@@ -1,26 +1,30 @@
-<h1 class="govuk-heading-xl">Register for a National Professional Qualification (NPQ)</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Register for a National Professional Qualification (NPQ)</h1>
 
-<p class="govuk-body-l">This service is for teachers who want to register to study for an NPQ.</p>
+    <p class="govuk-body-l">This service is for teachers who want to register to study for an NPQ.</p>
 
-<p class="govuk-body">Use this service to:</p>
+    <p class="govuk-body">Use this service to:</p>
 
-<ul class="govuk-list govuk-list--bullet">
-  <li>start your NPQ registration</li>
-</ul>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>start your NPQ registration</li>
+    </ul>
 
-<%= govuk_inset_text(text: "If you have already applied for an NPQ and wish to apply for another, you must first sign in to your account") %>
+    <%= govuk_inset_text(text: "If you have already applied for an NPQ and wish to apply for another, you must first sign in to your account") %>
 
-<h2 class="govuk-heading-m">Before you start</h2>
+    <h2 class="govuk-heading-m">Before you start</h2>
 
-<p class="govuk-body">You must:</p>
+    <p class="govuk-body">You must:</p>
 
-<ul class="govuk-list govuk-list--bullet">
-  <li>have your teacher reference number (TRN)</li>
-  <li>have your funding source confirmed - either a scholarship, school or personal funding</li>
-  <li>know which NPQ you want to study</li>
-  <li>have chosen a provider</li>
-</ul>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>have your teacher reference number (TRN)</li>
+      <li>have your funding source confirmed - either a scholarship, school or personal funding</li>
+      <li>know which NPQ you want to study</li>
+      <li>have chosen a provider</li>
+    </ul>
 
-<%= render GovukComponent::StartNowButton.new(
-      text: "Start now",
-      href: "") %>
+    <%= render GovukComponent::StartNowButton.new(
+          text: "Start now",
+          href: "") %>
+  </div>
+</div>
