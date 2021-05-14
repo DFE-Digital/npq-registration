@@ -1,0 +1,24 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @wizard, url: registration_wizard_update_path do |f| %>
+      <%= f.govuk_check_boxes_fieldset :can_share_choices,
+        legend: {
+        text: "Share choices with training provider",
+        size: "xl",
+        tag: "h1"
+      } do %>
+
+      <p class="govuk-body">You must share your NPQ choice(s) with your training provider.</p>
+
+      <p class="govuk-body">If you don't share the details you cannot progress with your NPQ.</p>
+
+      <%= f.govuk_check_box :can_share_choices,
+        "Yes",
+        multiple: false,
+        required: true,
+        link_errors: true,
+        label: { text: "I agree my choices can be shared with my training provider"} %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

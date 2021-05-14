@@ -10,3 +10,7 @@ $govuk-font-url-function: frontend-font-url;
 $govuk-image-url-function: frontend-image-url;
 
 @import "~govuk-frontend/govuk/all";
+
+h1.govuk-fieldset__heading {
+  margin-bottom: 50px;
+}
