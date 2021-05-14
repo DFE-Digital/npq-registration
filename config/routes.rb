@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  root "pages#start"
+  get "/start", to: "pages#start"
+
   get "/pages/:page", to: "pages#show"
 
   get "/404", to: "errors#not_found", via: :all
