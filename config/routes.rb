@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get "/start", to: "pages#start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
-  put "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
+  patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
 
   get "/pages/:page", to: "pages#show"
 

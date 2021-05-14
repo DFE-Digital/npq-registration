@@ -9,6 +9,10 @@ class RegistrationWizard
     set_current_step(current_step)
   end
 
+  def form
+    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize
+  end
+
 private
 
   def set_current_step(step)

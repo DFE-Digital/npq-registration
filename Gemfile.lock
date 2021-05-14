@@ -104,6 +104,8 @@ GEM
       deep_merge (~> 1.2.1)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
+    i18n-debug (1.2.0)
+      i18n (< 2)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -277,6 +279,7 @@ DEPENDENCIES
   foreman
   govuk-components
   govuk_design_system_formbuilder
+  i18n-debug
   listen (>= 3.0.5, < 3.6)
   pg (>= 0.18, < 2.0)
   pry-byebug

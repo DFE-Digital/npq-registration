@@ -32,5 +32,8 @@ module GovukRailsBoilerplate
     config.exceptions_app = routes
 
     config.middleware.use Rack::Deflater
+
+    # don't use AJAX/XHR to submit forms by default
+    config.action_view.form_with_generates_remote_forms = false
   end
 end

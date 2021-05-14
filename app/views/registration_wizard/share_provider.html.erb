@@ -1,6 +1,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @wizard, url: registration_wizard_update_path do |f| %>
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
       <%= f.govuk_check_boxes_fieldset :can_share_choices,
         legend: {
         text: "Share choices with training provider",
@@ -17,8 +19,10 @@
         multiple: false,
         required: true,
         link_errors: true,
-        label: { text: "I agree my choices can be shared with my training provider"} %>
+        label: { text: "I agree my choices can be shared with my training provider" } %>
       <% end %>
+
+      <%= f.govuk_submit %>
     <% end %>
   </div>
 </div>
