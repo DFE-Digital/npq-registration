@@ -24,7 +24,7 @@ class RegistrationWizardController < ApplicationController
 private
 
   def store
-    session[:registration_store] ||= {}
+    session["registration_store"] ||= {}
   end
 
   def wizard_params

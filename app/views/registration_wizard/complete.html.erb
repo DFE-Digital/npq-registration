@@ -1,7 +1,7 @@
 <%= render GovukComponent::Panel.new(title: "Confirm email", body: "") %>
 
 <p class="govuk-body">
-  We've sent an email to ???
+  We've sent an email to <%= session["registration_store"]["email"] %>
 </p>
 
 <p class="govuk-body">

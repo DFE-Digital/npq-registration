@@ -21,7 +21,11 @@ class RegistrationWizard
 
   def save!
     params.to_h.each do |k, v|
-      store[k.to_sym] = v
+      store[k] = v
+    end
+
+    if submission_step?
+      User.create!(submission_params)
     end
   end
 
@@ -44,5 +48,13 @@ private
       contact_details
       complete
     ]
+  end
+
+  def submission_step?
+    current_step == :contact_details
+  end
+
+  def submission_params
+    params.slice(:email)
   end
 end
