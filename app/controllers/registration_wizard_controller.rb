@@ -15,8 +15,7 @@ class RegistrationWizardController < ApplicationController
     if @form.valid?
       @wizard.save!
 
-      # handle update
-      # if success redirect
+      redirect_to registration_wizard_show_path(@wizard.next_step)
     else
       render @wizard.current_step
     end

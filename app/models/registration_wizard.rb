@@ -21,6 +21,11 @@ class RegistrationWizard
     end
   end
 
+  def next_step
+    index = steps.find_index(current_step)
+    steps[index + 1]
+  end
+
 private
 
   def set_current_step(step)

@@ -7,5 +7,9 @@ RSpec.feature "Happy journey", type: :feature do
 
     page.click_link("Start now")
     expect(page).to have_text("Share choices with training provider")
+
+    page.check("I agree my choices can be shared with my training provider")
+    page.click_button("Continue")
+    expect(page).to have_text("Contact details")
   end
 end
