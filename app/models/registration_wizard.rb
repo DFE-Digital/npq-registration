@@ -42,6 +42,7 @@ private
     %i[
       share_provider
       contact_details
+      complete
     ]
   end
 end
