@@ -11,6 +11,10 @@ class RegistrationWizard
     @store = store
   end
 
+  def self.permitted_params_for_step(step)
+    "Forms::#{step.to_s.camelcase}".constantize.permitted_params
+  end
+
   def form
     @form ||= "Forms::#{current_step.to_s.camelcase}".constantize.new(params)
   end

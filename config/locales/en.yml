@@ -6,3 +6,8 @@ en:
           attributes:
             can_share_choices:
               accepted: You must agree to share data with providers in order to continue
+        forms/contact_details:
+          attributes:
+            email:
+              blank: Email can't be blank
+              invalid: Enter a valid email address

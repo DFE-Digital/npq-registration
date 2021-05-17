@@ -5,6 +5,7 @@ ruby File.read(".ruby-version").chomp
 
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
+gem "email_validator", require: "email_validator/strict"
 gem "foreman"
 gem "govuk-components"
 gem "govuk_design_system_formbuilder"
@@ -30,6 +31,7 @@ group :development do
 end
 
 group :test do
+  gem "shoulda-matchers", "~> 4.0"
   gem "simplecov", require: false
   gem "webdrivers", "~> 4.6"
 end
