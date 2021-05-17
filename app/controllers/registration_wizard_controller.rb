@@ -15,7 +15,7 @@ class RegistrationWizardController < ApplicationController
     if @form.valid?
       @wizard.save!
 
-      redirect_to registration_wizard_show_path(@wizard.next_step)
+      redirect_to registration_wizard_show_path(@wizard.next_step_path)
     else
       render @wizard.current_step
     end

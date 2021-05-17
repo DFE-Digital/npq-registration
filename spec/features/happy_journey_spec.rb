@@ -10,6 +10,7 @@ RSpec.feature "Happy journey", type: :feature do
 
     page.check("I agree my choices can be shared with my training provider")
     page.click_button("Continue")
+    expect(page.current_path).to include("contact-details")
     expect(page).to have_text("Contact details")
   end
 end

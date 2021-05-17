@@ -25,9 +25,9 @@ class RegistrationWizard
     end
   end
 
-  def next_step
+  def next_step_path
     index = steps.find_index(current_step)
-    steps[index + 1]
+    steps[index + 1].to_s.dasherize
   end
 
 private
