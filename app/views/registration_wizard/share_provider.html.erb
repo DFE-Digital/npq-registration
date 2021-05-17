@@ -4,18 +4,20 @@
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_check_boxes_fieldset :can_share_choices,
+        multiple: false,
         legend: {
-        text: "Share choices with training provider",
-        size: "xl",
-        tag: "h1"
-      } do %>
+          text: "Share choices with training provider",
+          size: "xl",
+          tag: "h1"
+        } do %>
 
       <p class="govuk-body">You must share your NPQ choice(s) with your training provider.</p>
 
       <p class="govuk-body">If you don't share the details you cannot progress with your NPQ.</p>
 
       <%= f.govuk_check_box :can_share_choices,
-        "Yes",
+        1,
+        0,
         multiple: false,
         required: true,
         link_errors: true,

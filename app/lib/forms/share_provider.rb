@@ -4,6 +4,6 @@ module Forms
 
     attr_accessor :can_share_choices
 
-    validates :can_share_choices, acceptance: { accept: "Yes" }
+    validates :can_share_choices, acceptance: true
   end
 end

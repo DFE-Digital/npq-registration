@@ -3,14 +3,22 @@ class RegistrationWizard
 
   class InvalidStep < StandardError; end
 
-  attr_reader :current_step
+  attr_reader :current_step, :params, :store
 
-  def initialize(current_step:)
+  def initialize(current_step:, store:, params: {})
     set_current_step(current_step)
+    @params = params
+    @store = store
   end
 
   def form
-    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize
+    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize.new(params)
+  end
+
+  def save!
+    params.to_h.each do |k, v|
+      store[k.to_sym] = v
+    end
   end
 
 private
@@ -22,8 +30,9 @@ private
   end
 
   def steps
-    [
-      :share_provider,
+    %i[
+      share_provider
+      contact_details
     ]
   end
 end
