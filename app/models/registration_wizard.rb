@@ -16,7 +16,7 @@ class RegistrationWizard
   end
 
   def form
-    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize.new(params)
+    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize.new(params.merge(wizard: self))
   end
 
   def save!

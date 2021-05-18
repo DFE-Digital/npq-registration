@@ -2,7 +2,7 @@ module Forms
   class ContactDetails
     include ActiveModel::Model
 
-    attr_accessor :email
+    attr_accessor :wizard, :email
 
     validates :email, presence: true, email: true
 
@@ -17,7 +17,15 @@ module Forms
     end
 
     def previous_step
-      :name_changes
+      if wizard.store["changed_name"] == "no"
+        :name_changes
+      elsif wizard.store["updated_name"] == "yes"
+        :updated_name
+      elsif wizard.store["name_not_updated_action"] == "use_old_name"
+        :not_updated_name
+      else # fail safe
+        :start
+      end
     end
   end
 end

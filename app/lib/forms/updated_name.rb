@@ -2,7 +2,7 @@ module Forms
   class UpdatedName
     include ActiveModel::Model
 
-    attr_accessor :updated_name
+    attr_accessor :wizard, :updated_name
 
     validates :updated_name, presence: true
 

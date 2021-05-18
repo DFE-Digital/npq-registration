@@ -2,7 +2,7 @@ module Forms
   class TeacherReferenceNumber
     include ActiveModel::Model
 
-    attr_accessor :trn_knowledge
+    attr_accessor :wizard, :trn_knowledge
 
     validates :trn_knowledge, presence: true
 

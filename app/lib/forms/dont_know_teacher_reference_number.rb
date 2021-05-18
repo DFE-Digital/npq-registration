@@ -2,6 +2,8 @@ module Forms
   class DontKnowTeacherReferenceNumber
     include ActiveModel::Model
 
+    attr_accessor :wizard
+
     def self.permitted_params
       []
     end

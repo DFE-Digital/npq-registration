@@ -2,7 +2,7 @@ module Forms
   class NameChanges
     include ActiveModel::Model
 
-    attr_accessor :changed_name
+    attr_accessor :wizard, :changed_name
 
     validates :changed_name, presence: true
 
