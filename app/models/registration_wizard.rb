@@ -16,7 +16,13 @@ class RegistrationWizard
   end
 
   def form
-    @form ||= "Forms::#{current_step.to_s.camelcase}".constantize.new(params.merge(wizard: self))
+    return @form if @form
+
+    hash = load_from_store
+    hash.merge!(params)
+    hash.merge!(wizard: self)
+
+    @form ||= form_class.new(hash)
   end
 
   def save!
@@ -38,6 +44,14 @@ class RegistrationWizard
   end
 
 private
+
+  def load_from_store
+    store.slice(*form_class.permitted_params.map(&:to_s))
+  end
+
+  def form_class
+    @form_class ||= "Forms::#{current_step.to_s.camelcase}".constantize
+  end
 
   def set_current_step(step)
     @current_step = steps.find { |s| s == step.to_sym }
