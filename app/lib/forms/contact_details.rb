@@ -17,7 +17,7 @@ module Forms
     end
 
     def previous_step
-      :teacher_reference_number
+      :name_changes
     end
   end
 end

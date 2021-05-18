@@ -15,3 +15,7 @@ en:
           attributes:
             trn_knowledge:
               blank: Choose an option regarding your teacher reference number
+        forms/name_changes:
+          attributes:
+            changed_name:
+              blank: Select whether or not you have changed your name

@@ -50,6 +50,7 @@ private
       start
       share_provider
       teacher_reference_number
+      name_changes
       dont_know_teacher_reference_number
       dont_have_teacher_reference_number
       contact_details

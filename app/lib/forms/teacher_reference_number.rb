@@ -15,7 +15,7 @@ module Forms
     def next_step
       case trn_knowledge
       when "yes"
-        :contact_details
+        :name_changes
       when "no-dont-know"
         :dont_know_teacher_reference_number
       when "no-dont-have"
