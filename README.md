@@ -4,9 +4,9 @@
 
 ## Prerequisites
 
-- Ruby 2.7.1
+- Ruby 2.7.2
 - PostgreSQL
-- NodeJS 12.13.x
+- NodeJS 14.16.1
 - Yarn 1.12.x
 
 ## Setting up the app in development

@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "12.x"
+    "node": "14.16.1"
   },
   "dependencies": {
     "@rails/webpacker": "^5.3.0",
