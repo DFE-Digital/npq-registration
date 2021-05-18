@@ -13,7 +13,12 @@ module Forms
     end
 
     def next_step
-      :contact_details
+      case changed_name
+      when "yes"
+        :updated_name
+      when "no"
+        :contact_details
+      end
     end
 
     def previous_step

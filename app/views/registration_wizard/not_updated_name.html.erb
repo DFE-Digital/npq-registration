@@ -1,0 +1,32 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">Name not updated</h1>
+
+      <p class="govuk-body">If your name has not been updated and does not match the DQT, you have two options:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>use your old name to register with the service</li>
+        <li>change your name on the DQT</li>
+      </ul>
+
+      <p class="govuk-body">Call the Teaching Regulation Agency on 020 7593 5394. Make sure you have your National Insurance number ready before you call.</p>
+
+      <%= f.govuk_radio_buttons_fieldset(:name_not_updated_action, legend: { text: "Have you updated your name on the DQT?" } ) do %>
+        <%= f.govuk_radio_button :name_not_updated_action, "change_dqt_name", label: { text: "Change my name on the DQT" }, link_errors: true %>
+        <%= f.govuk_radio_button :name_not_updated_action, "use_old_name", label: { text: "Register with my old name" } %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

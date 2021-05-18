@@ -5,7 +5,7 @@ en:
         forms/share_provider:
           attributes:
             can_share_choices:
-              accepted: You must agree to share data with providers in order to continue
+              accepted: You must agree to share data with providers to continue
         forms/contact_details:
           attributes:
             email:
@@ -19,3 +19,11 @@ en:
           attributes:
             changed_name:
               blank: Select whether or not you have changed your name
+        forms/updated_name:
+          attributes:
+            updated_name:
+              blank: Select whether or not you have updated your name on the DQT
+        forms/not_updated_name:
+          attributes:
+            name_not_updated_action:
+              blank: Select how to proceed

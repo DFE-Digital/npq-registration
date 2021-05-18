@@ -1,0 +1,22 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Change your details on the Database of Qualified Teachers (DQT)</h1>
+
+    <p class="govuk-body">To update your name on the DQT you will need to login to the <%= govuk_link_to "Teacher Self Service Portal", "https://teacherservices.education.gov.uk/SelfService/Login" %>, change your name and upload one of the following documents as evidence:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>marriage: copy of your marriage certificate</li>
+      <li>civil partnership: copy of your civil agreement certificate</li>
+      <li>divorce: copy of your decree absolute and your birth certificate</li>
+      <li>statutory declaration: copy of the statutory declaration</li>
+      <li>deed poll: copy of your deed poll. Once you have clicked submit, you will be taken to the Change of Details request page.</li>
+    </ul>
+  </div>
+</div>
