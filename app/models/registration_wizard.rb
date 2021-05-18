@@ -47,6 +47,7 @@ private
 
   def steps
     %i[
+      start
       share_provider
       teacher_reference_number
       dont_know_teacher_reference_number

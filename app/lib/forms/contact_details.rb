@@ -15,5 +15,9 @@ module Forms
     def next_step
       :complete
     end
+
+    def previous_step
+      :teacher_reference_number
+    end
   end
 end

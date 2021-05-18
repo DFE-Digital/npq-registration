@@ -22,5 +22,9 @@ module Forms
         :dont_have_teacher_reference_number
       end
     end
+
+    def previous_step
+      :share_provider
+    end
   end
 end

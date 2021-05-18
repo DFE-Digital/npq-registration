@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
-  root "pages#start"
-  get "/start", to: "pages#start"
+
+  root "registration_wizard#show", step: "start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
