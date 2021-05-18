@@ -45,6 +45,7 @@ private
   def steps
     %i[
       share_provider
+      teacher_reference_number
       contact_details
       complete
     ]

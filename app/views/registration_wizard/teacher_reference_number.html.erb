@@ -1,0 +1,25 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">Teacher reference number</h1>
+
+      <p class="govuk-body">Your teacher reference number (TRN) is used to check you're eligible to study for a national professional qualification (NPQ).</p>
+
+      <%= render GovukComponent::Details.new(summary: "What is a teacher reference number?") do %>
+        <%= tag.p("A teacher reference number (TRN) is a unique ID that allows us to check you are a teacher.") %>
+        <%= tag.p("If you don’t know what your teacher reference number (TRN) is, this can usually be found on your payslip, teachers’ pension documentation or teacher training records.") %>
+        <%= tag.p("The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.") %>
+      <% end %>
+
+      <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: 'Do you know your teacher reference number (TRN)?'} ) do %>
+        <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: 'Yes, I know my TRN' }, link_errors: true %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: 'No, I do not know my TRN' } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: 'No, I do have a TRN' } %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
