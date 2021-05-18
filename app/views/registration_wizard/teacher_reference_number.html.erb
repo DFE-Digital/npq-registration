@@ -13,10 +13,10 @@
         <%= tag.p("The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.") %>
       <% end %>
 
-      <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: 'Do you know your teacher reference number (TRN)?'} ) do %>
-        <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: 'Yes, I know my TRN' }, link_errors: true %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: 'No, I do not know my TRN' } %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: 'No, I do have a TRN' } %>
+      <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you know your teacher reference number (TRN)?"} ) do %>
+        <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: "Yes, I know my TRN" }, link_errors: true %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: "No, I don't know my TRN" } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: "No, I don't have a TRN" } %>
       <% end %>
 
       <%= f.govuk_submit %>
