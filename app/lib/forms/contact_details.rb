@@ -11,5 +11,9 @@ module Forms
         email
       ]
     end
+
+    def next_step
+      :complete
+    end
   end
 end

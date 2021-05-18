@@ -62,6 +62,8 @@
     </header>
 
     <div class="govuk-width-container">
+      <%= content_for(:before_content) %>
+
       <main class="govuk-main-wrapper " id="main-content" role="main">
         <%= yield %>
       </main>

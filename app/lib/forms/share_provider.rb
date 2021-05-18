@@ -11,5 +11,9 @@ module Forms
         can_share_choices
       ]
     end
+
+    def next_step
+      :teacher_reference_number
+    end
   end
 end

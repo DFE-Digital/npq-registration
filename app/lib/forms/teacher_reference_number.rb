@@ -11,5 +11,16 @@ module Forms
         trn_knowledge
       ]
     end
+
+    def next_step
+      case trn_knowledge
+      when "yes"
+        :contact_details
+      when "no-dont-know"
+        :dont_know_teacher_reference_number
+      when "no-dont-have"
+        :dont_have_teacher_reference_number
+      end
+    end
   end
 end

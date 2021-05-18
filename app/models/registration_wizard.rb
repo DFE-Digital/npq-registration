@@ -30,8 +30,11 @@ class RegistrationWizard
   end
 
   def next_step_path
-    index = steps.find_index(current_step)
-    steps[index + 1].to_s.dasherize
+    form.next_step.to_s.dasherize
+  end
+
+  def previous_step_path
+    form.previous_step.to_s.dasherize
   end
 
 private
@@ -46,6 +49,8 @@ private
     %i[
       share_provider
       teacher_reference_number
+      dont_know_teacher_reference_number
+      dont_have_teacher_reference_number
       contact_details
       complete
     ]
