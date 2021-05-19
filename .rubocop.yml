@@ -11,3 +11,7 @@ AllCops:
     - 'config/application.rb'
     - 'config/puma.rb'
     - 'vendor/**/*'
+
+Rails/ApplicationController:
+  Exclude:
+    - "app/controllers/monitoring_controller.rb"
