@@ -58,3 +58,10 @@ RUN apk add --update --no-cache libpq tzdata && \
 # Copy files generated in the builder image
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+
+ENV PORT=8080
+ENV RAILS_ENV=production
+
+EXPOSE ${PORT}
+
+CMD RAILS_ENV=${RAILS_ENV} bundle exec rake db:migrate && bundle exec rails s -e ${RAILS_ENV} -p ${PORT} --binding=0.0.0.0

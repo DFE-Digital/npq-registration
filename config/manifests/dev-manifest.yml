@@ -1,0 +1,20 @@
+---
+applications:
+- name: npq-registration-dev
+  processes:
+  - type: web
+    disk_quota: 2G
+    memory: 512M
+    health-check-http-endpoint: /healthcheck.json
+    health-check-type: http
+    health-check-invocation-timeout: 10
+    instances: 1
+  services:
+    - npq-registration-dev-db
+  env:
+    DOCKER_IMAGE_ID: ((DOCKER_IMAGE_ID))
+    ENV: $HOME/.profile
+    SERVICE_ENV: development
+    SECRET_KEY_BASE: ((SECRET_KEY_BASE))
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
