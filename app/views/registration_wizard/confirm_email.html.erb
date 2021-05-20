@@ -14,8 +14,8 @@
     To confirm your details, we've sent a code to <%= session["registration_store"]["email"] %>
   </p>
 
-  <%= f.govuk_email_field :confirmation_code,
-    width: 20,
+  <%= f.govuk_text_field :confirmation_code,
+    width: 10,
     label: { text: "Enter your code" } %>
 
   <%= f.govuk_submit %>
