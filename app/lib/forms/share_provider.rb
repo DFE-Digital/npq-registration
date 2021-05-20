@@ -1,8 +1,6 @@
 module Forms
-  class ShareProvider
-    include ActiveModel::Model
-
-    attr_accessor :wizard, :can_share_choices
+  class ShareProvider < Base
+    attr_accessor :can_share_choices
 
     validates :can_share_choices, acceptance: true
 

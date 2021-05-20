@@ -1,8 +1,6 @@
 module Forms
-  class ContactDetails
-    include ActiveModel::Model
-
-    attr_accessor :wizard, :email
+  class ContactDetails < Base
+    attr_accessor :email
 
     validates :email, presence: true, email: true
 

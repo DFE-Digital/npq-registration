@@ -29,6 +29,8 @@ class RegistrationWizard
     params.to_h.each do |k, v|
       store[k] = v
     end
+
+    form.after_save
   end
 
   def next_step_path

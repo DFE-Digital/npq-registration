@@ -1,8 +1,6 @@
 module Forms
-  class ConfirmEmail
-    include ActiveModel::Model
-
-    attr_accessor :wizard, :confirmation_code
+  class ConfirmEmail < Base
+    attr_accessor :confirmation_code
 
     validates :confirmation_code, presence: true, length: { is: 6 }
 
@@ -14,6 +12,10 @@ module Forms
 
     def previous_step
       :contact_details
+    end
+
+    def after_save
+      # do stuff
     end
   end
 end

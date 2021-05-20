@@ -1,8 +1,6 @@
 module Forms
-  class NotUpdatedName
-    include ActiveModel::Model
-
-    attr_accessor :wizard, :name_not_updated_action
+  class NotUpdatedName < Base
+    attr_accessor :name_not_updated_action
 
     validates :name_not_updated_action, presence: true
 

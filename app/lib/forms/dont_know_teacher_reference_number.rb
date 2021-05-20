@@ -1,13 +1,5 @@
 module Forms
-  class DontKnowTeacherReferenceNumber
-    include ActiveModel::Model
-
-    attr_accessor :wizard
-
-    def self.permitted_params
-      []
-    end
-
+  class DontKnowTeacherReferenceNumber < Base
     def previous_step
       :teacher_reference_number
     end
