@@ -48,7 +48,10 @@ RSpec.describe Forms::ContactDetails, type: :model do
   end
 
   describe "#after_save" do
-    subject { described_class.new(email: "user@example.com") }
+    let(:store) { {} }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store) }
+
+    subject { described_class.new(email: "user@example.com", wizard: wizard) }
 
     it "sends email" do
       expect {

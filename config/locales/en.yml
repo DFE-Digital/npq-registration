@@ -32,3 +32,7 @@ en:
             confirmation_code:
               blank: Code can't be blank
               wrong_length: Code should be 6 characters long
+        forms/confirm_email:
+          attributes:
+            confirmation_code:
+              incorrect: Code is not correct. Please try again

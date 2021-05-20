@@ -71,6 +71,7 @@ private
       dont_have_teacher_reference_number
       contact_details
       confirm_email
+      qualified_teacher_check
     ]
   end
 

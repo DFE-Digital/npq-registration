@@ -89,5 +89,17 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Confirm your contact details")
     expect(page).to have_text("user@example.com")
+    page.fill_in "Enter your code", with: "000000"
+    page.click_button("Continue")
+
+    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Code is not correct")
+
+    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+    page.fill_in "Enter your code", with: code
+    page.click_button("Continue")
+
+    expect(page).to have_text("Qualified teacher check")
   end
 end

@@ -27,7 +27,12 @@ module Forms
     end
 
     def after_save
-      ConfirmEmailMailer.confirmation_code_mail(to: email, code: "1234").deliver_now
+      wizard.store["generated_confirmation_code"] = code
+      ConfirmEmailMailer.confirmation_code_mail(to: email, code: code).deliver_now
+    end
+
+    def code
+      @code ||= Services::OtpCodeGenerator.new.call
     end
   end
 end
