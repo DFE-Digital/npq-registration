@@ -68,7 +68,7 @@ private
       dont_know_teacher_reference_number
       dont_have_teacher_reference_number
       contact_details
-      complete
+      confirm_email
     ]
   end
 

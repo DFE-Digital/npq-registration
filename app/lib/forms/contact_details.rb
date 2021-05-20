@@ -13,7 +13,7 @@ module Forms
     end
 
     def next_step
-      :complete
+      :confirm_email
     end
 
     def previous_step

@@ -1,5 +1,5 @@
 module Forms
-  class Complete
+  class ConfirmEmail
     include ActiveModel::Model
 
     attr_accessor :wizard
