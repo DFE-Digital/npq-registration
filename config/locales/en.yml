@@ -27,3 +27,8 @@ en:
           attributes:
             name_not_updated_action:
               blank: Select how to proceed
+        forms/confirm_email:
+          attributes:
+            confirmation_code:
+              blank: Code can't be blank
+              wrong_length: Code should be 6 characters long
