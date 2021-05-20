@@ -29,10 +29,6 @@ class RegistrationWizard
     params.to_h.each do |k, v|
       store[k] = v
     end
-
-    if submission_step?
-      User.create!(submission_params)
-    end
   end
 
   def next_step_path
@@ -74,10 +70,6 @@ private
       contact_details
       complete
     ]
-  end
-
-  def submission_step?
-    current_step == :contact_details
   end
 
   def submission_params
