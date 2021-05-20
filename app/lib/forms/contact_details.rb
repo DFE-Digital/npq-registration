@@ -25,5 +25,9 @@ module Forms
         :start
       end
     end
+
+    def after_save
+      ConfirmEmailMailer.confirmation_code_mail(to: email, code: "1234").deliver_now
+    end
   end
 end

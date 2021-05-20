@@ -13,9 +13,5 @@ module Forms
     def previous_step
       :contact_details
     end
-
-    def after_save
-      # do stuff
-    end
   end
 end

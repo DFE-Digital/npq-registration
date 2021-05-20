@@ -46,4 +46,14 @@ RSpec.describe Forms::ContactDetails, type: :model do
       end
     end
   end
+
+  describe "#after_save" do
+    subject { described_class.new(email: "user@example.com") }
+
+    it "sends email" do
+      expect {
+        subject.after_save
+      }.to change(ActionMailer::Base.deliveries, :count).by(1)
+    end
+  end
 end

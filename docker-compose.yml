@@ -32,3 +32,4 @@ services:
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_LOG_TO_STDOUT=true
       - SECRET_KEY_BASE=abcd1234
+      - GOVUK_NOTIFY_API_KEY=addnotifykeyhere

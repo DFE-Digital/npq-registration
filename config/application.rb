@@ -35,5 +35,10 @@ module GovukRailsBoilerplate
 
     # don't use AJAX/XHR to submit forms by default
     config.action_view.form_with_generates_remote_forms = false
+
+    config.action_mailer.delivery_method = :notify
+    config.action_mailer.notify_settings = {
+      api_key: ENV["GOVUK_NOTIFY_API_KEY"]
+    }
   end
 end
