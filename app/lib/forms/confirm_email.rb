@@ -7,5 +7,9 @@ module Forms
     def self.permitted_params
       []
     end
+
+    def previous_step
+      :contact_details
+    end
   end
 end

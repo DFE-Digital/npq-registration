@@ -60,7 +60,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm email")
+    expect(page).to have_text("Confirm your contact details")
     expect(page).to have_text("user@example.com")
   end
 
@@ -87,7 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm email")
+    expect(page).to have_text("Confirm your contact details")
     expect(page).to have_text("user@example.com")
   end
 end
