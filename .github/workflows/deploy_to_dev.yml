@@ -55,4 +55,10 @@ jobs:
           cf api https://api.london.cloud.service.gov.uk
           cf auth "${{ secrets.GOVPAAS_DEV_USERNAME }}" "${{ secrets.GOVPAAS_DEV_PASSWORD }}"
           cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
-          cf push "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" --manifest ./config/manifests/"${{ env.ENV_STUB }}"-manifest.yml --var DOCKER_IMAGE_ID="${{ steps.docker_build_push.outputs.digest }}" --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_DEV }}" --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" --docker-username "${{ secrets.DOCKER_USERNAME }}" --strategy rolling
+          cf push "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --manifest ./config/manifests/"${{ env.ENV_STUB }}"-manifest.yml \
+            --var DOCKER_IMAGE_ID="${{ steps.docker_build_push.outputs.digest }}" \
+            --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_DEV }}" \
+            --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --docker-username "${{ secrets.DOCKER_USERNAME }}" \
+            --strategy rolling
