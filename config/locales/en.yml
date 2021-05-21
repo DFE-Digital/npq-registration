@@ -45,3 +45,7 @@ en:
               blank: Last name can't be blank
             date_of_birth:
               blank: Date of birth can't be blank
+        forms/choose_your_npq:
+          attributes:
+            npq:
+              blank: Choose a National Professional Qualification

@@ -73,6 +73,7 @@ private
       confirm_email
       qualified_teacher_check
       choose_your_npq
+      choose_your_provider
     ]
   end
 

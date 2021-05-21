@@ -110,5 +110,9 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your NPQ")
+    page.choose("NPQ for Headship (NPQH)")
+    page.click_button("Continue")
+
+    expect(page).to have_text("Choose your provider")
   end
 end

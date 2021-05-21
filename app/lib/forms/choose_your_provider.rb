@@ -1,5 +1,5 @@
 module Forms
-  class ChooseYourNpq < Base
+  class ChooseYourProvider < Base
     OPTIONS = [
       OpenStruct.new(value: "NPQLT",
                      text: "NPQ Leading Teaching (NPQLT)",
