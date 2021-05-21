@@ -33,3 +33,15 @@ en:
               blank: Code can't be blank
               wrong_length: Code should be 6 characters long
               incorrect: Code is not correct. Please try again
+        forms/qualified_teacher_check:
+          attributes:
+            trn:
+              blank: Teacher reference number can't be blank
+              too_short: Teacher reference number is too short (minimum is %{count} characters)
+              too_long: Teacher reference number is too long (maximum is %{count} characters)
+            first_name:
+              blank: First name can't be blank
+            last_name:
+              blank: Last name can't be blank
+            date_of_birth:
+              blank: Date of birth can't be blank

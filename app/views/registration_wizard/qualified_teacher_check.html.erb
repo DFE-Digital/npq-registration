@@ -12,6 +12,29 @@
 
       <h1 class="govuk-heading-xl">Qualified teacher check</h1>
 
+      <p class="govuk-body">
+        We need to check your teacher details on the Database of Qualified Teachers (DQT) to ensure you qualify to study for a National Professional Qualification (NPQ).
+      </p>
+
+      <%= f.govuk_text_field :trn,
+        width: 10,
+        label: { text: "Teacher reference number (TRN)" },
+        hint: { text: "Your TRN is 7-10 characters long. It may include “/” or “RP”." } %>
+
+      <%= f.govuk_text_field :first_name,
+        width: 20,
+        label: { text: "First name" },
+        hint: { text: "Your first name exactly as it appears on the DQT" } %>
+
+      <%= f.govuk_text_field :last_name,
+        width: 20,
+        label: { text: "Last name" },
+        hint: { text: "Your surname exactly as it appears on the DQT" } %>
+
+      <%= f.govuk_date_field :date_of_birth,
+        date_of_birth: true,
+        legend: { text: "Date of birth" },
+        hint: { text: "For example, 31 3 1980" } %>
 
       <%= f.govuk_submit %>
     <% end %>

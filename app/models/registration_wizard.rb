@@ -72,6 +72,7 @@ private
       contact_details
       confirm_email
       qualified_teacher_check
+      choose_your_npq
     ]
   end
 
