@@ -75,6 +75,7 @@ private
       choose_your_npq
       choose_your_provider
       delivery_partner
+      select_delivery_partner
     ]
   end
 

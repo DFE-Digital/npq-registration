@@ -53,3 +53,7 @@ en:
           attributes:
             provider:
               blank: Choose a provider
+        forms/delivery_partner:
+          attributes:
+            delivery_partner_knowledge:
+              blank: Choose whether or not you know your delivery partner?

@@ -12,6 +12,13 @@
 
       <h1 class="govuk-heading-xl">Your delivery partner</h1>
 
+      <p class="govuk-body">Your delivery partner will be running your NPQ course.</p>
+
+      <%= f.govuk_radio_buttons_fieldset(:delivery_partner_knowledge, legend: { text: "Do you know which partner #{@form.provider} is using?" } ) do %>
+        <%= f.govuk_radio_button :delivery_partner_knowledge, "yes", label: { text: "Yes, I know which delivery partner will be used" }, link_errors: true %>
+        <%= f.govuk_radio_button :delivery_partner_knowledge, "no", label: { text: "No, I don't know which partner is being used" } %>
+      <% end %>
+
       <%= f.govuk_submit %>
     <% end %>
   </div>
