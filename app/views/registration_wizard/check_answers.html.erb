@@ -1,0 +1,25 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Check your details</h1>
+
+    <p class="govuk-body">Check the following details are correct before continuing.</p>
+
+    <%= render GovukComponent::SummaryList.new do |component|
+          @wizard.answers.each do |answer|
+            component.slot(
+              :row,
+              key: answer.key,
+              value: answer.value,
+              action: link_to('Change', '#')
+            )
+          end
+    end %>
+  </div>
+</div>

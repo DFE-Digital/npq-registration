@@ -41,6 +41,20 @@ class RegistrationWizard
     form.previous_step.to_s.dasherize
   end
 
+  def answers
+    dob = Forms::QualifiedTeacherCheck.new(store.select {|k, _v| k.starts_with?("date_of_birth") }).date_of_birth
+
+    [
+      OpenStruct.new(key: "First name", value: store["first_name"]),
+      OpenStruct.new(key: "Last name", value: store["last_name"]),
+      OpenStruct.new(key: "TRN", value: store["trn"]),
+      OpenStruct.new(key: "Date of birth", value: dob.to_s(:long)),
+      OpenStruct.new(key: "Email", value: store["email"]),
+      OpenStruct.new(key: "NPQ", value: store["npq"]),
+      OpenStruct.new(key: "Lead provider", value: store["provider"]),
+    ]
+  end
+
 private
 
   def load_from_store
@@ -76,6 +90,7 @@ private
       choose_your_provider
       delivery_partner
       select_delivery_partner
+      check_answers
     ]
   end
 
