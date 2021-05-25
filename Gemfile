@@ -10,6 +10,7 @@ gem "email_validator", require: "email_validator/strict"
 gem "foreman"
 gem "govuk-components"
 gem "govuk_design_system_formbuilder"
+gem "iconv"
 gem "mail-notify"
 gem "pg", ">= 0.18", "< 2.0"
 gem "puma", "~> 5.3"
@@ -37,6 +38,7 @@ group :test do
   gem "simplecov", require: false
   gem "site_prism"
   gem "webdrivers", "~> 4.6"
+  gem "webmock"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

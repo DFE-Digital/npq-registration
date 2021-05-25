@@ -10,10 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_17_135314) do
+ActiveRecord::Schema.define(version: 2021_05_24_095724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "schools", force: :cascade do |t|
+    t.text "urn", null: false
+    t.text "la_code"
+    t.text "la_name"
+    t.text "establishment_number"
+    t.text "name"
+    t.text "establishment_status_code"
+    t.text "establishment_status_name"
+    t.date "close_date"
+    t.text "ukprn"
+    t.date "last_changed_date"
+    t.text "address_1"
+    t.text "address_2"
+    t.text "address_3"
+    t.text "town"
+    t.text "county"
+    t.text "postcode"
+    t.integer "easting"
+    t.integer "northing"
+    t.text "region"
+    t.text "country"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["urn"], name: "index_schools_on_urn"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
