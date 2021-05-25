@@ -86,6 +86,11 @@ GEM
       rexml
     crass (1.0.6)
     deep_merge (1.2.1)
+    delayed_job (4.1.9)
+      activesupport (>= 3.0, < 6.2)
+    delayed_job_active_record (4.1.6)
+      activerecord (>= 3.0, < 6.2)
+      delayed_job (>= 3.0, < 5)
     devise (4.8.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -322,6 +327,7 @@ DEPENDENCIES
   byebug
   canonical-rails
   capybara (~> 3.35)
+  delayed_job_active_record
   devise
   dotenv-rails
   email_validator

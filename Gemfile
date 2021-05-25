@@ -5,6 +5,7 @@ ruby File.read(".ruby-version").chomp
 
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
+gem "delayed_job_active_record"
 gem "devise"
 gem "email_validator", require: "email_validator/strict"
 gem "foreman"
