@@ -13,12 +13,27 @@
 
     <h2 class="govuk-heading-m">Request a TRN by email</h2>
 
-    <p class="govuk-body">Send an email to <%= govuk_mail_to('qts.enquiries@education.gov.uk', "qts.enquiries@education.gov.uk") %> which includes your:</p>
+    <p class="govuk-body">To obtain a TRN send an email to <%= govuk_mail_to('qts.enquiries@education.gov.uk', "qts.enquiries@education.gov.uk") %></p>
+
+    <p class="govuk-body">To send a secure email to the department, please go to the <%= govuk_link_to "Egress site", "https://switch.egress.com/ui/signin.aspx" %></p>
+
+    <p class="govuk-body">Include the following information:</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>full name</li>
-      <li>date of birth</li>
-      <li>National Insurance number</li>
+      <li>enter in the subject line: Undertaking an NPQ, do not have a TRN and require a number to be issued</li>
+      <li>state you are undertaking an NPQ, do not have a TRN and require a number to be issued</li>
+      <li>your full legal name (we will use this to create a record for you)</li>
+      <li>your date of birth</li>
+      <li>an email address for us to respond to you at</li>
+    </ul>
+
+    <p class="govuk-body">Attach a copy of one of the following types of identification:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>passport</li>
+      <li>driving licence (full or provisional)</li>
+      <li>certificate of residence</li>
+      <li>birth certificate</li>
     </ul>
   </div>
 </div>
