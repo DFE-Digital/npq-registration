@@ -15,4 +15,3 @@ class SummaryListRowSection < SitePrism::Section
     action_element.find("a").click
   end
 end
-

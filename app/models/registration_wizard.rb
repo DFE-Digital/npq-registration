@@ -42,7 +42,7 @@ class RegistrationWizard
   end
 
   def answers
-    dob = Forms::QualifiedTeacherCheck.new(store.select {|k, _v| k.starts_with?("date_of_birth") }).date_of_birth
+    dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
 
     [
       OpenStruct.new(key: "First name", value: store["first_name"]),
