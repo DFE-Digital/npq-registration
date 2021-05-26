@@ -19,7 +19,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Back")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("No, I don't have a TRN")
+    page.choose("I don't have a TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
