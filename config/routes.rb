@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
 
+  get "/sign-in", to: "sessions#new"
+
   get "/pages/:page", to: "pages#show"
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
