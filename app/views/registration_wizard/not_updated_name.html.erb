@@ -19,9 +19,7 @@
         <li>change your name on the DQT</li>
       </ul>
 
-      <p class="govuk-body">Call the Teaching Regulation Agency on 020 7593 5394. Make sure you have your National Insurance number ready before you call.</p>
-
-      <%= f.govuk_radio_buttons_fieldset(:name_not_updated_action, legend: { text: "Have you updated your name on the DQT?" } ) do %>
+      <%= f.govuk_radio_buttons_fieldset(:name_not_updated_action, legend: { text: "I want to:" } ) do %>
         <%= f.govuk_radio_button :name_not_updated_action, "change_dqt_name", label: { text: "Change my name on the DQT" }, link_errors: true %>
         <%= f.govuk_radio_button :name_not_updated_action, "use_old_name", label: { text: "Register with my old name" } %>
       <% end %>
