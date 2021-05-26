@@ -14,7 +14,7 @@
 
       <p class="govuk-body">We need this to create an account and send you information about the NPQ.</p>
 
-      <p class="govuk-body">Already got an account? Sign in to continue.</p>
+      <p class="govuk-body">Already got an account? <%= govuk_link_to "Sign in", sign_in_path %> to continue.</p>
 
       <%= f.govuk_email_field :email,
                               width: 20,
