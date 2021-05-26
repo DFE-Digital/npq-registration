@@ -3,12 +3,13 @@ class RegistrationWizard
 
   class InvalidStep < StandardError; end
 
-  attr_reader :current_step, :params, :store
+  attr_reader :current_step, :params, :store, :session
 
-  def initialize(current_step:, store:, params: {})
+  def initialize(current_step:, store:, params: {}, session:)
     set_current_step(current_step)
     @params = params
     @store = store
+    @session = session
   end
 
   def self.permitted_params_for_step(step)

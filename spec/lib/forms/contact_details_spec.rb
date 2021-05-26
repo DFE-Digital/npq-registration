@@ -16,7 +16,8 @@ RSpec.describe Forms::ContactDetails, type: :model do
   end
 
   describe "#previous_step" do
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store) }
+    let(:session) { {} }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, session: session) }
 
     before do
       subject.wizard = wizard
@@ -49,7 +50,8 @@ RSpec.describe Forms::ContactDetails, type: :model do
 
   describe "#after_save" do
     let(:store) { {} }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store) }
+    let(:session) { {} }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, session: session) }
 
     subject { described_class.new(email: "user@example.com", wizard: wizard) }
 
