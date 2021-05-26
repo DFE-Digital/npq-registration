@@ -15,3 +15,7 @@ AllCops:
 Rails/ApplicationController:
   Exclude:
     - "app/controllers/monitoring_controller.rb"
+
+Rails/BulkChangeTable:
+  Exclude:
+    - "db/migrate/*"
