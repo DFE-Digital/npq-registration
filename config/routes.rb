@@ -6,7 +6,12 @@ Rails.application.routes.draw do
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
 
-  get "/sign-in", to: "sessions#new"
+  get "/sign-in", to: "session_wizard#show", step: "sign_in"
+
+  get "/session/:step", to: "session_wizard#show", as: "session_wizard_show"
+  patch "/session/:step", to: "session_wizard#update", as: "session_wizard_update"
+
+  resource :account
 
   get "/pages/:page", to: "pages#show"
 

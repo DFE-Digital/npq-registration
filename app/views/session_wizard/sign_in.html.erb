@@ -1,0 +1,29 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: root_path
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Sign in</h1>
+
+    <%= form_with model: @form, url: session_wizard_update_path, scope: "session_wizard", method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_text_field :email,
+        width: "three-quarters",
+        label: { text: "Email address" } %>
+
+      <%= f.govuk_submit "Sign in" %>
+    <% end %>
+
+    <h2 class="govuk-heading-m">How to access this service</h2>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li><%= govuk_link_to "create an account", root_path %></li>
+      <li>we don't use DfE sign in or passwords, you just need your account's email address</li>
+    </ul>
+  </div>
+</div>

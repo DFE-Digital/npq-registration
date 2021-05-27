@@ -57,3 +57,12 @@ en:
           attributes:
             delivery_partner_knowledge:
               blank: Choose whether or not you know your delivery partner?
+        forms/sign_in:
+          attributes:
+            email:
+              blank: Email can't be blank
+        forms/sign_in_code:
+          attributes:
+            code:
+              blank: Code can't be blank
+              incorrect: Code is not correct. Please try again
