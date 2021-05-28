@@ -1,0 +1,3 @@
+<% if cookies["consented-to-cookies"] == "accept" %>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%= Analytics::GOOGLE_TAG_MANAGER_ID %>" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<% end %>
