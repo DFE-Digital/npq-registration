@@ -13,7 +13,13 @@ Rails.application.routes.draw do
 
   resource :account
 
-  get "/pages/:page", to: "pages#show"
+  get "/cookies", to: "pages#show", page: "cookies"
+
+  resource :cookie_preferences do
+    member do
+      post "hide"
+    end
+  end
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 

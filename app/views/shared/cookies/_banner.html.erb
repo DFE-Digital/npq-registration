@@ -1,0 +1,12 @@
+<% case cookies["consented-to-cookies"] %>
+<% when "reject" %>
+  <% unless cookies["hide-cookies-banner"] == "1" %>
+    <%= render partial: "shared/cookies/rejected" %>
+  <% end %>
+<% when "accept" %>
+  <% unless cookies["hide-cookies-banner"] == "1" %>
+    <%= render partial: "shared/cookies/accepted" %>
+  <% end %>
+<% else %>
+  <%= render partial: "shared/cookies/not_set" %>
+<% end %>
