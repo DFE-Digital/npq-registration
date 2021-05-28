@@ -48,6 +48,13 @@
     </header>
 
     <div class="govuk-width-container">
+      <%= render GovukComponent::PhaseBanner.new(
+        phase: 'Alpha',
+        text: "This is a new service – your #{govuk_link_to("feedback", "#")} will help us to improve it.".html_safe
+      ) %>
+    </div>
+
+    <div class="govuk-width-container">
       <%= content_for(:before_content) %>
 
       <main class="govuk-main-wrapper " id="main-content" role="main">
