@@ -70,3 +70,7 @@ en:
           attributes:
             school_name:
               no_results: No schools in %{location} with the name %{name} were found, please try again
+        forms/find_school:
+          attributes:
+            school_location:
+              blank: School location can't be blank
