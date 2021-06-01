@@ -124,6 +124,22 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Select your delivery partner")
     page.click_button("Continue")
 
+    School.create!(urn: 100_000, name: "open manchester school", town: "manchester", establishment_status_code: "1")
+    School.create!(urn: 100_001, name: "closed manchester school", town: "manchester", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "open newcastle school", town: "newcastle", establishment_status_code: "1")
+
+    expect(page).to have_text("Find your school")
+    page.fill_in "School location", with: "manchester"
+    page.click_button("Continue")
+
+    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Please choose from schools located in manchester")
+    page.fill_in "Enter your school name", with: "open"
+    page.click_button("Continue")
+
+    page.choose "open manchester school"
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -133,5 +149,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
+    expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
   end
 end

@@ -66,3 +66,7 @@ en:
             code:
               blank: Code can't be blank
               incorrect: Code is not correct. Please try again
+        forms/choose_school:
+          attributes:
+            school_name:
+              no_results: No schools in %{location} with the name %{name} were found, please try again

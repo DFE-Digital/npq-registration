@@ -1,7 +1,7 @@
 module Forms
   class CheckAnswers < Base
     def previous_step
-      :select_delivery_partner
+      :choose_school
     end
   end
 end

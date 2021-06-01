@@ -1,0 +1,46 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">Choose your school</h1>
+
+      <% if @form.display_schools? %>
+        <% if @form.possible_schools.blank? %>
+          <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["school_location"] %></p>
+
+          <p class="govuk-body">No schools were found with that name, please try again</p>
+
+          <%= f.govuk_text_field :school_name,
+                                 width: "full",
+                                 label: { text: "Enter your school name" } %>
+        <% else %>
+          <%= f.govuk_radio_buttons_fieldset(:school_urn, legend: { size: 'm', text: "Please choose from schools located in #{@form.wizard.store["school_location"]}" }) do %>
+            <% @form.possible_schools.each do |school| %>
+              <%= f.govuk_radio_button :school_urn, school.urn, label: { text: school.name }, link_errors: true %>
+            <% end %>
+            <%= f.govuk_radio_divider %>
+            <%= f.govuk_radio_button :school_urn, 'other', label: { text: "School not shown above" } do %>
+              <%= f.govuk_text_field :school_name, label: { text: "Search for another school name" } %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["school_location"] %></p>
+
+        <%= f.govuk_text_field :school_name,
+                               width: "full",
+                               label: { text: "Enter your school name" } %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

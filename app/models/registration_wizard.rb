@@ -44,6 +44,7 @@ class RegistrationWizard
 
   def answers
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
+    school = School.find_by(urn: store["school_urn"])
 
     [
       OpenStruct.new(key: "First name", value: store["first_name"]),
@@ -53,6 +54,7 @@ class RegistrationWizard
       OpenStruct.new(key: "Email", value: store["email"]),
       OpenStruct.new(key: "NPQ", value: store["npq"]),
       OpenStruct.new(key: "Lead provider", value: store["provider"]),
+      OpenStruct.new(key: "School", value: school.name),
     ]
   end
 
@@ -91,6 +93,8 @@ private
       choose_your_provider
       delivery_partner
       select_delivery_partner
+      find_school
+      choose_school
       check_answers
     ]
   end
