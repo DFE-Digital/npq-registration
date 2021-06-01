@@ -124,9 +124,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Select your delivery partner")
     page.click_button("Continue")
 
-    School.create!(urn: 100_000, name: "open manchester school", town: "manchester", establishment_status_code: "1")
-    School.create!(urn: 100_001, name: "closed manchester school", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", town: "newcastle", establishment_status_code: "1")
+    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to have_text("Find your school")
     page.fill_in "School location", with: "manchester"
@@ -137,6 +137,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Enter your school name", with: "open"
     page.click_button("Continue")
 
+    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("street 1")
     page.choose "open manchester school"
     page.click_button("Continue")
 

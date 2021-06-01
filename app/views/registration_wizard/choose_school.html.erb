@@ -24,7 +24,7 @@
         <% else %>
           <%= f.govuk_radio_buttons_fieldset(:school_urn, legend: { size: 'm', text: "Please choose from schools located in #{@form.wizard.store["school_location"]}" }) do %>
             <% @form.possible_schools.each do |school| %>
-              <%= f.govuk_radio_button :school_urn, school.urn, label: { text: school.name }, link_errors: true %>
+              <%= f.govuk_radio_button :school_urn, school.urn, label: { text: school.name }, hint: { text: school.address_string }, link_errors: true %>
             <% end %>
             <%= f.govuk_radio_divider %>
             <%= f.govuk_radio_button :school_urn, 'other', label: { text: "School not shown above" } do %>
