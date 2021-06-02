@@ -1,0 +1,47 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">We cannot find your details</h1>
+
+    <p class="govuk-body">
+      We cannot find a match with the details you have provided.
+    </p>
+
+    <p class="govuk-body">
+      This could be because:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>you have abbreviated your first name e.g. Rob/Robert</li>
+      <li>your surname is different to the name held on the DQT</li>
+      <li>you've entered an incorrect TRN</li>
+      <li>you've have entered an incorrect date of birth</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder by email</h2>
+
+    <p class="govuk-body">
+      To request a reminder of your TRN, send an email to <%= govuk_mail_to "qts.enquiries@education.gov.uk", "qts.enquiries@education.gov.uk" %> which includes your:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>full name</li>
+      <li>date of birth</li>
+      <li>National Insurance number</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder by phone</h2>
+
+    <p class="govuk-body">
+      Call the Teaching Regulation Agency on 020 7593 5394. Make sure you have your National Insurance number ready before you call.
+    </p>
+
+    <%= govuk_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), button: true %>
+  </div>
+</div>

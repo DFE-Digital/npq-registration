@@ -100,6 +100,14 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567890")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(status: 200, body: dqt_response_body(trn: "1234567890", date_of_birth: "1980-12-13"), headers: {})
+
     expect(page).to have_text("Qualified teacher check")
     page.fill_in "Teacher reference number (TRN)", with: "1234567890"
     page.fill_in "First name", with: "John"

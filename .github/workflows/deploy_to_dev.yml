@@ -60,6 +60,7 @@ jobs:
             --var DOCKER_IMAGE_ID="${{ steps.docker_build_push.outputs.digest }}" \
             --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_DEV }}" \
             --var GOVUK_NOTIFY_API_KEY="${{ secrets.GOVUK_NOTIFY_API_KEY_DEV }}" \
+            --var ECF_APP_BEARER_TOKEN="${{ secrets.ECF_APP_BEARER_TOKEN_DEV }}" \
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling

@@ -71,7 +71,7 @@ private
   def set_current_step(step)
     @current_step = steps.find { |s| s == step.to_sym }
 
-    raise InvalidStep if @current_step.nil?
+    raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
   end
 
   def steps
@@ -89,6 +89,7 @@ private
       contact_details
       confirm_email
       qualified_teacher_check
+      dqt_mismatch
       choose_your_npq
       choose_your_provider
       delivery_partner
