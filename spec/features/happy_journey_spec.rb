@@ -152,5 +152,17 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    page.click_button("Submit")
+
+    expect(page).to have_text("Account created")
+
+    expect(User.count).to eql(1)
+
+    user = User.last
+
+    expect(user.email).to eql("user@example.com")
+    expect(user.first_name).to eql("John")
+    expect(user.last_name).to eql("Doe")
+    expect(user.trn).to eql("1234567890")
   end
 end

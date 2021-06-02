@@ -96,6 +96,7 @@ private
       find_school
       choose_school
       check_answers
+      confirmation
     ]
   end
 

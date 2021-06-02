@@ -21,5 +21,9 @@
             )
           end
     end %>
+
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_submit "Submit" %>
+    <% end %>
   </div>
 </div>
