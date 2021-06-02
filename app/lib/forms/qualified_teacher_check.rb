@@ -2,7 +2,7 @@ module Forms
   class QualifiedTeacherCheck < Base
     include ActiveRecord::AttributeAssignment
 
-    attr_accessor :trn, :first_name, :last_name
+    attr_accessor :trn, :first_name, :last_name, :national_insurance_number
 
     attr_reader :date_of_birth
 
@@ -21,6 +21,7 @@ module Forms
         first_name
         last_name
         date_of_birth
+        national_insurance_number
       ]
     end
 
