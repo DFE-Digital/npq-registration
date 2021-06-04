@@ -19,6 +19,10 @@ class School < ApplicationRecord
   def in_england?
     return if establishment_type_code == "30" # Welsh establishment
     return if la_code == "673" # "Vale of Glamorgan"
+    return if la_code == "702" # "BFPO Overseas Establishments"
+    return if la_code == "000" # "Does not apply"
+    return if la_code == "704" # "Fieldwork Overseas Establishments"
+    return if la_code == "708" # "Gibraltar Overseas Establishments"
 
     true
   end

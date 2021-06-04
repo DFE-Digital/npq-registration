@@ -25,5 +25,45 @@ RSpec.describe School do
         expect(subject.in_england?).to be_falsey
       end
     end
+
+    context "when school la_code is '702' (BFPO Overseas Establishments)" do
+      before do
+        subject.la_code = "702"
+      end
+
+      it "returns false" do
+        expect(subject.in_england?).to be_falsey
+      end
+    end
+
+    context "when school la_code is '000' (Does not apply)" do
+      before do
+        subject.la_code = "000"
+      end
+
+      it "returns false" do
+        expect(subject.in_england?).to be_falsey
+      end
+    end
+
+    context "when school la_code is '704' (Fieldwork Overseas Establishments)" do
+      before do
+        subject.la_code = "704"
+      end
+
+      it "returns false" do
+        expect(subject.in_england?).to be_falsey
+      end
+    end
+
+    context "when school la_code is '708' (Gibraltar Overseas Establishments)" do
+      before do
+        subject.la_code = "708"
+      end
+
+      it "returns false" do
+        expect(subject.in_england?).to be_falsey
+      end
+    end
   end
 end
