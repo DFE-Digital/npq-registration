@@ -46,6 +46,9 @@ RSpec.describe Services::ImportGiasSchools do
         expect(school.establishment_status_code).to eql(row["EstablishmentStatus (code)"])
         expect(school.establishment_status_name).to eql(row["EstablishmentStatus (name)"])
 
+        expect(school.establishment_type_code).to eql(row["TypeOfEstablishment (code)"])
+        expect(school.establishment_type_name).to eql(row["TypeOfEstablishment (name)"])
+
         expect(school.close_date ? school.close_date.strftime("%d-%m-%Y") : nil).to eql(row["CloseDate"])
         expect(school.ukprn).to eql(row["UKPRN"])
         expect(school.last_changed_date ? school.last_changed_date.strftime("%d-%m-%Y") : "").to eql(row["LastChangedDate"])

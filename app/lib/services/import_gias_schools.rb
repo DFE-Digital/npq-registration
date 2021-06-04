@@ -30,6 +30,9 @@ module Services
         establishment_status_code: row["EstablishmentStatus (code)"],
         establishment_status_name: row["EstablishmentStatus (name)"],
 
+        establishment_type_code: row["TypeOfEstablishment (code)"],
+        establishment_type_name: row["TypeOfEstablishment (name)"],
+
         close_date: row["CloseDate"],
         ukprn: row["UKPRN"],
         last_changed_date: row["LastChangedDate"],
