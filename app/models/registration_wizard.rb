@@ -47,8 +47,7 @@ class RegistrationWizard
     school = School.find_by(urn: store["school_urn"])
 
     array = []
-    array << OpenStruct.new(key: "First name", value: store["first_name"])
-    array << OpenStruct.new(key: "Last name", value: store["last_name"])
+    array << OpenStruct.new(key: "Full name", value: store["full_name"])
     array << OpenStruct.new(key: "TRN", value: store["trn"])
     array << OpenStruct.new(key: "Date of birth", value: dob.to_s(:long))
     array << OpenStruct.new(key: "Email", value: store["email"])

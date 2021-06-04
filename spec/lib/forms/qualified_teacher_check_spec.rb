@@ -4,8 +4,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:trn) }
     it { is_expected.to validate_length_of(:trn).is_at_least(7).is_at_most(10) }
-    it { is_expected.to validate_presence_of(:first_name) }
-    it { is_expected.to validate_presence_of(:last_name) }
+    it { is_expected.to validate_presence_of(:full_name) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
   end
 
@@ -13,8 +12,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     subject do
       described_class.new(
         trn: "1234567",
-        first_name: "John",
-        last_name: "Doe",
+        full_name: "John Doe",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
       )
@@ -38,7 +36,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "when DQT mismatch" do
       before do
-        subject.first_name = "Bob"
+        subject.full_name = "Bob"
         subject.national_insurance_number = ""
       end
 

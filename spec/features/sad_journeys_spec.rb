@@ -47,8 +47,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to have_text("Qualified teacher check")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
-    page.fill_in "First name", with: "John"
-    page.fill_in "Last name", with: "Doe"
+    page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
@@ -106,8 +105,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to have_text("Qualified teacher check")
     page.fill_in "Teacher reference number (TRN)", with: "1234567890"
-    page.fill_in "First name", with: "John"
-    page.fill_in "Last name", with: "Doe"
+    page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"

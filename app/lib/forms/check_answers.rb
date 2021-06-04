@@ -13,8 +13,7 @@ module Forms
 
       user.update!(
         trn: wizard.store["trn"],
-        first_name: wizard.store["first_name"],
-        last_name: wizard.store["last_name"],
+        full_name: wizard.store["full_name"],
       )
     end
   end

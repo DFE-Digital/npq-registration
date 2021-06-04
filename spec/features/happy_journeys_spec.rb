@@ -79,8 +79,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Qualified teacher check")
     page.fill_in "Teacher reference number (TRN)", with: "1234567890"
-    page.fill_in "First name", with: "John"
-    page.fill_in "Last name", with: "Doe"
+    page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
@@ -120,8 +119,7 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["First name"].value).to eql("John")
-    expect(check_answers_page.summary_list["Last name"].value).to eql("Doe")
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
@@ -177,8 +175,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Qualified teacher check")
     page.fill_in "Teacher reference number (TRN)", with: "1234567890"
-    page.fill_in "First name", with: "John"
-    page.fill_in "Last name", with: "Doe"
+    page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
@@ -224,8 +221,7 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["First name"].value).to eql("John")
-    expect(check_answers_page.summary_list["Last name"].value).to eql("Doe")
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
@@ -241,8 +237,7 @@ RSpec.feature "Happy journeys", type: :feature do
     user = User.last
 
     expect(user.email).to eql("user@example.com")
-    expect(user.first_name).to eql("John")
-    expect(user.last_name).to eql("Doe")
+    expect(user.full_name).to eql("John Doe")
     expect(user.trn).to eql("1234567890")
   end
 end

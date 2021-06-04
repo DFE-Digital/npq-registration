@@ -21,15 +21,10 @@
         label: { text: "Teacher reference number (TRN)" },
         hint: { text: "Your TRN is 7-10 characters long. It may include “/” or “RP”." } %>
 
-      <%= f.govuk_text_field :first_name,
-        width: 20,
-        label: { text: "First name" },
-        hint: { text: "Your first name exactly as it appears on the DQT" } %>
-
-      <%= f.govuk_text_field :last_name,
-        width: 20,
-        label: { text: "Last name" },
-        hint: { text: "Your surname exactly as it appears on the DQT" } %>
+      <%= f.govuk_text_field :full_name,
+        width: "three-quarters",
+        label: { text: "Full name" },
+        hint: { text: "Your full name exactly as it appears on the DQT" } %>
 
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
