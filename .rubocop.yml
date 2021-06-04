@@ -22,3 +22,6 @@ Rails/BulkChangeTable:
 
 Style/HashLikeCase:
   Enabled: false
+
+Rails/Delegate:
+  Enabled: false

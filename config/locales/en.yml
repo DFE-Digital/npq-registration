@@ -45,7 +45,7 @@ en:
               blank: Date of birth can't be blank
         forms/choose_your_npq:
           attributes:
-            npq:
+            course_id:
               blank: Choose a National Professional Qualification
         forms/choose_your_provider:
           attributes:

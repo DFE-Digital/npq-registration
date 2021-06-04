@@ -1,25 +1,12 @@
 module Forms
   class ChooseYourNpq < Base
-    OPTIONS = [
-      "NPQ Leading Teaching (NPQLT)",
-      "NPQ Leading Behaviour and Culture (NPQLBC)",
-      "NPQ Leading Teacher Development (NPQLTD)",
-      "NPQ for Senior Leadership (NPQSL)",
-      "NPQ for Headship (NPQH)",
-      "NPQ for Executive Leadership (NPQEL)",
-    ].each_with_index.map { |option, index|
-      OpenStruct.new(value: option,
-                     text: option,
-                     link_errors: index.zero?)
-    }.freeze
+    attr_accessor :course_id
 
-    attr_accessor :npq
-
-    validates :npq, presence: true
+    validates :course_id, presence: true
 
     def self.permitted_params
       %i[
-        npq
+        course_id
       ]
     end
 
@@ -36,11 +23,19 @@ module Forms
     end
 
     def studying_for_headship?
-      npq == "NPQ for Headship (NPQH)"
+      course.studying_for_headship?
     end
 
     def options
-      OPTIONS
+      Course.all.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       text: course.name,
+                       link_errors: index.zero?)
+      end
+    end
+
+    def course
+      Course.find(course_id)
     end
   end
 end

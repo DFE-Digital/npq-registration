@@ -8,7 +8,7 @@
 <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
   <%= f.govuk_error_summary %>
 
-  <%= f.govuk_radio_buttons_fieldset(:npq,
+  <%= f.govuk_radio_buttons_fieldset(:course_id,
         legend: {
           text: "Choose your NPQ",
           size: "xl",
@@ -16,7 +16,7 @@
         }
       ) do %>
     <% @form.options.each do |struct| %>
-      <%= f.govuk_radio_button :npq, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+      <%= f.govuk_radio_button :course_id, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
     <% end %>
   <% end %>
 

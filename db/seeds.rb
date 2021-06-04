@@ -1,7 +1,10 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+[
+  "NPQ Leading Teaching (NPQLT)",
+  "NPQ Leading Behaviour and Culture (NPQLBC)",
+  "NPQ Leading Teacher Development (NPQLTD)",
+  "NPQ for Senior Leadership (NPQSL)",
+  "NPQ for Headship (NPQH)",
+  "NPQ for Executive Leadership (NPQEL)",
+].each do |course_name|
+  Course.find_or_create_by!(name: course_name)
+end
