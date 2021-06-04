@@ -24,11 +24,19 @@ module Forms
     end
 
     def next_step
-      :choose_your_provider
+      if studying_for_headship?
+        :headteacher_duration
+      else
+        :choose_your_provider
+      end
     end
 
     def previous_step
       :qualified_teacher_check
+    end
+
+    def studying_for_headship?
+      npq == "NPQ for Headship (NPQH)"
     end
 
     def options

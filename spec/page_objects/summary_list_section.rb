@@ -8,4 +8,8 @@ class SummaryListSection < SitePrism::Section
 
     result
   end
+
+  def key?(key)
+    rows.find { |row| row.key == key }
+  end
 end

@@ -46,19 +46,26 @@ class RegistrationWizard
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
     school = School.find_by(urn: store["school_urn"])
 
-    [
-      OpenStruct.new(key: "First name", value: store["first_name"]),
-      OpenStruct.new(key: "Last name", value: store["last_name"]),
-      OpenStruct.new(key: "TRN", value: store["trn"]),
-      OpenStruct.new(key: "Date of birth", value: dob.to_s(:long)),
-      OpenStruct.new(key: "Email", value: store["email"]),
-      OpenStruct.new(key: "NPQ", value: store["npq"]),
-      OpenStruct.new(key: "Lead provider", value: store["provider"]),
-      OpenStruct.new(key: "School", value: school.name),
-    ]
+    array = []
+    array << OpenStruct.new(key: "First name", value: store["first_name"])
+    array << OpenStruct.new(key: "Last name", value: store["last_name"])
+    array << OpenStruct.new(key: "TRN", value: store["trn"])
+    array << OpenStruct.new(key: "Date of birth", value: dob.to_s(:long))
+    array << OpenStruct.new(key: "Email", value: store["email"])
+    array << OpenStruct.new(key: "NPQ", value: store["npq"])
+    array << OpenStruct.new(key: "Have you been a headteacher for two years or more?", value: store["headerteacher_over_two_years"]) if form_for_step(:choose_your_npq).studying_for_headship?
+    array << OpenStruct.new(key: "Lead provider", value: store["provider"])
+    array << OpenStruct.new(key: "School", value: school.name)
   end
 
 private
+
+  def form_for_step(step)
+    form_class = "Forms::#{step.to_s.camelcase}".constantize
+    hash = store.slice(*form_class.permitted_params.map(&:to_s))
+    hash.merge!(wizard: self)
+    form_class.new(hash)
+  end
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))
@@ -91,6 +98,7 @@ private
       qualified_teacher_check
       dqt_mismatch
       choose_your_npq
+      headteacher_duration
       choose_your_provider
       delivery_partner
       select_delivery_partner

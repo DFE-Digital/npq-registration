@@ -1,0 +1,28 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">How long have you been a headteacher?</h1>
+
+      <%= f.govuk_radio_buttons_fieldset(:headerteacher_over_two_years,
+            legend: {
+              text: "Have you been a headteacher for two years or more?",
+            }
+          ) do %>
+        <% @form.options.each do |struct| %>
+          <%= f.govuk_radio_button :headerteacher_over_two_years, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+        <% end %>
+      <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

@@ -114,7 +114,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your NPQ")
-    page.choose("NPQ for Headship (NPQH)")
+    page.choose("NPQ for Senior Leadership (NPQSL)")
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your provider")
