@@ -19,3 +19,6 @@ Rails/ApplicationController:
 Rails/BulkChangeTable:
   Exclude:
     - "db/migrate/*"
+
+Style/HashLikeCase:
+  Enabled: false

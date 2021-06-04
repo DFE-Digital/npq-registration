@@ -5,7 +5,7 @@ class RegistrationWizard
 
   attr_reader :current_step, :params, :store, :session
 
-  def initialize(current_step:, store:, params: {}, session:)
+  def initialize(current_step:, store:, session:, params: {})
     set_current_step(current_step)
     @params = params
     @store = store
