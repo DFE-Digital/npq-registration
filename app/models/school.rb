@@ -15,4 +15,11 @@ class School < ApplicationRecord
   def address_string
     address.join(", ")
   end
+
+  def in_england?
+    return if establishment_type_code == "30" # Welsh establishment
+    return if la_code == "673" # "Vale of Glamorgan"
+
+    true
+  end
 end

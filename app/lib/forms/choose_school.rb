@@ -14,6 +14,8 @@ module Forms
     def next_step
       if school_urn == "other" || school_urn.blank?
         :choose_school
+      elsif !school.in_england?
+        :school_not_in_england
       else
         :check_answers
       end
@@ -36,6 +38,10 @@ module Forms
     end
 
   private
+
+    def school
+      @school ||= School.find_by(urn: school_urn)
+    end
 
     def school_location
       wizard.store["school_location"]
