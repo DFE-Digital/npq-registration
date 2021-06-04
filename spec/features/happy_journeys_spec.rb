@@ -122,6 +122,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
+    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
@@ -179,6 +180,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number (optional)", with: "AB123456C"
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your NPQ")
@@ -224,6 +226,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
     expect(check_answers_page.summary_list["Have you been a headteacher for two years or more?"].value).to eql("Yes")
