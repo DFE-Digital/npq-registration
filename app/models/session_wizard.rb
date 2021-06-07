@@ -27,8 +27,8 @@ class SessionWizard
   end
 
   def save!
-    params.to_h.each do |k, v|
-      store[k] = v
+    form.attributes.each do |k, v|
+      store[k.to_s] = v
     end
 
     form.after_save

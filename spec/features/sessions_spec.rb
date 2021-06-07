@@ -17,7 +17,7 @@ RSpec.feature "Sessions", type: :feature do
 
     visit "/sign-in"
     expect(page).to have_content("Sign in")
-    page.fill_in "Email address", with: "user@example.com"
+    page.fill_in "Email address", with: " User@example.com "
     page.click_button "Sign in"
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
