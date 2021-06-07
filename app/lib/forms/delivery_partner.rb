@@ -19,7 +19,7 @@ module Forms
     end
 
     def lead_provider
-      @lead_provider ||= LeadProvider.find(wizard.store["provider"])
+      @lead_provider ||= LeadProvider.find(wizard.store["lead_provider_id"])
     end
   end
 end

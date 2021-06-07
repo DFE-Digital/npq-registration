@@ -1,12 +1,12 @@
 module Forms
   class ChooseYourProvider < Base
-    attr_accessor :provider
+    attr_accessor :lead_provider_id
 
-    validates :provider, presence: true
+    validates :lead_provider_id, presence: true
 
     def self.permitted_params
       %i[
-        provider
+        lead_provider_id
       ]
     end
 
