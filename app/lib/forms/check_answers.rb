@@ -15,6 +15,13 @@ module Forms
         trn: wizard.store["trn"],
         full_name: wizard.store["full_name"],
       )
+
+      user.applications.create!(
+        course_id: wizard.store["course_id"],
+        lead_provider_id: wizard.store["lead_provider_id"],
+        school_urn: wizard.store["school_urn"],
+        headerteacher_over_two_years: wizard.store["headerteacher_over_two_years"],
+      )
     end
   end
 end

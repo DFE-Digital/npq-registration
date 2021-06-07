@@ -244,5 +244,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(user.email).to eql("user@example.com")
     expect(user.full_name).to eql("John Doe")
     expect(user.trn).to eql("1234567890")
+
+    expect(user.applications.count).to eql(1)
+
+    visit "/account"
+
+    expect(page).to have_text("Teach First")
+    expect(page).to have_text("NPQ for Headship (NPQH)")
   end
 end

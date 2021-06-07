@@ -1,5 +1,21 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">NPQ applications</h1>
+
+    <%= render GovukComponent::SummaryList.new do |component| %>
+      <% current_user.applications.each do |application| %>
+        <% component.slot(
+          :row,
+          key: 'Course',
+          value: application.course.name
+        ) %>
+
+        <% component.slot(
+          :row,
+          key: 'Lead provider',
+          value: application.lead_provider.name
+        ) %>
+      <% end %>
+    <% end %>
   </div>
 </div>
