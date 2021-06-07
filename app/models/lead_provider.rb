@@ -1,0 +1,2 @@
+class LeadProvider < ApplicationRecord
+end

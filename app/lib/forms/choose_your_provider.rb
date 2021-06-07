@@ -1,21 +1,5 @@
 module Forms
   class ChooseYourProvider < Base
-    OPTIONS = [
-      "Ambition Institute",
-      "Best Practice Network",
-      "Church of England",
-      "Education Development Trust",
-      "Harris Federation",
-      "Leadership Learning South East",
-      "Teacher Development Trust",
-      "Teach First",
-      "UCL Institute of Education",
-    ].each_with_index.map { |option, index|
-      OpenStruct.new(value: option,
-                     text: option,
-                     link_errors: index.zero?)
-    }.freeze
-
     attr_accessor :provider
 
     validates :provider, presence: true
@@ -35,7 +19,11 @@ module Forms
     end
 
     def options
-      OPTIONS
+      LeadProvider.all.each_with_index.map do |provider, index|
+        OpenStruct.new(value: provider.id,
+                       text: provider.name,
+                       link_errors: index.zero?)
+      end
     end
   end
 end
