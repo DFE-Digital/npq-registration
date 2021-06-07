@@ -18,8 +18,8 @@ module Forms
       :choose_your_provider
     end
 
-    def provider
-      wizard.store["provider"]
+    def lead_provider
+      @lead_provider ||= LeadProvider.find(wizard.store["provider"])
     end
   end
 end

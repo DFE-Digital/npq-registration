@@ -94,6 +94,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Your delivery partner")
+    expect(page).to have_text("Do you know which partner Teach First is using?")
     page.choose("Yes, I know which delivery partner will be used")
     page.click_button("Continue")
 
