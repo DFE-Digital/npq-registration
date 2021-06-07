@@ -17,5 +17,11 @@ module Forms
     end
 
     def after_save; end
+
+    def attributes
+      self.class.permitted_params.index_with do |key|
+        public_send(key)
+      end
+    end
   end
 end
