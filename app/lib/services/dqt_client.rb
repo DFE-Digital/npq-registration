@@ -12,7 +12,7 @@ module Services
       request = Net::HTTP::Get.new(uri)
       request["Authorization"] = "Bearer #{config.bearer_token}"
 
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 20) do |http|
         http.request(request)
       end
 
