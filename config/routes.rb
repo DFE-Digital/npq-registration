@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :users
-
   root "registration_wizard#show", step: "start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
