@@ -53,12 +53,16 @@ RSpec.describe Forms::ContactDetails, type: :model do
     let(:session) { {} }
     let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, session: session) }
 
-    subject { described_class.new(email: "user@example.com", wizard: wizard) }
+    subject { described_class.new(email: " User@example.com ", wizard: wizard) }
 
-    it "sends email" do
+    it "sends email to downcased version" do
       expect {
         subject.after_save
       }.to change(ActionMailer::Base.deliveries, :count).by(1)
+
+      email = ActionMailer::Base.deliveries.last
+
+      expect(email.to).to eql(["user@example.com"])
     end
   end
 end

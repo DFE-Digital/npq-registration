@@ -1,6 +1,6 @@
 module Forms
   class ContactDetails < Base
-    attr_accessor :email
+    attr_reader :email
 
     validates :email, presence: true, email: true
 
@@ -8,6 +8,12 @@ module Forms
       %i[
         email
       ]
+    end
+
+    def email=(value)
+      unless value.nil?
+        @email = value.strip.downcase
+      end
     end
 
     def next_step
