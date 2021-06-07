@@ -231,6 +231,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
     expect(check_answers_page.summary_list["Have you been a headteacher for two years or more?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
     page.click_button("Submit")
 
