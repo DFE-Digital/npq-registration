@@ -7,7 +7,6 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
 gem "delayed_job_active_record"
 gem "email_validator", require: "email_validator/strict"
-gem "foreman"
 gem "govuk-components"
 gem "govuk_design_system_formbuilder"
 gem "iconv"
