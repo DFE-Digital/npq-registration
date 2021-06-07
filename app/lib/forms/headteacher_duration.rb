@@ -20,10 +20,10 @@ module Forms
 
     def options
       [
-        OpenStruct.new(value: "Yes",
+        OpenStruct.new(value: "yes",
                        text: "Yes, I have been a headteacher for two years or more",
                        link_errors: true),
-        OpenStruct.new(value: "No",
+        OpenStruct.new(value: "no",
                        text: "No, I’m not a headteacher or have been a headteacher for less than two years",
                        link_errors: false),
       ]
