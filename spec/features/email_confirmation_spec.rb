@@ -15,6 +15,12 @@ RSpec.feature "Email confirmation", type: :feature do
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 
+    expect {
+      page.click_button("Request another email")
+    }.to change { ActionMailer::Base.deliveries.size }.by(1)
+    expect(page).to have_content("Another email with confirmation details has been sent to user@example.com")
+    expect(ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]).to eql(code)
+
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 

@@ -2,7 +2,8 @@ class RegistrationWizardController < ApplicationController
   def show
     @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
                                      store: store,
-                                     session: session)
+                                     session: session,
+                                     request: request)
     @form = @wizard.form
 
     render @wizard.current_step
@@ -12,7 +13,8 @@ class RegistrationWizardController < ApplicationController
     @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
                                      store: store,
                                      params: wizard_params,
-                                     session: session)
+                                     session: session,
+                                     request: request)
     @form = @wizard.form
 
     if @form.valid?

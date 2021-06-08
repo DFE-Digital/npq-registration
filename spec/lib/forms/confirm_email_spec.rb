@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe Forms::ConfirmEmail, type: :model do
   let(:store) { {} }
   let(:session) { {} }
-  let(:wizard) { RegistrationWizard.new(current_step: :confirm_email, store: store, session: session) }
+  let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
+  let(:wizard) { RegistrationWizard.new(current_step: :confirm_email, store: store, session: session, request: request) }
 
   before do
     subject.wizard = wizard

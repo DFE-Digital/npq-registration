@@ -5,24 +5,35 @@
   ) %>
 <% end %>
 
-<%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
-  <%= f.govuk_error_summary %>
-
-  <h1 class="govuk-heading-xl">Confirm your contact details</h1>
-
-  <p class="govuk-body">
-    To confirm your details, we've sent a code to <%= session["registration_store"]["email"] %>
-  </p>
-
-  <%= f.govuk_text_field :confirmation_code,
-    width: 10,
-    label: { text: "Enter your code" } %>
-
-  <%= f.govuk_submit %>
+<% if flash[:info] %>
+  <%= render GovukComponent::NotificationBanner.new(title: 'Information',
+                                                   ) do |notification_banner|
+    notification_banner.slot(:heading, text: flash[:info])
+  end %>
 <% end %>
 
-<h3 class="govuk-heading-s">
-  Not received an email?
-</h3>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
 
-<%= govuk_link_to 'Request another email', '' %>
+      <h1 class="govuk-heading-xl">Confirm your contact details</h1>
+
+      <p class="govuk-body">
+        To confirm your details, we've sent a code to <%= session["registration_store"]["email"] %>
+      </p>
+
+      <%= f.govuk_text_field :confirmation_code,
+        width: 10,
+        label: { text: "Enter your code" } %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+
+    <h3 class="govuk-heading-s">
+      Not received an email?
+    </h3>
+
+    <%= govuk_button_to "Request another email", registration_wizard_update_path(step: "resend-code"), class: "govuk-button--secondary", method: :patch %>
+  </div>
+</div>
