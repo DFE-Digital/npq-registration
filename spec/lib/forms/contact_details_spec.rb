@@ -18,7 +18,7 @@ RSpec.describe Forms::ContactDetails, type: :model do
   describe "#previous_step" do
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, session: session, request: request) }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, request: request) }
 
     before do
       subject.wizard = wizard
@@ -53,7 +53,7 @@ RSpec.describe Forms::ContactDetails, type: :model do
     let(:store) { {} }
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, session: session, request: request) }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, request: request) }
 
     subject { described_class.new(email: " User@example.com ", wizard: wizard) }
 
