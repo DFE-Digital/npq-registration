@@ -17,7 +17,11 @@ module Forms
     end
 
     def next_step
-      :confirm_email
+      if email_confirmed?
+        :qualified_teacher_check
+      else
+        :confirm_email
+      end
     end
 
     def previous_step
@@ -37,8 +41,14 @@ module Forms
       ConfirmEmailMailer.confirmation_code_mail(to: email, code: code).deliver_now
     end
 
+  private
+
     def code
       @code ||= Services::OtpCodeGenerator.new.call
+    end
+
+    def email_confirmed?
+      email == wizard.store["confirmed_email"]
     end
   end
 end

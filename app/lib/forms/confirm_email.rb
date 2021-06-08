@@ -23,9 +23,15 @@ module Forms
       user = User.find_or_create_by!(email: wizard.store["email"])
       # TODO: protect against session fixation
       wizard.session["user_id"] = user.id
+      wizard.store["confirmed_email"] = user.email
+      clear_entered_code
     end
 
   private
+
+    def clear_entered_code
+      wizard.store.delete("confirmation_code")
+    end
 
     def validate_confirmation_code_is_correct
       if confirmation_code != wizard.store["generated_confirmation_code"]

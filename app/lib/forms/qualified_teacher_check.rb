@@ -38,7 +38,7 @@ module Forms
     end
 
     def previous_step
-      :confirm_email
+      :contact_details
     end
   end
 end
