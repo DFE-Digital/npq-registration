@@ -55,7 +55,7 @@
 
     <div class="govuk-width-container">
       <%= render GovukComponent::PhaseBanner.new(
-        phase: 'Alpha',
+        phase_tag: { text: 'Alpha' },
         text: "This is a new service – your #{govuk_link_to("feedback", "#")} will help us to improve it.".html_safe
       ) %>
     </div>
