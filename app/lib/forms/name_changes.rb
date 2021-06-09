@@ -1,8 +1,10 @@
 module Forms
   class NameChanges < Base
+    VALID_CHANGED_NAME_OPTIONS = %w[yes no].freeze
+
     attr_accessor :changed_name
 
-    validates :changed_name, presence: true
+    validates :changed_name, presence: true, inclusion: { in: VALID_CHANGED_NAME_OPTIONS }
 
     def self.permitted_params
       %i[
