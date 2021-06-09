@@ -3,6 +3,7 @@ module Forms
     attr_accessor :lead_provider_id
 
     validates :lead_provider_id, presence: true
+    validate :validate_lead_provider_exists
 
     def self.permitted_params
       %i[
@@ -23,6 +24,18 @@ module Forms
         OpenStruct.new(value: provider.id,
                        text: provider.name,
                        link_errors: index.zero?)
+      end
+    end
+
+  private
+
+    def lead_provider
+      LeadProvider.find_by(id: lead_provider_id)
+    end
+
+    def validate_lead_provider_exists
+      if lead_provider.blank?
+        errors.add(:lead_provider_id, :invalid)
       end
     end
   end
