@@ -2,7 +2,7 @@ module Forms
   class FindSchool < Base
     attr_accessor :school_location
 
-    validates :school_location, presence: true
+    validates :school_location, presence: true, length: { maximum: 64 }
 
     def self.permitted_params
       %i[
