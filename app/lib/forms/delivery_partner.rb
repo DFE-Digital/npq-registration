@@ -1,8 +1,10 @@
 module Forms
   class DeliveryPartner < Base
+    VALID_DELIVERY_PARTNER_KNOWLEDGE_OPTIONS = %w[yes no].freeze
+
     attr_accessor :delivery_partner_knowledge
 
-    validates :delivery_partner_knowledge, presence: true
+    validates :delivery_partner_knowledge, presence: true, inclusion: { in: VALID_DELIVERY_PARTNER_KNOWLEDGE_OPTIONS }
 
     def self.permitted_params
       %i[
