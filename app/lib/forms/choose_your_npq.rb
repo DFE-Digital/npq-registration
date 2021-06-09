@@ -3,6 +3,7 @@ module Forms
     attr_accessor :course_id
 
     validates :course_id, presence: true
+    validate :validate_course_exists
 
     def self.permitted_params
       %i[
@@ -35,7 +36,15 @@ module Forms
     end
 
     def course
-      Course.find(course_id)
+      Course.find_by(id: course_id)
+    end
+
+  private
+
+    def validate_course_exists
+      if course.blank?
+        errors.add(:course_id, :invalid)
+      end
     end
   end
 end

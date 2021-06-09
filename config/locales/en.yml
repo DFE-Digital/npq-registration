@@ -47,6 +47,7 @@ en:
           attributes:
             course_id:
               blank: Choose a National Professional Qualification
+              invalid: Choose a valid National Professional Qualification
         forms/choose_your_provider:
           attributes:
             provider:
