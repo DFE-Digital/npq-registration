@@ -1,8 +1,10 @@
 module Forms
   class HeadteacherDuration < Base
+    VALID_HEADERTEACHER_OVER_TWO_YEARS_OPTIONS = %w[yes no].freeze
+
     attr_accessor :headerteacher_over_two_years
 
-    validates :headerteacher_over_two_years, presence: true
+    validates :headerteacher_over_two_years, presence: true, inclusion: { in: VALID_HEADERTEACHER_OVER_TWO_YEARS_OPTIONS }
 
     def self.permitted_params
       %i[
