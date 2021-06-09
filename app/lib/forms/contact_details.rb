@@ -2,7 +2,7 @@ module Forms
   class ContactDetails < Base
     attr_reader :email
 
-    validates :email, presence: true, email: true
+    validates :email, presence: true, email: true, length: { maximum: 128 }
 
     def self.permitted_params
       %i[

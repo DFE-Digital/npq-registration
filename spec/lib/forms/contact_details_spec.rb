@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe Forms::ContactDetails, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to validate_length_of(:email).is_at_most(128) }
 
     it "validates email addresses" do
       subject.email = "notvalid@example"
