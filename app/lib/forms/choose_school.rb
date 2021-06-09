@@ -2,6 +2,9 @@ module Forms
   class ChooseSchool < Base
     attr_accessor :school_name, :school_urn
 
+    validates :school_urn, format: { with: /\A\d{6}\z/, unless: -> { school_urn.blank? || school_urn == "other" } }
+    validates :school_name, length: { maximum: 64 }
+
     validate :validate_school_name_returns_results
 
     def self.permitted_params
