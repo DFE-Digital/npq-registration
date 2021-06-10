@@ -1,8 +1,10 @@
 module Forms
   class UpdatedName < Base
+    VALID_UPDATED_NAME_OPTIONS = %w[yes no not-sure].freeze
+
     attr_accessor :updated_name
 
-    validates :updated_name, presence: true
+    validates :updated_name, presence: true, inclusion: { in: VALID_UPDATED_NAME_OPTIONS }
 
     def self.permitted_params
       %i[
