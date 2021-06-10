@@ -5,7 +5,31 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     it { is_expected.to validate_presence_of(:trn) }
     it { is_expected.to validate_length_of(:trn).is_at_least(7).is_at_most(10) }
     it { is_expected.to validate_presence_of(:full_name) }
+    it { is_expected.to validate_length_of(:full_name).is_at_most(128) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
+    it { is_expected.to validate_length_of(:national_insurance_number).is_at_most(9) }
+
+    describe "#date_of_birth" do
+      it "must be in the past" do
+        subject.date_of_birth = 1.week.from_now
+        subject.valid?
+        expect(subject.errors[:date_of_birth]).to be_present
+
+        subject.date_of_birth = 20.years.ago
+        subject.valid?
+        expect(subject.errors[:date_of_birth]).to be_blank
+      end
+
+      it "must be a valid date" do
+        subject.date_of_birth = { 3 => 1, 2 => 13, 1 => 1990 }
+        subject.valid?
+        expect(subject.errors.of_kind?(:date_of_birth, :invalid)).to be_truthy
+
+        subject.date_of_birth = { 3 => 1, 2 => 12, 1 => 1990 }
+        subject.valid?
+        expect(subject.errors.of_kind?(:date_of_birth, :invalid)).to be_falsey
+      end
+    end
   end
 
   describe "#next_step" do
