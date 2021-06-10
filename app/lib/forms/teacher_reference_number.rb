@@ -1,8 +1,10 @@
 module Forms
   class TeacherReferenceNumber < Base
+    VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes no-dont-know no-dont-have].freeze
+
     attr_accessor :trn_knowledge
 
-    validates :trn_knowledge, presence: true
+    validates :trn_knowledge, presence: true, inclusion: { in: VALID_TRN_KNOWLEDGE_OPTIONS }
 
     def self.permitted_params
       %i[
