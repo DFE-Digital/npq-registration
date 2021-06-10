@@ -2,7 +2,7 @@ module Forms
   class SignInCode < Base
     attr_accessor :code
 
-    validates :code, presence: true
+    validates :code, presence: true, length: { is: 6 }
     validate :validate_correct_code
 
     def self.permitted_params

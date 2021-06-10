@@ -26,6 +26,8 @@ RSpec.describe Forms::SignInCode, type: :model do
       it { is_expected.to validate_presence_of(:code) }
     end
 
+    it { is_expected.to validate_length_of(:code).is_equal_to(6) }
+
     context "when correct code given" do
       let(:user) { User.create!(email: "user@example.com", otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
       let(:code) { "123456" }
