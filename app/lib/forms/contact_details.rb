@@ -17,7 +17,11 @@ module Forms
     end
 
     def next_step
-      if email_confirmed?
+      if changing_answer? && !email_confirmed?
+        :confirm_email
+      elsif changing_answer? && no_answers_will_change?
+        :check_answers
+      elsif email_confirmed?
         :qualified_teacher_check
       else
         :confirm_email

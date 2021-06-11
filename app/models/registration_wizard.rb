@@ -51,15 +51,41 @@ class RegistrationWizard
     school = School.find_by(urn: store["school_urn"])
 
     array = []
-    array << OpenStruct.new(key: "Full name", value: store["full_name"])
-    array << OpenStruct.new(key: "TRN", value: store["trn"])
-    array << OpenStruct.new(key: "Date of birth", value: dob.to_s(:long))
-    array << OpenStruct.new(key: "National Insurance number", value: store["national_insurance_number"]) if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-    array << OpenStruct.new(key: "Email", value: store["email"])
-    array << OpenStruct.new(key: "NPQ", value: form_for_step(:choose_your_npq).course.name)
-    array << OpenStruct.new(key: "Have you been a headteacher for two years or more?", value: store["headerteacher_over_two_years"].humanize) if form_for_step(:choose_your_npq).studying_for_headship?
-    array << OpenStruct.new(key: "Lead provider", value: form_for_step(:delivery_partner).lead_provider.name)
-    array << OpenStruct.new(key: "School", value: school.name)
+    array << OpenStruct.new(key: "Full name",
+                            value: store["full_name"],
+                            change_step: :qualified_teacher_check)
+    array << OpenStruct.new(key: "TRN",
+                            value: store["trn"],
+                            change_step: :qualified_teacher_check)
+    array << OpenStruct.new(key: "Date of birth",
+                            value: dob.to_s(:long),
+                            change_step: :qualified_teacher_check)
+
+    if form_for_step(:qualified_teacher_check).national_insurance_number.present?
+      array << OpenStruct.new(key: "National Insurance number",
+                              value: store["national_insurance_number"],
+                              change_step: :qualified_teacher_check)
+    end
+
+    array << OpenStruct.new(key: "Email",
+                            value: store["confirmed_email"],
+                            change_step: :contact_details)
+    array << OpenStruct.new(key: "NPQ",
+                            value: form_for_step(:choose_your_npq).course.name,
+                            change_step: :choose_your_npq)
+
+    if form_for_step(:choose_your_npq).studying_for_headship?
+      array << OpenStruct.new(key: "Have you been a headteacher for two years or more?",
+                              value: store["headerteacher_over_two_years"].humanize,
+                              change_step: :headteacher_duration)
+    end
+
+    array << OpenStruct.new(key: "Lead provider",
+                            value: form_for_step(:delivery_partner).lead_provider.name,
+                            change_step: :choose_your_provider)
+    array << OpenStruct.new(key: "School",
+                            value: school.name,
+                            change_step: :find_school)
   end
 
 private

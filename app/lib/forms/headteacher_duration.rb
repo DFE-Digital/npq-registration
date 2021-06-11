@@ -13,7 +13,11 @@ module Forms
     end
 
     def next_step
-      :choose_your_provider
+      if changing_answer?
+        :check_answers
+      else
+        :choose_your_provider
+      end
     end
 
     def previous_step

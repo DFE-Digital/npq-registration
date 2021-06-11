@@ -12,7 +12,15 @@ module Forms
     end
 
     def next_step
-      if studying_for_headship?
+      if changing_answer?
+        if no_answers_will_change?
+          :check_answers
+        elsif studying_for_headship?
+          :headteacher_duration
+        else
+          :check_answers
+        end
+      elsif studying_for_headship?
         :headteacher_duration
       else
         :choose_your_provider

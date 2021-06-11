@@ -12,7 +12,11 @@ module Forms
     end
 
     def next_step
-      :qualified_teacher_check
+      if changing_answer?
+        :check_answers
+      else
+        :qualified_teacher_check
+      end
     end
 
     def previous_step

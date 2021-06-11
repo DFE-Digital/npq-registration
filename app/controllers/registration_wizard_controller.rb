@@ -3,7 +3,9 @@ class RegistrationWizardController < ApplicationController
     @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
                                      store: store,
                                      request: request)
+
     @form = @wizard.form
+    @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     render @wizard.current_step
   end
@@ -14,11 +16,16 @@ class RegistrationWizardController < ApplicationController
                                      params: wizard_params,
                                      request: request)
     @form = @wizard.form
+    @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     if @form.valid?
-      @wizard.save!
+      if @form.changing_answer? && @form.next_step != :check_answers
+        redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
+      else
+        redirect_to registration_wizard_show_path(@wizard.next_step_path)
+      end
 
-      redirect_to registration_wizard_show_path(@wizard.next_step_path)
+      @wizard.save!
     else
       render @wizard.current_step
     end

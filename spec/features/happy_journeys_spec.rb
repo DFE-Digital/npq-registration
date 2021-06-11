@@ -233,6 +233,15 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Have you been a headteacher for two years or more?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    page.click_link("Change Have you been a headteacher for two years or more?")
+
+    expect(page).to have_text("How long have you been a headteacher?")
+    page.choose("No, I’m not a headteacher or have been a headteacher for less than two years")
+    page.click_button("Continue")
+
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Have you been a headteacher for two years or more?"].value).to eql("No")
+
     page.click_button("Submit")
 
     expect(page).to have_text("Account created")

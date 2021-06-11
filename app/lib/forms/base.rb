@@ -23,5 +23,21 @@ module Forms
         public_send(key)
       end
     end
+
+    def flag_as_changing_answer
+      @changing_answer = true
+    end
+
+    def changing_answer?
+      @changing_answer
+    end
+
+    def answers_will_change?
+      !no_answers_will_change?
+    end
+
+    def no_answers_will_change?
+      wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
+    end
   end
 end

@@ -6,6 +6,10 @@
 <% end %>
 
 <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+  <% if @form.changing_answer? %>
+    <%= hidden_field_tag :changing_answer, "1" %>
+  <% end %>
+
   <%= f.govuk_error_summary %>
 
   <%= f.govuk_radio_buttons_fieldset(:course_id,

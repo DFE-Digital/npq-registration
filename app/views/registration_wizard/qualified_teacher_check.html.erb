@@ -8,6 +8,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @form, url: registration_wizard_update_path, scope: 'registration_wizard', method: :patch do |f| %>
+      <% if @form.changing_answer? %>
+        <%= hidden_field_tag :changing_answer, "1" %>
+      <% end %>
+
       <%= f.govuk_error_summary %>
 
       <h1 class="govuk-heading-xl">Qualified teacher check</h1>

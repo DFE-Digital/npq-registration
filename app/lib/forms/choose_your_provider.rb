@@ -12,7 +12,11 @@ module Forms
     end
 
     def next_step
-      :delivery_partner
+      if changing_answer?
+        :check_answers
+      else
+        :delivery_partner
+      end
     end
 
     def previous_step

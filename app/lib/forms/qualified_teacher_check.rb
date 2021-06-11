@@ -37,7 +37,11 @@ module Forms
         date_of_birth: date_of_birth,
         national_insurance_number: national_insurance_number,
       )
-        :choose_your_npq
+        if changing_answer?
+          :check_answers
+        else
+          :choose_your_npq
+        end
       else
         :dqt_mismatch
       end
