@@ -1,0 +1,25 @@
+---
+applications:
+- name: npq-registration-staging
+  processes:
+  - type: web
+    disk_quota: 2G
+    memory: 2G
+    health-check-http-endpoint: /healthcheck.json
+    health-check-type: http
+    health-check-invocation-timeout: 10
+    instances: 2
+  services:
+    - npq-registration-staging-db
+  env:
+    DOCKER_IMAGE_ID: ((DOCKER_IMAGE_ID))
+    ENV: $HOME/.profile
+    SERVICE_ENV: staging
+    SECRET_KEY_BASE: ((SECRET_KEY_BASE))
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
+    GOVUK_NOTIFY_API_KEY: ((GOVUK_NOTIFY_API_KEY))
+    GOOGLE_TAG_MANAGER_ID: "GTM-N58Z5PG"
+    GOOGLE_ANALYTICS_ID: "G-G3823VRN6N"
+    ECF_APP_BASE_URL: "https://ecf-staging.london.cloudapps.digital"
+    ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
