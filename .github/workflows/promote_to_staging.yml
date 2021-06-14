@@ -1,5 +1,7 @@
 name: Promote to staging
 
+on: workflow_dispatch
+
 jobs:
   deploy:
     runs-on: ubuntu-20.04
