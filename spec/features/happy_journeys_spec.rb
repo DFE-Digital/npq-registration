@@ -93,14 +93,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
-    expect(page).to have_text("Your delivery partner")
-    expect(page).to have_text("Do you know which partner Teach First is using?")
-    page.choose("Yes, I know which delivery partner will be used")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Select your delivery partner")
-    page.click_button("Continue")
-
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to have_text("Find your school")
@@ -194,13 +186,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Choose your provider")
     page.choose("Teach First")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Your delivery partner")
-    page.choose("Yes, I know which delivery partner will be used")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Select your delivery partner")
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")

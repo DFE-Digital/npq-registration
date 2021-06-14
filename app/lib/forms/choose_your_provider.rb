@@ -15,7 +15,7 @@ module Forms
       if changing_answer?
         :check_answers
       else
-        :delivery_partner
+        :find_school
       end
     end
 
@@ -31,11 +31,11 @@ module Forms
       end
     end
 
-  private
-
     def lead_provider
       LeadProvider.find_by(id: lead_provider_id)
     end
+
+  private
 
     def validate_lead_provider_exists
       if lead_provider.blank?

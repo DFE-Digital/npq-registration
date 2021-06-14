@@ -81,7 +81,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Lead provider",
-                            value: form_for_step(:delivery_partner).lead_provider.name,
+                            value: form_for_step(:choose_your_provider).lead_provider.name,
                             change_step: :choose_your_provider)
     array << OpenStruct.new(key: "School",
                             value: school.name,
@@ -131,8 +131,6 @@ private
       choose_your_npq
       headteacher_duration
       choose_your_provider
-      delivery_partner
-      select_delivery_partner
       find_school
       choose_school
       school_not_in_england

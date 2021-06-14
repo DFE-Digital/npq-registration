@@ -119,13 +119,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
-    expect(page).to have_text("Your delivery partner")
-    page.choose("Yes, I know which delivery partner will be used")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Select your delivery partner")
-    page.click_button("Continue")
-
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
     expect(page).to have_text("Find your school")

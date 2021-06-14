@@ -57,10 +57,6 @@ en:
             lead_provider_id:
               blank: Choose a provider
               invalid: Choose a valid provider
-        forms/delivery_partner:
-          attributes:
-            delivery_partner_knowledge:
-              blank: Choose whether or not you know your delivery partner?
         forms/sign_in:
           attributes:
             email:
