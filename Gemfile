@@ -16,6 +16,8 @@ gem "pg_search"
 gem "puma", "~> 5.3"
 gem "rails", "~> 6.1.3"
 gem "webpacker"
+gem "lograge", ">= 0.11.2"
+gem "logstash-event"
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]

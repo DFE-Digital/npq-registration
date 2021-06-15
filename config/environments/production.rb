@@ -72,10 +72,28 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new($stdout)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  # Logging
+  config.log_level = :info
+  config.log_tags = [:request_id] # Prepend all log lines with the following tags.
+  logger = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter = config.log_formatter
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+  config.active_record.logger = nil # Don't log SQL in production
+
+  # Use Lograge for cleaner logging
+  config.lograge.enabled = true
+  config.lograge.base_controller_class = ["ActionController::API", "ActionController::Base"]
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
+  config.lograge.ignore_actions = []
+  config.lograge.logger = ActiveSupport::Logger.new($stdout)
+
+  # Include params in logs: https://github.com/roidrage/lograge#what-it-doesnt-do
+  config.lograge.custom_options = lambda do |event|
+    exceptions = %w[controller action format id]
+    {
+      params: event.payload[:params].except(*exceptions),
+      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
+    }
   end
 
   # Do not dump schema after migrations.
