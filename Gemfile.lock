@@ -99,6 +99,19 @@ GEM
     email_validator (2.2.3)
       activemodel
     erubi (1.10.0)
+    faraday (1.4.2)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.1.0)
     ffi (1.15.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -145,6 +158,7 @@ GEM
     mini_portile2 (2.5.3)
     minitest (5.14.4)
     msgpack (1.4.2)
+    multipart-post (2.1.1)
     nio4r (2.5.7)
     nokogiri (1.11.7)
       mini_portile2 (~> 2.5.0)
@@ -252,6 +266,7 @@ GEM
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-progressbar (1.11.0)
+    ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
@@ -266,6 +281,16 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (3.0.0)
+    sentry-rails (4.5.1)
+      railties (>= 5.0)
+      sentry-ruby-core (~> 4.5.0)
+    sentry-ruby (4.5.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      faraday (>= 1.0)
+      sentry-ruby-core (= 4.5.1)
+    sentry-ruby-core (4.5.1)
+      concurrent-ruby
+      faraday
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
     simplecov (0.21.2)
@@ -344,6 +369,8 @@ DEPENDENCIES
   rspec-rails (~> 5.0.1)
   rubocop-govuk
   scss_lint-govuk
+  sentry-rails
+  sentry-ruby
   shoulda-matchers (~> 4.5)
   simplecov
   site_prism

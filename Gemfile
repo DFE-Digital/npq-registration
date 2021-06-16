@@ -15,9 +15,12 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma", "~> 5.3"
 gem "rails", "~> 6.1.3"
-gem "webpacker"
 gem "lograge", ">= 0.11.2"
 gem "logstash-event"
+gem "webpacker"
+gem "sentry-rails"
+gem "sentry-ruby"
+
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
