@@ -130,6 +130,10 @@ GEM
     i18n-debug (1.2.0)
       i18n (< 2)
     iconv (1.0.8)
+    json_api_client (0.9.6)
+      activesupport
+      addressable (~> 2.2)
+      faraday (>= 0.8.0)
     jwt (2.2.3)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -357,6 +361,7 @@ DEPENDENCIES
   govuk_design_system_formbuilder
   i18n-debug
   iconv
+  json_api_client
   listen (>= 3.0.5, < 3.6)
   lograge (>= 0.11.2)
   logstash-event
