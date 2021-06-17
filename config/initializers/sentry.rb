@@ -2,7 +2,6 @@
 
 Sentry.init do |config|
   config.dsn = Rails.env.production? ? ENV["SENTRY_DSN"] : "disabled"
-  config.enabled_environments = %w[production]
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = ENV["SHA"]
 
