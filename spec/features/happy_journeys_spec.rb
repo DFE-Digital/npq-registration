@@ -238,6 +238,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(user.email).to eql("user@example.com")
     expect(user.full_name).to eql("John Doe")
     expect(user.trn).to eql("1234567890")
+    expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
 
     expect(user.applications.count).to eql(1)
 

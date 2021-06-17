@@ -14,6 +14,7 @@ module Forms
       user.update!(
         trn: wizard.store["trn"],
         full_name: wizard.store["full_name"],
+        date_of_birth: wizard.store["date_of_birth"],
       )
 
       user.applications.create!(
