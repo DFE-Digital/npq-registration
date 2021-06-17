@@ -11,7 +11,7 @@ module Services
         teacher_reference_number: user.trn,
         date_of_birth: user.date_of_birth,
         school_urn: application.school_urn,
-        headteacher_status: "no", # TODO: fixme
+        headteacher_status: application.headteacher_status,
         relationships: {
           user: ecf_user,
           npq_course: ecf_npq_course,
