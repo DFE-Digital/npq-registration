@@ -11,7 +11,7 @@ RSpec.describe Services::NpqProfileCreator do
       course: course,
       lead_provider: lead_provider,
       school_urn: "654321",
-      headerteacher_over_two_years: "no", # TODO: fixme
+      headteacher_status: "no",
     )
   end
 

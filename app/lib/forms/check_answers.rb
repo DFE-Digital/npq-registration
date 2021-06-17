@@ -21,7 +21,7 @@ module Forms
         course_id: wizard.store["course_id"],
         lead_provider_id: wizard.store["lead_provider_id"],
         school_urn: wizard.store["school_urn"],
-        headerteacher_over_two_years: wizard.store["headerteacher_over_two_years"],
+        headteacher_status: wizard.store["headteacher_status"],
       )
     end
   end

@@ -12,13 +12,13 @@
 
       <h1 class="govuk-heading-xl">How long have you been a headteacher?</h1>
 
-      <%= f.govuk_radio_buttons_fieldset(:headerteacher_over_two_years,
+      <%= f.govuk_radio_buttons_fieldset(:headteacher_status,
             legend: {
               text: "Have you been a headteacher for two years or more?",
             }
           ) do %>
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :headerteacher_over_two_years, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+          <%= f.govuk_radio_button :headteacher_status, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
         <% end %>
       <% end %>
 

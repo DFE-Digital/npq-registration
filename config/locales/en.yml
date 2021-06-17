@@ -76,5 +76,5 @@ en:
               blank: School location can't be blank
         forms/headteacher_duration:
           attributes:
-            headerteacher_over_two_years:
+            headteacher_status:
               blank: Choose whether or not you have been a headteacher for over two years
