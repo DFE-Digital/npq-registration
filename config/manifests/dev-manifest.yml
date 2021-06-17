@@ -24,3 +24,4 @@ applications:
     GOOGLE_ANALYTICS_ID: "G-4QYNT5ZME8"
     ECF_APP_BASE_URL: "https://ecf-dev.london.cloudapps.digital"
     ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
+    SENTRY_DSN: ((SENTRY_DSN))
