@@ -45,7 +45,6 @@ RUN rm -rf node_modules log tmp && \
 
 # Build runtime image
 FROM ruby:2.7.2-alpine as production
-ARG SHA
 
 # The application runs from /app
 WORKDIR /app

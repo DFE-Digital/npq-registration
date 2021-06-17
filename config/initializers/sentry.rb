@@ -3,7 +3,6 @@
 Sentry.init do |config|
   config.dsn = Rails.env.production? ? ENV["SENTRY_DSN"] : "disabled"
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
-  config.release = ENV["SHA"]
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.before_send = lambda do |event, _hint|
