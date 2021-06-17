@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Services::NpqProfileCreator do
-  let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe", ecf_id: "123", trn: "1234567") }
+  let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe", ecf_id: "123", trn: "1234567", date_of_birth: Date.new(1980, 12, 13)) }
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
 
@@ -44,7 +44,7 @@ RSpec.describe Services::NpqProfileCreator do
           },
           attributes: {
             teacher_reference_number: "1234567",
-            date_of_birth: Time.zone.today.iso8601, # TODO: fixme
+            date_of_birth: user.date_of_birth.iso8601,
             school_urn: application.school_urn,
             headteacher_status: "no",
           },

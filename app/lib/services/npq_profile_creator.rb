@@ -9,7 +9,7 @@ module Services
     def call
       profile = EcfApi::NpqProfile.new(
         teacher_reference_number: user.trn,
-        date_of_birth: Time.zone.today.iso8601, # TODO: fixme
+        date_of_birth: user.date_of_birth,
         school_urn: application.school_urn,
         headteacher_status: "no", # TODO: fixme
         relationships: {
