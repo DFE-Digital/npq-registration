@@ -11,17 +11,16 @@ gem "govuk-components"
 gem "govuk_design_system_formbuilder"
 gem "iconv"
 gem "json_api_client"
+gem "lograge", ">= 0.11.2"
+gem "logstash-event"
 gem "mail-notify"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma", "~> 5.3"
 gem "rails", "~> 6.1.3"
-gem "lograge", ">= 0.11.2"
-gem "logstash-event"
-gem "webpacker"
 gem "sentry-rails"
 gem "sentry-ruby"
-
+gem "webpacker"
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
