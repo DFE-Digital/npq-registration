@@ -9,7 +9,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       subject.valid?
       expect(subject.errors[:lead_provider_id]).to be_present
 
-      subject.lead_provider_id = Course.first.id
+      subject.lead_provider_id = LeadProvider.first.id
       subject.valid?
       expect(subject.errors[:lead_provider_id]).to be_blank
     end
