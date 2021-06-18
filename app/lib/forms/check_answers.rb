@@ -23,6 +23,8 @@ module Forms
         school_urn: wizard.store["school_urn"],
         headteacher_status: wizard.store["headteacher_status"],
       )
+
+      ApplicationSubmissionJob.perform_now(user: user)
     end
   end
 end

@@ -39,6 +39,7 @@ group :development do
 end
 
 group :test do
+  gem "factory_bot_rails"
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov", require: false
   gem "site_prism"
