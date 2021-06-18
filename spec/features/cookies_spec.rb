@@ -4,7 +4,7 @@ RSpec.feature "Cookies", type: :feature do
   scenario "view info about cookies" do
     visit "/"
     click_link("View cookies")
-    expect(page).to have_content("How we use cookies")
+    expect(page).to have_content("Cookies are small files saved on your phone, tablet or computer when you visit a website.")
   end
 
   scenario "when rejecting cookies" do
