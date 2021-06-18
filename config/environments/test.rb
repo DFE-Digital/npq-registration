@@ -47,4 +47,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.active_job.queue_adapter = :test
+
+  config.session_store :cookie_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
 end
