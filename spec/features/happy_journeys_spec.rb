@@ -121,7 +121,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
 
-    allow(ApplicationSubmissionJob).to receive(:perform_now).with(anything)
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     page.click_button("Submit")
   end
@@ -230,7 +230,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Have you been a headteacher for two years or more?"].value).to eql("No")
 
-    allow(ApplicationSubmissionJob).to receive(:perform_now).with(anything)
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     page.click_button("Submit")
 
