@@ -9,10 +9,10 @@ RSpec.feature "Back links", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
-    page.check("I agree my choices can be shared with my training provider")
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     page.click_link("Back")
-    expect(page).to have_checked_field("I agree my choices can be shared with my training provider")
+    expect(page).to have_checked_field("Yes, I agree my information can be shared")
   end
 end

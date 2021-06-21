@@ -11,8 +11,8 @@ RSpec.feature "Sad journeys", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
-    expect(page).to have_text("Share choices with training provider")
-    page.check("I agree my choices can be shared with my training provider")
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
@@ -73,8 +73,8 @@ RSpec.feature "Sad journeys", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
-    expect(page).to have_text("Share choices with training provider")
-    page.check("I agree my choices can be shared with my training provider")
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")

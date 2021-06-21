@@ -6,7 +6,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_link("Start now")
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
-    page.check("I agree my choices can be shared with my training provider")
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
