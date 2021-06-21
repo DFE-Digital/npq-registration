@@ -45,7 +45,7 @@ RSpec.feature "Sad journeys", type: :feature do
       )
       .to_return(status: 200, body: dqt_response_body, headers: {})
 
-    expect(page).to have_text("Qualified teacher check")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
@@ -56,7 +56,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_text("We cannot find your details")
     page.click_link("Try again")
 
-    expect(page).to have_text("Qualified teacher check")
+    expect(page).to have_text("Check your details")
   end
 
   scenario "school not in england" do
@@ -103,7 +103,7 @@ RSpec.feature "Sad journeys", type: :feature do
       )
       .to_return(status: 200, body: dqt_response_body(trn: "1234567890", date_of_birth: "1980-12-13"), headers: {})
 
-    expect(page).to have_text("Qualified teacher check")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567890"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"

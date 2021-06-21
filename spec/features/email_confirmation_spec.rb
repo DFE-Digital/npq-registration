@@ -25,7 +25,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_button("Continue")
 
     # goes back to email page and skips code page
-    expect(page).to have_content("Qualified teacher check")
+    expect(page).to have_content("Check your details")
     page.click_link("Back")
 
     # skips code page as email already confirmed
@@ -33,7 +33,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_button("Continue")
 
     # change email address
-    expect(page).to have_content("Qualified teacher check")
+    expect(page).to have_content("Check your details")
     page.click_link("Back")
     page.fill_in "Email address", with: "changed@example.com"
     page.click_button("Continue")
@@ -46,6 +46,6 @@ RSpec.feature "Email confirmation", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    expect(page).to have_content("Qualified teacher check")
+    expect(page).to have_content("Check your details")
   end
 end

@@ -10,21 +10,21 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Qualified teacher check</h1>
+      <h1 class="govuk-heading-xl">Check your details</h1>
 
       <p class="govuk-body">
-        We need to check your teacher details on the Database of Qualified Teachers (DQT) to ensure you qualify to study for a National Professional Qualification (NPQ).
+        We need to check your details on the Teaching Regulation Agency records to ensure you qualify to study for a National Professional Qualification (NPQ).
       </p>
 
       <%= f.govuk_text_field :trn,
         width: 10,
         label: { text: "Teacher reference number (TRN)" },
-        hint: { text: "Your TRN is 7-10 characters long. It may include “/” or “RP”." } %>
+        hint: { text: "Your TRN is 7-10 characters long. It may begin with “RP”." } %>
 
       <%= f.govuk_text_field :full_name,
         width: "three-quarters",
         label: { text: "Full name" },
-        hint: { text: "Your full name exactly as it appears on the DQT" } %>
+        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records" } %>
 
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
@@ -33,7 +33,8 @@
 
       <%= f.govuk_text_field :national_insurance_number,
         width: 10,
-        label: { text: "National Insurance number (optional)" } %>
+        label: { text: "National Insurance number (optional)" },
+        hint: { text: "This will help us match your details" } %>
 
       <%= f.govuk_submit %>
     <% end %>
