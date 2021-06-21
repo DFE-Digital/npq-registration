@@ -24,7 +24,7 @@ module Forms
         headteacher_status: wizard.store["headteacher_status"],
       )
 
-      ApplicationSubmissionJob.perform_now(user: user)
+      ApplicationSubmissionJob.perform_later(user: user)
 
       clear_answers_in_store
     end
