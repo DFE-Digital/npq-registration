@@ -13,7 +13,7 @@ applications:
     disk_quota: 2G
     health-check-type: process
     instances: 2
-    command: bundle exec jobs:work 
+    command: bundle exec rake jobs:work
   services:
     - npq-registration-prod-db
   env:
