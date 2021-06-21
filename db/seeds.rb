@@ -1,9 +1,4 @@
-case ENV["SERVICE_ENV"]
-when "production"
-  # TODO: awaiting data
-when "staging"
-  # TODO: awaiting data
-else
+def seed_courses!
   [
     { name: "NPQ Leading Teaching (NPQLT)", ecf_id: "15c52ed8-06b5-426e-81a2-c2664978a0dc" },
     { name: "NPQ Leading Behaviour and Culture (NPQLBC)", ecf_id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5" },
@@ -14,7 +9,9 @@ else
   ].each do |hash|
     Course.find_or_create_by!(name: hash[:name], ecf_id: hash[:ecf_id])
   end
+end
 
+def seed_lead_providers!
   [
     { name: "Ambition Institute", ecf_id: "9e35e998-c63b-4136-89c4-e9e18ddde0ea" },
     { name: "Best Practice Network", ecf_id: "57ba9e86-559f-4ff4-a6d2-4610c7259b67" },
@@ -29,3 +26,7 @@ else
     LeadProvider.find_or_create_by!(name: hash[:name], ecf_id: hash[:ecf_id])
   end
 end
+
+# IDs have been hard coded to be the same across all envs
+seed_courses!
+seed_lead_providers!
