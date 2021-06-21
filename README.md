@@ -17,6 +17,11 @@
 4. Run `bundle exec rails server` to launch the app on http://localhost:3000
 5. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
 
+## Importing schools
+
+- fire up a rails console and run the following
+- `Services::ImportGiasSchools.new.call`
+
 ## Running specs, linter(without auto correct) and annotate models and serializers
 ```
 bundle exec rake
