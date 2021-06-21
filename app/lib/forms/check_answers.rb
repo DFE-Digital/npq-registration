@@ -25,6 +25,14 @@ module Forms
       )
 
       ApplicationSubmissionJob.perform_now(user: user)
+
+      clear_answers_in_store
+    end
+
+  private
+
+    def clear_answers_in_store
+      wizard.store.clear
     end
   end
 end

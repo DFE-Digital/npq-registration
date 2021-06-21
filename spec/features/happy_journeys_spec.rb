@@ -251,5 +251,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Teach First")
     expect(page).to have_text("NPQ for Headship (NPQH)")
+
+    visit "/registration/share-provider"
+
+    expect(page).to have_unchecked_field("I agree my choices can be shared with my training provider")
   end
 end
