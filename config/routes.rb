@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resource :account
 
   get "/cookies", to: "pages#show", page: "cookies"
+  get "/privacy-policy", to: "pages#show", page: "privacy_policy"
 
   resource :cookie_preferences do
     member do
