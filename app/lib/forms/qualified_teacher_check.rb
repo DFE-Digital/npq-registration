@@ -37,12 +37,16 @@ module Forms
         date_of_birth: date_of_birth,
         national_insurance_number: national_insurance_number,
       )
+        mark_trn_as_verified
+
         if changing_answer?
           :check_answers
         else
           :choose_your_npq
         end
       else
+        mark_trn_as_unverified
+
         :dqt_mismatch
       end
     end
@@ -51,7 +55,23 @@ module Forms
       :contact_details
     end
 
+    def trn_verified?
+      @trn_verified
+    end
+
+    def after_save
+      wizard.store["trn_verified"] = trn_verified?
+    end
+
   private
+
+    def mark_trn_as_verified
+      @trn_verified = true
+    end
+
+    def mark_trn_as_unverified
+      @trn_verified = false
+    end
 
     def validate_date_of_birth_in_the_past?
       if date_of_birth && (date_of_birth > Time.zone.now)

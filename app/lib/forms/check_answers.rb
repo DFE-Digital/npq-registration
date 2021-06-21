@@ -9,10 +9,9 @@ module Forms
     end
 
     def after_save
-      user = User.find_by(email: wizard.store["email"])
-
       user.update!(
         trn: wizard.store["trn"],
+        trn_verified: wizard.store["trn_verified"],
         full_name: wizard.store["full_name"],
         date_of_birth: wizard.store["date_of_birth"],
       )
@@ -30,6 +29,10 @@ module Forms
     end
 
   private
+
+    def user
+      @user ||= User.find_by(email: wizard.store["email"])
+    end
 
     def clear_answers_in_store
       wizard.store.clear

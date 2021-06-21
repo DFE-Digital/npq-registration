@@ -9,6 +9,7 @@ module Services
     def call
       profile = EcfApi::NpqProfile.new(
         teacher_reference_number: user.trn,
+        teacher_reference_number_verified: user.trn_verified,
         date_of_birth: user.date_of_birth,
         school_urn: application.school_urn,
         headteacher_status: application.headteacher_status,

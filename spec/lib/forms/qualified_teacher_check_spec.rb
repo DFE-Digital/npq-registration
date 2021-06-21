@@ -56,6 +56,11 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "returns :choose_your_npq" do
         expect(subject.next_step).to eql(:choose_your_npq)
       end
+
+      it "marks trn_verified as truthy" do
+        subject.next_step
+        expect(subject.trn_verified?).to be_truthy
+      end
     end
 
     context "when DQT mismatch" do
@@ -66,6 +71,72 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "returns :dqt_mismatch" do
         expect(subject.next_step).to eql(:dqt_mismatch)
+      end
+
+      it "marks trn_verified as falsey" do
+        subject.next_step
+        expect(subject.trn_verified?).to be_falsey
+      end
+    end
+  end
+
+  describe "#after_save" do
+    let(:store) { {} }
+    let(:request) { nil }
+
+    let(:wizard) do
+      RegistrationWizard.new(
+        current_step: :qualified_teacher_check,
+        store: store,
+        request: request,
+      )
+    end
+
+    subject do
+      described_class.new(
+        trn: "1234567",
+        full_name: "John Doe",
+        date_of_birth: Date.parse("1960-12-13"),
+        national_insurance_number: "AB123456C",
+        wizard: wizard,
+      )
+    end
+
+    context "trn has been verified" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 200, body: dqt_response_body, headers: {})
+
+        subject.next_step
+      end
+
+      it "persists to store" do
+        subject.after_save
+        expect(wizard.store["trn_verified"]).to eql(true)
+      end
+    end
+
+    context "trn has not been verified" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 404, body: "", headers: {})
+
+        subject.next_step
+      end
+
+      it "persists to store" do
+        subject.after_save
+        expect(wizard.store["trn_verified"]).to eql(false)
       end
     end
   end
