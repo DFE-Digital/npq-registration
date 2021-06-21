@@ -59,22 +59,24 @@
       </div>
     </header>
 
-    <div class="govuk-width-container">
+    <aside class="govuk-width-container">
       <%= render GovukComponent::PhaseBanner.new(
         phase_tag: { text: 'Alpha' },
         text: "This is a new service – #{govuk_mail_to("continuing-professional-development@digital.education.gov.uk", "give feedback or report a problem", subject: "Feedback about Register for a National Professional Qualification (NPQ)")}".html_safe
       ) %>
-    </div>
+    </aside>
 
     <div class="govuk-width-container">
-      <%= content_for(:before_content) %>
+      <div role="navigation">
+        <%= content_for(:before_content) %>
+      </div>
 
       <main class="govuk-main-wrapper " id="main-content" role="main">
         <%= yield %>
       </main>
     </div>
 
-    <footer class="govuk-footer" role="contentinfo">
+    <footer class="govuk-footer">
       <div class="govuk-width-container ">
         <div class="govuk-footer__meta">
           <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">

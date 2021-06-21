@@ -17,11 +17,12 @@ RUN apk add --no-cache build-base yarn postgresql-dev
 # Install bundler to run bundle exec
 # This should be the same version as the Gemfile.lock
 RUN gem install bundler:2.1.4 --no-document
-RUN bundle config set without 'development test'
 
 # Install gems defined in Gemfile
 COPY .ruby-version Gemfile Gemfile.lock /app/
-RUN bundle install --jobs=4 --no-binstubs
+
+ARG BUNDLE_FLAGS="--jobs=4 --no-binstubs --no-cache --without development test"
+RUN bundle install ${BUNDLE_FLAGS}
 
 # Install node packages defined in package.json, including webpack
 COPY package.json yarn.lock /app/

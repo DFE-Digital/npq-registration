@@ -27,7 +27,7 @@ gem "webpacker"
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
-  gem "capybara", "~> 3.35"
+  gem "capybara"
   gem "dotenv-rails"
   gem "pry-byebug"
   gem "rspec-rails", "~> 5.0.1"
@@ -46,8 +46,11 @@ group :test do
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov", require: false
   gem "site_prism"
-  gem "webdrivers", "~> 4.6"
+  gem "webdrivers"
   gem "webmock"
+
+  gem "axe-core-capybara"
+  gem "axe-core-rspec"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
