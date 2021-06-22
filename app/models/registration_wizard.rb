@@ -114,7 +114,9 @@ private
   def steps
     %i[
       start
+      provider_check
       share_provider
+      about_npq
       teacher_reference_number
       name_changes
       updated_name

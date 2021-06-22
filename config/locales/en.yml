@@ -2,6 +2,10 @@ en:
   activemodel:
     errors:
       models:
+        forms/provider_check:
+          attributes:
+            chosen_provider:
+              blank: Select whether or not you have chosen an NPQ and provider
         forms/share_provider:
           attributes:
             can_share_choices:

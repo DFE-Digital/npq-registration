@@ -7,6 +7,10 @@ RSpec.feature "Sad journeys", type: :feature do
 
     page.click_link("Start now")
 
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
     expect(page).to have_text("Share choices with training provider")
     page.check("I agree my choices can be shared with my training provider")
     page.click_button("Continue")
@@ -64,6 +68,10 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_text("Before you start")
 
     page.click_link("Start now")
+
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
 
     expect(page).to have_text("Share choices with training provider")
     page.check("I agree my choices can be shared with my training provider")
@@ -137,5 +145,17 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Back")
 
     expect(page).to have_text("Choose your school")
+  end
+
+  scenario "Not chosen DQT or provider" do
+    visit "/"
+    expect(page).to have_text("Before you start")
+
+    page.click_link("Start now")
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("No, I don't know my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page).to have_text("Choosing an NPQ and Provider")
   end
 end

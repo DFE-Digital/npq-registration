@@ -1,0 +1,55 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLink.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl" >Choosing an NPQ and Provider</h1>
+
+    <h2 class="govuk-heading-m">Available courses</h2>
+
+    <p class="govuk-body">From September 2021, NPQ courses previously will be changed.</p>
+    <p class="govuk-body">These changes include:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>replacing the existing NPQs in senior leadership, headship and executive leadership</li>
+      <li>replacing the current NPQ in middle leadership with 3 new NPQs for teachers and leaders who want to develop their expertise in specialist areas of teaching practice:</li>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>supporting the training and development of others</li>
+        <li>developing teachers who are subject leads or responsible for improving teaching practice in a subject or phase</li>
+        <li>developing teachers who have responsibilities for leading behaviour and culture</li>
+      </ul>
+      <li>knowledge-based experience for the staffroom</li>
+    </ul>
+
+    <p class="govuk-body">These will be known as:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>NPQ Senior Leadership</li>
+      <li>NPQ Executive Leadership</li>
+      <li>NPQ Headship</li>
+      <li>NPQ Leading Teaching Development</li>
+      <li>NPQ Leading Teaching</li>
+      <li>NPW Leading Behaviour and Culture</li>
+    </ul>
+      
+    <h2 class="govuk-heading-m">Providers</h2>
+    <p class="govuk-body">There are nine training providers across the United Kingdom which run NPQ training courses.</p>
+    <p class="govuk-body">They are:</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li><a class="govuk-link" href="https://www.ambition.org.uk/blog/how-new-npqs-will-make-professional-development-work-your-school/">Ambition Institute</a></li>
+      <li><a class="govuk-link" href="https://www.outstandingleaders.org/npq">Best Practice Network (home of Outstanding Leaders Partnership)</a></li>
+      <li><a class="govuk-link" href="https://www.cefel.org.uk/npq/">Church of England</a></li>
+      <li><a class="govuk-link" href="https://www.educationdevelopmenttrust.com/npqs">Education Development Trust</a></li>
+      <li><a class="govuk-link" href="https://www.school-led.org.uk/">School-Led Network</a></li>
+      <li><a class="govuk-link" href="http://www.llse.org.uk/">LLSE</a></li>
+      <li><a class="govuk-link" href="https://tdtrust.org/npqs/">Teacher Development Trust</a></li>
+      <li><a class="govuk-link" href="http://www.teachfirst.org.uk/npqs">Teach First</a></li>
+      <li><a class="govuk-link" href="https://www.ucl.ac.uk/ioe/departments-and-centres/centres/ucl-centre-educational-leadership/national-professional-qualification-programmes">UCL Institute of Education   </a></li>
+    </ul>
+    <p class="govuk-body">Some providers may have specific criteria depending on your school’s circumstances. </p>
+    <p class="govuk-body">For example, the provider may require your school to be rated ‘good’ or ‘outstanding’ if you wish to train for their NPQ. Check with your current school to see if they recommended accredited partners for NPQ training.</p>
+  </div>
+</div>
+

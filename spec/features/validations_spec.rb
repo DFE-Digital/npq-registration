@@ -7,6 +7,6 @@ RSpec.feature "Validations", type: :feature do
     page.click_link("Start now")
     page.click_button("Continue")
 
-    expect(page).to have_text("You must agree")
+    expect(page).to have_text("Select whether or not ")
   end
 end
