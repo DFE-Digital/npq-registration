@@ -12,28 +12,30 @@
   end %>
 <% end %>
 
+<% if flash[:success] %>
+  <%= render GovukComponent::NotificationBanner.new(title: 'Email sent',
+                                                    success: true,
+                                                   ) do |notification_banner|
+    notification_banner.slot(:heading, text: flash[:success])
+  end %>
+<% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Confirm your contact details</h1>
-
-      <p class="govuk-body">
-        To confirm your details, we've sent a code to <%= session["registration_store"]["email"] %>
-      </p>
+      <h1 class="govuk-heading-xl">Confirm your code</h1>
 
       <%= f.govuk_text_field :confirmation_code,
         width: 10,
         label: { text: "Enter your code" } %>
 
+      <p class="govuk-body">
+        <%= govuk_link_to "I have not received an email", registration_wizard_update_path(step: "resend-code"), method: :patch %>
+      </p>
+
       <%= f.govuk_submit %>
     <% end %>
-
-    <h3 class="govuk-heading-s">
-      Not received an email?
-    </h3>
-
-    <%= govuk_button_to "Request another email", registration_wizard_update_path(step: "resend-code"), class: "govuk-button--secondary", method: :patch %>
   </div>
 </div>

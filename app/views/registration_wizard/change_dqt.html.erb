@@ -7,9 +7,11 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Change your details on the Database of Qualified Teachers (DQT)</h1>
+    <h1 class="govuk-heading-xl">Change your details on the Teaching Regulation Agency records</h1>
 
-    <p class="govuk-body">To update your name on the DQT you will need to login to the <%= govuk_link_to "Teacher Self Service Portal", "https://teacherservices.education.gov.uk/SelfService/Login" %>, change your name and upload one of the following documents as evidence:</p>
+    <p class="govuk-body">To update your name on the Teaching Regulation Agency records you will need to login to the <%= govuk_link_to "Teacher Self Service Portal", "https://teacherservices.education.gov.uk/SelfService/Login" %> - it can take a minimum of 5 days to update your details.</p>
+
+    <p class="govuk-body">You will need to upload one of the following documents as evidence of your name change:</p>
 
     <ul class="govuk-list govuk-list--bullet">
       <li>marriage: copy of your marriage certificate</li>
@@ -18,5 +20,7 @@
       <li>statutory declaration: copy of the statutory declaration</li>
       <li>deed poll: copy of your deed poll. Once you have clicked submit, you will be taken to the Change of Details request page.</li>
     </ul>
+
+    <%= govuk_inset_text(text: "You can still #{govuk_link_to('continue to register', registration_wizard_show_path(step: "contact_details"))} for your NPQ with your previous name - this can be changed on the Teaching Regulation Agency records after registration.".html_safe) %>
   </div>
 </div>
