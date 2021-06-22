@@ -13,12 +13,12 @@
       <%= f.govuk_check_boxes_fieldset :can_share_choices,
         multiple: false,
         legend: {
-          text: "Share choices with training provider",
+          text: "Sharing your NPQ information",
           size: "xl",
           tag: "h1"
         } do %>
 
-      <p class="govuk-body">You must share your NPQ choice(s) with your training provider.</p>
+      <p class="govuk-body">All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.</p>
 
       <p class="govuk-body">If you don't share the details you cannot progress with your NPQ.</p>
 
@@ -28,7 +28,7 @@
         multiple: false,
         required: true,
         link_errors: true,
-        label: { text: "I agree my choices can be shared with my training provider" } %>
+        label: { text: "Yes, I agree my information can be shared" } %>
       <% end %>
 
       <%= f.govuk_submit %>
