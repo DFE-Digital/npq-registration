@@ -18,7 +18,7 @@ RSpec.feature "Email confirmation", type: :feature do
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 
     expect {
-      page.click_button("Request another email")
+      page.click_link("I have not received an email")
     }.to change { ActionMailer::Base.deliveries.size }.by(1)
     expect(page).to have_content("Another email with confirmation details has been sent to user@example.com")
     expect(ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]).to eql(code)
@@ -31,7 +31,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_link("Back")
 
     # skips code page as email already confirmed
-    expect(page).to have_content("Contact details")
+    expect(page).to have_content("Email details")
     page.click_button("Continue")
 
     # change email address
@@ -43,7 +43,7 @@ RSpec.feature "Email confirmation", type: :feature do
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 
     # must confirm again
-    expect(page).to have_content("Confirm your contact details")
+    expect(page).to have_content("Confirm your code")
     expect(page.find_field("Enter your code").value).to be_blank
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")

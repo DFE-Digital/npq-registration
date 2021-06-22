@@ -24,16 +24,16 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Contact details")
+    expect(page).to have_text("Email details")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("user@example.com")
     page.fill_in "Enter your code", with: "000000"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("Code is not correct")
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
@@ -86,16 +86,16 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Contact details")
+    expect(page).to have_text("Email details")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("user@example.com")
     page.fill_in "Enter your code", with: "000000"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("Code is not correct")
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]

@@ -48,23 +48,23 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("No, I have not updated my name")
     page.click_button("Continue")
 
-    expect(page).to have_text("Name not updated")
-    page.choose("Change my name on the DQT")
+    expect(page).to have_text("Updating your name")
+    page.choose("Change my name on the Teaching Regulation Agency records")
     page.click_button("Continue")
 
-    expect(page).to have_text("Change your details on the Database of Qualified Teachers (DQT)")
+    expect(page).to have_text("Change your details on the Teaching Regulation Agency records")
     page.click_link("Back")
 
-    expect(page).to have_text("Name not updated")
-    page.choose("Register with my old name")
+    expect(page).to have_text("Updating your name")
+    page.choose("Register with my previous name")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Contact details")
+    expect(page).to have_text("Email details")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("user@example.com")
     page.click_button("Continue")
 
@@ -153,16 +153,16 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Contact details")
+    expect(page).to have_text("Email details")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("user@example.com")
     page.fill_in "Enter your code", with: "000000"
     page.click_button("Continue")
 
-    expect(page).to have_text("Confirm your contact details")
+    expect(page).to have_text("Confirm your code")
     expect(page).to have_text("Code is not correct")
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
@@ -242,7 +242,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     page.click_button("Submit")
 
-    expect(page).to have_text("Account created")
+    expect(page).to have_text("Stage One complete")
 
     expect(User.count).to eql(1)
 

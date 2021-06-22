@@ -35,6 +35,10 @@ module Forms
       LeadProvider.find_by(id: lead_provider_id)
     end
 
+    def course
+      Course.find_by(id: wizard.store["course_id"])
+    end
+
   private
 
     def validate_lead_provider_exists
