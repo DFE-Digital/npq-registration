@@ -34,10 +34,18 @@
         <% end %>
       <% else %>
         <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["school_location"] %></p>
+        <div class="npq-js-hidden">
+          <%= f.govuk_text_field :school_name,
+                                 width: "full",
+                                 label: { text: "Enter your school name" } %>
+        </div>
 
-        <%= f.govuk_text_field :school_name,
-                               width: "full",
-                               label: { text: "Enter your school name" } %>
+        <div class="npq-js-reveal">
+          <div class="govuk-form-group">
+            <%= f.label :school_urn, "Enter your school name", class: "govuk-label", for: "school-picker" %>
+            <%= f.text_field :school_urn, data: { location: @form.wizard.store["school_location"] }, id: "school-picker" %>
+          </div>
+        </div>
       <% end %>
 
       <%= f.govuk_submit %>
