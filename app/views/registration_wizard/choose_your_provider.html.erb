@@ -15,6 +15,16 @@
           tag: "h1"
         }
       ) do %>
+
+    <% if @form.course %>
+      <p class="govuk-body">
+        These are the training providers who provide <%= @form.course.name %>. Providers may have different entry requirements for courses.
+      </p>
+    <% end %>
+
+    <p class="govuk-body">
+      Check with the person responsible for professional development at your school.
+    </p>
     <% @form.options.each do |struct| %>
       <%= f.govuk_radio_button :lead_provider_id, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
     <% end %>
