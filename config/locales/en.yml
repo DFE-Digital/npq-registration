@@ -15,6 +15,11 @@ en:
             email:
               blank: Email can't be blank
               invalid: Enter a valid email address
+        forms/resend_code:
+          attributes:
+            email:
+              blank: Email can't be blank
+              invalid: Enter a valid email address
         forms/teacher_reference_number:
           attributes:
             trn_knowledge:

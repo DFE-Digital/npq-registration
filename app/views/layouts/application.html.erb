@@ -18,6 +18,12 @@
     <%= javascript_pack_tag 'application', defer: true %>
 
     <%= render partial: "shared/analytics/google" %>
+
+    <% if Rails.env.development? %>
+      <script>
+        console.log(<%= session.to_json.html_safe %>)
+      </script>
+    <% end %>
   </head>
 
   <body class="govuk-template__body ">

@@ -5,13 +5,6 @@
   ) %>
 <% end %>
 
-<% if flash[:info] %>
-  <%= render GovukComponent::NotificationBanner.new(title: 'Information',
-                                                   ) do |notification_banner|
-    notification_banner.slot(:heading, text: flash[:info])
-  end %>
-<% end %>
-
 <% if flash[:success] %>
   <%= render GovukComponent::NotificationBanner.new(title: 'Email sent',
                                                     success: true,
@@ -32,7 +25,7 @@
         label: { text: "Enter your code" } %>
 
       <p class="govuk-body">
-        <%= govuk_link_to "I have not received an email", registration_wizard_update_path(step: "resend-code"), method: :patch %>
+        <%= govuk_link_to "I have not received an email", registration_wizard_show_path(step: "resend-code") %>
       </p>
 
       <%= f.govuk_submit %>
