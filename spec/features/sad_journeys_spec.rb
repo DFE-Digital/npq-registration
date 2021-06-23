@@ -134,7 +134,9 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school")
-    page.fill_in "Enter your school name", with: "open"
+    within ".npq-js-hidden" do
+      page.fill_in "Enter your school name", with: "open"
+    end
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school")

@@ -10,7 +10,25 @@ $govuk-font-url-function: frontend-font-url;
 $govuk-image-url-function: frontend-image-url;
 
 @import "~govuk-frontend/govuk/all";
+@import "accessible-autocomplete";
 
 h1.govuk-fieldset__heading {
   margin-bottom: 50px;
+}
+
+.js-enabled .npq-js-hidden {
+  display: none;
+}
+
+.npq-js-reveal {
+  display: none;
+}
+
+.js-enabled .npq-js-reveal {
+  display: block;
+}
+
+// no idea why autocomplete is missing font-family
+.autocomplete__option {
+  font-family: "GDS Transport", arial, sans-serif;
 }

@@ -105,7 +105,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Choose your school")
     expect(page).to have_text("Please choose from schools located in manchester")
-    page.fill_in "Enter your school name", with: "open"
+    within ".npq-js-hidden" do
+      page.fill_in "Enter your school name", with: "open"
+    end
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school")
@@ -209,7 +211,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Choose your school")
     expect(page).to have_text("Please choose from schools located in manchester")
-    page.fill_in "Enter your school name", with: "open"
+    within ".npq-js-hidden" do
+      page.fill_in "Enter your school name", with: "open"
+    end
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school")

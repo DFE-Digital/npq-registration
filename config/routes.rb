@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "/healthcheck", to: "monitoring#healthcheck", format: :json
+
+  resources :schools, only: [:index]
+
   root "registration_wizard#show", step: "start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
@@ -22,8 +26,6 @@ Rails.application.routes.draw do
       post "hide"
     end
   end
-
-  get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
   get "/404", to: "errors#not_found", via: :all
   get "/422", to: "errors#unprocessable_entity", via: :all
