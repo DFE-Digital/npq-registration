@@ -1,6 +1,6 @@
 module Forms
   class HeadteacherDuration < Base
-    VALID_HEADTEACHER_STATUS_OPTIONS = %w[yes no].freeze
+    VALID_HEADTEACHER_STATUS_OPTIONS = %w[yes_in_first_two_years yes_over_two_years no].freeze
 
     attr_accessor :headteacher_status
 
@@ -26,11 +26,14 @@ module Forms
 
     def options
       [
-        OpenStruct.new(value: "yes",
-                       text: "Yes, I have been a headteacher for two years or more",
+        OpenStruct.new(value: "yes_in_first_two_years",
+                       text: "Yes, I am in the first two years of a headship",
                        link_errors: true),
+        OpenStruct.new(value: "yes_over_two_years",
+                       text: "Yes, I have been a headteacher for more than 2 years",
+                       link_errors: false),
         OpenStruct.new(value: "no",
-                       text: "No, I’m not a headteacher or have been a headteacher for less than two years",
+                       text: "No, I am not a headteacher",
                        link_errors: false),
       ]
     end

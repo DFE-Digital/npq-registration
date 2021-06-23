@@ -10,17 +10,12 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">How long have you been a headteacher?</h1>
-
-      <%= f.govuk_radio_buttons_fieldset(:headteacher_status,
-            legend: {
-              text: "Have you been a headteacher for two years or more?",
-            }
-          ) do %>
-        <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :headteacher_status, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
-        <% end %>
-      <% end %>
+      <%= f.govuk_collection_radio_buttons :headteacher_status,
+        @form.options,
+        :value,
+        :text,
+        legend: { text: 'Are you a headteacher?', size: "xl", tag: "h1" },
+        hint: { text: 'Extra support is available if you are in the first 2 years of your headship.' } %>
 
       <%= f.govuk_submit %>
     <% end %>
