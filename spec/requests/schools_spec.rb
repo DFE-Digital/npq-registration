@@ -10,7 +10,7 @@ RSpec.describe SchoolsController do
     end
 
     it "returns all possible matches" do
-      get "/schools.json?location=london&name=he"
+      get "/schools.json?location=london&name=hea"
 
       parsed_response = JSON.parse(response.body)
 
@@ -18,7 +18,7 @@ RSpec.describe SchoolsController do
     end
 
     it "returns only needed data" do
-      get "/schools.json?location=london&name=he"
+      get "/schools.json?location=london&name=hea"
 
       parsed_response = JSON.parse(response.body)
 
