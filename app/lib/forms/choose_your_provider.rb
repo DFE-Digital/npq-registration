@@ -20,7 +20,11 @@ module Forms
     end
 
     def previous_step
-      :choose_your_npq
+      if wizard.form_for_step(:choose_your_npq).studying_for_headship?
+        :headteacher_duration
+      else
+        :choose_your_npq
+      end
     end
 
     def options

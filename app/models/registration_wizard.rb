@@ -88,14 +88,14 @@ class RegistrationWizard
                             change_step: :find_school)
   end
 
-private
-
   def form_for_step(step)
     form_class = "Forms::#{step.to_s.camelcase}".constantize
     hash = store.slice(*form_class.permitted_params.map(&:to_s))
     hash.merge!(wizard: self)
     form_class.new(hash)
   end
+
+private
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))
