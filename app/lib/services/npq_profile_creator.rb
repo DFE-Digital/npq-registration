@@ -10,6 +10,7 @@ module Services
       profile = EcfApi::NpqProfile.new(
         teacher_reference_number: user.trn,
         teacher_reference_number_verified: user.trn_verified,
+        active_alert: user.active_alert,
         date_of_birth: user.date_of_birth,
         school_urn: application.school_urn,
         headteacher_status: application.headteacher_status,

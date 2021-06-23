@@ -102,6 +102,44 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       )
     end
 
+    context "has no active alerts" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 200, body: dqt_response_body, headers: {})
+
+        subject.next_step
+      end
+
+      it "persists to store" do
+        subject.after_save
+        expect(wizard.store["active_alert"]).to eql(false)
+      end
+    end
+
+    context "has active alerts" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 200, body: dqt_response_body(active_alert: true), headers: {})
+
+        subject.next_step
+      end
+
+      it "persists to store" do
+        subject.after_save
+        expect(wizard.store["active_alert"]).to eql(true)
+      end
+    end
+
     context "trn has been verified" do
       before do
         stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")

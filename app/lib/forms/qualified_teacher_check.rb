@@ -32,6 +32,7 @@ module Forms
     def next_step
       record = DqtRecord.find(trn: trn)
 
+      @active_alert = record && record.active_alert
       if record && record.fuzzy_match?(
         full_name: full_name,
         date_of_birth: date_of_birth,
@@ -59,8 +60,13 @@ module Forms
       @trn_verified
     end
 
+    def active_alert?
+      @active_alert
+    end
+
     def after_save
       wizard.store["trn_verified"] = trn_verified?
+      wizard.store["active_alert"] = active_alert?
     end
 
   private

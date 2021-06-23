@@ -8,6 +8,7 @@ RSpec.describe Services::NpqProfileCreator do
       ecf_id: "123",
       trn: "1234567",
       trn_verified: true,
+      active_alert: true,
       date_of_birth: Date.new(1980, 12, 13),
     )
   end
@@ -54,6 +55,7 @@ RSpec.describe Services::NpqProfileCreator do
           attributes: {
             teacher_reference_number: "1234567",
             teacher_reference_number_verified: true,
+            active_alert: true,
             date_of_birth: user.date_of_birth.iso8601,
             school_urn: application.school_urn,
             headteacher_status: "no",
