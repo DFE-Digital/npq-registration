@@ -62,7 +62,7 @@
     <div class="govuk-width-container">
       <%= render GovukComponent::PhaseBanner.new(
         phase_tag: { text: 'Alpha' },
-        text: "This is a new service – your #{govuk_link_to("feedback", "#")} will help us to improve it.".html_safe
+        text: "This is a new service – #{govuk_mail_to("continuing-professional-development@digital.education.gov.uk", "give feedback or report a problem", subject: "Feedback about Register for a National Professional Qualification (NPQ)")}".html_safe
       ) %>
     </div>
 
