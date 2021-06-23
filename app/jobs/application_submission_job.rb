@@ -8,6 +8,12 @@ class ApplicationSubmissionJob < ApplicationJob
 
     user.applications.where(ecf_id: nil).each do |application|
       Services::NpqProfileCreator.new(application: application).call
+
+      ApplicationSubmissionMailer.application_submitted_mail(
+        to: user.email,
+        full_name: user.full_name,
+        provider_name: application.lead_provider.name,
+      ).deliver_now
     end
   end
 end

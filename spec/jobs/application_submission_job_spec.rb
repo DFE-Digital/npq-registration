@@ -24,6 +24,23 @@ RSpec.describe ApplicationSubmissionJob do
       expect(profile_creator_double).to have_received(:call)
     end
 
+    it "sends submission email" do
+      user_creator_double = instance_double(Services::EcfUserCreator, call: nil)
+      profile_creator_double = instance_double(Services::NpqProfileCreator, call: nil)
+
+      expect(Services::EcfUserCreator).to receive(:new).and_return(user_creator_double)
+      expect(Services::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
+
+      allow(ApplicationSubmissionMailer).to receive(:application_submitted_mail).and_call_original
+      expect(ApplicationSubmissionMailer).to receive(:application_submitted_mail).with(
+        to: user.email,
+        full_name: user.full_name,
+        provider_name: application.lead_provider.name,
+      )
+
+      subject.perform_now
+    end
+
     context "when user already exists in ecf" do
       let(:user) { create(:user, ecf_id: "123") }
 
