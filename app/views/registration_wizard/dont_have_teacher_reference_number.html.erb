@@ -9,31 +9,60 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Get a Teacher Reference Number (TRN)</h1>
 
-    <p class="govuk-body">Government rules mean in order to teach at a school in England you must have a TRN number.</p>
-
     <h2 class="govuk-heading-m">Request a TRN by email</h2>
 
-    <p class="govuk-body">To obtain a TRN send an email to <%= govuk_mail_to('qts.enquiries@education.gov.uk', "qts.enquiries@education.gov.uk") %></p>
+    <p class="govuk-body">
+      If you know that you do not have a TRN, then please email the Teaching Regulation Agency at <%= govuk_mail_to "qts.enquiries@education.gov.uk", "qts.enquiries@education.gov.uk" %>. The team aim to respond to valid email requests within 5 working days.
+    </p>
 
-    <p class="govuk-body">To send a secure email to the department, please go to the <%= govuk_link_to "Egress site", "https://switch.egress.com/ui/signin.aspx" %></p>
+    <p class="govuk-body">
+      You will need to provide certain items of information, and confirmatory identification, to receive a TRN. Please use the free Galaxkey secure email platform to ensure your identification documents are protected.
+    </p>
 
-    <p class="govuk-body">Include the following information:</p>
+    <p class="govuk-body">
+      To send a secure email to the department, please go to the Galaxkey site: <%= govuk_link_to "https://manager.galaxkey.com/services/registerme", "https://manager.galaxkey.com/services/registerme" %>
+    </p>
+
+    <p class="govuk-body">
+      Please enter your email address that you wish to sign up with and complete the registration process. You will be sent an email to activate your account once you have completed this step. You will then be able to send secure emails to the Teaching Regulation Agency using Galaxkey.
+    </p>
+
+    <p class="govuk-body">
+      The steps you need to take to register with GalaxKey are outlined <%= govuk_link_to "in this quick start guide", "/GalaxKey-registration-process.pdf" %>. Please then follow these steps:
+    </p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>enter in the subject line: Undertaking an NPQ, do not have a TRN and require a number to be issued</li>
-      <li>state you are undertaking an NPQ, do not have a TRN and require a number to be issued</li>
-      <li>your full legal name (we will use this to create a record for you)</li>
-      <li>your date of birth</li>
-      <li>an email address for us to respond to you at</li>
+      <li>Select ‘Compose’ to start a secure email</li>
+      <li>Enter qts.enquiries@education.gov.uk as the recipient</li>
+      <li>Input the ‘Subject’ of the email as: Undertaking an NPQ, do not have a TRN and require a number to be issued</li>
+      <li>
+        Please including the following information in your email:
+
+        <ul class="govuk-list govuk-list--bullet">
+          <li>State you are undertaking an NPQ, do not have a TRN and require a number to be issued</li>
+          <li>Your full legal name (we will use this to create a record for you)</li>
+          <li>Your date of birth</li>
+          <li>An email address for us to respond to you at</li>
+          <li>
+            Attach a copy of one of the following types of identification as a file to accompany your submission. Please follow the restrictions on file size in the provided guidance:
+
+            <ul class="govuk-list govuk-list--bullet">
+              <li>Passport</li>
+              <li>Driving license (full or provisional)</li>
+              <li>Certificate of residence</li>
+              <li>Birth certificate</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
     </ul>
 
-    <p class="govuk-body">Attach a copy of one of the following types of identification:</p>
+    <p class="govuk-body">
+      The Teaching Regulation Agency will use the information you provide to create a permanent record for you and allocate you a TRN. Any copies of personal identification documents you provide will be destroyed once your request is processed.
+    </p>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>passport</li>
-      <li>driving licence (full or provisional)</li>
-      <li>certificate of residence</li>
-      <li>birth certificate</li>
-    </ul>
+    <p class="govuk-body">
+      Information about the Teaching Regulation Agency processes your data is available at the <%= govuk_link_to "teacher self-service site", "https://www.gov.uk/guidance/teacher-self-service-portal" %>.
+    </p>
   </div>
 </div>
