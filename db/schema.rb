@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_24_102737) do
+ActiveRecord::Schema.define(version: 2021_06_24_161922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 2021_06_24_102737) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "establishment_type_code"
     t.text "establishment_type_name"
+    t.boolean "high_pupil_premium", default: false, null: false
     t.index ["urn"], name: "index_schools_on_urn"
   end
 
