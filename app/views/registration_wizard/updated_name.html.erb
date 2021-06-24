@@ -12,9 +12,9 @@
 
       <h1 class="govuk-heading-xl">Updated name</h1>
 
-      <p class="govuk-body">If you've changed your name and want to use it for work, and any NPQ certificates gained, it must also be changed on the Database of Qualified Teachers (DQT).</p>
+      <p class="govuk-body">If you've changed your name and want to use it for work, and any NPQ certificates gained, it must also be changed on the Teaching Regulation Agency records.</p>
 
-      <%= f.govuk_radio_buttons_fieldset(:updated_name, legend: { text: "Have you updated your name on the DQT?" } ) do %>
+      <%= f.govuk_radio_buttons_fieldset(:updated_name, legend: { text: "Have you updated your name on the Teaching Regulation Agency records?" } ) do %>
         <%= f.govuk_radio_button :updated_name, "yes", label: { text: "Yes, I've updated my name" }, link_errors: true %>
         <%= f.govuk_radio_button :updated_name, "no", label: { text: "No, I have not updated my name" } %>
         <%= f.govuk_radio_button :updated_name, "not-sure", label: { text: "Not sure" } %>
