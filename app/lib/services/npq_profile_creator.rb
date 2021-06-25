@@ -14,6 +14,8 @@ module Services
         date_of_birth: user.date_of_birth,
         school_urn: application.school_urn,
         headteacher_status: application.headteacher_status,
+        eligible_for_funding: application.eligible_for_funding,
+        funding_choice: application.funding_choice,
         relationships: {
           user: ecf_user,
           npq_course: ecf_npq_course,

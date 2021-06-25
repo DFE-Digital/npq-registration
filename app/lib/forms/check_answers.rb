@@ -18,10 +18,12 @@ module Forms
       )
 
       user.applications.create!(
-        course_id: wizard.store["course_id"],
+        course_id: course.id,
         lead_provider_id: wizard.store["lead_provider_id"],
-        school_urn: wizard.store["school_urn"],
+        school_urn: school.urn,
         headteacher_status: wizard.store["headteacher_status"],
+        eligible_for_funding: Services::FundingEligibility.new(course: course, school: school).call,
+        funding_choice: wizard.store["funding"],
       )
 
       ApplicationSubmissionJob.perform_later(user: user)
@@ -30,6 +32,14 @@ module Forms
     end
 
   private
+
+    def course
+      @course ||= Course.find(wizard.store["course_id"])
+    end
+
+    def school
+      @school ||= School.find_by(urn: wizard.store["school_urn"])
+    end
 
     def user
       @user ||= User.find_by(email: wizard.store["email"])

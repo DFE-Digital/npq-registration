@@ -270,6 +270,11 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(user.applications.count).to eql(1)
 
+    application = user.applications.first
+
+    expect(application.eligible_for_funding).to be_falsey
+    expect(application.funding_choice).to eql("trust")
+
     visit "/account"
 
     expect(page).to have_text("Teach First")

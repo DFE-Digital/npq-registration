@@ -22,6 +22,8 @@ RSpec.describe Services::NpqProfileCreator do
       lead_provider: lead_provider,
       school_urn: "654321",
       headteacher_status: "no",
+      eligible_for_funding: true,
+      funding_choice: "trust",
     )
   end
 
@@ -59,6 +61,8 @@ RSpec.describe Services::NpqProfileCreator do
             date_of_birth: user.date_of_birth.iso8601,
             school_urn: application.school_urn,
             headteacher_status: "no",
+            eligible_for_funding: true,
+            funding_choice: "trust",
           },
         },
       }.to_json
