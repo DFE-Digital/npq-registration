@@ -227,7 +227,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
-    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
+    expect(check_answers_page.summary_list["National Insurance Number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
     expect(check_answers_page.summary_list["Are you a headteacher?"].value).to eql("Yes over two years")
