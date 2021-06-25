@@ -62,7 +62,7 @@ class RegistrationWizard
                             change_step: :qualified_teacher_check)
 
     if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-      array << OpenStruct.new(key: "National Insurance Number",
+      array << OpenStruct.new(key: "National Insurance number",
                               value: store["national_insurance_number"],
                               change_step: :qualified_teacher_check)
     end
