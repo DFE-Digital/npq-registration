@@ -115,6 +115,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "open manchester school"
     page.click_button("Continue")
 
+    expect(page).to have_text("Funding your NPQ")
+    page.choose "My school is paying"
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -126,6 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My school is paying")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
@@ -221,6 +226,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "open manchester school"
     page.click_button("Continue")
 
+    expect(page).to have_text("Funding your NPQ")
+    page.choose "My trust is paying"
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -233,6 +242,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Are you a headteacher?"].value).to eql("Yes over two years")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
     page.click_link("Change Are you a headteacher?")
 
     expect(page).to have_text("Are you a headteacher?")

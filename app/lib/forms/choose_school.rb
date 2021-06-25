@@ -19,8 +19,10 @@ module Forms
         :choose_school
       elsif !school.in_england?
         :school_not_in_england
-      else
+      elsif eligible_for_funding?
         :check_answers
+      else
+        :funding_your_npq
       end
     end
 
@@ -40,10 +42,18 @@ module Forms
         .limit(10)
     end
 
+    def eligible_for_funding?
+      Services::FundingEligibility.new(course: course, school: school).call
+    end
+
   private
 
     def school
       @school ||= School.find_by(urn: school_urn)
+    end
+
+    def course
+      @course ||= Course.find(wizard.store["course_id"])
     end
 
     def school_location
