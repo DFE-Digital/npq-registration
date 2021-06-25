@@ -18,22 +18,22 @@
 
       <%= f.govuk_text_field :trn,
         width: 10,
-        label: { text: "Teacher reference number (TRN)" },
+        label: { text: "Teacher reference number (TRN)", size: "s" },
         hint: { text: "Your TRN is 7-10 characters long. It may begin with “RP”." } %>
 
       <%= f.govuk_text_field :full_name,
         width: "three-quarters",
-        label: { text: "Full name" },
+        label: { text: "Full name", size: "s" },
         hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records" } %>
 
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
-        legend: { text: "Date of birth" },
+        legend: { text: "Date of birth", size: "s" },
         hint: { text: "For example, 31 3 1980" } %>
 
       <%= f.govuk_text_field :national_insurance_number,
         width: 10,
-        label: { text: "National Insurance number (optional)" },
+        label: { text: "National Insurance number (optional)", size: "s" },
         hint: { text: "This will help us match your details" } %>
 
       <%= f.govuk_submit %>
