@@ -15,7 +15,7 @@ module Forms
     end
 
     def previous_step
-      :start
+      :provider_check
     end
   end
 end
