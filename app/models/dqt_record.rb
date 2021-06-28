@@ -28,7 +28,7 @@ class DqtRecord
     [
       self.full_name == full_name,
       self.date_of_birth == date_of_birth,
-      self.national_insurance_number.downcase == national_insurance_number.downcase,
+      (self.national_insurance_number.downcase == national_insurance_number.downcase) && (national_insurance_number.downcase != "null"),
     ].count(true) > 1
   end
 end
