@@ -80,8 +80,9 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
 
       context "when changing to something other than headship" do
         let(:course) { Course.first }
+        let(:school) { create(:school) }
         let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:store) { { course_id: previous_course.id.to_s }.stringify_keys }
+        let(:store) { { course_id: previous_course.id.to_s, school_urn: school.urn }.stringify_keys }
         let(:request) { nil }
 
         before do

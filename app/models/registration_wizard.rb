@@ -86,6 +86,14 @@ class RegistrationWizard
     array << OpenStruct.new(key: "School",
                             value: school.name,
                             change_step: :find_school)
+
+    unless form_for_step(:choose_school).eligible_for_funding?
+      array << OpenStruct.new(key: "How is your NPQ being paid for?",
+                              value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
+                              change_step: :funding_your_npq)
+    end
+
+    array
   end
 
   def form_for_step(step)
@@ -136,6 +144,7 @@ private
       find_school
       choose_school
       school_not_in_england
+      funding_your_npq
       check_answers
       confirmation
     ]

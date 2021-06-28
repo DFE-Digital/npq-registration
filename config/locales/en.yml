@@ -1,5 +1,12 @@
 en:
   activemodel:
+    attributes:
+      forms/funding_your_npq:
+        funding_options:
+          school: My school is paying
+          trust: My trust is paying
+          self: I am paying
+          another: My NPQ is being paid in another way
     errors:
       models:
         forms/provider_check:
@@ -87,3 +94,8 @@ en:
           attributes:
             headteacher_status:
               blank: Choose whether or not you have been a headteacher for over two years
+        forms/funding_your_npq:
+          attributes:
+            funding:
+              blank: Choose how your NPQ will be funded
+              invalid: Choose a valid funding option
