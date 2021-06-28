@@ -34,6 +34,10 @@ RSpec.describe Services::ImportGiasSchools do
 
       rows = CSV.parse(File.open(file_fixture("gias_sample.csv"), "r:iso-8859-1:UTF-8").read, headers: true)
 
+      school = School.find_by(urn: rows[0]["URN"])
+
+      expect(school.establishment_type_code).to eql("2")
+
       rows.each do |row|
         school = School.find_by(urn: row["URN"])
 
