@@ -35,7 +35,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   describe "#next_step" do
     subject do
       described_class.new(
-        trn: "1234567",
+        trn: "RP12/34567",
         full_name: "John Doe",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",

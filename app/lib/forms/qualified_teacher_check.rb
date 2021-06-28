@@ -30,7 +30,7 @@ module Forms
     end
 
     def next_step
-      record = DqtRecord.find(trn: trn)
+      record = DqtRecord.find(trn: trn_digits_only)
 
       @active_alert = record && record.active_alert
       if record && record.fuzzy_match?(
@@ -70,6 +70,10 @@ module Forms
     end
 
   private
+
+    def trn_digits_only
+      trn.scan(/\d/).join
+    end
 
     def mark_trn_as_verified
       @trn_verified = true
