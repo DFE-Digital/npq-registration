@@ -50,7 +50,7 @@ RSpec.describe DqtRecord do
       described_class.new(
         teacher_reference_number: "1234567",
         full_name: "John Doe",
-        national_insurance_number: "AB123456C",
+        national_insurance_number: "AB123456c",
         active_alert: false,
         qts_date: "2000-12-13",
         date_of_birth: "1960-11-14",
