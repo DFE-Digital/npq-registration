@@ -5,12 +5,16 @@ class Rack::Attack
   throttle("General requests by ip", limit: 300, period: 5.minutes, &:ip)
 
   protected_routes = [
+    "/registration/contact_details",
+    "/registration/contact_details/change",
     "/registration/confirm_email",
     "/registration/confirm_email/change",
     "/registration/resend_code",
     "/registration/resend_code/change",
     "/registration/qualified_teacher_check",
     "/registration/qualified_teacher_check/change",
+    "/registration/sign_in",
+    "/registration/sign_in/change",
   ]
   throttle("Rate limit external APIs", limit: 5, period: 1.minute) do |request|
     request.ip if protected_routes.include?(request.path)
