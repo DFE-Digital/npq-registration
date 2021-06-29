@@ -71,6 +71,9 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:@localhost:5432/test
 
+      - name: Run rubocop
+        run: bundle exec rubocop --format clang --parallel
+
       - name: Run tests
         run: bundle exec rake
         env:
