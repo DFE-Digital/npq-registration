@@ -81,7 +81,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
       .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
 
-    expect(page).to have_text("Check your details")
+    expect(page).to have_text("Confirm your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
@@ -185,7 +185,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
       .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
 
-    expect(page).to have_text("Check your details")
+    expect(page).to have_text("Confirm your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
