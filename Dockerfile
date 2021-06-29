@@ -43,10 +43,6 @@ RUN rm -rf node_modules log tmp && \
       find /usr/local/bundle/gems -name "*.o" -delete && \
       find /usr/local/bundle/gems -name "*.html" -delete
 
-ARG GIT_COMMIT_SHA="UNKNOWN"
-ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
-RUN echo ${GIT_COMMIT_SHA} > ./GIT_COMMIT_SHA
-
 # Build runtime image
 FROM ruby:2.7.2-alpine as production
 
@@ -62,6 +58,10 @@ RUN apk add --update --no-cache libpq tzdata && \
 # Copy files generated in the builder image
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+
+ARG GIT_COMMIT_SHA="UNKNOWN"
+ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
+RUN echo ${GIT_COMMIT_SHA} > ./GIT_COMMIT_SHA
 
 ENV PORT=8080
 ENV RAILS_ENV=production
