@@ -43,6 +43,10 @@ RUN rm -rf node_modules log tmp && \
       find /usr/local/bundle/gems -name "*.o" -delete && \
       find /usr/local/bundle/gems -name "*.html" -delete
 
+ARG GIT_COMMIT_SHA="UNKNOWN"
+ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
+RUN echo ${GIT_COMMIT_SHA} > ./GIT_COMMIT_SHA
+
 # Build runtime image
 FROM ruby:2.7.2-alpine as production
 
