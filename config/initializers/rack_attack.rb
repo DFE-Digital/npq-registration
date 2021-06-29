@@ -8,6 +8,11 @@ class Rack::Attack
   throttle("Rate limit external APIs", limit: 5, period: 20.seconds) do |request|
     request.ip if protected_routes.include?(request.path)
   end
+
+  # Throttle /csp_reports requests by IP (5rpm)
+  throttle("csp_reports req/ip", limit: 5, period: 1.minute) do |req|
+    req.ip if req.path == "/csp_reports"
+  end
 end
 
 ActiveSupport::Notifications.subscribe("throttle.rack_attack") do |_name, _start, _finish, request_id, payload|
