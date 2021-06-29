@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CspReportsController < ApplicationController
-
   CSP_KEYS = %w[
     blocked-uri
     disposition
