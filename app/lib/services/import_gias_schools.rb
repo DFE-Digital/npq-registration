@@ -3,12 +3,12 @@ require "csv"
 module Services
   class ImportGiasSchools
     def call
-      CSV.foreach(csv_file, headers: true) do |row|
+      CSV.foreach(csv_file, headers: true, converters: [gias_converter]) do |row|
         school = School.find_or_create_by!(urn: row["URN"]) do |s|
           s.assign_attributes(attributes_from_row(row))
         end
 
-        if school.last_changed_date < Date.parse(row["LastChangedDate"])
+        if row["LastChangedDate"].present? && (school.last_changed_date < row["LastChangedDate"])
           school.update!(attributes_from_row(row))
         end
       end
@@ -18,6 +18,19 @@ module Services
     end
 
   private
+
+    def gias_converter
+      lambda do |value, field_info|
+        case field_info.header
+        when "TypeOfEstablishment (code)"
+          value.to_i
+        when "CloseDate", "LastChangedDate"
+          Date.parse(value) if value.present?
+        else
+          value.to_s if value.present?
+        end
+      end
+    end
 
     def attributes_from_row(row)
       {

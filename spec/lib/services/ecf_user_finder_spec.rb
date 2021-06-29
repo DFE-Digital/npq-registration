@@ -32,7 +32,7 @@ RSpec.describe Services::EcfUserFinder do
             id: "123",
             attributes: {
               email: user.email,
-            }
+            },
           }],
         }.to_json
       end
