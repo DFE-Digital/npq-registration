@@ -22,7 +22,11 @@ module Forms
         lead_provider_id: wizard.store["lead_provider_id"],
         school_urn: school.urn,
         headteacher_status: wizard.store["headteacher_status"],
-        eligible_for_funding: Services::FundingEligibility.new(course: course, school: school).call,
+        eligible_for_funding: Services::FundingEligibility.new(
+          course: course,
+          school: school,
+          headteacher_status: wizard.store["headteacher_status"],
+        ).call,
         funding_choice: wizard.store["funding"],
       )
 

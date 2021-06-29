@@ -1,10 +1,11 @@
 module Services
   class FundingEligibility
-    attr_reader :course, :school
+    attr_reader :course, :school, :headteacher_status
 
-    def initialize(course:, school:)
+    def initialize(course:, school:, headteacher_status: nil)
       @course = course
       @school = school
+      @headteacher_status = headteacher_status
     end
 
     def call
@@ -14,9 +15,16 @@ module Services
            "NPQ for Senior Leadership (NPQSL)",
            "NPQ for Executive Leadership (NPQEL)"
         eligible_establishment_type_codes_for_base_courses.include?(school.establishment_type_code) && school.high_pupil_premium
-      when "NPQ Leading Teacher Development (NPQLTD)",
-           "NPQ for Headship (NPQH)"
-        eligible_establishment_type_codes_for_ltd_or_headship_courses.include?(school.establishment_type_code)
+      when "NPQ Leading Teacher Development (NPQLTD)"
+        eligible_establishment_type_codes_for_ltd_courses.include?(school.establishment_type_code)
+      when "NPQ for Headship (NPQH)"
+        eligible_new_headteacher = if headteacher_status == "yes_in_first_two_years"
+                                     eligible_establishment_type_codes_for_new_headship.include?(school.establishment_type_code)
+                                   end
+
+        eligible_headship_school = school.high_pupil_premium && eligible_establishment_type_codes_for_headship_and_high_pupil_premiums.include?(school.establishment_type_code)
+
+        eligible_new_headteacher || eligible_headship_school
       else # fail safe
         false
       end
@@ -28,7 +36,15 @@ module Services
       %w[1 2 3 5 6 7 8 12 14 28 33 34 35 36 38 40 41 42 43 44].freeze
     end
 
-    def eligible_establishment_type_codes_for_ltd_or_headship_courses
+    def eligible_establishment_type_codes_for_ltd_courses
+      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].freeze
+    end
+
+    def eligible_establishment_type_codes_for_headship_and_high_pupil_premiums
+      %w[1 2 3 5 6 7 8 12 14 28 33 34 35 36 38 40 41 42 43 44].freeze
+    end
+
+    def eligible_establishment_type_codes_for_new_headship
       %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].freeze
     end
   end

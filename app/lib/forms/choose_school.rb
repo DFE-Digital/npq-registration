@@ -43,10 +43,14 @@ module Forms
     end
 
     def eligible_for_funding?
-      Services::FundingEligibility.new(course: course, school: school).call
+      Services::FundingEligibility.new(course: course, school: school, headteacher_status: headteacher_status).call
     end
 
   private
+
+    def headteacher_status
+      wizard.store["headteacher_status"]
+    end
 
     def school
       @school ||= School.find_by(urn: school_urn)

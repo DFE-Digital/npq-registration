@@ -18,7 +18,7 @@ module Forms
         elsif studying_for_headship?
           :headteacher_duration
         elsif wizard.form_for_step(:choose_school).eligible_for_funding? &&
-            !Services::FundingEligibility.new(course: course, school: school).call
+            !Services::FundingEligibility.new(course: course, school: school, headteacher_status: headteacher_status).call
           :funding_your_npq
         else
           :check_answers
@@ -51,6 +51,10 @@ module Forms
     end
 
   private
+
+    def headteacher_status
+      wizard.store["headteacher_status"]
+    end
 
     def school
       School.find_by(urn: wizard.store["school_urn"])

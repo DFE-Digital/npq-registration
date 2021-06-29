@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Services::FundingEligibility do
-  subject { described_class.new(course: course, school: school) }
+  let(:headteacher_status) { nil }
+
+  subject { described_class.new(course: course, school: school, headteacher_status: headteacher_status) }
 
   describe "#call" do
     context "studying for NPQEL, NPQLBC, NPQSL, NPQLT" do
@@ -58,8 +60,8 @@ RSpec.describe Services::FundingEligibility do
       end
     end
 
-    context "studying for NPQLTD or NPQH" do
-      let(:course) { Course.all.select { |c| c.name.match?(/\(NPQLTD\)|\(NPQH\)/) }.sample }
+    context "studying for NPQLTD" do
+      let(:course) { Course.all.select { |c| c.name.match?(/\(NPQLTD\)/) }.sample }
 
       context "eligible establishment" do
         let(:eligible_gias_code) { %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].sample }
@@ -76,6 +78,77 @@ RSpec.describe Services::FundingEligibility do
 
         it "returns false" do
           expect(subject.call).to be_falsey
+        end
+      end
+    end
+
+    context "studying for NPQLTD" do
+      let(:course) { Course.all.select { |c| c.name.match?(/\(NPQH\)/) }.sample }
+
+      context "in first 2 years of headship" do
+        let(:headteacher_status) { "yes_in_first_two_years" }
+
+        context "at eligible establishment" do
+          let(:eligible_gias_code) { %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].sample }
+          let(:school) { build(:school, establishment_type_code: eligible_gias_code) }
+
+          it "returns true" do
+            expect(subject.call).to be_truthy
+          end
+        end
+
+        context "at ineligible establishment" do
+          let(:ineligible_gias_code) { %w[10 11 18 24 25 26 27 29 30 31 32 37 43 46 56].sample }
+          let(:school) { build(:school, establishment_type_code: ineligible_gias_code) }
+
+          it "returns false" do
+            expect(subject.call).to be_falsey
+          end
+        end
+      end
+
+      context "not in first 2 years of headship" do
+        let(:headteacher_status) { %w[yes_over_two_years no].sample }
+
+        context "at eligible establishment" do
+          let(:eligible_gias_code) { %w[1 2 3 5 6 7 8 12 14 28 33 34 35 36 38 40 41 42 43 44].sample }
+
+          context "school has high_pupil_premium" do
+            let(:school) { build(:school, establishment_type_code: eligible_gias_code, high_pupil_premium: true) }
+
+            it "returns true" do
+              expect(subject.call).to be_truthy
+            end
+          end
+
+          context "school does not have high_pupil_premium" do
+            let(:school) { build(:school, establishment_type_code: eligible_gias_code, high_pupil_premium: false) }
+
+            it "returns false" do
+              expect(subject.call).to be_falsey
+            end
+          end
+        end
+
+        context "at ineligible establishment" do
+          let(:ineligible_gias_code) { %w[10 11 15 18 24 25 26 27 29 30 31 32 37 39 45 46 56].sample }
+          let(:school) { build(:school, establishment_type_code: ineligible_gias_code) }
+
+          context "school has high_pupil_premium" do
+            let(:school) { build(:school, establishment_type_code: ineligible_gias_code, high_pupil_premium: true) }
+
+            it "returns false" do
+              expect(subject.call).to be_falsey
+            end
+          end
+
+          context "school does not have high_pupil_premium" do
+            let(:school) { build(:school, establishment_type_code: ineligible_gias_code, high_pupil_premium: false) }
+
+            it "returns false" do
+              expect(subject.call).to be_falsey
+            end
+          end
         end
       end
     end
