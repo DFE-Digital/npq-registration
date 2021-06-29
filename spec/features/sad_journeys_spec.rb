@@ -51,7 +51,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
-    page.fill_in "Full name", with: "John Doe"
+    page.fill_in "Full name", with: "John Doeeeeee"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
@@ -103,16 +103,16 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567890")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
       )
-      .to_return(status: 200, body: dqt_response_body(trn: "1234567890", date_of_birth: "1980-12-13"), headers: {})
+      .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
 
     expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "1234567890"
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
