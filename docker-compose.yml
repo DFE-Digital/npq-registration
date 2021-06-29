@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        GIT_COMMIT_SHA: DOCKER_COMPOSE_GIT_COMMIT_SHA
     ports:
       - 8080:8080
     depends_on:

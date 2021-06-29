@@ -36,7 +36,7 @@ jobs:
           context: .
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-            SHA=${{ github.sha }}
+            GIT_COMMIT_SHA=${{ github.sha }}
           push: true
           tags: dfedigital/early-careers-framework-dev:npq-registration-dev
 
