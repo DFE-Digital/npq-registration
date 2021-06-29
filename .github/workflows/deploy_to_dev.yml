@@ -51,9 +51,11 @@ jobs:
           ENV_STUB: dev
           APP_NAME: npq-registration
           REMOTE_DOCKER_IMAGE_NAME: dfedigital/early-careers-framework-dev
+          CF_USERNAME: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
         run: |
           cf api https://api.london.cloud.service.gov.uk
-          cf auth "${{ secrets.GOVPAAS_DEV_USERNAME }}" "${{ secrets.GOVPAAS_DEV_PASSWORD }}"
+          cf auth
           cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
           cf push "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --manifest ./config/manifests/"${{ env.ENV_STUB }}"-manifest.yml \
