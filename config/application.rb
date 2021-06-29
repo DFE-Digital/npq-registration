@@ -40,5 +40,9 @@ module NpqRegistration
     config.action_mailer.notify_settings = {
       api_key: ENV["GOVUK_NOTIFY_API_KEY"]
     }
+
+    config.action_dispatch.default_headers = {
+      'X-XSS-Protection' => '0',
+    }
   end
 end
