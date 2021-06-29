@@ -13,8 +13,8 @@ class Rack::Attack
     "/registration/resend_code/change",
     "/registration/qualified_teacher_check",
     "/registration/qualified_teacher_check/change",
-    "/registration/sign_in",
-    "/registration/sign_in/change",
+    "/session/sign_in",
+    "/session/sign_in_code",
   ]
   throttle("Rate limit external APIs", limit: 5, period: 1.minute) do |request|
     request.ip if protected_routes.include?(request.path)
