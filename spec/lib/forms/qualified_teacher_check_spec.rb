@@ -3,11 +3,19 @@ require "rails_helper"
 RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:trn) }
-    it { is_expected.to validate_length_of(:trn).is_at_least(7).is_at_most(10) }
+    it { is_expected.to validate_length_of(:trn).is_equal_to(7) }
     it { is_expected.to validate_presence_of(:full_name) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(128) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_length_of(:national_insurance_number).is_at_most(9) }
+
+    describe "#trn" do
+      it "can only contain numbers" do
+        subject.trn = "123456a"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_present
+      end
+    end
 
     describe "#date_of_birth" do
       it "must be in the past" do

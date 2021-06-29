@@ -73,16 +73,16 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567890")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
       )
-      .to_return(status: 200, body: dqt_response_body(trn: "1234567890", date_of_birth: "1980-12-13"), headers: {})
+      .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
 
     expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "1234567890"
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
@@ -123,7 +123,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
@@ -177,16 +177,16 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567890")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
       )
-      .to_return(status: 200, body: dqt_response_body(trn: "1234567890", date_of_birth: "1980-12-13"), headers: {})
+      .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
 
     expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "1234567890"
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
@@ -234,7 +234,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567890")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
@@ -264,7 +264,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(user.email).to eql("user@example.com")
     expect(user.full_name).to eql("John Doe")
-    expect(user.trn).to eql("1234567890")
+    expect(user.trn).to eql("1234567")
     expect(user.trn_verified).to be_truthy
     expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
 
