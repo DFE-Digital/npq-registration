@@ -2,6 +2,8 @@
 
 Sentry.init do |config|
   config.dsn = Rails.env.production? ? ENV["SENTRY_DSN"] : "disabled"
+  config.release = ENV["GIT_COMMIT_SHA"]
+
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
