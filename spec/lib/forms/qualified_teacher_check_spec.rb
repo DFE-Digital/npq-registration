@@ -86,6 +86,27 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         expect(subject.trn_verified?).to be_falsey
       end
     end
+
+    context "exception is raised" do
+      before do
+        allow(DqtRecord).to receive(:find).and_raise(StandardError)
+      end
+
+      it "returns :dqt_mismatch" do
+        expect(subject.next_step).to eql(:dqt_mismatch)
+      end
+
+      it "marks trn_verified as falsey" do
+        subject.next_step
+        expect(subject.trn_verified?).to be_falsey
+      end
+
+      it "notifies sentry" do
+        allow(Sentry).to receive(:capture_exception)
+        subject.next_step
+        expect(Sentry).to have_received(:capture_exception)
+      end
+    end
   end
 
   describe "#after_save" do
