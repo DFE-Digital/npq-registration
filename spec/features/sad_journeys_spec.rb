@@ -155,7 +155,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     page.click_link("Start now")
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("No, I don't know my NPQ and provider")
+    page.choose("No, I don’t know my NPQ and provider")
     page.click_button("Continue")
 
     expect(page).to have_text("Choosing an NPQ and Provider")

@@ -20,12 +20,12 @@ en:
         forms/contact_details:
           attributes:
             email:
-              blank: Email can't be blank
+              blank: Email can’t be blank
               invalid: Enter a valid email address
         forms/resend_code:
           attributes:
             email:
-              blank: Email can't be blank
+              blank: Email can’t be blank
               invalid: Enter a valid email address
         forms/teacher_reference_number:
           attributes:
@@ -46,19 +46,19 @@ en:
         forms/confirm_email:
           attributes:
             confirmation_code:
-              blank: Code can't be blank
+              blank: Code can’t be blank
               wrong_length: Code should be 6 characters long
               incorrect: Code is not correct. Please try again
         forms/qualified_teacher_check:
           attributes:
             trn:
-              blank: Teacher reference number can't be blank
+              blank: Teacher reference number can’t be blank
               wrong_length: Teacher reference number must be %{count} digits long
               invalid: Teacher reference number must only contain numbers
             full_name:
-              blank: Full name can't be blank
+              blank: Full name can’t be blank
             date_of_birth:
-              blank: Date of birth can't be blank
+              blank: Date of birth can’t be blank
               in_future: Date of birth must be in the past
               invalid: Date of birth must be a valid date
             national_insurance_number:
@@ -76,11 +76,11 @@ en:
         forms/sign_in:
           attributes:
             email:
-              blank: Email can't be blank
+              blank: Email can’t be blank
         forms/sign_in_code:
           attributes:
             code:
-              blank: Code can't be blank
+              blank: Code can’t be blank
               incorrect: Code is not correct. Please try again
         forms/choose_school:
           attributes:
@@ -89,7 +89,7 @@ en:
         forms/find_school:
           attributes:
             school_location:
-              blank: School location can't be blank
+              blank: School location can’t be blank
         forms/headteacher_duration:
           attributes:
             headteacher_status:
