@@ -50,6 +50,12 @@ module Forms
 
         :dqt_mismatch
       end
+    rescue StandardError => e
+      Sentry.capture_exception(e)
+
+      mark_trn_as_unverified
+
+      :dqt_mismatch
     end
 
     def previous_step
