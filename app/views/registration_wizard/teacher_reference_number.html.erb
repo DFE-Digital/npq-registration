@@ -12,7 +12,7 @@
 
       <h1 class="govuk-heading-xl">Teacher reference number</h1>
 
-      <p class="govuk-body">Your teacher reference number (TRN) is used to check you're eligible to study for a national professional qualification (NPQ).</p>
+      <p class="govuk-body">Your teacher reference number (TRN) is used to check you’re eligible to study for a national professional qualification (NPQ).</p>
 
       <%= render GovukComponent::Details.new(summary: "What is a teacher reference number?") do %>
         <%= tag.p("A teacher reference number (TRN) is a unique ID that allows us to check you are a teacher.") %>
@@ -23,8 +23,8 @@
 
       <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you know your teacher reference number (TRN)?"} ) do %>
         <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: "Yes, I know my TRN" }, link_errors: true %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: "No, I don't know my TRN" } %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: "I don't have a TRN" } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: "No, I don’t know my TRN" } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: "I don’t have a TRN" } %>
       <% end %>
 
       <%= f.govuk_submit %>

@@ -16,14 +16,14 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("No, I don't know my TRN")
+    page.choose("No, I don’t know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("If you don’t know what your teacher reference number")
     page.click_link("Back")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("I don't have a TRN")
+    page.choose("I don’t have a TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
@@ -41,7 +41,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Not sure")
     page.click_button("Continue")
 
-    expect(page).to have_text("I don't know if I updated my name")
+    expect(page).to have_text("I don’t know if I updated my name")
     page.click_link("Back")
 
     expect(page).to have_text("Updated name")
