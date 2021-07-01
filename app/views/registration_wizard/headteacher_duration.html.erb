@@ -10,14 +10,14 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Are you a headteacher?</h1>
+      <h1 class="govuk-heading-xl">How long have you been a headteacher?</h1>
       <p class="govuk-body">If you're in the first two years of a headship, you may get government funding for your NPQH.</p>
       
       <%= f.govuk_collection_radio_buttons :headteacher_status,
         @form.options,
         :value,
         :text,
-        legend: { text: '' } %>
+        legend: { text: 'Are you in the first two years of a headship?' } %>
 
       <%= f.govuk_submit %>
     <% end %>

@@ -30,7 +30,7 @@ module Forms
                        text: "Yes, I am in the first two years of a headship",
                        link_errors: true),
         OpenStruct.new(value: "yes_over_two_years",
-                       text: "Yes, I have been a headteacher for more than 2 years",
+                       text: "No, I have been a headteacher for more than 2 years",
                        link_errors: false),
         OpenStruct.new(value: "yes_when_course_starts",
                        text: "No, I will be a headteacher when the course starts",
