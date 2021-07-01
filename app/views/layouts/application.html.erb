@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
   <head>
-    <title>Register for a National Professional Qualification</title>
+    <% if content_for?(:title) %>
+      <title><%= content_for(:title) %> - Register for a National Professional Qualification</title>
+    <% else %>
+      <title>Register for a National Professional Qualification</title>
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= canonical_tag %>
