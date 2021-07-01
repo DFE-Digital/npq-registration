@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Updated name
+  <%= @form.errors.present? ? "Error: " : nil %>Updated name
 <% end %>
 
 <% content_for :before_content do %>

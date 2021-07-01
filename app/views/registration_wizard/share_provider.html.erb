@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Sharing your NPQ information
+  <%= @form.errors.present? ? "Error: " : nil %>Sharing your NPQ information
 <% end %>
 
 <% content_for :before_content do %>

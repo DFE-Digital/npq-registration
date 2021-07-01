@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Teacher reference number
+  <%= @form.errors.present? ? "Error: " : nil %>Teacher reference number
 <% end %>
 
 <% content_for :before_content do %>

@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Find your school
+  <%= @form.errors.present? ? "Error: " : nil %>Find your school
 <% end %>
 
 <% content_for :before_content do %>

@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Check your email
+  <%= @form.errors.present? ? "Error: " : nil %>Check your email
 <% end %>
 
 <% content_for :before_content do %>
