@@ -4,13 +4,13 @@ RSpec.feature "Email confirmation", type: :feature do
   scenario "going back and changing their email address requires confirmation" do
     visit "/"
     page.click_link("Start now")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
     page.click_button("Continue")
-    page.check("Yes, I agree my information can be shared")
+    page.check("Yes, I agree my information can be shared", visible: :all)
     page.click_button("Continue")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
-    page.choose("No, I have the same name")
+    page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")

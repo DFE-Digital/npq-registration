@@ -11,6 +11,31 @@ require "site_prism"
 Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| require f }
 Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
 
+require "axe-rspec"
+require "axe-capybara"
+
+Capybara.register_driver :headless_chrome do |app|
+  version = Capybara::Selenium::Driver.load_selenium
+  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
+  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
+    opts.add_argument("--headless")
+    opts.add_argument("--disable-gpu")
+    opts.add_argument("--window-size=1920,1080")
+    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
+    opts.add_argument("--disable-site-isolation-trials")
+  end
+
+  Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
+end
+
+Capybara.default_driver = :headless_chrome
+Capybara.javascript_driver = :headless_chrome
+
+AxeCapybara.configure(:headless_chrome) do
+  # see below for a full list of configuration
+  # c.jslib_path = "next-version/axe.js"
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
