@@ -18,7 +18,7 @@ module Services
       when "NPQ Leading Teacher Development (NPQLTD)"
         eligible_establishment_type_codes_for_ltd_courses.include?(school.establishment_type_code)
       when "NPQ for Headship (NPQH)"
-        eligible_new_headteacher = if headteacher_status == "yes_in_first_two_years"
+        eligible_new_headteacher = if %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
                                      eligible_establishment_type_codes_for_new_headship.include?(school.establishment_type_code)
                                    end
 

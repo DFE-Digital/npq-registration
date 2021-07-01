@@ -107,6 +107,28 @@ RSpec.describe Services::FundingEligibility do
         end
       end
 
+      context "headship when course starts" do
+        let(:headteacher_status) { "yes_when_course_starts" }
+
+        context "at eligible establishment" do
+          let(:eligible_gias_code) { %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].sample }
+          let(:school) { build(:school, establishment_type_code: eligible_gias_code) }
+
+          it "returns true" do
+            expect(subject.call).to be_truthy
+          end
+        end
+
+        context "at ineligible establishment" do
+          let(:ineligible_gias_code) { %w[10 11 18 24 25 26 27 29 30 31 32 37 43 46 56].sample }
+          let(:school) { build(:school, establishment_type_code: ineligible_gias_code) }
+
+          it "returns false" do
+            expect(subject.call).to be_falsey
+          end
+        end
+      end
+
       context "not in first 2 years of headship" do
         let(:headteacher_status) { %w[yes_over_two_years no].sample }
 

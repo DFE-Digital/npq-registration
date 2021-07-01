@@ -75,7 +75,7 @@ class RegistrationWizard
                             change_step: :choose_your_npq)
 
     if form_for_step(:choose_your_npq).studying_for_headship?
-      array << OpenStruct.new(key: "Are you a headteacher?",
+      array << OpenStruct.new(key: "How long have you been a headteacher?",
                               value: store["headteacher_status"].humanize,
                               change_step: :headteacher_duration)
     end
