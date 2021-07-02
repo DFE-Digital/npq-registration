@@ -4,8 +4,9 @@ RSpec.describe ApplicationSubmissionJob do
   subject { described_class.new(user: user) }
 
   describe "#perform" do
-    let(:application) { create(:application, user: user) }
+    let(:application) { create(:application, user: user, school: school) }
     let(:user) { create(:user) }
+    let(:school) { create(:school) }
 
     before do
       application
@@ -84,7 +85,7 @@ RSpec.describe ApplicationSubmissionJob do
 
     context "when applications already exists in ecf" do
       let(:user) { create(:user, ecf_id: "123") }
-      let(:application) { create(:application, user: user, ecf_id: "456") }
+      let(:application) { create(:application, user: user, ecf_id: "456", school: school) }
 
       it "calls correct servivces" do
         instance_double(Services::EcfUserCreator)
