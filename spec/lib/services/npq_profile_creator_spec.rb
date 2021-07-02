@@ -14,13 +14,14 @@ RSpec.describe Services::NpqProfileCreator do
   end
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
+  let(:school) { create(:school) }
 
   let(:application) do
     Application.create!(
       user: user,
       course: course,
       lead_provider: lead_provider,
-      school_urn: "654321",
+      school_urn: school.urn,
       headteacher_status: "no",
       eligible_for_funding: true,
       funding_choice: "trust",
