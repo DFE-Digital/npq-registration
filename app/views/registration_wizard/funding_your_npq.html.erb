@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Funding your NPQ
+  <%= @form.errors.present? ? "Error: " : nil %>Funding your NPQ
 <% end %>
 
 <% content_for :before_content do %>

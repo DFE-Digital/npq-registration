@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Confirm your code
+  <%= @form.errors.present? ? "Error: " : nil %>Confirm your code
 <% end %>
 
 <% content_for :before_content do %>

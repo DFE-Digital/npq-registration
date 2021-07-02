@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Are you in the first two years of a headship?
+  <%= @form.errors.present? ? "Error: " : nil %>Are you in the first two years of a headship?
 <% end %>
 
 <% content_for :before_content do %>

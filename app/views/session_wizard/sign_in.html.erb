@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Sign in
+  <%= @form.errors.present? ? "Error: " : nil %>Sign in
 <% end %>
 
 <% content_for :before_content do %>
