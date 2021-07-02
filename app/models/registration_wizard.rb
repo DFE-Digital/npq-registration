@@ -1,3 +1,5 @@
+require "active_support/time"
+
 class RegistrationWizard
   include ActiveModel::Model
 

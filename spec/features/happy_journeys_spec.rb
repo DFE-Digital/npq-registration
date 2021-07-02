@@ -255,7 +255,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in "Enter your school name", with: "open"
     end
 
-    expect(page).to be_axe_clean
     expect(page).to have_content("open manchester school")
     page.find("#school-picker__option--0").click
     page.click_button("Continue")
