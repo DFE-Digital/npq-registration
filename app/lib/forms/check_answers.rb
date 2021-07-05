@@ -46,7 +46,7 @@ module Forms
     end
 
     def user
-      @user ||= User.find_by(email: wizard.store["email"])
+      @user ||= User.find_by(email: wizard.store["confirmed_email"])
     end
 
     def clear_answers_in_store
