@@ -50,17 +50,17 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       )
     end
 
-    before do
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-        .to_return(status: 200, body: dqt_response_body, headers: {})
-    end
-
     context "when DQT match found" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 200, body: participant_validator_response, headers: {})
+      end
+
       it "returns :choose_your_npq" do
         expect(subject.next_step).to eql(:choose_your_npq)
       end
@@ -73,8 +73,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "when DQT mismatch" do
       before do
-        subject.full_name = "Bob"
-        subject.national_insurance_number = ""
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 404, body: "", headers: {})
       end
 
       it "returns :dqt_mismatch" do
@@ -89,7 +94,9 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "exception is raised" do
       before do
-        allow(DqtRecord).to receive(:find).and_raise(StandardError)
+        mock_validator = instance_double(Services::ParticipantValidator)
+        allow(Services::ParticipantValidator).to receive(:new).and_return(mock_validator)
+        allow(mock_validator).to receive(:call).and_raise(StandardError)
       end
 
       it "returns :dqt_mismatch" do
@@ -133,13 +140,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "has no active alerts" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
           .with(
             headers: {
               "Authorization" => "Bearer ECFAPPBEARERTOKEN",
             },
           )
-          .to_return(status: 200, body: dqt_response_body, headers: {})
+          .to_return(status: 200, body: participant_validator_response, headers: {})
 
         subject.next_step
       end
@@ -152,13 +159,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "has active alerts" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
           .with(
             headers: {
               "Authorization" => "Bearer ECFAPPBEARERTOKEN",
             },
           )
-          .to_return(status: 200, body: dqt_response_body(active_alert: true), headers: {})
+          .to_return(status: 200, body: participant_validator_response(active_alert: true), headers: {})
 
         subject.next_step
       end
@@ -171,13 +178,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "trn has been verified" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
           .with(
             headers: {
               "Authorization" => "Bearer ECFAPPBEARERTOKEN",
             },
           )
-          .to_return(status: 200, body: dqt_response_body, headers: {})
+          .to_return(status: 200, body: participant_validator_response, headers: {})
 
         subject.next_step
       end
@@ -185,12 +192,33 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "persists to store" do
         subject.after_save
         expect(wizard.store["trn_verified"]).to eql(true)
+        expect(wizard.store["verified_trn"]).to eql("1234567")
+      end
+    end
+
+    context "when different trn found" do
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+          .to_return(status: 200, body: participant_validator_response(trn: "1111111"), headers: {})
+
+        subject.next_step
+      end
+
+      it "persists to store" do
+        subject.after_save
+        expect(wizard.store["trn_verified"]).to eql(true)
+        expect(wizard.store["verified_trn"]).to eql("1111111")
       end
     end
 
     context "trn has not been verified" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
           .with(
             headers: {
               "Authorization" => "Bearer ECFAPPBEARERTOKEN",

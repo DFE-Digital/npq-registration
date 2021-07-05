@@ -12,3 +12,15 @@ def dqt_response_body(trn: "1234567", date_of_birth: "1960-12-13", active_alert:
     },
   }.to_json
 end
+
+def participant_validator_response(trn: "1234567", active_alert: false)
+  {
+    data: {
+      attributes: {
+        trn: trn,
+        qts: true,
+        active_alert: active_alert,
+      },
+    },
+  }.to_json
+end

@@ -47,13 +47,13 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doeeeeee&nino=")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
       )
-      .to_return(status: 200, body: dqt_response_body, headers: {})
+      .to_return(status: 404, body: "", headers: {})
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Confirm your details")
@@ -118,13 +118,13 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/dqt-records/1234567")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doe&nino=")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
       )
-      .to_return(status: 200, body: dqt_response_body(trn: "1234567", date_of_birth: "1980-12-13"), headers: {})
+      .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Confirm your details")

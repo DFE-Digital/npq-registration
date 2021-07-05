@@ -30,15 +30,17 @@ module Forms
     end
 
     def next_step
-      record = DqtRecord.find(trn: trn_digits_only)
-
-      @active_alert = record && record.active_alert
-      if record && record.fuzzy_match?(
+      record = Services::ParticipantValidator.new(
+        trn: trn_digits_only,
         full_name: full_name,
         date_of_birth: date_of_birth,
         national_insurance_number: national_insurance_number,
-      )
+      ).call
+
+      if record
         mark_trn_as_verified
+        store_verified_trn(record)
+        store_active_alert(record)
 
         if changing_answer?
           :check_answers
@@ -58,6 +60,14 @@ module Forms
       :dqt_mismatch
     end
 
+    def store_verified_trn(record)
+      @verified_trn = record.trn
+    end
+
+    def store_active_alert(record)
+      @active_alert = record.active_alert
+    end
+
     def previous_step
       :contact_details
     end
@@ -72,10 +82,13 @@ module Forms
 
     def after_save
       wizard.store["trn_verified"] = trn_verified?
+      wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
     end
 
   private
+
+    attr_reader :verified_trn
 
     def trn_digits_only
       trn.scan(/\d/).join
