@@ -10,7 +10,7 @@ module Forms
 
     def after_save
       user.update!(
-        trn: wizard.store["trn"],
+        trn: wizard.store["verified_trn"].presence || wizard.store["trn"],
         trn_verified: wizard.store["trn_verified"],
         active_alert: wizard.store["active_alert"],
         full_name: wizard.store["full_name"],
@@ -46,7 +46,7 @@ module Forms
     end
 
     def user
-      @user ||= User.find_by(email: wizard.store["email"])
+      @user ||= User.find_by(email: wizard.store["confirmed_email"])
     end
 
     def clear_answers_in_store
