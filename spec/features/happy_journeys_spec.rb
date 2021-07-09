@@ -119,7 +119,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Find your school")
+    expect(page).to have_text("Where is your school?")
     page.fill_in "School location", with: "manchester"
     page.click_button("Continue")
 
@@ -244,7 +244,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Find your school")
+    expect(page).to have_text("Where is your school?")
     page.fill_in "School location", with: "manchester"
     page.click_button("Continue")
 

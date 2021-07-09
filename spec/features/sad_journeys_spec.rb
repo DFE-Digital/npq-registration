@@ -148,7 +148,7 @@ RSpec.feature "Sad journeys", type: :feature do
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Find your school")
+    expect(page).to have_text("Where is your school?")
     page.fill_in "School location", with: "wrexham"
     page.click_button("Continue")
 

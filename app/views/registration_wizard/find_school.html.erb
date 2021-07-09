@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Find your school
+  <%= @form.errors.present? ? "Error: " : nil %>Where is your school?
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,7 +14,7 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Find your school</h1>
+      <h1 class="govuk-heading-xl">Where is your school?</h1>
 
       <p class="govuk-body">We need this information to check if you can access Department for Education funding.</p>
 
