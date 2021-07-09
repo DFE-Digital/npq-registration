@@ -9,6 +9,9 @@ import schoolPicker from "./school-picker";
 Rails.start();
 initAll();
 
+require('es6-promise').polyfill()
+require('isomorphic-fetch')
+
 if (document.querySelector('#school-picker')) {
   schoolPicker.enhanceSelectElement({
     selectElement: document.querySelector('#school-picker'),
