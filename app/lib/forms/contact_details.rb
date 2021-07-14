@@ -1,5 +1,26 @@
 module Forms
   class ContactDetails < Base
+    TEST_DOMAINS = %w[
+      example.com
+      ambition.org.uk
+      churchofengland.org
+      pracedo.com
+      ucl.ac.uk
+      tribalgroup.com
+      teachfirst.org.uk
+      educationdevelopmenttrust.com
+      capita.com
+      bestpracticenet.co.uk
+      aircury.com
+      setsquaresolutions.com
+      harrisfederation.org.uk
+      harrischaffordhundred.org.uk
+      llse.org.uk
+      realgroup.co.uk
+      teacherdevelopmenttrust.org 
+      uclconsultants.com
+    ].freeze
+
     attr_reader :email
 
     validates :email, presence: true, email: true, length: { maximum: 128 }
@@ -43,10 +64,26 @@ module Forms
     def after_save
       wizard.store["generated_confirmation_code"] = code
       ConfirmEmailMailer.confirmation_code_mail(to: email, code: code).deliver_now
-      wizard.request.flash[:success] = "We've emailed a confirmation code to #{email}"
+      set_flash_message
     end
 
   private
+
+    def set_flash_message
+      wizard.request.flash[:success] = if sandbox? && whitelisted_domain?
+                                         "Your code is #{code}"
+                                       else
+                                         "We've emailed a confirmation code to #{email}"
+                                       end
+    end
+
+    def sandbox?
+      ENV["SERVICE_ENV"] == "sandbox"
+    end
+
+    def whitelisted_domain?
+      TEST_DOMAINS.any? { |domain| email.include?(domain) }
+    end
 
     def code
       @code ||= Services::OtpCodeGenerator.new.call
