@@ -1,0 +1,65 @@
+name: Promote to sandbox
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      # this step is not ideal as we should be using contents from docker image
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install CloudFoundry CLI
+        shell: bash
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf7-cli
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: Tag docker image from staging for sandbox
+        shell: bash
+        run: |
+          docker pull dfedigital/early-careers-framework-staging:npq-registration-staging
+          docker tag dfedigital/early-careers-framework-staging:npq-registration-staging dfedigital/early-careers-framework-staging:npq-registration-sandbox
+          docker push dfedigital/early-careers-framework-staging:npq-registration-sandbox
+          export DOCKER_IMAGE_ID=$(docker image ls -q dfedigital/early-careers-framework-staging:npq-registration-sandbox)
+          echo "DOCKER_IMAGE_ID=$DOCKER_IMAGE_ID" >> $GITHUB_ENV
+
+      - name: Deploy to Gov.uk PaaS
+        id: deploy-to-paas
+        shell: bash
+        env:
+          CF_DOCKER_PASSWORD: ${{ secrets.DOCKER_DEV_PASSWORD }}
+          PAAS_ORGANISATION: dfe
+          # This is a shared PAAS space
+          PAAS_SPACE: early-careers-framework-sandbox
+          ENV_STUB: sandbox
+          APP_NAME: npq-registration
+          REMOTE_DOCKER_IMAGE_NAME: dfedigital/early-careers-framework-staging
+          CF_USERNAME: ${{ secrets.GOVPAAS_STAG_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
+        run: |
+          cf api https://api.london.cloud.service.gov.uk
+          cf auth
+          cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
+          cf push "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --manifest ./config/manifests/"${{ env.ENV_STUB }}"-manifest.yml \
+            --var DOCKER_IMAGE_ID="${{ env.DOCKER_IMAGE_ID }}" \
+            --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_SANDBOX }}" \
+            --var GOVUK_NOTIFY_API_KEY="${{ secrets.GOVUK_NOTIFY_API_KEY_SANDBOX }}" \
+            --var ECF_APP_BEARER_TOKEN="${{ secrets.ECF_APP_BEARER_TOKEN_SANDBOX }}" \
+            --var SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
+            --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --docker-username "${{ secrets.DOCKER_USERNAME }}" \
+            --strategy rolling
