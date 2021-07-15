@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CspReportsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   CSP_KEYS = %w[
     blocked-uri
     disposition
