@@ -67,5 +67,21 @@ RSpec.describe Forms::ContactDetails, type: :model do
 
       expect(email.to).to eql(["user@example.com"])
     end
+
+    it "sets flash message" do
+      subject.after_save
+      expect(subject.wizard.request.flash[:success]).to eql("We've emailed a confirmation code to user@example.com")
+    end
+
+    context "when whitelisted domain and in sandbox" do
+      before do
+        allow(ENV).to receive(:[]).with("SERVICE_ENV").and_return("sandbox")
+      end
+
+      it "displays code in flash message" do
+        subject.after_save
+        expect(subject.wizard.request.flash[:success]).to match(/Your code is \d{6}/)
+      end
+    end
   end
 end
