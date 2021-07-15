@@ -5,6 +5,12 @@ require "rails_helper"
 RSpec.describe "CSP violation reporting" do
   let(:params) { { "csp-report" => { "blocked-uri" => "https://malicious.com/script.js" } } }
 
+  around do |example|
+    ActionController::Base.allow_forgery_protection = true
+    example.run
+    ActionController::Base.allow_forgery_protection = false
+  end
+
   before do
     allow(Rails.logger).to receive(:error)
     post csp_reports_path, params: params.to_json
