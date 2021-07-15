@@ -12,6 +12,7 @@ module Services
         teacher_reference_number_verified: user.trn_verified,
         active_alert: user.active_alert,
         date_of_birth: user.date_of_birth,
+        national_insurance_number: user.national_insurance_number,
         school_urn: application.school_urn,
         headteacher_status: application.headteacher_status,
         eligible_for_funding: application.eligible_for_funding,
