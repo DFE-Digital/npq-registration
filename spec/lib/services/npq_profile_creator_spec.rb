@@ -10,6 +10,7 @@ RSpec.describe Services::NpqProfileCreator do
       trn_verified: true,
       active_alert: true,
       date_of_birth: Date.new(1980, 12, 13),
+      national_insurance_number: "AB123456C",
     )
   end
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
@@ -60,6 +61,7 @@ RSpec.describe Services::NpqProfileCreator do
             teacher_reference_number_verified: true,
             active_alert: true,
             date_of_birth: user.date_of_birth.iso8601,
+            national_insurance_number: user.national_insurance_number,
             school_urn: application.school_urn,
             headteacher_status: "no",
             eligible_for_funding: true,

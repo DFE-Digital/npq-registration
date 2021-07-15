@@ -15,6 +15,7 @@ module Forms
         active_alert: wizard.store["active_alert"],
         full_name: wizard.store["full_name"],
         date_of_birth: wizard.store["date_of_birth"],
+        national_insurance_number: ni_number_to_store,
       )
 
       user.applications.create!(
@@ -36,6 +37,10 @@ module Forms
     end
 
   private
+
+    def ni_number_to_store
+      wizard.store["national_insurance_number"] unless wizard.store["trn_verified"]
+    end
 
     def course
       @course ||= Course.find(wizard.store["course_id"])

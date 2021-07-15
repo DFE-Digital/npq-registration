@@ -47,7 +47,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doeeeeee&nino=")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doeeeeee&nino=AB123456C")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -62,6 +62,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number (optional)", with: "AB123456C"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -70,6 +71,72 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Confirm your details")
+    page.click_button("Continue")
+
+    expect(page).to have_text("We cannot find your details")
+    page.click_link("Continue registration")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your NPQ")
+    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your provider")
+    page.choose("Teach First", visible: :all)
+    page.click_button("Continue")
+
+    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Where is your school?")
+    page.fill_in "School location", with: "manchester"
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Please choose from schools located in manchester")
+    within ".npq-js-reveal" do
+      page.fill_in "Enter your school name", with: "open"
+    end
+
+    expect(page).to have_content("open manchester school")
+    page.find("#school-picker__option--0").click
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Funding your NPQ")
+    page.choose "My trust is paying", visible: :all
+    page.click_button("Continue")
+
+    check_answers_page = CheckAnswersPage.new
+
+    expect(page).to be_axe_clean
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doeeeeee")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
+    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
+    expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
+    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
+    expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
+
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
+
+    page.click_button("Submit")
+
+    user = User.last
+
+    expect(user.email).to eql("user@example.com")
+    expect(user.full_name).to eql("John Doeeeeee")
+    expect(user.trn).to eql("1234567")
+    expect(user.trn_verified).to be_falsey
+    expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
+    expect(user.national_insurance_number).to eql("AB123456C")
   end
 
   scenario "school not in england" do

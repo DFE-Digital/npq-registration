@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_01_145259) do
+ActiveRecord::Schema.define(version: 2021_07_15_092732) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_07_01_145259) do
     t.date "date_of_birth"
     t.boolean "trn_verified", default: false, null: false
     t.boolean "active_alert", default: false
+    t.text "national_insurance_number"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end
