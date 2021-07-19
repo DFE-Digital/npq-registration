@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_15_092732) do
+ActiveRecord::Schema.define(version: 2021_07_19_104504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -59,6 +59,13 @@ ActiveRecord::Schema.define(version: 2021_07_15_092732) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "ecf_id"
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.text "identifier", null: false
+    t.text "data"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "schools", force: :cascade do |t|
