@@ -13,7 +13,7 @@ module Forms
       @date_of_birth_invalid = true
     end
 
-    validates :trn, presence: true, length: { is: 7 }, format: { with: /\A\d{7}\z/ }
+    validates :trn, presence: true, length: { in: 5..7 }, format: { with: /\A\d+\z/ }
     validates :full_name, presence: true, length: { maximum: 128 }
     validate :validate_date_of_birth_valid?
     validates :date_of_birth, presence: true

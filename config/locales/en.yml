@@ -53,7 +53,8 @@ en:
           attributes:
             trn:
               blank: Teacher reference number can’t be blank
-              wrong_length: Teacher reference number must be %{count} digits long
+              too_short: Teacher reference number is at least %{count} digits long
+              too_long: Teacher reference number is at most %{count} digits long
               invalid: Teacher reference number must only contain numbers
             full_name:
               blank: Full name can’t be blank
