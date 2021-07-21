@@ -231,7 +231,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("How long have you been a headteacher?")
-    page.choose("No, I have been a headteacher for more than 2 years", visible: :all)
+    page.choose("No, I have been a headteacher for more than 24 months", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean

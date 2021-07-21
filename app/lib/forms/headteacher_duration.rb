@@ -27,10 +27,10 @@ module Forms
     def options
       [
         OpenStruct.new(value: "yes_in_first_two_years",
-                       text: "Yes, I am in the first two years of a headship",
+                       text: "Yes, I have been a headteacher less than 24 months",
                        link_errors: true),
         OpenStruct.new(value: "yes_over_two_years",
-                       text: "No, I have been a headteacher for more than 2 years",
+                       text: "No, I have been a headteacher for more than 24 months",
                        link_errors: false),
         OpenStruct.new(value: "yes_when_course_starts",
                        text: "No, I will be a headteacher when the course starts",
