@@ -59,9 +59,16 @@ class RegistrationWizard
     array << OpenStruct.new(key: "TRN",
                             value: store["trn"],
                             change_step: :qualified_teacher_check)
-    array << OpenStruct.new(key: "Date of birth",
-                            value: dob.to_s(:long),
-                            change_step: :qualified_teacher_check)
+
+    begin
+      array << OpenStruct.new(key: "Date of birth",
+                              value: dob.to_s(:long),
+                              change_step: :qualified_teacher_check)
+    rescue ArgumentError => e
+      Sentry.capture_exception(e, extra: { dob: dob })
+
+      raise e
+    end
 
     if form_for_step(:qualified_teacher_check).national_insurance_number.present?
       array << OpenStruct.new(key: "National Insurance number",
