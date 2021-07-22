@@ -39,5 +39,9 @@ module Forms
     def no_answers_will_change?
       wizard.store.slice(*self.class.permitted_params.map(&:to_s)) == attributes.stringify_keys
     end
+
+    def requirements_met?
+      true
+    end
   end
 end
