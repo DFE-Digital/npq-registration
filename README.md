@@ -22,6 +22,11 @@
 - fire up a rails console and run the following
 - `Services::ImportGiasSchools.new.call`
 
+## Importing premium pupils data
+
+- fire up a rails console and run the following
+- `Services::SetHighPupilPremiums.new(path_to_csv: Rails.root.join("config/data/high_pupil_premiums_2021_2022.csv")).call`
+
 ## Running specs, linter(without auto correct) and annotate models and serializers
 ```
 bundle exec rake
