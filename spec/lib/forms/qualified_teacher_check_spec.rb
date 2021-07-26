@@ -114,6 +114,20 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         expect(Sentry).to have_received(:capture_exception)
       end
     end
+
+    context "when in sandbox" do
+      before do
+        allow(ENV).to receive(:[]).with("SERVICE_ENV").and_return("sandbox")
+      end
+
+      it "uses FakeParticipantValidator" do
+        allow(Services::FakeParticipantValidator).to receive(:new)
+
+        subject.next_step
+
+        expect(Services::FakeParticipantValidator).to have_received(:new)
+      end
+    end
   end
 
   describe "#after_save" do

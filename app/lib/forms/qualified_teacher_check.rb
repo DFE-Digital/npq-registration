@@ -30,7 +30,7 @@ module Forms
     end
 
     def next_step
-      record = Services::ParticipantValidator.new(
+      record = participant_validator_class.new(
         trn: trn_digits_only,
         full_name: full_name,
         date_of_birth: date_of_birth,
@@ -111,6 +111,14 @@ module Forms
     def validate_date_of_birth_valid?
       if @date_of_birth_invalid
         errors.add(:date_of_birth, :invalid)
+      end
+    end
+
+    def participant_validator_class
+      if ENV["SERVICE_ENV"] == "sandbox"
+        Services::FakeParticipantValidator
+      else
+        Services::ParticipantValidator
       end
     end
   end
