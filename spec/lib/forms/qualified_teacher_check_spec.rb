@@ -1,6 +1,31 @@
 require "rails_helper"
 
 RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
+  describe "before validations" do
+    subject do
+      described_class.new(
+        trn: "  1234  567  ",
+        full_name: "  John     Doe   ",
+        national_insurance_number: "  AB 12 34 56 C ",
+      )
+    end
+
+    it "strips superflous whitespace from TRN" do
+      subject.valid?
+      expect(subject.trn).to eql("1234567")
+    end
+
+    it "strips superflous whitespace from full_name" do
+      subject.valid?
+      expect(subject.full_name).to eql("John Doe")
+    end
+
+    it "strips superflous whitespace from NI number" do
+      subject.valid?
+      expect(subject.national_insurance_number).to eql("AB123456C")
+    end
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:trn) }
     it { is_expected.to validate_length_of(:trn).is_at_least(5).is_at_most(7) }
