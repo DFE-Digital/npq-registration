@@ -1,6 +1,7 @@
 module Forms
   class Base
     include ActiveModel::Model
+    include ActiveModel::Validations::Callbacks
 
     attr_accessor :wizard
 

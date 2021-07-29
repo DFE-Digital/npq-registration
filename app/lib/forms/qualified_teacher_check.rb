@@ -13,6 +13,10 @@ module Forms
       @date_of_birth_invalid = true
     end
 
+    before_validation :strip_full_name_whitespace
+    before_validation :strip_trn_whitespace
+    before_validation :strip_ni_number_whitespace
+
     validates :trn, presence: true, length: { in: 5..7 }, format: { with: /\A\d+\z/ }
     validates :full_name, presence: true, length: { maximum: 128 }
     validate :validate_date_of_birth_valid?
@@ -89,6 +93,18 @@ module Forms
   private
 
     attr_reader :verified_trn
+
+    def strip_full_name_whitespace
+      full_name&.squish!
+    end
+
+    def strip_trn_whitespace
+      trn&.gsub!(" ", "")
+    end
+
+    def strip_ni_number_whitespace
+      national_insurance_number&.gsub!(" ", "")
+    end
 
     def trn_digits_only
       trn.scan(/\d/).join
