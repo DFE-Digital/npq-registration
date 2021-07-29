@@ -16,6 +16,7 @@ module Forms
     before_validation :strip_full_name_whitespace
     before_validation :strip_trn_whitespace
     before_validation :strip_ni_number_whitespace
+    before_validation :strip_title_prefixes
 
     validates :trn, presence: true, length: { in: 5..7 }, format: { with: /\A\d+\z/ }
     validates :full_name, presence: true, length: { maximum: 128 }
@@ -128,6 +129,10 @@ module Forms
       if @date_of_birth_invalid
         errors.add(:date_of_birth, :invalid)
       end
+    end
+
+    def strip_title_prefixes
+      full_name&.sub!(/^Mr |^Mrs |^Miss |^Ms /, "")
     end
   end
 end
