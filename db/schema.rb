@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_19_104504) do
+ActiveRecord::Schema.define(version: 2021_07_30_094220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2021_07_19_104504) do
     t.text "establishment_type_code"
     t.text "establishment_type_name"
     t.boolean "high_pupil_premium", default: false, null: false
+    t.text "postcode_without_spaces"
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end
