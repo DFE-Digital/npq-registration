@@ -56,6 +56,7 @@ module Services
         town: row["Town"],
         county: row["County (name)"],
         postcode: row["Postcode"],
+        postcode_without_spaces: row["Postcode"]&.gsub(" ", ""),
         easting: row["Easting"],
         northing: row["Northing"],
         region: row["RSCRegion (name)"],
