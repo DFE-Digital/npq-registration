@@ -63,6 +63,7 @@ RSpec.describe Services::ImportGiasSchools do
         expect(school.town).to eql(row["Town"])
         expect(school.county).to eql(row["County (name)"])
         expect(school.postcode).to eql(row["Postcode"])
+        expect(school.postcode_without_spaces).to eql(row["Postcode"]&.gsub(" ", ""))
         expect(school.easting.to_s).to eql(row["Easting"].to_s)
         expect(school.northing.to_s).to eql(row["Northing"].to_s)
         expect(school.region).to eql(row["RSCRegion (name)"])
