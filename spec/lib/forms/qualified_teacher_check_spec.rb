@@ -24,6 +24,26 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       subject.valid?
       expect(subject.national_insurance_number).to eql("AB123456C")
     end
+
+    context "full_name with titles" do
+      it "removes leading titles from full_name" do
+        subject.full_name = "Mr John Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("John Doe")
+
+        subject.full_name = "Ms Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "Mrs Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "Miss Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+      end
+    end
   end
 
   describe "validations" do
