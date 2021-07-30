@@ -1,5 +1,9 @@
 module Forms
   class CheckAnswers < Base
+    def requirements_met?
+      wizard.store["date_of_birth"].present?
+    end
+
     def previous_step
       :choose_school
     end
