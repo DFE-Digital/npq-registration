@@ -11,6 +11,7 @@ module Services
             a.user.id,
             a.user.created_at,
             a.user.trn_verified,
+            a.user.trn_auto_verified,
             a.id,
             a.created_at,
             a.headteacher_status,
@@ -36,6 +37,7 @@ module Services
         user_id
         user_created_at
         trn_verified
+        trn_auto_verified
         application_id
         application_created_at
         headteacher_status

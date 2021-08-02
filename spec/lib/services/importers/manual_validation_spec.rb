@@ -5,8 +5,16 @@ RSpec.describe Services::Importers::ManualValidation do
   let(:school) { create(:school) }
   let(:user) { create(:user) }
   let(:application) { create(:application, :with_ecf_id, user: user, school: school) }
-
   let(:file) { Tempfile.new("test.csv") }
+
+  around do |example|
+    original_stdout = $stdout
+    $stdout = File.open(File::NULL, "w")
+
+    example.run
+
+    $stdout = original_stdout
+  end
 
   describe "#call" do
     subject do

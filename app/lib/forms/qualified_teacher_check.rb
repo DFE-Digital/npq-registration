@@ -44,6 +44,7 @@ module Forms
 
       if record
         mark_trn_as_verified
+        mark_trn_as_auto_verified
         store_verified_trn(record)
         store_active_alert(record)
 
@@ -81,12 +82,17 @@ module Forms
       @trn_verified
     end
 
+    def trn_auto_verified?
+      @trn_auto_verified
+    end
+
     def active_alert?
       @active_alert
     end
 
     def after_save
       wizard.store["trn_verified"] = trn_verified?
+      wizard.store["trn_auto_verified"] = trn_auto_verified?
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
     end
@@ -113,6 +119,10 @@ module Forms
 
     def mark_trn_as_verified
       @trn_verified = true
+    end
+
+    def mark_trn_as_auto_verified
+      @trn_auto_verified = true
     end
 
     def mark_trn_as_unverified
