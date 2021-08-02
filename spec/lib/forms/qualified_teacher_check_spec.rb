@@ -237,6 +237,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "persists to store" do
         subject.after_save
         expect(wizard.store["trn_verified"]).to eql(true)
+        expect(wizard.store["trn_auto_verified"]).to eql(true)
         expect(wizard.store["verified_trn"]).to eql("1234567")
       end
     end
@@ -257,6 +258,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "persists to store" do
         subject.after_save
         expect(wizard.store["trn_verified"]).to eql(true)
+        expect(wizard.store["trn_auto_verified"]).to eql(true)
         expect(wizard.store["verified_trn"]).to eql("1111111")
       end
     end
@@ -277,6 +279,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "persists to store" do
         subject.after_save
         expect(wizard.store["trn_verified"]).to eql(false)
+        expect(wizard.store["trn_auto_verified"]).to be_falsey
       end
     end
   end

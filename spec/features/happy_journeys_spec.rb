@@ -304,6 +304,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(user.full_name).to eql("John Doe")
     expect(user.trn).to eql("1234567")
     expect(user.trn_verified).to be_truthy
+    expect(user.trn_auto_verified).to be_truthy
     expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
     expect(user.national_insurance_number).to be_blank
 

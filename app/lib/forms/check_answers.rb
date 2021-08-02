@@ -16,6 +16,7 @@ module Forms
       user.update!(
         trn: wizard.store["verified_trn"].presence || wizard.store["trn"],
         trn_verified: wizard.store["trn_verified"],
+        trn_auto_verified: wizard.store["trn_auto_verified"],
         active_alert: wizard.store["active_alert"],
         full_name: wizard.store["full_name"],
         date_of_birth: wizard.store["date_of_birth"],
