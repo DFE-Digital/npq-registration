@@ -142,7 +142,7 @@ module Forms
     end
 
     def strip_title_prefixes
-      full_name&.sub!(/^Mr |^Mrs |^Miss |^Ms /, "")
+      full_name&.sub!(/^Mr\.* |^Mrs\.* |^Miss\.* |^Ms\.* /i, "")
     end
   end
 end
