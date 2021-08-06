@@ -31,7 +31,19 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         subject.valid?
         expect(subject.full_name).to eql("John Doe")
 
+        subject.full_name = "MR JOHN DOE"
+        subject.valid?
+        expect(subject.full_name).to eql("JOHN DOE")
+
+        subject.full_name = "Mr. John Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("John Doe")
+
         subject.full_name = "Ms Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "Ms. Jane Doe"
         subject.valid?
         expect(subject.full_name).to eql("Jane Doe")
 
@@ -39,7 +51,15 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         subject.valid?
         expect(subject.full_name).to eql("Jane Doe")
 
+        subject.full_name = "Mrs. Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
         subject.full_name = "Miss Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "Miss. Jane Doe"
         subject.valid?
         expect(subject.full_name).to eql("Jane Doe")
       end
