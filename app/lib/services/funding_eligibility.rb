@@ -37,7 +37,7 @@ module Services
     end
 
     def eligible_establishment_type_codes_for_ltd_courses
-      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].freeze
+      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 43 44 45].freeze
     end
 
     def eligible_establishment_type_codes_for_headship_and_high_pupil_premiums
@@ -45,7 +45,7 @@ module Services
     end
 
     def eligible_establishment_type_codes_for_new_headship
-      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 44 45].freeze
+      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 43 44 45].freeze
     end
   end
 end
