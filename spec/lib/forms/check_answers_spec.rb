@@ -32,5 +32,20 @@ RSpec.describe Forms::CheckAnswers do
         expect(user.trn).to eql(verified_trn)
       end
     end
+
+    context "when trn_auto_verified is nil" do
+      before do
+        store["trn_auto_verified"] = nil
+      end
+
+      it "persists as false" do
+        subject.wizard = wizard
+        subject.after_save
+
+        user.reload
+
+        expect(user.trn_auto_verified).to eql(false)
+      end
+    end
   end
 end

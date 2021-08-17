@@ -26,6 +26,9 @@ Style/HashLikeCase:
 Rails/Delegate:
   Enabled: false
 
+Style/DoubleNegation:
+  Enabled: false
+
 Rails/SaveBang:
   Exclude:
     - "app/lib/ecf_api/base.rb"
