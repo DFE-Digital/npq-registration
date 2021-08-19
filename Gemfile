@@ -38,7 +38,7 @@ end
 
 group :development do
   gem "i18n-debug"
-  gem "listen", ">= 3.0.5", "< 3.7"
+  gem "listen", ">= 3.0.5", "< 3.8"
   gem "web-console", ">= 3.3.0"
 end
 
