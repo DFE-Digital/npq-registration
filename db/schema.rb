@@ -61,6 +61,22 @@ ActiveRecord::Schema.define(version: 2021_08_31_105602) do
     t.text "ecf_id"
   end
 
+  create_table "local_authorities", force: :cascade do |t|
+    t.text "ukprn"
+    t.text "name"
+    t.text "address_1"
+    t.text "address_2"
+    t.text "address_3"
+    t.text "town"
+    t.text "county"
+    t.text "postcode"
+    t.text "postcode_without_spaces"
+    t.boolean "high_pupil_premium", default: false, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
+  end
+
   create_table "reports", force: :cascade do |t|
     t.text "identifier", null: false
     t.text "data"
