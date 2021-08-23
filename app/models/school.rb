@@ -13,6 +13,11 @@ class School < ApplicationRecord
   pg_search_scope :search_by_location,
                   against: %i[la_name address_1 address_2 address_3 town county postcode postcode_without_spaces region]
 
+  # 1 => establishment_status_name: "Open"
+  # 2 => establishment_status_name: "Closed"
+  # 3 => establishment_status_name: "Open, but proposed to close"
+  # 4 => establishment_status_name: "Proposed to open"
+
   scope :open, -> { where(establishment_status_code: %w[1 3 4]) }
 
   def address
