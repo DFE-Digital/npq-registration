@@ -37,7 +37,7 @@ module Forms
     end
 
     def possible_institutions
-      return @possible_institutions if possible_institutions
+      return @possible_institutions if @possible_institutions
 
       schools = School
         .open
