@@ -14,33 +14,39 @@ RSpec.describe Forms::ChooseSchool, type: :model do
       described_class.new(wizard: wizard)
     end
 
-    describe "#school_urn" do
-      it "can have school_urn as empty string" do
-        subject.school_urn = ""
+    describe "#institution_identifier" do
+      it "can have institution_identifier as empty string" do
+        subject.institution_identifier = ""
         subject.valid?
-        expect(subject.errors[:school_urn]).to be_blank
+        expect(subject.errors[:institution_identifier]).to be_blank
       end
 
-      it "can have school_urn as 'other'" do
-        subject.school_urn = "other"
+      it "can have institution_identifier as 'other'" do
+        subject.institution_identifier = "other"
         subject.valid?
-        expect(subject.errors[:school_urn]).to be_blank
+        expect(subject.errors[:institution_identifier]).to be_blank
       end
 
-      it "can have school_urn as '123456'" do
-        subject.school_urn = "123456"
+      it "can have institution_identifier as 'School-123456'" do
+        subject.institution_identifier = "School-123456"
         subject.valid?
-        expect(subject.errors[:school_urn]).to be_blank
+        expect(subject.errors[:institution_identifier]).to be_blank
       end
 
-      it "cannot have school_urn as '1234567'" do
-        subject.school_urn = "1234567"
+      it "can have institution_identifier as 'LocalAuthority-1'" do
+        subject.institution_identifier = "LocalAuthority-1"
         subject.valid?
-        expect(subject.errors[:school_urn]).to be_present
+        expect(subject.errors[:institution_identifier]).to be_blank
+      end
+
+      it "cannot have institution_identifier as '1234567'" do
+        subject.institution_identifier = "1234567"
+        subject.valid?
+        expect(subject.errors[:institution_identifier]).to be_present
       end
     end
 
-    it { is_expected.to validate_length_of(:school_name).is_at_most(64) }
+    it { is_expected.to validate_length_of(:institution_name).is_at_most(64) }
   end
 
   describe "#next_step" do
@@ -48,7 +54,7 @@ RSpec.describe Forms::ChooseSchool, type: :model do
     let(:store) { { "course_id" => course.id.to_s } }
     let(:school) { create(:school) }
 
-    subject { described_class.new(school_urn: school.urn, wizard: wizard) }
+    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard: wizard) }
 
     context "eligible_for_funding" do
       let(:funding_double) { instance_double(Services::FundingEligibility, call: true) }

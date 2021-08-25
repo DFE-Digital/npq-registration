@@ -24,7 +24,7 @@ RSpec.describe InstitutionsController do
 
       parsed_response = JSON.parse(response.body)
 
-      expect(parsed_response.sample.keys).to eql(%w[urn ukprn name address])
+      expect(parsed_response.sample.keys).to eql(%w[identifier name address])
       expect(parsed_response.sample["address"]).to be_a(String)
     end
 
@@ -33,7 +33,7 @@ RSpec.describe InstitutionsController do
 
       parsed_response = JSON.parse(response.body)
 
-      expect(parsed_response.sample.keys).to eql(%w[urn ukprn name address])
+      expect(parsed_response.sample.keys).to eql(%w[identifier name address])
       expect(parsed_response.sample["address"]).to be_a(String)
     end
   end

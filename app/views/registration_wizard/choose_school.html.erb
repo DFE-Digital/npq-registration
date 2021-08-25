@@ -18,36 +18,36 @@
 
       <% if @form.display_schools? %>
         <% if @form.possible_schools.blank? %>
-          <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["school_location"] %></p>
+          <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["institution_location"] %></p>
 
           <p class="govuk-body">No schools were found with that name, please try again</p>
 
-          <%= f.govuk_text_field :school_name,
+          <%= f.govuk_text_field :institution_name,
                                  width: "full",
                                  label: { text: "Enter your school name" } %>
         <% else %>
-          <%= f.govuk_radio_buttons_fieldset(:school_urn, legend: { size: 'm', text: "Please choose from schools located in #{@form.wizard.store["school_location"]}" }) do %>
+          <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'm', text: "Please choose from schools located in #{@form.wizard.store["institution_location"]}" }) do %>
             <% @form.possible_schools.each do |school| %>
-              <%= f.govuk_radio_button :school_urn, school.urn, label: { text: school.name }, hint: { text: school.address_string }, link_errors: true %>
+              <%= f.govuk_radio_button :institution_identifier, school.urn, label: { text: school.name }, hint: { text: school.address_string }, link_errors: true %>
             <% end %>
             <%= f.govuk_radio_divider %>
-            <%= f.govuk_radio_button :school_urn, 'other', label: { text: "School not shown above" } do %>
-              <%= f.govuk_text_field :school_name, label: { text: "Search for another school name" } %>
+            <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "School not shown above" } do %>
+              <%= f.govuk_text_field :institution_name, label: { text: "Search for another school name" } %>
             <% end %>
           <% end %>
         <% end %>
       <% else %>
-        <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["school_location"] %></p>
+        <p class="govuk-body">Please choose from schools located in <%= @form.wizard.store["institution_location"] %></p>
         <div class="npq-js-hidden">
-          <%= f.govuk_text_field :school_name,
+          <%= f.govuk_text_field :institution_name,
                                  width: "full",
                                  label: { text: "Enter your school name" } %>
         </div>
 
         <div class="npq-js-reveal">
           <div class="govuk-form-group">
-            <%= f.label :school_urn, "Enter your school name", class: "govuk-label", for: "school-picker" %>
-            <%= f.text_field :school_urn, data: { location: @form.wizard.store["school_location"] }, id: "school-picker" %>
+            <%= f.label :institution_identifier, "Enter your school name", class: "govuk-label", for: "school-picker" %>
+            <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "school-picker" %>
           </div>
         </div>
       <% end %>

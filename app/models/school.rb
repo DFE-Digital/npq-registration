@@ -38,4 +38,8 @@ class School < ApplicationRecord
 
     true
   end
+
+  def identifier
+    "School-#{urn}"
+  end
 end

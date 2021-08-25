@@ -1,5 +1,7 @@
 module Forms
   class CheckAnswers < Base
+    include Helpers::Institution
+
     def previous_step
       :choose_school
     end
@@ -22,11 +24,12 @@ module Forms
       user.applications.create!(
         course_id: course.id,
         lead_provider_id: wizard.store["lead_provider_id"],
-        school_urn: school.urn,
+        school_urn: institution.urn,
+        ukprn: institution.ukprn,
         headteacher_status: wizard.store["headteacher_status"],
         eligible_for_funding: Services::FundingEligibility.new(
           course: course,
-          school: school,
+          institution: institution,
           headteacher_status: wizard.store["headteacher_status"],
         ).call,
         funding_choice: wizard.store["funding"],

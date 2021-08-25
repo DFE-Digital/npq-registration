@@ -2,8 +2,9 @@ require "rails_helper"
 
 RSpec.describe Services::FundingEligibility do
   let(:headteacher_status) { nil }
+  let(:institution) { school }
 
-  subject { described_class.new(course: course, school: school, headteacher_status: headteacher_status) }
+  subject { described_class.new(course: course, institution: institution, headteacher_status: headteacher_status) }
 
   describe "#call" do
     context "studying for NPQEL, NPQLBC, NPQSL, NPQLT" do
@@ -177,6 +178,34 @@ RSpec.describe Services::FundingEligibility do
                 expect(subject.call).to be_falsey
               end
             end
+          end
+        end
+      end
+    end
+
+    context "when institution is a LocalAuthority" do
+      let(:institution) { create(:local_authority) }
+
+      context "studying for NPQLTD, NPQH" do
+        let(:course) { Course.all.select { |c| c.name.match?(/\(NPQLTD\)|\(NPQH\)/) }.sample }
+
+        it "is eligible" do
+          expect(subject.call).to be_truthy
+        end
+      end
+
+      context "studying for NPQEL, NPQLBC, NPQSL, NPQLT" do
+        let(:course) { Course.all.select { |c| c.name.match?(/\(NPQEL\)|\(NPQLBC\)|\(NPQSL\)|\(NPQLT\)/) }.sample }
+
+        it "is not eligible" do
+          expect(subject.call).to be_falsey
+        end
+
+        context "local authority has high pupil premium" do
+          let(:institution) { create(:local_authority, high_pupil_premium: true) }
+
+          it "is eligible" do
+            expect(subject.call).to be_truthy
           end
         end
       end

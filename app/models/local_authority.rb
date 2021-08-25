@@ -24,4 +24,12 @@ class LocalAuthority < ApplicationRecord
   def address_string
     address.join(", ")
   end
+
+  def identifier
+    "LocalAuthority-#{id}"
+  end
+
+  def in_england?
+    true
+  end
 end

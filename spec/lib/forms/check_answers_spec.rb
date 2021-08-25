@@ -9,7 +9,7 @@ RSpec.describe Forms::CheckAnswers do
   let(:store) do
     {
       lead_provider_id: load_provider.id,
-      school_urn: school.urn,
+      institution_identifier: "School-#{school.urn}",
       course_id: course.id,
       trn_verified: true,
       trn: "1234567",

@@ -20,13 +20,14 @@ ActiveRecord::Schema.define(version: 2021_08_31_105602) do
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.text "school_urn", null: false
+    t.text "school_urn"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "ecf_id"
     t.text "headteacher_status"
     t.boolean "eligible_for_funding", default: false, null: false
     t.text "funding_choice"
+    t.text "ukprn"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"

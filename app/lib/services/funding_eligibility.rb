@@ -1,31 +1,49 @@
 module Services
   class FundingEligibility
-    attr_reader :course, :school, :headteacher_status
+    attr_reader :course, :institution, :headteacher_status
 
-    def initialize(course:, school:, headteacher_status: nil)
+    def initialize(course:, institution:, headteacher_status: nil)
       @course = course
-      @school = school
+      @institution = institution
       @headteacher_status = headteacher_status
     end
 
     def call
-      case course.name
-      when "NPQ Leading Teaching (NPQLT)",
-           "NPQ Leading Behaviour and Culture (NPQLBC)",
-           "NPQ for Senior Leadership (NPQSL)",
-           "NPQ for Executive Leadership (NPQEL)"
-        eligible_establishment_type_codes_for_base_courses.include?(school.establishment_type_code) && school.high_pupil_premium
-      when "NPQ Leading Teacher Development (NPQLTD)"
-        eligible_establishment_type_codes_for_ltd_courses.include?(school.establishment_type_code)
-      when "NPQ for Headship (NPQH)"
-        eligible_new_headteacher = if %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
-                                     eligible_establishment_type_codes_for_new_headship.include?(school.establishment_type_code)
-                                   end
+      case institution.class.name
+      when "School"
+        case course.name
+        when "NPQ Leading Teaching (NPQLT)",
+             "NPQ Leading Behaviour and Culture (NPQLBC)",
+             "NPQ for Senior Leadership (NPQSL)",
+             "NPQ for Executive Leadership (NPQEL)"
+          eligible_establishment_type_codes_for_base_courses.include?(institution.establishment_type_code) && institution.high_pupil_premium
+        when "NPQ Leading Teacher Development (NPQLTD)"
+          eligible_establishment_type_codes_for_ltd_courses.include?(institution.establishment_type_code)
+        when "NPQ for Headship (NPQH)"
+          eligible_new_headteacher = if %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
+                                       eligible_establishment_type_codes_for_new_headship.include?(institution.establishment_type_code)
+                                     end
 
-        eligible_headship_school = school.high_pupil_premium && eligible_establishment_type_codes_for_headship_and_high_pupil_premiums.include?(school.establishment_type_code)
+          eligible_headship_institution = institution.high_pupil_premium && eligible_establishment_type_codes_for_headship_and_high_pupil_premiums.include?(institution.establishment_type_code)
 
-        eligible_new_headteacher || eligible_headship_school
-      else # fail safe
+          eligible_new_headteacher || eligible_headship_institution
+        else # fail safe
+          false
+        end
+      when "LocalAuthority"
+        case course.name
+        when "NPQ Leading Teacher Development (NPQLTD)",
+             "NPQ for Headship (NPQH)"
+          true
+        when "NPQ Leading Teaching (NPQLT)",
+             "NPQ Leading Behaviour and Culture (NPQLBC)",
+             "NPQ for Senior Leadership (NPQSL)",
+             "NPQ for Executive Leadership (NPQEL)"
+          institution.high_pupil_premium
+        else
+          false
+        end
+      else
         false
       end
     end
