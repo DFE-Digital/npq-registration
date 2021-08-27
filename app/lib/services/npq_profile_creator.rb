@@ -14,6 +14,7 @@ module Services
         date_of_birth: user.date_of_birth,
         national_insurance_number: user.national_insurance_number,
         school_urn: application.school_urn,
+        school_ukprn: application.ukprn,
         headteacher_status: application.headteacher_status,
         eligible_for_funding: application.eligible_for_funding,
         funding_choice: application.funding_choice,
