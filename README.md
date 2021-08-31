@@ -6,7 +6,7 @@
 
 - Ruby 2.7.4
 - PostgreSQL
-- NodeJS 14.17.4
+- NodeJS 14.17.5
 - Yarn 1.12.x
 
 ## Setting up the app in development
