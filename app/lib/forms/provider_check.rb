@@ -24,5 +24,9 @@ module Forms
     def previous_step
       :start
     end
+
+    def requirements_met?
+      true
+    end
   end
 end
