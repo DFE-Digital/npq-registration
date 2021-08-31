@@ -48,5 +48,5 @@ Rails.application.configure do
 
   config.active_job.queue_adapter = :test
 
-  config.session_store :cookie_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
+  config.session_store :active_record_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
 end

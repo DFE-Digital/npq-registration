@@ -42,7 +42,7 @@ module Forms
     end
 
     def requirements_met?
-      true
+      wizard.store.present?
     end
   end
 end

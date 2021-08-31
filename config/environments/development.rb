@@ -52,5 +52,5 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.session_store :cookie_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
+  config.session_store :active_record_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
 end
