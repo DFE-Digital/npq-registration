@@ -289,6 +289,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     visit "/registration/share-provider"
 
-    expect(page).to have_unchecked_field("Yes, I agree my information can be shared", visible: :all)
+    expect(page).to have_content("Before you start")
   end
 end
