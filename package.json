@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": "14.17.5"
+    "node": "14.17.6"
   },
   "dependencies": {
     "@babel/preset-react": "^7.14.5",
