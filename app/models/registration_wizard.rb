@@ -92,7 +92,7 @@ class RegistrationWizard
     array << OpenStruct.new(key: "Lead provider",
                             value: form_for_step(:choose_your_provider).lead_provider.name,
                             change_step: :choose_your_provider)
-    array << OpenStruct.new(key: "School",
+    array << OpenStruct.new(key: "School or college",
                             value: institution(source: store["institution_identifier"]).name,
                             change_step: :find_school)
 

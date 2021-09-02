@@ -98,7 +98,7 @@ RSpec.feature "Happy journeys", type: :feature do
       .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Confirm your details")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
@@ -119,15 +119,15 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school?")
-    page.fill_in "School location", with: "manchester"
+    expect(page).to have_text("Where is your school or college?")
+    page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools located in manchester")
+    expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school name", with: "open"
+      page.fill_in "Enter your school or college name", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -135,8 +135,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Funding your NPQ")
-    page.choose "My school is paying", visible: :all
+    expect(page).to have_text("Funding")
+    page.choose "My school or college is covering the cost", visible: :all
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new
@@ -150,8 +150,8 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
-    expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
-    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My school is paying")
+    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My school or college is covering the cost")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
@@ -215,7 +215,7 @@ RSpec.feature "Happy journeys", type: :feature do
       .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Confirm your details")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
@@ -244,15 +244,15 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school?")
-    page.fill_in "School location", with: "manchester"
+    expect(page).to have_text("Where is your school or college?")
+    page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools located in manchester")
+    expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school name", with: "open"
+      page.fill_in "Enter your school or college name", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -260,7 +260,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Funding your NPQ")
+    expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
 
@@ -276,7 +276,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Headship (NPQH)")
     expect(check_answers_page.summary_list["How long have you been a headteacher?"].value).to eql("Yes over two years")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
     page.click_link("Change How long have you been a headteacher?")
 

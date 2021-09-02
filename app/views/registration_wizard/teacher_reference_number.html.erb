@@ -16,14 +16,21 @@
 
       <h1 class="govuk-heading-xl">Teacher reference number</h1>
 
-      <p class="govuk-body">Your teacher reference number (TRN) is used to check you’re eligible to study for a national professional qualification (NPQ).</p>
+      <p class="govuk-body">
+        Your teacher reference number (TRN) is used to check you're eligible to study for a national professional qualification (NPQ).
+      </p>
 
-      <%= render GovukComponent::Details.new(summary: "What is a teacher reference number?") do %>
-        <%= tag.p("A teacher reference number (TRN) is a unique ID that allows us to check you are a teacher.") %>
-        <%= tag.p("If you don’t know what your teacher reference number (TRN) is, this can usually be found on your payslip, teachers’ pension documentation or teacher training records.") %>
-        <%= tag.p("The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.") %>
-        <%= tag.p("You may not have a TRN if you qualified outside England or overseas.") %>
-      <% end %>
+      <p class="govuk-body">
+        If you don’t know what your teacher reference number (TRN) is, this can usually be found on your payslip, teachers’ pension documentation or teacher training records.
+      </p>
+
+      <p class="govuk-body">
+        The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.
+      </p>
+
+      <p class="govuk-body">
+        You may not have a TRN if you are working in further education or qualified outside England or overseas.
+      </p>
 
       <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you know your teacher reference number (TRN)?"} ) do %>
         <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: "Yes, I know my TRN" }, link_errors: true %>
