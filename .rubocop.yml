@@ -38,3 +38,4 @@ Rails/SaveBang:
 Rails/Output:
   Exclude:
     - "app/lib/services/importers/*"
+    - "app/lib/services/exporters/*"
