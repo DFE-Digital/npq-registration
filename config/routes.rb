@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
   resources :schools, only: [:index]
+  resources :institutions, only: [:index]
 
   root "registration_wizard#show", step: "start"
 

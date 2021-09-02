@@ -20,7 +20,7 @@
 
       <%= render GovukComponent::InsetText.new(text: "You can only select schools in England, Guernsey, Jersey or the Isle of Man. If your school is outside these locations, check with your training provider.") %>
 
-      <%= f.govuk_text_field :school_location,
+      <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
                              hint: { text: "Enter town, city or postcode" },
                              label: { text: "School location" } %>

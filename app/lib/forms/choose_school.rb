@@ -1,23 +1,25 @@
 module Forms
   class ChooseSchool < Base
-    attr_accessor :school_name, :school_urn
+    include Helpers::Institution
 
-    validates :school_urn, format: { with: /\A\d{6}\z/, unless: -> { school_urn.blank? || school_urn == "other" } }
-    validates :school_name, length: { maximum: 64 }
+    attr_accessor :institution_name, :institution_identifier
+
+    validates :institution_identifier, format: { with: /\ASchool-\d{6}\z|\ALocalAuthority-\d+\z/, unless: -> { institution_identifier.blank? || institution_identifier == "other" } }
+    validates :institution_name, length: { maximum: 64 }
 
     validate :validate_school_name_returns_results
 
     def self.permitted_params
       %i[
-        school_name
-        school_urn
+        institution_name
+        institution_identifier
       ]
     end
 
     def next_step
-      if school_urn == "other" || school_urn.blank?
+      if institution_identifier == "other" || institution_identifier.blank?
         :choose_school
-      elsif !school.in_england?
+      elsif !institution(source: institution_identifier).in_england?
         :school_not_in_england
       elsif eligible_for_funding?
         :check_answers
@@ -31,19 +33,28 @@ module Forms
     end
 
     def display_schools?
-      wizard.store["school_location"].present? && wizard.store["school_name"].present?
+      wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
     end
 
-    def possible_schools
-      @possible_schools ||= School
+    def possible_institutions
+      return @possible_institutions if @possible_institutions
+
+      schools = School
         .open
-        .search_by_location(school_location)
-        .search_by_name(school_name)
+        .search_by_location(institution_location)
+        .search_by_name(institution_name)
         .limit(10)
+
+      local_authorities = LocalAuthority
+        .search_by_location(institution_location)
+        .search_by_name(institution_name)
+        .limit(10)
+
+      @possible_institutions = schools + local_authorities
     end
 
     def eligible_for_funding?
-      Services::FundingEligibility.new(course: course, school: school, headteacher_status: headteacher_status).call
+      Services::FundingEligibility.new(course: course, institution: institution(source: institution_identifier), headteacher_status: headteacher_status).call
     end
 
   private
@@ -52,21 +63,17 @@ module Forms
       wizard.store["headteacher_status"]
     end
 
-    def school
-      @school ||= School.find_by(urn: school_urn)
-    end
-
     def course
       @course ||= Course.find(wizard.store["course_id"])
     end
 
-    def school_location
-      wizard.store["school_location"]
+    def institution_location
+      wizard.store["institution_location"]
     end
 
     def validate_school_name_returns_results
-      if display_schools? && possible_schools.blank?
-        errors.add(:school_name, :no_results, location: school_location, name: school_name)
+      if display_schools? && possible_institutions.blank?
+        errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
       end
     end
   end

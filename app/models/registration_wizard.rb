@@ -2,6 +2,7 @@ require "active_support/time"
 
 class RegistrationWizard
   include ActiveModel::Model
+  include Forms::Helpers::Institution
 
   class InvalidStep < StandardError; end
 
@@ -50,7 +51,6 @@ class RegistrationWizard
 
   def answers
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
-    school = School.find_by(urn: store["school_urn"])
 
     array = []
     array << OpenStruct.new(key: "Full name",
@@ -93,7 +93,7 @@ class RegistrationWizard
                             value: form_for_step(:choose_your_provider).lead_provider.name,
                             change_step: :choose_your_provider)
     array << OpenStruct.new(key: "School",
-                            value: school.name,
+                            value: institution(source: store["institution_identifier"]).name,
                             change_step: :find_school)
 
     unless form_for_step(:choose_school).eligible_for_funding?

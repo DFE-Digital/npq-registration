@@ -85,11 +85,11 @@ en:
               incorrect: Code is not correct. Please try again
         forms/choose_school:
           attributes:
-            school_name:
+            institution_name:
               no_results: No schools in %{location} with the name %{name} were found, please try again
         forms/find_school:
           attributes:
-            school_location:
+            institution_location:
               blank: School location can’t be blank
         forms/headteacher_duration:
           attributes:
