@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Where is your school?
+  <%= @form.errors.present? ? "Error: " : nil %>Where is your school or college?
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,16 +14,16 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Where is your school?</h1>
+      <h1 class="govuk-heading-xl">Where is your school or college?</h1>
 
       <p class="govuk-body">We need this information to check if you can access Department for Education funding.</p>
 
-      <%= render GovukComponent::InsetText.new(text: "You can only select schools in England, Guernsey, Jersey or the Isle of Man. If your school is outside these locations, check with your training provider.") %>
+      <%= render GovukComponent::InsetText.new(text: "You can only select schools and colleges in England, Guernsey, Jersey or the Isle of Man. If your school or college is outside these locations, check with your training provider.") %>
 
       <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
                              hint: { text: "Enter town, city or postcode" },
-                             label: { text: "School location" } %>
+                             label: { text: "School or college location" } %>
 
       <%= f.govuk_submit %>
     <% end %>

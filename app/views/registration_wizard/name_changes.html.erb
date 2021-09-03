@@ -16,9 +16,16 @@
 
       <h1 class="govuk-heading-xl">Name changes</h1>
 
-      <p class="govuk-body">Your name must match the name held in the Teaching Regulation Agency records to confirm you can take an NPQ.</p>
+      <p class="govuk-body">
+        Your name must match the name held in the Teaching Regulation Agency records to confirm you can take an NPQ.
+      </p>
 
-      <%= f.govuk_radio_buttons_fieldset(:changed_name, legend: { text: "Has your name changed since you became a qualified teacher?" } ) do %>
+      <p class="govuk-body">
+        If it doesn't match, you cannot continue with an NPQ.
+      </p>
+
+      <%= f.govuk_radio_buttons_fieldset(:changed_name, legend: { text: "Has your name changed since you first registered as a teacher?
+" } ) do %>
         <%= f.govuk_radio_button :changed_name, "yes", label: { text: "Yes, I have changed my name" }, link_errors: true %>
         <%= f.govuk_radio_button :changed_name, "no", label: { text: "No, I have the same name" } %>
       <% end %>

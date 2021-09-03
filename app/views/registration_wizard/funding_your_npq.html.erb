@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Funding your NPQ
+  <%= @form.errors.present? ? "Error: " : nil %>Funding
 <% end %>
 
 <% content_for :before_content do %>
@@ -9,16 +9,25 @@
   ) %>
 <% end %>
 
-<%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-  <%= f.govuk_error_summary %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
 
-  <%= f.govuk_collection_radio_buttons :funding,
-    @form.options,
-    :value,
-    :text,
-    :description,
-    legend: { text: "Funding your NPQ", tag: "h1", size: "xl" },
-    hint: { text: "How is your #{@form.course.name} being paid for?" } %>
+      <h1 class="govuk-heading-xl">Funding</h1>
 
-  <%= f.govuk_submit %>
-<% end %>
+      <p class="govuk-body">
+        Your school or college is not eligible for NPQ government scholarship funding.
+      </p>
+
+      <%= f.govuk_collection_radio_buttons :funding,
+        @form.options,
+        :value,
+        :text,
+        :description,
+        legend: { text: "How is your #{@form.course.name} being paid for?" } %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

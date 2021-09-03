@@ -56,7 +56,7 @@ RSpec.feature "Sad journeys", type: :feature do
       .to_return(status: 404, body: "", headers: {})
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Confirm your details")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doeeeeee"
     page.fill_in "Day", with: "13"
@@ -70,7 +70,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Try again")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Confirm your details")
+    expect(page).to have_text("Check your details")
     page.click_button("Continue")
 
     expect(page).to have_text("We cannot find your details")
@@ -91,15 +91,15 @@ RSpec.feature "Sad journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school?")
-    page.fill_in "School location", with: "manchester"
+    expect(page).to have_text("Where is your school or college?")
+    page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools located in manchester")
+    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school name", with: "open"
+      page.fill_in "Enter your school or college name", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -107,7 +107,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Funding your NPQ")
+    expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
 
@@ -122,7 +122,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["School"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
@@ -195,7 +195,7 @@ RSpec.feature "Sad journeys", type: :feature do
       .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Confirm your details")
+    expect(page).to have_text("Check your details")
     page.fill_in "Teacher reference number (TRN)", with: "1234567"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
@@ -216,14 +216,14 @@ RSpec.feature "Sad journeys", type: :feature do
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school?")
-    page.fill_in "School location", with: "wrexham"
+    expect(page).to have_text("Where is your school or college?")
+    page.fill_in "School or college location", with: "wrexham"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose your school")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school name", with: "open"
+      page.fill_in "Enter your school or college name", with: "open"
     end
 
     expect(page).to have_content("open welsh school")
@@ -231,7 +231,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("School must be in England")
+    expect(page).to have_text("School or college must be in England")
     page.click_link("Back")
 
     expect(page).to be_axe_clean

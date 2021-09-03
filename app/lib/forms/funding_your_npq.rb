@@ -27,7 +27,7 @@ module Forms
     def options
       [
         OpenStruct.new(value: "school",
-                       text: "My school is paying",
+                       text: "My school or college is covering the cost",
                        link_errors: true),
         OpenStruct.new(value: "trust",
                        text: "My trust is paying",
@@ -37,7 +37,7 @@ module Forms
                        link_errors: false),
         OpenStruct.new(value: "another",
                        text: "My NPQ is being paid in another way",
-                       description: "For example, I am sharing the costs with my school",
+                       description: "For example, I am sharing the costs with my school or college",
                        link_errors: false),
       ].freeze
     end
