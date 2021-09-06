@@ -33,6 +33,13 @@ RSpec.describe Forms::ChooseSchool, type: :model do
         expect(subject.errors[:institution_identifier]).to be_blank
       end
 
+      # this is used for the sandbox environment
+      it "can have institution_identifier as 'School-1234567'" do
+        subject.institution_identifier = "School-1234567"
+        subject.valid?
+        expect(subject.errors[:institution_identifier]).to be_blank
+      end
+
       it "can have institution_identifier as 'LocalAuthority-1'" do
         subject.institution_identifier = "LocalAuthority-1"
         subject.valid?
