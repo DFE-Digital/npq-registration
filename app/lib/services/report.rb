@@ -13,6 +13,7 @@ module Services
             a.user.trn_verified,
             a.user.trn_auto_verified,
             a.id,
+            a.ecf_id,
             a.created_at,
             a.headteacher_status,
             a.eligible_for_funding,
@@ -39,6 +40,7 @@ module Services
         trn_verified
         trn_auto_verified
         application_id
+        application_ecf_id
         application_created_at
         headteacher_status
         eligible_for_funding
