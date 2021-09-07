@@ -14,7 +14,7 @@
     "set-value": "^4.0.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^4.1.1"
   },
   "license": "MIT"
 }
