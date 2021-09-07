@@ -14,6 +14,7 @@ module Forms
     end
 
     before_validation :strip_full_name_whitespace
+    before_validation :convert_full_name_smart_quotes
     before_validation :strip_trn_whitespace
     before_validation :strip_ni_number_whitespace
     before_validation :strip_title_prefixes
@@ -103,6 +104,10 @@ module Forms
 
     def strip_full_name_whitespace
       full_name&.squish!
+    end
+
+    def convert_full_name_smart_quotes
+      full_name&.tr!("’", "'")
     end
 
     def strip_trn_whitespace

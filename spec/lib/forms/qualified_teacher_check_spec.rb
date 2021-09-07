@@ -5,7 +5,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     subject do
       described_class.new(
         trn: "  1234  567  ",
-        full_name: "  John     Doe   ",
+        full_name: "  John     O’Doe   ",
         national_insurance_number: "  AB 12 34 56 C ",
       )
     end
@@ -15,9 +15,9 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       expect(subject.trn).to eql("1234567")
     end
 
-    it "strips superflous whitespace from full_name" do
+    it "strips superflous whitespace from full_name + converts smart quotes" do
       subject.valid?
-      expect(subject.full_name).to eql("John Doe")
+      expect(subject.full_name).to eql("John O'Doe")
     end
 
     it "strips superflous whitespace from NI number" do
