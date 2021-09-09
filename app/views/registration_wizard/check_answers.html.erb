@@ -21,7 +21,7 @@
               :row,
               key: answer.key,
               value: answer.value,
-              action: link_to("Change <span class=\"govuk-visually-hidden\"> #{answer.key}</span>".html_safe, "/registration/#{answer.change_step.to_s.dasherize}/change")
+              action: govuk_link_to("Change <span class=\"govuk-visually-hidden\"> #{answer.key}</span>".html_safe, "/registration/#{answer.change_step.to_s.dasherize}/change")
             )
           end
     end %>
