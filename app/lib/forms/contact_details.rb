@@ -73,7 +73,7 @@ module Forms
       wizard.request.flash[:success] = if sandbox? && whitelisted_domain?
                                          "Your code is #{code}"
                                        else
-                                         "We've emailed a confirmation code to #{email}"
+                                         "We’ve emailed a confirmation code to #{email}"
                                        end
     end
 

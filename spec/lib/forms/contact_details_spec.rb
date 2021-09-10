@@ -70,7 +70,7 @@ RSpec.describe Forms::ContactDetails, type: :model do
 
     it "sets flash message" do
       subject.after_save
-      expect(subject.wizard.request.flash[:success]).to eql("We've emailed a confirmation code to user@example.com")
+      expect(subject.wizard.request.flash[:success]).to eql("We’ve emailed a confirmation code to user@example.com")
     end
 
     context "when whitelisted domain and in sandbox" do
