@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.14.5",
-    "@rails/webpacker": "^5.4.0",
+    "@rails/webpacker": "^5.4.2",
     "accessible-autocomplete": "^2.0.3",
     "es6-promise": "^4.2.8",
     "govuk-frontend": "^3.13.0",
