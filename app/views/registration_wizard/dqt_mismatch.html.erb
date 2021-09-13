@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: registration_wizard_show_path(@wizard.previous_step_path)
   ) %>
@@ -32,7 +32,7 @@
       Try again to enter your details - entering your National Insurance number will help us match your details.
     </p>
 
-    <%= govuk_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), button: true %>
+    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
 
     <h2 class="govuk-heading-m">Still can’t match your details?</h2>
 
@@ -40,6 +40,6 @@
       You can still continue to register - our support team will contact you to confirm your details before you start your course.
     </p>
 
-    <%= govuk_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), button: true, class: "govuk-button--secondary" %>
+    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), class: "govuk-button--secondary" %>
   </div>
 </div>

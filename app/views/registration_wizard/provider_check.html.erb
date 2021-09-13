@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: registration_wizard_show_path(@wizard.previous_step_path)
   ) %>
@@ -14,9 +14,13 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Have you already chosen an NPQ and provider?</h1>
-
-      <%= f.govuk_radio_buttons_fieldset(:chosen_provider, legend: { text: "" } ) do %>
+      <%= f.govuk_radio_buttons_fieldset(:chosen_provider,
+                                         legend: {
+                                           text: "Have you already chosen an NPQ and provider?",
+                                           tag: "h1",
+                                           size: "xl"
+                                         }
+                                        ) do %>
         <%= f.govuk_radio_button :chosen_provider, "yes", label: { text: "Yes, I have chosen my NPQ and provider" }, link_errors: true %>
         <%= f.govuk_radio_button :chosen_provider, "no", label: { text: "No, I don’t know my NPQ and provider" } %>
       <% end %>

@@ -2,19 +2,17 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">NPQ applications</h1>
 
-    <%= render GovukComponent::SummaryList.new do |component| %>
+    <%= render GovukComponent::SummaryListComponent.new do |component| %>
       <% current_user.applications.each do |application| %>
-        <% component.slot(
-          :row,
-          key: 'Course',
-          value: application.course.name
-        ) %>
+        <% component.row do |row|
+             row.key { 'Course' }
+             row.value { application.course.name }
+          end %>
 
-        <% component.slot(
-          :row,
-          key: 'Lead provider',
-          value: application.lead_provider.name
-        ) %>
+        <% component.row do |row|
+             row.key { 'Lead provider' }
+             row.value { application.lead_provider.name }
+          end %>
       <% end %>
     <% end %>
   </div>

@@ -3,17 +3,18 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: registration_wizard_show_path(@wizard.previous_step_path)
   ) %>
 <% end %>
 
 <% if flash[:success] %>
-  <%= render GovukComponent::NotificationBanner.new(title: 'Email sent',
-                                                    success: true,
-                                                   ) do |notification_banner|
-    notification_banner.slot(:heading, text: flash[:success])
+  <%= render GovukComponent::NotificationBannerComponent.new(
+    title_text: 'Email sent',
+    success: true,
+    ) do |notification_banner|
+      notification_banner.heading(text: flash[:success])
   end %>
 <% end %>
 
