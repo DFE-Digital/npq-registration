@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: root_path,
   ) %>

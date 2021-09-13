@@ -37,7 +37,7 @@
       <li>have chosen a provider</li>
     </ul>
 
-    <%= render GovukComponent::StartNowButton.new(
+    <%= render GovukComponent::StartButtonComponent.new(
           text: "Start now",
           href: registration_wizard_show_path(step: "provider-check")) %>
   </div>

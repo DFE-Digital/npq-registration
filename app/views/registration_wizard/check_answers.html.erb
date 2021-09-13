@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: registration_wizard_show_path(@wizard.previous_step_path)
   ) %>
@@ -15,14 +15,17 @@
 
     <p class="govuk-body">Check the following details are correct before continuing.</p>
 
-    <%= render GovukComponent::SummaryList.new do |component|
+    <%= render GovukComponent::SummaryListComponent.new do |component|
           @wizard.answers.each do |answer|
-            component.slot(
-              :row,
-              key: answer.key,
-              value: answer.value,
-              action: govuk_link_to("Change <span class=\"govuk-visually-hidden\"> #{answer.key}</span>".html_safe, "/registration/#{answer.change_step.to_s.dasherize}/change")
-            )
+            component.row do |row|
+              row.key { answer.key }
+              row.value { answer.value }
+              row.action(
+                text: 'Change',
+                visually_hidden_text: answer.key,
+                href: "/registration/#{answer.change_step.to_s.dasherize}/change",
+              )
+            end
           end
     end %>
 

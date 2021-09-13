@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLink.new(
+  <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: registration_wizard_show_path(@wizard.previous_step_path)
   ) %>
@@ -18,7 +18,7 @@
 
       <p class="govuk-body">We need this information to check if you can access Department for Education funding.</p>
 
-      <%= render GovukComponent::InsetText.new(text: "You can only select schools and colleges in England, Guernsey, Jersey or the Isle of Man. If your school or college is outside these locations, check with your training provider.") %>
+      <%= render GovukComponent::InsetTextComponent.new(text: "You can only select schools and colleges in England, Guernsey, Jersey or the Isle of Man. If your school or college is outside these locations, check with your training provider.") %>
 
       <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
