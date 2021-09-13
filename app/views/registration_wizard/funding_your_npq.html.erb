@@ -25,7 +25,9 @@
         :value,
         :text,
         :description,
-        legend: { text: "How is your #{@form.course.name} being paid for?" } %>
+        legend: { text: "How is your #{@form.course.name} being paid for?" },
+        bold_labels: false
+      %>
 
       <%= f.govuk_submit %>
     <% end %>
