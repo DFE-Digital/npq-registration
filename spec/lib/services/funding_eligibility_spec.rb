@@ -7,6 +7,20 @@ RSpec.describe Services::FundingEligibility do
   subject { described_class.new(course: course, institution: institution, headteacher_status: headteacher_status) }
 
   describe "#call" do
+    context "in the special URN list" do
+      let(:school) { build(:school, urn: "146816") }
+
+      Course.all.each do |course|
+        context "studying #{course.name}" do
+          let(:course) { course }
+
+          it "returns true" do
+            expect(subject.call).to be_truthy
+          end
+        end
+      end
+    end
+
     context "studying for NPQEL, NPQLBC, NPQSL, NPQLT" do
       let(:course) { Course.all.select { |c| c.name.match?(/\(NPQEL\)|\(NPQLBC\)|\(NPQSL\)|\(NPQLT\)/) }.sample }
 

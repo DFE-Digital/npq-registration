@@ -9,6 +9,8 @@ module Services
     end
 
     def call
+      return true if eligible_urns.include?(institution.urn)
+
       case institution.class.name
       when "School"
         case course.name
@@ -64,6 +66,45 @@ module Services
 
     def eligible_establishment_type_codes_for_new_headship
       %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 43 44 45].freeze
+    end
+
+    def eligible_urns
+      %w[
+        146816
+        141030
+        131867
+        130416
+        145003
+        139730
+        143704
+        141940
+        147756
+        139363
+        130468
+        130457
+        144753
+        144886
+        130503
+        143689
+        144511
+        130452
+        130548
+        145002
+        144463
+        130458
+        130411
+        130422
+        130746
+        133608
+        144887
+        145230
+        139433
+        142673
+        147477
+        130580
+        133545
+        130504
+      ]
     end
   end
 end
