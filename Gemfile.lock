@@ -69,16 +69,13 @@ GEM
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.2)
-    axe-core-api (4.2.1)
-      capybara
+    axe-core-api (4.3.0)
       dumb_delegator
-      selenium-webdriver
       virtus
-      watir
     axe-core-capybara (4.2.1)
       axe-core-api
       dumb_delegator
-    axe-core-rspec (4.2.1)
+    axe-core-rspec (4.3.0)
       axe-core-api
       dumb_delegator
       virtus
@@ -368,9 +365,6 @@ GEM
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
-    watir (6.19.1)
-      regexp_parser (>= 1.2, < 3)
-      selenium-webdriver (>= 3.142.7)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
