@@ -219,7 +219,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     public_suffix (4.0.6)
-    puma (5.4.0)
+    puma (5.5.0)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -426,7 +426,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   pg_search
   pry-byebug
-  puma (~> 5.4)
+  puma (~> 5.5)
   rack-attack
   rails (~> 6.1.4)
   rspec-rails (~> 5.0.2)
