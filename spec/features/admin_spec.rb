@@ -20,5 +20,8 @@ RSpec.feature "admin", type: :feature do
 
     page.click_link("Admin")
     expect(page.current_path).to eql("/admin")
+
+    page.click_link("Applications")
+    expect(page.current_path).to eql("/admin/applications")
   end
 end
