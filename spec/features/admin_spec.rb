@@ -42,5 +42,10 @@ RSpec.feature "admin", type: :feature do
     applications[3..].each do |app|
       expect(page).to have_content(app.user.email)
     end
+
+    page.fill_in "Search by email", with: applications.sample.user.email
+    page.click_button "Search"
+
+    expect(page.find_all("table tbody tr").size).to eql(1)
   end
 end
