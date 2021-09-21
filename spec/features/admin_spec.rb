@@ -21,7 +21,13 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Admin")
     expect(page.current_path).to eql("/admin")
 
+    applications = create_list :application, 2
+
     page.click_link("Applications")
     expect(page.current_path).to eql("/admin/applications")
+
+    applications.each do |app|
+      expect(page).to have_content(app.user.email)
+    end
   end
 end
