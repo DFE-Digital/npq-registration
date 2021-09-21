@@ -29,5 +29,9 @@ RSpec.feature "Sessions", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_content("NPQ applications")
+    expect(page).not_to have_content("Admin")
+
+    visit "/admin"
+    expect(page.current_path).to eql("/sign-in")
   end
 end

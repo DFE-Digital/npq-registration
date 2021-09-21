@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :admin, controller: "admin"
+
   resource :csp_reports, only: %i[create]
 
   get "/404", to: "errors#not_found", via: :all
