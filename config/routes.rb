@@ -28,11 +28,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :admin, controller: "admin"
-
   namespace :admin do
     resources :applications
   end
+
+  get "/admin", to: "admin#show"
 
   resource :csp_reports, only: %i[create]
 

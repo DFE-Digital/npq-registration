@@ -11,4 +11,8 @@ class Admin::ApplicationsController < AdminController
 
     @pagy, @applications = pagy(scope)
   end
+
+  def show
+    @application = Application.includes(:user).find(params[:id])
+  end
 end
