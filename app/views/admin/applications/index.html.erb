@@ -36,7 +36,7 @@
       <tbody class="govuk-table__body">
         <% @applications.each do |app| %>
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><%= link_to app.user.email, admin_application_path(app) %></td>
+            <td class="govuk-table__cell"><%= govuk_link_to app.user.email, admin_application_path(app) %></td>
             <td class="govuk-table__cell"><%= app.course.name %></td>
             <td class="govuk-table__cell"><%= app.lead_provider.name %></td>
             <td class="govuk-table__cell"><%= app.school_urn %></td>
@@ -46,6 +46,6 @@
       </tbody>
     </table>
 
-    <%== pagy_nav(@pagy) %>
+    <%== pagy_govuk_nav(@pagy) %>
   </div>
 </div>

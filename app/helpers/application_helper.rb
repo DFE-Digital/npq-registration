@@ -8,4 +8,8 @@ module ApplicationHelper
       '<strong class="govuk-tag govuk-tag--red">NO</strong>'
     end.html_safe
   end
+
+  def pagy_govuk_nav(pagy)
+    render "pagy/paginator", pagy: pagy
+  end
 end
