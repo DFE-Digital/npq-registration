@@ -3,6 +3,13 @@ require "rails_helper"
 RSpec.feature "admin", type: :feature do
   let(:admin) { create(:admin) }
 
+  around do |example|
+    previous_pagination = Pagy::VARS[:items]
+    Pagy::VARS[:items] = 3
+    example.run
+    Pagy::VARS[:items] = previous_pagination
+  end
+
   scenario "when logged in, it shows admin homepage" do
     visit "/admin"
     expect(page).to be_axe_clean
@@ -21,12 +28,18 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Admin")
     expect(page.current_path).to eql("/admin")
 
-    applications = create_list :application, 2
+    applications = create_list :application, 4
 
     page.click_link("Applications")
     expect(page.current_path).to eql("/admin/applications")
 
-    applications.each do |app|
+    applications[0..2].each do |app|
+      expect(page).to have_content(app.user.email)
+    end
+
+    page.find("[aria-label=next]").click
+
+    applications[3..].each do |app|
       expect(page).to have_content(app.user.email)
     end
   end

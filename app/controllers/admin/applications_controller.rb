@@ -1,5 +1,7 @@
 class Admin::ApplicationsController < AdminController
+  include Pagy::Backend
+
   def index
-    @applications = Application.includes(:user, :course, :lead_provider).all
+    @pagy, @applications = pagy(Application.includes(:user, :course, :lead_provider))
   end
 end
