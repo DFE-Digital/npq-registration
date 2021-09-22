@@ -26,6 +26,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'Name' }
+        row.value { @application.user.full_name }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'Course' }
         row.value { @application.course.name }
       end %>
