@@ -52,7 +52,7 @@
 
       <%= summary_list.row do |row|
         row.key { 'Funding eligibility' }
-        row.value { @application.eligible_for_funding }
+        row.value { admin_funding_tag(@application.eligible_for_funding) }
       end %>
 
       <%= summary_list.row do |row|
