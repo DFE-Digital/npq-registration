@@ -9,6 +9,12 @@
   ) %>
 <% end %>
 
+<% if flash[:negative].present? %>
+  <%= govuk_notification_banner(title_text: "Unauthorized") do |banner| %>
+    <% banner.heading(text: "Sign in with you administrator account") %>
+  <% end %>
+<% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Sign in</h1>
