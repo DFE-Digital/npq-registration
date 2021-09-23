@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :applications
+    resources :applications, only: %i[index show]
   end
 
   get "/admin", to: "admin#show"
