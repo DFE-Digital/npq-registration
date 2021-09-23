@@ -66,10 +66,10 @@ RSpec.describe Forms::ChooseSchool, type: :model do
     context "eligible_for_funding" do
       let(:funding_double) { instance_double(Services::FundingEligibility, call: true) }
 
-      it "goes to check_answers" do
+      it "goes to possible_funding" do
         allow(Services::FundingEligibility).to receive(:new).and_return(funding_double)
 
-        expect(subject.next_step).to eql(:check_answers)
+        expect(subject.next_step).to eql(:possible_funding)
       end
     end
 

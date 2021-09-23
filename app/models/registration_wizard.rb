@@ -153,6 +153,7 @@ private
       find_school
       choose_school
       school_not_in_england
+      possible_funding
       funding_your_npq
       check_answers
       confirmation
