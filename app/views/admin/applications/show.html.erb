@@ -1,0 +1,84 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: admin_applications_path
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Application</h1>
+
+    <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
+      <%= summary_list.row do |row|
+        row.key { 'Application ECF ID' }
+        row.value { @application.ecf_id }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'User ECF ID' }
+        row.value { @application.user.ecf_id }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Email' }
+        row.value { @application.user.email }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Name' }
+        row.value { @application.user.full_name }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'TRN' }
+        row.value { @application.user.trn }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'TRN validated' }
+        row.value { @application.user.trn_verified.to_s }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'TRN auto validated' }
+        row.value { @application.user.trn_auto_verified.to_s }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Course' }
+        row.value { @application.course.name }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Lead provider' }
+        row.value { @application.lead_provider.name }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'School URN' }
+        row.value { @application.school_urn }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'School UKPRN' }
+        row.value { @application.ukprn }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Headteacher' }
+        row.value { @application.headteacher_status }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Funding eligibility' }
+        row.value { admin_funding_tag(@application.eligible_for_funding) }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'Funding choice' }
+        row.value { @application.funding_choice }
+      end %>
+    <% end %>
+  </div>
+</div>

@@ -28,6 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :admin do
+    resources :applications, only: %i[index show]
+  end
+
+  get "/admin", to: "admin#show"
+
   resource :csp_reports, only: %i[create]
 
   get "/404", to: "errors#not_found", via: :all

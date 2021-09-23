@@ -34,7 +34,15 @@ module Services
     end
 
     def uri
-      @uri ||= URI("#{config.endpoint}/#{trn}?full_name=#{full_name}&date_of_birth=#{dob_as_string}&nino=#{national_insurance_number}")
+      @uri ||= URI("#{config.endpoint}/#{trn}?#{query_hash.to_query}")
+    end
+
+    def query_hash
+      {
+        full_name: full_name,
+        date_of_birth: dob_as_string,
+        nino: national_insurance_number,
+      }
     end
 
     def use_ssl?

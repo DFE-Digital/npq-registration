@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
   <head>
+    <meta charset="utf-8">
     <% if content_for?(:title) %>
       <title><%= content_for(:title) %> - Register for a National Professional Qualification</title>
     <% else %>
@@ -59,6 +60,17 @@
 
         <div class="govuk-header__content">
           <%= link_to "Register for a National Professional Qualification", "/", class: "govuk-header__link govuk-header__link--service-name" %>
+
+          <% if current_user.admin? %>
+            <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide navigation menu">Menu</button>
+            <nav>
+              <ul id="navigation" class="govuk-header__navigation " aria-label="Navigation menu">
+                <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
+                  <%= link_to "Admin", admin_path, class: "govuk-header__link" %>
+                </li>
+              </ul>
+            </nav>
+          <% end %>
         </div>
       </div>
     </header>
