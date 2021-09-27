@@ -22,7 +22,7 @@ module Forms
       elsif !institution(source: institution_identifier).in_england?
         :school_not_in_england
       elsif eligible_for_funding?
-        :check_answers
+        :possible_funding
       else
         :funding_your_npq
       end

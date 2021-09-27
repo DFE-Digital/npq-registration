@@ -3,7 +3,11 @@ module Forms
     include Helpers::Institution
 
     def previous_step
-      :choose_school
+      if funding_eligbility
+        :possible_funding
+      else
+        :funding_your_npq
+      end
     end
 
     def next_step
@@ -27,11 +31,7 @@ module Forms
         school_urn: institution.urn,
         ukprn: institution.ukprn,
         headteacher_status: wizard.store["headteacher_status"],
-        eligible_for_funding: Services::FundingEligibility.new(
-          course: course,
-          institution: institution,
-          headteacher_status: wizard.store["headteacher_status"],
-        ).call,
+        eligible_for_funding: funding_eligbility,
         funding_choice: wizard.store["funding"],
       )
 
@@ -41,6 +41,14 @@ module Forms
     end
 
   private
+
+    def funding_eligbility
+      @funding_eligbility ||= Services::FundingEligibility.new(
+        course: course,
+        institution: institution,
+        headteacher_status: wizard.store["headteacher_status"],
+      ).call
+    end
 
     def ni_number_to_store
       wizard.store["national_insurance_number"] unless wizard.store["trn_verified"]

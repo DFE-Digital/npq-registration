@@ -104,7 +104,15 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+    School.create!(
+      urn: 100_000,
+      name: "open manchester school",
+      address_1: "street 1",
+      town: "manchester",
+      establishment_status_code: "1",
+      establishment_type_code: "1",
+      high_pupil_premium: true,
+    )
 
     expect(page).to have_text("Where is your school or college?")
     page.fill_in "School or college location", with: "manchester"
@@ -122,8 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "open manchester school", visible: :all
     page.click_button("Continue")
 
-    expect(page).to have_text("Funding")
-    page.choose "My school or college is covering the cost", visible: :all
+    expect(page).to have_text("You may qualify for DfE scholarship funding")
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new
@@ -137,7 +144,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
-    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My school or college is covering the cost")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
