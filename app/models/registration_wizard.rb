@@ -79,6 +79,11 @@ class RegistrationWizard
     array << OpenStruct.new(key: "Email",
                             value: store["confirmed_email"],
                             change_step: :contact_details)
+
+    array << OpenStruct.new(key: "School or college",
+                            value: institution(source: store["institution_identifier"]).name,
+                            change_step: :find_school)
+
     array << OpenStruct.new(key: "Course",
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
@@ -89,18 +94,18 @@ class RegistrationWizard
                               change_step: :headteacher_duration)
     end
 
+    if studying_aso?
+    else
+      unless form_for_step(:choose_school).eligible_for_funding?
+        array << OpenStruct.new(key: "How is your NPQ being paid for?",
+                                value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
+                                change_step: :funding_your_npq)
+      end
+    end
+
     array << OpenStruct.new(key: "Lead provider",
                             value: form_for_step(:choose_your_provider).lead_provider.name,
                             change_step: :choose_your_provider)
-    array << OpenStruct.new(key: "School or college",
-                            value: institution(source: store["institution_identifier"]).name,
-                            change_step: :find_school)
-
-    unless form_for_step(:choose_school).eligible_for_funding?
-      array << OpenStruct.new(key: "How is your NPQ being paid for?",
-                              value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
-                              change_step: :funding_your_npq)
-    end
 
     array
   end
@@ -113,6 +118,14 @@ class RegistrationWizard
   end
 
 private
+
+  def studying_aso?
+    course.name == "Additional Support Offer for new headteachers"
+  end
+
+  def course
+    Course.find(store["course_id"])
+  end
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))

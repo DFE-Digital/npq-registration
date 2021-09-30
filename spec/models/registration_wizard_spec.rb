@@ -1,13 +1,14 @@
 require "rails_helper"
 
 RSpec.describe RegistrationWizard do
+  let(:store) { {} }
+  let(:session) { {} }
+  let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
+  let(:current_step) { "share_provider" }
+
+  subject { described_class.new(current_step: current_step, store: store, request: request) }
+
   describe "#current_step" do
-    let(:store) { {} }
-    let(:session) { {} }
-    let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-
-    subject { described_class.new(current_step: "share_provider", store: store, request: request) }
-
     it "returns current step" do
       expect(subject.current_step).to eql(:share_provider)
     end
@@ -19,6 +20,25 @@ RSpec.describe RegistrationWizard do
         expect {
           subject.current_step
         }.to raise_error(RegistrationWizard::InvalidStep)
+      end
+    end
+  end
+
+  describe "#answers" do
+    let(:school) { create(:school) }
+    let(:store) do
+      {
+        "date_of_birth" => 30.years.ago,
+        "institution_identifier" => "School-#{school.urn}",
+        "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
+        "lead_provider_id" => LeadProvider.all.sample.id,
+        "funding_choice" => "school",
+      }
+    end
+
+    context "when ASO is selected course" do
+      it "does not show How is your NPQ being paid for?" do
+        expect(subject.answers.map(&:key)).not_to include("How is your NPQ being paid for?")
       end
     end
   end
