@@ -95,6 +95,11 @@ class RegistrationWizard
     end
 
     if studying_aso?
+      if aso_needs_funding?
+        array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
+                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                change_step: :funding_your_aso)
+      end
     else
       unless form_for_step(:choose_school).eligible_for_funding?
         array << OpenStruct.new(key: "How is your NPQ being paid for?",
@@ -118,6 +123,10 @@ class RegistrationWizard
   end
 
 private
+
+  def aso_needs_funding?
+    store["aso_funding"] == "yes"
+  end
 
   def studying_aso?
     course.name == "Additional Support Offer for new headteachers"
