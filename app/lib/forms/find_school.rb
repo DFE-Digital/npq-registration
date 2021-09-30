@@ -15,7 +15,7 @@ module Forms
     end
 
     def previous_step
-      :choose_your_provider
+      :qualified_teacher_check
     end
   end
 end

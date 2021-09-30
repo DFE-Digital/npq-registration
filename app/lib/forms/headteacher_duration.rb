@@ -1,5 +1,7 @@
 module Forms
   class HeadteacherDuration < Base
+    include Helpers::Institution
+
     VALID_HEADTEACHER_STATUS_OPTIONS = %w[yes_in_first_two_years yes_over_two_years yes_when_course_starts no].freeze
 
     attr_accessor :headteacher_status
@@ -15,8 +17,10 @@ module Forms
     def next_step
       if changing_answer?
         :check_answers
+      elsif Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+        :possible_funding
       else
-        :choose_your_provider
+        :funding_your_npq
       end
     end
 
@@ -39,6 +43,12 @@ module Forms
                        text: "No, I am not a headteacher",
                        link_errors: false),
       ]
+    end
+
+  private
+
+    def course
+      Course.find(wizard.store["course_id"])
     end
   end
 end

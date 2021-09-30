@@ -6,8 +6,9 @@ def seed_courses!
     { name: "NPQ for Senior Leadership (NPQSL)", ecf_id: "a42736ad-3d0b-401d-aebe-354ef4c193ec" },
     { name: "NPQ for Headship (NPQH)", ecf_id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768" },
     { name: "NPQ for Executive Leadership (NPQEL)", ecf_id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a" },
+    { name: "Additional Support Offer for new headteachers", ecf_id: "7fbefdd4-dd2d-4a4f-8995-d59e525124b7", description: "The Additional Support Offer is a targeted support package for new headteachers." },
   ].each do |hash|
-    Course.find_or_create_by!(name: hash[:name], ecf_id: hash[:ecf_id])
+    Course.find_or_create_by!(name: hash[:name], ecf_id: hash[:ecf_id], description: hash[:description])
   end
 end
 

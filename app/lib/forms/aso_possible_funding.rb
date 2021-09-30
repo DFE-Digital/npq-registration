@@ -1,12 +1,11 @@
 module Forms
-  class PossibleFunding < Base
+  class AsoPossibleFunding < Base
     def next_step
       :choose_your_provider
     end
 
     def previous_step
-      # TODO: WRONG
-      :choose_school
+      :aso_new_headteacher
     end
 
     def course

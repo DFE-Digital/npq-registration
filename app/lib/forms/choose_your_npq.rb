@@ -27,24 +27,33 @@ module Forms
         end
       elsif studying_for_headship?
         :headteacher_duration
+      elsif studying_for_aso?
+        :about_aso
+      elsif Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+        :possible_funding
       else
-        :choose_your_provider
+        :funding_your_npq
       end
     end
 
     def previous_step
-      :qualified_teacher_check
+      :choose_school
     end
 
     def studying_for_headship?
       course.studying_for_headship?
     end
 
+    def studying_for_aso?
+      course.studying_for_aso?
+    end
+
     def options
       Course.all.each_with_index.map do |course, index|
         OpenStruct.new(value: course.id,
                        text: course.name,
-                       link_errors: index.zero?)
+                       link_errors: index.zero?,
+                       hint: course.description)
       end
     end
 

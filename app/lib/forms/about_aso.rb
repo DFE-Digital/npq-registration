@@ -1,11 +1,11 @@
 module Forms
-  class DqtMismatch < Base
+  class AboutAso < Base
     def previous_step
-      :qualified_teacher_check
+      :choose_your_npq
     end
 
     def next_step
-      :find_school
+      :npqh_status
     end
   end
 end

@@ -1,5 +1,7 @@
 module Forms
   class ChooseYourProvider < Base
+    include Helpers::Institution
+
     attr_accessor :lead_provider_id
 
     validates :lead_provider_id, presence: true
@@ -15,13 +17,17 @@ module Forms
       if changing_answer?
         :check_answers
       else
-        :find_school
+        :check_answers
       end
     end
 
     def previous_step
       if wizard.form_for_step(:choose_your_npq).studying_for_headship?
         :headteacher_duration
+      elsif course.name == "Additional Support Offer for new headteachers" && wizard.store["aso_funding"] == "yes"
+        :funding_your_aso
+      elsif wizard.store["aso_new_headteacher"] == "yes"
+        :aso_possible_funding
       else
         :choose_your_npq
       end
@@ -44,6 +50,18 @@ module Forms
     end
 
   private
+
+    def eligible_for_funding?
+      Services::FundingEligibility.new(course: course, institution: institution(source: institution_identifier), headteacher_status: headteacher_status).call
+    end
+
+    def institution_identifier
+      wizard.store["institution_identifier"]
+    end
+
+    def headteacher_status
+      wizard.store["headteacher_status"]
+    end
 
     def validate_lead_provider_exists
       if lead_provider.blank?

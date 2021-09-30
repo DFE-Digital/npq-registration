@@ -52,7 +52,7 @@ module Forms
         if changing_answer?
           :check_answers
         else
-          :choose_your_npq
+          :find_school
         end
       else
         mark_trn_as_unverified

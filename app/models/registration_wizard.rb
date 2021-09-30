@@ -79,12 +79,12 @@ class RegistrationWizard
     array << OpenStruct.new(key: "Email",
                             value: store["confirmed_email"],
                             change_step: :contact_details)
-    array << OpenStruct.new(key: "NPQ",
+    array << OpenStruct.new(key: "Course",
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
 
     if form_for_step(:choose_your_npq).studying_for_headship?
-      array << OpenStruct.new(key: "How long have you been a headteacher?",
+      array << OpenStruct.new(key: "Have you been a headteacher for less than 24 months?",
                               value: store["headteacher_status"].humanize,
                               change_step: :headteacher_duration)
     end
@@ -147,6 +147,15 @@ private
       resend_code
       qualified_teacher_check
       dqt_mismatch
+      about_aso
+      npqh_status
+      aso_unavailable
+      aso_headteacher
+      aso_new_headteacher
+      aso_funding_not_available
+      aso_possible_funding
+      aso_funding_contact
+      funding_your_aso
       choose_your_npq
       headteacher_duration
       choose_your_provider

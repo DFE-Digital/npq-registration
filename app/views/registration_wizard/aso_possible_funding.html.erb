@@ -1,0 +1,28 @@
+<% content_for :title do %>
+  You may qualify for DfE scholarship funding
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">You may qualify for DfE scholarship funding</h1>
+
+    <p class="govuk-body">
+      DfE scholarship funding may be available for the Additional Support Offer.
+    </p>
+
+    <p class="govuk-body">
+      Your training provider will give you more details and confirm if you qualify for funding.
+    </p>
+
+    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
