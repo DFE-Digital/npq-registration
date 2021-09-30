@@ -3,15 +3,7 @@ module Forms
     include Helpers::Institution
 
     def previous_step
-      if course.name == "Additional Support Offer for new headteachers"
-        :choose_your_provider
-      else
-        if funding_eligbility
-          :possible_funding
-        else
-          :funding_your_npq
-        end
-      end
+      :choose_your_provider
     end
 
     def next_step

@@ -4,7 +4,7 @@ class SummaryListSection < SitePrism::Section
   def [](key)
     result = rows.find { |row| row.key == key }
 
-    raise "No row with key '#{key}' could be found" unless result
+    raise "No row with key '#{key}' could be found. The following row keys were present: #{rows.map(&:key)}" unless result
 
     result
   end

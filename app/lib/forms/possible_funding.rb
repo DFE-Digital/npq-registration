@@ -5,8 +5,11 @@ module Forms
     end
 
     def previous_step
-      # TODO: WRONG
-      :choose_school
+      if course.name == "NPQ for Headship (NPQH)"
+        :headteacher_duration
+      else
+        :choose_your_npq
+      end
     end
 
     def course

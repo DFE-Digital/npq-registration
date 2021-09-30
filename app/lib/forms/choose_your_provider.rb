@@ -14,11 +14,7 @@ module Forms
     end
 
     def next_step
-      if changing_answer?
-        :check_answers
-      else
-        :check_answers
-      end
+      :check_answers
     end
 
     def previous_step
