@@ -59,11 +59,15 @@ module Services
     end
 
     def funding_eligbility
-      @funding_eligbility ||= Services::FundingEligibility.new(
-        course: course,
-        institution: institution(source: store["institution_identifier"]),
-        headteacher_status: store["headteacher_status"],
-      ).call
+      if course.aso?
+        (store["aso_headteacher"] == "yes") && (store["aso_new_headteacher"] == "yes")
+      else
+        Services::FundingEligibility.new(
+          course: course,
+          institution: institution(source: store["institution_identifier"]),
+          headteacher_status: store["headteacher_status"],
+        ).call
+      end
     end
 
     def ni_number_to_store
