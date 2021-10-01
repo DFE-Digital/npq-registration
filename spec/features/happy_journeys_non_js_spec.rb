@@ -448,7 +448,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     application = user.applications.first
 
+    expect(application.course).to be_aso
+    expect(application.headteacher_status).to eql("no")
     expect(application.eligible_for_funding).to be_falsey
+    expect(application.funding_choice).to eql("self")
 
     visit "/account"
 

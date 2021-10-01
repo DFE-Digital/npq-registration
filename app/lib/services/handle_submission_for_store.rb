@@ -27,7 +27,7 @@ module Services
           ukprn: institution(source: store["institution_identifier"]).ukprn,
           headteacher_status: headteacher_status,
           eligible_for_funding: funding_eligbility,
-          funding_choice: store["funding"],
+          funding_choice: funding_choice,
         )
 
         enqueue_job
@@ -35,6 +35,14 @@ module Services
     end
 
   private
+
+    def funding_choice
+      if course.aso?
+        store["aso_funding_choice"]
+      else
+        store["funding"]
+      end
+    end
 
     def headteacher_status
       if course.aso?
