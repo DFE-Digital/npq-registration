@@ -1,10 +1,12 @@
 module Forms
   class AsoNewHeadteacher < Base
+    VALID_ASO_NEW_HEADTEACHER_OPTIONS = %w[yes no].freeze
+
     include Helpers::Institution
 
     attr_accessor :aso_new_headteacher
 
-    validates :aso_new_headteacher, presence: true
+    validates :aso_new_headteacher, presence: true, inclusion: { in: VALID_ASO_NEW_HEADTEACHER_OPTIONS }
 
     def self.permitted_params
       %i[

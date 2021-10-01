@@ -1,8 +1,10 @@
 module Forms
   class AsoFundingNotAvailable < Base
+    VALID_ASO_FUNDING_OPTIONS = %w[yes no].freeze
+
     attr_accessor :aso_funding
 
-    validates :aso_funding, presence: true
+    validates :aso_funding, presence: true, inclusion: { in: VALID_ASO_FUNDING_OPTIONS }
 
     def self.permitted_params
       %i[
