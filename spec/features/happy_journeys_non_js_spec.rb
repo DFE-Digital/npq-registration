@@ -460,7 +460,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_content("Before you start")
   end
 
-  scenario "funded ASO registration journey" do
+  fscenario "funded ASO registration journey" do
     visit "/"
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
@@ -602,7 +602,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     application = user.applications.first
 
+    expect(application.course).to be_aso
+    expect(application.headteacher_status).to eql("yes_in_first_two_years")
     expect(application.eligible_for_funding).to be_falsey
+    expect(application.funding_choice).to be_nil
 
     visit "/account"
 
