@@ -5,7 +5,7 @@ module Forms
     end
 
     def previous_step
-      if course.name == "NPQ for Headship (NPQH)"
+      if course.npqh?
         :headteacher_duration
       else
         :choose_your_npq

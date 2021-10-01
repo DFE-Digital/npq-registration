@@ -19,8 +19,9 @@ module Forms
           :check_answers
         elsif studying_for_headship?
           :headteacher_duration
-        elsif wizard.form_for_step(:choose_school).eligible_for_funding? &&
-            !Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+        elsif studying_for_aso?
+          :about_aso
+        elsif previously_eligible_for_funding? && now_no_longer_eligible_for_funding?
           :funding_your_npq
         else
           :check_answers
@@ -62,6 +63,14 @@ module Forms
     end
 
   private
+
+    def previously_eligible_for_funding?
+      wizard.form_for_step(:choose_school).eligible_for_funding?
+    end
+
+    def now_no_longer_eligible_for_funding?
+      !Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+    end
 
     def headteacher_status
       wizard.store["headteacher_status"]

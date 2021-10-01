@@ -18,9 +18,9 @@ module Forms
     end
 
     def previous_step
-      if wizard.form_for_step(:choose_your_npq).studying_for_headship?
+      if course.nph?
         :headteacher_duration
-      elsif course.name == "Additional Support Offer for new headteachers" && wizard.store["aso_funding"] == "yes"
+      elsif course.aso? && wizard.store["aso_funding"] == "yes"
         :funding_your_aso
       elsif wizard.store["aso_new_headteacher"] == "yes"
         :aso_possible_funding

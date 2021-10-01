@@ -5,7 +5,11 @@ module Forms
     end
 
     def next_step
-      :find_school
+      if changing_answer?
+        :check_answers
+      else
+        :find_school
+      end
     end
   end
 end
