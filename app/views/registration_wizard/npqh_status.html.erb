@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> What are you applying for?
+  <%= @form.errors.present? ? "Error: " : nil %> Are you studying for, or have you completed an NPQ for Headship (NPQH)?
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,15 +14,22 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_radio_buttons_fieldset(:course_id,
+      <%= f.govuk_radio_buttons_fieldset(:npqh_status,
             legend: {
-              text: "What are you applying for?",
-              size: "xl",
+              text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?",
+              size: "l",
               tag: "h1"
             }
           ) do %>
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :course_id, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
+          <% if @form.options.last == struct %>
+            <%= f.govuk_radio_divider %>
+          <% end %>
+
+          <%= f.govuk_radio_button :npqh_status, struct.value,
+            label: { text: struct.text },
+            hint: { text: struct.hint },
+            link_errors: struct.link_errors %>
         <% end %>
       <% end %>
 

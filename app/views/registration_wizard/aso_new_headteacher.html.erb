@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> What are you applying for?
+  <%= @form.errors.present? ? "Error: " : nil %> Are you a headteacher?
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,15 +14,15 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_radio_buttons_fieldset(:course_id,
+      <%= f.govuk_radio_buttons_fieldset(:aso_new_headteacher,
             legend: {
-              text: "What are you applying for?",
+              text: "Are you in your first 2 years of a headship?",
               size: "xl",
               tag: "h1"
             }
           ) do %>
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :course_id, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
+          <%= f.govuk_radio_button :aso_new_headteacher, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
         <% end %>
       <% end %>
 

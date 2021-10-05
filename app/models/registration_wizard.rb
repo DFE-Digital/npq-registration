@@ -79,28 +79,38 @@ class RegistrationWizard
     array << OpenStruct.new(key: "Email",
                             value: store["confirmed_email"],
                             change_step: :contact_details)
-    array << OpenStruct.new(key: "NPQ",
+
+    array << OpenStruct.new(key: "School or college",
+                            value: institution(source: store["institution_identifier"]).name,
+                            change_step: :find_school)
+
+    array << OpenStruct.new(key: "Course",
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
 
-    if form_for_step(:choose_your_npq).studying_for_headship?
-      array << OpenStruct.new(key: "How long have you been a headteacher?",
+    if course.npqh?
+      array << OpenStruct.new(key: "Have you been a headteacher for less than 24 months?",
                               value: store["headteacher_status"].humanize,
                               change_step: :headteacher_duration)
+    end
+
+    if course.aso?
+      if aso_needs_funding?
+        array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
+                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                change_step: :funding_your_aso)
+      end
+    else
+      unless form_for_step(:choose_school).eligible_for_funding?
+        array << OpenStruct.new(key: "How is your NPQ being paid for?",
+                                value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
+                                change_step: :funding_your_npq)
+      end
     end
 
     array << OpenStruct.new(key: "Lead provider",
                             value: form_for_step(:choose_your_provider).lead_provider.name,
                             change_step: :choose_your_provider)
-    array << OpenStruct.new(key: "School or college",
-                            value: institution(source: store["institution_identifier"]).name,
-                            change_step: :find_school)
-
-    unless form_for_step(:choose_school).eligible_for_funding?
-      array << OpenStruct.new(key: "How is your NPQ being paid for?",
-                              value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
-                              change_step: :funding_your_npq)
-    end
 
     array
   end
@@ -113,6 +123,14 @@ class RegistrationWizard
   end
 
 private
+
+  def aso_needs_funding?
+    store["aso_funding"] == "yes"
+  end
+
+  def course
+    Course.find(store["course_id"])
+  end
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))
@@ -147,6 +165,15 @@ private
       resend_code
       qualified_teacher_check
       dqt_mismatch
+      about_aso
+      npqh_status
+      aso_unavailable
+      aso_headteacher
+      aso_new_headteacher
+      aso_funding_not_available
+      aso_possible_funding
+      aso_funding_contact
+      funding_your_aso
       choose_your_npq
       headteacher_duration
       choose_your_provider

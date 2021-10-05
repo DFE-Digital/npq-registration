@@ -5,7 +5,11 @@ module Forms
     end
 
     def next_step
-      :choose_your_npq
+      if changing_answer?
+        :check_answers
+      else
+        :find_school
+      end
     end
   end
 end

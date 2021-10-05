@@ -126,8 +126,8 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
           .to_return(status: 200, body: participant_validator_response, headers: {})
       end
 
-      it "returns :choose_your_npq" do
-        expect(subject.next_step).to eql(:choose_your_npq)
+      it "returns :find_school" do
+        expect(subject.next_step).to eql(:find_school)
       end
 
       it "marks trn_verified as truthy" do

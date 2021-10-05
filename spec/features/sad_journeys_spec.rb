@@ -76,16 +76,6 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_text("We cannot find your details")
     page.click_link("Continue registration")
 
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your NPQ")
-    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your provider")
-    page.choose("Teach First", visible: :all)
-    page.click_button("Continue")
-
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
@@ -107,8 +97,18 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
+    expect(page).to have_text("What are you applying for?")
+    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
     expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your provider")
+    page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new
@@ -120,7 +120,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["NPQ"].value).to eql("NPQ for Senior Leadership (NPQSL)")
+    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
@@ -201,16 +201,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your NPQ")
-    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your provider")
-    page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")

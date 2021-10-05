@@ -7,6 +7,12 @@ en:
           trust: My trust is paying
           self: I am paying
           another: My NPQ is being paid in another way
+      forms/funding_your_aso:
+        funding_options:
+          school: My school or college is covering the cost
+          trust: My trust is paying
+          self: I am paying
+          another: The Additional Support Offer is being paid in another way
     errors:
       models:
         forms/provider_check:
@@ -100,3 +106,19 @@ en:
             funding:
               blank: Choose how your NPQ will be funded
               invalid: Choose a valid funding option
+        forms/npqh_status:
+          attributes:
+            npqh_status:
+              blank: Information about NPQH can’t be blank
+        forms/aso_headteacher:
+          attributes:
+            aso_headteacher:
+              blank: Choose whether or not you are a headteacher
+        forms/aso_funding_not_available:
+          attributes:
+            aso_funding:
+              blank: Choose whether or not you want to pay for the Additional Support Offer in another way?
+        forms/funding_your_aso:
+          attributes:
+            aso_funding:
+              inclusion: Choose one of the following funding options for your Additional Support Offer

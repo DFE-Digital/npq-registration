@@ -1,7 +1,7 @@
 module Forms
-  class ChangeDqt < Base
+  class AsoUnavailable < Base
     def previous_step
-      :not_updated_name
+      :npqh_status
     end
   end
 end

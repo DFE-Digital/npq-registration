@@ -50,35 +50,8 @@ RSpec.describe Forms::CheckAnswers do
   end
 
   describe "#previous_step" do
-    let(:course) { Course.all.sample }
-    let(:store) do
-      {
-        "course_id" => course.id.to_s,
-        "institution_identifier" => "School-#{school.urn}",
-      }
-    end
-    let(:school) { build(:school) }
-
-    subject { described_class.new(wizard: wizard) }
-
-    context "eligible_for_funding" do
-      let(:funding_double) { instance_double(Services::FundingEligibility, call: true) }
-
-      it "goes to possible_funding" do
-        allow(Services::FundingEligibility).to receive(:new).and_return(funding_double)
-
-        expect(subject.previous_step).to eql(:possible_funding)
-      end
-    end
-
-    context "ineligible_for_funding" do
-      let(:funding_double) { instance_double(Services::FundingEligibility, call: false) }
-
-      it "goes to funding_your_npq" do
-        allow(Services::FundingEligibility).to receive(:new).and_return(funding_double)
-
-        expect(subject.previous_step).to eql(:funding_your_npq)
-      end
+    it "goes to choose_your_provider" do
+      expect(subject.previous_step).to eql(:choose_your_provider)
     end
   end
 end

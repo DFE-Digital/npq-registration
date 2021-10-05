@@ -29,10 +29,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     end
 
     context "when studying for headship" do
-      let(:course) { Course.first }
+      let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
 
-      it "returns choose_your_provider" do
-        expect(subject.next_step).to eql(:choose_your_provider)
+      it "returns headteacher_duration" do
+        expect(subject.next_step).to eql(:headteacher_duration)
       end
     end
 

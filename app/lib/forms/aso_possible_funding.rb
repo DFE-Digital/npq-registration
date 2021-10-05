@@ -1,15 +1,11 @@
 module Forms
-  class PossibleFunding < Base
+  class AsoPossibleFunding < Base
     def next_step
       :choose_your_provider
     end
 
     def previous_step
-      if course.npqh?
-        :headteacher_duration
-      else
-        :choose_your_npq
-      end
+      :aso_new_headteacher
     end
 
     def course

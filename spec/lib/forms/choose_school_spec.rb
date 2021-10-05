@@ -63,24 +63,8 @@ RSpec.describe Forms::ChooseSchool, type: :model do
 
     subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard: wizard) }
 
-    context "eligible_for_funding" do
-      let(:funding_double) { instance_double(Services::FundingEligibility, call: true) }
-
-      it "goes to possible_funding" do
-        allow(Services::FundingEligibility).to receive(:new).and_return(funding_double)
-
-        expect(subject.next_step).to eql(:possible_funding)
-      end
-    end
-
-    context "ineligible_for_funding" do
-      let(:funding_double) { instance_double(Services::FundingEligibility, call: false) }
-
-      it "goes to funding_your_npq" do
-        allow(Services::FundingEligibility).to receive(:new).and_return(funding_double)
-
-        expect(subject.next_step).to eql(:funding_your_npq)
-      end
+    it "goes to choose_your_npq" do
+      expect(subject.next_step).to eql(:choose_your_npq)
     end
   end
 end

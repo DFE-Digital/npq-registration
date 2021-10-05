@@ -1,14 +1,14 @@
 module Forms
-  class FundingYourNpq < Base
+  class FundingYourAso < Base
     VALID_FUNDING_OPTIONS = %w[school trust self another].freeze
 
-    attr_accessor :funding
+    attr_accessor :aso_funding_choice
 
-    validates :funding, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
+    validates :aso_funding_choice, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
 
     def self.permitted_params
       %i[
-        funding
+        aso_funding_choice
       ]
     end
 
@@ -17,11 +17,7 @@ module Forms
     end
 
     def previous_step
-      :choose_school
-    end
-
-    def course
-      @course ||= Course.find(wizard.store["course_id"])
+      :aso_funding_not_available
     end
 
     def options
@@ -36,8 +32,8 @@ module Forms
                        text: "I am paying",
                        link_errors: false),
         OpenStruct.new(value: "another",
-                       text: "My NPQ is being paid in another way",
-                       description: "For example, I am sharing the costs with my school or college",
+                       text: "The Additional Support Offer is being paid in another way",
+                       hint: "For example, I am sharing the costs with my school or college",
                        link_errors: false),
       ].freeze
     end
