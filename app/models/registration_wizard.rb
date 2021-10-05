@@ -88,13 +88,13 @@ class RegistrationWizard
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
 
-    if form_for_step(:choose_your_npq).studying_for_headship?
+    if course.npqh?
       array << OpenStruct.new(key: "Have you been a headteacher for less than 24 months?",
                               value: store["headteacher_status"].humanize,
                               change_step: :headteacher_duration)
     end
 
-    if studying_aso?
+    if course.aso?
       if aso_needs_funding?
         array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
@@ -126,10 +126,6 @@ private
 
   def aso_needs_funding?
     store["aso_funding"] == "yes"
-  end
-
-  def studying_aso?
-    course.name == "Additional Support Offer for new headteachers"
   end
 
   def course

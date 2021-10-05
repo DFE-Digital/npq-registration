@@ -17,18 +17,18 @@ module Forms
       if changing_answer?
         if no_answers_will_change?
           :check_answers
-        elsif studying_for_headship?
+        elsif course.npqh?
           :headteacher_duration
-        elsif studying_for_aso?
+        elsif course.aso?
           :about_aso
         elsif previously_eligible_for_funding? && now_no_longer_eligible_for_funding?
           :funding_your_npq
         else
           :check_answers
         end
-      elsif studying_for_headship?
+      elsif course.npqh?
         :headteacher_duration
-      elsif studying_for_aso?
+      elsif course.aso?
         :about_aso
       elsif Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
         :possible_funding
@@ -39,14 +39,6 @@ module Forms
 
     def previous_step
       :choose_school
-    end
-
-    def studying_for_headship?
-      course.studying_for_headship?
-    end
-
-    def studying_for_aso?
-      course.studying_for_aso?
     end
 
     def options
