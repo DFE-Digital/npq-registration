@@ -50,7 +50,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_link("Back")
 
     # skips code page as email already confirmed
-    expect(page).to have_content("Email details")
+    expect(page).to have_content("Email address")
     page.click_button("Continue")
 
     # change email address
