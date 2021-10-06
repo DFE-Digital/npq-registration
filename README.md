@@ -1,4 +1,5 @@
-![Deploy](https://github.com/DFE-Digital/govuk-rails-boilerplate/workflows/Deploy/badge.svg)
+![Tests](https://github.com/DFE-Digital/npq-registration/actions/workflows/test.yml/badge.svg)
+![Deployment](https://github.com/DFE-Digital/npq-registration/actions/workflows/deploy_to_dev.yml/badge.svg)
 
 # npq-registration (National Professional Qualification)
 
