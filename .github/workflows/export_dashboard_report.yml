@@ -41,7 +41,7 @@ jobs:
           cf api https://api.london.cloud.service.gov.uk
           cf auth
           cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
-          cf conduit npq-registration-prod-db -c '{"read_only": true}' -- psql -d rdsbroker_858b741f_16c5_4f39_a5ab_77da5d31e5e7 -c "copy(select data from reports where identifier='dashboard') to STDOUT" | sed 's/\\n/\n/g' > ~/data.csv
+          cf conduit npq-registration-prod-db -c '{"read_only": true}' -- psql -d rdsbroker_858b741f_16c5_4f39_a5ab_77da5d31e5e7 -c "copy(select data from reports where identifier='dashboard') to STDOUT" | sed 's/\\n/\n/g' | sed '${/^$/d;}' > ~/data.csv
 
       - name: Upload csv to BigQuery
         shell: bash
