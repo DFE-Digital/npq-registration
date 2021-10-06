@@ -122,3 +122,7 @@ en:
           attributes:
             aso_funding:
               inclusion: Choose one of the following funding options for your Additional Support Offer
+        forms/aso_new_headteacher:
+          attributes:
+            aso_new_headteacher:
+              blank: Choose whether or not you are in your first 2 years of headship
