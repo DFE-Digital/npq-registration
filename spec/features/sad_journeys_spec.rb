@@ -28,7 +28,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email details")
+    expect(page).to have_text("Email address")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
@@ -167,7 +167,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email details")
+    expect(page).to have_text("Email address")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 

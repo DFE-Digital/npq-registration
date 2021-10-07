@@ -14,13 +14,9 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Email details</h1>
-
-      <p class="govuk-body">We’ll email you a code to confirm your email address.</p>
-
-      <%= f.govuk_email_field :email,
-                              width: 20,
-                              label: { text: 'Email address' } %>
+      <%= f.govuk_text_field :email,
+        label: { text: "Email address", tag: "h1", size: "xl" },
+        hint: { text: "We’ll email you a code to confirm your email address." } %>
 
       <%= f.govuk_submit %>
     <% end %>
