@@ -27,7 +27,7 @@ RSpec.describe RegistrationWizard do
   describe "#answers" do
     let(:school) { create(:school) }
 
-    context "when ASO is selected course" do
+    context "when ASO is selected course and not eligible for funding" do
       let(:store) do
         {
           "date_of_birth" => 30.years.ago,
@@ -35,11 +35,19 @@ RSpec.describe RegistrationWizard do
           "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
           "lead_provider_id" => LeadProvider.all.sample.id,
           "funding_choice" => "school",
+          "aso_headteacher" => "yes",
+          "aso_new_headteacher" => "yes",
+          "aso_funding" => "yes",
+          "aso_funding_choice" => "another",
         }
       end
 
       it "does not show How is your NPQ being paid for?" do
         expect(subject.answers.map(&:key)).not_to include("How is your NPQ being paid for?")
+      end
+
+      it "does not show ASO funding option" do
+        expect(subject.answers.find { |el| el.key == "How is the Additional Support Offer being paid for?" }).to be_nil
       end
     end
 

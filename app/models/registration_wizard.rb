@@ -125,7 +125,7 @@ class RegistrationWizard
 private
 
   def aso_needs_funding?
-    store["aso_funding"] == "yes"
+    (store["aso_headteacher"] != "yes" || store["aso_new_headteacher"] != "yes") && store["aso_funding"] == "yes"
   end
 
   def course
