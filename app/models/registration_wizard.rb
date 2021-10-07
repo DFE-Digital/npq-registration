@@ -62,7 +62,7 @@ class RegistrationWizard
 
     begin
       array << OpenStruct.new(key: "Date of birth",
-                              value: dob.to_s(:long),
+                              value: dob.to_s(:govuk),
                               change_step: :qualified_teacher_check)
     rescue ArgumentError => e
       Sentry.capture_exception(e, extra: { dob: dob })
