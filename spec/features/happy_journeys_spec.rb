@@ -145,7 +145,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
@@ -270,7 +270,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    expect(check_answers_page.summary_list["Date of birth"].value).to eql("December 13, 1980")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Headship (NPQH)")

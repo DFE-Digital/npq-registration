@@ -14,7 +14,7 @@
     <h1 class="govuk-heading-xl">We cannot find your details</h1>
 
     <p class="govuk-body">
-      We cannot find a match with the details you have provided.
+      We cannot find a match with the details you’ve given.
     </p>
 
     <p class="govuk-body">
@@ -24,12 +24,41 @@
     <ul class="govuk-list govuk-list--bullet">
       <li>you have abbreviated your first name, for example Rob/Robert</li>
       <li>your surname is different to the name held on the Teaching Regulation Agency records</li>
-      <li>you’ve entered an incorrect TRN</li>
-      <li>you have entered an incorrect date of birth</li>
+      <li>mistyped or entered some incorrect information</li>
     </ul>
 
+    <h2 class="govuk-heading-m">Check your details and try again</h2>
+
+    <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
+      <% summary_list.row do |row|
+           row.key { "Teacher reference number (TRN)" }
+           row.value { @wizard.store["trn"] } %>
+      <% end %>
+
+      <% summary_list.row do |row|
+           row.key { "Full name" }
+           row.value { @wizard.store["full_name"] } %>
+      <% end %>
+
+      <% summary_list.row do |row|
+           row.key { "Date of birth" }
+           row.value { @wizard.store["date_of_birth"].to_s(:govuk) } %>
+      <% end %>
+
+      <% if @wizard.store["national_insurance_number"].present? %>
+        <% summary_list.row do |row|
+             row.key { "National Insurance number" }
+             row.value { @wizard.store["national_insurance_number"] } %>
+        <% end %>
+      <% end %>
+    <% end %>
+
     <p class="govuk-body">
-      Try again to enter your details - entering your National Insurance number will help us match your details.
+      <% if @wizard.store["national_insurance_number"].present? %>
+        Try again to enter your details.
+      <% else %>
+        Try again to enter your details – entering your National Insurance number will help us match your details.
+      <% end %>
     </p>
 
     <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
