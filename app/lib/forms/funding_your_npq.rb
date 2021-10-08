@@ -17,7 +17,7 @@ module Forms
     end
 
     def previous_step
-      :choose_school
+      :choose_your_npq
     end
 
     def course

@@ -88,12 +88,6 @@ class RegistrationWizard
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
 
-    if course.npqh?
-      array << OpenStruct.new(key: "Have you been a headteacher for less than 24 months?",
-                              value: store["headteacher_status"].humanize,
-                              change_step: :headteacher_duration)
-    end
-
     if course.aso?
       if aso_needs_funding?
         array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
@@ -175,7 +169,6 @@ private
       aso_funding_contact
       funding_your_aso
       choose_your_npq
-      headteacher_duration
       choose_your_provider
       find_school
       choose_school

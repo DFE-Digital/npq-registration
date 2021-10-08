@@ -17,8 +17,6 @@ module Forms
       if changing_answer?
         if no_answers_will_change?
           :check_answers
-        elsif course.npqh?
-          :headteacher_duration
         elsif course.aso?
           :about_aso
         elsif previously_eligible_for_funding? && now_no_longer_eligible_for_funding?
@@ -26,8 +24,6 @@ module Forms
         else
           :check_answers
         end
-      elsif course.npqh?
-        :headteacher_duration
       elsif course.aso?
         :about_aso
       elsif Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call

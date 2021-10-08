@@ -20,8 +20,6 @@ module Forms
     def previous_step
       if course.npqh? && eligible_for_funding?
         :possible_funding
-      elsif course.npqh?
-        :headteacher_duration
       elsif course.aso? && wizard.store["aso_funding"] == "yes"
         :funding_your_aso
       elsif wizard.store["aso_new_headteacher"] == "yes"

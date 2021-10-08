@@ -250,11 +250,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("How long have you been a headteacher?")
-    page.choose("No, I have been a headteacher for more than 24 months", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
@@ -274,20 +269,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Headship (NPQH)")
-    expect(check_answers_page.summary_list["Have you been a headteacher for less than 24 months?"].value).to eql("Yes over two years")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
-    page.click_link("Change Have you been a headteacher for less than 24 months?")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Have you been a headteacher for less than 24 months?")
-    page.choose("No, I am not a headteacher", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Have you been a headteacher for less than 24 months?"].value).to eql("No")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
