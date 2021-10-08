@@ -15,10 +15,10 @@ module Forms
     end
 
     def next_step
-      if aso_new_headteacher == "no"
-        :aso_funding_not_available
-      else
+      if eligible_for_funding?
         :aso_possible_funding
+      else
+        :aso_funding_not_available
       end
     end
 
@@ -35,6 +35,22 @@ module Forms
     end
 
   private
+
+    def course
+      Course.find_by(id: wizard.store["course_id"])
+    end
+
+    def eligible_for_funding?
+      Services::FundingEligibility.new(
+        course: course,
+        institution: institution,
+        new_headteacher: new_headteacher?,
+      ).call
+    end
+
+    def new_headteacher?
+      aso_new_headteacher == "yes"
+    end
 
     def options_array
       [

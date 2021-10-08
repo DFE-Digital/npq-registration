@@ -51,15 +51,7 @@ module Forms
       @possible_institutions = schools + local_authorities
     end
 
-    def eligible_for_funding?
-      Services::FundingEligibility.new(course: course, institution: institution(source: institution_identifier), headteacher_status: headteacher_status).call
-    end
-
   private
-
-    def headteacher_status
-      wizard.store["headteacher_status"]
-    end
 
     def course
       @course ||= Course.find(wizard.store["course_id"])
