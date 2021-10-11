@@ -10,6 +10,8 @@ class RegistrationWizardController < ApplicationController
     return redirect_to root_path unless @form.requirements_met?
 
     render @wizard.current_step
+
+    @wizard.after_render
   end
 
   def update

@@ -12,14 +12,6 @@ module Forms
 
     def after_save
       Services::HandleSubmissionForStore.new(store: wizard.store).call
-
-      clear_answers_in_store
-    end
-
-  private
-
-    def clear_answers_in_store
-      wizard.store.clear
     end
   end
 end
