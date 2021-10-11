@@ -22,11 +22,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
     expect(page).to have_text("Email address")
     page.fill_in "Email address", with: "user@example.com"
@@ -158,11 +153,6 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("Teacher reference number")
     page.choose("Yes, I know my TRN", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean

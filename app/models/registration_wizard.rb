@@ -153,10 +153,6 @@ private
       share_provider
       about_npq
       teacher_reference_number
-      name_changes
-      updated_name
-      not_sure_updated_name
-      not_updated_name
       change_dqt
       dont_know_teacher_reference_number
       dont_have_teacher_reference_number

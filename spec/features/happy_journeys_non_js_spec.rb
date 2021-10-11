@@ -40,32 +40,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
 
-    expect(page).to have_text("Name changes")
-    page.choose("Yes, I have changed my name", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Updated name")
-    page.choose("Not sure", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("I don’t know if I updated my name")
-    page.click_link("Back")
-
-    expect(page).to have_text("Updated name")
-    page.choose("No, I have not updated my name", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Updating your name")
-    page.choose("Change my name on the Teaching Regulation Agency records", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Change your details on the Teaching Regulation Agency records")
-    page.click_link("Back")
-
-    expect(page).to have_text("Updating your name")
-    page.choose("Register with my previous name", visible: :all)
-    page.click_button("Continue")
-
     expect(page.current_path).to include("contact-details")
     expect(page).to have_text("Email address")
     page.fill_in "Email address", with: "user@example.com"
@@ -186,10 +160,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Teacher reference number")
     page.choose("Yes, I know my TRN", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -336,10 +306,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Teacher reference number")
     page.choose("Yes, I know my TRN", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -501,10 +467,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Teacher reference number")
     page.choose("Yes, I know my TRN", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
