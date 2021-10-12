@@ -5,11 +5,7 @@ module Forms
     end
 
     def previous_step
-      if course.npqh?
-        :headteacher_duration
-      else
-        :choose_your_npq
-      end
+      :choose_your_npq
     end
 
     def course

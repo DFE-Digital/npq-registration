@@ -97,10 +97,6 @@ en:
           attributes:
             institution_location:
               blank: School location can’t be blank
-        forms/headteacher_duration:
-          attributes:
-            headteacher_status:
-              blank: Choose whether or not you have been a headteacher for over two years
         forms/funding_your_npq:
           attributes:
             funding:

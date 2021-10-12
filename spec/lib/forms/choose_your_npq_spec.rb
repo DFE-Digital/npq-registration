@@ -20,22 +20,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       described_class.new(course_id: course.id.to_s)
     end
 
-    context "when studying for headship" do
-      let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-
-      it "returns headteacher_duration" do
-        expect(subject.next_step).to eql(:headteacher_duration)
-      end
-    end
-
-    context "when studying for headship" do
-      let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-
-      it "returns headteacher_duration" do
-        expect(subject.next_step).to eql(:headteacher_duration)
-      end
-    end
-
     context "when changing answers" do
       before do
         subject.flag_as_changing_answer
@@ -56,25 +40,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
 
         it "returns check_answers" do
           expect(subject.next_step).to eql(:check_answers)
-        end
-      end
-
-      context "when changing to headship" do
-        let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:previous_course) { Course.first }
-        let(:store) { { course_id: previous_course.id.to_s }.stringify_keys }
-        let(:request) { nil }
-
-        before do
-          subject.wizard = RegistrationWizard.new(
-            current_step: :choose_your_npq,
-            store: store,
-            request: request,
-          )
-        end
-
-        it "returns headteacher_duration" do
-          expect(subject.next_step).to eql(:headteacher_duration)
         end
       end
 

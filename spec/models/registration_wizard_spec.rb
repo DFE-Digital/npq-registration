@@ -25,7 +25,7 @@ RSpec.describe RegistrationWizard do
   end
 
   describe "#answers" do
-    let(:school) { create(:school) }
+    let(:school) { create(:school, establishment_type_code: "1") }
 
     context "when ASO is selected course and not eligible for funding" do
       let(:store) do

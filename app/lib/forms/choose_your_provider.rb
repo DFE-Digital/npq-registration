@@ -20,8 +20,6 @@ module Forms
     def previous_step
       if course.npqh? && eligible_for_funding?
         :possible_funding
-      elsif course.npqh?
-        :headteacher_duration
       elsif course.aso? && wizard.store["aso_funding"] == "yes"
         :funding_your_aso
       elsif wizard.store["aso_new_headteacher"] == "yes"
@@ -50,15 +48,19 @@ module Forms
   private
 
     def eligible_for_funding?
-      Services::FundingEligibility.new(course: course, institution: institution(source: institution_identifier), headteacher_status: headteacher_status).call
+      Services::FundingEligibility.new(
+        course: course,
+        institution: institution(source: institution_identifier),
+        new_headteacher: new_headteacher?,
+      ).call
     end
 
     def institution_identifier
       wizard.store["institution_identifier"]
     end
 
-    def headteacher_status
-      wizard.store["headteacher_status"]
+    def new_headteacher?
+      wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
     end
 
     def validate_lead_provider_exists

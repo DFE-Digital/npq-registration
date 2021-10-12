@@ -17,8 +17,6 @@ module Forms
       if changing_answer?
         if no_answers_will_change?
           :check_answers
-        elsif course.npqh?
-          :headteacher_duration
         elsif course.aso?
           :about_aso
         elsif previously_eligible_for_funding? && now_no_longer_eligible_for_funding?
@@ -26,11 +24,9 @@ module Forms
         else
           :check_answers
         end
-      elsif course.npqh?
-        :headteacher_duration
       elsif course.aso?
         :about_aso
-      elsif Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+      elsif Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
         :possible_funding
       else
         :funding_your_npq
@@ -56,16 +52,28 @@ module Forms
 
   private
 
+    def previous_course
+      Course.find_by(id: wizard.store["course_id"])
+    end
+
     def previously_eligible_for_funding?
-      wizard.form_for_step(:choose_school).eligible_for_funding?
+      Services::FundingEligibility.new(
+        course: previous_course,
+        institution: institution,
+        new_headteacher: new_headteacher?,
+      ).call
     end
 
     def now_no_longer_eligible_for_funding?
-      !Services::FundingEligibility.new(course: course, institution: institution, headteacher_status: headteacher_status).call
+      !Services::FundingEligibility.new(
+        course: course,
+        institution: institution,
+        new_headteacher: new_headteacher?,
+      ).call
     end
 
-    def headteacher_status
-      wizard.store["headteacher_status"]
+    def new_headteacher?
+      wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
     end
 
     def validate_course_exists

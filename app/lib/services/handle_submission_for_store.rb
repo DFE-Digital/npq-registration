@@ -67,15 +67,15 @@ module Services
     end
 
     def funding_eligbility
-      if course.aso?
-        (store["aso_headteacher"] == "yes") && (store["aso_new_headteacher"] == "yes")
-      else
-        Services::FundingEligibility.new(
-          course: course,
-          institution: institution(source: store["institution_identifier"]),
-          headteacher_status: store["headteacher_status"],
-        ).call
-      end
+      Services::FundingEligibility.new(
+        course: course,
+        institution: institution(source: store["institution_identifier"]),
+        new_headteacher: new_headteacher?,
+      ).call
+    end
+
+    def new_headteacher?
+      %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
     end
 
     def ni_number_to_store

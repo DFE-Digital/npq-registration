@@ -88,24 +88,16 @@ class RegistrationWizard
                             value: form_for_step(:choose_your_npq).course.name,
                             change_step: :choose_your_npq)
 
-    if course.npqh?
-      array << OpenStruct.new(key: "Have you been a headteacher for less than 24 months?",
-                              value: store["headteacher_status"].humanize,
-                              change_step: :headteacher_duration)
-    end
-
-    if course.aso?
-      if aso_needs_funding?
-        array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
+    if needs_funding?
+      array << if course.aso?
+                 OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
-      end
-    else
-      unless form_for_step(:choose_school).eligible_for_funding?
-        array << OpenStruct.new(key: "How is your NPQ being paid for?",
+               else
+                 OpenStruct.new(key: "How is your NPQ being paid for?",
                                 value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
                                 change_step: :funding_your_npq)
-      end
+               end
     end
 
     array << OpenStruct.new(key: "Lead provider",
@@ -124,8 +116,16 @@ class RegistrationWizard
 
 private
 
-  def aso_needs_funding?
-    (store["aso_headteacher"] != "yes" || store["aso_new_headteacher"] != "yes") && store["aso_funding"] == "yes"
+  def needs_funding?
+    !Services::FundingEligibility.new(
+      course: course,
+      institution: institution(source: store["institution_identifier"]),
+      new_headteacher: new_headteacher?,
+    ).call
+  end
+
+  def new_headteacher?
+    store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
   end
 
   def course
@@ -175,7 +175,6 @@ private
       aso_funding_contact
       funding_your_aso
       choose_your_npq
-      headteacher_duration
       choose_your_provider
       find_school
       choose_school

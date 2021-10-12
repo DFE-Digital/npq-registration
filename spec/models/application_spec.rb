@@ -7,7 +7,7 @@ RSpec.describe Application do
     subject { build(:application) }
 
     it "calls Services::FundingEligibility with correct params" do
-      allow(Services::FundingEligibility).to receive(:new).with(course: subject.course, institution: subject.school, headteacher_status: subject.headteacher_status).and_return(mock_funding_service)
+      allow(Services::FundingEligibility).to receive(:new).with(course: subject.course, institution: subject.school, new_headteacher: subject.new_headteacher?).and_return(mock_funding_service)
 
       subject.calculate_funding_eligbility
 

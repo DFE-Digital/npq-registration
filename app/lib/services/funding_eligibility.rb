@@ -1,11 +1,11 @@
 module Services
   class FundingEligibility
-    attr_reader :course, :institution, :headteacher_status
+    attr_reader :institution, :course
 
-    def initialize(course:, institution:, headteacher_status: nil)
-      @course = course
+    def initialize(institution:, course:, new_headteacher: false)
       @institution = institution
-      @headteacher_status = headteacher_status
+      @course = course
+      @new_headteacher = new_headteacher
     end
 
     def call
@@ -13,38 +13,13 @@ module Services
 
       case institution.class.name
       when "School"
-        case course.name
-        when "NPQ Leading Teaching (NPQLT)",
-             "NPQ Leading Behaviour and Culture (NPQLBC)",
-             "NPQ for Senior Leadership (NPQSL)",
-             "NPQ for Executive Leadership (NPQEL)"
-          eligible_establishment_type_codes_for_base_courses.include?(institution.establishment_type_code) && institution.high_pupil_premium
-        when "NPQ Leading Teacher Development (NPQLTD)"
-          eligible_establishment_type_codes_for_ltd_courses.include?(institution.establishment_type_code)
-        when "NPQ for Headship (NPQH)"
-          eligible_new_headteacher = if %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
-                                       eligible_establishment_type_codes_for_new_headship.include?(institution.establishment_type_code)
-                                     end
-
-          eligible_headship_institution = institution.high_pupil_premium && eligible_establishment_type_codes_for_headship_and_high_pupil_premiums.include?(institution.establishment_type_code)
-
-          eligible_new_headteacher || eligible_headship_institution
-        else # fail safe
-          false
+        if course.aso?
+          eligible_establishment_type_codes.include?(institution.establishment_type_code) && new_headteacher?
+        else
+          eligible_establishment_type_codes.include?(institution.establishment_type_code)
         end
       when "LocalAuthority"
-        case course.name
-        when "NPQ Leading Teacher Development (NPQLTD)",
-             "NPQ for Headship (NPQH)"
-          true
-        when "NPQ Leading Teaching (NPQLT)",
-             "NPQ Leading Behaviour and Culture (NPQLBC)",
-             "NPQ for Senior Leadership (NPQSL)",
-             "NPQ for Executive Leadership (NPQEL)"
-          institution.high_pupil_premium
-        else
-          false
-        end
+        true
       else
         false
       end
@@ -52,20 +27,12 @@ module Services
 
   private
 
-    def eligible_establishment_type_codes_for_base_courses
-      %w[1 2 3 5 6 7 8 12 14 28 33 34 35 36 38 40 41 42 43 44].freeze
+    def new_headteacher?
+      @new_headteacher
     end
 
-    def eligible_establishment_type_codes_for_ltd_courses
-      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 43 44 45].freeze
-    end
-
-    def eligible_establishment_type_codes_for_headship_and_high_pupil_premiums
-      %w[1 2 3 5 6 7 8 12 14 28 33 34 35 36 38 40 41 42 43 44].freeze
-    end
-
-    def eligible_establishment_type_codes_for_new_headship
-      %w[1 2 3 5 6 7 8 12 14 15 28 33 34 35 36 38 39 40 41 42 43 44 45].freeze
+    def eligible_establishment_type_codes
+      %w[1 2 3 5 6 7 8 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].freeze
     end
 
     def eligible_urns

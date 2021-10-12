@@ -250,10 +250,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("NPQ for Headship (NPQH)", visible: :all)
     page.click_button("Continue")
 
-    expect(page).to have_text("How long have you been a headteacher?")
-    page.choose("No, I have been a headteacher for more than 24 months", visible: :all)
-    page.click_button("Continue")
-
     expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
@@ -271,18 +267,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Headship (NPQH)")
-    expect(check_answers_page.summary_list["Have you been a headteacher for less than 24 months?"].value).to eql("Yes over two years")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
-    page.click_link("Change Have you been a headteacher for less than 24 months?")
-
-    expect(page).to have_text("How long have you been a headteacher?")
-    page.choose("No, I am not a headteacher", visible: :all)
-    page.click_button("Continue")
-
-    expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Have you been a headteacher for less than 24 months?"].value).to eql("No")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
@@ -309,7 +296,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.eligible_for_funding).to be_falsey
     expect(application.funding_choice).to eql("trust")
     expect(application.course).to be_npqh
-    expect(application.headteacher_status).to eql("no")
+    expect(application.headteacher_status).to be_nil
 
     visit "/account"
 
@@ -542,7 +529,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "National Insurance number (optional)", with: "AB123456C"
     page.click_button("Continue")
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1", establishment_type_code: "1")
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
