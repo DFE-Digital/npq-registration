@@ -157,6 +157,7 @@ private
   def steps
     %i[
       start
+      teacher_catchment
       provider_check
       share_provider
       about_npq

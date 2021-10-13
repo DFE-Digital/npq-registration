@@ -122,3 +122,7 @@ en:
           attributes:
             aso_new_headteacher:
               blank: Choose whether or not you are in your first 2 years of headship
+        forms/teacher_catchment:
+          attributes:
+            teacher_catchment:
+              blank: Choose whether you are a teacher in England, Jersey, Guernsey or the Isle of Man

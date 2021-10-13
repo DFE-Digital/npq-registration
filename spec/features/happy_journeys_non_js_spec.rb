@@ -14,56 +14,60 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
+    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
     expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("No, I don’t know my TRN", visible: :all)
+    page.choose("No, I don’t know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("If you don’t know what your teacher reference number")
     page.click_link("Back")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("I don’t have a TRN", visible: :all)
+    page.choose("I don’t have a TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
     page.click_link("Back")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Name changes")
-    page.choose("Yes, I have changed my name", visible: :all)
+    page.choose("Yes, I have changed my name")
     page.click_button("Continue")
 
     expect(page).to have_text("Updated name")
-    page.choose("Not sure", visible: :all)
+    page.choose("Not sure")
     page.click_button("Continue")
 
     expect(page).to have_text("I don’t know if I updated my name")
     page.click_link("Back")
 
     expect(page).to have_text("Updated name")
-    page.choose("No, I have not updated my name", visible: :all)
+    page.choose("No, I have not updated my name")
     page.click_button("Continue")
 
     expect(page).to have_text("Updating your name")
-    page.choose("Change my name on the Teaching Regulation Agency records", visible: :all)
+    page.choose("Change my name on the Teaching Regulation Agency records")
     page.click_button("Continue")
 
     expect(page).to have_text("Change your details on the Teaching Regulation Agency records")
     page.click_link("Back")
 
     expect(page).to have_text("Updating your name")
-    page.choose("Register with my previous name", visible: :all)
+    page.choose("Register with my previous name")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -125,18 +129,18 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school")
-    page.choose "open manchester school", visible: :all
+    page.choose "open manchester school"
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+    page.choose("NPQ for Senior Leadership (NPQSL)")
     page.click_button("Continue")
 
     expect(page).to have_text("You may qualify for DfE scholarship funding")
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your provider")
-    page.choose("Teach First", visible: :all)
+    page.choose("Teach First")
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new
@@ -187,20 +191,24 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
+    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
     expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
+    page.choose("No, I have the same name")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -260,19 +268,19 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school or college")
-    page.choose "open manchester school", visible: :all
+    page.choose "open manchester school"
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("NPQ for Headship (NPQH)", visible: :all)
+    page.choose("NPQ for Headship (NPQH)")
     page.click_button("Continue")
 
     expect(page).to have_text("Funding")
-    page.choose "My trust is paying", visible: :all
+    page.choose "My trust is paying"
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your provider")
-    page.choose("Teach First", visible: :all)
+    page.choose("Teach First")
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new
@@ -330,20 +338,24 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
+    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
     expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
+    page.choose("No, I have the same name")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -403,11 +415,11 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school or college")
-    page.choose "open manchester school", visible: :all
+    page.choose "open manchester school"
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("Additional Support Offer for new headteachers", visible: :all)
+    page.choose("Additional Support Offer for new headteachers")
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Additional Support Offer for new headteachers"
@@ -501,20 +513,24 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
+    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
     expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page).to have_text("Teacher reference number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Name changes")
-    page.choose("No, I have the same name", visible: :all)
+    page.choose("No, I have the same name")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -574,11 +590,11 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("Choose your school or college")
-    page.choose "open manchester school", visible: :all
+    page.choose "open manchester school"
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("Additional Support Offer for new headteachers", visible: :all)
+    page.choose("Additional Support Offer for new headteachers")
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Additional Support Offer for new headteachers"
