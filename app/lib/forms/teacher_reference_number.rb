@@ -26,5 +26,13 @@ module Forms
     def previous_step
       :share_provider
     end
+
+    def title
+      if wizard.query_store.england_teacher?
+        "You need your teacher reference number to register for an NPQ"
+      else
+        "You’ll need a teacher reference number to register for an NPQ"
+      end
+    end
   end
 end

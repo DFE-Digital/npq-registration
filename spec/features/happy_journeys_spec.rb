@@ -22,8 +22,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
-    page.choose("No, I don’t know my TRN", visible: :all)
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("Yes, but I need to be reminded what it is", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -31,8 +31,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Back")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
-    page.choose("I don’t have a TRN", visible: :all)
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("No, I need to get a TRN", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -40,7 +40,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Back")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
 
@@ -192,7 +192,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
 

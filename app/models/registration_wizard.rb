@@ -122,6 +122,10 @@ class RegistrationWizard
     form_class.new(hash)
   end
 
+  def query_store
+    @query_store ||= Services::QueryStore.new(store: store)
+  end
+
 private
 
   def needs_funding?

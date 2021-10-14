@@ -22,7 +22,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
 
@@ -172,7 +172,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
 

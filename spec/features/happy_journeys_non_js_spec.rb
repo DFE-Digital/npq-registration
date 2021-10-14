@@ -26,21 +26,21 @@ RSpec.feature "Happy journeys", type: :feature do
     page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
-    expect(page).to have_text("Teacher reference number")
-    page.choose("No, I don’t know my TRN")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("Yes, but I need to be reminded what it is")
     page.click_button("Continue")
 
     expect(page).to have_text("If you don’t know what your teacher reference number")
     page.click_link("Back")
 
-    expect(page).to have_text("Teacher reference number")
-    page.choose("I don’t have a TRN")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("No, I need to get a TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
     page.click_link("Back")
 
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
@@ -203,7 +203,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
@@ -350,7 +350,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
@@ -525,7 +525,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
-    expect(page).to have_text("Teacher reference number")
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
