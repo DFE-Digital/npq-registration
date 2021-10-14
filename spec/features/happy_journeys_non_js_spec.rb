@@ -44,7 +44,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("Yes, I have changed my name")
     page.click_button("Continue")
 
@@ -207,7 +207,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("No, I have the same name")
     page.click_button("Continue")
 
@@ -354,7 +354,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("No, I have the same name")
     page.click_button("Continue")
 
@@ -529,7 +529,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
 
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("No, I have the same name")
     page.click_button("Continue")
 

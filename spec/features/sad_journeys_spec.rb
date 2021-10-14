@@ -27,7 +27,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
@@ -177,7 +177,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Name changes")
+    expect(page.current_path).to eql("/registration/name-changes")
     page.choose("No, I have the same name", visible: :all)
     page.click_button("Continue")
 
