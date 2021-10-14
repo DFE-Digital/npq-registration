@@ -15,6 +15,7 @@ en:
           another: The Additional Support Offer is being paid in another way
       forms/teacher_catchment:
         teacher_catchment:
+          one: nil # pluralization fix
           yes: Yes
           no_teach_elsewhere: No, I’m a teacher somewhere else
           no_not_teacher: No, I’m not a teacher
