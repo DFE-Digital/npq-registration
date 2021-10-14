@@ -3,6 +3,7 @@ require "active_support/time"
 class RegistrationWizard
   include ActiveModel::Model
   include Forms::Helpers::Institution
+  include ActionView::Helpers::TranslationHelper
 
   class InvalidStep < StandardError; end
 
@@ -59,11 +60,16 @@ class RegistrationWizard
 
   def answers
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
-
     array = []
+
+    array << OpenStruct.new(key: "Are you a teacher in England, Jersey, Guernsey or the Isle of Man?",
+                            value: t(store["teacher_catchment"], scope: %i[activemodel attributes forms/teacher_catchment teacher_catchment]),
+                            change_step: :teacher_catchment)
+
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
                             change_step: :qualified_teacher_check)
+
     array << OpenStruct.new(key: "TRN",
                             value: store["trn"],
                             change_step: :qualified_teacher_check)

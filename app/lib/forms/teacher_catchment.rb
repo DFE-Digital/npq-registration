@@ -15,7 +15,15 @@ module Forms
     end
 
     def next_step
-      :provider_check
+      if changing_answer?
+        if answers_will_change?
+          :provider_check
+        else
+          :check_answers
+        end
+      else
+        :provider_check
+      end
     end
 
     def previous_step

@@ -13,6 +13,11 @@ en:
           trust: My trust is paying
           self: I am paying
           another: The Additional Support Offer is being paid in another way
+      forms/teacher_catchment:
+        teacher_catchment:
+          yes: Yes
+          no_teach_elsewhere: No, I’m a teacher somewhere else
+          no_not_teacher: No, I’m not a teacher
     errors:
       models:
         forms/provider_check:
