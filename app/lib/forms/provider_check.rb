@@ -22,7 +22,7 @@ module Forms
     end
 
     def previous_step
-      :start
+      :teacher_catchment
     end
   end
 end
