@@ -7,8 +7,10 @@ module Forms
     def next_step
       if changing_answer?
         :check_answers
-      else
+      elsif wizard.query_store.england_teacher?
         :find_school
+      else
+        :choose_your_npq
       end
     end
   end

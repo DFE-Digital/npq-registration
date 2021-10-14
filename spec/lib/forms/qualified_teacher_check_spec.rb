@@ -149,6 +149,12 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   end
 
   describe "#next_step" do
+    let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :qualified_teacher_check) }
+    let(:request) { nil }
+    let(:store) do
+      { "teacher_catchment" => "yes" }
+    end
+
     subject do
       described_class.new(
         trn: "RP12/34567",
@@ -156,6 +162,10 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
       )
+    end
+
+    before do
+      subject.wizard = wizard
     end
 
     context "when DQT match found" do

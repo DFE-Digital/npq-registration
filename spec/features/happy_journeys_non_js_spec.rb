@@ -674,4 +674,119 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page.current_path).to eql("/")
   end
+
+  scenario "international teacher NPQH journey" do
+    visit "/"
+    expect(page).to have_text("Before you start")
+    page.click_link("Start now")
+
+    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    page.choose("No, I’m a teacher somewhere else")
+    page.click_button("Continue")
+
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("Yes, I know my TRN")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/name-changes")
+    page.choose("No, I have the same name")
+    page.click_button("Continue")
+
+    expect(page.current_path).to include("contact-details")
+    expect(page).to have_text("Email address")
+    page.fill_in "Email address", with: "user@example.com"
+    page.click_button("Continue")
+
+    expect(page).to have_text("Confirm your code")
+    expect(page).to have_text("user@example.com")
+
+    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+    page.fill_in "Enter your code", with: code
+    page.click_button("Continue")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doe&nino=AB123456C")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(status: 200, body: participant_validator_response, headers: {})
+
+    expect(page).to have_text("Check your details")
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
+    page.fill_in "Full name", with: "John Doe"
+    page.fill_in "Day", with: "13"
+    page.fill_in "Month", with: "12"
+    page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.click_button("Continue")
+
+    expect(page).to have_text("What are you applying for?")
+    expect(page).not_to have_text("Additional Support Offer for new headteachers")
+    page.choose("NPQ for Headship (NPQH)")
+    page.click_button("Continue")
+
+    expect(page).to have_text("How is your course being paid for?")
+    page.choose "My employer is paying"
+    page.click_button("Continue")
+
+    expect(page).to have_text("Choose your provider")
+    page.choose("Teach First")
+    page.click_button("Continue")
+
+    check_answers_page = CheckAnswersPage.new
+
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
+    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
+    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Headship (NPQH)")
+    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
+    expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
+
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
+
+    page.click_button("Submit")
+
+    expect(page).to have_text("Initial registration complete")
+
+    expect(User.count).to eql(1)
+
+    user = User.last
+
+    expect(user.email).to eql("user@example.com")
+    expect(user.full_name).to eql("John Doe")
+    expect(user.trn_verified).to be_truthy
+    expect(user.trn_auto_verified).to be_truthy
+    expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
+    expect(user.national_insurance_number).to be_blank
+
+    expect(user.applications.count).to eql(1)
+
+    application = user.applications.first
+
+    expect(application.course).to be_npqh
+    expect(application.eligible_for_funding).to be_falsey
+    expect(application.funding_choice).to eql("employer")
+
+    visit "/account"
+
+    expect(page).to have_text("Teach First")
+    expect(page).to have_text("NPQ for Headship (NPQH)")
+
+    visit "/registration/share-provider"
+
+    expect(page).to have_content("Before you start")
+  end
 end

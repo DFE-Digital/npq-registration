@@ -88,9 +88,11 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    array << OpenStruct.new(key: "School or college",
-                            value: institution(source: store["institution_identifier"]).name,
-                            change_step: :find_school)
+    if query_store.england_teacher?
+      array << OpenStruct.new(key: "School or college",
+                              value: institution(source: store["institution_identifier"]).name,
+                              change_step: :find_school)
+    end
 
     array << OpenStruct.new(key: "Course",
                             value: form_for_step(:choose_your_npq).course.name,

@@ -23,8 +23,8 @@ module Services
         user.applications.create!(
           course_id: course.id,
           lead_provider_id: store["lead_provider_id"],
-          school_urn: institution(source: store["institution_identifier"]).urn,
-          ukprn: institution(source: store["institution_identifier"]).ukprn,
+          school_urn: school_urn,
+          ukprn: ukprn,
           headteacher_status: headteacher_status,
           eligible_for_funding: funding_eligbility,
           funding_choice: funding_choice,
@@ -43,6 +43,22 @@ module Services
     def padded_verified_trn
       if store["verified_trn"].present?
         store["verified_trn"].rjust(7, "0")
+      end
+    end
+
+    def query_store
+      @query_store ||= Services::QueryStore.new(store: store)
+    end
+
+    def school_urn
+      if query_store.england_teacher?
+        institution(source: store["institution_identifier"]).urn
+      end
+    end
+
+    def ukprn
+      if query_store.england_teacher?
+        institution(source: store["institution_identifier"]).ukprn
       end
     end
 
