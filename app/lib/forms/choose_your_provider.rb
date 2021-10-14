@@ -18,7 +18,9 @@ module Forms
     end
 
     def previous_step
-      if course.npqh? && eligible_for_funding?
+      if !wizard.query_store.england_teacher?
+        :funding_your_npq
+      elsif course.npqh? && eligible_for_funding?
         :possible_funding
       elsif course.aso? && wizard.store["aso_funding"] == "yes"
         :funding_your_aso
