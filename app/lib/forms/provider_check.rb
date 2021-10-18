@@ -15,7 +15,7 @@ module Forms
     def next_step
       case chosen_provider
       when "yes"
-        :share_provider
+        :teacher_reference_number
       when "no"
         :about_npq
       end

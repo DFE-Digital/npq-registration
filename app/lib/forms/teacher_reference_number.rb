@@ -24,7 +24,7 @@ module Forms
     end
 
     def previous_step
-      :share_provider
+      :provider_check
     end
 
     def title

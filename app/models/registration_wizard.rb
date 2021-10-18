@@ -172,7 +172,6 @@ private
       are_you_a_teacher
       teacher_catchment
       provider_check
-      share_provider
       about_npq
       teacher_reference_number
       name_changes
@@ -203,6 +202,7 @@ private
       school_not_in_england
       possible_funding
       funding_your_npq
+      share_provider
       check_answers
       confirmation
     ]

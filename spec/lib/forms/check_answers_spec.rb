@@ -50,8 +50,8 @@ RSpec.describe Forms::CheckAnswers do
   end
 
   describe "#previous_step" do
-    it "goes to choose_your_provider" do
-      expect(subject.previous_step).to eql(:choose_your_provider)
+    it "goes to share_provider" do
+      expect(subject.previous_step).to eql(:share_provider)
     end
   end
 end

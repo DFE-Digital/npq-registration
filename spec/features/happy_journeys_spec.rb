@@ -23,11 +23,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is", visible: :all)
     page.click_button("Continue")
@@ -156,6 +151,11 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(page).to be_axe_clean
@@ -196,11 +196,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -291,6 +286,11 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose your provider")
     page.choose("Teach First", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared", visible: :all)
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new

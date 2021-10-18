@@ -26,10 +26,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is")
     page.click_button("Continue")
@@ -147,6 +143,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -206,10 +206,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -292,6 +288,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -357,10 +357,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -472,6 +468,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -536,10 +536,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -643,6 +639,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Teach First")
     page.click_button("Continue")
 
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
+
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
@@ -710,10 +710,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -763,6 +759,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("Choose your provider")
     page.choose("Teach First")
+    page.click_button("Continue")
+
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
     page.click_button("Continue")
 
     check_answers_page = CheckAnswersPage.new

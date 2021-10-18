@@ -14,7 +14,7 @@ module Forms
     end
 
     def next_step
-      :check_answers
+      :share_provider
     end
 
     def previous_step
