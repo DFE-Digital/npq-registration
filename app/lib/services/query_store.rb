@@ -21,6 +21,10 @@ class Services::QueryStore
     store["teacher_status"] == "yes"
   end
 
+  def are_you_a_teacher_humanized
+    I18n.t(store["teacher_status"], scope: %w[activemodel attributes forms/are_you_a_teacher teacher_status])
+  end
+
   def course
     @course ||= Course.find(store["course_id"])
   end

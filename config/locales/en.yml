@@ -22,6 +22,11 @@ en:
           northern_ireland: Northern Ireland
           jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
           another: Another country
+      forms/are_you_a_teacher:
+        teacher_status:
+          one: nil # workaround
+          "yes": "Yes"
+          "no": No, I’m not a teacher or school leader
     errors:
       models:
         forms/provider_check:

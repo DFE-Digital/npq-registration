@@ -11,9 +11,9 @@ module Forms
     end
 
     def next_step
-      if changing_answer?
-        :check_answers
-      elsif teacher_status == "yes"
+      return :check_answers if changing_answer? && no_answers_will_change?
+
+      if teacher_status == "yes"
         :teacher_catchment
       else
         :provider_check
