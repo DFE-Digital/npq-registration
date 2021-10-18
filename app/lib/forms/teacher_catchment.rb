@@ -28,7 +28,6 @@ module Forms
     end
 
     def options
-
       [
         OpenStruct.new(value: "england",
                        text: "England",
