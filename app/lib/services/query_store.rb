@@ -20,4 +20,12 @@ class Services::QueryStore
   def teacher?
     store["teacher_status"] == "yes"
   end
+
+  def course
+    @course ||= Course.find(store["course_id"])
+  end
+
+  def lead_provider
+    @lead_provider ||= LeadProvider.find(store["lead_provider_id"])
+  end
 end

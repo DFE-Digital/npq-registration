@@ -62,9 +62,11 @@ class RegistrationWizard
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
     array = []
 
-    array << OpenStruct.new(key: "Where do you teach?",
-                            value: query_store.where_teach_humanized,
-                            change_step: :teacher_catchment)
+    if query_store.teacher?
+      array << OpenStruct.new(key: "Where do you teach?",
+                              value: query_store.where_teach_humanized,
+                              change_step: :teacher_catchment)
+    end
 
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
@@ -101,7 +103,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Course",
-                            value: form_for_step(:choose_your_npq).course.name,
+                            value: query_store.course.name,
                             change_step: :choose_your_npq)
 
     if needs_funding?
@@ -117,7 +119,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Lead provider",
-                            value: form_for_step(:choose_your_provider).lead_provider.name,
+                            value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
     array
