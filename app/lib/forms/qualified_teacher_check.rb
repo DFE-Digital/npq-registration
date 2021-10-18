@@ -66,7 +66,7 @@ module Forms
 
         if changing_answer?
           :check_answers
-        elsif wizard.query_store.england_teacher?
+        elsif wizard.query_store.inside_catchment?
           :find_school
         else
           :choose_your_npq

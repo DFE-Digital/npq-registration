@@ -26,7 +26,7 @@ module Forms
     end
 
     def title
-      if wizard.query_store.england_teacher?
+      if wizard.query_store.inside_catchment?
         "Has your name changed since you first registered as a teacher?"
       else
         "Has your name changed since you received your teacher reference number (TRN)?"

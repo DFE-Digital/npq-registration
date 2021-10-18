@@ -14,8 +14,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
-    page.choose("Yes")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -146,6 +150,7 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you teach?"].value).to eql("England")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("RP12/345")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
@@ -191,8 +196,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
-    page.choose("Yes")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -338,8 +347,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
-    page.choose("Yes")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -513,8 +526,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
-    page.choose("Yes")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -680,8 +697,13 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
-    page.choose("No, I’m a teacher somewhere else")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("Another country")
+    page.select("China")
     page.click_button("Continue")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -746,7 +768,7 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Are you a teacher in England, Jersey, Guernsey or the Isle of Man?"].value).to eql("No, I’m a teacher somewhere else")
+    expect(check_answers_page.summary_list["Where do you teach?"].value).to eql("China")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")

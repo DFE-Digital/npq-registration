@@ -26,7 +26,7 @@ module Forms
         end
       elsif course.aso?
         :about_aso
-      elsif !wizard.query_store.england_teacher?
+      elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
       elsif Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
         :possible_funding
@@ -55,7 +55,7 @@ module Forms
   private
 
     def courses
-      if wizard.query_store.england_teacher?
+      if wizard.query_store.inside_catchment?
         Course.all
       else
         Course.all - Course.where(name: "Additional Support Offer for new headteachers")

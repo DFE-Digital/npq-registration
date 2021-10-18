@@ -7,8 +7,14 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
     page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    # expect(page).to be_axe_clean
+    # TODO: aria-expanded
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -177,8 +183,14 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Are you a teacher in England, Jersey, Guernsey or the Isle of Man?")
+    expect(page.current_path).to eql("/registration/are-you-a-teacher")
     page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    # expect(page).to be_axe_clean
+    # TODO: aria-expanded
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean

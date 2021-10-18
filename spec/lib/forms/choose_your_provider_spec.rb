@@ -22,7 +22,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:school) { create(:school) }
     let(:store) do
       {
-        "teacher_catchment" => "yes",
+        "teacher_catchment" => "england",
         "course_id" => course.id,
         "institution_identifier" => "School-#{school.urn}",
       }
@@ -53,7 +53,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     context "international journey" do
       let(:store) do
         {
-          "teacher_catchment" => "no_teach_elsewhere",
+          "teacher_catchment" => "another",
         }
       end
 

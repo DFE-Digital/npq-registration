@@ -62,8 +62,8 @@ class RegistrationWizard
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
     array = []
 
-    array << OpenStruct.new(key: "Are you a teacher in England, Jersey, Guernsey or the Isle of Man?",
-                            value: t(store["teacher_catchment"], scope: %i[activemodel attributes forms/teacher_catchment teacher_catchment]),
+    array << OpenStruct.new(key: "Where do you teach?",
+                            value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 
     array << OpenStruct.new(key: "Full name",
@@ -94,7 +94,7 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    if query_store.england_teacher?
+    if query_store.inside_catchment?
       array << OpenStruct.new(key: "School or college",
                               value: institution(source: store["institution_identifier"]).name,
                               change_step: :find_school)
@@ -169,6 +169,7 @@ private
   def steps
     %i[
       start
+      are_you_a_teacher
       teacher_catchment
       provider_check
       share_provider

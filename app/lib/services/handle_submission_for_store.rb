@@ -51,13 +51,13 @@ module Services
     end
 
     def school_urn
-      if query_store.england_teacher?
+      if query_store.inside_catchment?
         institution(source: store["institution_identifier"]).urn
       end
     end
 
     def ukprn
-      if query_store.england_teacher?
+      if query_store.inside_catchment?
         institution(source: store["institution_identifier"]).ukprn
       end
     end

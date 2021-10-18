@@ -18,7 +18,7 @@ module Forms
     end
 
     def previous_step
-      if !wizard.query_store.england_teacher?
+      if !wizard.query_store.inside_catchment?
         :funding_your_npq
       elsif course.npqh? && eligible_for_funding?
         :possible_funding

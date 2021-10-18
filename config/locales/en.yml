@@ -15,10 +15,13 @@ en:
           another: The Additional Support Offer is being paid in another way
       forms/teacher_catchment:
         teacher_catchment:
-          one: nil # pluralization fix
-          yes: Yes
-          no_teach_elsewhere: No, I’m a teacher somewhere else
-          no_not_teacher: No, I’m not a teacher
+          one : nil # workaround
+          england: England
+          scotland: Scotland
+          wales: Wales
+          northern_ireland: Northern Ireland
+          jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
+          another: Another country
     errors:
       models:
         forms/provider_check:
@@ -131,4 +134,8 @@ en:
         forms/teacher_catchment:
           attributes:
             teacher_catchment:
-              blank: Choose whether you are a teacher in England, Jersey, Guernsey or the Isle of Man
+              blank: Choose where you teach
+        forms/are_you_a_teacher:
+          attributes:
+            teacher_status:
+              blank: Choose whether or not you are a teacher or school leader

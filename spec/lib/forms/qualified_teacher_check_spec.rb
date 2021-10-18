@@ -152,7 +152,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :qualified_teacher_check) }
     let(:request) { nil }
     let(:store) do
-      { "teacher_catchment" => "yes" }
+      { "teacher_catchment" => "england" }
     end
 
     subject do

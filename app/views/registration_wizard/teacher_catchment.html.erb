@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Are you a teacher in England, Jersey, Guernsey or the Isle of Man?
+  <%= @form.errors.present? ? "Error: " : nil %>Where do you teach?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,14 +16,33 @@
 
       <%= f.govuk_radio_buttons_fieldset(:lead_provider_id,
             legend: {
-              text: "Are you a teacher in England, Jersey, Guernsey or the Isle of Man?",
+              text: "Where do you teach?",
               size: "xl",
               tag: "h1"
             }
           ) do %>
 
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+          <% if @form.options.last != struct %>
+            <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+          <% else %>
+            <%= f.govuk_radio_divider %>
+
+            <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors do %>
+              <div data-module="app-country-autocomplete">
+                <%= f.govuk_collection_select(
+                    :teacher_catchment_country,
+                    Services::AutocompleteCountries.as_open_structs,
+                    :name,
+                    :name,
+                    label: {
+                      text: "Which country do you teach in?"
+                    },
+                    options: { include_blank: true }
+                ) %>
+              </div>
+            <% end %>
+          <% end %>
         <% end %>
       <% end %>
 

@@ -25,7 +25,7 @@ module Forms
     end
 
     def options
-      if wizard.query_store.england_teacher?
+      if wizard.query_store.inside_catchment?
         england_options
       else
         outside_england_options
@@ -33,7 +33,7 @@ module Forms
     end
 
     def title
-      if wizard.query_store.england_teacher?
+      if wizard.query_store.inside_catchment?
         "Funding"
       else
         "How is your course being paid for?"

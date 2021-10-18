@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Forms::DqtMismatch do
   let(:request) { nil }
-  let(:store) { { "teacher_catchment" => "no_teach_elsewhere" } }
+  let(:store) { { "teacher_catchment" => "another" } }
   let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :dqt_mismatch) }
 
   before do
