@@ -2,7 +2,10 @@ module Forms
   class TeacherCatchment < Base
     attr_accessor :teacher_catchment, :teacher_catchment_country
 
-    validates :teacher_catchment, presence: true
+    validates :teacher_catchment, presence: true, inclusion: { in: %w[england scotland wales northern_ireland jersey_guernsey_isle_of_man another] }
+    validates :teacher_catchment_country, presence: true,
+                                          inclusion: { in: Services::AutocompleteCountries::ALL },
+                                          if: proc { |f| f.teacher_catchment == "another" }
 
     def self.permitted_params
       %i[

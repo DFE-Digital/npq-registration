@@ -135,6 +135,9 @@ en:
           attributes:
             teacher_catchment:
               blank: Choose where you teach
+            teacher_catchment_country:
+              blank: Select which country you teach in
+              inclusion: Select one of the listed countries
         forms/are_you_a_teacher:
           attributes:
             teacher_status:
