@@ -16,4 +16,8 @@ class Services::QueryStore
       I18n.t(store["teacher_catchment"], scope: %i[activemodel attributes forms/teacher_catchment teacher_catchment])
     end
   end
+
+  def teacher?
+    store["teacher_status"] == "yes"
+  end
 end

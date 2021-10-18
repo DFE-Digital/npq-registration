@@ -13,8 +13,10 @@ module Forms
     def next_step
       if changing_answer?
         :check_answers
-      else
+      elsif teacher_status == "yes"
         :teacher_catchment
+      else
+        :provider_check
       end
     end
 
