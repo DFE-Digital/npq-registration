@@ -11,7 +11,7 @@ module Services
     def call
       ActiveRecord::Base.transaction do
         user.update!(
-          trn: store["verified_trn"].presence || store["trn"],
+          trn: store["verified_trn"].presence || padded_entered_trn,
           trn_verified: store["trn_verified"],
           trn_auto_verified: !!store["trn_auto_verified"],
           active_alert: store["active_alert"],
@@ -35,6 +35,10 @@ module Services
     end
 
   private
+
+    def padded_entered_trn
+      store["trn"].rjust(7, "0")
+    end
 
     def funding_choice
       if course.aso?
