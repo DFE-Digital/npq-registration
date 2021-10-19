@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14.17.6'
+          node-version: '14.18.1'
 
       - name: Set up ruby gem cache
         uses: actions/cache@v1
