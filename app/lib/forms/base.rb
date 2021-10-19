@@ -17,7 +17,13 @@ module Forms
       raise NotImplementedError
     end
 
+    def before_render
+      reset_store! if wizard.store["submitted"]
+    end
+
     def after_save; end
+
+    def after_render; end
 
     def attributes
       self.class.permitted_params.index_with do |key|
@@ -43,6 +49,10 @@ module Forms
 
     def requirements_met?
       wizard.store.present?
+    end
+
+    def reset_store!
+      wizard.store.clear
     end
   end
 end

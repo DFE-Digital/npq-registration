@@ -23,6 +23,9 @@ Rails/BulkChangeTable:
 Style/HashLikeCase:
   Enabled: false
 
+Lint/MissingSuper:
+  Enabled: false
+
 Rails/Delegate:
   Enabled: false
 

@@ -7,9 +7,13 @@ class RegistrationWizardController < ApplicationController
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
+    @wizard.before_render
+
     return redirect_to root_path unless @form.requirements_met?
 
     render @wizard.current_step
+
+    @wizard.after_render
   end
 
   def update

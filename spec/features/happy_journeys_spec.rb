@@ -278,7 +278,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Submit")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Initial registration complete")
+    expect(page).to have_text("Your initial registration is complete")
 
     expect(User.count).to eql(1)
 
