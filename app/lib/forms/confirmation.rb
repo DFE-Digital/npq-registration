@@ -13,7 +13,9 @@ module Forms
     end
 
     def after_render
-      wizard.store.clear
+      wizard.store["submitted"] = true
     end
+
+    def reset_store!; end
   end
 end

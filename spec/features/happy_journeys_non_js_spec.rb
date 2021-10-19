@@ -316,9 +316,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Teach First")
     expect(page).to have_text("NPQ for Headship (NPQH)")
 
-    visit "/registration/share-provider"
+    visit "/registration/check-answers"
 
-    expect(page).to have_content("Before you start")
+    expect(page.current_path).to eql("/")
   end
 
   scenario "self funded ASO registration journey" do
@@ -481,9 +481,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Teach First")
     expect(page).to have_text("Additional Support Offer for new headteachers")
 
-    visit "/registration/share-provider"
+    visit "/registration/check-answers"
 
-    expect(page).to have_content("Before you start")
+    expect(page.current_path).to eql("/")
   end
 
   scenario "funded ASO registration journey" do
@@ -638,8 +638,8 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Teach First")
     expect(page).to have_text("Additional Support Offer for new headteachers")
 
-    visit "/registration/share-provider"
+    visit "/registration/check-answers"
 
-    expect(page).to have_content("Before you start")
+    expect(page.current_path).to eql("/")
   end
 end

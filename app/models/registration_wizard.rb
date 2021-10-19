@@ -19,6 +19,10 @@ class RegistrationWizard
     "Forms::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
+  def before_render
+    form.before_render
+  end
+
   def after_render
     form.after_render
   end
