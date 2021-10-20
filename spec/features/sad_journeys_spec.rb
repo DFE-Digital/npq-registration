@@ -47,10 +47,16 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doeeeeee&nino=AB123456C")
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: "1234567",
+          date_of_birth: "1980-12-13",
+          full_name: "John Doeeeeee",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 404, body: "", headers: {})
@@ -186,10 +192,16 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button("Continue")
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1980-12-13&full_name=John%20Doe&nino=")
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: "1234567",
+          date_of_birth: "1980-12-13",
+          full_name: "John Doe",
+          nino: "",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})

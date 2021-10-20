@@ -10,8 +10,9 @@ module Services
     end
 
     def call
-      request = Net::HTTP::Get.new(uri)
+      request = Net::HTTP::Post.new(uri)
       request["Authorization"] = "Bearer #{config.bearer_token}"
+      request.set_form_data(payload)
 
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl?, read_timeout: 20) do |http|
         http.request(request)
@@ -34,11 +35,12 @@ module Services
     end
 
     def uri
-      @uri ||= URI("#{config.endpoint}/#{trn}?#{query_hash.to_query}")
+      @uri ||= URI(config.endpoint)
     end
 
-    def query_hash
+    def payload
       {
+        trn: trn,
         full_name: full_name,
         date_of_birth: dob_as_string,
         nino: national_insurance_number,
@@ -46,12 +48,7 @@ module Services
     end
 
     def use_ssl?
-      case uri.scheme
-      when "https"
-        true
-      else
-        false
-      end
+      uri.scheme == "https"
     end
 
     def dob_as_string
