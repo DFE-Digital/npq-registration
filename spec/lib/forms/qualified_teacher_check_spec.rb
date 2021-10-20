@@ -1,6 +1,23 @@
 require "rails_helper"
 
 RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
+  def stub_api_request(trn:, date_of_birth:, full_name:, nino:, response_code: 200, response_body: "")
+    stub_request(:post,
+                 "https://ecf-app.gov.uk/api/v1/participant-validation")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: trn,
+          date_of_birth: date_of_birth,
+          full_name: full_name,
+          nino: nino,
+        },
+      )
+      .to_return(status: response_code, body: response_body, headers: {})
+  end
+
   describe "before validations" do
     subject do
       described_class.new(
@@ -117,13 +134,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "when DQT match found" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 200, body: participant_validator_response, headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_body: participant_validator_response,
+        )
       end
 
       it "returns :find_school" do
@@ -138,13 +155,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "when DQT mismatch" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 404, body: "", headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_code: 404,
+        )
       end
 
       it "returns :dqt_mismatch" do
@@ -205,13 +222,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "has no active alerts" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 200, body: participant_validator_response, headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_body: participant_validator_response,
+        )
 
         subject.next_step
       end
@@ -224,13 +241,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "has active alerts" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 200, body: participant_validator_response(active_alert: true), headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_body: participant_validator_response(active_alert: true),
+        )
 
         subject.next_step
       end
@@ -243,13 +260,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "trn has been verified" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 200, body: participant_validator_response, headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_body: participant_validator_response,
+        )
 
         subject.next_step
       end
@@ -264,13 +281,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "when different trn found" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 200, body: participant_validator_response(trn: "1111111"), headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_body: participant_validator_response(trn: "1111111"),
+        )
 
         subject.next_step
       end
@@ -285,13 +302,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "trn has not been verified" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/1234567?date_of_birth=1960-12-13&full_name=John%20Doe&nino=AB123456C")
-          .with(
-            headers: {
-              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            },
-          )
-          .to_return(status: 404, body: "", headers: {})
+        stub_api_request(
+          trn: "1234567",
+          date_of_birth: "1960-12-13",
+          full_name: "John Doe",
+          nino: "AB123456C",
+          response_code: 404,
+        )
 
         subject.next_step
       end

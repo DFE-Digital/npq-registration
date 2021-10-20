@@ -30,10 +30,17 @@ RSpec.describe Services::ParticipantValidator do
       end
 
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/#{trn}?date_of_birth=#{date_of_birth.iso8601}&full_name=#{full_name}&nino=#{national_insurance_number}")
+        stub_request(:post,
+                     "https://ecf-app.gov.uk/api/v1/participant-validation")
         .with(
           headers: {
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          },
+          body: {
+            trn: trn,
+            date_of_birth: date_of_birth.iso8601,
+            full_name: full_name,
+            nino: national_insurance_number,
           },
         )
         .to_return(status: 200, body: body.to_json, headers: {})
@@ -59,10 +66,17 @@ RSpec.describe Services::ParticipantValidator do
       end
 
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/#{trn}?date_of_birth=#{date_of_birth.iso8601}&full_name=#{full_name}&nino=#{national_insurance_number}")
+        stub_request(:post,
+                     "https://ecf-app.gov.uk/api/v1/participant-validation")
         .with(
           headers: {
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          },
+          body: {
+            trn: trn,
+            date_of_birth: date_of_birth.iso8601,
+            full_name: full_name,
+            nino: national_insurance_number,
           },
         )
         .to_return(status: 200, body: body.to_json, headers: {})
@@ -77,10 +91,17 @@ RSpec.describe Services::ParticipantValidator do
 
     context "when no record could be found" do
       before do
-        stub_request(:get, "https://ecf-app.gov.uk/api/v1/participant-validation/#{trn}?date_of_birth=#{date_of_birth.iso8601}&full_name=#{full_name}&nino=#{national_insurance_number}")
+        stub_request(:post,
+                     "https://ecf-app.gov.uk/api/v1/participant-validation")
         .with(
           headers: {
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          },
+          body: {
+            trn: trn,
+            date_of_birth: date_of_birth.iso8601,
+            full_name: full_name,
+            nino: national_insurance_number,
           },
         )
         .to_return(status: 404, body: "", headers: {})
