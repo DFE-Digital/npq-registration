@@ -1,7 +1,7 @@
 module Forms
   class Confirmation < Base
     def requirements_met?
-      true
+      wizard.store["course_id"].present? && wizard.store["lead_provider_id"].present?
     end
 
     def course

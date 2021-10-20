@@ -169,6 +169,11 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.funding_choice).to be_nil
     expect(application.course).to be_npqsl
     expect(application.headteacher_status).to be_nil
+
+    visit "/"
+    visit "/registration/confirmation"
+
+    expect(page.current_path).to eql("/")
   end
 
   scenario "registration journey via using same name" do
