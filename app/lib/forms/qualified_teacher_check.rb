@@ -19,8 +19,9 @@ module Forms
     before_validation :strip_ni_number_whitespace
     before_validation :strip_title_prefixes
 
-    validates :trn, presence: true, length: { in: 5..7 }, format: { with: /\A\d+\z/ }
+    validates :trn, presence: true
     validates :full_name, presence: true, length: { maximum: 128 }
+    validate :validate_processed_trn
     validate :validate_date_of_birth_valid?
     validates :date_of_birth, presence: true
     validate :validate_date_of_birth_in_the_past?
@@ -33,6 +34,20 @@ module Forms
         date_of_birth
         national_insurance_number
       ]
+    end
+
+    def validate_processed_trn
+      if processed_trn !~ /\A\d+\z/
+        errors.add(:trn, :invalid)
+      elsif processed_trn.length < 5
+        errors.add(:trn, :too_short, count: 5)
+      elsif processed_trn.length > 7
+        errors.add(:trn, :too_long, count: 7)
+      end
+    end
+
+    def processed_trn
+      @processed_trn ||= (trn || "").gsub("RP", "").gsub("/", "")
     end
 
     def next_step

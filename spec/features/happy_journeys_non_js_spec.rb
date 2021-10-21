@@ -86,16 +86,16 @@ RSpec.feature "Happy journeys", type: :feature do
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
         body: {
-          trn: "1234567",
+          trn: "12345",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
           nino: "",
         },
       )
-      .to_return(status: 200, body: participant_validator_response, headers: {})
+      .to_return(status: 200, body: participant_validator_response(trn: "12345"), headers: {})
 
     expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "1234567"
+    page.fill_in "Teacher reference number (TRN)", with: "RP12/345"
     page.fill_in "Full name", with: "John Doe"
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
@@ -143,7 +143,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("RP12/345")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
@@ -161,7 +161,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(user.email).to eql("user@example.com")
     expect(user.full_name).to eql("John Doe")
-    expect(user.trn).to eql("1234567")
+    expect(user.trn).to eql("0012345")
     expect(user.trn_verified).to be_truthy
     expect(user.trn_auto_verified).to be_truthy
     expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
