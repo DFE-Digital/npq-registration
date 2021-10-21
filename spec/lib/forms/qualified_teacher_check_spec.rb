@@ -85,7 +85,6 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:trn) }
-    it { is_expected.to validate_length_of(:trn).is_at_least(5).is_at_most(7) }
     it { is_expected.to validate_presence_of(:full_name) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(128) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
@@ -94,6 +93,33 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     describe "#trn" do
       it "can only contain numbers" do
         subject.trn = "123456a"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_present
+      end
+    end
+
+    describe "#processed_trn" do
+      it "permits legacy style trns" do
+        subject.trn = "RP99/12345"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_blank
+        expect(subject.processed_trn).to eql("9912345")
+      end
+
+      it "denies trns over 7 characters" do
+        subject.trn = "RP99/123456"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_present
+      end
+
+      it "denies trns under 5 characters" do
+        subject.trn = "RP/1234"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_present
+      end
+
+      it "denies trns with other letters" do
+        subject.trn = "AA99/12345"
         subject.valid?
         expect(subject.errors[:trn]).to be_present
       end
