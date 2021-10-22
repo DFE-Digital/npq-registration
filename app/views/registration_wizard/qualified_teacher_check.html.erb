@@ -16,28 +16,28 @@
 
       <h1 class="govuk-heading-xl">Check your details</h1>
 
-      <p class="govuk-body">
+      <p class="govuk-body govuk-!-margin-bottom-7">
         We need to check your details on the Teaching Regulation Agency records to ensure you qualify to study for a National Professional Qualification (NPQ).
       </p>
 
       <%= f.govuk_text_field :trn,
         width: 10,
-        label: { text: "Teacher reference number (TRN)", size: "s" },
-        hint: { text: "Your TRN is exactly 7 digits long" } %>
+        label: { text: "Teacher reference number (TRN)", size: "m" },
+        hint: { text: "Your TRN is usually 7 digits long, for example 4567814.<br />It may include the letters RP or a slash ‘/’ symbol, for example RP99/12345".html_safe } %>
 
       <%= f.govuk_text_field :full_name,
         width: "three-quarters",
-        label: { text: "Full name", size: "s" },
-        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records" } %>
+        label: { text: "Full name", size: "m" },
+        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency&nbsp;records".html_safe } %>
 
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
-        legend: { text: "Date of birth", size: "s" },
+        legend: { text: "Date of birth", size: "m" },
         hint: { text: "For example, 31 3 1980" } %>
 
       <%= f.govuk_text_field :national_insurance_number,
         width: 10,
-        label: { text: "National Insurance number (optional)", size: "s" },
+        label: { text: "National Insurance number (optional)", size: "m" },
         hint: { text: "This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ123456C’." } %>
 
       <%= f.govuk_submit %>
