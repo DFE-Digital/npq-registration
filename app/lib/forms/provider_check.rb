@@ -22,11 +22,7 @@ module Forms
     end
 
     def previous_step
-      if query_store.teacher?
-        :teacher_catchment
-      else
-        :are_you_a_teacher
-      end
+      :teacher_catchment
     end
   end
 end

@@ -14,10 +14,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England")
     page.click_button("Continue")
@@ -196,10 +192,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England")
     page.click_button("Continue")
@@ -346,10 +338,6 @@ RSpec.feature "Happy journeys", type: :feature do
     visit "/"
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
-
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England")
@@ -526,10 +514,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England")
     page.click_button("Continue")
@@ -697,10 +681,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("Another country")
     page.select("China")
@@ -811,16 +791,5 @@ RSpec.feature "Happy journeys", type: :feature do
     visit "/registration/share-provider"
 
     expect(page).to have_content("Before you start")
-  end
-
-  scenario "non teacher journey" do
-    visit "/"
-    page.click_link("Start now")
-
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose "No, I’m not a teacher or school leader"
-    page.click_button("Continue")
-
-    expect(page.current_path).to eql("/registration/provider-check")
   end
 end

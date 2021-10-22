@@ -14,6 +14,10 @@ module Forms
       ]
     end
 
+    def requirements_met?
+      true
+    end
+
     def next_step
       if changing_answer?
         if answers_will_change?
@@ -27,7 +31,7 @@ module Forms
     end
 
     def previous_step
-      :are_you_a_teacher
+      :start
     end
 
     def options

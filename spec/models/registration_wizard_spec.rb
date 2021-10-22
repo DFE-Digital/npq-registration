@@ -27,47 +27,6 @@ RSpec.describe RegistrationWizard do
   describe "#answers" do
     let(:school) { create(:school, establishment_type_code: "1") }
 
-    context "is a teacher" do
-      let(:store) do
-        {
-          "teacher_status" => "yes",
-          "teacher_catchment" => "england",
-          "date_of_birth" => 30.years.ago,
-          "institution_identifier" => "School-#{school.urn}",
-          "course_id" => Course.all.sample.id,
-          "lead_provider_id" => LeadProvider.all.sample.id,
-        }
-      end
-
-      it "shows are you a teacher?" do
-        expect(subject.answers.find { |e| e.key == "Are you a teacher?" }.value).to eql("Yes")
-      end
-
-      it "shows where do you teach?" do
-        expect(subject.answers.find { |e| e.key == "Where do you teach?" }.value).to eql("England")
-      end
-    end
-
-    context "is not a teacher" do
-      let(:store) do
-        {
-          "teacher_status" => "no",
-          "date_of_birth" => 30.years.ago,
-          "institution_identifier" => "School-#{school.urn}",
-          "course_id" => Course.all.sample.id,
-          "lead_provider_id" => LeadProvider.all.sample.id,
-        }
-      end
-
-      it "shows are you a teacher?" do
-        expect(subject.answers.find { |e| e.key == "Are you a teacher?" }.value).to eql("No, I’m not a teacher or school leader")
-      end
-
-      it "does not show where do you teach?" do
-        expect(subject.answers.find { |e| e.key == "Where do you teach?" }).to be_nil
-      end
-    end
-
     context "when ASO is selected course and not eligible for funding" do
       let(:store) do
         {

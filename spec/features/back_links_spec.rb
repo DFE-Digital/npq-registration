@@ -5,11 +5,6 @@ RSpec.feature "Back links", type: :feature do
     visit "/"
     page.click_link("Start now")
 
-    expect(page).to be_axe_clean
-    expect(page.current_path).to eql("/registration/are-you-a-teacher")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
     # expect(page).to be_axe_clean
     # TODO: aria-expanded
     expect(page.current_path).to eql("/registration/teacher-catchment")

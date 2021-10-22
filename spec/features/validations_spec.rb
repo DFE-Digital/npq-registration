@@ -7,7 +7,6 @@ RSpec.feature "Validations", type: :feature do
     page.click_link("Start now")
     page.click_button("Continue")
 
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Choose whether")
+    expect(page).to have_text("Choose where")
   end
 end

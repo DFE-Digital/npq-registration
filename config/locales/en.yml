@@ -22,11 +22,6 @@ en:
           northern_ireland: Northern Ireland
           jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
           another: Another country
-      forms/are_you_a_teacher:
-        teacher_status:
-          one: nil # workaround
-          "yes": "Yes"
-          "no": No, I’m not a teacher or school leader
     errors:
       models:
         forms/provider_check:
@@ -143,7 +138,3 @@ en:
             teacher_catchment_country:
               blank: Select which country you teach in
               inclusion: Select one of the listed countries
-        forms/are_you_a_teacher:
-          attributes:
-            teacher_status:
-              blank: Choose whether or not you are a teacher or school leader
