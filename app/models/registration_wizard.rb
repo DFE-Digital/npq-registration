@@ -62,7 +62,7 @@ class RegistrationWizard
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
     array = []
 
-    array << OpenStruct.new(key: "Where do you teach?",
+    array << OpenStruct.new(key: "Where do you work?",
                             value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 

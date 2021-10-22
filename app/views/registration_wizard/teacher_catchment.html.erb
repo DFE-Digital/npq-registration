@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Where do you teach?
+  <%= @form.errors.present? ? "Error: " : nil %>Where do you work?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_radio_buttons_fieldset(:lead_provider_id,
             legend: {
-              text: "Where do you teach?",
+              text: "Where do you work?",
               size: "xl",
               tag: "h1"
             }
