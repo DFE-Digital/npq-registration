@@ -5,6 +5,7 @@ en:
         funding_options:
           school: My school or college is covering the cost
           trust: My trust is paying
+          employer: My employer is paying
           self: I am paying
           another: My NPQ is being paid in another way
       forms/funding_your_aso:
