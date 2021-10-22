@@ -6,8 +6,8 @@ RSpec.describe Forms::ProviderCheck, type: :model do
   end
 
   describe "#previous_step" do
-    it "returns teacher_catchment" do
-      expect(subject.previous_step).to eql(:teacher_catchment)
+    it "returns start" do
+      expect(subject.previous_step).to eql(:start)
     end
   end
 end

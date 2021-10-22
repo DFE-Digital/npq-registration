@@ -24,7 +24,7 @@ module Forms
     end
 
     def previous_step
-      :provider_check
+      :teacher_catchment
     end
 
     def title

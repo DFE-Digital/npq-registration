@@ -12,17 +12,21 @@ module Forms
       ]
     end
 
+    def requirements_met?
+      true
+    end
+
     def next_step
       case chosen_provider
       when "yes"
-        :teacher_reference_number
+        :teacher_catchment
       when "no"
         :about_npq
       end
     end
 
     def previous_step
-      :teacher_catchment
+      :start
     end
   end
 end

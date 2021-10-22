@@ -14,12 +14,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("England")
-    page.click_button("Continue")
-
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -192,12 +192,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("England")
-    page.click_button("Continue")
-
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -339,12 +339,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("England")
-    page.click_button("Continue")
-
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -514,12 +514,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("England")
-    page.click_button("Continue")
-
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -681,13 +681,13 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("Another country")
     page.select("China")
-    page.click_button("Continue")
-
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")

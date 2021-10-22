@@ -14,24 +14,20 @@ module Forms
       ]
     end
 
-    def requirements_met?
-      true
-    end
-
     def next_step
       if changing_answer?
         if answers_will_change?
-          :provider_check
+          :teacher_reference_number
         else
           :check_answers
         end
       else
-        :provider_check
+        :teacher_reference_number
       end
     end
 
     def previous_step
-      :start
+      :provider_check
     end
 
     def options
