@@ -64,4 +64,32 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
     end
   end
+
+  describe "#previous_step" do
+    let(:request) { nil }
+
+    before do
+      subject.wizard = RegistrationWizard.new(
+        current_step: :choose_your_npq,
+        store: store,
+        request: request,
+      )
+    end
+
+    context "when inside catchment" do
+      let(:store) { { teacher_catchment: "england" }.stringify_keys }
+
+      it "returns choose_school" do
+        expect(subject.previous_step).to eql(:choose_school)
+      end
+    end
+
+    context "when outside catchment" do
+      let(:store) { { teacher_catchment: "another" }.stringify_keys }
+
+      it "return qualified_teacher_check" do
+        expect(subject.previous_step).to eql(:qualified_teacher_check)
+      end
+    end
+  end
 end

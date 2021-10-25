@@ -36,7 +36,11 @@ module Forms
     end
 
     def previous_step
-      :choose_school
+      if query_store.inside_catchment?
+        :choose_school
+      else
+        :qualified_teacher_check
+      end
     end
 
     def options
