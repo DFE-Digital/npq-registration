@@ -5,6 +5,7 @@ module Forms
 
       def institution(source: wizard.store["institution_identifier"])
         return @institution if @institution
+        return nil if source.nil?
 
         klass, identifier = source.split("-")
 

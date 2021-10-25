@@ -9,6 +9,7 @@ module Services
     end
 
     def call
+      return false if institution.nil?
       return true if eligible_urns.include?(institution.urn)
 
       case institution.class.name

@@ -12,10 +12,14 @@ module Forms
       ]
     end
 
+    def requirements_met?
+      true
+    end
+
     def next_step
       case chosen_provider
       when "yes"
-        :share_provider
+        :teacher_catchment
       when "no"
         :about_npq
       end
@@ -23,10 +27,6 @@ module Forms
 
     def previous_step
       :start
-    end
-
-    def requirements_met?
-      true
     end
   end
 end

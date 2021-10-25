@@ -5,6 +5,7 @@ import Rails from 'rails-ujs';
 import { initAll } from 'govuk-frontend';
 import accessibleAutocomplete from 'accessible-autocomplete';
 import institutionPicker from "./institution-picker";
+import countryPicker from "./country-picker";
 
 Rails.start();
 initAll();

@@ -10,14 +10,9 @@ RSpec.feature "Back links", type: :feature do
     page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
     page.click_button("Continue")
 
-    expect(page).to be_axe_clean
-    page.check("Yes, I agree my information can be shared", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     page.click_link("Back")
 
     expect(page).to be_axe_clean
-    expect(page).to have_checked_field("Yes, I agree my information can be shared", visible: :all)
+    expect(page).to have_checked_field("Yes, I have chosen my NPQ and provider", visible: :all)
   end
 end

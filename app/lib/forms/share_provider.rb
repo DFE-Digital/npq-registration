@@ -11,11 +11,11 @@ module Forms
     end
 
     def next_step
-      :teacher_reference_number
+      :check_answers
     end
 
     def previous_step
-      :provider_check
+      :choose_your_provider
     end
   end
 end

@@ -14,11 +14,13 @@ module Forms
     end
 
     def next_step
-      :check_answers
+      :share_provider
     end
 
     def previous_step
-      if course.npqh? && eligible_for_funding?
+      if !wizard.query_store.inside_catchment?
+        :funding_your_npq
+      elsif course.npqh? && eligible_for_funding?
         :possible_funding
       elsif course.aso? && wizard.store["aso_funding"] == "yes"
         :funding_your_aso

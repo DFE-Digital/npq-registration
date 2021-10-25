@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Teacher reference number
+  <%= @form.errors.present? ? "Error: " : nil %><%= @form.title %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,28 +14,24 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Teacher reference number</h1>
+      <h1 class="govuk-heading-xl"><%= @form.title %></h1>
 
-      <p class="govuk-body">
-        Your teacher reference number (TRN) is used to check you’re eligible to study for a national professional qualification (NPQ).
-      </p>
+      <p class="govuk-body">You may not have a teacher reference number (TRN) if you:</p>
 
-      <p class="govuk-body">
-        If you don’t know what your teacher reference number (TRN) is, this can usually be found on your payslip, teachers’ pension documentation or teacher training records.
-      </p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>qualified outside England or overseas</li>
+        <li>are not a qualified teacher</li>
+        <li>are working in further education</li>
+      </ul>
 
-      <p class="govuk-body">
-        The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.
-      </p>
+      <p class="govuk-body">The TRN has previously been known as a QTS, GTC, DfE, DfES or DCSF number.</p>
 
-      <p class="govuk-body">
-        You may not have a TRN if you are working in further education or qualified outside England or overseas.
-      </p>
+      <p class="govuk-body">If you think you have a TRN, it can usually be found on a teacher’s payslip, pension documentation or teacher training records.</p>
 
-      <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you know your teacher reference number (TRN)?"} ) do %>
+      <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you have a teacher reference number (TRN)"} ) do %>
         <%= f.govuk_radio_button :trn_knowledge, "yes", label: { text: "Yes, I know my TRN" }, link_errors: true %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: "No, I don’t know my TRN" } %>
-        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: "I don’t have a TRN" } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-know", label: { text: "Yes, but I need to be reminded what it is" } %>
+        <%= f.govuk_radio_button :trn_knowledge, "no-dont-have", label: { text: "No, I need to get a TRN" } %>
       <% end %>
 
       <%= f.govuk_submit %>

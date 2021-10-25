@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Funding
+  <%= @form.errors.present? ? "Error: " : nil %><%= @form.title %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,20 +14,37 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Funding</h1>
+      <% if @wizard.query_store.inside_catchment? %>
+        <h1 class="govuk-heading-xl"><%= @form.title %></h1>
 
-      <p class="govuk-body">
-        Your school or college is not eligible for DfE scholarship funding.
-      </p>
+        <p class="govuk-body">
+          Your school or college is not eligible for DfE scholarship funding.
+        </p>
 
-      <%= f.govuk_collection_radio_buttons :funding,
-        @form.options,
-        :value,
-        :text,
-        :description,
-        legend: { text: "How is your #{@form.course.name} being paid for?" },
-        bold_labels: false
-      %>
+        <%= f.govuk_collection_radio_buttons :funding,
+          @form.options,
+          :value,
+          :text,
+          :description,
+          legend: {
+            text: "How is your #{@form.course.name} being paid for?"
+          },
+          bold_labels: false
+        %>
+      <% else %>
+        <%= f.govuk_collection_radio_buttons :funding,
+          @form.options,
+          :value,
+          :text,
+          :description,
+          legend: {
+            tag: "h1",
+            size: "xl",
+            text: @form.title,
+          },
+          bold_labels: false
+        %>
+      <% end %>
 
       <%= f.govuk_submit %>
     <% end %>

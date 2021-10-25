@@ -26,6 +26,8 @@ module Forms
         end
       elsif course.aso?
         :about_aso
+      elsif !wizard.query_store.inside_catchment?
+        :funding_your_npq
       elsif Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
         :possible_funding
       else
@@ -38,7 +40,7 @@ module Forms
     end
 
     def options
-      Course.all.each_with_index.map do |course, index|
+      courses.each_with_index.map do |course, index|
         OpenStruct.new(value: course.id,
                        text: course.name,
                        link_errors: index.zero?,
@@ -51,6 +53,14 @@ module Forms
     end
 
   private
+
+    def courses
+      if wizard.query_store.inside_catchment?
+        Course.all
+      else
+        Course.all - Course.where(name: "Additional Support Offer for new headteachers")
+      end
+    end
 
     def previous_course
       Course.find_by(id: wizard.store["course_id"])

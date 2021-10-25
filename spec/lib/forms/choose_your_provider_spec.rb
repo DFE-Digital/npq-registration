@@ -22,6 +22,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:school) { create(:school) }
     let(:store) do
       {
+        "teacher_catchment" => "england",
         "course_id" => course.id,
         "institution_identifier" => "School-#{school.urn}",
       }
@@ -35,14 +36,29 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
     let(:mock_funding_service) { instance_double(Services::FundingEligibility, call: true) }
 
+    before do
+      subject.wizard = wizard
+    end
+
     context "when npqh and eligible for funding" do
       before do
-        subject.wizard = wizard
         allow(Services::FundingEligibility).to receive(:new).and_return(mock_funding_service)
       end
 
       it "returns :possible_funding" do
         expect(subject.previous_step).to eql(:possible_funding)
+      end
+    end
+
+    context "international journey" do
+      let(:store) do
+        {
+          "teacher_catchment" => "another",
+        }
+      end
+
+      it "returns :funding_your_npq" do
+        expect(subject.previous_step).to eql(:funding_your_npq)
       end
     end
   end

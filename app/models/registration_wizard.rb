@@ -3,6 +3,7 @@ require "active_support/time"
 class RegistrationWizard
   include ActiveModel::Model
   include Forms::Helpers::Institution
+  include ActionView::Helpers::TranslationHelper
 
   class InvalidStep < StandardError; end
 
@@ -59,11 +60,16 @@ class RegistrationWizard
 
   def answers
     dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
-
     array = []
+
+    array << OpenStruct.new(key: "Where do you work?",
+                            value: query_store.where_teach_humanized,
+                            change_step: :teacher_catchment)
+
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
                             change_step: :qualified_teacher_check)
+
     array << OpenStruct.new(key: "TRN",
                             value: store["trn"],
                             change_step: :qualified_teacher_check)
@@ -88,12 +94,14 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    array << OpenStruct.new(key: "School or college",
-                            value: institution(source: store["institution_identifier"]).name,
-                            change_step: :find_school)
+    if query_store.inside_catchment?
+      array << OpenStruct.new(key: "School or college",
+                              value: institution(source: store["institution_identifier"]).name,
+                              change_step: :find_school)
+    end
 
     array << OpenStruct.new(key: "Course",
-                            value: form_for_step(:choose_your_npq).course.name,
+                            value: query_store.course.name,
                             change_step: :choose_your_npq)
 
     if needs_funding?
@@ -109,7 +117,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Lead provider",
-                            value: form_for_step(:choose_your_provider).lead_provider.name,
+                            value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
     array
@@ -120,6 +128,10 @@ class RegistrationWizard
     hash = store.slice(*form_class.permitted_params.map(&:to_s))
     hash.merge!(wizard: self)
     form_class.new(hash)
+  end
+
+  def query_store
+    @query_store ||= Services::QueryStore.new(store: store)
   end
 
 private
@@ -157,8 +169,8 @@ private
   def steps
     %i[
       start
+      teacher_catchment
       provider_check
-      share_provider
       about_npq
       teacher_reference_number
       name_changes
@@ -189,6 +201,7 @@ private
       school_not_in_england
       possible_funding
       funding_your_npq
+      share_provider
       check_answers
       confirmation
     ]

@@ -24,7 +24,15 @@ module Forms
     end
 
     def previous_step
-      :share_provider
+      :teacher_catchment
+    end
+
+    def title
+      if wizard.query_store.inside_catchment?
+        "You need your teacher reference number to register for an NPQ"
+      else
+        "You’ll need a teacher reference number to register for an NPQ"
+      end
     end
   end
 end

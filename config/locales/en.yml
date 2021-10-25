@@ -5,6 +5,7 @@ en:
         funding_options:
           school: My school or college is covering the cost
           trust: My trust is paying
+          employer: My employer is paying
           self: I am paying
           another: My NPQ is being paid in another way
       forms/funding_your_aso:
@@ -13,6 +14,15 @@ en:
           trust: My trust is paying
           self: I am paying
           another: The Additional Support Offer is being paid in another way
+      forms/teacher_catchment:
+        teacher_catchment:
+          one : nil # workaround
+          england: England
+          scotland: Scotland
+          wales: Wales
+          northern_ireland: Northern Ireland
+          jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
+          another: Another country
     errors:
       models:
         forms/provider_check:
@@ -122,3 +132,10 @@ en:
           attributes:
             aso_new_headteacher:
               blank: Choose whether or not you are in your first 2 years of headship
+        forms/teacher_catchment:
+          attributes:
+            teacher_catchment:
+              blank: Choose where you work
+            teacher_catchment_country:
+              blank: Select which country you work in
+              inclusion: Select one of the listed countries

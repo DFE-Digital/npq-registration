@@ -54,5 +54,9 @@ module Forms
     def reset_store!
       wizard.store.clear
     end
+
+    def query_store
+      wizard.query_store
+    end
   end
 end

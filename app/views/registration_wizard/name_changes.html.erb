@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Name changes
+  <%= @form.errors.present? ? "Error: " : nil %><%= @form.title %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,18 +14,17 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Name changes</h1>
+      <%= f.govuk_radio_buttons_fieldset(
+        :changed_name,
+        legend: {
+          tag: "h1",
+          size: "l",
+          text: @form.title,
+        } ) do %>
+        <p class="govuk-body">
+          Your name must match the name held in the Teaching Regulation Agency records to confirm you can take an NPQ.
+        </p>
 
-      <p class="govuk-body">
-        Your name must match the name held in the Teaching Regulation Agency records to confirm you can take an NPQ.
-      </p>
-
-      <p class="govuk-body">
-        If it does not match, you cannot continue with an NPQ.
-      </p>
-
-      <%= f.govuk_radio_buttons_fieldset(:changed_name, legend: { text: "Has your name changed since you first registered as a teacher?
-" } ) do %>
         <%= f.govuk_radio_button :changed_name, "yes", label: { text: "Yes, I have changed my name" }, link_errors: true %>
         <%= f.govuk_radio_button :changed_name, "no", label: { text: "No, I have the same name" } %>
       <% end %>
