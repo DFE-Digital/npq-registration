@@ -665,6 +665,8 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.headteacher_status).to eql("yes_in_first_two_years")
     expect(application.eligible_for_funding).to be_truthy
     expect(application.funding_choice).to be_nil
+    expect(application.teacher_catchment).to eql("england")
+    expect(application.teacher_catchment_country).to be_nil
 
     visit "/account"
 
@@ -788,6 +790,8 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.course).to be_npqh
     expect(application.eligible_for_funding).to be_falsey
     expect(application.funding_choice).to eql("employer")
+    expect(application.teacher_catchment).to eql("another")
+    expect(application.teacher_catchment_country).to eql("China")
 
     visit "/account"
 

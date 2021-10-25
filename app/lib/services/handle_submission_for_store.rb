@@ -28,6 +28,8 @@ module Services
           headteacher_status: headteacher_status,
           eligible_for_funding: funding_eligbility,
           funding_choice: funding_choice,
+          teacher_catchment: store["teacher_catchment"],
+          teacher_catchment_country: store["teacher_catchment_country"].presence,
         )
 
         enqueue_job
