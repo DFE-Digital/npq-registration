@@ -10,8 +10,6 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_button("Continue")
     page.choose("Yes, I know my TRN", visible: :all)
     page.click_button("Continue")
-    page.choose("No, I have the same name", visible: :all)
-    page.click_button("Continue")
     page.fill_in "Email address", with: "user@example.com"
     page.click_button("Continue")
 
