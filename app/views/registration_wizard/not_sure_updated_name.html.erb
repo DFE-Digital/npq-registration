@@ -1,0 +1,38 @@
+<% content_for :title do %>
+  I don’t know if I updated my name
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">I don’t know if I updated my name</h1>
+
+    <p class="govuk-body">If you are unsure whether you have updated your name on Teaching Regulation Agency records, you can request a reminder.</p>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder by email</h2>
+
+    <p class="govuk-body">Send an email to <%= govuk_mail_to('qts.enquiries@education.gov.uk', "qts.enquiries@education.gov.uk") %> which includes your:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>full name</li>
+      <li>date of birth</li>
+      <li>National Insurance number</li>
+    </ul>
+
+    <h2 class="govuk-heading-m">Request a TRN reminder by phone</h2>
+
+    <p class="govuk-body">
+      Call the Teaching Regulation Agency on 020 7593 5394 to obtain your TRN.
+    </p>
+
+    <p class="govuk-body">
+      Make sure you have your National Insurance number ready before you call.
+    </p>
+  </div>
+</div>

@@ -28,7 +28,22 @@
       <%= f.govuk_text_field :full_name,
         width: "three-quarters",
         label: { text: "Full name", size: "m" },
-        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency&nbsp;records".html_safe } %>
+        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency&nbsp;records".html_safe },
+        form_group: { class: "govuk-!-margin-bottom-2" } %>
+
+      <%= render GovukComponent::DetailsComponent.new(summary_text: "Help if you have changed your name") do %>
+        <p>If your name has changed and you have not updated your Teaching Regulation Agency record, you can:</p>
+
+        <ul class="govuk-list govuk-list--bullet">
+          <li>use your previous name to register with the service</li>
+          <li>use your previous name to register, and then change it on the Teaching Regulation Agency records at a later date</li>
+          <li><%= govuk_link_to "change your name on the Teaching Regulation Agency records", registration_wizard_show_path(step: "change-dqt") %> first and then return to register for an NPQ</li>
+        </ul>
+
+        <p>It will take a minimum of 5 days to update your Teaching Regulation Agency records.</p>
+
+        <p>If you are unsure whether you have updated your name, you can <%= govuk_link_to "request a reminder", registration_wizard_show_path(step: "not-sure-updated-name") %>.</p>
+      <% end %>
 
       <%= f.govuk_date_field :date_of_birth,
         date_of_birth: true,
