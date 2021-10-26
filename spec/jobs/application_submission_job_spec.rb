@@ -41,6 +41,7 @@ RSpec.describe ApplicationSubmissionJob do
         to: user.email,
         full_name: user.full_name,
         provider_name: application.lead_provider.name,
+        course_name: application.course.name,
       )
 
       subject.perform_now
