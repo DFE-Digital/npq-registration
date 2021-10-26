@@ -5,10 +5,10 @@ RSpec.feature "admin", type: :feature do
 
   around do |example|
     Capybara.current_driver = :rack_test
-    previous_pagination = Pagy::VARS[:items]
-    Pagy::VARS[:items] = 3
+    previous_pagination = Pagy::DEFAULT[:items]
+    Pagy::DEFAULT[:items] = 3
     example.run
-    Pagy::VARS[:items] = previous_pagination
+    Pagy::DEFAULT[:items] = previous_pagination
     Capybara.current_driver = Capybara.default_driver
   end
 
