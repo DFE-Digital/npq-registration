@@ -12,13 +12,14 @@ class ApplicationSubmissionJob < ApplicationJob
       end
     end
 
-    user.applications.where(ecf_id: nil).each do |application|
+    user.applications.includes(:lead_provider, :course).where(ecf_id: nil).each do |application|
       Services::NpqProfileCreator.new(application: application).call
 
       ApplicationSubmissionMailer.application_submitted_mail(
         to: user.email,
         full_name: user.full_name,
         provider_name: application.lead_provider.name,
+        course_name: application.course.name,
       ).deliver_now
     end
   end
