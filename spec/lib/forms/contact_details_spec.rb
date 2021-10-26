@@ -17,36 +17,8 @@ RSpec.describe Forms::ContactDetails, type: :model do
   end
 
   describe "#previous_step" do
-    let(:session) { {} }
-    let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, request: request) }
-
-    before do
-      subject.wizard = wizard
-    end
-
-    context "when name has not changed" do
-      let(:store) { { "changed_name" => "no" } }
-
-      it "return name_changes" do
-        expect(subject.previous_step).to eql(:name_changes)
-      end
-    end
-
-    context "when name has been updated" do
-      let(:store) { { "updated_name" => "yes" } }
-
-      it "returns updated_name" do
-        expect(subject.previous_step).to eql(:updated_name)
-      end
-    end
-
-    context "when using old name" do
-      let(:store) { { "name_not_updated_action" => "use_old_name" } }
-
-      it "returns not_updated_name" do
-        expect(subject.previous_step).to eql(:not_updated_name)
-      end
+    it "return name_changes" do
+      expect(subject.previous_step).to eql(:teacher_reference_number)
     end
   end
 

@@ -1,7 +1,7 @@
 module Forms
   class ChangeDqt < Base
     def previous_step
-      :not_updated_name
+      :qualified_teacher_check
     end
   end
 end

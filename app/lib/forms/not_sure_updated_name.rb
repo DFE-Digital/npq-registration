@@ -1,7 +1,7 @@
 module Forms
   class NotSureUpdatedName < Base
     def previous_step
-      :updated_name
+      :qualified_teacher_check
     end
   end
 end

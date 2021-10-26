@@ -173,10 +173,6 @@ private
       provider_check
       about_npq
       teacher_reference_number
-      name_changes
-      updated_name
-      not_sure_updated_name
-      not_updated_name
       change_dqt
       dont_know_teacher_reference_number
       dont_have_teacher_reference_number
@@ -184,6 +180,7 @@ private
       confirm_email
       resend_code
       qualified_teacher_check
+      not_sure_updated_name
       dqt_mismatch
       about_aso
       npqh_status

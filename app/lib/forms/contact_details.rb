@@ -50,15 +50,7 @@ module Forms
     end
 
     def previous_step
-      if wizard.store["changed_name"] == "no"
-        :name_changes
-      elsif wizard.store["updated_name"] == "yes"
-        :updated_name
-      elsif wizard.store["name_not_updated_action"] == "use_old_name"
-        :not_updated_name
-      else # fail safe
-        :start
-      end
+      :teacher_reference_number
     end
 
     def after_save
