@@ -1,1 +1,1 @@
-Pagy::VARS[:link_extra] = 'class="govuk-link"'
+Pagy::DEFAULT[:link_extra] = 'class="govuk-link"'
