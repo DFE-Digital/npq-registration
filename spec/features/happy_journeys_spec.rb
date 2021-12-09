@@ -17,6 +17,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England", visible: :all)
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is", visible: :all)
@@ -153,6 +157,10 @@ RSpec.feature "Happy journeys", type: :feature do
     # TODO: aria-expanded
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean

@@ -22,6 +22,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is")
     page.click_button("Continue")
@@ -174,6 +178,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -315,6 +323,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("England")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -488,6 +500,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -652,6 +668,10 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("Another country")
     page.select("China")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")

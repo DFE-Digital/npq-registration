@@ -28,6 +28,9 @@ yarn-debug.log*
 
 .env
 .env.development
+.env.*.local
 *.log
+
+.examples
 
 /coverage

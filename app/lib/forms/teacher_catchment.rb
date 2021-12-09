@@ -17,12 +17,12 @@ module Forms
     def next_step
       if changing_answer?
         if answers_will_change?
-          :teacher_reference_number
+          :work_in_school
         else
           :check_answers
         end
       else
-        :teacher_reference_number
+        :work_in_school
       end
     end
 

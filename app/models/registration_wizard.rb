@@ -170,6 +170,7 @@ private
     %i[
       start
       teacher_catchment
+      work_in_school
       provider_check
       about_npq
       teacher_reference_number
