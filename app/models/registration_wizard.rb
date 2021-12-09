@@ -66,6 +66,10 @@ class RegistrationWizard
                             value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 
+    array << OpenStruct.new(key: "Do you work in a school or college?",
+                            value: store["works_in_school"].capitalize,
+                            change_step: :work_in_school)
+
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
                             change_step: :qualified_teacher_check)
