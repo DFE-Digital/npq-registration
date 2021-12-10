@@ -90,15 +90,15 @@ RSpec.feature "Happy journeys", type: :feature do
       high_pupil_premium: true,
     )
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
 
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
@@ -232,18 +232,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -381,18 +381,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -558,18 +558,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 

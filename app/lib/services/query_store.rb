@@ -17,6 +17,10 @@ class Services::QueryStore
     end
   end
 
+  def works_in_school?
+    store["works_in_school"] == "yes"
+  end
+
   def course
     @course ||= Course.find(store["course_id"])
   end

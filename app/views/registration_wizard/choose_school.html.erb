@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Choose your school or college
+  <%= @form.errors.present? ? "Error: " : nil %>Choose your school, college or academy trust
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,7 +14,7 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Choose your school or college</h1>
+      <h1 class="govuk-heading-xl">Choose your school, college or academy trust</h1>
 
       <% if @form.display_schools? %>
         <% if @form.possible_institutions.blank? %>
@@ -41,12 +41,12 @@
         <div class="npq-js-hidden">
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter your school or college name" } %>
+                                 label: { text: "Enter your school, college or trust name", class: "govuk-label govuk-label--s" } %>
         </div>
 
         <div class="npq-js-reveal">
           <div class="govuk-form-group">
-            <%= f.label :institution_identifier, "Enter your school or college name", class: "govuk-label", for: "school-picker" %>
+            <%= f.label :institution_identifier, "Enter your school, college or trust name", class: "govuk-label govuk-label--s", for: "school-picker" %>
             <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "school-picker" %>
           </div>
         </div>
