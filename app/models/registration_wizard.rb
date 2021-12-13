@@ -124,6 +124,15 @@ class RegistrationWizard
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
+    unless query_store.works_in_school?
+      array << OpenStruct.new(key: "Employer",
+                              value: store["employer_name"],
+                              change_step: :your_work)
+      array << OpenStruct.new(key: "Role",
+                              value: store["employment_role"],
+                              change_step: :your_work)
+    end
+
     array
   end
 
@@ -200,6 +209,7 @@ private
       choose_your_provider
       find_school
       choose_school
+      your_work
       school_not_in_england
       possible_funding
       funding_your_npq

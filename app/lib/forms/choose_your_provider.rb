@@ -14,11 +14,15 @@ module Forms
     end
 
     def next_step
-      :share_provider
+      if wizard.query_store.works_in_school?
+        :share_provider
+      else
+        :your_work
+      end
     end
 
     def previous_step
-      if !wizard.query_store.inside_catchment?
+      if !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
         :funding_your_npq
       elsif course.npqh? && eligible_for_funding?
         :possible_funding

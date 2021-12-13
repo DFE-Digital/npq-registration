@@ -1,0 +1,24 @@
+<% content_for :title do %>
+  <%= @form.errors.present? ? "Error: " : nil %>Tell us about where you work
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Tell us about where you work</h1>
+    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_text_field :employer_name, label: { text: "Name of employer", size: "m" } %>
+      <%= f.govuk_text_field :employment_role, label: { text: "Role", size: "m" }, hint: { text: "For example: Administrator, business manager" } %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>

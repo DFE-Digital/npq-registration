@@ -47,6 +47,12 @@ en:
             email:
               blank: Email can’t be blank
               invalid: Enter a valid email address
+        forms/your_work:
+          attributes:
+            employer_name:
+              blank: Enter your employer's name
+            employment_role:
+              blank: Enter your employment role
         forms/teacher_reference_number:
           attributes:
             trn_knowledge:

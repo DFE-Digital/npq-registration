@@ -36,7 +36,7 @@ module Forms
     end
 
     def previous_step
-      if query_store.inside_catchment?
+      if query_store.inside_catchment? && query_store.works_in_school?
         :choose_school
       else
         :qualified_teacher_check
@@ -59,7 +59,7 @@ module Forms
   private
 
     def courses
-      if wizard.query_store.inside_catchment?
+      if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
         Course.all
       else
         Course.all - Course.where(name: "Additional Support Offer for new headteachers")

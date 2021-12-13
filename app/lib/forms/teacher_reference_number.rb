@@ -24,7 +24,7 @@ module Forms
     end
 
     def previous_step
-      :teacher_catchment
+      :work_in_school
     end
 
     def title
