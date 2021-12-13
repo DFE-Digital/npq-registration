@@ -179,13 +179,29 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         )
       end
 
-      it "returns :find_school" do
-        expect(subject.next_step).to eql(:find_school)
-      end
-
       it "marks trn_verified as truthy" do
         subject.next_step
         expect(subject.trn_verified?).to be_truthy
+      end
+
+      context "when user selected they work in a school" do
+        before do
+          store["works_in_school"] = "yes"
+        end
+
+        it "returns :find_school" do
+          expect(subject.next_step).to eql(:find_school)
+        end
+      end
+
+      context "when user selected they do not work in a school" do
+        before do
+          store["works_in_school"] = "no"
+        end
+
+        it "returns :find_school" do
+          expect(subject.next_step).to eql(:choose_your_npq)
+        end
       end
     end
 

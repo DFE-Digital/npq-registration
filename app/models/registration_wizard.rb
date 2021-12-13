@@ -98,7 +98,7 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    if query_store.inside_catchment?
+    if query_store.inside_catchment? && query_store.works_in_school?
       array << OpenStruct.new(key: "School or college",
                               value: institution(source: store["institution_identifier"]).name,
                               change_step: :find_school)
