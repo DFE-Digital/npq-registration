@@ -703,22 +703,6 @@
       "en-GB": "Czechia"
     }
   },
-  "country:DD": {
-    "edges": {
-      "from": [
-      ]
-    },
-    "meta": {
-      "canonical": true,
-      "canonical-mask": 1,
-      "display-name": true,
-      "stable-name": true
-    },
-    "names": {
-      "cy": false,
-      "en-GB": "East Germany"
-    }
-  },
   "country:DE": {
     "edges": {
       "from": [
@@ -2655,22 +2639,6 @@
       "en-GB": "Sao Tome and Principe"
     }
   },
-  "country:SU": {
-    "edges": {
-      "from": [
-      ]
-    },
-    "meta": {
-      "canonical": true,
-      "canonical-mask": 1,
-      "display-name": true,
-      "stable-name": true
-    },
-    "names": {
-      "cy": false,
-      "en-GB": "USSR"
-    }
-  },
   "country:SV": {
     "edges": {
       "from": [
@@ -3117,22 +3085,6 @@
     "names": {
       "cy": false,
       "en-GB": "Yemen"
-    }
-  },
-  "country:YU": {
-    "edges": {
-      "from": [
-      ]
-    },
-    "meta": {
-      "canonical": true,
-      "canonical-mask": 1,
-      "display-name": true,
-      "stable-name": true
-    },
-    "names": {
-      "cy": false,
-      "en-GB": "Yugoslavia"
     }
   },
   "country:ZA": {
@@ -6802,40 +6754,6 @@
     "names": {
       "cy": false,
       "en-GB": "Czech Republic"
-    }
-  },
-  "nym:Czechoslav": {
-    "edges": {
-      "from": [
-        "country:CZ"
-      ]
-    },
-    "meta": {
-      "canonical": false,
-      "canonical-mask": 0,
-      "display-name": false,
-      "stable-name": false
-    },
-    "names": {
-      "cy": false,
-      "en-GB": "Czechoslav"
-    }
-  },
-  "nym:Czechoslovak Republic": {
-    "edges": {
-      "from": [
-        "country:CS"
-      ]
-    },
-    "meta": {
-      "canonical": false,
-      "canonical-mask": 0,
-      "display-name": true,
-      "stable-name": true
-    },
-    "names": {
-      "cy": false,
-      "en-GB": "Czechoslovak Republic"
     }
   },
   "nym:DD": {
