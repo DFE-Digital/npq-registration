@@ -139,7 +139,7 @@ GEM
     ffi (1.15.3)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    govuk-components (2.1.4)
+    govuk-components (2.1.5)
       activemodel (>= 6.0)
       railties (>= 6.0)
       view_component (~> 2.39.0)
