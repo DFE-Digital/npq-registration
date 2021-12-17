@@ -28,7 +28,7 @@ module Forms
         :about_aso
       elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
-      elsif Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
+      elsif wizard.query_store.works_in_school? && Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
         :possible_funding
       else
         :funding_your_npq
