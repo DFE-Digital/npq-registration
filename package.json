@@ -14,7 +14,7 @@
     "serialize-javascript": "^6.0.0"
   },
   "devDependencies": {
-    "webpack-dev-server": "^4.4.0"
+    "webpack-dev-server": "^4.7.0"
   },
   "license": "MIT"
 }
