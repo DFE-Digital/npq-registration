@@ -4,7 +4,7 @@ module Forms
 
     validates :teacher_catchment, presence: true, inclusion: { in: %w[england scotland wales northern_ireland jersey_guernsey_isle_of_man another] }
     validates :teacher_catchment_country, presence: true,
-                                          inclusion: { in: Services::AutocompleteCountries::ALL },
+                                          inclusion: { in: Services::AutocompleteCountries.names },
                                           if: proc { |f| f.teacher_catchment == "another" }
 
     def self.permitted_params
