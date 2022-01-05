@@ -24,11 +24,11 @@ module Forms
     end
 
     def previous_step
-      :teacher_catchment
+      :work_in_school
     end
 
     def title
-      if wizard.query_store.inside_catchment?
+      if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
         "You need your teacher reference number to register for an NPQ"
       else
         "You’ll need a teacher reference number to register for an NPQ"

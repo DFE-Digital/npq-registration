@@ -29,6 +29,10 @@ en:
           attributes:
             chosen_provider:
               blank: Select whether or not you have chosen an NPQ and provider
+        forms/work_in_school:
+          attributes:
+            works_in_school:
+              blank: Select whether or not you currently work in a school, college or academy trust?
         forms/share_provider:
           attributes:
             can_share_choices:
@@ -43,6 +47,12 @@ en:
             email:
               blank: Email can’t be blank
               invalid: Enter a valid email address
+        forms/your_work:
+          attributes:
+            employer_name:
+              blank: Enter the name of your employer
+            employment_role:
+              blank: Enter your employment role
         forms/teacher_reference_number:
           attributes:
             trn_knowledge:

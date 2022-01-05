@@ -28,7 +28,7 @@ module Forms
         :about_aso
       elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
-      elsif Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
+      elsif wizard.query_store.works_in_school? && Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
         :possible_funding
       else
         :funding_your_npq
@@ -36,7 +36,7 @@ module Forms
     end
 
     def previous_step
-      if query_store.inside_catchment?
+      if query_store.inside_catchment? && query_store.works_in_school?
         :choose_school
       else
         :qualified_teacher_check
@@ -59,7 +59,7 @@ module Forms
   private
 
     def courses
-      if wizard.query_store.inside_catchment?
+      if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
         Course.all
       else
         Course.all - Course.where(name: "Additional Support Offer for new headteachers")

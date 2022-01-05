@@ -66,6 +66,10 @@ class RegistrationWizard
                             value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 
+    array << OpenStruct.new(key: "Do you work in a school or college?",
+                            value: store["works_in_school"].capitalize,
+                            change_step: :work_in_school)
+
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
                             change_step: :qualified_teacher_check)
@@ -94,7 +98,7 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    if query_store.inside_catchment?
+    if query_store.inside_catchment? && query_store.works_in_school?
       array << OpenStruct.new(key: "School or college",
                               value: institution(source: store["institution_identifier"]).name,
                               change_step: :find_school)
@@ -120,6 +124,15 @@ class RegistrationWizard
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
+    unless query_store.works_in_school?
+      array << OpenStruct.new(key: "Employer",
+                              value: store["employer_name"],
+                              change_step: :your_work)
+      array << OpenStruct.new(key: "Role",
+                              value: store["employment_role"],
+                              change_step: :your_work)
+    end
+
     array
   end
 
@@ -137,6 +150,8 @@ class RegistrationWizard
 private
 
   def needs_funding?
+    return true unless query_store.works_in_school?
+
     !Services::FundingEligibility.new(
       course: course,
       institution: institution(source: store["institution_identifier"]),
@@ -170,6 +185,7 @@ private
     %i[
       start
       teacher_catchment
+      work_in_school
       provider_check
       about_npq
       teacher_reference_number
@@ -195,6 +211,7 @@ private
       choose_your_provider
       find_school
       choose_school
+      your_work
       school_not_in_england
       possible_funding
       funding_your_npq

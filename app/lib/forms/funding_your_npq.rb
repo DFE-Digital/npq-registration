@@ -25,15 +25,17 @@ module Forms
     end
 
     def options
-      if wizard.query_store.inside_catchment?
-        england_options
-      else
-        outside_england_options
-      end
+      [
+        (option("school", "My school or college is covering the cost", link_errors: true) if works_in_school?),
+        (option("trust", "My trust is paying") if works_in_school? && inside_catchment?),
+        (option("employer", "My employer is paying") if !inside_catchment? || !works_in_school?),
+        option("self", "I am paying"),
+        option("another", "My NPQ is being paid in another way", "For example, I am sharing the costs with my school or college"),
+      ].compact.freeze
     end
 
     def title
-      if wizard.query_store.inside_catchment?
+      if inside_catchment? && works_in_school?
         "Funding"
       else
         "How is your course being paid for?"
@@ -42,40 +44,21 @@ module Forms
 
   private
 
-    def england_options
-      [
-        OpenStruct.new(value: "school",
-                       text: "My school or college is covering the cost",
-                       link_errors: true),
-        OpenStruct.new(value: "trust",
-                       text: "My trust is paying",
-                       link_errors: false),
-        OpenStruct.new(value: "self",
-                       text: "I am paying",
-                       link_errors: false),
-        OpenStruct.new(value: "another",
-                       text: "My NPQ is being paid in another way",
-                       description: "For example, I am sharing the costs with my school or college",
-                       link_errors: false),
-      ].freeze
+    def option(value, text, description = nil, link_errors: false)
+      OpenStruct.new(
+        value: value,
+        text: text,
+        description: description,
+        link_errors: link_errors,
+      )
     end
 
-    def outside_england_options
-      [
-        OpenStruct.new(value: "school",
-                       text: "My school or college is covering the cost",
-                       link_errors: true),
-        OpenStruct.new(value: "employer",
-                       text: "My employer is paying",
-                       link_errors: false),
-        OpenStruct.new(value: "self",
-                       text: "I am paying",
-                       link_errors: false),
-        OpenStruct.new(value: "another",
-                       text: "My NPQ is being paid in another way",
-                       description: "For example, I am sharing the costs with my school or college",
-                       link_errors: false),
-      ].freeze
+    def works_in_school?
+      wizard.query_store.works_in_school?
+    end
+
+    def inside_catchment?
+      wizard.query_store.inside_catchment?
     end
   end
 end

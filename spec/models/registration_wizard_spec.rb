@@ -31,6 +31,7 @@ RSpec.describe RegistrationWizard do
       let(:store) do
         {
           "date_of_birth" => 30.years.ago,
+          "works_in_school" => "yes",
           "institution_identifier" => "School-#{school.urn}",
           "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
           "lead_provider_id" => LeadProvider.all.sample.id,
@@ -55,6 +56,7 @@ RSpec.describe RegistrationWizard do
       let(:store) do
         {
           "date_of_birth" => 30.years.ago,
+          "works_in_school" => "yes",
           "institution_identifier" => "School-#{school.urn}",
           "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
           "lead_provider_id" => LeadProvider.all.sample.id,

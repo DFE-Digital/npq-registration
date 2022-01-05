@@ -53,13 +53,13 @@ module Services
     end
 
     def school_urn
-      if query_store.inside_catchment?
+      if query_store.inside_catchment? && query_store.works_in_school?
         institution(source: store["institution_identifier"]).urn
       end
     end
 
     def ukprn
-      if query_store.inside_catchment?
+      if query_store.inside_catchment? && query_store.works_in_school?
         institution(source: store["institution_identifier"]).ukprn
       end
     end

@@ -20,11 +20,13 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:request) { nil }
     let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
     let(:school) { create(:school) }
+    let(:works_in_school) { "yes" }
     let(:store) do
       {
         "teacher_catchment" => "england",
         "course_id" => course.id,
         "institution_identifier" => "School-#{school.urn}",
+        "works_in_school" => works_in_school,
       }
     end
     let(:wizard) do
@@ -56,6 +58,14 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
           "teacher_catchment" => "another",
         }
       end
+
+      it "returns :funding_your_npq" do
+        expect(subject.previous_step).to eql(:funding_your_npq)
+      end
+    end
+
+    context "when not working in school" do
+      let(:works_in_school) { "no" }
 
       it "returns :funding_your_npq" do
         expect(subject.previous_step).to eql(:funding_your_npq)

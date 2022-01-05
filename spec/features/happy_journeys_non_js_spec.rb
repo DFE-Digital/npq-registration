@@ -22,6 +22,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is")
     page.click_button("Continue")
@@ -86,15 +90,15 @@ RSpec.feature "Happy journeys", type: :feature do
       high_pupil_premium: true,
     )
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
 
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
@@ -121,6 +125,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("RP12/345")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
@@ -174,6 +179,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -223,18 +232,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -257,6 +266,8 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
@@ -317,6 +328,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -366,18 +381,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -429,6 +444,8 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
@@ -488,6 +505,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England")
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
+    page.click_button("Continue")
+
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN")
     page.click_button("Continue")
@@ -537,18 +558,18 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school or college")
+    expect(page).to have_text("Choose your school, college or academy trust")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -592,6 +613,8 @@ RSpec.feature "Happy journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
@@ -652,6 +675,10 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page.current_path).to eql("/registration/teacher-catchment")
     page.choose("Another country")
     page.select("China")
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
@@ -715,6 +742,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Where do you work?"].value).to eql("China")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")

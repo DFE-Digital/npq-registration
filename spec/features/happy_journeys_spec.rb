@@ -17,6 +17,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England", visible: :all)
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is", visible: :all)
@@ -83,7 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
@@ -91,7 +95,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Choose your school")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -155,6 +159,10 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("England", visible: :all)
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, I know my TRN", visible: :all)
@@ -210,7 +218,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Where is your school or college?")
+    expect(page).to have_text("Where is your school, college or academy trust?")
     page.fill_in "School or college location", with: "manchester"
     page.click_button("Continue")
 
@@ -218,7 +226,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Choose your school")
     expect(page).to have_text("Please choose from schools and colleges located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school or college name", with: "open"
+      page.fill_in "Enter your school, college or trust name", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -318,6 +326,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     page.click_button("Continue")
 
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
     page.choose("Yes, but I need to be reminded what it is", visible: :all)
@@ -415,6 +427,120 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("I am paying")
+
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
+
+    page.click_button("Submit")
+
+    expect(page).to be_axe_clean
+  end
+
+  scenario "registration journey while not currently working at school" do
+    visit "/"
+    expect(page).to have_text("Before you start")
+    page.click_link("Start now")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.click_button("Continue")
+
+    # expect(page).to be_axe_clean
+    # TODO: aria-expanded
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("No", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("Yes, I know my TRN", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to include("contact-details")
+    expect(page).to have_text("Email address")
+    page.fill_in "Email address", with: "user@example.com"
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Confirm your code")
+    expect(page).to have_text("user@example.com")
+    page.click_button("Continue")
+
+    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+    expect(page).to be_axe_clean
+    page.fill_in "Enter your code", with: code
+    page.click_button("Continue")
+
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: "1234567",
+          date_of_birth: "1980-12-13",
+          full_name: "John Doe",
+          nino: "",
+        },
+      )
+      .to_return(status: 200, body: participant_validator_response, headers: {})
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Check your details")
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
+    page.fill_in "Full name", with: "John Doe"
+    page.fill_in "Day", with: "13"
+    page.fill_in "Month", with: "12"
+    page.fill_in "Year", with: "1980"
+    page.click_button("Continue")
+
+    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("What are you applying for?")
+    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("How is your course being paid for?")
+    page.choose "My employer is paying", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your provider")
+    page.choose("Teach First", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Tell us about where you work")
+    page.fill_in "Name of employer", with: "Big company"
+    page.fill_in "Role", with: "Trainer"
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.click_button("Continue")
+
+    check_answers_page = CheckAnswersPage.new
+
+    expect(page).to be_axe_clean
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
+    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
+    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
+    expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
+    expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My employer is paying")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
