@@ -37,6 +37,7 @@ Rails/SaveBang:
     - "app/lib/ecf_api/base.rb"
     - "app/lib/services/ecf_user_creator.rb"
     - "app/lib/services/npq_profile_creator.rb"
+    - "app/lib/services/npq_profile_updater.rb"
 
 Rails/Output:
   Exclude:
