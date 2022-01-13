@@ -7,7 +7,7 @@ module Forms
     def next_step
       if changing_answer?
         :check_answers
-      elsif wizard.query_store.inside_catchment?
+      elsif wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
         :find_school
       else
         :choose_your_npq
