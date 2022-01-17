@@ -9,6 +9,7 @@ module Services
         applications.each do |a|
           csv << [
             a.user.id,
+            a.user.ecf_id,
             a.user.created_at,
             a.user.trn_verified,
             a.user.trn_auto_verified,
@@ -36,6 +37,7 @@ module Services
     def headers
       %w[
         user_id
+        ecf_user_id
         user_created_at
         trn_verified
         trn_auto_verified
