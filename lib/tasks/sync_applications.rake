@@ -3,9 +3,10 @@ namespace :sync do
   task applications: :environment do
     Rails.logger.info "syncing applications"
 
-    count = Application.count
+    count = Application.where("ecf_id is not null").count
     errored_ids = []
-    Application.each_with_index do |application, i|
+    Application.where("ecf_id is not null").order(created_at: :asc).each_with_index do |application, i|
+      sleep(0.1)
       Rails.logger.info "syncing application #{application.id}, (#{i + 1},/#{count})"
       Services::NpqProfileUpdater.new(application: application).call
     rescue StandardError
