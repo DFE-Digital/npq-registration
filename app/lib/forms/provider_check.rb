@@ -26,7 +26,7 @@ module Forms
     end
 
     def previous_step
-      :start
+      :chosen_start_date
     end
   end
 end
