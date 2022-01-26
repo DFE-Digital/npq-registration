@@ -11,7 +11,7 @@ module Forms
               presence: true,
               length: { maximum: 128 },
               unless: :selected_no?
-    validate :can_register_interest?
+    validate :can_register_interest
 
     def current_term(term = "Autumn 2022")
       term
@@ -21,10 +21,14 @@ module Forms
       notification_option == "no"
     end
 
-    def can_register_interest?
+    def can_register_interest
       if RegistrationInterest.find_by(email: email).present?
         errors.add(:email, :taken)
       end
+    end
+
+    def save!
+      RegistrationInterest.create!(email: email, term: current_term)
     end
   end
 end
