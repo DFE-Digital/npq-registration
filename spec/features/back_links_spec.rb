@@ -6,13 +6,13 @@ RSpec.feature "Back links", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    expect(page).to have_text("Have you agreed a start date of")
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     page.click_link("Back")
 
     expect(page).to be_axe_clean
-    expect(page).to have_checked_field("Yes, I have chosen my NPQ and provider", visible: :all)
+    expect(page).to have_checked_field("Yes", visible: :all)
   end
 end
