@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   post "/registration-interest", to: "registration_interest#create"
   get "/registration-interest/confirm", to: "registration_interest#confirm"
   get "/registration-interest/no-notification", to: "registration_interest#no_notification"
+  get "/registration-interest/sign-up", to: "interest_notification_sign_up#new"
+  post "/registration-interest/sign-up", to: "interest_notification_sign_up#create"
+  get "/registration-interest/sign-up/confirm", to: "interest_notification_sign_up#confirm"
 
   get "/sign-in", to: "session_wizard#show", step: "sign_in"
 
