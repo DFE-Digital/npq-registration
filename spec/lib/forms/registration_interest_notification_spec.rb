@@ -30,4 +30,17 @@ RSpec.describe Forms::RegistrationInterestNotification, type: :model do
       end
     end
   end
+
+  describe "#term" do
+    context "when term isn't explicitly set" do
+      it "shows the default term set" do
+        expect(subject.term).to eq("Autumn 2022")
+      end
+
+      it "shows the term has been set" do
+        subject.term_interest_registered = "Spring 2022"
+        expect(subject.term).to eq("Spring 2022")
+      end
+    end
+  end
 end
