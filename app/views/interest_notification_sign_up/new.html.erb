@@ -2,8 +2,10 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @notification_form, url: registration_interest_sign_up_path do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.hidden_field :notification_option, value: "yes" %>
-        <%= f.govuk_text_field :email, label: { text: "What's your email address", size: 'xl' }, hint: { text: "We'll email you when registration reopens" }, width: 'three-quarters' %>
+      <%= f.govuk_text_field :email,
+             label: { text: "What’s your email address?", tag: "h1", size: "xl" },
+             hint: { text: "We'll email you when registration reopens" },
+             width: 'three-quarters' %>
       <%= f.govuk_submit %>
     <% end %>
   </div>
