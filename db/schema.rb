@@ -84,7 +84,6 @@ ActiveRecord::Schema.define(version: 2022_01_25_143328) do
 
   create_table "registration_interests", force: :cascade do |t|
     t.citext "email", null: false
-    t.string "term"
     t.boolean "notified", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
