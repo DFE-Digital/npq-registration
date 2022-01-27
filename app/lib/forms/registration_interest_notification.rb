@@ -4,7 +4,7 @@ module Forms
 
     VALID_NOTIFICATION_OPTIONS = %w[yes no].freeze
 
-    attr_accessor :email, :notification_option
+    attr_accessor :email, :notification_option, :term_interest_registered
 
     validates :notification_option, inclusion: { in: VALID_NOTIFICATION_OPTIONS }
     validates :email,
@@ -13,8 +13,8 @@ module Forms
               unless: :selected_no?
     validate :can_register_interest
 
-    def current_term(term = "Autumn 2022")
-      term
+    def term
+      term_interest_registered || "Autumn 2022"
     end
 
     def selected_no?
@@ -28,7 +28,7 @@ module Forms
     end
 
     def save!
-      RegistrationInterest.create!(email: email, term: current_term)
+      RegistrationInterest.create!(email: email, term: term)
     end
   end
 end
