@@ -13,7 +13,6 @@ module Forms
               unless: :selected_no?
     validate :can_register_interest
 
-
     def selected_no?
       notification_option == "no"
     end
