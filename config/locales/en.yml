@@ -25,6 +25,10 @@ en:
           another: Another country
     errors:
       models:
+        forms/chosen_start_date:
+          attributes:
+            chosen_start_date:
+              blank: Select whether you have agreed a start date
         forms/provider_check:
           attributes:
             chosen_provider:
@@ -137,3 +141,11 @@ en:
             teacher_catchment_country:
               blank: Select which country you work in
               inclusion: Select one of the listed countries
+        forms/registration_interest_notification:
+          attributes:
+            notification_option:
+              inclusion: Select an option
+            email:
+              blank: Enter an email address
+              invalid: This email has already been registered for interest
+              taken: You have already registered to be notified

@@ -11,6 +11,14 @@ Rails.application.routes.draw do
   patch "/registration/:step", to: "registration_wizard#update", as: "registration_wizard_update"
   patch "/registration/:step/change", to: "registration_wizard#update", as: "registration_wizard_update_change", changing_answer: "1"
 
+  get "/registration-interest", to: "registration_interest#new"
+  post "/registration-interest", to: "registration_interest#create"
+  get "/registration-interest/confirm", to: "registration_interest#confirm"
+  get "/registration-interest/no-notification", to: "registration_interest#no_notification"
+  get "/registration-interest/sign-up", to: "interest_notification_sign_up#new"
+  post "/registration-interest/sign-up", to: "interest_notification_sign_up#create"
+  get "/registration-interest/sign-up/confirm", to: "interest_notification_sign_up#confirm"
+
   get "/sign-in", to: "session_wizard#show", step: "sign_in"
 
   get "/session/:step", to: "session_wizard#show", as: "session_wizard_show"

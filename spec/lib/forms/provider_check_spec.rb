@@ -7,7 +7,7 @@ RSpec.describe Forms::ProviderCheck, type: :model do
 
   describe "#previous_step" do
     it "returns start" do
-      expect(subject.previous_step).to eql(:start)
+      expect(subject.previous_step).to eql(:chosen_start_date)
     end
   end
 end

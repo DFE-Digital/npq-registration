@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_25_103506) do
+ActiveRecord::Schema.define(version: 2022_01_25_143328) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "applications", force: :cascade do |t|
@@ -79,6 +80,14 @@ ActiveRecord::Schema.define(version: 2021_10_25_103506) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
+  end
+
+  create_table "registration_interests", force: :cascade do |t|
+    t.citext "email", null: false
+    t.boolean "notified", default: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_registration_interests_on_email", unique: true
   end
 
   create_table "reports", force: :cascade do |t|
