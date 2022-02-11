@@ -26,7 +26,7 @@ module Services
           school_urn: school_urn,
           ukprn: ukprn,
           headteacher_status: headteacher_status,
-          eligible_for_funding: funding_eligbility,
+          eligible_for_funding: funding_eligibility,
           funding_choice: funding_choice,
           teacher_catchment: store["teacher_catchment"],
           teacher_catchment_country: store["teacher_catchment_country"].presence,
@@ -65,7 +65,12 @@ module Services
     end
 
     def funding_choice
-      if course.aso?
+      # It is possible that the applicant had chosen a non-funded path and selected a funding choice
+      # before going back a few steps and choosing a funded route. We should clear the funding choice
+      # to nil here to reduce confusion
+      if funding_eligibility
+        nil
+      elsif course.aso?
         store["aso_funding_choice"]
       else
         store["funding"]
@@ -94,8 +99,10 @@ module Services
       ApplicationSubmissionJob.perform_later(user: user)
     end
 
-    def funding_eligbility
-      Services::FundingEligibility.new(
+    def funding_eligibility
+      return @funding_eligibility if defined?(@funding_eligibility)
+
+      @funding_eligibility = Services::FundingEligibility.new(
         course: course,
         institution: institution(source: store["institution_identifier"]),
         new_headteacher: new_headteacher?,
