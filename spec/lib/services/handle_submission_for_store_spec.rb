@@ -25,5 +25,35 @@ RSpec.describe Services::HandleSubmissionForStore do
         expect(user.reload.trn).to eql("0012345")
       end
     end
+
+    context "when there is a funding choice selected" do
+      let(:store) do
+        super().merge(
+          "funding" => "school",
+        )
+      end
+
+      context "when there is a funding choice selected and eligible for funding is true" do
+        before do
+          allow_any_instance_of(Services::FundingEligibility).to receive(:call) { true }
+        end
+
+        it "clears the funding choice to nil on the application" do
+          subject.call
+          expect(user.applications.first.reload.funding_choice).to eq nil
+        end
+      end
+
+      context "when there is a funding choice selected and eligible for funding is false" do
+        before do
+          allow_any_instance_of(Services::FundingEligibility).to receive(:call) { false }
+        end
+
+        it "saves the funding choice to nil on the application" do
+          subject.call
+          expect(user.applications.first.reload.funding_choice).to eq "school"
+        end
+      end
+    end
   end
 end
