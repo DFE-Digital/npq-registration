@@ -23,7 +23,7 @@ Sentry.init do |config|
       when /healthcheck/
         0.0 # ignore healthcheck requests
       else
-        0.1
+        0.01
       end
     else
       0.0 # We don't care about performance of other things
