@@ -30,6 +30,7 @@ yarn-debug.log*
 .env.development
 .env.*.local
 *.log
+.idea
 
 .examples
 
