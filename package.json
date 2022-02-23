@@ -5,7 +5,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
     "@rails/webpacker": "^5.4.3",
-    "accessible-autocomplete": "^2.0.3",
+    "accessible-autocomplete": "^2.0.4",
     "es6-promise": "^4.2.8",
     "govuk-country-and-territory-autocomplete": "^1.0.1",
     "govuk-frontend": "^3.14.0",
