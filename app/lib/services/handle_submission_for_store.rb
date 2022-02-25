@@ -30,6 +30,9 @@ module Services
           funding_choice: funding_choice,
           teacher_catchment: store["teacher_catchment"],
           teacher_catchment_country: store["teacher_catchment_country"].presence,
+          works_in_school: store["works_in_school"] == "yes",
+          employer_name: store["employer_name"].presence,
+          employment_role: store["employment_role"].presence,
         )
 
         enqueue_job

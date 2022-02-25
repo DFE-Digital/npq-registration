@@ -68,6 +68,9 @@ RSpec.describe Services::NpqProfileCreator do
             headteacher_status: "no",
             eligible_for_funding: true,
             funding_choice: "trust",
+            works_in_school: application.works_in_school,
+            employer_name: application.employer_name,
+            employment_role: application.employment_role,
           },
         },
       }.to_json

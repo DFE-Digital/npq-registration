@@ -18,6 +18,9 @@ module Services
         headteacher_status: application.headteacher_status,
         eligible_for_funding: application.eligible_for_funding,
         funding_choice: application.funding_choice,
+        works_in_school: application.works_in_school,
+        employer_name: application.employer_name,
+        employment_role: application.employment_role,
         relationships: {
           user: ecf_user,
           npq_course: ecf_npq_course,
