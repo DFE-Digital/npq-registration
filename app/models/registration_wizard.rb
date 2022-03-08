@@ -10,7 +10,9 @@ class RegistrationWizard
   attr_reader :current_step, :params, :store, :request
 
   def initialize(current_step:, store:, request:, params: {})
+    current_step = :closed if Services::Feature.registration_closed?
     set_current_step(current_step)
+
     @params = params
     @store = store
     @request = request
@@ -184,6 +186,7 @@ private
   def steps
     %i[
       start
+      closed
       chosen_start_date
       teacher_catchment
       work_in_school
