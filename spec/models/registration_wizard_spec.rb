@@ -22,6 +22,16 @@ RSpec.describe RegistrationWizard do
         }.to raise_error(RegistrationWizard::InvalidStep)
       end
     end
+
+    context "when registration is closed" do
+      before do
+        allow(Services::Feature).to receive(:registration_closed?).and_return(true)
+      end
+
+      it "always returns closed" do
+        expect(subject.current_step).to eql(:closed)
+      end
+    end
   end
 
   describe "#answers" do
