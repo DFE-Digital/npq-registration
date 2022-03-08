@@ -9,11 +9,17 @@ module Forms
       []
     end
 
+    # Previous steps should lead to `closed` when registration is closed.
     def previous_step
+      return :closed if Services::Feature.registration_closed?
+
       raise NotImplementedError
     end
 
+    # Subsequent steps should lead to `closed` when registration is closed.
     def next_step
+      return :closed if Services::Feature.registration_closed?
+
       raise NotImplementedError
     end
 

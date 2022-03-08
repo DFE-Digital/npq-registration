@@ -46,6 +46,8 @@ private
   end
 
   def wizard_params
+    return {} if Services::Feature.registration_closed?
+
     params.fetch(:registration_wizard, {}).permit(RegistrationWizard.permitted_params_for_step(params[:step].underscore))
   end
 end
