@@ -11,7 +11,7 @@ jobs:
     container: google/cloud-sdk:latest
     steps:
       - name: Auth with gcloud
-        uses: google-github-actions/setup-gcloud@master
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_BASE64 }}
 
