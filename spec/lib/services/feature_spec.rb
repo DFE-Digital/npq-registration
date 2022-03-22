@@ -5,6 +5,10 @@ RSpec.describe Services::Feature do
     let(:start_time) { Services::Feature::REGISTRATION_CLOSED.first }
     let(:end_time)   { Services::Feature::REGISTRATION_CLOSED.last }
 
+    before do
+      allow(Services::Feature).to receive(:features_enabled?).and_return(true)
+    end
+
     context "before the closure period" do
       before { travel_to start_time - 1 }
 
