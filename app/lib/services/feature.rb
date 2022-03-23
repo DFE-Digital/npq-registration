@@ -4,7 +4,12 @@ module Services
 
     class << self
       def registration_closed?
-        REGISTRATION_CLOSED.cover?(Time.zone.now)
+        features_enabled? && REGISTRATION_CLOSED.cover?(Time.zone.now)
+      end
+
+      # We only enable these feature in prod.
+      def features_enabled?
+        ENV["SERVICE_ENV"] == "production"
       end
     end
   end

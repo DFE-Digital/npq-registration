@@ -25,6 +25,7 @@ RSpec.describe RegistrationWizard do
 
     context "when registration is closed" do
       before do
+        allow(Services::Feature).to receive(:features_enabled?).and_return(true)
         allow(Services::Feature).to receive(:registration_closed?).and_return(true)
       end
 

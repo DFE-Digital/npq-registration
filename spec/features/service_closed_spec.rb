@@ -38,10 +38,12 @@ RSpec.feature "Service is hard closed", type: :feature do
 private
 
   def close_registration!
+    allow(Services::Feature).to receive(:features_enabled?).and_return(true)
     allow(Services::Feature).to receive(:registration_closed?).and_return(true)
   end
 
   def open_registration!
+    allow(Services::Feature).to receive(:features_enabled?).and_return(true)
     allow(Services::Feature).to receive(:registration_closed?).and_return(false)
   end
 end
