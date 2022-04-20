@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_24_121536) do
+ActiveRecord::Schema.define(version: 2022_04_07_111331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -62,6 +62,38 @@ ActiveRecord::Schema.define(version: 2022_02_24_121536) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "educational_institutions", force: :cascade do |t|
+    t.text "urn", null: false
+    t.text "la_code"
+    t.text "la_name"
+    t.text "establishment_number"
+    t.text "name"
+    t.text "establishment_status_code"
+    t.text "establishment_status_name"
+    t.date "close_date"
+    t.text "ukprn"
+    t.date "last_changed_date"
+    t.text "address_1"
+    t.text "address_2"
+    t.text "address_3"
+    t.text "town"
+    t.text "county"
+    t.text "postcode"
+    t.integer "easting"
+    t.integer "northing"
+    t.text "region"
+    t.text "country"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "establishment_type_code"
+    t.text "establishment_type_name"
+    t.boolean "high_pupil_premium", default: false, null: false
+    t.text "postcode_without_spaces"
+    t.string "type", null: false
+    t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
+    t.index ["urn"], name: "index_educational_institutions_on_urn"
+  end
+
   create_table "lead_providers", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -98,37 +130,6 @@ ActiveRecord::Schema.define(version: 2022_02_24_121536) do
     t.text "data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "schools", force: :cascade do |t|
-    t.text "urn", null: false
-    t.text "la_code"
-    t.text "la_name"
-    t.text "establishment_number"
-    t.text "name"
-    t.text "establishment_status_code"
-    t.text "establishment_status_name"
-    t.date "close_date"
-    t.text "ukprn"
-    t.date "last_changed_date"
-    t.text "address_1"
-    t.text "address_2"
-    t.text "address_3"
-    t.text "town"
-    t.text "county"
-    t.text "postcode"
-    t.integer "easting"
-    t.integer "northing"
-    t.text "region"
-    t.text "country"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.text "establishment_type_code"
-    t.text "establishment_type_name"
-    t.boolean "high_pupil_premium", default: false, null: false
-    t.text "postcode_without_spaces"
-    t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
-    t.index ["urn"], name: "index_schools_on_urn"
   end
 
   create_table "sessions", force: :cascade do |t|
