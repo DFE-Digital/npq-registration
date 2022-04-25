@@ -58,7 +58,11 @@ module Services
             town: wrapped_csv_row.town,
             postcode: wrapped_csv_row.postcode,
             region: wrapped_csv_row.region,
-            postcode_without_spaces: wrapped_csv_row.postcode_without_spaces
+            postcode_without_spaces: wrapped_csv_row.postcode_without_spaces,
+            early_years_individual_registers: wrapped_csv_row.individual_registers,
+            provider_early_years_register_flag: wrapped_csv_row.provider_early_years_register_flag,
+            provider_compulsory_childcare_register_flag: wrapped_csv_row.provider_compulsory_childcare_register_flag,
+            places: wrapped_csv_row.places,
           )
         end
 
@@ -128,6 +132,41 @@ module Services
 
         def postcode_without_spaces
           csv_row["Postcode"]&.gsub(" ", "")
+        end
+
+        def individual_registers
+          raw_data = csv_row["Individual Register combinations"]
+
+          case raw_data
+          when "ALL"
+            %w[CCR VCR EYR]
+          when "CCR only"
+            %w[CCR]
+          when "CCR-VCR"
+            %w[CCR VCR]
+          when "EYR only"
+            %w[EYR]
+          when "EYR-CCR"
+            %w[CCR EYR]
+          when "EYR-VCR"
+            %w[VCR EYR]
+          when "VCR only"
+            %w[VCR]
+          else
+            raise "Unknown Individual Register combinations value: #{raw_data}"
+          end
+        end
+
+        def provider_early_years_register_flag
+          csv_row["Provider Early Years Register Flag"] == 'Y'
+        end
+
+        def provider_compulsory_childcare_register_flag
+          csv_row["Provider Compulsory Childcare Register Flag"] == 'Y'
+        end
+
+        def places
+          csv_row["Places"]
         end
       end
     end

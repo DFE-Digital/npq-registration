@@ -22,7 +22,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
       end
 
       it "imports rows as PrivateChildcareProvider records" do
-        expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(4)
+        expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(7)
 
         expect(find_and_slice_private_childcare_provider("520917")).to eq({
           "address_1" => "21 Roseville Road",
@@ -31,6 +31,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "close_date" => nil,
           "country" => nil,
           "county" => nil,
+          "early_years_individual_registers" => %w[CCR VCR EYR],
           "easting" => nil,
           "establishment_number" => nil,
           "establishment_status_code" => "1",
@@ -43,8 +44,11 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "last_changed_date" => nil,
           "name" => "Rosewood Nursery",
           "northing" => nil,
+          "places" => 60,
           "postcode" => "LS8 5DT",
           "postcode_without_spaces" => "LS85DT",
+          "provider_compulsory_childcare_register_flag" => true,
+          "provider_early_years_register_flag" => true,
           "region" => "Yorkshire and The Humber",
           "town" => "Leeds",
           "ukprn" => nil,
@@ -58,6 +62,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "close_date" => nil,
           "country" => nil,
           "county" => nil,
+          "early_years_individual_registers" => %w[CCR],
           "easting" => nil,
           "establishment_number" => nil,
           "establishment_status_code" => "1",
@@ -70,8 +75,11 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "last_changed_date" => nil,
           "name" => "Daisy Chain Childcare",
           "northing" => nil,
+          "places" => 50,
           "postcode" => "LS26 0NL",
           "postcode_without_spaces" => "LS260NL",
+          "provider_compulsory_childcare_register_flag" => true,
+          "provider_early_years_register_flag" => true,
           "region" => "Yorkshire and The Humber",
           "town" => "Leeds",
           "ukprn" => nil,
@@ -85,6 +93,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "close_date" => nil,
           "country" => nil,
           "county" => nil,
+          "early_years_individual_registers" => %w[CCR VCR],
           "easting" => nil,
           "establishment_number" => nil,
           "establishment_status_code" => "1",
@@ -97,8 +106,11 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "last_changed_date" => nil,
           "name" => "Sparkle Daycare",
           "northing" => nil,
+          "places" => 18,
           "postcode" => "NG9 8DJ",
           "postcode_without_spaces" => "NG98DJ",
+          "provider_compulsory_childcare_register_flag" => true,
+          "provider_early_years_register_flag" => true,
           "region" => "East Midlands",
           "town" => "NOTTINGHAM",
           "ukprn" => nil,
@@ -112,6 +124,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "close_date" => nil,
           "country" => nil,
           "county" => nil,
+          "early_years_individual_registers" => %w[EYR],
           "easting" => nil,
           "establishment_number" => nil,
           "establishment_status_code" => "1",
@@ -124,18 +137,119 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "last_changed_date" => nil,
           "name" => "Cricklade Preschool Playgroup",
           "northing" => nil,
+          "places" => 28,
           "postcode" => "SN6 6AT",
           "postcode_without_spaces" => "SN66AT",
+          "provider_compulsory_childcare_register_flag" => false,
+          "provider_early_years_register_flag" => true,
           "region" => "South West",
           "town" => "Cricklade",
           "ukprn" => nil,
           "urn" => "EY426355",
         })
+
+        expect(find_and_slice_private_childcare_provider("EY426356")).to eq({
+          "address_1" => "The Old Library",
+          "address_2" => "Bath Road",
+          "address_3" => nil,
+          "close_date" => nil,
+          "country" => nil,
+          "county" => nil,
+          "early_years_individual_registers" => ["CCR", "EYR"],
+          "easting" => nil,
+          "establishment_number" => nil,
+          "establishment_status_code" => "1",
+          "establishment_status_name" => "Open",
+          "establishment_type_code" => nil,
+          "establishment_type_name" => nil,
+          "high_pupil_premium" => false,
+          "la_code" => nil,
+          "la_name" => nil,
+          "last_changed_date" => nil,
+          "name" => "Cricklade Preschool Playgroup",
+          "northing" => nil,
+          "places" => 28,
+          "postcode" => "SN6 6AT",
+          "postcode_without_spaces" => "SN66AT",
+          "provider_compulsory_childcare_register_flag" => false,
+          "provider_early_years_register_flag" => true,
+          "region" => "South West",
+          "town" => "Cricklade",
+          "ukprn" => nil,
+          "urn" => "EY426356",
+        })
+
+        expect(find_and_slice_private_childcare_provider("EY426357")).to eq({
+          "address_1" => "The Old Library",
+          "address_2" => "Bath Road",
+          "address_3" => nil,
+          "close_date" => nil,
+          "country" => nil,
+          "county" => nil,
+          "early_years_individual_registers" => ["VCR", "EYR"],
+          "easting" => nil,
+          "establishment_number" => nil,
+          "establishment_status_code" => "1",
+          "establishment_status_name" => "Open",
+          "establishment_type_code" => nil,
+          "establishment_type_name" => nil,
+          "high_pupil_premium" => false,
+          "la_code" => nil,
+          "la_name" => nil,
+          "last_changed_date" => nil,
+          "name" => "Cricklade Preschool Playgroup",
+          "northing" => nil,
+          "places" => 28,
+          "postcode" => "SN6 6AT",
+          "postcode_without_spaces" => "SN66AT",
+          "provider_compulsory_childcare_register_flag" => false,
+          "provider_early_years_register_flag" => false,
+          "region" => "South West",
+          "town" => "Cricklade",
+          "ukprn" => nil,
+          "urn" => "EY426357",
+        })
+
+        expect(find_and_slice_private_childcare_provider("EY426358")).to eq({
+          "address_1" => "The Old Library",
+          "address_2" => "Bath Road",
+          "address_3" => nil,
+          "close_date" => nil,
+          "country" => nil,
+          "county" => nil,
+          "early_years_individual_registers" => %w[VCR],
+          "easting" => nil,
+          "establishment_number" => nil,
+          "establishment_status_code" => "1",
+          "establishment_status_name" => "Open",
+          "establishment_type_code" => nil,
+          "establishment_type_name" => nil,
+          "high_pupil_premium" => false,
+          "la_code" => nil,
+          "la_name" => nil,
+          "last_changed_date" => nil,
+          "name" => "Cricklade Preschool Playgroup",
+          "northing" => nil,
+          "places" => 28,
+          "postcode" => "SN6 6AT",
+          "postcode_without_spaces" => "SN66AT",
+          "provider_compulsory_childcare_register_flag" => true,
+          "provider_early_years_register_flag" => false,
+          "region" => "South West",
+          "town" => "Cricklade",
+          "ukprn" => nil,
+          "urn" => "EY426358",
+        })
       end
 
       it "returns the correct number of imported records" do
         run_import
-        expect(subject.imported_records).to eq(4)
+        expect(subject.imported_records).to eq(7)
+      end
+
+      it "returns no errors for invalid rows" do
+        run_import
+        expect(subject.import_errors).to eq({})
       end
     end
 
@@ -147,6 +261,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         run_import
         expect(subject.import_errors).to eq({
           3 => ["Validation failed: Urn can't be blank"],
+          4 => ["Unknown Individual Register combinations value: ABC only"],
         })
       end
 
@@ -160,6 +275,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "close_date" => nil,
           "country" => nil,
           "county" => nil,
+          "early_years_individual_registers" => %w[CCR VCR EYR],
           "easting" => nil,
           "establishment_number" => nil,
           "establishment_status_code" => "1",
@@ -172,8 +288,11 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           "last_changed_date" => nil,
           "name" => "Rosewood Nursery",
           "northing" => nil,
+          "places" => 60,
           "postcode" => "LS8 5DT",
           "postcode_without_spaces" => "LS85DT",
+          "provider_compulsory_childcare_register_flag" => true,
+          "provider_early_years_register_flag" => true,
           "region" => "Yorkshire and The Humber",
           "town" => "Leeds",
           "ukprn" => nil,
