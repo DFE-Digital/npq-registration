@@ -1,7 +1,7 @@
 require "csv"
 
 module Services
-  module ChildcareProviders
+  module PrivateChildcareProviders
     class Importer
       attr_reader :file_name, :import_errors, :imported_records
 
@@ -42,23 +42,23 @@ module Services
       PROVIDER_URN_HEADER_NAME = "Provider URN".freeze
 
       def persist_csv_row(csv_row, row_number)
-        childcare_provider_csv_row = ChildcareProviderCSVRow.new(csv_row: csv_row)
+        wrapped_csv_row = WrappedCSVRow.new(csv_row: csv_row)
 
         new_record = false
-        ChildcareProvider.find_or_create_by!(urn: childcare_provider_csv_row.urn) do |childcare_provider|
+        PrivateChildcareProvider.find_or_create_by!(urn: wrapped_csv_row.urn) do |private_childcare_provider|
           new_record = true
 
-          childcare_provider.assign_attributes(
-            name: childcare_provider_csv_row.name,
-            establishment_status_code: childcare_provider_csv_row.establishment_status_code,
-            establishment_status_name: childcare_provider_csv_row.establishment_status_name,
-            address_1: childcare_provider_csv_row.address_1,
-            address_2: childcare_provider_csv_row.address_2,
-            address_3: childcare_provider_csv_row.address_3,
-            town: childcare_provider_csv_row.town,
-            postcode: childcare_provider_csv_row.postcode,
-            region: childcare_provider_csv_row.region,
-            postcode_without_spaces: childcare_provider_csv_row.postcode_without_spaces,
+          private_childcare_provider.assign_attributes(
+            name: wrapped_csv_row.name,
+            establishment_status_code: wrapped_csv_row.establishment_status_code,
+            establishment_status_name: wrapped_csv_row.establishment_status_name,
+            address_1: wrapped_csv_row.address_1,
+            address_2: wrapped_csv_row.address_2,
+            address_3: wrapped_csv_row.address_3,
+            town: wrapped_csv_row.town,
+            postcode: wrapped_csv_row.postcode,
+            region: wrapped_csv_row.region,
+            postcode_without_spaces: wrapped_csv_row.postcode_without_spaces
           )
         end
 
@@ -72,7 +72,7 @@ module Services
         @import_errors[row_number_for_errors] << e.message
       end
 
-      class ChildcareProviderCSVRow
+      class WrappedCSVRow
         attr_reader :csv_row
 
         def initialize(csv_row:)

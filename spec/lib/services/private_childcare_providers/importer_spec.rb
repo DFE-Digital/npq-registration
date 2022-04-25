@@ -1,30 +1,30 @@
 require "rails_helper"
 
-RSpec.describe Services::ChildcareProviders::Importer do
+RSpec.describe Services::PrivateChildcareProviders::Importer do
   subject { described_class.new(file_name: file_name) }
 
   let(:run_import) { subject.call }
 
   describe "#call" do
-    def find_and_slice_childcare_provider(urn)
-      childcare_provider = ChildcareProvider.find_by(urn: urn)
+    def find_and_slice_private_childcare_provider(urn)
+      private_childcare_provider = PrivateChildcareProvider.find_by(urn: urn)
 
-      childcare_provider.as_json(except: %i[id created_at updated_at])
+      private_childcare_provider.as_json(except: %i[id created_at updated_at])
     end
 
     context "with all rows valid" do
       # File contains sample of real data
-      let(:file_name) { "spec/fixtures/files/childcare_providers_sample.csv" }
+      let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample.csv" }
 
       it "returns no errors" do
         run_import
         expect(subject.import_errors).to eq({})
       end
 
-      it "imports rows as ChildcareProvider records" do
-        expect { run_import }.to change { ChildcareProvider.count }.from(0).to(4)
+      it "imports rows as PrivateChildcareProvider records" do
+        expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(4)
 
-        expect(find_and_slice_childcare_provider("520917")).to eq({
+        expect(find_and_slice_private_childcare_provider("520917")).to eq({
           "address_1" => "21 Roseville Road",
           "address_2" => "Harehills",
           "address_3" => nil,
@@ -51,7 +51,7 @@ RSpec.describe Services::ChildcareProviders::Importer do
           "urn" => "520917",
         })
 
-        expect(find_and_slice_childcare_provider("EY790942")).to eq({
+        expect(find_and_slice_private_childcare_provider("EY790942")).to eq({
           "address_1" => "High Ridge Park",
           "address_2" => "Rothwell",
           "address_3" => nil,
@@ -78,7 +78,7 @@ RSpec.describe Services::ChildcareProviders::Importer do
           "urn" => "EY790942",
         })
 
-        expect(find_and_slice_childcare_provider("EY565343")).to eq({
+        expect(find_and_slice_private_childcare_provider("EY565343")).to eq({
           "address_1" => "34 Church Street",
           "address_2" => "Stapleford",
           "address_3" => nil,
@@ -105,7 +105,7 @@ RSpec.describe Services::ChildcareProviders::Importer do
           "urn" => "EY565343",
         })
 
-        expect(find_and_slice_childcare_provider("EY426355")).to eq({
+        expect(find_and_slice_private_childcare_provider("EY426355")).to eq({
           "address_1" => "The Old Library",
           "address_2" => "Bath Road",
           "address_3" => nil,
@@ -141,7 +141,7 @@ RSpec.describe Services::ChildcareProviders::Importer do
 
     context "with invalid rows" do
       # File contains sample of real data
-      let(:file_name) { "spec/fixtures/files/childcare_providers_sample_with_errors.csv" }
+      let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample_with_errors.csv" }
 
       it "returns errors for invalid rows" do
         run_import
@@ -151,9 +151,9 @@ RSpec.describe Services::ChildcareProviders::Importer do
       end
 
       it "imports valid rows" do
-        expect { run_import }.to change { ChildcareProvider.count }.from(0).to(1)
+        expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(1)
 
-        expect(find_and_slice_childcare_provider("520917")).to eq({
+        expect(find_and_slice_private_childcare_provider("520917")).to eq({
           "address_1" => "21 Roseville Road",
           "address_2" => "Harehills",
           "address_3" => nil,
@@ -194,7 +194,7 @@ RSpec.describe Services::ChildcareProviders::Importer do
       it "returns an error and creates no records" do
         expect {
           expect { run_import }.to(raise_error(RuntimeError, "File not found: #{file_name}"))
-        }.to_not(change { ChildcareProvider.count })
+        }.to_not(change { PrivateChildcareProvider.count })
 
         expect(subject.imported_records).to eq(0)
       end

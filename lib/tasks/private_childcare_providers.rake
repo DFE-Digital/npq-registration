@@ -1,10 +1,10 @@
-namespace :childcare_providers do
+namespace :private_childcare_providers do
   desc "Sync applications attributes with ecf service"
   task :import, [:file_name] => :environment do |_t, args|
     file_name = args.file_name
     Rails.logger.info("Importing Childcare providers from CSV file: #{file_name}")
 
-    importer = Services::ChildcareProviders::Importer.new(file_name: file_name)
+    importer = Services::PrivateChildcareProviders::Importer.new(file_name: file_name)
 
     importer.call
 
