@@ -20,3 +20,11 @@ if (document.querySelector('#school-picker')) {
     placeholder: "Start typing to search schools and colleges",
   })
 }
+
+if (document.querySelector('#nursery-picker')) {
+  institutionPicker.enhanceSelectElement({
+    selectElement: document.querySelector('#nursery-picker'),
+    lookupPath: 'institutions',
+    placeholder: "Start typing to search nurseries",
+  })
+}

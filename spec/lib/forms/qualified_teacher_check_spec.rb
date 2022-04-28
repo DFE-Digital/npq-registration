@@ -184,6 +184,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         expect(subject.trn_verified?).to be_truthy
       end
 
+      context "when user selected they work in childcare" do
+        before do
+          store["works_in_childcare"] = "yes"
+        end
+
+        it "returns :find_childcare_provider" do
+          expect(subject.next_step).to eql(:find_childcare_provider)
+        end
+      end
+
       context "when user selected they work in a school" do
         before do
           store["works_in_school"] = "yes"
@@ -197,9 +207,10 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       context "when user selected they do not work in a school" do
         before do
           store["works_in_school"] = "no"
+          store["works_in_childcare"] = "no"
         end
 
-        it "returns :find_school" do
+        it "returns :choose_your_npq" do
           expect(subject.next_step).to eql(:choose_your_npq)
         end
       end

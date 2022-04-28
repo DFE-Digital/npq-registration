@@ -9,6 +9,8 @@ module Forms
         :check_answers
       elsif wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
         :find_school
+      elsif wizard.query_store.inside_catchment? && wizard.query_store.works_in_childcare?
+        :find_childcare_provider
       else
         :choose_your_npq
       end

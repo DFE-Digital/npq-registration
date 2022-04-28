@@ -101,6 +101,10 @@ en:
             code:
               blank: Code can’t be blank
               incorrect: Code is not correct. Please try again
+        forms/choose_childcare_provider:
+          attributes:
+            institution_name:
+              no_results: No nurseries in %{location} with the name %{name} were found, please try again
         forms/choose_school:
           attributes:
             institution_name:
@@ -109,6 +113,10 @@ en:
           attributes:
             institution_location:
               blank: School location can’t be blank
+        forms/find_childcare_provider:
+          attributes:
+            institution_location:
+              blank: Nursery location can’t be blank
         forms/funding_your_npq:
           attributes:
             funding:
