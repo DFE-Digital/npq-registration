@@ -106,7 +106,7 @@ class RegistrationWizard
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_school)
       elsif query_store.works_in_childcare?
-        array << OpenStruct.new(key: "Childcare Provider",
+        array << OpenStruct.new(key: "Childcare provider",
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_childcare_provider)
       end
