@@ -16,6 +16,7 @@ RSpec.describe Services::ImportGiasSchools do
       )
       .to_return(status: 200, body: File.open(file_fixture("gias_sample.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
       .to_return(status: 200, body: File.open(file_fixture("gias_update.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
+      .to_return(status: 200, body: File.open(file_fixture("gias_sample.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
     end
 
     it "creates not existent schools" do
@@ -81,6 +82,20 @@ RSpec.describe Services::ImportGiasSchools do
       }.not_to change(School, :count)
 
       expect(School.first.name).to eql("The Aldgate School 2")
+    end
+
+    context "with refresh_all flag" do
+      before do
+        described_class.new.call
+        described_class.new.call
+        School.update_all(name: "foo")
+      end
+
+      it "updates everything" do
+        described_class.new(refresh_all: true).call
+
+        expect(School.where(name: "foo").count).to be_zero
+      end
     end
   end
 end
