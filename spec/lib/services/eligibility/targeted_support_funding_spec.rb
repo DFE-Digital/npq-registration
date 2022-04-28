@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Eligibility::LowHeadCount do
+RSpec.describe Services::Eligibility::TargetedSupportFunding do
   describe "#call" do
     context "when eligible" do
       let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }

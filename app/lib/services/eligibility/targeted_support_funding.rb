@@ -1,6 +1,6 @@
 module Services
   module Eligibility
-    class LowHeadCount
+    class TargetedSupportFunding
       attr_reader :institution
 
       def initialize(institution:)
