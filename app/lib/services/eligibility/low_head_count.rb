@@ -1,18 +1,19 @@
 module Services
   module Eligibility
     class LowHeadCount
-      attr_reader :school
+      attr_reader :institution
 
-      def initialize(school:)
-        @school = school
+      def initialize(institution:)
+        @institution = institution
       end
 
       def call
-        return false if school.number_of_pupils.nil?
-        return false if school.number_of_pupils.zero?
+        return false if institution.is_a?(LocalAuthority)
+        return false if institution.number_of_pupils.nil?
+        return false if institution.number_of_pupils.zero?
 
-        eligible_establishment_type_codes.include?(school.establishment_type_code) &&
-          school.number_of_pupils < pupil_count_threshold
+        eligible_establishment_type_codes.include?(institution.establishment_type_code) &&
+          institution.number_of_pupils < pupil_count_threshold
       end
 
     private
