@@ -9,8 +9,8 @@ function institutionPicker (options) {
   render(<Autocomplete {...options} />, options.element)
 }
 
-async function fetchSource(query, location) {
-  const res  = await fetch( `/institutions.json?location=${encodeURIComponent(location)}&name=${encodeURIComponent(query)}` );
+async function fetchSource(lookupPath, query, location) {
+  const res  = await fetch( `/${lookupPath}.json?location=${encodeURIComponent(location)}&name=${encodeURIComponent(query)}` );
   const data = await res.json();
   return data;
 }
@@ -48,7 +48,7 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
   const location = configurationOptions.selectElement.getAttribute("data-location")
 
   configurationOptions.source = debounce( async ( query, populateResults ) => {
-    const res = await fetchSource(query, location);
+    const res = await fetchSource(configurationOptions.lookupPath, query, location);
     populateResults(res);
   }, 300 )
 
