@@ -68,6 +68,8 @@ RSpec.describe Services::ImportGiasSchools do
         expect(school.northing.to_s).to eql(row["Northing"].to_s)
         expect(school.region).to eql(row["RSCRegion (name)"])
         expect(school.country).to eql(row["Country (name)"])
+
+        expect(school.number_of_pupils).to eql(row["NumberOfPupils"].nil? ? nil : row["NumberOfPupils"].to_i)
       end
     end
 
