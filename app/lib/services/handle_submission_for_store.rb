@@ -33,6 +33,7 @@ module Services
           works_in_school: store["works_in_school"] == "yes",
           employer_name: store["employer_name"].presence,
           employment_role: store["employment_role"].presence,
+          low_head_count_eligibility: low_head_count_eligibility,
         )
 
         enqueue_job
@@ -109,6 +110,12 @@ module Services
         course: course,
         institution: institution(source: store["institution_identifier"]),
         new_headteacher: new_headteacher?,
+      ).call
+    end
+
+    def low_head_count_eligibility
+      @low_head_count_eligibility ||= Services::Eligibility::LowHeadCount.new(
+        institution: institution(source: store["institution_identifier"]),
       ).call
     end
 

@@ -8,6 +8,7 @@ module Services
       end
 
       def call
+        return false if institution.nil?
         return false if institution.is_a?(LocalAuthority)
         return false if institution.number_of_pupils.nil?
         return false if institution.number_of_pupils.zero?
