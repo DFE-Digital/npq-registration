@@ -10,8 +10,6 @@ module Forms
         klass, identifier = source.split("-")
 
         @institution ||= case klass
-                         when "PrivateChildcareProvider"
-                           PrivateChildcareProvider.find_by(urn: identifier)
                          when "School"
                            School.find_by(urn: identifier)
                          when "LocalAuthority"
