@@ -61,6 +61,8 @@ module Services
         northing: row["Northing"],
         region: row["RSCRegion (name)"],
         country: row["Country (name)"],
+
+        number_of_pupils: row["NumberOfPupils"],
       }
     end
 
