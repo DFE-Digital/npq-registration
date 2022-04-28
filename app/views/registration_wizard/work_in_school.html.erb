@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Do you work in a school, college or academy trust?
+  <%= @form.errors.present? ? "Error: " : nil %>Do you work in a school, academy trust or 16 to 19 educational setting?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_radio_buttons_fieldset(:works_in_school,
                                          legend: {
-                                           text: "Do you work in a school, college or academy trust?",
+                                           text: "Do you work in a school, academy trust or 16 to 19 educational setting?",
                                            tag: "h1",
                                            size: "xl"
                                          }
