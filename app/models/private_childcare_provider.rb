@@ -10,6 +10,8 @@ class PrivateChildcareProvider < ApplicationRecord
                     },
                   }
 
+  validates :provider_urn, presence: true
+
   def address
     [address_1, address_2, address_3, town, postcode, region].reject(&:blank?)
   end
