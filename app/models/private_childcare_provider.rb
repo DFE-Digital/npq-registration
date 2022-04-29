@@ -1,4 +1,6 @@
 class PrivateChildcareProvider < ApplicationRecord
+  REDACTED_DATA_STRING = "REDACTED".freeze
+
   include PgSearch::Model
 
   pg_search_scope :search_by_name,
@@ -10,10 +12,32 @@ class PrivateChildcareProvider < ApplicationRecord
                     },
                   }
 
+  pg_search_scope :search_by_urn,
+                  against: [:provider_urn],
+                  using: {
+                    tsearch: {
+                      prefix: true,
+                      dictionary: "english",
+                    },
+                  }
+
   validates :provider_urn, presence: true
 
+  def urn
+    provider_urn
+  end
+
+  def provider_name
+    raw_name = self[:provider_name]
+    raw_name unless raw_name == REDACTED_DATA_STRING
+  end
+
+  def name
+    provider_name
+  end
+
   def address
-    [address_1, address_2, address_3, town, postcode, region].reject(&:blank?)
+    [address_1, address_2, address_3, town, county, postcode].reject(&:blank?) - [REDACTED_DATA_STRING]
   end
 
   def address_string

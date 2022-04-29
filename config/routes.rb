@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   resources :schools, only: [:index]
   resources :institutions, only: [:index]
+  resources :private_childcare_providers, only: [:index]
 
   root "registration_wizard#show", step: "start"
 

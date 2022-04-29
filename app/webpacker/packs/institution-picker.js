@@ -33,14 +33,14 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
       if (object === undefined) {
         return ""
       } else {
-        return object.name + " - " + object.address
+        return [object.urn, object.name, object.address].filter(n => n).join(' - ')
       }
     },
     suggestion: function(object) {
       if (object === undefined) {
         return ""
       } else {
-        return object.name + " - " + object.address
+        return [object.urn, object.name, object.address].filter(n => n).join(' - ')
       }
     }
   }
