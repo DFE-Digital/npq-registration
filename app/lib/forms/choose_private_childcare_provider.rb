@@ -21,15 +21,5 @@ module Forms
     def previous_step
       :have_ofsted_urn
     end
-
-  private
-
-    def institution_urn
-      return if institution_identifier.blank?
-
-      _klass, institution_urn = institution_identifier.split("-")
-
-      institution_urn
-    end
   end
 end
