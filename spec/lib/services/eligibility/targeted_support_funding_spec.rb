@@ -61,5 +61,15 @@ RSpec.describe Services::Eligibility::TargetedSupportFunding do
         expect(subject.call).to be_falsey
       end
     end
+
+    context "when FE applicable body" do
+      let(:institution) { build(:school, ukprn: "10000350", number_of_pupils: 1000) }
+
+      subject { described_class.new(institution: institution) }
+
+      it "returns true" do
+        expect(subject.call).to be_truthy
+      end
+    end
   end
 end
