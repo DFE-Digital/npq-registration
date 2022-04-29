@@ -144,7 +144,7 @@ module Services
         end
 
         def postcode_without_spaces
-          csv_row["Postcode"]&.gsub(" ", "")
+          postcode&.gsub(" ", "")
         end
 
         def early_years_individual_registers
