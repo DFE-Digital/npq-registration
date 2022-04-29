@@ -2,13 +2,19 @@ require "csv"
 
 module Services
   class ImportGiasSchools
+    def initialize(refresh_all: false)
+      @refresh_all = refresh_all
+    end
+
     def call
       CSV.foreach(csv_file, headers: true, converters: [gias_converter]) do |row|
         school = School.find_or_create_by!(urn: row["URN"]) do |s|
           s.assign_attributes(attributes_from_row(row))
         end
 
-        if row["LastChangedDate"].present? && (school.last_changed_date < row["LastChangedDate"])
+        if refresh_all?
+          school.update!(attributes_from_row(row))
+        elsif row["LastChangedDate"].present? && (school.last_changed_date < row["LastChangedDate"])
           school.update!(attributes_from_row(row))
         end
       end
@@ -18,6 +24,10 @@ module Services
     end
 
   private
+
+    def refresh_all?
+      @refresh_all
+    end
 
     def gias_converter
       lambda do |value, field_info|
@@ -61,6 +71,8 @@ module Services
         northing: row["Northing"],
         region: row["RSCRegion (name)"],
         country: row["Country (name)"],
+
+        number_of_pupils: row["NumberOfPupils"],
       }
     end
 

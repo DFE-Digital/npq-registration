@@ -92,6 +92,7 @@ RSpec.feature "Happy journeys", type: :feature do
       establishment_status_code: "1",
       establishment_type_code: "1",
       high_pupil_premium: true,
+      number_of_pupils: 100,
     )
 
     expect(page).to have_text("Where is your school, college or academy trust?")
@@ -163,6 +164,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.funding_choice).to be_nil
     expect(application.course).to be_npqsl
     expect(application.headteacher_status).to be_nil
+    expect(application.targeted_support_funding_eligibility).to be_truthy
 
     visit "/"
     visit "/registration/confirmation"
@@ -668,6 +670,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.funding_choice).to be_nil
     expect(application.teacher_catchment).to eql("england")
     expect(application.teacher_catchment_country).to be_nil
+    expect(application.targeted_support_funding_eligibility).to be_falsey
 
     visit "/account"
 

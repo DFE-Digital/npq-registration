@@ -33,6 +33,7 @@ module Services
           works_in_school: store["works_in_school"] == "yes",
           employer_name: store["employer_name"].presence,
           employment_role: store["employment_role"].presence,
+          targeted_support_funding_eligibility: targeted_support_funding_eligibility,
         )
 
         enqueue_job
@@ -109,6 +110,12 @@ module Services
         course: course,
         institution: institution(source: store["institution_identifier"]),
         new_headteacher: new_headteacher?,
+      ).call
+    end
+
+    def targeted_support_funding_eligibility
+      @targeted_support_funding_eligibility ||= Services::Eligibility::TargetedSupportFunding.new(
+        institution: institution(source: store["institution_identifier"]),
       ).call
     end
 
