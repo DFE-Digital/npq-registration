@@ -2,7 +2,7 @@ module Forms
   class HaveOfstedUrn < Base
     attr_accessor :has_ofsted_urn
 
-    validates :has_ofsted_urn, presence: true, inclusion: { in: %w[yes help no] }
+    validates :has_ofsted_urn, presence: true, inclusion: { in: %w[yes no] }
 
     def self.permitted_params
       %i[
