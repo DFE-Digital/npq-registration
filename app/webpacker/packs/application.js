@@ -16,6 +16,15 @@ require('isomorphic-fetch')
 if (document.querySelector('#school-picker')) {
   institutionPicker.enhanceSelectElement({
     selectElement: document.querySelector('#school-picker'),
+    lookupPath: 'institutions',
     placeholder: "Start typing to search schools and colleges",
+  })
+}
+
+if (document.querySelector('#nursery-picker')) {
+  institutionPicker.enhanceSelectElement({
+    selectElement: document.querySelector('#nursery-picker'),
+    lookupPath: 'institutions',
+    placeholder: "Start typing to search nurseries",
   })
 }

@@ -1,0 +1,22 @@
+<% content_for :title do %>
+  Nursery must be in England, Guernsey, Jersey or the Isle of Man
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">Nursery must be in England, Guernsey, Jersey or the Isle of Man</h1>
+
+    <p class="govuk-body">The nursery you have selected is not in England, Guernsey, Jersey or the Isle of Man.</p>
+
+    <p class="govuk-body">This NPQ application can only be completed by people working in these locations.</p>
+
+    <p class="govuk-body">If you work in a nursery outside these locations and you want to study for an NPQ, check with your training provider or nursery’s training contact.</p>
+  </div>
+</div>

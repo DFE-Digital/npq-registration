@@ -100,10 +100,16 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    if query_store.inside_catchment? && query_store.works_in_school?
-      array << OpenStruct.new(key: "School or college",
-                              value: institution(source: store["institution_identifier"]).name,
-                              change_step: :find_school)
+    if query_store.inside_catchment?
+      if query_store.works_in_school?
+        array << OpenStruct.new(key: "School or college",
+                                value: institution(source: store["institution_identifier"]).name,
+                                change_step: :find_school)
+      elsif query_store.works_in_childcare?
+        array << OpenStruct.new(key: "Childcare provider",
+                                value: institution(source: store["institution_identifier"]).name,
+                                change_step: :find_childcare_provider)
+      end
     end
 
     array << OpenStruct.new(key: "Course",
@@ -215,6 +221,8 @@ private
       choose_your_provider
       find_school
       choose_school
+      find_childcare_provider
+      choose_childcare_provider
       your_work
       school_not_in_england
       possible_funding
