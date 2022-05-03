@@ -584,94 +584,94 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    # page.choose("Additional Support Offer for new headteachers")
-    # page.click_button("Continue")
+    page.choose("The Early Headship Coaching Offer")
+    page.click_button("Continue")
 
-    # expect(page).to have_selector "h1", text: "Additional Support Offer for new headteachers"
-    # page.click_link("Continue")
+    expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
+    page.click_link("Continue")
 
-    # expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
-    # page.choose "None of the above"
-    # page.click_button("Continue")
+    expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+    page.choose "None of the above"
+    page.click_button("Continue")
 
-    # expect(page).to have_selector "h1", text: "You cannot register for the Additional Support Offer"
-    # page.click_link("Back")
+    expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+    page.click_link("Back")
 
-    # expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
-    # page.choose "I have completed an NPQH"
-    # page.click_button("Continue")
+    expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+    page.choose "I have completed an NPQH"
+    page.click_button("Continue")
 
-    # expect(page).to have_selector "h1", text: "Are you a headteacher?"
-    # page.choose "Yes, I am a headteacher"
-    # page.click_button("Continue")
+    expect(page).to have_selector "h1", text: "Are you a headteacher?"
+    page.choose "Yes, I am a headteacher"
+    page.click_button("Continue")
 
-    # expect(page).to have_selector "h1", text: "Are you in your first 2 years of a headship?"
-    # page.choose "Yes, I am in my first 2 years of a headship"
-    # page.click_button("Continue")
+    expect(page).to have_selector "h1", text: "Are you in your first 5 years of a headship?"
+    page.choose "Yes, I am in my first 5 years of a headship"
+    page.click_button("Continue")
 
-    # expect(page).to have_selector "h1", text: "You may qualify for DfE scholarship funding"
-    # page.click_button("Continue")
+    expect(page).to have_selector "h1", text: "If your provider accepts your application, you’ll qualify for DfE scholarship funding"
+    page.click_button("Continue")
 
-    # expect(page).to have_text("Choose your provider")
-    # page.choose("Teach First")
-    # page.click_button("Continue")
+    expect(page).to have_text("Choose your provider")
+    page.choose("Teach First")
+    page.click_button("Continue")
 
-    # expect(page).to have_text("Sharing your NPQ information")
-    # page.check("Yes, I agree my information can be shared")
-    # page.click_button("Continue")
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared")
+    page.click_button("Continue")
 
-    # check_answers_page = CheckAnswersPage.new
+    check_answers_page = CheckAnswersPage.new
 
-    # expect(check_answers_page).to be_displayed
-    # expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
-    # expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
-    # expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    # expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    # expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    # expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
-    # expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    # expect(check_answers_page.summary_list["Course"].value).to eql("Additional Support Offer for new headteachers")
-    # expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    # expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
+    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
+    expect(check_answers_page.summary_list["Course"].value).to eql("The Early Headship Coaching Offer")
+    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
+    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
 
-    # allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    # page.click_button("Submit")
+    page.click_button("Submit")
 
-    # expect(page).to have_text("Your initial registration is complete")
+    expect(page).to have_text("Your initial registration is complete")
 
-    # expect(User.count).to eql(1)
+    expect(User.count).to eql(1)
 
-    # user = User.last
+    user = User.last
 
-    # expect(user.email).to eql("user@example.com")
-    # expect(user.full_name).to eql("John Doe")
-    # expect(user.trn).to eql("1234567")
-    # expect(user.trn_verified).to be_truthy
-    # expect(user.trn_auto_verified).to be_truthy
-    # expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
-    # expect(user.national_insurance_number).to be_blank
+    expect(user.email).to eql("user@example.com")
+    expect(user.full_name).to eql("John Doe")
+    expect(user.trn).to eql("1234567")
+    expect(user.trn_verified).to be_truthy
+    expect(user.trn_auto_verified).to be_truthy
+    expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
+    expect(user.national_insurance_number).to be_blank
 
-    # expect(user.applications.count).to eql(1)
+    expect(user.applications.count).to eql(1)
 
-    # application = user.applications.first
+    application = user.applications.first
 
-    # expect(application.course).to be_aso
-    # expect(application.headteacher_status).to eql("yes_in_first_two_years")
-    # expect(application.eligible_for_funding).to be_truthy
-    # expect(application.funding_choice).to be_nil
-    # expect(application.teacher_catchment).to eql("england")
-    # expect(application.teacher_catchment_country).to be_nil
-    # expect(application.targeted_support_funding_eligibility).to be_falsey
+    expect(application.course).to be_ehco
+    expect(application.headteacher_status).to eql("yes_in_first_five_years")
+    expect(application.eligible_for_funding).to be_truthy
+    expect(application.funding_choice).to be_nil
+    expect(application.teacher_catchment).to eql("england")
+    expect(application.teacher_catchment_country).to be_nil
+    expect(application.targeted_support_funding_eligibility).to be_falsey
 
-    # visit "/account"
+    visit "/account"
 
-    # expect(page).to have_text("Teach First")
-    # expect(page).to have_text("Additional Support Offer for new headteachers")
+    expect(page).to have_text("Teach First")
+    expect(page).to have_text("The Early Headship Coaching Offer")
 
-    # visit "/registration/check-answers"
+    visit "/registration/check-answers"
 
-    # expect(page.current_path).to eql("/")
+    expect(page.current_path).to eql("/")
   end
 
   scenario "international teacher NPQH journey" do

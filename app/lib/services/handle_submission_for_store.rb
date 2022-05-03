@@ -87,9 +87,9 @@ module Services
         when "yes"
           case store["aso_new_headteacher"]
           when "yes"
-            "yes_in_first_two_years"
+            "yes_in_first_five_years"
           when "no"
-            "yes_over_two_years"
+            "no"
           end
         when "no"
           "no"
