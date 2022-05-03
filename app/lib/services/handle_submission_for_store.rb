@@ -74,7 +74,7 @@ module Services
       # to nil here to reduce confusion
       if funding_eligibility
         nil
-      elsif course.aso?
+      elsif course.ehco?
         store["aso_funding_choice"]
       else
         store["funding"]
@@ -82,7 +82,7 @@ module Services
     end
 
     def headteacher_status
-      if course.aso?
+      if course.ehco?
         case store["aso_headteacher"]
         when "yes"
           case store["aso_new_headteacher"]

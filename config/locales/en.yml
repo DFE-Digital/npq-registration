@@ -136,8 +136,9 @@ en:
               blank: Choose whether or not you want to pay for the Additional Support Offer in another way?
         forms/funding_your_aso:
           attributes:
-            aso_funding:
-              inclusion: Choose one of the following funding options for your Additional Support Offer
+            aso_funding_choice:
+              inclusion: Choose one of the following funding options
+              blank: Choose one of the following funding options
         forms/aso_new_headteacher:
           attributes:
             aso_new_headteacher:
