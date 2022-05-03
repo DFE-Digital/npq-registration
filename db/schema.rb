@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_28_153531) do
+ActiveRecord::Schema.define(version: 2022_05_03_114606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -46,6 +46,8 @@ ActiveRecord::Schema.define(version: 2022_04_28_153531) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "ecf_id"
     t.text "description"
+    t.integer "position", default: 0
+    t.boolean "display", default: true
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

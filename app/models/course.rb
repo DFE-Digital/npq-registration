@@ -1,4 +1,6 @@
 class Course < ApplicationRecord
+  scope :ehco, -> { where(name: "The Early Headship Coaching Offer") }
+
   def npqh?
     name == "NPQ for Headship (NPQH)"
   end
@@ -9,5 +11,9 @@ class Course < ApplicationRecord
 
   def npqsl?
     name == "NPQ for Senior Leadership (NPQSL)"
+  end
+
+  def ehco?
+    name == "The Early Headship Coaching Offer"
   end
 end
