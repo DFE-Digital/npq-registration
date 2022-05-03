@@ -223,6 +223,8 @@ private
       choose_school
       find_childcare_provider
       choose_childcare_provider
+      have_ofsted_urn
+      choose_private_childcare_provider
       your_work
       school_not_in_england
       possible_funding

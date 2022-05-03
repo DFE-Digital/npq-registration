@@ -28,3 +28,10 @@ if (document.querySelector('#nursery-picker')) {
     placeholder: "Start typing to search nurseries",
   })
 }
+
+if (document.querySelector('#private-childcare-provider-picker')) {
+  institutionPicker.enhanceSelectElement({
+    selectElement: document.querySelector('#private-childcare-provider-picker'),
+    lookupPath: 'private_childcare_providers'
+  })
+}

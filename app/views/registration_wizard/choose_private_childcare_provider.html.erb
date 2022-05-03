@@ -1,0 +1,35 @@
+<% content_for :title do %>
+  <%= @form.errors.present? ? "Error: " : nil %>Choose your nursery
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <h1 class="govuk-heading-xl">Enter your or your employer's URN</h1>
+
+      <div class="npq-js-hidden">
+        <%= f.govuk_text_field :institution_name,
+                               width: "full",
+                               label: { text: "Enter your nursery name", class: "govuk-label govuk-label--s" } %>
+      </div>
+
+      <div class="npq-js-reveal">
+        <div class="govuk-form-group">
+          <span class="govuk-hint" id="private-childcare-provider-picker-hint">For example EY456789</span>
+          <%= f.text_field :institution_identifier, id: "private-childcare-provider-picker" %>
+        </div>
+      </div>
+      <%= f.govuk_submit %>
+
+    <% end %>
+  </div>
+</div>

@@ -86,6 +86,31 @@ ActiveRecord::Schema.define(version: 2022_04_28_153531) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "private_childcare_providers", force: :cascade do |t|
+    t.text "provider_urn", null: false
+    t.text "provider_name"
+    t.text "registered_person_urn"
+    t.text "registered_person_name"
+    t.text "registration_date"
+    t.text "provider_status"
+    t.text "address_1"
+    t.text "address_2"
+    t.text "address_3"
+    t.text "town"
+    t.text "postcode"
+    t.text "postcode_without_spaces"
+    t.text "region"
+    t.text "local_authority"
+    t.text "ofsted_region"
+    t.json "early_years_individual_registers", default: []
+    t.boolean "provider_early_years_register_flag"
+    t.boolean "provider_compulsory_childcare_register_flag"
+    t.integer "places"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["provider_urn"], name: "index_private_childcare_providers_on_provider_urn"
+  end
+
   create_table "registration_interests", force: :cascade do |t|
     t.citext "email", null: false
     t.boolean "notified", default: false
