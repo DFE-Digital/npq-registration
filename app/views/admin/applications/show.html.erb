@@ -76,6 +76,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { "Targeted support funding eligibility" }
+        row.value { admin_funding_tag(@application.targeted_support_funding_eligibility) }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'Funding choice' }
         row.value { @application.funding_choice }
       end %>
