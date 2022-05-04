@@ -23,7 +23,7 @@ module Forms
     end
 
     def previous_step
-      :about_aso
+      :about_ehco
     end
 
     def options

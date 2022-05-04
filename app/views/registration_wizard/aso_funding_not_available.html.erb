@@ -14,18 +14,9 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl" >DfE scholarship funding not available</h1>
+      <h1 class="govuk-heading-xl" >DfE scholarship funding is not available</h1>
 
-      <p class="govuk-body">You can still register for the Additional Support Offer, but you need to pay for it another way.</p>
-
-      <%= f.govuk_collection_radio_buttons :aso_funding,
-        @form.options,
-        :value,
-        :text,
-        :description,
-        legend: { text: "Do you want to pay for the Additional Support Offer in another way?" },
-        bold_labels: false
-      %>
+      <p class="govuk-body">PLACEHOLDER</p>
 
       <%= f.govuk_submit %>
     <% end %>

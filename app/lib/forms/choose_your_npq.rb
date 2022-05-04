@@ -24,8 +24,8 @@ module Forms
         else
           :check_answers
         end
-      elsif course.aso?
-        :about_aso
+      elsif course.ehco?
+        :about_ehco
       elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
       elsif wizard.query_store.works_in_school? && Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call

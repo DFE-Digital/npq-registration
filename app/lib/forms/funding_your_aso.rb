@@ -23,7 +23,7 @@ module Forms
     def options
       [
         OpenStruct.new(value: "school",
-                       text: "My school or college is covering the cost",
+                       text: "My workplace is covering the cost",
                        link_errors: true),
         OpenStruct.new(value: "trust",
                        text: "My trust is paying",
@@ -32,8 +32,8 @@ module Forms
                        text: "I am paying",
                        link_errors: false),
         OpenStruct.new(value: "another",
-                       text: "The Additional Support Offer is being paid in another way",
-                       hint: "For example, I am sharing the costs with my school or college",
+                       text: "The Early Headship Coaching Offer is being paid in another way",
+                       hint: "For example, I am sharing the costs with my workplace",
                        link_errors: false),
       ].freeze
     end

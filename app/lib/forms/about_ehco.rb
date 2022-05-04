@@ -1,5 +1,5 @@
 module Forms
-  class AboutAso < Base
+  class AboutEhco < Base
     def previous_step
       :choose_your_npq
     end
