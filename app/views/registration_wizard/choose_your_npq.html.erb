@@ -21,6 +21,21 @@
               tag: "h1"
             }
           ) do %>
+        <%= govuk_details(summary_text: "Help with NPQH and the Early Headship Coaching Offer") do %>
+          <p class="govuk-body">
+            If you’re applying to start an NPQ for Headship (NPQH), you might also be applying for the Early Headship Coaching Offer, a package of structured face-to-face support for new headteachers.
+          </p>
+
+          <p class="govuk-body">
+            To register for both you should:
+          </p>
+
+          <ul class="govuk-list govuk-list--bullet">
+            <li>complete your registration for an NPQH using this service</li>
+            <li>complete a separate registration for the Early Headship Coaching Offer, also using this service</li>
+          </ul>
+        <% end %>
+
         <% @form.options.each do |struct| %>
           <%= f.govuk_radio_button :course_id, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
         <% end %>

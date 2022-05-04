@@ -60,9 +60,9 @@ module Forms
 
     def courses
       if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
-        Course.all
+        Course.where(display: true).order(:position)
       else
-        Course.all - Course.where(name: "Additional Support Offer for new headteachers")
+        Course.where(display: true).order(:position) - Course.ehco
       end
     end
 
