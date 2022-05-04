@@ -339,7 +339,7 @@ GEM
     sentry-ruby-core (4.8.3)
       concurrent-ruby
       faraday
-    shoulda-matchers (5.0.0)
+    shoulda-matchers (5.1.0)
       activesupport (>= 5.2.0)
     simplecov (0.21.2)
       docile (~> 1.1)
@@ -438,7 +438,7 @@ DEPENDENCIES
   sentry-delayed_job
   sentry-rails
   sentry-ruby
-  shoulda-matchers (~> 5.0)
+  shoulda-matchers (~> 5.1)
   simplecov
   site_prism
   tzinfo-data
