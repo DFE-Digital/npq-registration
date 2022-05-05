@@ -94,6 +94,11 @@
         row.key { "Created at" }
         row.value { l @application.created_at, format: :admin }
       end %>
+
+      <%= summary_list.row do |row|
+        row.key { "Cohort" }
+        row.value { @application.cohort.to_s }
+      end %>
     <% end %>
   </div>
 </div>
