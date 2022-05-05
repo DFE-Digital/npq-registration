@@ -1,4 +1,7 @@
 en:
+  time:
+    formats:
+      admin: "%R on %d/%m/%Y"
   activemodel:
     attributes:
       forms/funding_your_npq:
