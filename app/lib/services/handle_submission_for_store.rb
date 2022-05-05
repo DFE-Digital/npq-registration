@@ -23,6 +23,7 @@ module Services
         user.applications.create!(
           course_id: course.id,
           lead_provider_id: store["lead_provider_id"],
+          private_childcare_provider_urn: private_childcare_provider_urn,
           school_urn: school_urn,
           ukprn: ukprn,
           headteacher_status: headteacher_status,
@@ -34,6 +35,9 @@ module Services
           employer_name: store["employer_name"].presence,
           employment_role: store["employment_role"].presence,
           targeted_support_funding_eligibility: targeted_support_funding_eligibility,
+          works_in_nursery: store["works_in_nursery"] == "yes",
+          works_in_childcare: store["works_in_childcare"] == "yes",
+          kind_of_nursery: store["kind_of_nursery"],
         )
 
         enqueue_job
@@ -56,14 +60,26 @@ module Services
       @query_store ||= Services::QueryStore.new(store: store)
     end
 
+    def private_childcare_provider_urn
+      if query_store.inside_catchment? && query_store.works_in_private_childcare_provider?
+        institution(source: store["institution_identifier"]).provider_urn
+      end
+    end
+
+    def store_school_urn_data?
+      return false unless query_store.inside_catchment?
+
+      query_store.works_in_school? || query_store.works_in_public_childcare_provider?
+    end
+
     def school_urn
-      if query_store.inside_catchment? && query_store.works_in_school?
+      if store_school_urn_data?
         institution(source: store["institution_identifier"]).urn
       end
     end
 
     def ukprn
-      if query_store.inside_catchment? && query_store.works_in_school?
+      if store_school_urn_data?
         institution(source: store["institution_identifier"]).ukprn
       end
     end

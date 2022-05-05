@@ -14,18 +14,20 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Enter your or your employer's URN</h1>
-
       <div class="npq-js-hidden">
         <%= f.govuk_text_field :institution_name,
                                width: "full",
                                label: { text: "Enter your nursery name", class: "govuk-label govuk-label--s" } %>
       </div>
 
+      <%= f.label :institution_identifier, class: "govuk-label govuk-label--s", for: "private-childcare-provider-picker" do %>
+        <h1 class="govuk-heading-xl">Enter your or your employer's URN</h1>
+      <% end %>
+
       <div class="npq-js-reveal">
         <div class="govuk-form-group">
-          <span class="govuk-hint" id="private-childcare-provider-picker-hint">For example EY456789</span>
-          <%= f.text_field :institution_identifier, id: "private-childcare-provider-picker" %>
+          <span class="govuk-hint" id="private-childcare-provider-picker__hint">For example EY456789</span>
+          <%= f.text_field(:institution_identifier, id: "private-childcare-provider-picker", "aria-label" => "Enter your or your employer's URN") %>
         </div>
       </div>
       <%= f.govuk_submit %>

@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "admin/applications/show.html.erb", type: :view do
   let(:application_page) { ApplicationPage.new }
-  let(:application) { create(:application, targeted_support_funding_eligibility: true) }
+  let(:application) { create(:application, targeted_support_funding_eligibility: true, private_childcare_provider_urn: "EY98753") }
 
   it "displays targeted_support_funding_eligibility" do
     assign(:application, application)
@@ -20,5 +20,13 @@ RSpec.describe "admin/applications/show.html.erb", type: :view do
     expected = application.created_at.strftime("%R on %d/%m/%Y")
 
     expect(application_page.summary_list["Created at"].value).to eql(expected)
+  end
+
+  it "displays application private_childcare_provider_urn" do
+    assign(:application, application)
+    render
+    application_page.load(rendered)
+
+    expect(application_page.summary_list["Private Childcare Provider URN"].value).to eql("EY98753")
   end
 end

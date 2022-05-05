@@ -66,6 +66,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'Private Childcare Provider URN' }
+        row.value { @application.private_childcare_provider_urn }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'Headteacher' }
         row.value { @application.headteacher_status }
       end %>

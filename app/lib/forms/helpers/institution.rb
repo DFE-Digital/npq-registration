@@ -11,7 +11,7 @@ module Forms
 
         @institution ||= case klass
                          when "PrivateChildcareProvider"
-                           PrivateChildcareProvider.find_by(urn: identifier)
+                           PrivateChildcareProvider.find_by(provider_urn: identifier)
                          when "School"
                            School.find_by(urn: identifier)
                          when "LocalAuthority"
