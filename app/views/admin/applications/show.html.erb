@@ -84,6 +84,11 @@
         row.key { 'Funding choice' }
         row.value { @application.funding_choice }
       end %>
+
+      <%= summary_list.row do |row|
+        row.key { "Created at" }
+        row.value { l @application.created_at, format: :admin }
+      end %>
     <% end %>
   </div>
 </div>
