@@ -28,7 +28,7 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def ukprn
-    provider_urn
+    nil
   end
 
   def provider_name
