@@ -1,6 +1,6 @@
 module Forms
   class TeacherReferenceNumber < Base
-    VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes no-dont-know no-dont-have].freeze
+    VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes need-reminder no-dont-have].freeze
 
     attr_accessor :trn_knowledge
 
@@ -16,7 +16,7 @@ module Forms
       case trn_knowledge
       when "yes"
         :contact_details
-      when "no-dont-know"
+      when "need-reminder"
         :dont_know_teacher_reference_number
       when "no-dont-have"
         :dont_have_teacher_reference_number
@@ -28,11 +28,34 @@ module Forms
     end
 
     def title
-      if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
+      if assumed_to_have_trn?
         "You need your teacher reference number to register for an NPQ"
       else
-        "You’ll need a teacher reference number to register for an NPQ"
+        "You need a teacher reference number to register for an NPQ"
       end
+    end
+
+    def options
+      [
+        option("yes", "Yes", link_errors: true),
+        option("need-reminder", "I need a reminder"),
+        option("no-dont-have", "I do not have a TRN"),
+      ]
+    end
+
+    def assumed_to_have_trn?
+      wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
+    end
+
+  private
+
+    def option(value, text, description = nil, link_errors: false)
+      OpenStruct.new(
+        value: value,
+        text: text,
+        description: description,
+        link_errors: link_errors,
+      )
     end
   end
 end
