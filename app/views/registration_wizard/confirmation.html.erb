@@ -16,8 +16,28 @@
 
     <h2 class="govuk-heading-m">What happens next</h2>
 
-    <p class="govuk-body">Your provider will contact you to complete your registration.</p>
+    <p class="govuk-body"><%= @form.lead_provider.name %> will contact you to complete your registration.</p>
 
-    <p class="govuk-body">They will provide details of timings, costs and deadlines for your NPQ application.</p>
+    <p class="govuk-body">They will provide details of timings, costs and deadlines.</p>
+
+    <% if @form.display_ehco_information?  %>
+      <h2 class="govuk-heading-m">Early Headship Coaching Offer</h2>
+
+      <p class="govuk-body">The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.</p>
+
+      <p class="govuk-body">You may be eligible for DE scholarship funding if you are in the first 5 years of a headship and:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>have completed an NPQH</li>
+        <li>are studying for an NPQH</li>
+        <li>are about to start an NPOH</li>
+      </ul>
+
+      <p class="govuk-body">If eligible, your training provider will share further details with you.</p>
+
+      <p class="govuk-body">
+        <%= govuk_link_to "Read more about the Early Headship Coaching Offer", @form.ehco_more_information_url %>
+      </p>
+    <% end %>
   </div>
 </div>

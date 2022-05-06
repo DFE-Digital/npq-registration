@@ -16,6 +16,14 @@ module Forms
       wizard.store["submitted"] = true
     end
 
+    def display_ehco_information?
+      course.ehco?
+    end
+
+    def ehco_more_information_url
+      "https://www.gov.uk/government/publications/national-professional-qualifications-npqs-reforms/national-professional-qualifications-npqs-reforms#additional-support-offer-for-the-npq-in-headship"
+    end
+
     def reset_store!; end
   end
 end
