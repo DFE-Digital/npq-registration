@@ -10,10 +10,6 @@ module Forms
       %i[works_in_childcare]
     end
 
-    def requirements_met?
-      true
-    end
-
     def next_step
       if wizard.query_store.inside_catchment? && works_in_childcare?
         :work_in_nursery
