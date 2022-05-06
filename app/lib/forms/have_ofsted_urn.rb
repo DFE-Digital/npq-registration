@@ -20,7 +20,7 @@ module Forms
     end
 
     def previous_step
-      if wizard.store["works_in_nursery"] == "yes"
+      if wizard.query_store.work_in_nursery?
         :kind_of_nursery
       else
         :work_in_nursery
