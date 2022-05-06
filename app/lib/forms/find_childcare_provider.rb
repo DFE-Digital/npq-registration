@@ -15,7 +15,7 @@ module Forms
     end
 
     def previous_step
-      :qualified_teacher_check
+      :kind_of_nursery
     end
   end
 end

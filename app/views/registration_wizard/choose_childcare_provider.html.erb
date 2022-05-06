@@ -24,7 +24,7 @@
 
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter name" } %>
+                                 label: { text: "Enter your nursery name" } %>
         <% else %>
           <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'm', text: "Please choose from nurseries located in #{@form.wizard.store["institution_location"]}" }) do %>
             <% @form.possible_institutions.each do |institution| %>
@@ -41,12 +41,12 @@
         <div class="npq-js-hidden">
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter name", class: "govuk-label govuk-label--s" } %>
+                                 label: { text: "Enter your nursery name", class: "govuk-label govuk-label--s" } %>
         </div>
 
         <div class="npq-js-reveal">
           <div class="govuk-form-group">
-            <%= f.label :institution_identifier, "Enter name", class: "govuk-label govuk-label--s", for: "nursery-picker" %>
+            <%= f.label :institution_identifier, "Enter your nursery name", class: "govuk-label govuk-label--s", for: "nursery-picker" %>
             <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "nursery-picker" %>
           </div>
         </div>

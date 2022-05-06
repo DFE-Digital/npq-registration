@@ -72,6 +72,26 @@ class RegistrationWizard
                             value: store["works_in_school"].capitalize,
                             change_step: :work_in_school)
 
+    unless query_store.works_in_school?
+      array << OpenStruct.new(key: "Do you work in early years or childcare?",
+                              value: store["works_in_childcare"].capitalize,
+                              change_step: :work_in_childcare)
+
+      if query_store.inside_catchment? && query_store.works_in_childcare?
+        array << OpenStruct.new(key: "Do you work in a nursery?",
+                                value: store["works_in_nursery"].capitalize,
+                                change_step: :work_in_nursery)
+
+        if query_store.work_in_nursery?
+          kind_of_nursery = store["kind_of_nursery"]
+
+          array << OpenStruct.new(key: "What kind of nursery do you work in?",
+                                  value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
+                                  change_step: :kind_of_nursery)
+        end
+      end
+    end
+
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
                             change_step: :qualified_teacher_check)
@@ -105,10 +125,14 @@ class RegistrationWizard
         array << OpenStruct.new(key: "School or college",
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_school)
-      elsif query_store.works_in_childcare?
-        array << OpenStruct.new(key: "Childcare provider",
+      elsif query_store.works_in_public_childcare_provider?
+        array << OpenStruct.new(key: "Nursery",
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_childcare_provider)
+      elsif query_store.works_in_private_childcare_provider?
+        array << OpenStruct.new(key: "Nursery",
+                                value: institution(source: store["institution_identifier"]).provider_name,
+                                change_step: :have_ofsted_urn)
       end
     end
 
@@ -223,6 +247,9 @@ private
       choose_school
       find_childcare_provider
       choose_childcare_provider
+      work_in_childcare
+      work_in_nursery
+      kind_of_nursery
       have_ofsted_urn
       choose_private_childcare_provider
       your_work

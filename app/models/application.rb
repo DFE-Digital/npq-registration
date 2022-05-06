@@ -4,6 +4,12 @@ class Application < ApplicationRecord
   belongs_to :lead_provider
   belongs_to :school, foreign_key: "school_urn", primary_key: "urn", optional: true
 
+  enum kind_of_nursery: {
+    local_authority_maintained_nursery: "local_authority_maintained_nursery",
+    preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
+    private_nursery: "private_nursery",
+  }
+
   def calculate_funding_eligbility
     Services::FundingEligibility.new(course: course, institution: school, new_headteacher: new_headteacher?).call
   end

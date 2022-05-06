@@ -108,6 +108,10 @@ en:
           attributes:
             institution_name:
               no_results: No nurseries in %{location} with the name %{name} were found, please try again
+        forms/choose_private_childcare_provider:
+          attributes:
+            institution_identifier:
+              invalid: No private childcare providers with the URN %{urn} were found, please try again
         forms/choose_school:
           attributes:
             institution_name:
@@ -161,3 +165,9 @@ en:
               blank: Enter an email address
               invalid: This email has already been registered for interest
               taken: You have already registered to be notified
+  registration_wizard:
+    kind_of_nursery:
+      local_authority_maintained_nursery: Local authority maintained nursery
+      preschool_class_as_part_of_school: Preschool class that's part of a school
+      private_nursery: Private nursery
+

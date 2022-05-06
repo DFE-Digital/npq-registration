@@ -27,6 +27,10 @@ class PrivateChildcareProvider < ApplicationRecord
     provider_urn
   end
 
+  def ukprn
+    nil
+  end
+
   def provider_name
     raw_name = self[:provider_name]
     raw_name unless raw_name == REDACTED_DATA_STRING
@@ -37,7 +41,7 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def address
-    [address_1, address_2, address_3, town, county, postcode].reject(&:blank?) - [REDACTED_DATA_STRING]
+    [address_1, address_2, address_3, town, region, postcode].reject(&:blank?) - [REDACTED_DATA_STRING]
   end
 
   def address_string
