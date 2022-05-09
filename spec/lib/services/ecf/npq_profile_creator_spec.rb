@@ -27,6 +27,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       headteacher_status: "no",
       eligible_for_funding: true,
       funding_choice: "trust",
+      targeted_support_funding_eligibility: true,
     )
   end
 
@@ -71,6 +72,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             works_in_school: application.works_in_school,
             employer_name: application.employer_name,
             employment_role: application.employment_role,
+            targeted_support_funding_eligibility: true,
           },
         },
       }.to_json
