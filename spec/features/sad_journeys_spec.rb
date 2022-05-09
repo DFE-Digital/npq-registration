@@ -118,7 +118,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 
@@ -362,7 +362,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First", visible: :all)
     page.click_button("Continue")
 

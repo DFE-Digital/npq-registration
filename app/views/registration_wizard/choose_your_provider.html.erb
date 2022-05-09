@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Choose your provider
+  <%= @form.errors.present? ? "Error: " : nil %>Select your provider
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_radio_buttons_fieldset(:lead_provider_id,
             legend: {
-              text: "Choose your provider",
+              text: "Select your provider",
               size: "xl",
               tag: "h1"
             }
@@ -24,13 +24,10 @@
 
         <% if @form.course %>
           <p class="govuk-body">
-            These are the training providers who provide <%= @form.course.name %>. Providers may have different entry requirements for courses.
+            These are the training providers who provide <%= @form.course.name %>. Providers may have different entry requirements.
           </p>
         <% end %>
 
-        <p class="govuk-body">
-          Check with the person responsible for professional development at your school or college.
-        </p>
         <% @form.options.each do |struct| %>
           <%= f.govuk_radio_button :lead_provider_id, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
         <% end %>
