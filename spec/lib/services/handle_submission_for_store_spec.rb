@@ -55,5 +55,27 @@ RSpec.describe Services::HandleSubmissionForStore do
         end
       end
     end
+
+    context "when applying for EHCO" do
+      context "a headteacher for over five years" do
+        let(:store) do
+          {
+            "confirmed_email" => user.email,
+            "trn_verified" => false,
+            "trn" => "12345",
+            "course_id" => Course.ehco.first.id,
+            "institution_identifier" => "School-#{school.urn}",
+            "lead_provider_id" => LeadProvider.all.sample.id,
+            "aso_headteacher" => "yes",
+            "aso_new_headteacher" => "no",
+          }
+        end
+
+        it "returns headteacher_status as yes_over_five_years" do
+          subject.call
+          expect(user.applications.first.reload.headteacher_status).to eq "yes_over_five_years"
+        end
+      end
+    end
   end
 end

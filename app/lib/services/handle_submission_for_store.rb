@@ -105,7 +105,7 @@ module Services
           when "yes"
             "yes_in_first_five_years"
           when "no"
-            "no"
+            "yes_over_five_years"
           end
         when "no"
           "no"
