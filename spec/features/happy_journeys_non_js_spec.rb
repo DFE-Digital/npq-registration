@@ -293,6 +293,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Submit")
 
     expect(page).to have_text("Your initial registration is complete")
+    expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
 
     expect(User.count).to eql(1)
 
@@ -466,6 +467,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Submit")
 
     expect(page).to have_text("Your initial registration is complete")
+    expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
 
     expect(User.count).to eql(1)
 
@@ -639,6 +641,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Submit")
 
     expect(page).to have_text("Your initial registration is complete")
+    expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
 
     expect(User.count).to eql(1)
 
@@ -776,6 +779,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Submit")
 
     expect(page).to have_text("Your initial registration is complete")
+    expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
 
     expect(User.count).to eql(1)
 
