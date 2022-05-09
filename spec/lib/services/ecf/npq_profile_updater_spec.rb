@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::NpqProfileUpdater do
+RSpec.describe Services::Ecf::NpqProfileUpdater do
   let(:user) do
     User.create!(
       email: "john.doe@example.com",
