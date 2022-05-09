@@ -31,21 +31,21 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, but I need to be reminded what it is")
+    page.choose("I need a reminder")
     page.click_button("Continue")
 
     expect(page).to have_text("If you don’t know what your teacher reference number")
     page.click_link("Back")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("No, I need to get a TRN")
+    page.choose("I do not have a TRN")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
     page.click_link("Back")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -194,7 +194,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -348,7 +348,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -522,7 +522,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")
@@ -700,7 +700,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to include("contact-details")

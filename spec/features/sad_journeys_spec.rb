@@ -28,7 +28,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -183,7 +183,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -301,7 +301,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes, I know my TRN", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
