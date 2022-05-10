@@ -3,17 +3,17 @@ class ApplicationSubmissionJob < ApplicationJob
 
   def perform(user:)
     if user.ecf_id.blank?
-      ecf_user = Services::EcfUserFinder.new(user: user).call
+      ecf_user = Services::Ecf::EcfUserFinder.new(user: user).call
 
       if ecf_user
         user.update!(ecf_id: ecf_user.id)
       else
-        Services::EcfUserCreator.new(user: user).call
+        Services::Ecf::EcfUserCreator.new(user: user).call
       end
     end
 
     user.applications.includes(:lead_provider, :course).where(ecf_id: nil).each do |application|
-      Services::NpqProfileCreator.new(application: application).call
+      Services::Ecf::NpqProfileCreator.new(application: application).call
 
       ApplicationSubmissionMailer.application_submitted_mail(
         to: user.email,
