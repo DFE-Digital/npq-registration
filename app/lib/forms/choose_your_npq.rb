@@ -19,7 +19,7 @@ module Forms
           :check_answers
         elsif course.aso?
           :about_aso
-        elsif previously_eligible_for_funding? && now_no_longer_eligible_for_funding?
+        elsif previously_eligible_for_funding? && !eligible_for_funding?
           :funding_your_npq
         else
           :check_answers
@@ -28,7 +28,7 @@ module Forms
         :about_ehco
       elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
-      elsif wizard.query_store.works_in_school? && Services::FundingEligibility.new(course: course, institution: institution, new_headteacher: new_headteacher?).call
+      elsif wizard.query_store.works_in_school? && eligible_for_funding?
         :possible_funding
       else
         :funding_your_npq
@@ -75,15 +75,15 @@ module Forms
         course: previous_course,
         institution: institution,
         new_headteacher: new_headteacher?,
-      ).call
+      ).funded?
     end
 
-    def now_no_longer_eligible_for_funding?
-      !Services::FundingEligibility.new(
+    def eligible_for_funding?
+      Services::FundingEligibility.new(
         course: course,
         institution: institution,
         new_headteacher: new_headteacher?,
-      ).call
+      ).funded?
     end
 
     def new_headteacher?

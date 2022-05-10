@@ -58,7 +58,7 @@ module Forms
         course: course,
         institution: institution(source: institution_identifier),
         new_headteacher: new_headteacher?,
-      ).call
+      ).funded?
     end
 
     def institution_identifier

@@ -13,7 +13,7 @@ class Application < ApplicationRecord
   }
 
   def calculate_funding_eligbility
-    Services::FundingEligibility.new(course: course, institution: school, new_headteacher: new_headteacher?).call
+    Services::FundingEligibility.new(course: course, institution: school, new_headteacher: new_headteacher?).funded?
   end
 
   def new_headteacher?

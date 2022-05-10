@@ -188,7 +188,7 @@ private
       course: course,
       institution: institution(source: store["institution_identifier"]),
       new_headteacher: new_headteacher?,
-    ).call
+    ).funded?
   end
 
   def new_headteacher?

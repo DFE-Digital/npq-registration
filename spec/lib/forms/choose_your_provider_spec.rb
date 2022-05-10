@@ -36,7 +36,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         request: request,
       )
     end
-    let(:mock_funding_service) { instance_double(Services::FundingEligibility, call: true) }
+    let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
 
     before do
       subject.wizard = wizard
