@@ -29,4 +29,12 @@ RSpec.describe "admin/applications/show.html.erb", type: :view do
 
     expect(application_page.summary_list["Private Childcare Provider URN"].value).to eql("EY98753")
   end
+
+  it "displays cohort" do
+    assign(:application, application)
+    render
+    application_page.load(rendered)
+
+    expect(application_page.summary_list["Cohort"].value).to eql(2021.to_s)
+  end
 end

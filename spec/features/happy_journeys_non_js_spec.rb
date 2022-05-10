@@ -165,6 +165,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(application.course).to be_npqsl
     expect(application.headteacher_status).to be_nil
     expect(application.targeted_support_funding_eligibility).to be_truthy
+    expect(application.cohort).to eql(2022)
 
     visit "/"
     visit "/registration/confirmation"
