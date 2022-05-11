@@ -28,6 +28,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       eligible_for_funding: true,
       funding_choice: "trust",
       targeted_support_funding_eligibility: true,
+      cohort: 2022,
     )
   end
 
@@ -73,6 +74,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             employer_name: application.employer_name,
             employment_role: application.employment_role,
             targeted_support_funding_eligibility: true,
+            cohort: 2022,
           },
         },
       }.to_json
