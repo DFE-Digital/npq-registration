@@ -118,7 +118,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("You may qualify for DfE scholarship funding")
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First")
     page.click_button("Continue")
 
@@ -266,7 +266,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "My trust is paying"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First")
     page.click_button("Continue")
 
@@ -441,7 +441,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "I am paying"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First")
     page.click_button("Continue")
 
@@ -615,7 +615,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_selector "h1", text: "If your provider accepts your application, you’ll qualify for DfE scholarship funding"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First")
     page.click_button("Continue")
 
@@ -753,7 +753,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "My employer is paying"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your provider")
+    expect(page).to have_text("Select your provider")
     page.choose("Teach First")
     page.click_button("Continue")
 
