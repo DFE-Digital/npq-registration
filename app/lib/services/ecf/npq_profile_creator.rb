@@ -22,8 +22,8 @@ module Services
           works_in_school: application.works_in_school,
           employer_name: application.employer_name,
           employment_role: application.employment_role,
-          targeted_support_funding_eligibility: application.targeted_support_funding_eligibility,
           cohort: application.cohort,
+          targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
           relationships: {
             user: ecf_user,
             npq_course: ecf_npq_course,

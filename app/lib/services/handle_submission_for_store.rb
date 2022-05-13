@@ -34,7 +34,7 @@ module Services
           works_in_school: store["works_in_school"] == "yes",
           employer_name: store["employer_name"].presence,
           employment_role: store["employment_role"].presence,
-          targeted_support_funding_eligibility: targeted_support_funding_eligibility,
+          targeted_delivery_funding_eligibility: targeted_delivery_funding_eligibility,
           works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
@@ -130,8 +130,8 @@ module Services
       ).call
     end
 
-    def targeted_support_funding_eligibility
-      @targeted_support_funding_eligibility ||= Services::Eligibility::TargetedSupportFunding.new(
+    def targeted_delivery_funding_eligibility
+      @targeted_delivery_funding_eligibility ||= Services::Eligibility::TargetedDeliveryFunding.new(
         institution: institution(source: store["institution_identifier"]),
       ).call
     end

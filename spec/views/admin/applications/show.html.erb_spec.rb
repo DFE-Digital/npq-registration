@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.describe "admin/applications/show.html.erb", type: :view do
   let(:application_page) { ApplicationPage.new }
-  let(:application) { create(:application, targeted_support_funding_eligibility: true, private_childcare_provider_urn: "EY98753") }
+  let(:application) { create(:application, targeted_delivery_funding_eligibility: true, private_childcare_provider_urn: "EY98753") }
 
-  it "displays targeted_support_funding_eligibility" do
+  it "displays targeted_delivery_funding_eligibility" do
     assign(:application, application)
     render
     application_page.load(rendered)
