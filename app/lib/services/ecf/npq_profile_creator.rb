@@ -23,6 +23,7 @@ module Services
           employer_name: application.employer_name,
           employment_role: application.employment_role,
           targeted_support_funding_eligibility: application.targeted_support_funding_eligibility,
+          cohort: application.cohort,
           relationships: {
             user: ecf_user,
             npq_course: ecf_npq_course,
