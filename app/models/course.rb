@@ -16,4 +16,8 @@ class Course < ApplicationRecord
   def ehco?
     name == "The Early Headship Coaching Offer"
   end
+
+  def eyl?
+    name == "NPQ Early Years Leadership (NPQEYL)"
+  end
 end

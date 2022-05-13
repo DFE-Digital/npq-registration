@@ -115,7 +115,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("NPQ for Senior Leadership (NPQSL)")
     page.click_button("Continue")
 
-    expect(page).to have_text("You may qualify for DfE scholarship funding")
+    expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+    expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available.")
     page.click_button("Continue")
 
     expect(page).to have_text("Select your provider")

@@ -28,7 +28,7 @@ module Forms
         :about_ehco
       elsif !wizard.query_store.inside_catchment?
         :funding_your_npq
-      elsif wizard.query_store.works_in_school? && eligible_for_funding?
+      elsif possible_school_funding? || possible_ey_funding?
         :possible_funding
       else
         :funding_your_npq
@@ -94,6 +94,14 @@ module Forms
       if course.blank?
         errors.add(:course_id, :invalid)
       end
+    end
+
+    def possible_school_funding?
+      wizard.query_store.works_in_school? && eligible_for_funding?
+    end
+
+    def possible_ey_funding?
+      Services::EarlyYearsFundingChecker.new(wizard.query_store, course_id).run
     end
   end
 end

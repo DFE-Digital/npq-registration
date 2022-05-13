@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  You may qualify for DfE scholarship funding
+  If your provider accepts your application, you’ll qualify for DfE funding
 <% end %>
 
 <% content_for :before_content do %>
@@ -11,15 +11,21 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">You may qualify for DfE scholarship funding</h1>
+    <h1 class="govuk-heading-xl">If your provider accepts your application, you’ll qualify for DfE funding</h1>
 
-    <p class="govuk-body">
-      DfE scholarship funding may be available for the <%= @form.course.name %> course you have selected.
-    </p>
+    <% if Services::EarlyYearsFundingChecker.new(@wizard.query_store, @wizard.store['course_id']).run %>
+      <p class="govuk-body">From the information you have provided, DfE scholarship funding should be available for the <strong>NPQ Early Years Leadership (NPQEYL)</strong>.</p>
 
-    <p class="govuk-body">
-      Your training provider will give you more details and confirm if you qualify for funding.
-    </p>
+      <p class="govuk-body">
+        You’ll only be eligible for DfE funding for this NPQ once. If you start this NPQ, and then withdraw or fail, you will not be funded again for the same course.
+      </p>
+    <% else %>
+      <p class="govuk-body"><strong>From the information you have provided, DfE scholarship funding should be available.</strong></p>
+
+      <p class="govuk-body">
+        You’ll only be eligible for DfE funding for each NPQ once. If you start an NPQ, and then withdraw or fail, you will not be funded again for the same course.
+      </p>
+    <% end %>
 
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_submit %>
