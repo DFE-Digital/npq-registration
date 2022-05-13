@@ -22,13 +22,13 @@ RSpec.feature "Email confirmation", type: :feature do
     expect(page).to have_content("Confirm your code")
     page.click_link("I have not received an email")
 
-    expect(page).to have_content("Resend verification email")
+    expect(page).to have_content("If you did not get an email")
     page.click_link("Cancel")
 
     expect(page).to have_content("Confirm your code")
     page.click_link("I have not received an email")
 
-    expect(page).to have_content("Resend verification email")
+    expect(page).to have_content("If you did not get an email")
     expect {
       page.click_button("Continue")
     }.to change { ActionMailer::Base.deliveries.size }.by(1)
@@ -36,7 +36,7 @@ RSpec.feature "Email confirmation", type: :feature do
     expect(page).to have_content("Confirm your code")
     page.click_link("I have not received an email")
 
-    expect(page).to have_content("Resend verification email")
+    expect(page).to have_content("If you did not get an email")
     page.fill_in "Email address", with: "another@example.com"
     expect {
       page.click_button("Continue")
