@@ -1,6 +1,6 @@
 module Services
   module Eligibility
-    class TargetedSupportFunding
+    class TargetedDeliveryFunding
       attr_reader :institution
 
       def initialize(institution:)
