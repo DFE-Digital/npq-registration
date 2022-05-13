@@ -9,7 +9,7 @@ RSpec.describe "admin/applications/show.html.erb", type: :view do
     render
     application_page.load(rendered)
 
-    expect(application_page.summary_list["Targeted support funding eligibility"].value).to eql("YES")
+    expect(application_page.summary_list["Targeted delivery funding eligibility"].value).to eql("YES")
   end
 
   it "displays application created_at" do
