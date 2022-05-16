@@ -14,11 +14,7 @@ module Forms
     end
 
     def next_step
-      if wizard.query_store.works_in_school?
-        :share_provider
-      else
-        :your_work
-      end
+      :share_provider
     end
 
     def previous_step

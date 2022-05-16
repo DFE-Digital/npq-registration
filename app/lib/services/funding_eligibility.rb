@@ -1,13 +1,22 @@
 module Services
   class FundingEligibility
     FUNDED_ELIGIBILITY_RESULT = :funded
+
     NO_INSTITUTION = :no_institution
     INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
     INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
+    PREVIOUSLY_FUNDED = :previously_funded
+
+    # EHCO
     NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
 
     # School
     SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES = :school_outside_england_or_crown_dependencies
+
+    # Early Years
+    EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES = :early_years_outside_england_or_crown_dependencies
+    NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
+    EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
 
     attr_reader :institution, :course
 
@@ -34,12 +43,19 @@ module Services
           return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
 
           FUNDED_ELIGIBILITY_RESULT
+        when "PrivateChildcareProvider"
+          # TODO: implement funding rejection for private childcare providers
+          FUNDED_ELIGIBILITY_RESULT
         when "LocalAuthority"
           FUNDED_ELIGIBILITY_RESULT
         else
           INELIGIBLE_INSTITUTION_TYPE
         end
       end
+    end
+
+    def ineligible_institution_type?
+      [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
     end
 
   private

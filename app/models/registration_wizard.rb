@@ -252,6 +252,7 @@ private
       your_work
       school_not_in_england
       possible_funding
+      ineligible_for_funding
       funding_your_npq
       share_provider
       check_answers

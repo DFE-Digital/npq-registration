@@ -9,11 +9,11 @@ module Forms
     end
 
     def next_step
-      :share_provider
+      :funding_your_npq
     end
 
     def previous_step
-      :choose_your_provider
+      :choose_your_npq
     end
   end
 end

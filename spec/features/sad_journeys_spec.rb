@@ -113,6 +113,12 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
+    expect(page).to have_text("DfE scholarship funding is not available")
+    expect(page).to have_text("In England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    page.click_link("Continue")
+
+    expect(page).to be_axe_clean
     expect(page).to have_text("Funding")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
@@ -356,6 +362,12 @@ RSpec.feature "Sad journeys", type: :feature do
     page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all) # Needs changing to an early years course once added
     page.click_button("Continue")
 
+    expect(page).to have_text("DfE scholarship funding is not available")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("Work in England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("Be registered on the Ofsted childcare and early education register or be registered with a Childminder Agency (CMA)")
+    page.click_link("Continue")
+
     expect(page).to be_axe_clean
     expect(page).to have_text("How is your course being paid for?")
     page.choose "My employer is paying", visible: :all
@@ -364,12 +376,6 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("Select your provider")
     page.choose("Teach First", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Tell us about where you work")
-    page.fill_in "Name of employer", with: "Big company"
-    page.fill_in "Role", with: "Trainer"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean

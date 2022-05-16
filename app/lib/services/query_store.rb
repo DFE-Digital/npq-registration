@@ -29,6 +29,10 @@ class Services::QueryStore
     store["works_in_nursery"] == "yes"
   end
 
+  def has_ofsted_urn?
+    store["has_ofsted_urn"] == "yes"
+  end
+
   def works_in_public_childcare_provider?
     works_in_nursery? &&
       Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["kind_of_nursery"])
