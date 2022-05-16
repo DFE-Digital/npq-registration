@@ -182,8 +182,6 @@ class RegistrationWizard
 private
 
   def needs_funding?
-    return true unless query_store.works_in_school?
-
     !Services::FundingEligibility.new(
       course: course,
       institution: institution(source: store["institution_identifier"]),
