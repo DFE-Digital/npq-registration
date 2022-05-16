@@ -66,10 +66,7 @@ module Forms
       wizard.store["institution_identifier"]
     end
 
-    def new_headteacher?
-      wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
-    end
-    delegate :inside_catchment?, to: :query_store
+    delegate :new_headteacher?, :inside_catchment?, to: :query_store
 
     def validate_lead_provider_exists
       if lead_provider.blank?

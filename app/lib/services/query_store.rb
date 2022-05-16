@@ -46,4 +46,8 @@ class Services::QueryStore
   def lead_provider
     @lead_provider ||= LeadProvider.find(store["lead_provider_id"])
   end
+
+  def new_headteacher?
+    store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
+  end
 end

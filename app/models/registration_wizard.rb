@@ -190,9 +190,7 @@ private
     ).funded?
   end
 
-  def new_headteacher?
-    store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
-  end
+  delegate :new_headteacher?, to: :query_store
 
   def course
     Course.find(store["course_id"])
