@@ -22,7 +22,7 @@ class Services::QueryStore
   end
 
   def works_in_childcare?
-    store["works_in_childcare?"] == "yes"
+    store["works_in_childcare"] == "yes"
   end
 
   def works_in_nursery?
