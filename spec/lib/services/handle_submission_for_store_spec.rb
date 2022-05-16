@@ -35,7 +35,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
       context "when there is a funding choice selected and eligible for funding is true" do
         before do
-          allow_any_instance_of(Services::FundingEligibility).to receive(:call) { true }
+          allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
         end
 
         it "clears the funding choice to nil on the application" do
@@ -46,7 +46,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
       context "when there is a funding choice selected and eligible for funding is false" do
         before do
-          allow_any_instance_of(Services::FundingEligibility).to receive(:call) { false }
+          allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
         end
 
         it "saves the funding choice to nil on the application" do

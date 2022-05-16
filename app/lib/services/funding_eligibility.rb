@@ -1,5 +1,11 @@
 module Services
   class FundingEligibility
+    FUNDED_ELIGIBILITY_RESULT = :funded
+    NO_INSTITUTION = :no_institution
+    INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
+    INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
+    NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
+
     attr_reader :institution, :course
 
     def initialize(institution:, course:, new_headteacher: false)
@@ -8,21 +14,26 @@ module Services
       @new_headteacher = new_headteacher
     end
 
-    def call
-      return false if institution.nil?
-      return true if eligible_urns.include?(institution.urn)
+    def funded?
+      funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
+    end
 
-      case institution.class.name
-      when "School"
-        if course.aso?
-          eligible_establishment_type_codes.include?(institution.establishment_type_code) && new_headteacher?
+    def funding_eligiblity_status_code
+      @funding_eligiblity_status_code ||= begin
+        return NO_INSTITUTION if institution.nil?
+        return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.urn)
+
+        case institution.class.name
+        when "School"
+          return INELIGIBLE_ESTABLISHMENT_TYPE unless eligible_establishment_type_codes.include?(institution.establishment_type_code)
+          return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
+
+          FUNDED_ELIGIBILITY_RESULT
+        when "LocalAuthority"
+          FUNDED_ELIGIBILITY_RESULT
         else
-          eligible_establishment_type_codes.include?(institution.establishment_type_code)
+          INELIGIBLE_INSTITUTION_TYPE
         end
-      when "LocalAuthority"
-        true
-      else
-        false
       end
     end
 

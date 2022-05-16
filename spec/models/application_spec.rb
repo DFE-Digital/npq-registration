@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Application do
   describe "#calculate_funding_eligbility" do
-    let(:mock_funding_service) { instance_double(Services::FundingEligibility, call: nil) }
+    let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
 
     subject { build(:application) }
 
@@ -11,7 +11,7 @@ RSpec.describe Application do
 
       subject.calculate_funding_eligbility
 
-      expect(mock_funding_service).to have_received(:call)
+      expect(mock_funding_service).to have_received(:funded?)
     end
   end
 end
