@@ -82,7 +82,7 @@ class RegistrationWizard
                                 value: store["works_in_nursery"].capitalize,
                                 change_step: :work_in_nursery)
 
-        if query_store.work_in_nursery?
+        if query_store.works_in_nursery?
           kind_of_nursery = store["kind_of_nursery"]
 
           array << OpenStruct.new(key: "What kind of nursery do you work in?",
