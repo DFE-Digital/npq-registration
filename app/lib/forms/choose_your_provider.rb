@@ -57,6 +57,7 @@ module Forms
       Services::FundingEligibility.new(
         course: course,
         institution: institution(source: institution_identifier),
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end
@@ -68,6 +69,7 @@ module Forms
     def new_headteacher?
       wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
     end
+    delegate :inside_catchment?, to: :query_store
 
     def validate_lead_provider_exists
       if lead_provider.blank?

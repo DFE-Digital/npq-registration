@@ -44,6 +44,7 @@ module Forms
       Services::FundingEligibility.new(
         course: course,
         institution: institution,
+        inside_catchment: wizard.query_store.inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end

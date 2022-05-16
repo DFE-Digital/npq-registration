@@ -3,8 +3,9 @@ require "rails_helper"
 RSpec.describe Services::FundingEligibility do
   let(:institution) { school }
   let(:course) { Course.all.find { |c| !c.aso? } }
+  let(:inside_catchment) { true }
 
-  subject { described_class.new(institution: institution, course: course) }
+  subject { described_class.new(institution: institution, course: course, inside_catchment: inside_catchment) }
 
   describe ".funded? && .funding_eligiblity_status_code" do
     context "in the special URN list" do
@@ -45,6 +46,7 @@ RSpec.describe Services::FundingEligibility do
                 described_class.new(
                   institution: institution,
                   course: course,
+                  inside_catchment: inside_catchment,
                   new_headteacher: true,
                 )
               end
@@ -75,6 +77,7 @@ RSpec.describe Services::FundingEligibility do
                 described_class.new(
                   institution: institution,
                   course: course,
+                  inside_catchment: inside_catchment,
                   new_headteacher: true,
                 )
               end

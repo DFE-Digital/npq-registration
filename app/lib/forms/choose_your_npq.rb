@@ -26,8 +26,6 @@ module Forms
         end
       elsif course.ehco?
         :about_ehco
-      elsif !wizard.query_store.inside_catchment?
-        :funding_your_npq
       elsif wizard.query_store.works_in_school? && eligible_for_funding?
         :possible_funding
       else
@@ -74,6 +72,7 @@ module Forms
       Services::FundingEligibility.new(
         course: previous_course,
         institution: institution,
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end
@@ -82,6 +81,7 @@ module Forms
       Services::FundingEligibility.new(
         course: course,
         institution: institution,
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end
@@ -89,6 +89,8 @@ module Forms
     def new_headteacher?
       wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
     end
+
+    delegate :inside_catchment?, to: :query_store
 
     def validate_course_exists
       if course.blank?

@@ -13,7 +13,16 @@ class Application < ApplicationRecord
   }
 
   def calculate_funding_eligbility
-    Services::FundingEligibility.new(course: course, institution: school, new_headteacher: new_headteacher?).funded?
+    Services::FundingEligibility.new(
+      course: course,
+      institution: school,
+      inside_catchment: inside_catchment?,
+      new_headteacher: new_headteacher?
+    ).funded?
+  end
+
+  def inside_catchment?
+    %w[england jersey_guernsey_isle_of_man].include?(teacher_catchment)
   end
 
   def new_headteacher?

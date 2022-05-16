@@ -6,11 +6,15 @@ module Services
     INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
     NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
 
+    # School
+    SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES = :school_outside_england_or_crown_dependencies
+
     attr_reader :institution, :course
 
-    def initialize(institution:, course:, new_headteacher: false)
+    def initialize(institution:, course:, inside_catchment:, new_headteacher: false)
       @institution = institution
       @course = course
+      @inside_catchment = inside_catchment
       @new_headteacher = new_headteacher
     end
 
@@ -25,6 +29,7 @@ module Services
 
         case institution.class.name
         when "School"
+          return SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES unless inside_catchment?
           return INELIGIBLE_ESTABLISHMENT_TYPE unless eligible_establishment_type_codes.include?(institution.establishment_type_code)
           return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
 
@@ -38,6 +43,10 @@ module Services
     end
 
   private
+
+    def inside_catchment?
+      @inside_catchment
+    end
 
     def new_headteacher?
       @new_headteacher
