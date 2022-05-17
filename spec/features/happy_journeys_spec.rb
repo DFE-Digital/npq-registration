@@ -115,7 +115,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
-    expect(page).to have_text("In England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("In England")
     expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
     page.click_link("Continue")
 
@@ -259,7 +259,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("DfE scholarship funding is not available")
-    expect(page).to have_text("In England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("In England")
     expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
     page.click_link("Continue")
 
@@ -439,7 +439,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
-    expect(page).to have_text("In England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("In England")
     expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
     page.click_link("Continue")
 
@@ -716,7 +716,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
-    expect(page).to have_text("In England, Jersey, Guernsey or the Isle of Man")
+    expect(page).to have_text("In England")
     expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
     page.click_link("Continue")
 
