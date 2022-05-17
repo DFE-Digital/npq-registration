@@ -6,7 +6,7 @@ class Services::QueryStore
   end
 
   def inside_catchment?
-    store["teacher_catchment"] == "england" || store["teacher_catchment"] == "jersey_guernsey_isle_of_man"
+    store["teacher_catchment"] == "england"
   end
 
   def where_teach_humanized
