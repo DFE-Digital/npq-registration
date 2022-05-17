@@ -76,16 +76,16 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       )
     end
 
-    let(:store) {
+    let(:store) do
       {
         teacher_catchment: teacher_catchment,
         works_in_school: works_in_school,
         works_in_childcare: works_in_childcare,
         works_in_nursery: works_in_nursery,
         kind_of_nursery: kind_of_nursery,
-        has_ofsted_urn: has_ofsted_urn
+        has_ofsted_urn: has_ofsted_urn,
       }.stringify_keys
-    }
+    end
 
     let(:teacher_catchment) { "another" }
     let(:works_in_school) { "no" }
@@ -101,7 +101,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         expect(subject.previous_step).to eql(:work_in_childcare)
       end
 
-      context 'when working in school' do
+      context "when working in school" do
         let(:works_in_school) { "yes" }
 
         it "returns choose_school" do

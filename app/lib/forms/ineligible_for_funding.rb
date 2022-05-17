@@ -50,7 +50,7 @@ module Forms
         end
       end
 
-      raise RuntimeError, "Missing status code handling: #{funding_eligiblity_status_code}"
+      raise "Missing status code handling: #{funding_eligiblity_status_code}"
     end
 
     def funding_eligiblity_status_code

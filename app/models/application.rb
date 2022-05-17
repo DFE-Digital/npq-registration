@@ -17,7 +17,7 @@ class Application < ApplicationRecord
       course: course,
       institution: school,
       inside_catchment: inside_catchment?,
-      new_headteacher: new_headteacher?
+      new_headteacher: new_headteacher?,
     ).funded?
   end
 
