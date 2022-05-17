@@ -2,6 +2,18 @@ module Forms
   class IneligibleForFunding < Base
     include Helpers::Institution
 
+    SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "school/outside_catchment_or_ineligible_establishment".freeze
+    SCHOOL_ALREADY_FUNDED = "school/has_already_been_funded".freeze
+    EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
+    EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
+
+    VALID_PARTIALS = [
+      SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT,
+      SCHOOL_ALREADY_FUNDED,
+      EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT,
+      EARLY_YEARS_NOT_APPLYING_FOR_NPQEY,
+    ].freeze
+
     attr_accessor :version
 
     def self.permitted_params
@@ -18,22 +30,22 @@ module Forms
 
     def ineligible_template
       @ineligible_template ||= begin
-        return version if version.present?
+        return version if VALID_PARTIALS.include?(version)
 
         case funding_eligiblity_status_code
         when Services::FundingEligibility::SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
-          return 'school/outside_catchment_or_ineligible_establishment'
+          return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
         when Services::FundingEligibility::PREVIOUSLY_FUNDED
-          return 'school/has_already_been_funded'
+          return SCHOOL_ALREADY_FUNDED
         when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
-          return 'early_years/outside_catchment_or_not_on_early_years_register'
+          return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
         when Services::FundingEligibility::EARLY_YEARS_INVALID_NPQ
-          return 'early_years/not_applying_for_NPQEY'
+          return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
         when Services::FundingEligibility::NO_INSTITUTION
           if query_store.works_in_school?
-            return 'school/outside_catchment_or_ineligible_establishment'
+            return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
           else
-            return 'early_years/outside_catchment_or_not_on_early_years_register'
+            return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
           end
         end
       end
