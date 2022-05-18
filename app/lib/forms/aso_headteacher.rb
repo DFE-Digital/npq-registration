@@ -39,7 +39,7 @@ module Forms
     def options_array
       [
         {
-          text: "Yes, I am a headteacher",
+          text: "Yes",
           value: "yes",
         },
         {

@@ -611,11 +611,11 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Are you a headteacher?"
-    page.choose "Yes, I am a headteacher"
+    page.choose "Yes"
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Are you in your first 5 years of a headship?"
-    page.choose "Yes, I am in my first 5 years of a headship"
+    page.choose "Yes"
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "If your provider accepts your application, you’ll qualify for DfE scholarship funding"
