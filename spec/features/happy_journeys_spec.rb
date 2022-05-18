@@ -51,8 +51,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -189,8 +189,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -386,8 +386,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -528,8 +528,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -652,8 +652,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -776,8 +776,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -930,8 +930,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("Email address")
-    page.fill_in "Email address", with: "user@example.com"
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
