@@ -14,11 +14,7 @@ module Forms
     end
 
     def next_step
-      if wizard.query_store.works_in_school?
-        :share_provider
-      else
-        :your_work
-      end
+      :share_provider
     end
 
     def previous_step
@@ -57,6 +53,7 @@ module Forms
       Services::FundingEligibility.new(
         course: course,
         institution: institution(source: institution_identifier),
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end
@@ -65,9 +62,7 @@ module Forms
       wizard.store["institution_identifier"]
     end
 
-    def new_headteacher?
-      wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
-    end
+    delegate :new_headteacher?, :inside_catchment?, to: :query_store
 
     def validate_lead_provider_exists
       if lead_provider.blank?

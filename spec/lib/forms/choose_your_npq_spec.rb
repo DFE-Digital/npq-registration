@@ -76,27 +76,77 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       )
     end
 
-    context "when inside catchment and working in school" do
-      let(:store) { { teacher_catchment: "england", works_in_school: "yes" }.stringify_keys }
-
-      it "returns choose_school" do
-        expect(subject.previous_step).to eql(:choose_school)
-      end
+    let(:store) do
+      {
+        teacher_catchment: teacher_catchment,
+        works_in_school: works_in_school,
+        works_in_childcare: works_in_childcare,
+        works_in_nursery: works_in_nursery,
+        kind_of_nursery: kind_of_nursery,
+        has_ofsted_urn: has_ofsted_urn,
+      }.stringify_keys
     end
 
-    context "when outside catchment" do
-      let(:store) { { teacher_catchment: "another", works_in_school: "yes" }.stringify_keys }
+    let(:teacher_catchment) { "another" }
+    let(:works_in_school) { "no" }
+    let(:works_in_childcare) { "no" }
+    let(:works_in_nursery) { "no" }
+    let(:kind_of_nursery) { nil }
+    let(:has_ofsted_urn) { "no" }
 
-      it "return qualified_teacher_check" do
-        expect(subject.previous_step).to eql(:qualified_teacher_check)
+    context "when inside catchment" do
+      let(:teacher_catchment) { "england" }
+
+      it "returns work_in_childcare" do
+        expect(subject.previous_step).to eql(:work_in_childcare)
       end
-    end
 
-    context "when outside catchment" do
-      let(:store) { { teacher_catchment: "england", works_in_school: "no" }.stringify_keys }
+      context "when working in school" do
+        let(:works_in_school) { "yes" }
 
-      it "return qualified_teacher_check" do
-        expect(subject.previous_step).to eql(:qualified_teacher_check)
+        it "returns choose_school" do
+          expect(subject.previous_step).to eql(:choose_school)
+        end
+      end
+
+      context "when working in childcare" do
+        let(:works_in_childcare) { "yes" }
+
+        it "return have_ofsted_urn" do
+          expect(subject.previous_step).to eql(:have_ofsted_urn)
+        end
+
+        context "when working in a nursery" do
+          let(:works_in_nursery) { "yes" }
+
+          it "return have_ofsted_urn" do
+            expect(subject.previous_step).to eql(:have_ofsted_urn)
+          end
+
+          context "when working for a public childcare provider" do
+            let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+
+            it "return choose_childcare_provider" do
+              expect(subject.previous_step).to eql(:choose_childcare_provider)
+            end
+          end
+
+          context "when working for a private childcare provider" do
+            let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
+
+            it "return have_ofsted_urn" do
+              expect(subject.previous_step).to eql(:have_ofsted_urn)
+            end
+
+            context "when user has declared they have an ofsted URN" do
+              let(:has_ofsted_urn) { "yes" }
+
+              it "return choose_private_childcare_provider" do
+                expect(subject.previous_step).to eql(:choose_private_childcare_provider)
+              end
+            end
+          end
+        end
       end
     end
   end

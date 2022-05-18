@@ -20,26 +20,42 @@ module Forms
         elsif course.aso?
           :about_aso
         elsif previously_eligible_for_funding? && !eligible_for_funding?
-          :funding_your_npq
+          if ineligible_institution_type?
+            :your_work
+          else
+            :ineligible_for_funding
+          end
         else
           :check_answers
         end
       elsif course.ehco?
         :about_ehco
-      elsif !wizard.query_store.inside_catchment?
-        :funding_your_npq
-      elsif wizard.query_store.works_in_school? && eligible_for_funding?
-        :possible_funding
+      elsif wizard.query_store.works_in_childcare? || wizard.query_store.works_in_school?
+        if eligible_for_funding?
+          :possible_funding
+        else
+          :ineligible_for_funding
+        end
+      elsif ineligible_institution_type?
+        :your_work
       else
-        :funding_your_npq
+        :ineligible_for_funding
       end
     end
 
     def previous_step
       if query_store.inside_catchment? && query_store.works_in_school?
         :choose_school
+      elsif query_store.inside_catchment? && query_store.works_in_childcare?
+        if query_store.works_in_nursery? && query_store.works_in_public_childcare_provider?
+          :choose_childcare_provider
+        elsif query_store.has_ofsted_urn?
+          :choose_private_childcare_provider
+        else
+          :have_ofsted_urn
+        end
       else
-        :qualified_teacher_check
+        :work_in_childcare
       end
     end
 
@@ -74,21 +90,26 @@ module Forms
       Services::FundingEligibility.new(
         course: previous_course,
         institution: institution,
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
+    end
+
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= Services::FundingEligibility.new(
+        course: course,
+        institution: institution,
+        inside_catchment: inside_catchment?,
+        new_headteacher: new_headteacher?,
+      )
     end
 
     def eligible_for_funding?
-      Services::FundingEligibility.new(
-        course: course,
-        institution: institution,
-        new_headteacher: new_headteacher?,
-      ).funded?
+      funding_eligibility_calculator.funded?
     end
 
-    def new_headteacher?
-      wizard.store["aso_headteacher"] == "yes" && wizard.store["aso_new_headteacher"] == "yes"
-    end
+    delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
+    delegate :new_headteacher?, :inside_catchment?, to: :query_store
 
     def validate_course_exists
       if course.blank?

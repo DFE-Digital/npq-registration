@@ -82,7 +82,7 @@ class RegistrationWizard
                                 value: store["works_in_nursery"].capitalize,
                                 change_step: :work_in_nursery)
 
-        if query_store.work_in_nursery?
+        if query_store.works_in_nursery?
           kind_of_nursery = store["kind_of_nursery"]
 
           array << OpenStruct.new(key: "What kind of nursery do you work in?",
@@ -182,18 +182,15 @@ class RegistrationWizard
 private
 
   def needs_funding?
-    return true unless query_store.works_in_school?
-
     !Services::FundingEligibility.new(
       course: course,
       institution: institution(source: store["institution_identifier"]),
+      inside_catchment: query_store.inside_catchment?,
       new_headteacher: new_headteacher?,
     ).funded?
   end
 
-  def new_headteacher?
-    store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
-  end
+  delegate :new_headteacher?, to: :query_store
 
   def course
     Course.find(store["course_id"])
@@ -255,6 +252,7 @@ private
       your_work
       school_not_in_england
       possible_funding
+      ineligible_for_funding
       funding_your_npq
       share_provider
       check_answers

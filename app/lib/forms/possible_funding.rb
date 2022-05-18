@@ -11,5 +11,11 @@ module Forms
     def course
       @course ||= Course.find(wizard.store["course_id"])
     end
+
+    def message_template
+      return "private_childcare_provider" if wizard.query_store.works_in_private_childcare_provider?
+
+      "school"
+    end
   end
 end

@@ -17,7 +17,7 @@ module Forms
     end
 
     def previous_step
-      :choose_your_npq
+      :ineligible_for_funding
     end
 
     def course

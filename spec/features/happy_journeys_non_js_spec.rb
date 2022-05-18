@@ -262,6 +262,12 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("NPQ for Headship (NPQH)")
     page.click_button("Continue")
 
+    expect(page).to have_text("DfE scholarship funding is not available")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("In England")
+    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    page.click_link("Continue")
+
     expect(page).to have_text("Funding")
     page.choose "My trust is paying"
     page.click_button("Continue")
@@ -748,6 +754,11 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_text("Additional Support Offer for new headteachers")
     page.choose("NPQ for Headship (NPQH)")
     page.click_button("Continue")
+
+    expect(page).to have_text("DfE scholarship funding is not available")
+    expect(page).to have_text("In England")
+    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    page.click_link("Continue")
 
     expect(page).to have_text("How is your course being paid for?")
     page.choose "My employer is paying"

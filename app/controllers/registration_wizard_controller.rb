@@ -2,7 +2,8 @@ class RegistrationWizardController < ApplicationController
   def show
     @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
                                      store: store,
-                                     request: request)
+                                     request: request,
+                                     params: wizard_params)
 
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"

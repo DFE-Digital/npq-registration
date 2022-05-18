@@ -126,6 +126,7 @@ module Services
       @funding_eligibility = Services::FundingEligibility.new(
         course: course,
         institution: institution(source: store["institution_identifier"]),
+        inside_catchment: query_store.inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
     end

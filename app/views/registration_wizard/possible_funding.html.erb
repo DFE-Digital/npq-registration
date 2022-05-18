@@ -11,15 +11,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">You may qualify for DfE scholarship funding</h1>
-
-    <p class="govuk-body">
-      DfE scholarship funding may be available for the <%= @form.course.name %> course you have selected.
-    </p>
-
-    <p class="govuk-body">
-      Your training provider will give you more details and confirm if you qualify for funding.
-    </p>
+    <%= render "registration_wizard/possible_funding/#{@form.message_template}", course_name: @form.course.name %>
 
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_submit %>

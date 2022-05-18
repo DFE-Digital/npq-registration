@@ -15,11 +15,7 @@ module Forms
     end
 
     def previous_step
-      if wizard.query_store.works_in_school?
-        :choose_your_provider
-      else
-        :your_work
-      end
+      :choose_your_provider
     end
   end
 end
