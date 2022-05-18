@@ -7,6 +7,7 @@ RSpec.describe Services::Feature do
 
     before do
       allow(Services::Feature).to receive(:features_enabled?).and_return(true)
+      allow(ENV).to receive(:fetch).with("REGISTRATION_CLOSED", "false").and_return("false")
     end
 
     context "before the closure period" do
@@ -14,6 +15,16 @@ RSpec.describe Services::Feature do
 
       it "returns false" do
         expect(described_class.registration_closed?).to eql(false)
+      end
+
+      context "when REGISTRATION_CLOSED env variable is set" do
+        before do
+          allow(ENV).to receive(:fetch).with("REGISTRATION_CLOSED", "false").and_return("true")
+        end
+
+        it "returns true" do
+          expect(described_class.registration_closed?).to eql(true)
+        end
       end
     end
 
@@ -23,6 +34,16 @@ RSpec.describe Services::Feature do
       it "returns true" do
         expect(described_class.registration_closed?).to eql(true)
       end
+
+      context "when REGISTRATION_CLOSED env variable is set" do
+        before do
+          allow(ENV).to receive(:fetch).with("REGISTRATION_CLOSED", "false").and_return("true")
+        end
+
+        it "returns true" do
+          expect(described_class.registration_closed?).to eql(true)
+        end
+      end
     end
 
     context "after the closure period" do
@@ -30,6 +51,16 @@ RSpec.describe Services::Feature do
 
       it "returns false" do
         expect(described_class.registration_closed?).to eql(false)
+      end
+
+      context "when REGISTRATION_CLOSED env variable is set" do
+        before do
+          allow(ENV).to receive(:fetch).with("REGISTRATION_CLOSED", "false").and_return("true")
+        end
+
+        it "returns true" do
+          expect(described_class.registration_closed?).to eql(true)
+        end
       end
     end
   end

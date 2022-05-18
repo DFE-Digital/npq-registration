@@ -6,7 +6,7 @@ module Services
 
     class << self
       def registration_closed?
-        features_enabled? && registration_closed_due_to_timing?
+        features_enabled? && (registration_closed_due_to_timing? || registration_closed_via_env_variable?)
       end
 
       # We only enable these feature in prod.
@@ -16,6 +16,10 @@ module Services
 
       def registration_closed_due_to_timing?
         REGISTRATION_CLOSED.cover?(Time.zone.now)
+      end
+
+      def registration_closed_via_env_variable?
+        ENV.fetch("REGISTRATION_CLOSED", "false") == "true"
       end
     end
   end
