@@ -53,12 +53,7 @@ module Forms
       )
     end
 
-    def works_in_school?
-      wizard.query_store.works_in_school?
-    end
-
-    def inside_catchment?
-      wizard.query_store.inside_catchment?
-    end
+    delegate :query_store, to: :wizard
+    delegate :works_in_school?, :inside_catchment?, to: :query_store
   end
 end

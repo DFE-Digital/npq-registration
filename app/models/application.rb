@@ -22,7 +22,7 @@ class Application < ApplicationRecord
   end
 
   def inside_catchment?
-    %w[england jersey_guernsey_isle_of_man].include?(teacher_catchment)
+    %w[england].include?(teacher_catchment)
   end
 
   def new_headteacher?
