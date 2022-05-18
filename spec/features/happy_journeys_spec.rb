@@ -579,6 +579,13 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
+    expect(page).to have_text("DfE scholarship funding is not available")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("In England")
+    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    page.click_link("Continue")
+
+    expect(page).to be_axe_clean
     expect(page).to have_text("How is your course being paid for?")
     page.choose "I am paying", visible: :all
     page.click_button("Continue")
