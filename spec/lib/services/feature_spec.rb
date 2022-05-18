@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe Services::Feature do
   describe "#registration_closed?" do
-    let(:start_time) { Services::Feature::REGISTRATION_CLOSED.first }
-    let(:end_time)   { Services::Feature::REGISTRATION_CLOSED.last }
+    let(:start_time) { Services::Feature::REGISTRATION_CLOSE_DATE }
+    let(:end_time)   { Services::Feature::REGISTRATION_OPEN_DATE }
 
     before do
       allow(Services::Feature).to receive(:features_enabled?).and_return(true)
@@ -25,14 +25,12 @@ RSpec.describe Services::Feature do
       end
     end
 
-    # Service doesn't have a re-open date currently.
-    #
-    # context "after the closure period" do
-    #   before { travel_to end_time + 1 }
+    context "after the closure period" do
+      before { travel_to end_time + 1 }
 
-    #   it "returns false" do
-    #     expect(described_class.registration_closed?).to eql(false)
-    #   end
-    # end
+      it "returns false" do
+        expect(described_class.registration_closed?).to eql(false)
+      end
+    end
   end
 end
