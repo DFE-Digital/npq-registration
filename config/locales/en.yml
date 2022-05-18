@@ -6,14 +6,14 @@ en:
     attributes:
       forms/funding_your_npq:
         funding_options:
-          school: My school or college is covering the cost
+          school: My workplace is covering the cost
           trust: My trust is paying
           employer: My employer is paying
           self: I am paying
           another: My NPQ is being paid in another way
       forms/funding_your_aso:
         funding_options:
-          school: My school or college is covering the cost
+          school: My workplace is covering the cost
           trust: My trust is paying
           self: I am paying
           another: The Additional Support Offer is being paid in another way
