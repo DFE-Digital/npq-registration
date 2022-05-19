@@ -2,6 +2,31 @@ require "rails_helper"
 
 RSpec.describe Forms::ChooseYourProvider, type: :model do
   describe "validations" do
+    let(:current_step) { "choose_your_provider" }
+    let(:request) { nil }
+    let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+    let(:school) { create(:school) }
+    let(:works_in_school) { "yes" }
+    let(:store) do
+      {
+        "teacher_catchment" => "england",
+        "course_id" => course.id,
+        "institution_identifier" => "School-#{school.urn}",
+        "works_in_school" => works_in_school,
+      }
+    end
+    let(:wizard) do
+      RegistrationWizard.new(
+        current_step: current_step,
+        store: store,
+        request: request,
+      )
+    end
+
+    before do
+      subject.wizard = wizard
+    end
+
     it { is_expected.to validate_presence_of(:lead_provider_id) }
 
     it "course for lead_provider_id must exist" do
@@ -12,6 +37,56 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       subject.lead_provider_id = LeadProvider.first.id
       subject.valid?
       expect(subject.errors[:lead_provider_id]).to be_blank
+    end
+
+    npqeyl_and_npqll_codes = %w[
+      NPQEYL
+      NPQLL
+    ].freeze
+    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes
+
+    context "when trying to use non EYL/LL provider" do
+      let(:lead_provider) { LeadProvider.find_by!(name: "Church of England") }
+
+      context "when applying for an EYL/LL course" do
+        let(:course_code) { npqeyl_and_npqll_codes.sample }
+        let(:course_name) { Course::COURSE_NAMES[course_code] }
+        let(:course) { Course.find_by(name: course_name) }
+
+        it "returns an error" do
+          subject.lead_provider_id = lead_provider.id
+          subject.valid?
+          expect(subject.errors[:lead_provider_id]).to be_present
+        end
+      end
+
+      context "when applying for an non-EYL/LL course" do
+        let(:course_code) { other_npq_codes.sample }
+        let(:course_name) { Course::COURSE_NAMES[course_code] }
+        let(:course) { Course.find_by(name: course_name) }
+
+        it "returns an error" do
+          subject.lead_provider_id = lead_provider.id
+          subject.valid?
+          expect(subject.errors[:lead_provider_id]).to be_blank
+        end
+      end
+    end
+
+    context "when trying to use EYL/LL provider" do
+      let(:lead_provider) { LeadProvider.npqeyl_and_npqll_providers.sample }
+
+      context "when applying for an EYL/LL course" do
+        let(:course_code) { npqeyl_and_npqll_codes.sample }
+        let(:course_name) { Course::COURSE_NAMES[course_code] }
+        let(:course) { Course.find_by(name: course_name) }
+
+        it "returns an error" do
+          subject.lead_provider_id = lead_provider.id
+          subject.valid?
+          expect(subject.errors[:lead_provider_id]).to be_blank
+        end
+      end
     end
   end
 
