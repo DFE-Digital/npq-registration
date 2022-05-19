@@ -13,6 +13,16 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       subject.valid?
       expect(subject.errors[:course_id]).to be_blank
     end
+
+    it "course for course_id must be available to applicant" do
+      subject.course_id = Course.where(display: false).first
+      subject.valid?
+      expect(subject.errors[:course_id]).to be_present
+
+      subject.course_id = Course.first.id
+      subject.valid?
+      expect(subject.errors[:course_id]).to be_blank
+    end
   end
 
   describe "#next_step" do

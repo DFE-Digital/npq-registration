@@ -69,7 +69,7 @@ module Forms
     end
 
     def course
-      Course.find_by(id: course_id)
+      courses.find_by(id: course_id)
     end
 
   private
