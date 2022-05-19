@@ -16,8 +16,8 @@ module Forms
       wizard.store["submitted"] = true
     end
 
-    def display_ehco_information?
-      course.ehco?
+    def display_npqh_information?
+      course.npqh?
     end
 
     def ehco_more_information_url
