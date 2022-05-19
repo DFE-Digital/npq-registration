@@ -32,7 +32,7 @@ module Forms
     end
 
     def options
-      LeadProvider.all.each_with_index.map do |provider, index|
+      providers.each_with_index.map do |provider, index|
         OpenStruct.new(value: provider.id,
                        text: provider.name,
                        link_errors: index.zero?)
@@ -40,7 +40,7 @@ module Forms
     end
 
     def lead_provider
-      LeadProvider.find_by(id: lead_provider_id)
+      providers.find_by(id: lead_provider_id)
     end
 
     def course
@@ -56,6 +56,10 @@ module Forms
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
       ).funded?
+    end
+
+    def providers
+      LeadProvider.for(course: course)
     end
 
     def institution_identifier

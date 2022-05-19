@@ -72,4 +72,70 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       end
     end
   end
+
+  describe ".options" do
+    subject do
+      form.options
+    end
+
+    let(:form) { described_class.new }
+
+    let(:store) do
+      { "course_id" => course_id }
+    end
+
+    let(:course) { Course.ehco }
+    let(:course_id) { course.id }
+
+    let(:expected_providers) { LeadProvider.all }
+
+    before do
+      form.wizard = RegistrationWizard.new(
+        current_step: :choose_your_npq,
+        store: store,
+        request: nil,
+      )
+    end
+
+    npqeyl_and_npqll_codes = %w[
+      NPQEYL
+      NPQLL
+    ].freeze
+    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes
+
+    other_npq_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:expected_providers) { LeadProvider.all }
+
+        it "returns all options" do
+          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
+        end
+      end
+    end
+
+    npqeyl_and_npqll_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:expected_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Education Development Trust",
+            "School-Led Network",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
+
+        it "returns all options" do
+          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
+        end
+      end
+    end
+  end
 end
