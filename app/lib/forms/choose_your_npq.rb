@@ -69,17 +69,13 @@ module Forms
     end
 
     def course
-      Course.find_by(id: course_id)
+      courses.find_by(id: course_id)
     end
 
   private
 
     def courses
-      if wizard.query_store.inside_catchment? && wizard.query_store.works_in_school?
-        Course.where(display: true).order(:position)
-      else
-        Course.where(display: true).order(:position) - Course.ehco
-      end
+      Course.where(display: true).order(:position)
     end
 
     def previous_course
