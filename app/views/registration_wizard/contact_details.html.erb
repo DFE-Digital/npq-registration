@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Email address
+  <%= @form.errors.present? ? "Error: " : nil %>What's your email address?
 <% end %>
 
 <% content_for :before_content do %>
@@ -15,7 +15,7 @@
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_text_field :email,
-        label: { text: "Email address", tag: "h1", size: "xl" },
+        label: { text: "What's your email address?", tag: "h1", size: "xl" },
         hint: { text: "We’ll email you a code to confirm your email address." } %>
 
       <%= f.govuk_submit %>
