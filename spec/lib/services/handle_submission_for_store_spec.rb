@@ -4,12 +4,14 @@ RSpec.describe Services::HandleSubmissionForStore do
   let(:user) { create(:user, trn: nil) }
   let(:school) { create(:school) }
 
+  let(:courses) { Course.all - Course.ehco }
+
   let(:store) do
     {
       "confirmed_email" => user.email,
       "trn_verified" => false,
       "trn" => "12345",
-      "course_id" => Course.all.sample.id,
+      "course_id" => courses.sample.id,
       "institution_identifier" => "School-#{school.urn}",
       "lead_provider_id" => LeadProvider.all.sample.id,
     }
@@ -49,9 +51,29 @@ RSpec.describe Services::HandleSubmissionForStore do
           allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
         end
 
-        it "saves the funding choice to nil on the application" do
+        it "saves the funding choice to school on the application" do
           subject.call
           expect(user.applications.first.reload.funding_choice).to eq "school"
+        end
+
+        context "when the course is EHCO" do
+          before do
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+          end
+
+          let(:courses) { Course.ehco }
+
+          let(:store) do
+            super().merge(
+              "funding" => "school",
+              "aso_funding_choice" => "trust",
+            )
+          end
+
+          it "saves funding choice from the aso funding choice question instead of the regular path" do
+            subject.call
+            expect(user.applications.first.reload.funding_choice).to eq "trust"
+          end
         end
       end
     end
