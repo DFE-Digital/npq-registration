@@ -55,4 +55,8 @@ class PrivateChildcareProvider < ApplicationRecord
   def identifier
     "PrivateChildcareProvider-#{urn}"
   end
+
+  def on_early_years_register?
+    early_years_individual_registers.include?("EYR")
+  end
 end

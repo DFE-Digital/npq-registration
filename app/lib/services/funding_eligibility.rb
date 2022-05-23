@@ -44,7 +44,10 @@ module Services
 
           FUNDED_ELIGIBILITY_RESULT
         when "PrivateChildcareProvider"
-          # TODO: implement funding rejection for private childcare providers
+          return EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES unless inside_catchment?
+          return EARLY_YEARS_INVALID_NPQ unless course.eyl?
+          return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
+
           FUNDED_ELIGIBILITY_RESULT
         when "LocalAuthority"
           FUNDED_ELIGIBILITY_RESULT

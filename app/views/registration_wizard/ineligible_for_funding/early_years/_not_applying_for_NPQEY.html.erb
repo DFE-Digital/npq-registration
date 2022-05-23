@@ -1,3 +1,14 @@
+<% content_for :title do %>
+  <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
+<% end %>
+
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
 <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
 
 <p class="govuk-body">Pending Copy</p>
