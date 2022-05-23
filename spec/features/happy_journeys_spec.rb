@@ -990,7 +990,11 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
-    PrivateChildcareProvider.create!(provider_urn: "EY123456", provider_name: "searchable childcare provider", address_1: "street 1", town: "manchester")
+    PrivateChildcareProvider.create!(
+      provider_urn: "EY123456", provider_name: "searchable childcare provider",
+      address_1: "street 1", town: "manchester",
+      early_years_individual_registers: %w[CCR VCR EYR]
+    )
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Enter your or your employer's URN")
@@ -1002,9 +1006,21 @@ RSpec.feature "Happy journeys", type: :feature do
     page.find("#private-childcare-provider-picker__option--0").click
     page.click_button("Continue")
 
+    eyl_course = ["NPQ Early Years Leadership (NPQEYL)"]
+    ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
+
+    ineligible_courses.each do |course|
+      expect(page).to have_text("What are you applying for?")
+      page.choose(course, visible: :all)
+      page.click_button("Continue")
+
+      expect(page).not_to have_text("If your provider accepts your application, you’ll qualify for DfE funding.")
+      page.click_link("Back")
+    end
+
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
-    page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all) # Needs changing to an early years course once added
+    page.choose("NPQ Early Years Leadership (NPQEYL)", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -1030,7 +1046,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
+    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ Early Years Leadership (NPQEYL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
     expect(check_answers_page.summary_list.key?("How is your NPQ being paid for?")).to be_falsey
