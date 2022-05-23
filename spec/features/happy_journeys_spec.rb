@@ -1014,7 +1014,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose(course, visible: :all)
       page.click_button("Continue")
 
-      expect(page).not_to have_text("If your provider accepts your application, you’ll qualify for DfE funding.")
+      expect(page).not_to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
       page.click_link("Back")
     end
 
@@ -1024,7 +1024,8 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding.")
+    expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+    expect(page).to have_text("You’ll only be eligible for DfE funding for this NPQ once. If you start this NPQ, and then withdraw or fail, you will not be funded again for the same course.")
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
