@@ -29,6 +29,11 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       funding_choice: "trust",
       cohort: 2022,
       targeted_delivery_funding_eligibility: true,
+      works_in_nursery: false,
+      works_in_childcare: false,
+      kind_of_nursery: nil,
+      private_childcare_provider_urn: nil,
+      funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
     )
   end
 
@@ -75,6 +80,11 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             employment_role: application.employment_role,
             cohort: 2022,
             targeted_delivery_funding_eligibility: true,
+            works_in_nursery: false,
+            works_in_childcare: false,
+            kind_of_nursery: nil,
+            private_childcare_provider_urn: nil,
+            funding_eligiblity_status_code: "funded",
           },
         },
       }.to_json

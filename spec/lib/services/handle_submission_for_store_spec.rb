@@ -37,7 +37,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     it "store data from store" do
       expect(stable_as_json(user.reload)).to match({
-        "email" => "user1@example.com",
+        "email" => user.email,
         "ecf_id" => nil,
         "trn" => nil,
         "full_name" => "John Doe",
@@ -56,7 +56,7 @@ RSpec.describe Services::HandleSubmissionForStore do
       subject.call
 
       expect(stable_as_json(user.reload)).to match({
-        "email" => "user1@example.com",
+        "email" => user.email,
         "ecf_id" => nil,
         "trn" => "0012345",
         "full_name" => "Jane Doe",

@@ -26,6 +26,7 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
       ukprn: school.ukprn,
       headteacher_status: "no",
       eligible_for_funding: true,
+      funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       funding_choice: "trust",
       ecf_id: "1234",
     )
@@ -59,6 +60,7 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
         type: "npq_profiles",
         attributes: {
           eligible_for_funding: true,
+          funding_eligiblity_status_code: "funded",
         },
       },
     }.to_json
