@@ -1006,7 +1006,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.find("#private-childcare-provider-picker__option--0").click
     page.click_button("Continue")
 
-    eyl_course = ["NPQ Early Years Leadership (NPQEYL)"]
+    eyl_course = ["NPQ for Early Years Leadership (NPQEYL)"]
     ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
 
     ineligible_courses.each do |course|
@@ -1020,7 +1020,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
-    page.choose("NPQ Early Years Leadership (NPQEYL)", visible: :all)
+    page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -1047,7 +1047,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ Early Years Leadership (NPQEYL)")
+    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Early Years Leadership (NPQEYL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
     expect(check_answers_page.summary_list.key?("How is your NPQ being paid for?")).to be_falsey

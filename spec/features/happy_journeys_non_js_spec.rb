@@ -419,7 +419,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("The Early Headship Coaching Offer")
+    page.choose("Early Headship Coaching Offer")
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
@@ -465,7 +465,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("The Early Headship Coaching Offer")
+    expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
 
@@ -500,7 +500,7 @@ RSpec.feature "Happy journeys", type: :feature do
     visit "/account"
 
     expect(page).to have_text("Teach First")
-    expect(page).to have_text("The Early Headship Coaching Offer")
+    expect(page).to have_text("Early Headship Coaching Offer")
 
     visit "/registration/check-answers"
 
@@ -593,7 +593,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("What are you applying for?")
-    page.choose("The Early Headship Coaching Offer")
+    page.choose("Early Headship Coaching Offer")
     page.click_button("Continue")
 
     expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
@@ -639,7 +639,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("The Early Headship Coaching Offer")
+    expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
 
@@ -677,7 +677,7 @@ RSpec.feature "Happy journeys", type: :feature do
     visit "/account"
 
     expect(page).to have_text("Teach First")
-    expect(page).to have_text("The Early Headship Coaching Offer")
+    expect(page).to have_text("Early Headship Coaching Offer")
 
     visit "/registration/check-answers"
 
