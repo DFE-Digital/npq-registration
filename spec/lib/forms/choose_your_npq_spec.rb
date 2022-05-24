@@ -9,7 +9,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       subject.valid?
       expect(subject.errors[:course_id]).to be_present
 
-      subject.course_id = Course.first.id
+      subject.course_id = Course.where(display: true).first.id
       subject.valid?
       expect(subject.errors[:course_id]).to be_blank
     end
@@ -19,7 +19,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       subject.valid?
       expect(subject.errors[:course_id]).to be_present
 
-      subject.course_id = Course.first.id
+      subject.course_id = Course.where(display: true).first.id
       subject.valid?
       expect(subject.errors[:course_id]).to be_blank
     end
@@ -54,7 +54,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course) { Course.first }
+        let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
         let(:school) { create(:school) }
         let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
         let(:store) { { course_id: previous_course.id.to_s, institution_identifier: "School-#{school.urn}" }.stringify_keys }
