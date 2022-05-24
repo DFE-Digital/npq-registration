@@ -78,6 +78,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         "employer_name" => nil,
         "employment_role" => nil,
         "funding_choice" => nil,
+        "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "headteacher_status" => nil,
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => lead_provider.id,
