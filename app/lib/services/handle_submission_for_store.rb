@@ -122,7 +122,7 @@ module Services
     end
 
     def funding_eligibility_service
-      @funding_eligibility ||= Services::FundingEligibility.new(
+      @funding_eligibility_service ||= Services::FundingEligibility.new(
         course: course,
         institution: institution(source: store["institution_identifier"]),
         inside_catchment: query_store.inside_catchment?,
