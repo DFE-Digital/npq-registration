@@ -82,7 +82,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         "headteacher_status" => nil,
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => lead_provider.id,
-        "private_childcare_provider_urn" => "100001",
+        "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
         "school_urn" => nil,
         "targeted_delivery_funding_eligibility" => false,
         "targeted_support_funding_eligibility" => false,
