@@ -127,8 +127,8 @@ RSpec.describe Services::FundingEligibility do
         context "when outside catchment" do
           let(:inside_catchment) { false }
 
-          it "returns status code :early_years_outside_england_or_crown_dependencies" do
-            expect(subject.funding_eligiblity_status_code).to eq :early_years_outside_england_or_crown_dependencies
+          it "returns status code :early_years_outside_catchment" do
+            expect(subject.funding_eligiblity_status_code).to eq :early_years_outside_catchment
           end
 
           it "it is not eligible" do

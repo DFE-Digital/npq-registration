@@ -11,10 +11,10 @@ module Services
     NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
 
     # School
-    SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES = :school_outside_england_or_crown_dependencies
+    SCHOOL_OUTSIDE_CATCHMENT = :school_outside_catchment
 
     # Early Years
-    EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES = :early_years_outside_england_or_crown_dependencies
+    EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
     NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
     EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
 
@@ -38,13 +38,13 @@ module Services
 
         case institution.class.name
         when "School"
-          return SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES unless inside_catchment?
+          return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
           return INELIGIBLE_ESTABLISHMENT_TYPE unless eligible_establishment_type_codes.include?(institution.establishment_type_code)
           return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
 
           FUNDED_ELIGIBILITY_RESULT
         when "PrivateChildcareProvider"
-          return EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES unless inside_catchment?
+          return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
           return EARLY_YEARS_INVALID_NPQ unless course.eyl?
           return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
 

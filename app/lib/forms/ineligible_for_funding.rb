@@ -33,11 +33,11 @@ module Forms
         return version if VALID_PARTIALS.include?(version)
 
         case funding_eligiblity_status_code
-        when Services::FundingEligibility::SCHOOL_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
+        when Services::FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
           return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
         when Services::FundingEligibility::PREVIOUSLY_FUNDED
           return SCHOOL_ALREADY_FUNDED
-        when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_ENGLAND_OR_CROWN_DEPENDENCIES, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
+        when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
           return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
         when Services::FundingEligibility::EARLY_YEARS_INVALID_NPQ
           return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
