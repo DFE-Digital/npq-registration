@@ -403,4 +403,188 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
   end
+
+  scenario "applying for EHCO but not new headteacher" do
+    visit "/"
+    expect(page).to have_text("Before you start")
+    page.click_link("Start now")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Have you agreed a start date of")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.click_button("Continue")
+
+    # expect(page).to be_axe_clean
+    # TODO: aria-expanded
+    expect(page.current_path).to eql("/registration/teacher-catchment")
+    page.choose("England", visible: :all)
+    page.click_button("Continue")
+
+    expect(page.current_path).to eql("/registration/work-in-school")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("I need a reminder", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("If you don’t know what your teacher reference number")
+    page.click_link("Back")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("I do not have a TRN", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Get a Teacher Reference Number (TRN)")
+    page.click_link("Back")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to eql("/registration/teacher-reference-number")
+    page.choose("Yes", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page.current_path).to include("contact-details")
+    expect(page).to have_text("What's your email address?")
+    page.fill_in "What's your email address?", with: "user@example.com"
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Confirm your code")
+    expect(page).to have_text("user@example.com")
+    page.click_button("Continue")
+
+    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+    expect(page).to be_axe_clean
+    page.fill_in "Enter your code", with: code
+    page.click_button("Continue")
+
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: "1234567",
+          date_of_birth: "1980-12-13",
+          full_name: "John Doe",
+          nino: "",
+        },
+      )
+      .to_return(status: 200, body: participant_validator_response, headers: {})
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Check your details")
+    page.fill_in "Teacher reference number (TRN)", with: "1234567"
+    page.fill_in "Full name", with: "John Doe"
+    page.fill_in "Day", with: "13"
+    page.fill_in "Month", with: "12"
+    page.fill_in "Year", with: "1980"
+    page.click_button("Continue")
+
+    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Where is your school, college or academy trust?")
+    page.fill_in "School or college location", with: "manchester"
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    within ".npq-js-reveal" do
+      page.fill_in "Enter your school, college or trust name", with: "open"
+    end
+
+    expect(page).to have_content("open manchester school")
+    page.find("#school-picker__option--0").click
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("What are you applying for?")
+    page.choose("The Early Headship Coaching Offer", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
+    page.click_link("Continue")
+
+    expect(page).to be_axe_clean
+    page.text
+    expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+    page.choose "None of the above", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+    page.click_link("Back")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+    page.choose "I have completed an NPQH", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_selector "h1", text: "Are you a headteacher?"
+    page.choose "Yes", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_selector "h1", text: "Are you in your first 5 years of a headship?"
+    page.choose "No", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to have_selector "h1", text: "DfE scholarship funding is not available"
+    page.click_button("Continue")
+
+    expect(page).to have_selector "h1", text: "How is the Early Headship Coaching Offer being paid for?"
+    page.choose "I am paying", visible: :all
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Select your provider")
+    page.choose("Teach First", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Sharing your NPQ information")
+    page.check("Yes, I agree my information can be shared", visible: :all)
+    page.click_button("Continue")
+
+    expect(page).to be_axe_clean
+
+    check_answers_page = CheckAnswersPage.new
+
+    expect(check_answers_page).to be_displayed
+    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
+    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
+    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
+    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
+    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
+    expect(check_answers_page.summary_list["Course"].value).to eql("The Early Headship Coaching Offer")
+    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
+    expect(check_answers_page.summary_list["How is the Early Headship Coaching Offer being paid for?"].value).to eql("I am paying")
+    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
+
+    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
+
+    page.click_button("Submit")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Your initial registration is complete")
+    expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+
+    expect(page).to be_axe_clean
+  end
 end

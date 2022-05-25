@@ -138,7 +138,7 @@ module Services
     end
 
     def new_headteacher?
-      %w[yes_in_first_two_years yes_when_course_starts].include?(headteacher_status)
+      %w[yes_in_first_two_years yes_in_first_five_years yes_when_course_starts].include?(headteacher_status)
     end
 
     def ni_number_to_store
