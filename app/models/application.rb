@@ -26,6 +26,6 @@ class Application < ApplicationRecord
   end
 
   def new_headteacher?
-    %w[yes_when_course_starts yes_in_first_two_years].include?(headteacher_status)
+    %w[yes_when_course_starts yes_in_first_five_years yes_in_first_two_years].include?(headteacher_status)
   end
 end
