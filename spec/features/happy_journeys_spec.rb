@@ -120,7 +120,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Funding")
+    expect(page).to have_text("How is your course being paid for?")
     page.choose "My workplace is covering the cost", visible: :all
     page.click_button("Continue")
 
@@ -264,7 +264,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Funding")
+    expect(page).to have_text("How is your course being paid for?")
     page.choose "My trust is paying", visible: :all
     page.click_button("Continue")
 
