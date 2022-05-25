@@ -480,7 +480,7 @@ RSpec.feature "Sad journeys", type: :feature do
           full_name: "John Doe",
           nino: "",
         },
-        )
+      )
       .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
