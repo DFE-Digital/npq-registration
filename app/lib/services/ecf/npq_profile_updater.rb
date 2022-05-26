@@ -10,6 +10,7 @@ module Services
       def call
         profile = EcfApi::NpqProfile.find(application.ecf_id).first
         profile.eligible_for_funding = application.eligible_for_funding
+        profile.funding_eligiblity_status_code = application.funding_eligiblity_status_code
         profile.save
       end
     end

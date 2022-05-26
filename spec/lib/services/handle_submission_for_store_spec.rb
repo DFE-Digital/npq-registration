@@ -3,23 +3,99 @@ require "rails_helper"
 RSpec.describe Services::HandleSubmissionForStore do
   let(:user) { create(:user, trn: nil) }
   let(:school) { create(:school) }
+  let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
   let(:courses) { Course.all - Course.ehco }
+
+  let(:course) { courses.sample }
+  let(:lead_provider) { LeadProvider.all.sample }
 
   let(:store) do
     {
       "confirmed_email" => user.email,
       "trn_verified" => false,
       "trn" => "12345",
-      "course_id" => courses.sample.id,
-      "institution_identifier" => "School-#{school.urn}",
-      "lead_provider_id" => LeadProvider.all.sample.id,
+      "course_id" => course.id,
+      "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+      "lead_provider_id" => lead_provider.id,
+      "date_of_birth" => (30.years.ago + 1.day).to_s,
+      "full_name" => "Jane Doe",
+      "works_in_childcare" => "yes",
+      "works_in_nursery" => "yes",
+      "works_in_school" => "no",
+      "kind_of_nursery" => "private_nursery",
+      "teacher_catchment" => "england",
     }
   end
 
   subject { described_class.new(store: store) }
 
   describe "#call" do
+    def stable_as_json(record)
+      record.as_json(except: %i[id created_at updated_at])
+    end
+
+    it "store data from store" do
+      expect(stable_as_json(user.reload)).to match({
+        "email" => user.email,
+        "ecf_id" => nil,
+        "trn" => nil,
+        "full_name" => "John Doe",
+        "otp_hash" => nil,
+        "otp_expires_at" => nil,
+        "date_of_birth" => 30.years.ago.to_date.to_s,
+        "trn_verified" => false,
+        "active_alert" => false,
+        "national_insurance_number" => nil,
+        "trn_auto_verified" => false,
+        "admin" => false,
+      })
+      expect(user.applications.reload.count).to eq 0
+      expect(stable_as_json(user.applications.last)).to match(nil)
+
+      subject.call
+
+      expect(stable_as_json(user.reload)).to match({
+        "email" => user.email,
+        "ecf_id" => nil,
+        "trn" => "0012345",
+        "full_name" => "Jane Doe",
+        "otp_hash" => nil,
+        "otp_expires_at" => nil,
+        "date_of_birth" => (30.years.ago + 1.day).to_date.to_s,
+        "trn_verified" => false,
+        "active_alert" => nil,
+        "national_insurance_number" => nil,
+        "trn_auto_verified" => false,
+        "admin" => false,
+      })
+      expect(user.applications.reload.count).to eq 1
+      expect(stable_as_json(user.applications.last)).to match({
+        "cohort" => 2022,
+        "course_id" => course.id,
+        "ecf_id" => nil,
+        "eligible_for_funding" => false,
+        "employer_name" => nil,
+        "employment_role" => nil,
+        "funding_choice" => nil,
+        "funding_eligiblity_status_code" => "early_years_invalid_npq",
+        "headteacher_status" => nil,
+        "kind_of_nursery" => "private_nursery",
+        "lead_provider_id" => lead_provider.id,
+        "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
+        "school_urn" => nil,
+        "targeted_delivery_funding_eligibility" => false,
+        "targeted_support_funding_eligibility" => false,
+        "teacher_catchment" => "england",
+        "teacher_catchment_country" => nil,
+        "ukprn" => nil,
+        "user_id" => user.id,
+        "works_in_childcare" => true,
+        "works_in_nursery" => true,
+        "works_in_school" => false,
+      })
+    end
+
     context "when entered trn is shorter than 7 characters" do
       it "pads by prefixing zeros to 7 characters" do
         subject.call

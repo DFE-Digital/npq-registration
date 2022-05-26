@@ -28,6 +28,7 @@ module Services
           ukprn: ukprn,
           headteacher_status: headteacher_status,
           eligible_for_funding: funding_eligibility,
+          funding_eligiblity_status_code: funding_eligiblity_status_code,
           funding_choice: funding_choice,
           teacher_catchment: store["teacher_catchment"],
           teacher_catchment_country: store["teacher_catchment_country"].presence,
@@ -120,15 +121,21 @@ module Services
       ApplicationSubmissionJob.perform_later(user: user)
     end
 
-    def funding_eligibility
-      return @funding_eligibility if defined?(@funding_eligibility)
-
-      @funding_eligibility = Services::FundingEligibility.new(
+    def funding_eligibility_service
+      @funding_eligibility_service ||= Services::FundingEligibility.new(
         course: course,
         institution: institution(source: store["institution_identifier"]),
         inside_catchment: query_store.inside_catchment?,
         new_headteacher: new_headteacher?,
-      ).funded?
+      )
+    end
+
+    def funding_eligibility
+      funding_eligibility_service.funded?
+    end
+
+    def funding_eligiblity_status_code
+      funding_eligibility_service.funding_eligiblity_status_code
     end
 
     def targeted_delivery_funding_eligibility

@@ -160,7 +160,7 @@ class RegistrationWizard
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
-    unless query_store.works_in_school?
+    unless query_store.works_in_school? || query_store.works_in_childcare?
       array << OpenStruct.new(key: "Employer",
                               value: store["employer_name"],
                               change_step: :your_work)
