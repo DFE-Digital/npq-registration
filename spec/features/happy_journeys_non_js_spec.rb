@@ -268,7 +268,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
     page.click_link("Continue")
 
-    expect(page).to have_text("Funding")
+    expect(page).to have_text("How is your course being paid for?")
     page.choose "My trust is paying"
     page.click_button("Continue")
 

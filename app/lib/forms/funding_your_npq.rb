@@ -35,11 +35,7 @@ module Forms
     end
 
     def title
-      if inside_catchment? && works_in_school?
-        "Funding"
-      else
-        "How is your course being paid for?"
-      end
+      "How is your course being paid for?"
     end
 
   private
