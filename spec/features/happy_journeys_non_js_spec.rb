@@ -15,7 +15,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -176,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -336,7 +336,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -506,7 +506,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -679,7 +679,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
