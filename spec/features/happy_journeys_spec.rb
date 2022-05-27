@@ -89,14 +89,14 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -229,14 +229,14 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
