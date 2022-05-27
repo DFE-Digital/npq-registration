@@ -109,8 +109,13 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("DfE scholarship funding is not available")
-    expect(page).to have_text("In England")
-    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("state-funded schools")
+    expect(page).to have_text("state-funded 16 to 19 organisations")
+    expect(page).to have_text("independent special schools")
+    expect(page).to have_text("virtual schools")
+    expect(page).to have_text("hospital schools")
+    expect(page).to have_text("young offenders institutions")
     page.click_link("Continue")
 
     expect(page).to be_axe_clean
@@ -346,7 +351,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
     expect(page).to have_text("Work in England")
-    expect(page).to have_text("Be registered on the Ofsted childcare and early education register or be registered with a Childminder Agency (CMA)")
+    expect(page).to have_text("Be registered with Ofsted on the Early Years Register or the Childcare Register, or be registered with a Childminder Agency (CMA)")
     page.click_link("Continue")
 
     expect(page).to be_axe_clean

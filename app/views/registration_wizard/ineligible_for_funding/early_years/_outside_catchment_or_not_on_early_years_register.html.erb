@@ -2,20 +2,13 @@
   <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
 <% end %>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
 <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
 
-<p class="govuk-body">To be eligible for scholarship funding for the <%= course_name %> you must:</p>
+<p class="govuk-body">To be eligible for scholarship funding for the <b><%= course_name %></b> you must:</p>
 
 <ul class="govuk-list govuk-list--bullet">
   <li>Work in England</li>
-  <li>Be registered on the Ofsted childcare and early education register or be registered with a Childminder Agency (CMA)</li>
+  <li>Be registered with Ofsted on the Early Years Register or the Childcare Register, or be registered with a Childminder Agency (CMA)</li>
 </ul>
 
-<p class="govuk-body">You can still register for <%= course_name %> but you need to pay for it another way. To find out more about your funding options please contact your course provider.</p>
+<p class="govuk-body">You can still register for <%= course_name %>, but you need to pay for it another way. Contact your course provider to discuss your funding options.</p>
