@@ -28,8 +28,6 @@ class RegistrationWizardController < ApplicationController
     if @form.valid?
       if @form.changing_answer? && @form.next_step != :check_answers
         redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
-      elsif @form.next_step == :notification_option
-        redirect_to registration_interest_path
       else
         redirect_to registration_wizard_show_path(@wizard.next_step_path)
       end

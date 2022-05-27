@@ -37,6 +37,6 @@
 
     <%= render GovukComponent::StartButtonComponent.new(
           text: "Start now",
-          href: registration_wizard_show_path(step: "chosen-start-date")) %>
+          href: registration_wizard_show_path(@wizard.next_step_path)) %>
   </div>
 </div>
