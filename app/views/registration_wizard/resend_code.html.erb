@@ -26,6 +26,12 @@
       <%= f.govuk_submit do %>
         <%= govuk_link_to "Cancel", registration_wizard_show_path(@wizard.previous_step_path), class: "govuk-link--no-visited-state" %>
       <% end %>
+
+
+      <p class="govuk-body">
+        If you still need help, contact us:<br>
+        <%= mail_to 'continuing-professional-development@digital.education.gov.uk', 'continuing-professional-development@digital.education.gov.uk', class: 'govuk-link' %>
+      </p>
     <% end %>
   </div>
 </div>
