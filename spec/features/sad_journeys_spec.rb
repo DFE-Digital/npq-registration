@@ -7,11 +7,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Have you agreed a start date of")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
     page.click_button("Continue")
@@ -168,11 +163,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Have you agreed a start date of")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
     page.click_button("Continue")
@@ -267,11 +257,6 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Have you agreed a start date of")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
     page.choose("No, I don’t know my NPQ and provider", visible: :all)
     page.click_button("Continue")
@@ -284,11 +269,6 @@ RSpec.feature "Sad journeys", type: :feature do
     visit "/"
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Have you agreed a start date of")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -408,11 +388,6 @@ RSpec.feature "Sad journeys", type: :feature do
     visit "/"
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Have you agreed a start date of")
-    page.choose("Yes", visible: :all)
-    page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")

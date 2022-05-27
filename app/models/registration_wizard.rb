@@ -218,7 +218,6 @@ private
     %i[
       start
       closed
-      chosen_start_date
       teacher_catchment
       work_in_school
       provider_check

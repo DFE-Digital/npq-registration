@@ -5,7 +5,6 @@ class InterestNotificationSignUpController < ApplicationController
 
   def create
     @notification_form = Forms::RegistrationInterestNotification.new(notification_params)
-    @notification_form.notification_option = "yes"
 
     if @notification_form.valid?
       @notification_form.save!
