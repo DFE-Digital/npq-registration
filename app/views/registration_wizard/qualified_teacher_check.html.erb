@@ -23,12 +23,12 @@
       <%= f.govuk_text_field :trn,
         width: 10,
         label: { text: "Teacher reference number (TRN)", size: "m" },
-        hint: { text: "Your TRN is usually 7 digits long, for example 4567814.<br />It may include the letters RP or a slash ‘/’ symbol, for example RP99/12345".html_safe } %>
+        hint: { text: "Your TRN is between 6 and 7 characters long. It may begin with 'RP'" } %>
 
       <%= f.govuk_text_field :full_name,
         width: "three-quarters",
         label: { text: "Full name", size: "m" },
-        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency&nbsp;records".html_safe },
+        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records" },
         form_group: { class: "govuk-!-margin-bottom-2" } %>
 
       <%= render GovukComponent::DetailsComponent.new(summary_text: "Help if you have changed your name") do %>
@@ -52,8 +52,8 @@
 
       <%= f.govuk_text_field :national_insurance_number,
         width: 10,
-        label: { text: "National Insurance number (optional)", size: "m" },
-        hint: { text: "This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ123456C’." } %>
+        label: { text: @form.ni_number_required? ? "National Insurance number" : "National Insurance number (optional)", size: "m" },
+        hint: { text: "This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’." } %>
 
       <%= f.govuk_submit %>
     <% end %>

@@ -68,7 +68,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -212,7 +212,7 @@ RSpec.feature "Sad journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -224,6 +224,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
@@ -453,7 +454,7 @@ RSpec.feature "Sad journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -465,6 +466,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")

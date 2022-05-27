@@ -70,7 +70,7 @@ RSpec.feature "Happy journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -82,6 +82,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -136,7 +137,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
@@ -219,7 +220,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -651,7 +652,7 @@ RSpec.feature "Happy journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -663,6 +664,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -705,7 +707,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
@@ -770,7 +772,7 @@ RSpec.feature "Happy journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -782,6 +784,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -854,7 +857,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
@@ -919,7 +922,7 @@ RSpec.feature "Happy journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -931,6 +934,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -1010,7 +1014,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ Early Years Leadership (NPQEYL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey

@@ -20,11 +20,15 @@ module Forms
     before_validation :strip_title_prefixes
 
     validates :trn, presence: true
-    validates :full_name, presence: true, length: { maximum: 128 }
     validate :validate_processed_trn
-    validate :validate_date_of_birth_valid?
+
+    validates :full_name, presence: true, length: { maximum: 128 }
+
     validates :date_of_birth, presence: true
+    validate :validate_date_of_birth_valid?
     validate :validate_date_of_birth_in_the_past?
+
+    validates :national_insurance_number, presence: true, if: :ni_number_required?
     validates :national_insurance_number, length: { maximum: 9 }
 
     def self.permitted_params
@@ -113,6 +117,10 @@ module Forms
       wizard.store["trn_auto_verified"] = trn_auto_verified?
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
+    end
+
+    def ni_number_required?
+      wizard.query_store.inside_catchment?
     end
 
   private
