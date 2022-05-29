@@ -74,7 +74,7 @@ module Services
     end
 
     def eligible_establishment_type_codes
-      %w[1 2 3 5 6 7 8 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].freeze
+      %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].freeze
     end
 
     def eligible_urns

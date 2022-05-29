@@ -23,7 +23,7 @@ RSpec.describe Services::FundingEligibility do
     end
 
     context "when institution is a School" do
-      %w[1 2 3 5 6 7 8 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
+      %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
         context "eligible establishment_type_code #{eligible_gias_code}" do
           let(:institution) { build(:school, establishment_type_code: eligible_gias_code) }
 
@@ -59,7 +59,7 @@ RSpec.describe Services::FundingEligibility do
         end
       end
 
-      %w[10 11 25 27 29 30 37 56].each do |ineligible_gias_code|
+      %w[11 25 27 29 30 37 56].each do |ineligible_gias_code|
         context "ineligible establishment_type_code #{ineligible_gias_code}" do
           let(:institution) { build(:school, establishment_type_code: ineligible_gias_code) }
 
