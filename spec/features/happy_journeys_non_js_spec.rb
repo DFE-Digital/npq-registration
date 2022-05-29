@@ -108,9 +108,37 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "open manchester school"
     page.click_button("Continue")
 
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/RP12%2F345?npq_course_identifier=npq-senior-leadership")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+
     expect(page).to have_text("What are you applying for?")
     page.choose("NPQ for Senior Leadership (NPQSL)")
     page.click_button("Continue")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
 
     expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
     page.click_button("Continue")
@@ -250,6 +278,20 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_text("Choose your workplace")
     page.choose "open manchester school"
     page.click_button("Continue")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
 
     expect(page).to have_text("What are you applying for?")
     page.choose("NPQ for Headship (NPQH)")
@@ -433,6 +475,20 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose "No"
     page.click_button("Continue")
 
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-early-headship-coaching-offer")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+
     expect(page).to have_selector "h1", text: "DfE scholarship funding is not available"
     page.click_button("Continue")
 
@@ -602,6 +658,20 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_selector "h1", text: "Are you a headteacher?"
     page.choose "Yes"
     page.click_button("Continue")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-early-headship-coaching-offer")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
 
     expect(page).to have_selector "h1", text: "Are you in your first 5 years of a headship?"
     page.choose "Yes"

@@ -13,6 +13,12 @@ module EcfApi
     end
   end
 
+  class RawParser
+    def self.parse(_klass, response)
+      response.body.presence || {}
+    end
+  end
+
   class Base < JsonApiClient::Resource
     self.site = "#{ENV['ECF_APP_BASE_URL']}/api/v1/"
     self.connection_class = ConnectionWithAuthHeader

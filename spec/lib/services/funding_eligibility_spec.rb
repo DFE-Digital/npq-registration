@@ -3,8 +3,22 @@ require "rails_helper"
 RSpec.describe Services::FundingEligibility do
   let(:course) { Course.all.find { |c| !c.aso? } }
   let(:inside_catchment) { true }
+  let(:trn) { "1234567" }
+  let(:previously_funded) { false }
+  let(:course_identifier) { course.identifier }
 
-  subject { described_class.new(institution: institution, course: course, inside_catchment: inside_catchment) }
+  subject { described_class.new(institution: institution, course: course, inside_catchment: inside_catchment, trn: trn) }
+
+  before do
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/#{trn}?npq_course_identifier=#{course_identifier}")
+      .to_return(
+        status: 200,
+        body: previously_funded_response(previously_funded),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+  end
 
   describe ".funded? && .funding_eligiblity_status_code" do
     context "in the special URN list" do
@@ -32,6 +46,15 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :funded
           end
 
+          context "when fundend in previous cohort" do
+            let(:previously_funded) { true }
+
+            it "is ineligible" do
+              expect(subject.funded?).to be false
+              expect(subject.funding_eligiblity_status_code).to eq :previously_funded
+            end
+          end
+
           context "when undertaking ASO" do
             let(:course) { Course.all.find(&:aso?) }
 
@@ -47,6 +70,7 @@ RSpec.describe Services::FundingEligibility do
                   course: course,
                   inside_catchment: inside_catchment,
                   new_headteacher: true,
+                  trn: trn,
                 )
               end
 
@@ -78,6 +102,7 @@ RSpec.describe Services::FundingEligibility do
                   course: course,
                   inside_catchment: inside_catchment,
                   new_headteacher: true,
+                  trn: trn,
                 )
               end
 
@@ -105,6 +130,15 @@ RSpec.describe Services::FundingEligibility do
         expect(subject.funded?).to be_truthy
         expect(subject.funding_eligiblity_status_code).to eq :funded
       end
+
+      context "when fundend in previous cohort" do
+        let(:previously_funded) { true }
+
+        it "is ineligible" do
+          expect(subject.funded?).to be false
+          expect(subject.funding_eligiblity_status_code).to eq :previously_funded
+        end
+      end
     end
 
     context "when institution is a PrivateChildcareProvider" do
@@ -123,6 +157,15 @@ RSpec.describe Services::FundingEligibility do
         let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
         let(:course) { Course.all.find(&:eyl?) }
         let(:inside_catchment) { true }
+
+        context "when fundend in previous cohort" do
+          let(:previously_funded) { true }
+
+          it "is ineligible" do
+            expect(subject.funded?).to be false
+            expect(subject.funding_eligiblity_status_code).to eq :previously_funded
+          end
+        end
 
         context "when outside catchment" do
           let(:inside_catchment) { false }

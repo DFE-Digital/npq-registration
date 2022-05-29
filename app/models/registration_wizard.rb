@@ -191,6 +191,7 @@ private
       institution: institution(source: store["institution_identifier"]),
       inside_catchment: query_store.inside_catchment?,
       new_headteacher: new_headteacher?,
+      trn: store["trn"],
     ).funded?
   end
 
@@ -238,6 +239,7 @@ private
       aso_headteacher
       aso_new_headteacher
       aso_funding_not_available
+      aso_previously_funded
       aso_possible_funding
       funding_your_aso
       choose_your_npq

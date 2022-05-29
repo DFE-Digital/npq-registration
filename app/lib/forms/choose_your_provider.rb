@@ -57,6 +57,7 @@ module Forms
         institution: institution(source: institution_identifier),
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
+        trn: wizard.store["trn"],
       ).funded?
     end
 

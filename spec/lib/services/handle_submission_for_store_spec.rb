@@ -28,6 +28,22 @@ RSpec.describe Services::HandleSubmissionForStore do
     }
   end
 
+  before do
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/12345?npq_course_identifier=#{course.identifier}")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+  end
+
   subject { described_class.new(store: store) }
 
   describe "#call" do
@@ -266,6 +282,22 @@ RSpec.describe Services::HandleSubmissionForStore do
             "aso_headteacher" => "yes",
             "aso_new_headteacher" => "no",
           }
+        end
+
+        before do
+          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/12345?npq_course_identifier=npq-early-headship-coaching-offer")
+            .with(
+              headers: {
+                "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+              },
+            )
+            .to_return(
+              status: 200,
+              body: previously_funded_response(false),
+              headers: {
+                "Content-Type" => "application/vnd.api+json",
+              },
+            )
         end
 
         it "returns headteacher_status as yes_over_five_years" do
