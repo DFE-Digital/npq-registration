@@ -17,8 +17,8 @@ module Forms
       if changing_answer?
         if no_answers_will_change?
           :check_answers
-        elsif course.aso?
-          :about_aso
+        elsif course.ehco?
+          :about_ehco
         elsif previously_eligible_for_funding? && !eligible_for_funding?
           if ineligible_institution_type?
             :your_work
