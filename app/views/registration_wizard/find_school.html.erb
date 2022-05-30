@@ -18,12 +18,12 @@
 
       <p class="govuk-body">We need this information to check if you can access Department for Education funding.</p>
 
-      <%= render GovukComponent::InsetTextComponent.new(text: "You can only select schools and colleges in England, Guernsey, Jersey or the Isle of Man. If your school or college is outside these locations, check with your training provider.") %>
+      <%= render GovukComponent::InsetTextComponent.new(text: "You can only select schools, trusts and 16 to 19 educational settings in England, Guernsey, Jersey or the Isle of Man. If your workplace is outside these locations, check with your training provider.") %>
 
       <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
                              hint: { text: "Enter town, city or postcode" },
-                             label: { text: "School or college location", class: "govuk-label--s" } %>
+                             label: { text: "Workplace location", class: "govuk-label--s" } %>
 
       <%= f.govuk_submit %>
     <% end %>

@@ -8,7 +8,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     # expect(page).to be_axe_clean
@@ -68,7 +68,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -88,14 +88,14 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school, college or academy trust")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
 
     expect(page).to have_content("open manchester school")
@@ -109,8 +109,13 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("DfE scholarship funding is not available")
-    expect(page).to have_text("In England")
-    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("state-funded schools")
+    expect(page).to have_text("state-funded 16 to 19 organisations")
+    expect(page).to have_text("independent special schools")
+    expect(page).to have_text("virtual schools")
+    expect(page).to have_text("hospital schools")
+    expect(page).to have_text("young offenders institutions")
     page.click_link("Continue")
 
     expect(page).to be_axe_clean
@@ -164,7 +169,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     # expect(page).to be_axe_clean
@@ -212,7 +217,7 @@ RSpec.feature "Sad journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -224,19 +229,20 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "wrexham"
+    page.fill_in "Workplace location", with: "wrexham"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Choose your workplace")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
 
     expect(page).to have_content("open welsh school")
@@ -248,7 +254,7 @@ RSpec.feature "Sad journeys", type: :feature do
     page.click_link("Back")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Choose your workplace")
   end
 
   scenario "Not chosen DQT or provider" do
@@ -258,7 +264,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("No, I don’t know my NPQ and provider", visible: :all)
+    page.choose("No", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -272,7 +278,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     # expect(page).to be_axe_clean
@@ -345,7 +351,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
     expect(page).to have_text("Work in England")
-    expect(page).to have_text("Be registered on the Ofsted childcare and early education register or be registered with a Childminder Agency (CMA)")
+    expect(page).to have_text("Be registered with Ofsted on the Early Years Register or the Childcare Register, or be registered with a Childminder Agency (CMA)")
     page.click_link("Continue")
 
     expect(page).to be_axe_clean
@@ -391,7 +397,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider", visible: :all)
+    page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
     # expect(page).to be_axe_clean
@@ -453,7 +459,7 @@ RSpec.feature "Sad journeys", type: :feature do
           trn: "1234567",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response, headers: {})
@@ -465,20 +471,21 @@ RSpec.feature "Sad journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choose your school")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-reveal" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
 
     expect(page).to have_content("open manchester school")

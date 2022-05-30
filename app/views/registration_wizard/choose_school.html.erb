@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Choose your school, college or academy trust
+  <%= @form.errors.present? ? "Error: " : nil %>Choose your workplace
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,17 +14,17 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Choose your school, college or academy trust</h1>
+      <h1 class="govuk-heading-xl">Choose your workplace</h1>
 
       <% if @form.display_schools? %>
         <% if @form.possible_institutions.blank? %>
-          <p class="govuk-body">Please choose from schools and colleges located in <strong><%= @form.wizard.store["institution_location"] %></strong></p>
+          <p class="govuk-body">Please choose from schools, trusts and 16 to 19 educational settings located in <strong><%= @form.wizard.store["institution_location"] %></strong></p>
 
           <p class="govuk-body">No schools or colleges were found with that name, please try again</p>
 
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter your school or college name" } %>
+                                 label: { text: "Enter the name of your workplace" } %>
         <% else %>
           <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'm', text: "Please choose from schools located in #{@form.wizard.store["institution_location"]}" }) do %>
             <% @form.possible_institutions.each do |institution| %>
@@ -32,21 +32,21 @@
             <% end %>
             <%= f.govuk_radio_divider %>
             <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "School or college not shown above" } do %>
-              <%= f.govuk_text_field :institution_name, label: { text: "Search for another school or college name" } %>
+              <%= f.govuk_text_field :institution_name, label: { text: "Search for another workplace" } %>
             <% end %>
           <% end %>
         <% end %>
       <% else %>
-        <p class="govuk-body">Please choose from schools and colleges located in <%= @form.wizard.store["institution_location"] %></p>
+        <p class="govuk-body">Choose from schools, trusts and 16 to 19 educational settings located in <%= @form.wizard.store["institution_location"] %></p>
         <div class="npq-js-hidden">
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter your school, college or trust name", class: "govuk-label govuk-label--s" } %>
+                                 label: { text: "Enter the name of your workplace", class: "govuk-label govuk-label--s" } %>
         </div>
 
         <div class="npq-js-reveal">
           <div class="govuk-form-group">
-            <%= f.label :institution_identifier, "Enter your school, college or trust name", class: "govuk-label govuk-label--s", for: "school-picker" %>
+            <%= f.label :institution_identifier, "Enter the name of your workplace", class: "govuk-label govuk-label--s", for: "school-picker" %>
             <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "school-picker" %>
           </div>
         </div>

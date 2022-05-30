@@ -1,9 +1,21 @@
+<% content_for :title do %>
+  <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
+<% end %>
+
 <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
 
-<p class="govuk-body">Our records show that you have previously received scholarship funding for <b><%= course_name %></b>. If you have failed or withdrawn from this course, then you are not eligible for scholarship funding for the same NPQ again.</p>
+<p class="govuk-body">Our records show that you are already registered to study NPQ for <b><%= course_name %></b>.</p>
 
-<p class="govuk-body">You can still register for <%= course_name %>, but you need to pay for it another way.</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>
+    You can only receive scholarship funding to study this NPQ with one provider. If you do not wish to proceed with your current provider you will need to contact them.
+  </li>
 
-<%= govuk_details(summary_text: "I have not failed or withdrawn from this course") do %>
-  <p class="govuk-body">PENDING COPY</p>
-<% end %>
+  <li>
+    If you have previously failed or withdrawn from this course, then you're not eligible for scholarship funding for the same NPQ again. If you do not believe you've failed or withdrawn from this course please email <%= mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>
+  </li>
+</ul>
+
+<p class="govuk-body">
+  You can go <%= link_to('back and select a different NPQ', registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for <%= course_name %>. You'll need to pay for it another way. Contact your course provider to discuss your funding options.
+</p>

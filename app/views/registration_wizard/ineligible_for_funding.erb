@@ -2,6 +2,13 @@
   Your initial registration is complete
 <% end %>
 
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
+<% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= render "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}", course_name: @form.course.name %>

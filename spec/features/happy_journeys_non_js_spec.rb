@@ -15,7 +15,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -67,7 +67,7 @@ RSpec.feature "Happy journeys", type: :feature do
           trn: "12345",
           date_of_birth: "1980-12-13",
           full_name: "John Doe",
-          nino: "",
+          nino: "AB123456C",
         },
       )
       .to_return(status: 200, body: participant_validator_response(trn: "12345"), headers: {})
@@ -78,6 +78,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(
@@ -92,18 +93,18 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
 
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school")
+    expect(page).to have_text("Choose your workplace")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -130,7 +131,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("RP12/345")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
+    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
@@ -175,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -228,7 +229,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -236,17 +237,17 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
+    expect(page).to have_text("Choose your workplace")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -256,8 +257,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to have_text("DfE scholarship funding is not available")
     expect(page).to have_text("To be eligible for scholarship funding for")
-    expect(page).to have_text("In England")
-    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    expect(page).to have_text("state-funded schools")
+    expect(page).to have_text("state-funded 16 to 19 organisations")
+    expect(page).to have_text("independent special schools")
+    expect(page).to have_text("virtual schools")
+    expect(page).to have_text("hospital schools")
+    expect(page).to have_text("young offenders institutions")
     page.click_link("Continue")
 
     expect(page).to have_text("How is your course being paid for?")
@@ -331,7 +336,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -384,7 +389,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -392,17 +397,17 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
+    expect(page).to have_text("Choose your workplace")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -501,7 +506,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -554,7 +559,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "Day", with: "13"
     page.fill_in "Month", with: "12"
     page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    page.fill_in "National Insurance number", with: "AB123456C"
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1", establishment_type_code: "1")
@@ -562,17 +567,17 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "School or college location", with: "manchester"
+    page.fill_in "Workplace location", with: "manchester"
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
-    expect(page).to have_text("Please choose from schools and colleges located in manchester")
+    expect(page).to have_text("Choose your workplace")
+    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
     within ".npq-js-hidden" do
-      page.fill_in "Enter your school, college or trust name", with: "open"
+      page.fill_in "Enter the name of your workplace", with: "open"
     end
     page.click_button("Continue")
 
-    expect(page).to have_text("Choose your school, college or academy trust")
+    expect(page).to have_text("Choose your workplace")
     page.choose "open manchester school"
     page.click_button("Continue")
 
@@ -674,7 +679,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Start now")
 
     expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes, I have chosen my NPQ and provider")
+    page.choose("Yes")
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-catchment")
@@ -736,8 +741,13 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to have_text("DfE scholarship funding is not available")
-    expect(page).to have_text("In England")
-    expect(page).to have_text("In a state-funded school, trust or 16 to 19 educational setting")
+    expect(page).to have_text("To be eligible for scholarship funding for")
+    expect(page).to have_text("state-funded schools")
+    expect(page).to have_text("state-funded 16 to 19 organisations")
+    expect(page).to have_text("independent special schools")
+    expect(page).to have_text("virtual schools")
+    expect(page).to have_text("hospital schools")
+    expect(page).to have_text("young offenders institutions")
     page.click_link("Continue")
 
     expect(page).to have_text("How is your course being paid for?")

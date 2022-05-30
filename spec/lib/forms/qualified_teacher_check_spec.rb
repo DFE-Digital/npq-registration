@@ -18,6 +18,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       .to_return(status: response_code, body: response_body, headers: {})
   end
 
+  let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :qualified_teacher_check) }
+  let(:request) { nil }
+  let(:store) do
+    { "teacher_catchment" => "england" }
+  end
+
+  before do
+    subject.wizard = wizard
+  end
+
   describe "before validations" do
     subject do
       described_class.new(
