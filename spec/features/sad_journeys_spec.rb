@@ -494,7 +494,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
-    page.choose("The Early Headship Coaching Offer", visible: :all)
+    page.choose("Early Headship Coaching Offer", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -554,7 +554,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("The Early Headship Coaching Offer")
+    expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
     expect(check_answers_page.summary_list["How is the Early Headship Coaching Offer being paid for?"].value).to eql("I am paying")
     expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
