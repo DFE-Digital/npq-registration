@@ -741,7 +741,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_link("Continue")
 
     expect(page).to have_text("How is your course being paid for?")
-    page.choose "My employer is paying"
+    page.choose "My workplace is covering the cost"
     page.click_button("Continue")
 
     expect(page).to have_text("Select your provider")
@@ -790,7 +790,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(application.course).to be_npqh
     expect(application.eligible_for_funding).to be_falsey
-    expect(application.funding_choice).to eql("employer")
+    expect(application.funding_choice).to eql("school")
     expect(application.teacher_catchment).to eql("another")
     expect(application.teacher_catchment_country).to eql("China")
 
