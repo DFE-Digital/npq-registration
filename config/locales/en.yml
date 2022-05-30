@@ -15,7 +15,7 @@ en:
           school: My workplace is covering the cost
           trust: My trust is paying
           self: I am paying
-          another: The Additional Support Offer is being paid in another way
+          another: The Early Headship Coaching Offer is being paid in another way
       forms/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
@@ -139,7 +139,7 @@ en:
         forms/aso_funding_not_available:
           attributes:
             aso_funding:
-              blank: Choose whether or not you want to pay for the Additional Support Offer in another way?
+              blank: Choose whether or not you want to pay for the Early Headship Coaching Offer in another way?
         forms/funding_your_aso:
           attributes:
             aso_funding_choice:
