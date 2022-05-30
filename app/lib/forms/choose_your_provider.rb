@@ -22,10 +22,12 @@ module Forms
         :funding_your_npq
       elsif course.npqh? && eligible_for_funding?
         :possible_funding
-      elsif course.aso? && wizard.store["aso_funding"] == "yes"
-        :funding_your_aso
-      elsif wizard.store["aso_new_headteacher"] == "yes"
-        :aso_possible_funding
+      elsif course.ehco?
+        if eligible_for_funding?
+          :aso_possible_funding
+        else
+          :funding_your_aso
+        end
       else
         :choose_your_npq
       end
@@ -50,7 +52,7 @@ module Forms
   private
 
     def eligible_for_funding?
-      Services::FundingEligibility.new(
+      @eligible_for_funding ||= Services::FundingEligibility.new(
         course: course,
         institution: institution(source: institution_identifier),
         inside_catchment: inside_catchment?,
