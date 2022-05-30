@@ -239,7 +239,6 @@ private
       aso_new_headteacher
       aso_funding_not_available
       aso_possible_funding
-      aso_funding_contact
       funding_your_aso
       choose_your_npq
       choose_your_provider
