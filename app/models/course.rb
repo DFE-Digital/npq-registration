@@ -1,18 +1,18 @@
 class Course < ApplicationRecord
   COURSE_NAMES = {
-    NPQLT: "NPQ Leading Teaching (NPQLT)",
-    NPQLBC: "NPQ Leading Behaviour and Culture (NPQLBC)",
-    NPQLTD: "NPQ Leading Teacher Development (NPQLTD)",
+    ASO: "Additional Support Offer for new headteachers",
+    NPQLT: "NPQ for Leading Teaching (NPQLT)",
+    NPQLBC: "NPQ for Leading Behaviour and Culture (NPQLBC)",
+    NPQLTD: "NPQ for Leading Teacher Development (NPQLTD)",
+    NPQLL: "NPQ for Leading Literacy (NPQLL)",
     NPQSL: "NPQ for Senior Leadership (NPQSL)",
     NPQH: "NPQ for Headship (NPQH)",
     NPQEL: "NPQ for Executive Leadership (NPQEL)",
-    ASO: "Additional Support Offer for new headteachers",
-    EHCO: "The Early Headship Coaching Offer",
-    NPQEYL: "NPQ Early Years Leadership (NPQEYL)",
-    NPQLL: "NPQ Leading Literacy (NPQLL)",
+    NPQEYL: "NPQ for Early Years Leadership (NPQEYL)",
+    EHCO: "Early Headship Coaching Offer",
   }.with_indifferent_access.freeze
 
-  scope :ehco, -> { where(name: "The Early Headship Coaching Offer") }
+  scope :ehco, -> { where(name: "Early Headship Coaching Offer") }
 
   def npqh?
     name == "NPQ for Headship (NPQH)"
@@ -27,10 +27,10 @@ class Course < ApplicationRecord
   end
 
   def ehco?
-    name == "The Early Headship Coaching Offer"
+    name == "Early Headship Coaching Offer"
   end
 
   def eyl?
-    name == "NPQ Early Years Leadership (NPQEYL)"
+    name == "NPQ for Early Years Leadership (NPQEYL)"
   end
 end
