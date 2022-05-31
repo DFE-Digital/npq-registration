@@ -61,7 +61,7 @@ module Forms
     end
 
     def providers
-      LeadProvider.for(course: course)
+      LeadProvider.for(course: course).alphabetical
     end
 
     def institution_identifier

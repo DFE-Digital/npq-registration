@@ -43,48 +43,157 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       NPQEYL
       NPQLL
     ].freeze
-    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes
+    npqel_code = %w[
+      NPQEL
+    ].freeze
+    npqh_sl_lt_ltd_lbc_ehco_codes = %w[
+      NPQH
+      NPQSL
+      NPQLT
+      NPQLTD
+      NPQLBC
+      EHCO
+      ASO
+    ].freeze
+    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
 
-    context "when trying to use non EYL/LL provider" do
-      let(:lead_provider) { LeadProvider.find_by!(name: "Church of England") }
+    other_npq_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
 
-      context "when applying for an EYL/LL course" do
-        let(:course_code) { npqeyl_and_npqll_codes.sample }
-        let(:course_name) { Course::COURSE_NAMES[course_code] }
-        let(:course) { Course.find_by(name: course_name) }
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:valid_lead_providers) { LeadProvider.all }
 
-        it "returns an error" do
-          subject.lead_provider_id = lead_provider.id
-          subject.valid?
-          expect(subject.errors[:lead_provider_id]).to be_present
+        let(:invalid_lead_providers) do
+          LeadProvider.where.not(id: valid_lead_providers)
         end
-      end
 
-      context "when applying for an non-EYL/LL course" do
-        let(:course_code) { other_npq_codes.sample }
-        let(:course_name) { Course::COURSE_NAMES[course_code] }
-        let(:course) { Course.find_by(name: course_name) }
+        it "returns raises an error when an invalid lead provider is used" do
+          valid_lead_providers.each do |valid_lead_provider|
+            subject.lead_provider_id = valid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_blank
+          end
 
-        it "returns an error" do
-          subject.lead_provider_id = lead_provider.id
-          subject.valid?
-          expect(subject.errors[:lead_provider_id]).to be_blank
+          invalid_lead_providers.each do |invalid_lead_provider|
+            subject.lead_provider_id = invalid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_present
+          end
         end
       end
     end
 
-    context "when trying to use EYL/LL provider" do
-      let(:lead_provider) { LeadProvider.npqeyl_and_npqll_providers.sample }
+    npqeyl_and_npqll_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
 
-      context "when applying for an EYL/LL course" do
-        let(:course_code) { npqeyl_and_npqll_codes.sample }
-        let(:course_name) { Course::COURSE_NAMES[course_code] }
-        let(:course) { Course.find_by(name: course_name) }
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:valid_lead_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Education Development Trust",
+            "School-Led Network",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
 
-        it "returns an error" do
-          subject.lead_provider_id = lead_provider.id
-          subject.valid?
-          expect(subject.errors[:lead_provider_id]).to be_blank
+        let(:invalid_lead_providers) do
+          LeadProvider.where.not(id: valid_lead_providers)
+        end
+
+        it "returns raises an error when an invalid lead provider is used" do
+          valid_lead_providers.each do |valid_lead_provider|
+            subject.lead_provider_id = valid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_blank
+          end
+
+          invalid_lead_providers.each do |invalid_lead_provider|
+            subject.lead_provider_id = invalid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_present
+          end
+        end
+      end
+    end
+
+    npqel_code.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:valid_lead_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Church of England",
+            "Education Development Trust",
+            "LLSE",
+            "National Institute of Teaching",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
+
+        let(:invalid_lead_providers) do
+          LeadProvider.where.not(id: valid_lead_providers)
+        end
+
+        it "returns raises an error when an invalid lead provider is used" do
+          valid_lead_providers.each do |valid_lead_provider|
+            subject.lead_provider_id = valid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_blank
+          end
+
+          invalid_lead_providers.each do |invalid_lead_provider|
+            subject.lead_provider_id = invalid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_present
+          end
+        end
+      end
+    end
+
+    npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:valid_lead_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Church of England",
+            "Education Development Trust",
+            "LLSE",
+            "School-Led Network",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
+
+        let(:invalid_lead_providers) do
+          LeadProvider.where.not(id: valid_lead_providers)
+        end
+
+        it "returns raises an error when an invalid lead provider is used" do
+          valid_lead_providers.each do |valid_lead_provider|
+            subject.lead_provider_id = valid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_blank
+          end
+
+          invalid_lead_providers.each do |invalid_lead_provider|
+            subject.lead_provider_id = invalid_lead_provider.id
+            subject.valid?
+            expect(subject.errors[:lead_provider_id]).to be_present
+          end
         end
       end
     end
@@ -176,7 +285,19 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       NPQEYL
       NPQLL
     ].freeze
-    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes
+    npqel_code = %w[
+      NPQEL
+    ].freeze
+    npqh_sl_lt_ltd_lbc_ehco_codes = %w[
+      NPQH
+      NPQSL
+      NPQLT
+      NPQLTD
+      NPQLBC
+      EHCO
+      ASO
+    ].freeze
+    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
 
     other_npq_codes.each do |course_code|
       course_name = Course::COURSE_NAMES[course_code]
@@ -200,6 +321,56 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "Education Development Trust",
+            "School-Led Network",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
+
+        it "returns all options" do
+          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
+        end
+      end
+    end
+
+    npqel_code.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:expected_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Church of England",
+            "Education Development Trust",
+            "LLSE",
+            "National Institute of Teaching",
+            "Teacher Development Trust",
+            "Teach First",
+            "UCL Institute of Education",
+          ])
+        end
+
+        it "returns all options" do
+          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
+        end
+      end
+    end
+
+    npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
+      course_name = Course::COURSE_NAMES[course_code]
+
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(name: course_name) }
+        let(:expected_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Church of England",
+            "Education Development Trust",
+            "LLSE",
             "School-Led Network",
             "Teacher Development Trust",
             "Teach First",
