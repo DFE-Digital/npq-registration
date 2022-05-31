@@ -5,7 +5,7 @@ RSpec.describe Services::HandleSubmissionForStore do
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
-  let(:courses) { Course.all - Course.ehco }
+  let(:courses) { Course.all - Course.ehco - Course.aso }
 
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }
