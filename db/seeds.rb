@@ -37,10 +37,6 @@ def update_course_positions!
   end
 end
 
-def hide_courses!
-  Course.where(position: 0).update(display: false)
-end
-
 def seed_lead_providers!
   [
     { name: "Ambition Institute", ecf_id: "9e35e998-c63b-4136-89c4-e9e18ddde0ea" },
@@ -60,5 +56,4 @@ end
 # IDs have been hard coded to be the same across all envs
 seed_courses!
 update_course_positions!
-hide_courses!
 seed_lead_providers!
