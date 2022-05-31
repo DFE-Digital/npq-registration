@@ -8,7 +8,6 @@ en:
         funding_options:
           school: My workplace is covering the cost
           trust: My trust is paying
-          employer: My employer is paying
           self: I am paying
           another: My NPQ is being paid in another way
       forms/funding_your_aso:

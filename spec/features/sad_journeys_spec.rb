@@ -356,7 +356,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("How is your course being paid for?")
-    page.choose "My employer is paying", visible: :all
+    page.choose "My workplace is covering the cost", visible: :all
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
@@ -381,7 +381,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
-    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My employer is paying")
+    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My workplace is covering the cost")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 

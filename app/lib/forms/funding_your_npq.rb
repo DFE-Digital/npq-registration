@@ -26,9 +26,8 @@ module Forms
 
     def options
       [
-        (option("school", "My workplace is covering the cost", link_errors: true) if works_in_school?),
+        option("school", "My workplace is covering the cost", link_errors: true),
         (option("trust", "My trust is paying") if works_in_school? && inside_catchment?),
-        (option("employer", "My employer is paying") if !inside_catchment? || !works_in_school?),
         option("self", "I am paying"),
         option("another", "My NPQ is being paid in another way", "For example, I am sharing the costs with my workplace"),
       ].compact.freeze
