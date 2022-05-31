@@ -13,6 +13,7 @@ class Course < ApplicationRecord
   }.with_indifferent_access.freeze
 
   scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
+  scope :npqeyl, -> { where(name: COURSE_NAMES[:NPQEYL]) }
 
   def npqh?
     name == COURSE_NAMES[:NPQH]
