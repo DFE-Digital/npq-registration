@@ -11,10 +11,33 @@ class LeadProvider < ApplicationRecord
     "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
 
+  NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS = [
+    "Ambition Institute",
+    "Best Practice Network (home of Outstanding Leaders Partnership)",
+    "Church of England",
+    "Education Development Trust",
+    "LLSE",
+    "School-Led Network",
+    "Teacher Development Trust",
+    "Teach First",
+    "UCL Institute of Education",
+  ].freeze
+
   EYL_LL_PROVIDERS = [
     "Ambition Institute",
     "Education Development Trust",
     "School-Led Network",
+    "Teacher Development Trust",
+    "Teach First",
+    "UCL Institute of Education",
+  ].freeze
+
+  EL_PROVIDERS = [
+    "Ambition Institute",
+    "Best Practice Network (home of Outstanding Leaders Partnership)",
+    "Church of England",
+    "Education Development Trust",
+    "LLSE",
     "Teacher Development Trust",
     "Teach First",
     "UCL Institute of Education",
@@ -25,8 +48,18 @@ class LeadProvider < ApplicationRecord
   #       longterm having this handled in the DB so none of
   #       this data has to be hardcoded would be preferable.
   COURSE_TO_PROVIDER_MAPPING = {
+    Course::COURSE_NAMES[:NPQH] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:NPQSL] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:NPQLT] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:NPQLTD] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:NPQLBC] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:EHCO] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    Course::COURSE_NAMES[:ASO] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+
     Course::COURSE_NAMES[:NPQEYL] => EYL_LL_PROVIDERS,
     Course::COURSE_NAMES[:NPQLL] => EYL_LL_PROVIDERS,
+
+    Course::COURSE_NAMES[:NPQEL] => EL_PROVIDERS,
   }.freeze
 
   scope :alphabetical, -> { order(name: :asc) }
