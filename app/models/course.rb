@@ -12,6 +12,7 @@ class Course < ApplicationRecord
     EHCO: "Early Headship Coaching Offer",
   }.with_indifferent_access.freeze
 
+  scope :aso, -> { where(name: COURSE_NAMES[:ASO]) }
   scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
   scope :npqeyl, -> { where(name: COURSE_NAMES[:NPQEYL]) }
 
