@@ -74,7 +74,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     context "when trying to use EYL/LL provider" do
-      let(:lead_provider) { LeadProvider.npqeyl_and_npqll_providers.sample }
+      let(:lead_provider) { LeadProvider.find_by!(name: LeadProvider::EYL_LL_PROVIDERS.sample) }
 
       context "when applying for an EYL/LL course" do
         let(:course_code) { npqeyl_and_npqll_codes.sample }
