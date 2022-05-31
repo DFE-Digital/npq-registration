@@ -422,11 +422,6 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Do you work in early years or childcare?")
-    page.choose("No", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
     page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
     page.click_button("Continue")
@@ -562,11 +557,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Do you work in early years or childcare?")
-    page.choose("No", visible: :all)
-    page.click_button("Continue")
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")

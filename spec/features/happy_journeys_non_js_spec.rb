@@ -731,10 +731,6 @@ RSpec.feature "Happy journeys", type: :feature do
     page.fill_in "National Insurance number (optional)", with: "AB123456C"
     page.click_button("Continue")
 
-    expect(page).to have_text("Do you work in early years or childcare?")
-    page.choose("No")
-    page.click_button("Continue")
-
     expect(page).to have_text("What are you applying for?")
     expect(page).not_to have_text("Additional Support Offer for new headteachers")
     page.choose("NPQ for Headship (NPQH)")
