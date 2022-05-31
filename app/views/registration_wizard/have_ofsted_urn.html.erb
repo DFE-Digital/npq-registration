@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Do you have an Ofsted unique reference number (URN)?
+  <%= @form.errors.present? ? "Error: " : nil %>Do you or your employer have an Ofsted unique reference number (URN)?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_radio_buttons_fieldset(:has_ofsted_urn,
             legend: {
-              text: "Do you have an Ofsted unique reference number (URN)?",
+              text: "Do you or your employer have an Ofsted unique reference number (URN)?",
               size: "xl",
               tag: "h1"
             }
