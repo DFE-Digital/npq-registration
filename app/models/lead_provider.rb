@@ -9,6 +9,8 @@ class LeadProvider < ApplicationRecord
     "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
 
+  scope :alphabetical, -> { order(name: :asc) }
+
   def self.for(course:)
     case course.name
     when Course::COURSE_NAMES[:NPQEYL], Course::COURSE_NAMES[:NPQLL]
