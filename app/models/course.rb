@@ -12,25 +12,25 @@ class Course < ApplicationRecord
     EHCO: "Early Headship Coaching Offer",
   }.with_indifferent_access.freeze
 
-  scope :ehco, -> { where(name: "Early Headship Coaching Offer") }
+  scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
 
   def npqh?
-    name == "NPQ for Headship (NPQH)"
+    name == COURSE_NAMES[:NPQH]
   end
 
   def aso?
-    name == "Additional Support Offer for new headteachers"
+    name == COURSE_NAMES[:ASO]
   end
 
   def npqsl?
-    name == "NPQ for Senior Leadership (NPQSL)"
+    name == COURSE_NAMES[:NPQSL]
   end
 
   def ehco?
-    name == "Early Headship Coaching Offer"
+    name == COURSE_NAMES[:EHCO]
   end
 
   def eyl?
-    name == "NPQ for Early Years Leadership (NPQEYL)"
+    name == COURSE_NAMES[:NPQEYL]
   end
 end
