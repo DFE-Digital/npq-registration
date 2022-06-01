@@ -86,7 +86,21 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
               headers: {
                 "Authorization" => "Bearer ECFAPPBEARERTOKEN",
               },
-            )
+              )
+            .to_return(
+              status: 200,
+              body: previously_funded_response(false),
+              headers: {
+                "Content-Type" => "application/vnd.api+json",
+              },
+              )
+
+          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding?npq_course_identifier=npq-leading-teaching")
+            .with(
+              headers: {
+                "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+              },
+              )
             .to_return(
               status: 200,
               body: previously_funded_response(false),

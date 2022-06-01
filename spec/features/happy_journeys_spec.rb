@@ -1183,7 +1183,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Do you have an Ofsted unique reference number (URN)?")
+    expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
@@ -1357,7 +1357,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Do you have an Ofsted unique reference number (URN)?")
+    expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
@@ -1565,6 +1565,20 @@ RSpec.feature "Happy journeys", type: :feature do
     page.find("#nursery-picker__option--0").click
     page.click_button("Continue")
 
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+        )
+
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
     page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all) # Needs changing to an early years course once added
@@ -1611,6 +1625,20 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Best Practice Network (home of Outstanding Leaders Partnership)")
 
     page.click_link("Change", href: "/registration/choose-your-npq/change")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-early-years-leadership")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+        )
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
