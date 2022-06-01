@@ -1570,14 +1570,14 @@ RSpec.feature "Happy journeys", type: :feature do
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
-        )
+      )
       .to_return(
         status: 200,
         body: previously_funded_response(false),
         headers: {
           "Content-Type" => "application/vnd.api+json",
         },
-        )
+      )
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
@@ -1631,14 +1631,14 @@ RSpec.feature "Happy journeys", type: :feature do
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
-        )
+      )
       .to_return(
         status: 200,
         body: previously_funded_response(false),
         headers: {
           "Content-Type" => "application/vnd.api+json",
         },
-        )
+      )
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
