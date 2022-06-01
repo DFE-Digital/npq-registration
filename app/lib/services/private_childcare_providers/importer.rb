@@ -3,12 +3,13 @@ require "csv"
 module Services
   module PrivateChildcareProviders
     class Importer
-      attr_reader :file_name, :import_errors, :imported_records
+      attr_reader :file_name, :import_errors, :imported_records, :csv_row_parser
 
-      def initialize(file_name:)
+      def initialize(file_name:, csv_row_parser:)
         @file_name = file_name
         @import_errors = {}
         @imported_records = 0
+        @csv_row_parser = csv_row_parser
       end
 
       def call
@@ -42,7 +43,7 @@ module Services
       PROVIDER_URN_HEADER_NAME = "Provider URN".freeze
 
       def persist_csv_row(csv_row, row_number)
-        wrapped_csv_row = WrappedCSVRow.new(csv_row: csv_row)
+        wrapped_csv_row = csv_row_parser.new(csv_row: csv_row)
 
         new_record = false
         PrivateChildcareProvider.find_or_create_by!(provider_urn: wrapped_csv_row.provider_urn) do |private_childcare_provider|
@@ -80,7 +81,7 @@ module Services
         @import_errors[row_number_for_errors] << e.message
       end
 
-      class WrappedCSVRow
+      class ChildcareProviderWrappedCSVRow
         attr_reader :csv_row
 
         def initialize(csv_row:)
@@ -180,6 +181,102 @@ module Services
 
         def places
           csv_row["Places"]
+        end
+      end
+
+      class ChildminderAgencyWrappedCSVRow
+        attr_reader :csv_row
+
+        def initialize(csv_row:)
+          @csv_row = csv_row
+        end
+
+        def retrieve_value(key)
+          raw_value = csv_row[key]
+          raw_value&.strip
+        end
+
+        def provider_urn
+          retrieve_value("CA Reference")
+        end
+
+        def provider_name
+          retrieve_value("Provider Name")
+        end
+
+        def registered_person_name
+          nil
+        end
+
+        def registered_person_urn
+          nil
+        end
+
+        def registration_date
+          nil
+        end
+
+        def provider_status
+          retrieve_value("Provider Status")
+        end
+
+        def address_1
+          retrieve_value("Provider Address 1")
+        end
+
+        def address_2
+          retrieve_value("Provider Address 2")
+        end
+
+        def address_3
+          retrieve_value("Provider Address 3")
+        end
+
+        def town
+          nil
+        end
+
+        def postcode
+          retrieve_value("Provider Postcode")
+        end
+
+        def region
+          nil
+        end
+
+        def local_authority
+          retrieve_value("Local Authority")
+        end
+
+        def ofsted_region
+          nil
+        end
+
+        def postcode_without_spaces
+          postcode&.gsub(" ", "")
+        end
+
+        def early_years_individual_registers
+          raw_data = retrieve_value("Individual Register Combinations")
+
+          case raw_data
+          when "EYR, CCR, VCR"
+            %w[CCR VCR EYR]
+          else
+            raise "Unknown Individual Register combinations value: #{raw_data}"
+          end
+        end
+
+        def provider_early_years_register_flag
+          nil
+        end
+
+        def provider_compulsory_childcare_register_flag
+          nil
+        end
+
+        def places
+          nil
         end
       end
     end
