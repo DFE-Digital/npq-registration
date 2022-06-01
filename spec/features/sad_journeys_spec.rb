@@ -577,7 +577,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(check_answers_page).to be_displayed
     expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
-    expect(check_answers_page.summary_list["Do you work in a school or college?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Do you work in a school, academy trust, or 16 to 19 educational setting?"].value).to eql("Yes")
     expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
     expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
     expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
