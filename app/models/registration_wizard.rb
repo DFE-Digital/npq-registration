@@ -130,8 +130,14 @@ class RegistrationWizard
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_childcare_provider)
       elsif query_store.works_in_private_childcare_provider?
+        value = if query_store.has_ofsted_urn?
+                  institution(source: store["institution_identifier"]).provider_name
+                else
+                  "No Ofsted URN provided"
+                end
+
         array << OpenStruct.new(key: "Nursery",
-                                value: institution(source: store["institution_identifier"]).provider_name,
+                                value: value,
                                 change_step: :have_ofsted_urn)
       end
     end
