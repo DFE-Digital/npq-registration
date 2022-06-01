@@ -48,7 +48,7 @@ class Services::QueryStore
   end
 
   def lead_provider
-    @lead_provider ||= LeadProvider.find(store["lead_provider_id"])
+    @lead_provider ||= LeadProvider.find_by(id: store["lead_provider_id"])
   end
 
   def new_headteacher?
