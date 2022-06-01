@@ -13,8 +13,19 @@ module Forms
       ]
     end
 
+    def after_save
+      return if lead_provider_valid?
+
+      wizard.store["lead_provider_id"] = nil
+    end
+
     def next_step
-      if changing_answer?
+      # If your lead provider remains valid we can progress down the changing answer path
+      # as it is fine for us to end up going back to the check_answers page.
+      # If it is no longer valid due to the NPQ changing though we will need to be
+      # reinserted back into the flow so that later on the user can be asked to
+      # choose a new provider.
+      if changing_answer? && lead_provider_valid?
         if no_answers_will_change?
           :check_answers
         elsif course.ehco?
@@ -73,6 +84,14 @@ module Forms
     end
 
   private
+
+    def lead_provider_valid?
+      valid_providers.include?(wizard.query_store.lead_provider)
+    end
+
+    def valid_providers
+      LeadProvider.for(course: course)
+    end
 
     def courses
       Course.where(display: true).order(:position)
