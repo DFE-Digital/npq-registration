@@ -22,6 +22,22 @@ RSpec.describe Forms::CheckAnswers do
   let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store: store, request: request) }
 
   describe "#after_save" do
+    before do
+      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=#{course.identifier}")
+        .with(
+          headers: {
+            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          },
+        )
+        .to_return(
+          status: 200,
+          body: previously_funded_response(false),
+          headers: {
+            "Content-Type" => "application/vnd.api+json",
+          },
+        )
+    end
+
     context "when verified_trn and entered trn differ" do
       it "uses verified_trn" do
         subject.wizard = wizard

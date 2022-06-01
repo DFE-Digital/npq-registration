@@ -66,6 +66,20 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
             store: store,
             request: request,
           )
+
+          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding?npq_course_identifier=npq-headship")
+            .with(
+              headers: {
+                "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+              },
+            )
+            .to_return(
+              status: 200,
+              body: previously_funded_response(false),
+              headers: {
+                "Content-Type" => "application/vnd.api+json",
+              },
+            )
         end
 
         it "returns check_answers" do

@@ -102,6 +102,20 @@ RSpec.feature "Sad journeys", type: :feature do
     page.find("#school-picker__option--0").click
     page.click_button("Continue")
 
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")
     page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
@@ -491,6 +505,20 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to have_content("open manchester school")
     page.find("#school-picker__option--0").click
     page.click_button("Continue")
+
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-early-headship-coaching-offer")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+      )
+      .to_return(
+        status: 200,
+        body: previously_funded_response(false),
+        headers: {
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
 
     expect(page).to be_axe_clean
     expect(page).to have_text("What are you applying for?")

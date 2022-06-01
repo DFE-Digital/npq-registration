@@ -24,3 +24,9 @@ def participant_validator_response(trn: "1234567", active_alert: false)
     },
   }.to_json
 end
+
+def previously_funded_response(previously_funded)
+  {
+    previously_funded: previously_funded,
+  }.to_json
+end

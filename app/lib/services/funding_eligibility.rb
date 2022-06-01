@@ -21,11 +21,12 @@ module Services
 
     attr_reader :institution, :course
 
-    def initialize(institution:, course:, inside_catchment:, new_headteacher: false)
+    def initialize(institution:, course:, inside_catchment:, trn:, new_headteacher: false)
       @institution = institution
       @course = course
       @inside_catchment = inside_catchment
       @new_headteacher = new_headteacher
+      @trn = trn
     end
 
     def funded?
@@ -35,6 +36,7 @@ module Services
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
         return NO_INSTITUTION if institution.nil?
+        return PREVIOUSLY_FUNDED if previously_funded?
         return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.urn)
 
         case institution.class.name
@@ -114,6 +116,12 @@ module Services
         133545
         130504
       ]
+    end
+
+    def previously_funded?
+      results = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(@trn)
+
+      results["previously_funded"] == true
     end
   end
 end

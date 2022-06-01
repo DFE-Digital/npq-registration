@@ -127,6 +127,7 @@ module Services
         institution: institution(source: store["institution_identifier"]),
         inside_catchment: query_store.inside_catchment?,
         new_headteacher: new_headteacher?,
+        trn: store["trn"],
       )
     end
 

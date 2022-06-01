@@ -52,7 +52,24 @@ RSpec.describe RegistrationWizard do
           "aso_new_headteacher" => "yes",
           "aso_funding" => "yes",
           "aso_funding_choice" => "another",
+          "trn" => "123456",
         }
+      end
+
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/123456?npq_course_identifier=npq-additional-support-offer")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+         .to_return(
+           status: 200,
+           body: previously_funded_response(false),
+           headers: {
+             "Content-Type" => "application/vnd.api+json",
+           },
+         )
       end
 
       it "does not show How is your NPQ being paid for?" do
@@ -74,7 +91,24 @@ RSpec.describe RegistrationWizard do
           "lead_provider_id" => LeadProvider.all.sample.id,
           "aso_funding" => "yes",
           "aso_funding_choice" => "another",
+          "trn" => "123456",
         }
+      end
+
+      before do
+        stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/123456?npq_course_identifier=npq-additional-support-offer")
+          .with(
+            headers: {
+              "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            },
+          )
+         .to_return(
+           status: 200,
+           body: previously_funded_response(false),
+           headers: {
+             "Content-Type" => "application/vnd.api+json",
+           },
+         )
       end
 
       it "shows ASO funding option" do

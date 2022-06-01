@@ -15,8 +15,11 @@ module Forms
     end
 
     def next_step
-      if eligible_for_funding?
+      case funding_eligiblity_status_code
+      when :funded
         :aso_possible_funding
+      when :previously_funded
+        :aso_previously_funded
       else
         :aso_funding_not_available
       end
@@ -40,13 +43,14 @@ module Forms
       Course.find_by(id: wizard.store["course_id"])
     end
 
-    def eligible_for_funding?
+    def funding_eligiblity_status_code
       Services::FundingEligibility.new(
         course: course,
         institution: institution,
         inside_catchment: wizard.query_store.inside_catchment?,
         new_headteacher: new_headteacher?,
-      ).funded?
+        trn: @wizard.store["trn"],
+      ).funding_eligiblity_status_code
     end
 
     def new_headteacher?

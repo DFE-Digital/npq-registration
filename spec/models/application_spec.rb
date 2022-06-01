@@ -12,6 +12,7 @@ RSpec.describe Application do
         institution: subject.school,
         inside_catchment: subject.inside_catchment?,
         new_headteacher: subject.new_headteacher?,
+        trn: subject.user.trn,
       ).and_return(mock_funding_service)
 
       subject.calculate_funding_eligbility
