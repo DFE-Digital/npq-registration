@@ -10,6 +10,18 @@ module Forms
       ]
     end
 
+    # If you say you have no ofsted URN, then we should
+    # make sure you do not have an institution saved.
+    # This is to ensure people do not end up saying
+    # no but having invalid data where they entered
+    # one present.
+    def after_save
+      return if wizard.query_store.has_ofsted_urn?
+
+      wizard.store["institution_identifier"] = nil
+      wizard.store["institution_name"] = nil
+    end
+
     def next_step
       case has_ofsted_urn
       when "yes"
