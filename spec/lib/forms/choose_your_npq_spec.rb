@@ -38,12 +38,12 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       context "nothing was actually changed" do
         let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
         let(:lead_provider) { LeadProvider.for(course: course).first }
-        let(:store) {
+        let(:store) do
           {
             course_id: course.id.to_s,
-            lead_provider_id: lead_provider.id
+            lead_provider_id: lead_provider.id,
           }.stringify_keys
-        }
+        end
         let(:request) { nil }
 
         before do
@@ -65,13 +65,13 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
         let(:lead_providers) { LeadProvider.for(course: course) }
         let(:lead_provider) { lead_providers.first }
-        let(:store) {
+        let(:store) do
           {
             course_id: previous_course.id.to_s,
             institution_identifier: "School-#{school.urn}",
-            lead_provider_id: lead_provider.id
+            lead_provider_id: lead_provider.id,
           }.stringify_keys
-        }
+        end
         let(:request) { nil }
 
         before do
@@ -96,7 +96,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
             )
         end
 
-        context 'when lead provider is valid for new course' do
+        context "when lead provider is valid for new course" do
           let(:lead_providers) { LeadProvider.for(course: course) }
 
           it "returns check_answers" do
@@ -104,7 +104,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           end
         end
 
-        context 'when lead provider is not valid for new course' do
+        context "when lead provider is not valid for new course" do
           let(:lead_providers) { LeadProvider.where.not(id: LeadProvider.for(course: course)) }
 
           it "redirects you towards picking your provider flow" do

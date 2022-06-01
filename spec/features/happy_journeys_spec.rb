@@ -1461,7 +1461,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).to be_axe_clean
   end
-  
+
   scenario "registration journey changing NPQ to one LeadProvider no longer supports" do
     visit "/"
     expect(page).to have_text("Before you start")
@@ -1515,7 +1515,7 @@ RSpec.feature "Happy journeys", type: :feature do
           full_name: "John Doe",
           nino: "AB123456C",
         },
-        )
+      )
       .to_return(status: 200, body: participant_validator_response, headers: {})
 
     expect(page).to be_axe_clean
