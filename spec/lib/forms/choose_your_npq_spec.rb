@@ -37,7 +37,13 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
 
       context "nothing was actually changed" do
         let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:store) { { course_id: course.id.to_s }.stringify_keys }
+        let(:lead_provider) { LeadProvider.for(course: course).first }
+        let(:store) {
+          {
+            course_id: course.id.to_s,
+            lead_provider_id: lead_provider.id
+          }.stringify_keys
+        }
         let(:request) { nil }
 
         before do
@@ -57,7 +63,15 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
         let(:school) { create(:school) }
         let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:store) { { course_id: previous_course.id.to_s, institution_identifier: "School-#{school.urn}" }.stringify_keys }
+        let(:lead_providers) { LeadProvider.for(course: course) }
+        let(:lead_provider) { lead_providers.first }
+        let(:store) {
+          {
+            course_id: previous_course.id.to_s,
+            institution_identifier: "School-#{school.urn}",
+            lead_provider_id: lead_provider.id
+          }.stringify_keys
+        }
         let(:request) { nil }
 
         before do
@@ -82,8 +96,20 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
             )
         end
 
-        it "returns check_answers" do
-          expect(subject.next_step).to eql(:check_answers)
+        context 'when lead provider is valid for new course' do
+          let(:lead_providers) { LeadProvider.for(course: course) }
+
+          it "returns check_answers" do
+            expect(subject.next_step).to eql(:check_answers)
+          end
+        end
+
+        context 'when lead provider is not valid for new course' do
+          let(:lead_providers) { LeadProvider.where.not(id: LeadProvider.for(course: course)) }
+
+          it "redirects you towards picking your provider flow" do
+            expect(subject.next_step).to eql(:ineligible_for_funding)
+          end
         end
       end
     end
