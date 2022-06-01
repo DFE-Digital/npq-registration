@@ -967,7 +967,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Do you have an Ofsted unique reference number (URN)?")
+    expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
 

@@ -21,7 +21,7 @@ RSpec.describe Forms::DqtMismatch do
       let(:teacher_catchment) { "other" }
       let(:works_in_school) { "yes" }
 
-      it { is_expected.to be :work_in_childcare }
+      it { is_expected.to be :choose_your_npq }
     end
 
     context "when not working in school or nursery" do
