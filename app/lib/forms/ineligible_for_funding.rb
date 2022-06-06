@@ -7,18 +7,7 @@ module Forms
     EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
 
-    VALID_PARTIALS = [
-      SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT,
-      SCHOOL_ALREADY_FUNDED,
-      EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT,
-      EARLY_YEARS_NOT_APPLYING_FOR_NPQEY,
-    ].freeze
-
     attr_accessor :version
-
-    def self.permitted_params
-      [:version]
-    end
 
     def next_step
       :funding_your_npq
@@ -29,26 +18,22 @@ module Forms
     end
 
     def ineligible_template
-      @ineligible_template ||= begin
-        return version if VALID_PARTIALS.include?(version)
-
-        case funding_eligiblity_status_code
-        when Services::FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
-          return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-        when Services::FundingEligibility::PREVIOUSLY_FUNDED
-          return SCHOOL_ALREADY_FUNDED
-        when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
-          return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-        when Services::FundingEligibility::EARLY_YEARS_INVALID_NPQ
-          return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
-        when Services::FundingEligibility::NO_INSTITUTION
-          if query_store.works_in_school?
-            return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-          else
-            return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-          end
-        end
-      end
+      @ineligible_template ||= case funding_eligiblity_status_code
+                               when Services::FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
+                                 return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                               when Services::FundingEligibility::PREVIOUSLY_FUNDED
+                                 return SCHOOL_ALREADY_FUNDED
+                               when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
+                                 return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                               when Services::FundingEligibility::EARLY_YEARS_INVALID_NPQ
+                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
+                               when Services::FundingEligibility::NO_INSTITUTION
+                                 if query_store.works_in_school?
+                                   return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                                 else
+                                   return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                                 end
+                               end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
     end
