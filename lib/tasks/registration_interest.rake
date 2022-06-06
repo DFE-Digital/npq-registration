@@ -3,7 +3,7 @@ namespace :registration_interest do
   task :send_notifications, %i[count] => :environment do |_t, args|
     count = args["count"].to_i
 
-    RegistrationInterest.order("RANDOM()").first(count).each do |registration_interest|
+    RegistrationInterest.not_yet_notified.random_sample(count).each do |registration_interest|
       RegistrationOpenNotificationJob.perform_later(registration_interest: registration_interest)
     end
   end
