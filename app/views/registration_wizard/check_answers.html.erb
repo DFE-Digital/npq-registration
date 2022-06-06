@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  Check your details
+  Check your answers and confirm
 <% end %>
 
 <% content_for :before_content do %>
@@ -11,9 +11,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Check your details</h1>
-
-    <p class="govuk-body">Check the following details are correct before continuing.</p>
+    <h1 class="govuk-heading-xl">Check your answers and confirm</h1>
 
     <%= render GovukComponent::SummaryListComponent.new do |component|
           @wizard.answers.each do |answer|
