@@ -10,7 +10,7 @@
     "govuk-country-and-territory-autocomplete": "^1.0.2",
     "govuk-frontend": "^3.14.0",
     "isomorphic-fetch": "^3.0.0",
-    "rails-ujs": "^5.2.6",
+    "rails-ujs": "^5.2.8",
     "serialize-javascript": "^6.0.0"
   },
   "devDependencies": {
