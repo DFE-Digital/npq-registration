@@ -15,7 +15,7 @@ RSpec.describe Forms::RegistrationInterestNotification, type: :model do
         it "shows the form is invalid when trying to register again" do
           subject.email = existing_registration.email
           subject.valid?
-          expect(subject.errors[:email]).to include("You have already registered to be notified")
+          expect(subject.errors[:email]).to include("This email has already been registered for interest")
         end
       end
     end

@@ -4,8 +4,8 @@ module Forms
 
     attr_accessor :email
 
-    validates :email, presence: true, length: { maximum: 128 }
     validate :validate_unique_email
+    validates :email, presence: true, length: { maximum: 128 }, email: true
 
     def validate_unique_email
       return if RegistrationInterest.find_by(email: email).blank?

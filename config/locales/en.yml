@@ -162,8 +162,8 @@ en:
               inclusion: Select an option
             email:
               blank: Enter an email address
-              invalid: This email has already been registered for interest
-              taken: You have already registered to be notified
+              invalid: This email is invalid
+              taken: This email has already been registered for interest
   registration_wizard:
     kind_of_nursery:
       local_authority_maintained_nursery: Local authority maintained nursery
