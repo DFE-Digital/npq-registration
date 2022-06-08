@@ -7,7 +7,7 @@ class RegistrationOpenNotificationJob < ApplicationJob
     registration_interest.update!(notified: true)
   end
 
-  private
+private
 
   def send_notification(registration_interest)
     return unless registration_interest.valid_email?

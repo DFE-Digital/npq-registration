@@ -3,10 +3,10 @@ namespace :registration_interest do
   task :send_notifications, %i[count] => :environment do |_t, args|
     count = args["count"]
 
-    recipients = if args["count"] == "all"
+    recipients = if count == "all"
                    RegistrationInterest.not_yet_notified
                  else
-                   count = args["count"].to_i
+                   count = count.to_i
                    RegistrationInterest.not_yet_notified.random_sample(count)
                  end
 
