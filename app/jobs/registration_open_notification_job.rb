@@ -4,7 +4,11 @@ class RegistrationOpenNotificationJob < ApplicationJob
   def perform(registration_interest:)
     send_notification(registration_interest)
 
-    registration_interest.update!(notified: true)
+    # rubocop:disable Rails/SkipsModelValidations
+    # We actively want to skip validation here so that otherwise invalid
+    # records are marked as notified
+    registration_interest.update_attribute(:notified, true)
+    # rubocop:enable Rails/SkipsModelValidations
   end
 
 private
