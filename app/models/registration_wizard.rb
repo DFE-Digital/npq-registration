@@ -85,7 +85,7 @@ class RegistrationWizard
         if query_store.works_in_nursery?
           kind_of_nursery = store["kind_of_nursery"]
 
-          array << OpenStruct.new(key: "What kind of nursery do you work in?",
+          array << OpenStruct.new(key: "Type of nursery",
                                   value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
                                   change_step: :kind_of_nursery)
         end
