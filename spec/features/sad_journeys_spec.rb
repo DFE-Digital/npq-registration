@@ -584,7 +584,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["How is the Early Headship Coaching Offer being paid for?"].value).to eql("I am paying")
+    expect(check_answers_page.summary_list["How is your EHCO being paid for?"].value).to eql("I am paying")
     expect(check_answers_page.summary_list["Workplace"].value).to eql("open manchester school")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)

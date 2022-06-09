@@ -152,7 +152,7 @@ class RegistrationWizard
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
                elsif course.ehco?
-                 OpenStruct.new(key: "How is the Early Headship Coaching Offer being paid for?",
+                 OpenStruct.new(key: "How is your EHCO being paid for?",
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
                else
@@ -160,6 +160,22 @@ class RegistrationWizard
                                 value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
                                 change_step: :funding_your_npq)
                end
+    end
+
+    if course.ehco?
+      array << OpenStruct.new(key: "Have you completed an NPQH?",
+                              value: I18n.t(store["npqh_status"], scope: "activemodel.attributes.forms/npqh_status.status_options"),
+                              change_step: :npqh_status)
+
+      array << OpenStruct.new(key: "Are you a headteacher?",
+                              value: store["aso_headteacher"].capitalize,
+                              change_step: :aso_headteacher)
+
+      if store["aso_headteacher"] == "yes"
+        array << OpenStruct.new(key: "Are you in your first 5 years of a headship?",
+                                value: store["aso_new_headteacher"].capitalize,
+                                change_step: :aso_new_headteacher)
+      end
     end
 
     array << OpenStruct.new(key: "Lead provider",

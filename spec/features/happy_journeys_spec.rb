@@ -1408,15 +1408,22 @@ RSpec.feature "Happy journeys", type: :feature do
     page.choose("Early Headship Coaching Offer", visible: :all)
     page.click_button("Continue")
 
-    expect(page.current_path).to eql("/registration/about-ehco")
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Early Headship Coaching Offer")
     page.click_link("Continue")
-    expect(page.current_path).to eql("/registration/npqh-status")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Are you studying for, or have you completed an NPQ for Headship (NPQH)?")
     page.choose("I have completed an NPQH", visible: :all)
     page.click_button("Continue")
-    expect(page.current_path).to eql("/registration/aso-headteacher")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Are you a headteacher?")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
-    expect(page.current_path).to eql("/registration/aso-new-headteacher")
+
+    expect(page).to be_axe_clean
+    expect(page).to have_text("Are you in your first 5 years of a headship?")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
 
@@ -1453,7 +1460,10 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list.key?("Workplace")).to be_falsey
-    expect(check_answers_page.summary_list["How is the Early Headship Coaching Offer being paid for?"].value).to eql("I am paying")
+    expect(check_answers_page.summary_list["How is your EHCO being paid for?"].value).to eql("I am paying")
+    expect(check_answers_page.summary_list["Have you completed an NPQH?"].value).to eql("I have completed an NPQH")
+    expect(check_answers_page.summary_list["Are you a headteacher?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Are you in your first 5 years of a headship?"].value).to eql("Yes")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
