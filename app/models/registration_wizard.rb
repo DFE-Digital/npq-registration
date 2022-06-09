@@ -122,7 +122,7 @@ class RegistrationWizard
 
     if query_store.inside_catchment?
       if query_store.works_in_school?
-        array << OpenStruct.new(key: "School or college",
+        array << OpenStruct.new(key: "Workplace",
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_school)
       elsif query_store.works_in_public_childcare_provider?
