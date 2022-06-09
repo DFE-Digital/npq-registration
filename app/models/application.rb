@@ -13,7 +13,7 @@ class Application < ApplicationRecord
     private_nursery: "private_nursery",
   }
 
-  def calculate_funding_eligbility
+  def calculate_funding_eligibility
     Services::FundingEligibility.new(
       course: course,
       institution: institution,
@@ -38,7 +38,7 @@ class Application < ApplicationRecord
     %w[yes_when_course_starts yes_in_first_five_years yes_in_first_two_years].include?(headteacher_status)
   end
 
-  private
+private
 
   def private_childcare_provider_institution?
     works_in_nursery? && private_nursery?

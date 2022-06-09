@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Application do
-  describe "#calculate_funding_eligbility" do
+  describe "#calculate_funding_eligibility" do
     let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
 
     subject { create(:application, kind_of_application) }
@@ -16,9 +16,9 @@ RSpec.describe Application do
           inside_catchment: subject.inside_catchment?,
           new_headteacher: subject.new_headteacher?,
           trn: subject.user.trn,
-          ).and_return(mock_funding_service)
+        ).and_return(mock_funding_service)
 
-        subject.calculate_funding_eligbility
+        subject.calculate_funding_eligibility
 
         expect(mock_funding_service).to have_received(:funded?)
       end
@@ -34,9 +34,9 @@ RSpec.describe Application do
           inside_catchment: subject.inside_catchment?,
           new_headteacher: subject.new_headteacher?,
           trn: subject.user.trn,
-          ).and_return(mock_funding_service)
+        ).and_return(mock_funding_service)
 
-        subject.calculate_funding_eligbility
+        subject.calculate_funding_eligibility
 
         expect(mock_funding_service).to have_received(:funded?)
       end
@@ -52,9 +52,9 @@ RSpec.describe Application do
           inside_catchment: subject.inside_catchment?,
           new_headteacher: subject.new_headteacher?,
           trn: subject.user.trn,
-          ).and_return(mock_funding_service)
+        ).and_return(mock_funding_service)
 
-        subject.calculate_funding_eligbility
+        subject.calculate_funding_eligibility
 
         expect(mock_funding_service).to have_received(:funded?)
       end
