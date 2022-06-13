@@ -2088,7 +2088,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page.current_path).to eql("contact-details")
+    expect(page.current_path).to eql("/registration/contact-details")
     expect(page).to have_text("What's your email address?")
     page.fill_in "What's your email address?", with: "user@example.com"
     page.click_button("Continue")
