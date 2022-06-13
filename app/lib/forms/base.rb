@@ -45,6 +45,24 @@ module Forms
       @changing_answer
     end
 
+    # Determines whether to return user from /registration/:step/change paths
+    # to /registration/:step paths when data changes.
+    #
+    # This is used when something very core to the data being gathered changes.
+    #
+    # For example, if a user who said they didn't work in a school changes to
+    # say that they do work in a school or the other way around then we need to
+    # put them back into the regular flow to make sure they don't get sent back
+    # to the check answers page before they answer any new questions that may
+    # need answering.
+    def return_to_regular_flow_on_change?
+      false
+    end
+
+    def return_to_regular_flow?
+      return_to_regular_flow_on_change? && answers_will_change?
+    end
+
     def answers_will_change?
       !no_answers_will_change?
     end

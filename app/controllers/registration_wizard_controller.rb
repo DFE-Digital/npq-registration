@@ -25,7 +25,7 @@ class RegistrationWizardController < ApplicationController
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     if @form.valid?
-      if @form.changing_answer? && @form.next_step != :check_answers
+      if @form.changing_answer? && @form.next_step != :check_answers && !@form.return_to_regular_flow?
         redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
       else
         redirect_to registration_wizard_show_path(@wizard.next_step_path)
