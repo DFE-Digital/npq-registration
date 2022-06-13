@@ -1265,6 +1265,9 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
     expect(check_answers_page.summary_list.key?("Workplace")).to be_falsey
     expect(check_answers_page.summary_list.key?("How is your NPQ being paid for?")).to be_falsey
+    expect(check_answers_page.summary_list["Do you work in early years or childcare?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Do you work in a nursery?"].value).to eql("Yes")
+    expect(check_answers_page.summary_list["Ofsted registration details"].value).to eql("EY123456 - searchable childcare provider - street 1, manchester")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 

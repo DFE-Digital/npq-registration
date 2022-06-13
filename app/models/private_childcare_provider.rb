@@ -59,4 +59,14 @@ class PrivateChildcareProvider < ApplicationRecord
   def on_early_years_register?
     early_years_individual_registers.include?("EYR")
   end
+
+  def registration_details
+    details = []
+
+    details << urn
+    details << name if name.present?
+    details << address_string if address_string.present?
+
+    details.join(" - ")
+  end
 end
