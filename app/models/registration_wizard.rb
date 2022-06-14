@@ -61,7 +61,6 @@ class RegistrationWizard
   end
 
   def answers
-    dob = Forms::QualifiedTeacherCheck.new(store.select { |k, _v| k.starts_with?("date_of_birth") }).date_of_birth
     array = []
 
     array << OpenStruct.new(key: "Where do you work?",
@@ -100,15 +99,9 @@ class RegistrationWizard
                             value: store["trn"],
                             change_step: :qualified_teacher_check)
 
-    begin
-      array << OpenStruct.new(key: "Date of birth",
-                              value: dob.to_s(:govuk),
-                              change_step: :qualified_teacher_check)
-    rescue ArgumentError => e
-      Sentry.capture_exception(e, extra: { dob: dob })
-
-      raise e
-    end
+    array << OpenStruct.new(key: "Date of birth",
+                            value: query_store.formatted_date_of_birth,
+                            change_step: :qualified_teacher_check)
 
     if form_for_step(:qualified_teacher_check).national_insurance_number.present?
       array << OpenStruct.new(key: "National Insurance number",
