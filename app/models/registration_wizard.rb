@@ -141,7 +141,7 @@ class RegistrationWizard
                             value: query_store.course.name,
                             change_step: :choose_your_npq)
 
-    if needs_funding?
+    unless eligible_for_funding?
       array << if course.aso?
                  OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
@@ -206,14 +206,18 @@ private
     institution(source: store["institution_identifier"])
   end
 
-  def needs_funding?
-    !Services::FundingEligibility.new(
+  def funding_eligibility_calculator
+    Services::FundingEligibility.new(
       course: course,
       institution: institution_from_store,
       inside_catchment: query_store.inside_catchment?,
       new_headteacher: new_headteacher?,
       trn: store["trn"],
-    ).funded?
+    )
+  end
+
+  def eligible_for_funding?
+    funding_eligibility_calculator.funded?
   end
 
   delegate :new_headteacher?, to: :query_store
