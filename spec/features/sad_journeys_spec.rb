@@ -158,7 +158,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["Workplace"].value).to eql("open manchester school")
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
@@ -394,7 +394,7 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
     expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
-    expect(check_answers_page.summary_list.key?("School or college")).to be_falsey
+    expect(check_answers_page.summary_list.key?("Workplace")).to be_falsey
     expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My workplace is covering the cost")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
@@ -584,8 +584,8 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
     expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
     expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["How is the Early Headship Coaching Offer being paid for?"].value).to eql("I am paying")
-    expect(check_answers_page.summary_list["School or college"].value).to eql("open manchester school")
+    expect(check_answers_page.summary_list["How is your EHCO being paid for?"].value).to eql("I am paying")
+    expect(check_answers_page.summary_list["Workplace"].value).to eql("open manchester school")
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 

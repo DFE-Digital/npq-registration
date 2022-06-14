@@ -85,7 +85,7 @@ class RegistrationWizard
         if query_store.works_in_nursery?
           kind_of_nursery = store["kind_of_nursery"]
 
-          array << OpenStruct.new(key: "What kind of nursery do you work in?",
+          array << OpenStruct.new(key: "Type of nursery",
                                   value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
                                   change_step: :kind_of_nursery)
         end
@@ -122,7 +122,7 @@ class RegistrationWizard
 
     if query_store.inside_catchment?
       if query_store.works_in_school?
-        array << OpenStruct.new(key: "School or college",
+        array << OpenStruct.new(key: "Workplace",
                                 value: institution(source: store["institution_identifier"]).name,
                                 change_step: :find_school)
       elsif query_store.works_in_public_childcare_provider?
@@ -152,7 +152,7 @@ class RegistrationWizard
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
                elsif course.ehco?
-                 OpenStruct.new(key: "How is the Early Headship Coaching Offer being paid for?",
+                 OpenStruct.new(key: "How is your EHCO being paid for?",
                                 value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
                else
@@ -160,6 +160,22 @@ class RegistrationWizard
                                 value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
                                 change_step: :funding_your_npq)
                end
+    end
+
+    if course.ehco?
+      array << OpenStruct.new(key: "Have you completed an NPQH?",
+                              value: I18n.t(store["npqh_status"], scope: "activemodel.attributes.forms/npqh_status.status_options"),
+                              change_step: :npqh_status)
+
+      array << OpenStruct.new(key: "Are you a headteacher?",
+                              value: store["aso_headteacher"].capitalize,
+                              change_step: :aso_headteacher)
+
+      if store["aso_headteacher"] == "yes"
+        array << OpenStruct.new(key: "Are you in your first 5 years of a headship?",
+                                value: store["aso_new_headteacher"].capitalize,
+                                change_step: :aso_new_headteacher)
+      end
     end
 
     array << OpenStruct.new(key: "Lead provider",
