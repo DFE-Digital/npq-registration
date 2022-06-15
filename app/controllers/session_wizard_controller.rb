@@ -22,10 +22,10 @@ class SessionWizardController < ApplicationController
         user_id = @form.user.id
         reset_session
         session["user_id"] = user_id
-        redirect_to account_path and return
+        redirect_to account_path
+      else
+        redirect_to session_wizard_show_path(@wizard.next_step_path)
       end
-
-      redirect_to session_wizard_show_path(@wizard.next_step_path)
     else
       render @wizard.current_step
     end

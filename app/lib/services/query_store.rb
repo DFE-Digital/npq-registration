@@ -54,4 +54,12 @@ class Services::QueryStore
   def new_headteacher?
     store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
   end
+
+  def date_of_birth
+    store["date_of_birth"]
+  end
+
+  def formatted_date_of_birth
+    date_of_birth&.to_s(:govuk)
+  end
 end
