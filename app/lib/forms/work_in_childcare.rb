@@ -10,6 +10,10 @@ module Forms
       %i[works_in_childcare]
     end
 
+    def return_to_regular_flow_on_change?
+      true
+    end
+
     def next_step
       if wizard.query_store.inside_catchment? && works_in_childcare?
         :work_in_nursery

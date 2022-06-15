@@ -14,6 +14,10 @@ module Forms
       ]
     end
 
+    def return_to_regular_flow_on_change?
+      true
+    end
+
     def next_step
       if changing_answer?
         if answers_will_change?
