@@ -39,8 +39,7 @@ class Services::QueryStore
   end
 
   def works_in_private_childcare_provider?
-    works_in_nursery? &&
-      Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(store["kind_of_nursery"])
+    works_in_childcare? && !works_in_public_childcare_provider?
   end
 
   def course

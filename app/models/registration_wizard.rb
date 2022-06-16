@@ -87,18 +87,18 @@ class RegistrationWizard
           array << OpenStruct.new(key: "Type of nursery",
                                   value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
                                   change_step: :kind_of_nursery)
+        end
 
-          if query_store.works_in_private_childcare_provider?
-            array << if query_store.has_ofsted_urn?
-                       OpenStruct.new(key: "Ofsted registration details",
-                                      value: institution(source: store["institution_identifier"]).registration_details,
-                                      change_step: :have_ofsted_urn)
-                     else
-                       OpenStruct.new(key: "Do you have a URN?",
-                                      value: store["has_ofsted_urn"].capitalize,
-                                      change_step: :have_ofsted_urn)
-                     end
-          end
+        if query_store.works_in_private_childcare_provider?
+          array << if query_store.has_ofsted_urn?
+                     OpenStruct.new(key: "Ofsted registration details",
+                                    value: institution(source: store["institution_identifier"]).registration_details,
+                                    change_step: :have_ofsted_urn)
+                   else
+                     OpenStruct.new(key: "Do you have a URN?",
+                                    value: store["has_ofsted_urn"].capitalize,
+                                    change_step: :have_ofsted_urn)
+                   end
         end
       end
     end
