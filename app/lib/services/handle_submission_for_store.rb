@@ -40,6 +40,7 @@ module Services
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
           cohort: Application::TARGET_COHORT,
+          raw_application_data: raw_application_data,
         )
 
         enqueue_job
@@ -47,6 +48,13 @@ module Services
     end
 
   private
+
+    def raw_application_data
+      # Cutting out confirmation keys since that is not application related data
+      # Though I recognise that this means that even though this is meant to be raw
+      # it still has a small layer of processing
+      store.except("generated_confirmation_code")
+    end
 
     def padded_entered_trn
       store["trn"].rjust(7, "0")
