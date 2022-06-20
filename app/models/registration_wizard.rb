@@ -114,7 +114,7 @@ class RegistrationWizard
         if query_store.works_in_private_childcare_provider?
           array << if query_store.has_ofsted_urn?
                      OpenStruct.new(key: "Ofsted registration details",
-                                    value: institution(source: store["institution_identifier"]).registration_details,
+                                    value: institution_from_store.registration_details,
                                     change_step: :have_ofsted_urn)
                    else
                      OpenStruct.new(key: "Do you have a URN?",
@@ -128,11 +128,11 @@ class RegistrationWizard
     if query_store.inside_catchment?
       if query_store.works_in_school?
         array << OpenStruct.new(key: "Workplace",
-                                value: institution(source: store["institution_identifier"]).name,
+                                value: institution_from_store.name,
                                 change_step: :find_school)
       elsif query_store.works_in_public_childcare_provider?
         array << OpenStruct.new(key: "Nursery",
-                                value: institution(source: store["institution_identifier"]).name,
+                                value: institution_from_store.name,
                                 change_step: :find_childcare_provider)
       end
     end
@@ -202,10 +202,14 @@ class RegistrationWizard
 
 private
 
+  def institution_from_store
+    institution(source: store["institution_identifier"])
+  end
+
   def needs_funding?
     !Services::FundingEligibility.new(
       course: course,
-      institution: institution(source: store["institution_identifier"]),
+      institution: institution_from_store,
       inside_catchment: query_store.inside_catchment?,
       new_headteacher: new_headteacher?,
       trn: store["trn"],
