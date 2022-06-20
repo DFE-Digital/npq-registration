@@ -36,7 +36,7 @@ RSpec.describe PrivateChildcareProvider, type: :model do
       let(:provider) { build(:private_childcare_provider) }
 
       it "displays the urn, provider name and address" do
-        expect(provider.registration_details).to eq("#{provider.urn} - #{provider.name} - #{provider.address_string}")
+        expect(provider.registration_details).to eq("#{provider.urn} - #{provider.name}")
       end
     end
   end
