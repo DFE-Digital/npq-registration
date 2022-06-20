@@ -29,6 +29,10 @@ class Course < ApplicationRecord
   scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
   scope :npqeyl, -> { where(name: COURSE_NAMES[:NPQEYL]) }
 
+  def self.find_by_code(code:)
+    find_by(name: COURSE_NAMES[code])
+  end
+
   def npqh?
     name == COURSE_NAMES[:NPQH]
   end

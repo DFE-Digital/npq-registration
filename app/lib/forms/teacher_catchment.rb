@@ -14,6 +14,12 @@ module Forms
       ]
     end
 
+    def after_save
+      return if teacher_catchment == "another"
+
+      wizard.store["teacher_catchment_country"] = nil
+    end
+
     def return_to_regular_flow_on_change?
       true
     end

@@ -1,6 +1,22 @@
 require "rails_helper"
 
 RSpec.feature "Sad journeys", type: :feature do
+  def latest_application
+    Application.order(created_at: :asc).last
+  end
+
+  def latest_application_user
+    latest_application.user
+  end
+
+  def retrieve_latest_application_user_data
+    latest_application_user.as_json(except: %i[id created_at updated_at])
+  end
+
+  def retrieve_latest_application_data
+    latest_application.as_json(except: %i[id created_at updated_at user_id])
+  end
+
   scenario "DQT mismatch" do
     visit "/"
     expect(page).to have_text("Before you start")
@@ -151,29 +167,90 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doeeeeee")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list["National Insurance number"].value).to eql("AB123456C")
-    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
-    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["Workplace"].value).to eql("open manchester school")
-    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My trust is paying")
+
+    summary_data = check_answers_page.summary_list.rows.map { |summary_item|
+      [summary_item.key, summary_item.value]
+    }.to_h
+
+    expect(summary_data).to eql(
+      "Full name" => "John Doeeeeee",
+      "TRN" => "1234567",
+      "Date of birth" => "13 December 1980",
+      "National Insurance number" => "AB123456C",
+      "Email" => "user@example.com",
+      "Course" => "NPQ for Senior Leadership (NPQSL)",
+      "Lead provider" => "Teach First",
+      "Workplace" => "open manchester school",
+      "How is your NPQ being paid for?" => "My trust is paying",
+      "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+      "Where do you work?" => "England",
+    )
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     page.click_button("Submit")
 
-    user = User.last
-
-    expect(user.email).to eql("user@example.com")
-    expect(user.full_name).to eql("John Doeeeeee")
-    expect(user.trn).to eql("1234567")
-    expect(user.trn_verified).to be_falsey
-    expect(user.trn_auto_verified).to be_falsey
-    expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
-    expect(user.national_insurance_number).to eql("AB123456C")
+    expect(retrieve_latest_application_user_data).to eq(
+      "active_alert" => nil,
+      "admin" => false,
+      "date_of_birth" => "1980-12-13",
+      "ecf_id" => nil,
+      "email" => "user@example.com",
+      "full_name" => "John Doeeeeee",
+      "national_insurance_number" => "AB123456C",
+      "otp_expires_at" => nil,
+      "otp_hash" => nil,
+      "trn" => "1234567",
+      "trn_auto_verified" => false,
+      "trn_verified" => false,
+    )
+    expect(retrieve_latest_application_data).to eq(
+      "cohort" => 2022,
+      "course_id" => Course.find_by_code(code: :NPQSL).id,
+      "ecf_id" => nil,
+      "eligible_for_funding" => false,
+      "employer_name" => nil,
+      "employment_role" => nil,
+      "funding_choice" => "trust",
+      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "headteacher_status" => nil,
+      "kind_of_nursery" => nil,
+      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "private_childcare_provider_urn" => nil,
+      "school_urn" => "100000",
+      "targeted_delivery_funding_eligibility" => false,
+      "targeted_support_funding_eligibility" => false,
+      "teacher_catchment" => "england",
+      "teacher_catchment_country" => nil,
+      "ukprn" => nil,
+      "works_in_childcare" => false,
+      "works_in_nursery" => false,
+      "works_in_school" => true,
+      "raw_application_data" => {
+        "active_alert" => nil,
+        "can_share_choices" => "1",
+        "chosen_provider" => "yes",
+        "confirmed_email" => "user@example.com",
+        "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
+        "date_of_birth" => "1980-12-13",
+        "email" => "user@example.com",
+        "full_name" => "John Doeeeeee",
+        "funding" => "trust",
+        "institution_identifier" => "School-100000",
+        "institution_location" => "manchester",
+        "institution_name" => "",
+        "lead_provider_id" => "9",
+        "national_insurance_number" => "AB123456C",
+        "teacher_catchment" => "england",
+        "teacher_catchment_country" => nil,
+        "trn" => "1234567",
+        "trn_auto_verified" => nil,
+        "trn_knowledge" => "yes",
+        "trn_verified" => false,
+        "verified_trn" => nil,
+        "works_in_school" => "yes",
+      },
+    )
   end
 
   scenario "school not in england" do
@@ -387,21 +464,89 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list.key?("National Insurance number")).to be_falsey
-    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("NPQ for Senior Leadership (NPQSL)")
-    expect(check_answers_page.summary_list.key?("Have you been a headteacher for two years or more?")).to be_falsey
-    expect(check_answers_page.summary_list.key?("Workplace")).to be_falsey
-    expect(check_answers_page.summary_list["How is your NPQ being paid for?"].value).to eql("My workplace is covering the cost")
+
+    summary_data = check_answers_page.summary_list.rows.map { |summary_item|
+      [summary_item.key, summary_item.value]
+    }.to_h
+
+    expect(summary_data).to eql(
+      "Full name" => "John Doe",
+      "TRN" => "1234567",
+      "Date of birth" => "13 December 1980",
+      "Email" => "user@example.com",
+      "Course" => "NPQ for Senior Leadership (NPQSL)",
+      "How is your NPQ being paid for?" => "My workplace is covering the cost",
+      "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
+      "Do you work in early years or childcare?" => "Yes",
+      "Lead provider" => "Teach First",
+      "Where do you work?" => "Scotland",
+    )
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     page.click_button("Submit")
 
     expect(page).to be_axe_clean
+
+    expect(retrieve_latest_application_user_data).to eq(
+      "active_alert" => false,
+      "admin" => false,
+      "date_of_birth" => "1980-12-13",
+      "ecf_id" => nil,
+      "email" => "user@example.com",
+      "full_name" => "John Doe",
+      "national_insurance_number" => nil,
+      "otp_expires_at" => nil,
+      "otp_hash" => nil,
+      "trn" => "1234567",
+      "trn_auto_verified" => true,
+      "trn_verified" => true,
+    )
+    expect(retrieve_latest_application_data).to eq(
+      "cohort" => 2022,
+      "course_id" => Course.find_by_code(code: :NPQSL).id,
+      "ecf_id" => nil,
+      "eligible_for_funding" => false,
+      "employer_name" => nil,
+      "employment_role" => nil,
+      "funding_choice" => "school",
+      "funding_eligiblity_status_code" => "no_institution",
+      "headteacher_status" => nil,
+      "kind_of_nursery" => nil,
+      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "private_childcare_provider_urn" => nil,
+      "school_urn" => nil,
+      "targeted_delivery_funding_eligibility" => false,
+      "targeted_support_funding_eligibility" => false,
+      "teacher_catchment" => "scotland",
+      "teacher_catchment_country" => nil,
+      "ukprn" => nil,
+      "works_in_childcare" => true,
+      "works_in_nursery" => false,
+      "works_in_school" => false,
+      "raw_application_data" => {
+        "active_alert" => false,
+        "can_share_choices" => "1",
+        "chosen_provider" => "yes",
+        "confirmed_email" => "user@example.com",
+        "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
+        "date_of_birth" => "1980-12-13",
+        "email" => "user@example.com",
+        "full_name" => "John Doe",
+        "funding" => "school",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "national_insurance_number" => "",
+        "teacher_catchment" => "scotland",
+        "teacher_catchment_country" => nil,
+        "trn" => "1234567",
+        "trn_auto_verified" => true,
+        "trn_knowledge" => "yes",
+        "trn_verified" => true,
+        "verified_trn" => "1234567",
+        "works_in_childcare" => "yes",
+        "works_in_school" => "no",
+      },
+    )
   end
 
   scenario "applying for EHCO but not new headteacher" do
@@ -576,16 +721,27 @@ RSpec.feature "Sad journeys", type: :feature do
     check_answers_page = CheckAnswersPage.new
 
     expect(check_answers_page).to be_displayed
-    expect(check_answers_page.summary_list["Where do you work?"].value).to eql("England")
-    expect(check_answers_page.summary_list["Do you work in a school, academy trust, or 16 to 19 educational setting?"].value).to eql("Yes")
-    expect(check_answers_page.summary_list["Full name"].value).to eql("John Doe")
-    expect(check_answers_page.summary_list["TRN"].value).to eql("1234567")
-    expect(check_answers_page.summary_list["Date of birth"].value).to eql("13 December 1980")
-    expect(check_answers_page.summary_list["Email"].value).to eql("user@example.com")
-    expect(check_answers_page.summary_list["Course"].value).to eql("Early Headship Coaching Offer")
-    expect(check_answers_page.summary_list["Lead provider"].value).to eql("Teach First")
-    expect(check_answers_page.summary_list["How is your EHCO being paid for?"].value).to eql("I am paying")
-    expect(check_answers_page.summary_list["Workplace"].value).to eql("open manchester school")
+
+    summary_data = check_answers_page.summary_list.rows.map { |summary_item|
+      [summary_item.key, summary_item.value]
+    }.to_h
+
+    expect(summary_data).to eql(
+      "Where do you work?" => "England",
+      "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+      "Full name" => "John Doe",
+      "TRN" => "1234567",
+      "Date of birth" => "13 December 1980",
+      "Email" => "user@example.com",
+      "Course" => "Early Headship Coaching Offer",
+      "Lead provider" => "Teach First",
+      "How is your EHCO being paid for?" => "I am paying",
+      "Workplace" => "open manchester school",
+      "Are you a headteacher?" => "Yes",
+      "Are you in your first 5 years of a headship?" => "No",
+      "Have you completed an NPQH?" => "I have completed an NPQH",
+      "National Insurance number" => "AB123456C",
+    )
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
@@ -596,5 +752,70 @@ RSpec.feature "Sad journeys", type: :feature do
     expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
 
     expect(page).to be_axe_clean
+
+    expect(retrieve_latest_application_user_data).to eq(
+      "active_alert" => false,
+      "admin" => false,
+      "date_of_birth" => "1980-12-13",
+      "ecf_id" => nil,
+      "email" => "user@example.com",
+      "full_name" => "John Doe",
+      "national_insurance_number" => nil,
+      "otp_expires_at" => nil,
+      "otp_hash" => nil,
+      "trn" => "1234567",
+      "trn_auto_verified" => true,
+      "trn_verified" => true,
+    )
+    expect(retrieve_latest_application_data).to eq(
+      "cohort" => 2022,
+      "course_id" => Course.find_by_code(code: :EHCO).id,
+      "ecf_id" => nil,
+      "eligible_for_funding" => false,
+      "employer_name" => nil,
+      "employment_role" => nil,
+      "funding_choice" => "self",
+      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "headteacher_status" => "yes_over_five_years",
+      "kind_of_nursery" => nil,
+      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "private_childcare_provider_urn" => nil,
+      "school_urn" => "100000",
+      "targeted_delivery_funding_eligibility" => false,
+      "targeted_support_funding_eligibility" => false,
+      "teacher_catchment" => "england",
+      "teacher_catchment_country" => nil,
+      "ukprn" => nil,
+      "works_in_childcare" => false,
+      "works_in_nursery" => false,
+      "works_in_school" => true,
+      "raw_application_data" => {
+        "active_alert" => false,
+        "aso_funding_choice" => "self",
+        "aso_headteacher" => "yes",
+        "aso_new_headteacher" => "no",
+        "can_share_choices" => "1",
+        "chosen_provider" => "yes",
+        "confirmed_email" => "user@example.com",
+        "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
+        "date_of_birth" => "1980-12-13",
+        "email" => "user@example.com",
+        "full_name" => "John Doe",
+        "institution_identifier" => "School-100000",
+        "institution_location" => "manchester",
+        "institution_name" => "",
+        "lead_provider_id" => "9",
+        "national_insurance_number" => "AB123456C",
+        "npqh_status" => "completed_npqh",
+        "teacher_catchment" => "england",
+        "teacher_catchment_country" => nil,
+        "trn" => "1234567",
+        "trn_auto_verified" => true,
+        "trn_knowledge" => "yes",
+        "trn_verified" => true,
+        "verified_trn" => "1234567",
+        "works_in_school" => "yes",
+      },
+    )
   end
 end

@@ -125,6 +125,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "works_in_childcare" => false,
           "works_in_nursery" => false,
           "works_in_school" => true,
+          "raw_application_data" => store,
         })
       end
     end
@@ -207,6 +208,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_nursery" => true,
           "works_in_school" => false,
+          "raw_application_data" => store,
         })
       end
     end

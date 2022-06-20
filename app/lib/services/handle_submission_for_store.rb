@@ -33,13 +33,14 @@ module Services
           teacher_catchment: store["teacher_catchment"],
           teacher_catchment_country: store["teacher_catchment_country"].presence,
           works_in_school: store["works_in_school"] == "yes",
-          employer_name: store["employer_name"].presence,
-          employment_role: store["employment_role"].presence,
+          employer_name: employer_name,
+          employment_role: employment_role,
           targeted_delivery_funding_eligibility: targeted_delivery_funding_eligibility,
           works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
           cohort: Application::TARGET_COHORT,
+          raw_application_data: raw_application_data,
         )
 
         enqueue_job
@@ -47,6 +48,13 @@ module Services
     end
 
   private
+
+    def raw_application_data
+      # Cutting out confirmation keys since that is not application related data
+      # Though I recognise that this means that even though this is meant to be raw
+      # it still has a small layer of processing
+      store.except("generated_confirmation_code")
+    end
 
     def padded_entered_trn
       store["trn"].rjust(7, "0")
@@ -62,14 +70,30 @@ module Services
       @query_store ||= Services::QueryStore.new(store: store)
     end
 
+    delegate :inside_catchment?, to: :query_store
+
+    def store_employer_data?
+      return false if eligible_for_funding?
+
+      ineligible_institution_type? && inside_catchment?
+    end
+
+    def employer_name
+      store["employer_name"].presence if store_employer_data?
+    end
+
+    def employment_role
+      store["employment_role"].presence if store_employer_data?
+    end
+
     def private_childcare_provider_urn
-      if query_store.inside_catchment? && query_store.works_in_private_childcare_provider?
+      if inside_catchment? && query_store.works_in_private_childcare_provider?
         institution(source: store["institution_identifier"]).provider_urn
       end
     end
 
     def store_school_urn_data?
-      return false unless query_store.inside_catchment?
+      return false unless inside_catchment?
 
       query_store.works_in_school? || query_store.works_in_public_childcare_provider?
     end
@@ -125,19 +149,23 @@ module Services
       @funding_eligibility_service ||= Services::FundingEligibility.new(
         course: course,
         institution: institution(source: store["institution_identifier"]),
-        inside_catchment: query_store.inside_catchment?,
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: store["trn"],
       )
     end
 
-    def funding_eligibility
+    def eligible_for_funding?
       funding_eligibility_service.funded?
     end
 
-    def funding_eligiblity_status_code
-      funding_eligibility_service.funding_eligiblity_status_code
+    def funding_eligibility
+      eligible_for_funding?
     end
+
+    delegate :ineligible_institution_type?,
+             :funding_eligiblity_status_code,
+             to: :funding_eligibility_service
 
     def targeted_delivery_funding_eligibility
       @targeted_delivery_funding_eligibility ||= Services::Eligibility::TargetedDeliveryFunding.new(
