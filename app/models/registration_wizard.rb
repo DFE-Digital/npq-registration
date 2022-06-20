@@ -111,7 +111,7 @@ class RegistrationWizard
                                   change_step: :kind_of_nursery)
         end
 
-        if query_store.works_in_private_childcare_provider?
+        if query_store.kind_of_nursery_private? || !query_store.works_in_nursery?
           array << if query_store.has_ofsted_urn?
                      OpenStruct.new(key: "Ofsted registration details",
                                     value: institution_from_store.registration_details,
@@ -130,7 +130,7 @@ class RegistrationWizard
         array << OpenStruct.new(key: "Workplace",
                                 value: institution_from_store.name,
                                 change_step: :find_school)
-      elsif query_store.works_in_public_childcare_provider?
+      elsif query_store.works_in_childcare? && query_store.works_in_nursery? && query_store.kind_of_nursery_public?
         array << OpenStruct.new(key: "Nursery",
                                 value: institution_from_store.name,
                                 change_step: :find_childcare_provider)

@@ -1,5 +1,7 @@
 module Forms
   class PossibleFunding < Base
+    include Helpers::Institution
+
     def next_step
       :choose_your_provider
     end
@@ -13,7 +15,7 @@ module Forms
     end
 
     def message_template
-      return "private_childcare_provider" if wizard.query_store.works_in_private_childcare_provider?
+      return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
 
       "school"
     end

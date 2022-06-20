@@ -20,19 +20,19 @@ module Forms
       end
 
       def load_private_childcare_provider_institution(identifier)
-        return unless query_store.works_in_private_childcare_provider?
+        return unless query_store.works_in_childcare?
 
         PrivateChildcareProvider.find_by(provider_urn: identifier)
       end
 
       def load_school_institution(identifier)
-        return unless query_store.works_in_public_childcare_provider? || query_store.works_in_school?
+        return unless query_store.works_in_childcare? || query_store.works_in_school?
 
         School.find_by(urn: identifier)
       end
 
       def load_local_authority_institution(identifier)
-        return unless query_store.works_in_public_childcare_provider? || query_store.works_in_school?
+        return unless query_store.works_in_childcare? || query_store.works_in_school?
 
         LocalAuthority.find_by(id: identifier)
       end

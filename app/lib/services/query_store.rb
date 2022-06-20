@@ -33,13 +33,12 @@ class Services::QueryStore
     store["has_ofsted_urn"] == "yes"
   end
 
-  def works_in_public_childcare_provider?
-    works_in_nursery? &&
-      Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["kind_of_nursery"])
+  def kind_of_nursery_public?
+    Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["kind_of_nursery"])
   end
 
-  def works_in_private_childcare_provider?
-    works_in_childcare? && !works_in_public_childcare_provider?
+  def kind_of_nursery_private?
+    Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(store["kind_of_nursery"])
   end
 
   def course
