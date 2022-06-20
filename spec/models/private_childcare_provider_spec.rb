@@ -35,7 +35,7 @@ RSpec.describe PrivateChildcareProvider, type: :model do
     context "without redacted info" do
       let(:provider) { build(:private_childcare_provider) }
 
-      it "displays the urn, provider name and address" do
+      it "displays only the urn and name" do
         expect(provider.registration_details).to eq("#{provider.urn} - #{provider.name}")
       end
     end
