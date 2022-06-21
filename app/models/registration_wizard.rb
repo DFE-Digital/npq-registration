@@ -98,7 +98,7 @@ class RegistrationWizard
                               value: store["works_in_childcare"].capitalize,
                               change_step: :work_in_childcare)
 
-      if query_store.inside_catchment? && query_store.works_in_childcare?
+      if inside_catchment? && query_store.works_in_childcare?
         array << OpenStruct.new(key: "Do you work in a nursery?",
                                 value: store["works_in_nursery"].capitalize,
                                 change_step: :work_in_nursery)
@@ -125,7 +125,7 @@ class RegistrationWizard
       end
     end
 
-    if query_store.inside_catchment?
+    if inside_catchment?
       if query_store.works_in_school?
         array << OpenStruct.new(key: "Workplace",
                                 value: institution_from_store.name,
@@ -177,7 +177,7 @@ class RegistrationWizard
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
 
-    unless query_store.works_in_school? || query_store.works_in_childcare?
+    if employer_data_gathered?
       array << OpenStruct.new(key: "Employer",
                               value: store["employer_name"],
                               change_step: :your_work)
@@ -210,7 +210,7 @@ private
     Services::FundingEligibility.new(
       course: course,
       institution: institution_from_store,
-      inside_catchment: query_store.inside_catchment?,
+      inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,
       trn: store["trn"],
     )
@@ -220,7 +220,15 @@ private
     funding_eligibility_calculator.funded?
   end
 
-  delegate :new_headteacher?, to: :query_store
+  def employer_data_gathered?
+    return false if eligible_for_funding?
+
+    ineligible_institution_type? && inside_catchment?
+  end
+
+  delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
+
+  delegate :new_headteacher?, :inside_catchment?, to: :query_store
 
   def course
     Course.find(store["course_id"])
