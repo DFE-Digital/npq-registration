@@ -64,8 +64,7 @@ class PrivateChildcareProvider < ApplicationRecord
     details = []
 
     details << urn
-    details << name if name.present?
-    details << address_string if address_string.present?
+    details << (name.presence || address_string)
 
     details.join(" - ")
   end

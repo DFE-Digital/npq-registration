@@ -1785,7 +1785,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "Course" => "NPQ for Early Years Leadership (NPQEYL)",
       "Do you work in early years or childcare?" => "Yes",
       "Do you work in a nursery?" => "Yes",
-      "Ofsted registration details" => "EY123456 - searchable childcare provider - street 1, manchester",
+      "Ofsted registration details" => "EY123456 - searchable childcare provider",
       "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
       "Lead provider" => "Teach First",
       "Type of nursery" => "Private nursery",
@@ -2294,7 +2294,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
       "Do you work in early years or childcare?" => "Yes",
       "Lead provider" => "Teach First",
-      "Ofsted registration details" => "EY123456 - searchable childcare provider - street 1, manchester",
+      "Ofsted registration details" => "EY123456 - searchable childcare provider",
       "Type of nursery" => "Private nursery",
       "Where do you work?" => "England",
     )
