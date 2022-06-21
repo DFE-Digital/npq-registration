@@ -71,6 +71,28 @@ class RegistrationWizard
                             value: store["works_in_school"].capitalize,
                             change_step: :work_in_school)
 
+    array << OpenStruct.new(key: "Full name",
+                            value: store["full_name"],
+                            change_step: :qualified_teacher_check)
+
+    array << OpenStruct.new(key: "TRN",
+                            value: store["trn"],
+                            change_step: :qualified_teacher_check)
+
+    array << OpenStruct.new(key: "Date of birth",
+                            value: query_store.formatted_date_of_birth,
+                            change_step: :qualified_teacher_check)
+
+    if form_for_step(:qualified_teacher_check).national_insurance_number.present?
+      array << OpenStruct.new(key: "National Insurance number",
+                              value: store["national_insurance_number"],
+                              change_step: :qualified_teacher_check)
+    end
+
+    array << OpenStruct.new(key: "Email",
+                            value: store["confirmed_email"],
+                            change_step: :contact_details)
+
     unless query_store.works_in_school?
       array << OpenStruct.new(key: "Do you work in early years or childcare?",
                               value: store["works_in_childcare"].capitalize,
@@ -102,28 +124,6 @@ class RegistrationWizard
         end
       end
     end
-
-    array << OpenStruct.new(key: "Full name",
-                            value: store["full_name"],
-                            change_step: :qualified_teacher_check)
-
-    array << OpenStruct.new(key: "TRN",
-                            value: store["trn"],
-                            change_step: :qualified_teacher_check)
-
-    array << OpenStruct.new(key: "Date of birth",
-                            value: query_store.formatted_date_of_birth,
-                            change_step: :qualified_teacher_check)
-
-    if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-      array << OpenStruct.new(key: "National Insurance number",
-                              value: store["national_insurance_number"],
-                              change_step: :qualified_teacher_check)
-    end
-
-    array << OpenStruct.new(key: "Email",
-                            value: store["confirmed_email"],
-                            change_step: :contact_details)
 
     if query_store.inside_catchment?
       if query_store.works_in_school?
