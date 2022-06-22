@@ -2,6 +2,7 @@ require "simplecov"
 SimpleCov.start "rails"
 
 require "webmock/rspec"
+require "with_model"
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
@@ -24,6 +25,8 @@ WebMock.disable_net_connect!(
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.extend WithModel
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

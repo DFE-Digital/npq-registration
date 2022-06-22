@@ -55,6 +55,8 @@ group :test do
 
   gem "axe-core-capybara"
   gem "axe-core-rspec"
+
+  gem "with_model"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
