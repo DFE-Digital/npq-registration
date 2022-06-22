@@ -14,15 +14,21 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   def latest_application_user
-    latest_application.user
+    latest_application&.user
   end
 
   def retrieve_latest_application_user_data
-    latest_application_user.as_json(except: %i[id created_at updated_at])
+    latest_application_user&.as_json(except: %i[id created_at updated_at])
   end
 
   def retrieve_latest_application_data
-    latest_application.as_json(except: %i[id created_at updated_at user_id])
+    latest_application&.as_json(except: %i[id created_at updated_at user_id])
+  end
+
+  before do
+    # Make sure all the tests are checking this data
+    expect(self).to receive(:retrieve_latest_application_user_data).and_call_original
+    expect(self).to receive(:retrieve_latest_application_data).and_call_original
   end
 
   scenario "registration journey via using old name and not headship" do
@@ -1102,21 +1108,6 @@ RSpec.feature "Happy journeys", type: :feature do
     visit "/registration/share-provider"
 
     expect(page).to have_content("Before you start")
-
-    expect(retrieve_latest_application_user_data).to eq(
-      "active_alert" => false,
-      "admin" => false,
-      "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
-      "email" => "user@example.com",
-      "full_name" => "John Doe",
-      "national_insurance_number" => nil,
-      "otp_expires_at" => nil,
-      "otp_hash" => nil,
-      "trn" => "1234567",
-      "trn_auto_verified" => true,
-      "trn_verified" => true,
-    )
 
     expect(retrieve_latest_application_user_data).to eq(
       "active_alert" => false,

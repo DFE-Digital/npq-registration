@@ -20,9 +20,9 @@ RSpec.describe Services::HandleSubmissionForStore do
       "lead_provider_id" => lead_provider.id,
       "date_of_birth" => (30.years.ago + 1.day).to_s,
       "full_name" => "Jane Doe",
-      "works_in_childcare" => "no",
-      "works_in_nursery" => "no",
-      "works_in_school" => "yes",
+      "works_in_childcare" => "yes",
+      "works_in_nursery" => "yes",
+      "works_in_school" => "no",
       "kind_of_nursery" => "private_nursery",
       "teacher_catchment" => "england",
     }

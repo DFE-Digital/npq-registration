@@ -69,6 +69,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           {
             course_id: previous_course.id.to_s,
             institution_identifier: "School-#{school.urn}",
+            works_in_school: "yes",
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end

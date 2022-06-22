@@ -31,7 +31,7 @@ module Forms
         elsif course.ehco?
           :about_ehco
         elsif previously_eligible_for_funding? && !eligible_for_funding?
-          if ineligible_institution_type?
+          if gather_workplace_data?
             :your_work
           else
             :ineligible_for_funding
@@ -41,13 +41,9 @@ module Forms
         end
       elsif course.ehco?
         :about_ehco
-      elsif wizard.query_store.works_in_childcare? || wizard.query_store.works_in_school?
-        if eligible_for_funding?
-          :possible_funding
-        else
-          :ineligible_for_funding
-        end
-      elsif ineligible_institution_type?
+      elsif eligible_for_funding?
+        :possible_funding
+      elsif gather_workplace_data?
         :your_work
       else
         :ineligible_for_funding
@@ -58,7 +54,7 @@ module Forms
       if query_store.inside_catchment? && query_store.works_in_school?
         :choose_school
       elsif query_store.inside_catchment? && query_store.works_in_childcare?
-        if query_store.works_in_nursery? && query_store.works_in_public_childcare_provider?
+        if query_store.works_in_nursery? && query_store.kind_of_nursery_public?
           :choose_childcare_provider
         elsif query_store.has_ofsted_urn?
           :choose_private_childcare_provider
@@ -123,6 +119,12 @@ module Forms
 
     def eligible_for_funding?
       funding_eligibility_calculator.funded?
+    end
+
+    def gather_workplace_data?
+      return if eligible_for_funding?
+
+      ineligible_institution_type? && query_store.inside_catchment?
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator

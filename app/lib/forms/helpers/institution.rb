@@ -11,12 +11,30 @@ module Forms
 
         @institution ||= case klass
                          when "PrivateChildcareProvider"
-                           PrivateChildcareProvider.find_by(provider_urn: identifier)
+                           load_private_childcare_provider_institution(identifier)
                          when "School"
-                           School.find_by(urn: identifier)
+                           load_school_institution(identifier)
                          when "LocalAuthority"
-                           LocalAuthority.find_by(id: identifier)
+                           load_local_authority_institution(identifier)
                          end
+      end
+
+      def load_private_childcare_provider_institution(identifier)
+        return unless query_store.works_in_childcare?
+
+        PrivateChildcareProvider.find_by(provider_urn: identifier)
+      end
+
+      def load_school_institution(identifier)
+        return unless query_store.works_in_childcare? || query_store.works_in_school?
+
+        School.find_by(urn: identifier)
+      end
+
+      def load_local_authority_institution(identifier)
+        return unless query_store.works_in_childcare? || query_store.works_in_school?
+
+        LocalAuthority.find_by(id: identifier)
       end
     end
   end

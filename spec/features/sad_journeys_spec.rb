@@ -6,15 +6,21 @@ RSpec.feature "Sad journeys", type: :feature do
   end
 
   def latest_application_user
-    latest_application.user
+    latest_application&.user
   end
 
   def retrieve_latest_application_user_data
-    latest_application_user.as_json(except: %i[id created_at updated_at])
+    latest_application_user&.as_json(except: %i[id created_at updated_at])
   end
 
   def retrieve_latest_application_data
-    latest_application.as_json(except: %i[id created_at updated_at user_id])
+    latest_application&.as_json(except: %i[id created_at updated_at user_id])
+  end
+
+  before do
+    # Make sure all the tests are checking this data
+    expect(self).to receive(:retrieve_latest_application_user_data).and_call_original
+    expect(self).to receive(:retrieve_latest_application_data).and_call_original
   end
 
   scenario "DQT mismatch" do
@@ -346,6 +352,9 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose your workplace")
+
+    expect(retrieve_latest_application_user_data).to eq(nil)
+    expect(retrieve_latest_application_data).to eq(nil)
   end
 
   scenario "Not chosen DQT or provider" do
@@ -360,6 +369,9 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choosing an NPQ and Provider")
+
+    expect(retrieve_latest_application_user_data).to eq(nil)
+    expect(retrieve_latest_application_data).to eq(nil)
   end
 
   scenario "works in childcare but not in england" do

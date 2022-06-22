@@ -86,28 +86,34 @@ module Services
       store["employment_role"].presence if store_employer_data?
     end
 
-    def private_childcare_provider_urn
-      if inside_catchment? && query_store.works_in_private_childcare_provider?
-        institution(source: store["institution_identifier"]).provider_urn
-      end
+    def institution_from_store
+      @institution_from_store ||= institution(source: store["institution_identifier"])
     end
 
-    def store_school_urn_data?
-      return false unless inside_catchment?
+    def store_private_childcare_provider_urn?
+      inside_catchment? && institution_from_store.is_a?(PrivateChildcareProvider)
+    end
 
-      query_store.works_in_school? || query_store.works_in_public_childcare_provider?
+    def private_childcare_provider_urn
+      institution_from_store.provider_urn if store_private_childcare_provider_urn?
+    end
+
+    def store_school_urn?
+      inside_catchment? && institution_from_store.is_a?(School)
     end
 
     def school_urn
-      if store_school_urn_data?
-        institution(source: store["institution_identifier"]).urn
-      end
+      institution_from_store.urn if store_school_urn?
+    end
+
+    def store_ukprn?
+      return false unless inside_catchment?
+
+      institution_from_store.is_a?(LocalAuthority) || institution_from_store.is_a?(School)
     end
 
     def ukprn
-      if store_school_urn_data?
-        institution(source: store["institution_identifier"]).ukprn
-      end
+      institution_from_store.ukprn if store_ukprn?
     end
 
     def funding_choice
@@ -148,7 +154,7 @@ module Services
     def funding_eligibility_service
       @funding_eligibility_service ||= Services::FundingEligibility.new(
         course: course,
-        institution: institution(source: store["institution_identifier"]),
+        institution: institution_from_store,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: store["trn"],
@@ -169,7 +175,7 @@ module Services
 
     def targeted_delivery_funding_eligibility
       @targeted_delivery_funding_eligibility ||= Services::Eligibility::TargetedDeliveryFunding.new(
-        institution: institution(source: store["institution_identifier"]),
+        institution: institution_from_store,
       ).call
     end
 

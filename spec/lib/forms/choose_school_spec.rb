@@ -58,7 +58,12 @@ RSpec.describe Forms::ChooseSchool, type: :model do
 
   describe "#next_step" do
     let(:course) { Course.all.sample }
-    let(:store) { { "course_id" => course.id.to_s } }
+    let(:store) do
+      {
+        "course_id" => course.id.to_s,
+        "works_in_school" => "yes",
+      }
+    end
     let(:school) { create(:school) }
 
     subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard: wizard) }
