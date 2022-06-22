@@ -38,8 +38,7 @@ module Forms
     def options
       [
         option("yes", "Yes", link_errors: true),
-        option("need-reminder", "I need a reminder"),
-        option("no-dont-have", "I do not have a TRN"),
+        option("no-dont-have", "No, I need help getting one"),
       ]
     end
 

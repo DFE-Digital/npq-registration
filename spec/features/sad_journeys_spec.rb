@@ -583,16 +583,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     expect(page).to be_axe_clean
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("I need a reminder", visible: :all)
-    page.click_button("Continue")
-
-    expect(page).to be_axe_clean
-    expect(page).to have_text("If you don’t know what your teacher reference number")
-    page.click_link("Back")
-
-    expect(page).to be_axe_clean
-    expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("I do not have a TRN", visible: :all)
+    page.choose("No, I need help getting one", visible: :all)
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
