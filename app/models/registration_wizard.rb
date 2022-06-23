@@ -258,7 +258,6 @@ private
       about_npq
       teacher_reference_number
       change_dqt
-      dont_know_teacher_reference_number
       dont_have_teacher_reference_number
       contact_details
       confirm_email

@@ -1,6 +1,6 @@
 module Forms
   class TeacherReferenceNumber < Base
-    VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes need-reminder no-dont-have].freeze
+    VALID_TRN_KNOWLEDGE_OPTIONS = %w[yes no-dont-have].freeze
 
     attr_accessor :trn_knowledge
 
@@ -16,8 +16,6 @@ module Forms
       case trn_knowledge
       when "yes"
         :contact_details
-      when "need-reminder"
-        :dont_know_teacher_reference_number
       when "no-dont-have"
         :dont_have_teacher_reference_number
       end
@@ -38,8 +36,7 @@ module Forms
     def options
       [
         option("yes", "Yes", link_errors: true),
-        option("need-reminder", "I need a reminder"),
-        option("no-dont-have", "I do not have a TRN"),
+        option("no-dont-have", "No, I need help getting one"),
       ]
     end
 

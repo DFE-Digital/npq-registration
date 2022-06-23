@@ -49,14 +49,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("I need a reminder")
-    page.click_button("Continue")
-
-    expect(page).to have_text("If you don’t know what your teacher reference number")
-    page.click_link("Back")
-
-    expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("I do not have a TRN")
+    page.choose("No, I need help getting one")
     page.click_button("Continue")
 
     expect(page).to have_text("Get a Teacher Reference Number (TRN)")
