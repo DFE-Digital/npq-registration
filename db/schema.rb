@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_17_131203) do
+ActiveRecord::Schema.define(version: 2022_06_28_094940) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 2022_06_17_131203) do
     t.text "description"
     t.integer "position", default: 0
     t.boolean "display", default: true
+    t.integer "default_cohort", default: 2022
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

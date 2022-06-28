@@ -771,7 +771,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "trn_verified" => true,
     )
     expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+      "cohort" => 2021,
       "course_id" => Course.find_by_code(code: :EHCO).id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
