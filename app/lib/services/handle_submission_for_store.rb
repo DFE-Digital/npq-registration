@@ -39,7 +39,7 @@ module Services
           works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
-          cohort: Application::TARGET_COHORT,
+          cohort: course.default_cohort,
           raw_application_data: raw_application_data,
         )
 

@@ -1,6 +1,4 @@
 class Application < ApplicationRecord
-  TARGET_COHORT = 2022
-
   belongs_to :user
   belongs_to :course
   belongs_to :lead_provider
