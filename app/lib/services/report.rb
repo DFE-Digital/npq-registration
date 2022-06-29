@@ -19,6 +19,13 @@ module Services
             a.headteacher_status,
             a.eligible_for_funding,
             a.funding_choice,
+            a.funding_eligiblity_status_code,
+            a.targeted_delivery_funding_eligibility,
+            a.works_in_nursery,
+            a.works_in_childcare,
+            a.kind_of_nursery,
+            a.private_childcare_provider_urn,
+            a.cohort,
             a.school_urn,
             a.school&.name,
             a.school&.establishment_type_name,
@@ -47,6 +54,13 @@ module Services
         headteacher_status
         eligible_for_funding
         funding_choice
+        funding_eligiblity_status_code
+        targeted_delivery_funding_eligibility
+        works_in_nursery
+        works_in_childcare
+        kind_of_nursery
+        private_childcare_provider_urn
+        cohort
         school_urn
         school_name
         establishment_type_name
