@@ -17,17 +17,17 @@
       <h1 class="govuk-heading-xl"><%= @form.title %></h1>
 
       <% if @form.assumed_to_have_trn? %>
-        <p class="govuk-body">Your teacher reference number (TRN) is used to check you're eligible to study for an NPQ.</p>
+        <p class="govuk-body">Your teacher reference number (TRN) is used to check you’re eligible to study for an NPQ.</p>
 
-        <p class="govuk-body">You can use the <%= govuk_link_to 'find a lost TRN service (opens in a new tab)', 'https://find-a-lost-trn.education.gov.uk/start', target: :_blank %> if you do not know your TRN, or want to check if you have one.</p>
+        <p class="govuk-body">You can use the <%= govuk_link_to 'Find a lost TRN service (opens in a new tab)', 'https://find-a-lost-trn.education.gov.uk/start', target: :_blank %> if you do not know your TRN, or want to check if you have one.</p>
 
         <p class="govuk-body">You may not have a TRN if you are working in early years, further education or qualified as a teacher outside England.</p>
       <% else %>
-        <p class="govuk-body">You'll need a teacher reference number (TRN) to register for an NPQ, even if you are not a teacher. We use your TRN to check you're eligible to study for an NPQ.</p>
+        <p class="govuk-body">You’ll need a teacher reference number (TRN) to register for an NPQ, even if you are not a teacher. We use your TRN to check you’re eligible to study for an NPQ.</p>
 
         <p class="govuk-body">You may not have a TRN if you are working in early years, further education or qualified as a teacher outside England.</p>
 
-        <p class="govuk-body">You can use the <%= govuk_link_to 'find a lost TRN service (opens in a new tab)', 'https://find-a-lost-trn.education.gov.uk/start', target: :_blank %> if you do not know your TRN, or want to check if you have one.</p>
+        <p class="govuk-body">You can use the <%= govuk_link_to 'Find a lost TRN service (opens in a new tab)', 'https://find-a-lost-trn.education.gov.uk/start', target: :_blank %> if you do not know your TRN, or want to check if you have one.</p>
       <% end %>
 
       <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you have a TRN?" } ) do %>
