@@ -9,7 +9,7 @@ module Services
 
       def call
         ActiveRecord::Base.transaction do
-          LeadProvider::ALL_PROVIDERS.each(&method(:create_or_update_lead_provider))
+          LeadProvider::ALL_PROVIDERS.each { |name, id| create_or_update_lead_provider(name, id) }
         rescue StandardError => e
           Rails.logger.error("Encountered error #{e.message}. Rolling back all changes")
           raise ActiveRecord::Rollback
