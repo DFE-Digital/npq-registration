@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Forms::DqtMismatch do
   let(:request) { nil }
   let(:store) { { "teacher_catchment" => teacher_catchment, "works_in_school" => works_in_school } }
-  let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :dqt_mismatch) }
+  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :dqt_mismatch) }
 
   subject(:step) { described_class.new.tap { |s| s.wizard = wizard } }
 

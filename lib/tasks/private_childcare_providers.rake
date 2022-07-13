@@ -19,7 +19,7 @@ namespace :private_childcare_providers do
 
     Rails.logger.info("Parsing CSV file using: #{csv_row_parser}")
 
-    importer = importer.new(file_name: file_name, csv_row_parser: csv_row_parser)
+    importer = importer.new(file_name:, csv_row_parser:)
 
     importer.call
 

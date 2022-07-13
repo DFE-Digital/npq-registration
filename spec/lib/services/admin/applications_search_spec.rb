@@ -4,7 +4,7 @@ RSpec.describe Services::Admin::ApplicationsSearch do
   let!(:application) { create(:application) }
   let!(:user) { application.user }
 
-  subject { described_class.new(q: q) }
+  subject { described_class.new(q:) }
 
   describe "#call" do
     context "when partial email match" do

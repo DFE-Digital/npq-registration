@@ -10,6 +10,6 @@ module ApplicationHelper
   end
 
   def pagy_govuk_nav(pagy)
-    render "pagy/paginator", pagy: pagy
+    render "pagy/paginator", pagy:
   end
 end

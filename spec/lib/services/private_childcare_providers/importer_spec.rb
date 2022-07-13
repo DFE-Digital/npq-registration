@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe Services::PrivateChildcareProviders::Importer do
   subject do
     described_class.new(
-      file_name: file_name,
-      csv_row_parser: csv_row_parser,
+      file_name:,
+      csv_row_parser:,
     )
   end
 

@@ -55,7 +55,7 @@ module Forms
 
     def after_save
       wizard.store["generated_confirmation_code"] = code
-      ConfirmEmailMailer.confirmation_code_mail(to: email, code: code).deliver_now
+      ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
       set_flash_message
     end
 

@@ -197,7 +197,7 @@ class RegistrationWizard
   end
 
   def query_store
-    @query_store ||= Services::QueryStore.new(store: store)
+    @query_store ||= Services::QueryStore.new(store:)
   end
 
 private
@@ -208,7 +208,7 @@ private
 
   def funding_eligibility_calculator
     Services::FundingEligibility.new(
-      course: course,
+      course:,
       institution: institution_from_store,
       inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,

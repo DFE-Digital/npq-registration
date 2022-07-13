@@ -20,7 +20,7 @@ module Services
 
       def create_or_update_lead_provider(name, ecf_id)
         Rails.logger.info("Updating Lead Provider with ECF ID #{ecf_id} to use name #{name}")
-        LeadProvider.find_or_initialize_by(ecf_id: ecf_id).update!(name: name)
+        LeadProvider.find_or_initialize_by(ecf_id:).update!(name:)
       end
     end
   end

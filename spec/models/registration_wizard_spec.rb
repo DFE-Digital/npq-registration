@@ -6,7 +6,7 @@ RSpec.describe RegistrationWizard do
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
   let(:current_step) { "share_provider" }
 
-  subject { described_class.new(current_step: current_step, store: store, request: request) }
+  subject { described_class.new(current_step:, store:, request:) }
 
   describe "#current_step" do
     it "returns current step" do
@@ -14,7 +14,7 @@ RSpec.describe RegistrationWizard do
     end
 
     context "when invalid step" do
-      subject { described_class.new(current_step: "i_do_not_exist", store: store, request: request) }
+      subject { described_class.new(current_step: "i_do_not_exist", store:, request:) }
 
       it "raises an error" do
         expect {

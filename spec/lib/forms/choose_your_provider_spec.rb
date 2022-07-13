@@ -17,9 +17,9 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
     let(:wizard) do
       RegistrationWizard.new(
-        current_step: current_step,
-        store: store,
-        request: request,
+        current_step:,
+        store:,
+        request:,
       )
     end
 
@@ -215,9 +215,9 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
     let(:wizard) do
       RegistrationWizard.new(
-        current_step: current_step,
-        store: store,
-        request: request,
+        current_step:,
+        store:,
+        request:,
       )
     end
     let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
@@ -276,7 +276,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     before do
       form.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
-        store: store,
+        store:,
         request: nil,
       )
     end

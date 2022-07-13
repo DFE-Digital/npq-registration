@@ -13,7 +13,7 @@ namespace :registration_interest do
     puts("Sending registration opening notification to #{recipients.count} unnotified registered emails")
 
     recipients.each do |registration_interest|
-      RegistrationOpenNotificationJob.perform_later(registration_interest: registration_interest)
+      RegistrationOpenNotificationJob.perform_later(registration_interest:)
     end
   end
 end

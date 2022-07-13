@@ -13,13 +13,13 @@ RSpec.describe Forms::CheckAnswers do
       course_id: course.id,
       trn_verified: true,
       trn: "1234567",
-      verified_trn: verified_trn,
+      verified_trn:,
       confirmed_email: user.email,
     }.stringify_keys
   end
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-  let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store: store, request: request) }
+  let(:wizard) { RegistrationWizard.new(current_step: :check_answers, store:, request:) }
 
   describe "#after_save" do
     before do

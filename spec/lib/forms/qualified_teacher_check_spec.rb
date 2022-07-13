@@ -9,16 +9,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
         },
         body: {
-          trn: trn,
-          date_of_birth: date_of_birth,
-          full_name: full_name,
-          nino: nino,
+          trn:,
+          date_of_birth:,
+          full_name:,
+          nino:,
         },
       )
       .to_return(status: response_code, body: response_body, headers: {})
   end
 
-  let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :qualified_teacher_check) }
+  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check) }
   let(:request) { nil }
   let(:store) do
     { "teacher_catchment" => "england" }
@@ -159,7 +159,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   end
 
   describe "#next_step" do
-    let(:wizard) { RegistrationWizard.new(store: store, request: request, current_step: :qualified_teacher_check) }
+    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check) }
     let(:request) { nil }
     let(:store) do
       { "teacher_catchment" => "england" }
@@ -267,8 +267,8 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     let(:wizard) do
       RegistrationWizard.new(
         current_step: :qualified_teacher_check,
-        store: store,
-        request: request,
+        store:,
+        request:,
       )
     end
 
@@ -278,7 +278,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         full_name: "John Doe",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
-        wizard: wizard,
+        wizard:,
       )
     end
 

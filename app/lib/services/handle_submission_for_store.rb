@@ -23,24 +23,24 @@ module Services
         user.applications.create!(
           course_id: course.id,
           lead_provider_id: store["lead_provider_id"],
-          private_childcare_provider_urn: private_childcare_provider_urn,
-          school_urn: school_urn,
-          ukprn: ukprn,
-          headteacher_status: headteacher_status,
+          private_childcare_provider_urn:,
+          school_urn:,
+          ukprn:,
+          headteacher_status:,
           eligible_for_funding: funding_eligibility,
-          funding_eligiblity_status_code: funding_eligiblity_status_code,
-          funding_choice: funding_choice,
+          funding_eligiblity_status_code:,
+          funding_choice:,
           teacher_catchment: store["teacher_catchment"],
           teacher_catchment_country: store["teacher_catchment_country"].presence,
           works_in_school: store["works_in_school"] == "yes",
-          employer_name: employer_name,
-          employment_role: employment_role,
-          targeted_delivery_funding_eligibility: targeted_delivery_funding_eligibility,
+          employer_name:,
+          employment_role:,
+          targeted_delivery_funding_eligibility:,
           works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
           cohort: course.default_cohort,
-          raw_application_data: raw_application_data,
+          raw_application_data:,
         )
 
         enqueue_job
@@ -67,7 +67,7 @@ module Services
     end
 
     def query_store
-      @query_store ||= Services::QueryStore.new(store: store)
+      @query_store ||= Services::QueryStore.new(store:)
     end
 
     delegate :inside_catchment?, to: :query_store
@@ -148,12 +148,12 @@ module Services
     end
 
     def enqueue_job
-      ApplicationSubmissionJob.perform_later(user: user)
+      ApplicationSubmissionJob.perform_later(user:)
     end
 
     def funding_eligibility_service
       @funding_eligibility_service ||= Services::FundingEligibility.new(
-        course: course,
+        course:,
         institution: institution_from_store,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,

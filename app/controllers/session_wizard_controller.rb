@@ -1,8 +1,8 @@
 class SessionWizardController < ApplicationController
   def show
     @wizard = SessionWizard.new(current_step: params[:step].underscore,
-                                store: store,
-                                session: session)
+                                store:,
+                                session:)
     @form = @wizard.form
 
     render @wizard.current_step
@@ -10,9 +10,9 @@ class SessionWizardController < ApplicationController
 
   def update
     @wizard = SessionWizard.new(current_step: params[:step].underscore,
-                                store: store,
+                                store:,
                                 params: wizard_params,
-                                session: session)
+                                session:)
     @form = @wizard.form
 
     if @form.valid?

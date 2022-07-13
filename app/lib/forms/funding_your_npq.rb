@@ -40,12 +40,7 @@ module Forms
   private
 
     def option(value, text, description = nil, link_errors: false)
-      OpenStruct.new(
-        value: value,
-        text: text,
-        description: description,
-        link_errors: link_errors,
-      )
+      OpenStruct.new(value:, text:, description:, link_errors:)
     end
 
     delegate :query_store, to: :wizard

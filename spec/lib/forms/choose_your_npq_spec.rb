@@ -37,7 +37,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
 
       context "nothing was actually changed" do
         let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:lead_provider) { LeadProvider.for(course: course).first }
+        let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
             course_id: course.id.to_s,
@@ -49,8 +49,8 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         before do
           subject.wizard = RegistrationWizard.new(
             current_step: :choose_your_npq,
-            store: store,
-            request: request,
+            store:,
+            request:,
           )
         end
 
@@ -63,7 +63,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
         let(:school) { create(:school) }
         let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
-        let(:lead_providers) { LeadProvider.for(course: course) }
+        let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do
           {
@@ -78,8 +78,8 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         before do
           subject.wizard = RegistrationWizard.new(
             current_step: :choose_your_npq,
-            store: store,
-            request: request,
+            store:,
+            request:,
           )
 
           stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding?npq_course_identifier=npq-headship")
@@ -112,7 +112,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         end
 
         context "when lead provider is valid for new course" do
-          let(:lead_providers) { LeadProvider.for(course: course) }
+          let(:lead_providers) { LeadProvider.for(course:) }
 
           it "returns check_answers" do
             expect(subject.next_step).to eql(:check_answers)
@@ -120,7 +120,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         end
 
         context "when lead provider is not valid for new course" do
-          let(:lead_providers) { LeadProvider.where.not(id: LeadProvider.for(course: course)) }
+          let(:lead_providers) { LeadProvider.where.not(id: LeadProvider.for(course:)) }
 
           it "redirects you towards picking your provider flow" do
             expect(subject.next_step).to eql(:ineligible_for_funding)
@@ -136,19 +136,19 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     before do
       subject.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
-        store: store,
-        request: request,
+        store:,
+        request:,
       )
     end
 
     let(:store) do
       {
-        teacher_catchment: teacher_catchment,
-        works_in_school: works_in_school,
-        works_in_childcare: works_in_childcare,
-        works_in_nursery: works_in_nursery,
-        kind_of_nursery: kind_of_nursery,
-        has_ofsted_urn: has_ofsted_urn,
+        teacher_catchment:,
+        works_in_school:,
+        works_in_childcare:,
+        works_in_nursery:,
+        kind_of_nursery:,
+        has_ofsted_urn:,
       }.stringify_keys
     end
 
@@ -240,7 +240,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     before do
       form.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
-        store: store,
+        store:,
         request: nil,
       )
     end

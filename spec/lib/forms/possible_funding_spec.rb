@@ -20,8 +20,8 @@ RSpec.describe Forms::PossibleFunding do
     let(:wizard) do
       RegistrationWizard.new(
         current_step: :possible_funding,
-        store: store,
-        request: request,
+        store:,
+        request:,
       )
     end
 

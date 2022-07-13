@@ -19,9 +19,9 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
 
   let(:application) do
     Application.create!(
-      user: user,
-      course: course,
-      lead_provider: lead_provider,
+      user:,
+      course:,
+      lead_provider:,
       school_urn: school.urn,
       ukprn: school.ukprn,
       headteacher_status: "no",
@@ -75,7 +75,7 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
     }.to_json
   end
 
-  subject { described_class.new(application: application) }
+  subject { described_class.new(application:) }
 
   before do
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-profiles/#{application.ecf_id}")

@@ -26,9 +26,9 @@ RSpec.describe Forms::ContactDetails, type: :model do
     let(:store) { {} }
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store: store, request: request) }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store:, request:) }
 
-    subject { described_class.new(email: " User@example.com ", wizard: wizard) }
+    subject { described_class.new(email: " User@example.com ", wizard:) }
 
     it "sends email to downcased version" do
       expect {

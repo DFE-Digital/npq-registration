@@ -40,8 +40,8 @@ module Forms
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= Services::FundingEligibility.new(
-        course: course,
-        institution: institution,
+        course:,
+        institution:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.store["trn"],

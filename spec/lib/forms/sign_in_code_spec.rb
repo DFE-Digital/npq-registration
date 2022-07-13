@@ -6,13 +6,13 @@ RSpec.describe Forms::SignInCode, type: :model do
   let(:store) { { "email" => user.email } }
   let(:session) { {} }
   let(:wizard) do
-    SessionWizard.new(store: store,
+    SessionWizard.new(store:,
                       current_step: "sign_in_code",
-                      session: session)
+                      session:)
   end
 
   subject do
-    described_class.new(code: code)
+    described_class.new(code:)
   end
 
   before do

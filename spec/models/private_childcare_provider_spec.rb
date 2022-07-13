@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe PrivateChildcareProvider, type: :model do
   describe "#on_early_years_register?" do
     let(:provider) do
-      described_class.new(early_years_individual_registers: early_years_individual_registers)
+      described_class.new(early_years_individual_registers:)
     end
 
     context "when the provider is on the early year register" do

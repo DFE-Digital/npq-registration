@@ -4,7 +4,7 @@ require "tempfile"
 RSpec.describe Services::Importers::ManualValidation do
   let(:school) { create(:school) }
   let(:user) { create(:user) }
-  let(:application) { create(:application, :with_ecf_id, user: user, school: school) }
+  let(:application) { create(:application, :with_ecf_id, user:, school:) }
   let(:file) { Tempfile.new("test.csv") }
 
   around do |example|

@@ -57,9 +57,9 @@ module Forms
     def next_step
       record = Services::ParticipantValidator.new(
         trn: trn_digits_only,
-        full_name: full_name,
-        date_of_birth: date_of_birth,
-        national_insurance_number: national_insurance_number,
+        full_name:,
+        date_of_birth:,
+        national_insurance_number:,
       ).call
 
       if record

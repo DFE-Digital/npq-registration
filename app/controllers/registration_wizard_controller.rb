@@ -1,8 +1,6 @@
 class RegistrationWizardController < ApplicationController
   def show
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
-                                     store: store,
-                                     request: request)
+    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, request:)
 
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
@@ -17,10 +15,7 @@ class RegistrationWizardController < ApplicationController
   end
 
   def update
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore,
-                                     store: store,
-                                     params: wizard_params,
-                                     request: request)
+    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:)
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
