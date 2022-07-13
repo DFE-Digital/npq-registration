@@ -30,6 +30,7 @@ gem "webpacker"
 
 gem 'omniauth'
 gem "omniauth-rails_csrf_protection"
+gem "omniauth_openid_connect"
 
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
