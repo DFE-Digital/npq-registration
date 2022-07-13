@@ -28,6 +28,9 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "webpacker"
 
+gem 'omniauth'
+gem "omniauth-rails_csrf_protection"
+
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"

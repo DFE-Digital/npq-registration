@@ -169,6 +169,7 @@ GEM
       activesupport (>= 6.0)
       deep_merge (~> 1.2.1)
     hashdiff (1.0.1)
+    hashie (5.0.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
     i18n-debug (1.2.0)
@@ -226,6 +227,13 @@ GEM
       racc (~> 1.4)
     notifications-ruby-client (5.3.0)
       jwt (>= 1.5, < 3)
+    omniauth (2.1.0)
+      hashie (>= 3.4.6)
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-rails_csrf_protection (1.0.1)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     pagy (5.10.1)
       activesupport
     parallel (1.22.1)
@@ -248,6 +256,8 @@ GEM
     rack (2.2.3.1)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
+    rack-protection (2.2.0)
+      rack
     rack-proxy (0.7.0)
       rack
     rack-test (1.1.0)
@@ -445,6 +455,8 @@ DEPENDENCIES
   lograge (>= 0.11.2)
   logstash-event
   mail-notify
+  omniauth
+  omniauth-rails_csrf_protection
   pagy
   pg (>= 0.18, < 2.0)
   pg_search
