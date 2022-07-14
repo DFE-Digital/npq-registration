@@ -1,0 +1,43 @@
+module Helpers
+  module JourneyAssertionHelper
+    def navigate_to_page(path, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
+      visit(path)
+
+      expect(page.current_path).to eql(path)
+
+      page_checks(axe_check:, &block)
+
+      page.click_button(submit_button_text) if submit_form
+    end
+
+    def given_i_am_on_page(path, submit_form: true, submit_button_text: "Continue", axe_check: true, &block)
+      expect(page.current_path).to eql(path)
+
+      page_checks(axe_check:, &block)
+
+      page.click_button(submit_button_text) if submit_form
+    end
+
+    alias_method :now_i_should_be_on_page, :given_i_am_on_page
+
+    def and_the_check_your_answers_page_should_contain(values)
+      check_answers_page = CheckAnswersPage.new
+
+      expect(check_answers_page).to be_displayed
+
+      summary_data = check_answers_page.summary_list.rows.map { |summary_item|
+        [summary_item.key, summary_item.value]
+      }.to_h
+
+      expect(summary_data).to eql(values)
+    end
+
+  private
+
+    def page_checks(axe_check:, &block)
+      expect(page).to(be_axe_clean) if axe_check
+
+      block.call if block_given?
+    end
+  end
+end
