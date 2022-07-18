@@ -86,7 +86,7 @@ module Forms
     end
 
     def valid_providers
-      LeadProvider.for(course: course)
+      LeadProvider.for(course:)
     end
 
     def courses
@@ -100,7 +100,7 @@ module Forms
     def previously_eligible_for_funding?
       Services::FundingEligibility.new(
         course: previous_course,
-        institution: institution,
+        institution:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.store["trn"],
@@ -109,8 +109,8 @@ module Forms
 
     def funding_eligibility_calculator
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
-        course: course,
-        institution: institution,
+        course:,
+        institution:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.store["trn"],

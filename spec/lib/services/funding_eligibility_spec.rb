@@ -7,7 +7,7 @@ RSpec.describe Services::FundingEligibility do
   let(:previously_funded) { false }
   let(:course_identifier) { course.identifier }
 
-  subject { described_class.new(institution: institution, course: course, inside_catchment: inside_catchment, trn: trn) }
+  subject { described_class.new(institution:, course:, inside_catchment:, trn:) }
 
   before do
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/#{trn}?npq_course_identifier=#{course_identifier}")
@@ -66,11 +66,11 @@ RSpec.describe Services::FundingEligibility do
             context "new headteacher" do
               subject do
                 described_class.new(
-                  institution: institution,
-                  course: course,
-                  inside_catchment: inside_catchment,
+                  institution:,
+                  course:,
+                  inside_catchment:,
                   new_headteacher: true,
-                  trn: trn,
+                  trn:,
                 )
               end
 
@@ -98,11 +98,11 @@ RSpec.describe Services::FundingEligibility do
             context "new headteacher" do
               subject do
                 described_class.new(
-                  institution: institution,
-                  course: course,
-                  inside_catchment: inside_catchment,
+                  institution:,
+                  course:,
+                  inside_catchment:,
                   new_headteacher: true,
-                  trn: trn,
+                  trn:,
                 )
               end
 

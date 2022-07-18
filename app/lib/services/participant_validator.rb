@@ -39,12 +39,7 @@ module Services
     end
 
     def payload
-      {
-        trn: trn,
-        full_name: full_name,
-        date_of_birth: dob_as_string,
-        nino: national_insurance_number,
-      }
+      { trn:, full_name:, date_of_birth: dob_as_string, nino: national_insurance_number }
     end
 
     def use_ssl?

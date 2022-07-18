@@ -28,6 +28,8 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "webpacker"
 
+gem "net-smtp", require: false
+
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"

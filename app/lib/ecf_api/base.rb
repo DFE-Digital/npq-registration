@@ -4,11 +4,11 @@ module EcfApi
       super(
         request_method,
         path,
-        params: params,
+        params:,
         headers: headers.update(
           "Authorization" => "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}",
         ),
-        body: body
+        body:
       )
     end
   end

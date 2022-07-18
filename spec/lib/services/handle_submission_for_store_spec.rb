@@ -44,7 +44,7 @@ RSpec.describe Services::HandleSubmissionForStore do
       )
   end
 
-  subject { described_class.new(store: store) }
+  subject { described_class.new(store:) }
 
   describe "#call" do
     def stable_as_json(record)

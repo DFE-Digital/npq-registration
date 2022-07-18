@@ -8,10 +8,10 @@ RSpec.describe Services::ParticipantValidator do
 
   subject do
     described_class.new(
-      trn: trn,
-      full_name: full_name,
-      date_of_birth: date_of_birth,
-      national_insurance_number: national_insurance_number,
+      trn:,
+      full_name:,
+      date_of_birth:,
+      national_insurance_number:,
     )
   end
 
@@ -21,7 +21,7 @@ RSpec.describe Services::ParticipantValidator do
         {
           data: {
             attributes: {
-              trn: trn,
+              trn:,
               qts: true,
               active_alert: false,
             },
@@ -37,9 +37,9 @@ RSpec.describe Services::ParticipantValidator do
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
           },
           body: {
-            trn: trn,
+            trn:,
             date_of_birth: date_of_birth.iso8601,
-            full_name: full_name,
+            full_name:,
             nino: national_insurance_number,
           },
         )
@@ -73,9 +73,9 @@ RSpec.describe Services::ParticipantValidator do
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
           },
           body: {
-            trn: trn,
+            trn:,
             date_of_birth: date_of_birth.iso8601,
-            full_name: full_name,
+            full_name:,
             nino: national_insurance_number,
           },
         )
@@ -98,9 +98,9 @@ RSpec.describe Services::ParticipantValidator do
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
           },
           body: {
-            trn: trn,
+            trn:,
             date_of_birth: date_of_birth.iso8601,
-            full_name: full_name,
+            full_name:,
             nino: national_insurance_number,
           },
         )

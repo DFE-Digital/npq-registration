@@ -19,9 +19,9 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
 
   let(:application) do
     Application.create!(
-      user: user,
-      course: course,
-      lead_provider: lead_provider,
+      user:,
+      course:,
+      lead_provider:,
       school_urn: school.urn,
       ukprn: school.ukprn,
       headteacher_status: "no",
@@ -37,7 +37,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
     )
   end
 
-  subject { described_class.new(application: application) }
+  subject { described_class.new(application:) }
 
   describe "#call" do
     let(:request_body) do

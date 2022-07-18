@@ -25,7 +25,7 @@ module Forms
     end
 
     def after_save
-      ConfirmEmailMailer.confirmation_code_mail(to: email, code: code).deliver_now
+      ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
       wizard.request.flash[:success] = "We’ve emailed a confirmation code to #{email}"
     end
 

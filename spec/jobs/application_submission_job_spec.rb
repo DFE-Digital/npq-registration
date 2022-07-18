@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe ApplicationSubmissionJob do
-  subject { described_class.new(user: user) }
+  subject { described_class.new(user:) }
 
   describe "#perform" do
-    let(:application) { create(:application, user: user, school: school) }
+    let(:application) { create(:application, user:, school:) }
     let(:user) { create(:user) }
     let(:school) { create(:school) }
 
@@ -17,9 +17,9 @@ RSpec.describe ApplicationSubmissionJob do
       user_creator_double = instance_double(Services::Ecf::EcfUserCreator, call: nil)
       profile_creator_double = instance_double(Services::Ecf::NpqProfileCreator, call: nil)
 
-      expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user: user).and_return(user_finder_double)
-      expect(Services::Ecf::EcfUserCreator).to receive(:new).with(user: user).and_return(user_creator_double)
-      expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application: application).and_return(profile_creator_double)
+      expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
+      expect(Services::Ecf::EcfUserCreator).to receive(:new).with(user:).and_return(user_creator_double)
+      expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
 
       subject.perform_now
 
@@ -32,7 +32,7 @@ RSpec.describe ApplicationSubmissionJob do
       user_creator_double = instance_double(Services::Ecf::EcfUserCreator, call: nil)
       profile_creator_double = instance_double(Services::Ecf::NpqProfileCreator, call: nil)
 
-      expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user: user).and_return(user_finder_double)
+      expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
       expect(Services::Ecf::EcfUserCreator).to receive(:new).and_return(user_creator_double)
       expect(Services::Ecf::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
 
@@ -55,7 +55,7 @@ RSpec.describe ApplicationSubmissionJob do
         profile_creator_double = instance_double(Services::Ecf::NpqProfileCreator, call: nil)
 
         expect(Services::Ecf::EcfUserCreator).not_to receive(:new)
-        expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application: application).and_return(profile_creator_double)
+        expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
 
         subject.perform_now
 
@@ -71,9 +71,9 @@ RSpec.describe ApplicationSubmissionJob do
         user_finder_double = instance_double(Services::Ecf::EcfUserFinder, call: ecf_user)
         profile_creator_double = instance_double(Services::Ecf::NpqProfileCreator, call: nil)
 
-        expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user: user).and_return(user_finder_double)
+        expect(Services::Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
         expect(Services::Ecf::EcfUserCreator).not_to receive(:new)
-        expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application: application).and_return(profile_creator_double)
+        expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
 
         subject.perform_now
 
@@ -86,7 +86,7 @@ RSpec.describe ApplicationSubmissionJob do
 
     context "when applications already exists in ecf" do
       let(:user) { create(:user, ecf_id: "123") }
-      let(:application) { create(:application, user: user, ecf_id: "456", school: school) }
+      let(:application) { create(:application, user:, ecf_id: "456", school:) }
 
       it "calls correct servivces" do
         instance_double(Services::Ecf::EcfUserCreator)

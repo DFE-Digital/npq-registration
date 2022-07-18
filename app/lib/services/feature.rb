@@ -2,7 +2,7 @@ module Services
   class Feature
     REGISTRATION_CLOSE_DATE = Time.zone.parse("12 March 2022 00:00")
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
-    REGISTRATION_CLOSED = (REGISTRATION_CLOSE_DATE..REGISTRATION_OPEN_DATE).freeze
+    REGISTRATION_CLOSED = (REGISTRATION_CLOSE_DATE..REGISTRATION_OPEN_DATE)
 
     class << self
       def registration_closed?

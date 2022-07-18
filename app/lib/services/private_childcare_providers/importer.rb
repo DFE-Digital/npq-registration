@@ -43,7 +43,7 @@ module Services
       PROVIDER_URN_HEADER_NAME = "Provider URN".freeze
 
       def persist_csv_row(csv_row, row_number)
-        wrapped_csv_row = csv_row_parser.new(csv_row: csv_row)
+        wrapped_csv_row = csv_row_parser.new(csv_row:)
 
         new_record = false
         PrivateChildcareProvider.find_or_create_by!(provider_urn: wrapped_csv_row.provider_urn) do |private_childcare_provider|

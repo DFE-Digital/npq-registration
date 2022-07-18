@@ -1,7 +1,7 @@
 class Services::AutocompleteCountries
   def self.as_open_structs
     names.map do |name|
-      OpenStruct.new(name: name)
+      OpenStruct.new(name:)
     end
   end
 

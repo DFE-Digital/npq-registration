@@ -6,12 +6,12 @@ RSpec.describe Forms::ChooseSchool, type: :model do
   let(:request) { nil }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step: current_step, store: store, request: request)
+    RegistrationWizard.new(current_step:, store:, request:)
   end
 
   describe "validations" do
     subject do
-      described_class.new(wizard: wizard)
+      described_class.new(wizard:)
     end
 
     describe "#institution_identifier" do
@@ -66,7 +66,7 @@ RSpec.describe Forms::ChooseSchool, type: :model do
     end
     let(:school) { create(:school) }
 
-    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard: wizard) }
+    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
 
     it "goes to choose_your_npq" do
       expect(subject.next_step).to eql(:choose_your_npq)

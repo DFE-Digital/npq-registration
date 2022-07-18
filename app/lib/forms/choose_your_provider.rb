@@ -53,7 +53,7 @@ module Forms
 
     def eligible_for_funding?
       @eligible_for_funding ||= Services::FundingEligibility.new(
-        course: course,
+        course:,
         institution: institution(source: institution_identifier),
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
@@ -62,7 +62,7 @@ module Forms
     end
 
     def providers
-      LeadProvider.for(course: course).alphabetical
+      LeadProvider.for(course:).alphabetical
     end
 
     def institution_identifier

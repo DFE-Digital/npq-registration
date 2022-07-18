@@ -5,8 +5,8 @@ RSpec.describe "registration_wizard/dqt_mismatch.html.erb", type: :view do
   let(:wizard) do
     RegistrationWizard.new(
       current_step: :dqt_mismatch,
-      store: store,
-      request: request,
+      store:,
+      request:,
     )
   end
 
