@@ -1,10 +1,11 @@
 module Services
   module Eligibility
     class TargetedDeliveryFunding
-      attr_reader :institution
+      attr_reader :institution, :course
 
-      def initialize(institution:)
+      def initialize(institution:, course:)
         @institution = institution
+        @course = course
       end
 
       def call
@@ -14,6 +15,7 @@ module Services
         return false if institution.is_a?(PrivateChildcareProvider)
         return false if institution.number_of_pupils.nil?
         return false if institution.number_of_pupils.zero?
+        return false unless course.supports_targeted_delivery_funding?
 
         eligible_establishment_type_codes.include?(institution.establishment_type_code) &&
           institution.number_of_pupils < pupil_count_threshold

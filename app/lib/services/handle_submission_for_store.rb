@@ -176,6 +176,7 @@ module Services
     def targeted_delivery_funding_eligibility
       @targeted_delivery_funding_eligibility ||= Services::Eligibility::TargetedDeliveryFunding.new(
         institution: institution_from_store,
+        course:,
       ).call
     end
 
