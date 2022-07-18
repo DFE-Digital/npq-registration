@@ -1,0 +1,7 @@
+<% if flash[:success] %>
+  <pre><%= raw JSON.pretty_generate(flash[:success]).gsub(" ", "&nbsp;") %></pre>
+<% end %>
+
+<%= form_tag('/auth/get_an_identity', method: 'post', data: {turbo: false}) do %>
+  <button type='submit'>Login with Get an Identity</button>
+<% end %>

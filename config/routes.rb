@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
+  get '/auth/:provider/callback', to: 'sessions#create'
+  get '/login', to: 'sessions#new'
+
   resources :schools, only: [:index]
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
