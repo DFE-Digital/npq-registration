@@ -7,7 +7,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
 
   scenario "registration journey when outside of catchment area (crown dependencies)" do
-    stub_participant_validation_request(omit_nino: true)
+    stub_participant_validation_request(nino: "")
 
     navigate_to_page("/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -117,6 +117,10 @@ RSpec.feature "Happy journeys", type: :feature do
           "Where do you work?" => "Jersey, Guernsey or the Isle of Man",
         },
       )
+    end
+
+    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+      expect(page).to have_text("Your initial registration is complete")
     end
 
     expect(retrieve_latest_application_user_data).to eq(

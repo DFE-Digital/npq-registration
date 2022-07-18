@@ -204,6 +204,10 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
+    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+      expect(page).to have_text("Your initial registration is complete")
+    end
+
     expect(retrieve_latest_application_user_data).to eq(
       "active_alert" => false,
       "admin" => false,

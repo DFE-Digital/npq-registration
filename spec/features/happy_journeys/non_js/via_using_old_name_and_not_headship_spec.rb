@@ -2,6 +2,9 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
+  include Helpers::JourneyAssertionHelper
+
+  include_context "stub course ecf to identifier mappings"
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -12,69 +15,64 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   scenario "registration journey via using old name and not headship" do
-    visit "/"
-    expect(page).to have_text("Before you start")
-    page.click_link("Start now")
+    stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
 
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes")
-    page.click_button("Continue")
+    navigate_to_page("/", submit_form: false, axe_check: false) do
+      expect(page).to have_text("Before you start")
+      page.click_link("Start now")
+    end
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("England")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/provider-check") do
+      expect(page).to have_text("Have you already chosen an NPQ and provider?")
+      page.choose("Yes", visible: :all)
+    end
 
-    expect(page.current_path).to eql("/registration/work-in-school")
-    page.choose("Yes")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
+      page.choose("England", visible: :all)
+    end
 
-    expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("No, I need help getting one")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/work-in-school") do
+      page.choose("Yes", visible: :all)
+    end
 
-    expect(page).to have_text("Get a Teacher Reference Number (TRN)")
-    page.click_link("Back")
+    now_i_should_be_on_page("/registration/teacher-reference-number") do
+      page.choose("No, I need help getting one", visible: :all)
+    end
 
-    expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/dont-have-teacher-reference-number", submit_form: false) do
+      expect(page).to have_text("Get a Teacher Reference Number (TRN)")
 
-    expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("What's your email address?")
-    page.fill_in "What's your email address?", with: "user@example.com"
-    page.click_button("Continue")
+      page.click_link("Back")
+    end
 
-    expect(page).to have_text("Confirm your code")
-    expect(page).to have_text("user@example.com")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/teacher-reference-number") do
+      page.choose("Yes", visible: :all)
+    end
 
-    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+    now_i_should_be_on_page("/registration/contact-details") do
+      expect(page).to have_text("What's your email address?")
+      page.fill_in "What's your email address?", with: "user@example.com"
+    end
 
-    page.fill_in "Enter your code", with: code
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/confirm-email") do
+      expect(page).to have_text("Confirm your code")
+      expect(page).to have_text("user@example.com")
 
-    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
-      .with(
-        headers: {
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-        },
-        body: {
-          trn: "12345",
-          date_of_birth: "1980-12-13",
-          full_name: "John Doe",
-          nino: "AB123456C",
-        },
-      )
-      .to_return(status: 200, body: participant_validator_response(trn: "12345"), headers: {})
+      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 
-    expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "RP12/345"
-    page.fill_in "Full name", with: "John Doe"
-    page.fill_in "Day", with: "13"
-    page.fill_in "Month", with: "12"
-    page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number", with: "AB123456C"
-    page.click_button("Continue")
+      page.fill_in("Enter your code", with: code)
+    end
+
+    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+      expect(page).to have_text("Check your details")
+
+      page.fill_in "Teacher reference number (TRN)", with: "RP12/345"
+      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Day", with: "13"
+      page.fill_in "Month", with: "12"
+      page.fill_in "Year", with: "1980"
+      page.fill_in "National Insurance number", with: "AB123456C"
+    end
 
     School.create!(
       urn: 100_000,
@@ -87,21 +85,24 @@ RSpec.feature "Happy journeys", type: :feature do
       number_of_pupils: 100,
     )
 
-    expect(page).to have_text("Where is your school, college or academy trust?")
-    page.fill_in "Workplace location", with: "manchester"
-    page.click_button("Continue")
-
-    expect(page).to have_text("Choose your workplace")
-    expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
-
-    within ".npq-js-hidden" do
-      page.fill_in "Enter the name of your workplace", with: "open"
+    now_i_should_be_on_page("/registration/find-school") do
+      expect(page).to have_text("Where is your school, college or academy trust?")
+      page.fill_in "Workplace location", with: "manchester"
     end
-    page.click_button("Continue")
 
-    expect(page).to have_text("Choose your workplace")
-    page.choose "open manchester school"
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/choose-school") do
+      expect(page).to have_text("Choose your workplace")
+      expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
+
+      within ".npq-js-hidden" do
+        page.fill_in "Enter the name of your workplace", with: "open"
+      end
+
+      page.click_button("Continue")
+
+      expect(page).to have_text("Choose your workplace")
+      page.choose "open manchester school"
+    end
 
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/RP12%2F345?npq_course_identifier=npq-senior-leadership")
       .with(
@@ -117,9 +118,10 @@ RSpec.feature "Happy journeys", type: :feature do
         },
       )
 
-    expect(page).to have_text("What are you applying for?")
-    page.choose("NPQ for Senior Leadership (NPQSL)")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/choose-your-npq") do
+      expect(page).to have_text("What are you applying for?")
+      page.choose("NPQ for Senior Leadership (NPQSL)")
+    end
 
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
       .with(
@@ -135,48 +137,48 @@ RSpec.feature "Happy journeys", type: :feature do
         },
       )
 
-    expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/possible-funding") do
+      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+    end
 
-    expect(page).to have_text("Select your provider")
-    page.choose("Teach First")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/choose-your-provider") do
+      expect(page).to have_text("Select your provider")
+      page.choose("Teach First", visible: :all)
+    end
 
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
-    page.click_button("Continue")
-
-    check_answers_page = CheckAnswersPage.new
-
-    expect(check_answers_page).to be_displayed
-
-    summary_data = check_answers_page.summary_list.rows.map { |summary_item|
-      [summary_item.key, summary_item.value]
-    }.to_h
-
-    expect(summary_data).to eql(
-      "Where do you work?" => "England",
-      "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
-      "Full name" => "John Doe",
-      "TRN" => "RP12/345",
-      "Date of birth" => "13 December 1980",
-      "National Insurance number" => "AB123456C",
-      "Email" => "user@example.com",
-      "Course" => "NPQ for Senior Leadership (NPQSL)",
-      "Workplace" => "open manchester school",
-      "Lead provider" => "Teach First",
-    )
+    now_i_should_be_on_page("/registration/share-provider") do
+      expect(page).to have_text("Sharing your NPQ information")
+      page.check("Yes, I agree my information can be shared", visible: :all)
+    end
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    page.click_button("Submit")
+    now_i_should_be_on_page("/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+      and_the_check_your_answers_page_should_contain(
+        {
+          "Where do you work?" => "England",
+          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "Full name" => "John Doe",
+          "TRN" => "RP12/345",
+          "Date of birth" => "13 December 1980",
+          "National Insurance number" => "AB123456C",
+          "Email" => "user@example.com",
+          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Workplace" => "open manchester school",
+          "Lead provider" => "Teach First",
+        },
+      )
+    end
+
+    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+      expect(page).to have_text("Your initial registration is complete")
+    end
 
     expect(User.count).to eql(1)
     expect(Application.count).to eql(1)
 
     visit "/"
     visit "/registration/confirmation"
-
     expect(page.current_path).to eql("/")
 
     expect(retrieve_latest_application_user_data).to eq(
@@ -193,6 +195,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "trn_auto_verified" => true,
       "trn_verified" => true,
     )
+
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
       "course_id" => Course.find_by_code(code: :NPQSL).id,

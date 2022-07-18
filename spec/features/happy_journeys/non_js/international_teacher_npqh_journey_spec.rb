@@ -2,6 +2,9 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
+  include Helpers::JourneyAssertionHelper
+
+  include_context "retrieve latest application data"
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -12,132 +15,124 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   scenario "international teacher NPQH journey" do
-    visit "/"
-    expect(page).to have_text("Before you start")
-    page.click_link("Start now")
+    stub_participant_validation_request
 
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("Yes")
-    page.click_button("Continue")
+    navigate_to_page("/", submit_form: false, axe_check: false) do
+      expect(page).to have_text("Before you start")
+      page.click_link("Start now")
+    end
 
-    expect(page.current_path).to eql("/registration/teacher-catchment")
-    page.choose("Another country")
-    page.select("China")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/provider-check") do
+      expect(page).to have_text("Have you already chosen an NPQ and provider?")
+      page.choose("Yes", visible: :all)
+    end
 
-    expect(page.current_path).to eql("/registration/work-in-school")
-    page.choose("Yes")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
+      page.choose("Another country")
+      page.select("China")
+    end
 
-    expect(page.current_path).to eql("/registration/teacher-reference-number")
-    page.choose("Yes")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/work-in-school") do
+      page.choose("Yes", visible: :all)
+    end
 
-    expect(page.current_path).to include("contact-details")
-    expect(page).to have_text("What's your email address?")
-    page.fill_in "What's your email address?", with: "user@example.com"
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/teacher-reference-number") do
+      page.choose("Yes", visible: :all)
+    end
 
-    expect(page).to have_text("Confirm your code")
-    expect(page).to have_text("user@example.com")
+    now_i_should_be_on_page("/registration/contact-details") do
+      expect(page).to have_text("What's your email address?")
+      page.fill_in "What's your email address?", with: "user@example.com"
+    end
 
-    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+    now_i_should_be_on_page("/registration/confirm-email") do
+      expect(page).to have_text("Confirm your code")
+      expect(page).to have_text("user@example.com")
 
-    page.fill_in "Enter your code", with: code
-    page.click_button("Continue")
+      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 
-    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
-      .with(
-        headers: {
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-        },
-        body: {
-          trn: "1234567",
-          date_of_birth: "1980-12-13",
-          full_name: "John Doe",
-          nino: "AB123456C",
-        },
-      )
-      .to_return(status: 200, body: participant_validator_response, headers: {})
+      page.fill_in("Enter your code", with: code)
+    end
 
-    expect(page).to have_text("Check your details")
-    page.fill_in "Teacher reference number (TRN)", with: "1234567"
-    page.fill_in "Full name", with: "John Doe"
-    page.fill_in "Day", with: "13"
-    page.fill_in "Month", with: "12"
-    page.fill_in "Year", with: "1980"
-    page.fill_in "National Insurance number (optional)", with: "AB123456C"
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+      expect(page).to have_text("Check your details")
 
-    expect(page).to have_text("What are you applying for?")
-    expect(page).not_to have_text("Additional Support Offer for new headteachers")
-    page.choose("NPQ for Headship (NPQH)")
-    page.click_button("Continue")
+      page.fill_in "Teacher reference number (TRN)", with: "1234567"
+      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Day", with: "13"
+      page.fill_in "Month", with: "12"
+      page.fill_in "Year", with: "1980"
+      page.fill_in "National Insurance number (optional)", with: "AB123456C"
+    end
 
-    expect(page).to have_text("DfE scholarship funding is not available")
-    expect(page).to have_text("To be eligible for scholarship funding for")
-    expect(page).to have_text("state-funded schools")
-    expect(page).to have_text("state-funded 16 to 19 organisations")
-    expect(page).to have_text("independent special schools")
-    expect(page).to have_text("virtual schools")
-    expect(page).to have_text("hospital schools")
-    expect(page).to have_text("young offenders institutions")
-    page.click_link("Continue")
+    now_i_should_be_on_page("/registration/choose-your-npq") do
+      expect(page).to have_text("What are you applying for?")
+      expect(page).not_to have_text("Additional Support Offer for new headteachers")
+      page.choose("NPQ for Headship (NPQH)")
+    end
 
-    expect(page).to have_text("How is your course being paid for?")
-    page.choose "My workplace is covering the cost"
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/ineligible-for-funding", submit_form: false) do
+      expect(page).to have_text("DfE scholarship funding is not available")
+      expect(page).to have_text("To be eligible for scholarship funding for")
+      expect(page).to have_text("state-funded schools")
+      expect(page).to have_text("state-funded 16 to 19 organisations")
+      expect(page).to have_text("independent special schools")
+      expect(page).to have_text("virtual schools")
+      expect(page).to have_text("hospital schools")
+      expect(page).to have_text("young offenders institutions")
 
-    expect(page).to have_text("Select your provider")
-    page.choose("Teach First")
-    page.click_button("Continue")
+      page.click_link("Continue")
+    end
 
-    expect(page).to have_text("Sharing your NPQ information")
-    page.check("Yes, I agree my information can be shared")
-    page.click_button("Continue")
+    now_i_should_be_on_page("/registration/funding-your-npq") do
+      expect(page).to have_text("How is your course being paid for?")
+      page.choose "My workplace is covering the cost"
+    end
 
-    check_answers_page = CheckAnswersPage.new
+    now_i_should_be_on_page("/registration/choose-your-provider") do
+      expect(page).to have_text("Select your provider")
+      page.choose("Teach First", visible: :all)
+    end
 
-    expect(check_answers_page).to be_displayed
-
-    summary_data = check_answers_page.summary_list.rows.map { |summary_item|
-      [summary_item.key, summary_item.value]
-    }.to_h
-
-    expect(summary_data).to eql(
-      "Where do you work?" => "China",
-      "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
-      "Full name" => "John Doe",
-      "TRN" => "1234567",
-      "Date of birth" => "13 December 1980",
-      "National Insurance number" => "AB123456C",
-      "Email" => "user@example.com",
-      "Course" => "NPQ for Headship (NPQH)",
-      "Lead provider" => "Teach First",
-      "How is your NPQ being paid for?" => "My workplace is covering the cost",
-    )
+    now_i_should_be_on_page("/registration/share-provider") do
+      expect(page).to have_text("Sharing your NPQ information")
+      page.check("Yes, I agree my information can be shared", visible: :all)
+    end
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    page.click_button("Submit")
+    now_i_should_be_on_page("/registration/check-answers", submit_button_text: "Submit") do
+      and_the_check_your_answers_page_should_contain(
+        {
+          "Where do you work?" => "China",
+          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "Full name" => "John Doe",
+          "TRN" => "1234567",
+          "Date of birth" => "13 December 1980",
+          "National Insurance number" => "AB123456C",
+          "Email" => "user@example.com",
+          "Course" => "NPQ for Headship (NPQH)",
+          "Lead provider" => "Teach First",
+          "How is your NPQ being paid for?" => "My workplace is covering the cost",
+        },
+      )
+    end
 
-    expect(page).to have_text("Your initial registration is complete")
-    expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+      expect(page).to have_text("Your initial registration is complete")
+      expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+    end
 
     expect(User.count).to eql(1)
+    expect(User.last.applications.count).to eql(1)
 
-    user = User.last
-
-    expect(user.applications.count).to eql(1)
-
-    visit "/account"
-
-    expect(page).to have_text("Teach First")
-    expect(page).to have_text("NPQ for Headship (NPQH)")
+    navigate_to_page("/account", submit_form: false, axe_check: false) do
+      expect(page).to have_text("Teach First")
+      expect(page).to have_text("NPQ for Headship (NPQH)")
+    end
 
     visit "/registration/share-provider"
-
-    expect(page).to have_content("Before you start")
+    expect(page.current_path).to eql("/")
 
     expect(retrieve_latest_application_user_data).to eq(
       "active_alert" => false,

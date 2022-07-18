@@ -35,7 +35,9 @@ module Helpers
   private
 
     def page_checks(axe_check:, &block)
-      expect(page).to(be_axe_clean) if axe_check
+      if axe_check && Capybara.current_driver != :rack_test
+        expect(page).to(be_axe_clean)
+      end
 
       block.call if block_given?
     end
