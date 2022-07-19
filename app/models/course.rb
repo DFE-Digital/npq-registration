@@ -33,6 +33,10 @@ class Course < ApplicationRecord
     find_by(name: COURSE_NAMES[code])
   end
 
+  def supports_targeted_delivery_funding?
+    !ehco? && !aso?
+  end
+
   def npqh?
     name == COURSE_NAMES[:NPQH]
   end
