@@ -7,8 +7,8 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "stub course ecf to identifier mappings"
 
-  scenario "registration journey via using old name and not headship" do
-    stub_participant_validation_request
+  scenario "works in childcare but not in england" do
+    stub_participant_validation_request(nino: "")
 
     navigate_to_page("/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -20,23 +20,14 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    # expect(page).to be_axe_clean
     # TODO: aria-expanded
     now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
-      page.choose("England", visible: :all)
+      page.choose("Scotland", visible: :all)
     end
 
     now_i_should_be_on_page("/registration/work-in-school") do
-      page.choose("Yes", visible: :all)
-    end
-
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
-      page.choose("No, I need help getting one", visible: :all)
-    end
-
-    now_i_should_be_on_page("/registration/dont-have-teacher-reference-number", submit_form: false) do
-      expect(page).to have_text("Get a Teacher Reference Number (TRN)")
-
-      page.click_link("Back")
+      page.choose("No", visible: :all)
     end
 
     now_i_should_be_on_page("/registration/teacher-reference-number") do
@@ -65,43 +56,25 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in "Day", with: "13"
       page.fill_in "Month", with: "12"
       page.fill_in "Year", with: "1980"
-      page.fill_in "National Insurance number", with: "AB123456C"
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    now_i_should_be_on_page("/registration/find-school") do
-      expect(page).to have_text("Where is your school, college or academy trust?")
-      page.fill_in "Workplace location", with: "manchester"
-    end
-
-    now_i_should_be_on_page("/registration/choose-school") do
-      expect(page).to have_text("Choose your workplace")
-      expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
-
-      within ".npq-js-reveal" do
-        page.fill_in "Enter the name of your workplace", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
+    now_i_should_be_on_page("/registration/work-in-childcare") do
+      expect(page).to have_text("Do you work in early years or childcare?")
+      page.choose("Yes", visible: :all)
     end
 
     now_i_should_be_on_page("/registration/choose-your-npq") do
       expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all) # Needs changing to an early years course once added
     end
 
     now_i_should_be_on_page("/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("DfE scholarship funding is not available")
       expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
+      expect(page).to have_text("Work in England")
+      expect(page).to have_text("Be registered with Ofsted on the Early Years Register or the Childcare Register, or be registered with a Childminder Agency (CMA)")
 
       page.click_link("Continue")
     end
@@ -129,21 +102,19 @@ RSpec.feature "Happy journeys", type: :feature do
           "Full name" => "John Doe",
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
-          "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
           "Course" => "NPQ for Senior Leadership (NPQSL)",
-          "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
+          "Do you work in early years or childcare?" => "Yes",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "England",
+          "Where do you work?" => "Scotland",
         },
       )
     end
 
     now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
     end
 
     expect(retrieve_latest_application_user_data).to eq(
@@ -169,20 +140,20 @@ RSpec.feature "Happy journeys", type: :feature do
       "employer_name" => nil,
       "employment_role" => nil,
       "funding_choice" => "school",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
-      "school_urn" => "100000",
+      "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
-      "teacher_catchment" => "england",
+      "teacher_catchment" => "scotland",
       "teacher_catchment_country" => nil,
       "ukprn" => nil,
-      "works_in_childcare" => false,
+      "works_in_childcare" => true,
       "works_in_nursery" => false,
-      "works_in_school" => true,
+      "works_in_school" => false,
       "raw_application_data" => {
         "active_alert" => false,
         "can_share_choices" => "1",
@@ -193,19 +164,17 @@ RSpec.feature "Happy journeys", type: :feature do
         "email" => "user@example.com",
         "full_name" => "John Doe",
         "funding" => "school",
-        "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
-        "institution_name" => "",
-        "lead_provider_id" => "9",
-        "national_insurance_number" => "AB123456C",
-        "teacher_catchment" => "england",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "national_insurance_number" => "",
+        "teacher_catchment" => "scotland",
         "teacher_catchment_country" => nil,
         "trn" => "1234567",
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
         "verified_trn" => "1234567",
-        "works_in_school" => "yes",
+        "works_in_childcare" => "yes",
+        "works_in_school" => "no",
       },
     )
   end

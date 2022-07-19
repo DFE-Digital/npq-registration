@@ -109,10 +109,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.check("Yes, I agree my information can be shared", visible: :all)
     end
 
-    check_answers_page = CheckAnswersPage.new
-
-    expect(check_answers_page).to be_displayed
-
     now_i_should_be_on_page("/registration/check-answers", submit_form: false) do
       and_the_check_your_answers_page_should_contain(
         {

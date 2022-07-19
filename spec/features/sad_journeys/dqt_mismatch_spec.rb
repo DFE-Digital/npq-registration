@@ -7,9 +7,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "stub course ecf to identifier mappings"
 
-  scenario "registration journey via using old name and not headship" do
-    stub_participant_validation_request
-
+  scenario "DQT mismatch" do
     navigate_to_page("/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
@@ -20,6 +18,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    # expect(page).to be_axe_clean
     # TODO: aria-expanded
     now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
       page.choose("England", visible: :all)
@@ -27,16 +26,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     now_i_should_be_on_page("/registration/work-in-school") do
       page.choose("Yes", visible: :all)
-    end
-
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
-      page.choose("No, I need help getting one", visible: :all)
-    end
-
-    now_i_should_be_on_page("/registration/dont-have-teacher-reference-number", submit_form: false) do
-      expect(page).to have_text("Get a Teacher Reference Number (TRN)")
-
-      page.click_link("Back")
     end
 
     now_i_should_be_on_page("/registration/teacher-reference-number") do
@@ -57,18 +46,50 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in("Enter your code", with: code)
     end
 
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+      .with(
+        headers: {
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+        },
+        body: {
+          trn: "1234567",
+          date_of_birth: "1980-12-13",
+          full_name: "John Doeeeeee",
+          nino: "AB123456C",
+        },
+      )
+      .to_return(status: 404, body: "", headers: {})
+
     now_i_should_be_on_page("/registration/qualified-teacher-check") do
       expect(page).to have_text("Check your details")
 
       page.fill_in "Teacher reference number (TRN)", with: "1234567"
-      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Full name", with: "John Doeeeeee"
       page.fill_in "Day", with: "13"
       page.fill_in "Month", with: "12"
       page.fill_in "Year", with: "1980"
       page.fill_in "National Insurance number", with: "AB123456C"
     end
 
+    now_i_should_be_on_page("/registration/dqt-mismatch", submit_form: false) do
+      expect(page).to have_text("We cannot find your details")
+
+      page.click_link("Try again")
+    end
+
+    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+      expect(page).to have_text("Check your details")
+    end
+
+    now_i_should_be_on_page("/registration/dqt-mismatch", submit_form: false) do
+      expect(page).to have_text("We cannot find your details")
+
+      page.click_link("Continue registration")
+    end
+
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
+    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
+    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     now_i_should_be_on_page("/registration/find-school") do
       expect(page).to have_text("Where is your school, college or academy trust?")
@@ -108,7 +129,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     now_i_should_be_on_page("/registration/funding-your-npq") do
       expect(page).to have_text("How is your course being paid for?")
-      page.choose "My workplace is covering the cost", visible: :all
+      page.choose "My trust is paying", visible: :all
     end
 
     now_i_should_be_on_page("/registration/choose-your-provider") do
@@ -126,16 +147,16 @@ RSpec.feature "Happy journeys", type: :feature do
     now_i_should_be_on_page("/registration/check-answers", submit_button_text: "Submit") do
       and_the_check_your_answers_page_should_contain(
         {
-          "Full name" => "John Doe",
+          "Full name" => "John Doeeeeee",
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
           "Course" => "NPQ for Senior Leadership (NPQSL)",
-          "Workplace" => "open manchester school",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
           "Lead provider" => "Teach First",
+          "Workplace" => "open manchester school",
+          "How is your NPQ being paid for?" => "My trust is paying",
+          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
           "Where do you work?" => "England",
         },
       )
@@ -143,22 +164,21 @@ RSpec.feature "Happy journeys", type: :feature do
 
     now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
     end
 
     expect(retrieve_latest_application_user_data).to eq(
-      "active_alert" => false,
+      "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "full_name" => "John Doe",
-      "national_insurance_number" => nil,
+      "full_name" => "John Doeeeeee",
+      "national_insurance_number" => "AB123456C",
       "otp_expires_at" => nil,
       "otp_hash" => nil,
       "trn" => "1234567",
-      "trn_auto_verified" => true,
-      "trn_verified" => true,
+      "trn_auto_verified" => false,
+      "trn_verified" => false,
     )
 
     expect(retrieve_latest_application_data).to eq(
@@ -168,7 +188,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_role" => nil,
-      "funding_choice" => "school",
+      "funding_choice" => "trust",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
@@ -184,15 +204,15 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_nursery" => false,
       "works_in_school" => true,
       "raw_application_data" => {
-        "active_alert" => false,
+        "active_alert" => nil,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "confirmed_email" => "user@example.com",
         "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
-        "full_name" => "John Doe",
-        "funding" => "school",
+        "full_name" => "John Doeeeeee",
+        "funding" => "trust",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
@@ -201,10 +221,10 @@ RSpec.feature "Happy journeys", type: :feature do
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn" => "1234567",
-        "trn_auto_verified" => true,
+        "trn_auto_verified" => nil,
         "trn_knowledge" => "yes",
-        "trn_verified" => true,
-        "verified_trn" => "1234567",
+        "trn_verified" => false,
+        "verified_trn" => nil,
         "works_in_school" => "yes",
       },
     )

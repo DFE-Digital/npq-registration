@@ -7,7 +7,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "stub course ecf to identifier mappings"
 
-  scenario "registration journey via using old name and not headship" do
+  scenario "applying for EHCO but not new headteacher" do
     stub_participant_validation_request
 
     navigate_to_page("/", submit_form: false, axe_check: false) do
@@ -20,6 +20,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    # expect(page).to be_axe_clean
     # TODO: aria-expanded
     now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
       page.choose("England", visible: :all)
@@ -86,29 +87,57 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_content("open manchester school")
 
       page.find("#school-picker__option--0").click
+      page.click_button("Continue")
     end
 
     now_i_should_be_on_page("/registration/choose-your-npq") do
       expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      page.choose("Early Headship Coaching Offer", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
+    now_i_should_be_on_page("/registration/about-ehco", submit_form: false) do
+      expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
 
       page.click_link("Continue")
     end
 
-    now_i_should_be_on_page("/registration/funding-your-npq") do
-      expect(page).to have_text("How is your course being paid for?")
-      page.choose "My workplace is covering the cost", visible: :all
+    now_i_should_be_on_page("/registration/npqh-status") do
+      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+
+      page.choose "None of the above", visible: :all
+    end
+
+    now_i_should_be_on_page("/registration/aso-unavailable", submit_form: false) do
+      expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+
+      page.click_link("Back")
+    end
+
+    now_i_should_be_on_page("/registration/npqh-status") do
+      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
+
+      page.choose "I have completed an NPQH", visible: :all
+    end
+
+    now_i_should_be_on_page("/registration/aso-headteacher") do
+      expect(page).to have_text("Are you a headteacher?")
+      page.choose("Yes", visible: :all)
+    end
+
+    now_i_should_be_on_page("/registration/aso-new-headteacher") do
+      expect(page).to have_text("Are you in your first 5 years of a headship?")
+      page.choose "No", visible: :all
+    end
+
+    now_i_should_be_on_page("/registration/aso-funding-not-available", submit_form: false) do
+      expect(page).to have_selector "h1", text: "DfE scholarship funding is not available"
+
+      page.click_button("Continue")
+    end
+
+    now_i_should_be_on_page("/registration/funding-your-aso") do
+      expect(page).to have_text("How is the Early Headship Coaching Offer being paid for?")
+      page.choose "I am paying", visible: :all
     end
 
     now_i_should_be_on_page("/registration/choose-your-provider") do
@@ -126,17 +155,20 @@ RSpec.feature "Happy journeys", type: :feature do
     now_i_should_be_on_page("/registration/check-answers", submit_button_text: "Submit") do
       and_the_check_your_answers_page_should_contain(
         {
+          "Where do you work?" => "England",
+          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
           "Full name" => "John Doe",
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
-          "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
-          "Workplace" => "open manchester school",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "Course" => "Early Headship Coaching Offer",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "England",
+          "How is your EHCO being paid for?" => "I am paying",
+          "Workplace" => "open manchester school",
+          "Are you a headteacher?" => "Yes",
+          "Are you in your first 5 years of a headship?" => "No",
+          "Have you completed an NPQH?" => "I have completed an NPQH",
+          "National Insurance number" => "AB123456C",
         },
       )
     end
@@ -162,15 +194,15 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQSL).id,
+      "cohort" => 2021,
+      "course_id" => Course.find_by_code(code: :EHCO).id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_role" => nil,
-      "funding_choice" => "school",
+      "funding_choice" => "self",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
-      "headteacher_status" => nil,
+      "headteacher_status" => "yes_over_five_years",
       "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
@@ -185,19 +217,22 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "raw_application_data" => {
         "active_alert" => false,
+        "aso_funding_choice" => "self",
+        "aso_headteacher" => "yes",
+        "aso_new_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "confirmed_email" => "user@example.com",
-        "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
+        "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",
-        "funding" => "school",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
         "lead_provider_id" => "9",
         "national_insurance_number" => "AB123456C",
+        "npqh_status" => "completed_npqh",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn" => "1234567",
