@@ -28,6 +28,8 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "webpacker"
 
+gem "net-imap", require: false
+gem "net-pop", require: false
 gem "net-smtp", require: false
 
 group :development, :test do
