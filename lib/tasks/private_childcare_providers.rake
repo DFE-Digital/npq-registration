@@ -26,6 +26,7 @@ namespace :private_childcare_providers do
     Rails.logger.info("Import finished")
 
     Rails.logger.info("Imported Records: #{importer.imported_records}")
+    Rails.logger.info("Updated Records: #{importer.updated_records}")
     Rails.logger.info("Import Errors: #{importer.import_errors}")
   end
 end

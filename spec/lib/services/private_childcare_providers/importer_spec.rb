@@ -254,6 +254,124 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           expect(subject.imported_records).to eq(1)
         end
       end
+
+      context "with records that already exist" do
+        let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample.csv" }
+
+        # the update file is the same as the import but the first two records have been changed
+        let(:updates) do
+          described_class.new(
+            file_name: "spec/fixtures/files/private_childcare_providers_sample_with_updates.csv",
+            csv_row_parser:,
+          )
+        end
+
+        let(:run_update) { updates.call }
+
+        before { run_import }
+
+        it "makes the correct number of updates" do
+          run_update
+          expect(updates.updated_records).to eql(2)
+        end
+
+        it "it doesn't reinsert existing records" do
+          run_update
+          expect(updates.imported_records).to eql(0)
+        end
+
+        it "makes the updates correctly" do
+          expect(find_and_slice_private_childcare_provider("520917")).to eq({
+            "provider_compulsory_childcare_register_flag" => true,
+            "provider_early_years_register_flag" => true,
+            "address_1" => "21 Roseville Road",
+            "address_2" => "Harehills",
+            "address_3" => nil,
+            "early_years_individual_registers" => %w[CCR VCR EYR],
+            "local_authority" => "Leeds",
+            "ofsted_region" => "North East, Yorkshire and the Humber",
+            "places" => 60,
+            "postcode" => "LS8 5DT",
+            "postcode_without_spaces" => "LS85DT",
+            "provider_name" => "Rosewood Nursery",
+            "provider_status" => "Active",
+            "provider_urn" => "520917",
+            "region" => "Yorkshire and The Humber",
+            "registered_person_name" => "The Leeds Teaching Hospitals NHS Trust",
+            "registered_person_urn" => "RP901956",
+            "registration_date" => "24/10/1983",
+            "town" => "Leeds",
+          })
+
+          expect(find_and_slice_private_childcare_provider("EY790942")).to eq({
+            "provider_compulsory_childcare_register_flag" => true,
+            "provider_early_years_register_flag" => true,
+            "address_1" => "High Ridge Park",
+            "address_2" => "Rothwell",
+            "address_3" => nil,
+            "early_years_individual_registers" => %w[CCR],
+            "local_authority" => "Leeds",
+            "ofsted_region" => "North East, Yorkshire and the Humber",
+            "provider_name" => "Daisy Chain Childcare",
+            "provider_status" => "Active",
+            "places" => 50,
+            "postcode" => "LS26 0NL",
+            "postcode_without_spaces" => "LS260NL",
+            "region" => "Yorkshire and The Humber",
+            "registered_person_name" => "Daisy Chain Childcare Limited",
+            "registered_person_urn" => "RP910702",
+            "registration_date" => "23/03/1996",
+            "town" => "Leeds",
+            "provider_urn" => "EY790942",
+          })
+
+          run_update
+
+          expect(find_and_slice_private_childcare_provider("520917")).to eq({
+            "provider_compulsory_childcare_register_flag" => false,
+            "provider_early_years_register_flag" => false,
+            "address_1" => "21 Roseville Road",
+            "address_2" => "Harehills",
+            "address_3" => nil,
+            "early_years_individual_registers" => %w[CCR VCR EYR],
+            "local_authority" => "Leeds",
+            "ofsted_region" => "North East, Yorkshire and the Humber",
+            "places" => 60,
+            "postcode" => "LS8 5DT",
+            "postcode_without_spaces" => "LS85DT",
+            "provider_name" => "Rosewood Nursery",
+            "provider_status" => "Active",
+            "provider_urn" => "520917",
+            "region" => "Yorkshire and The Humber",
+            "registered_person_name" => "The Leeds Teaching Hospitals NHS Trust",
+            "registered_person_urn" => "RP901956",
+            "registration_date" => "24/10/1983",
+            "town" => "Leeds",
+          })
+
+          expect(find_and_slice_private_childcare_provider("EY790942")).to eq({
+            "provider_compulsory_childcare_register_flag" => false,
+            "provider_early_years_register_flag" => false,
+            "address_1" => "High Ridge Park",
+            "address_2" => "Rothwell",
+            "address_3" => nil,
+            "early_years_individual_registers" => %w[CCR],
+            "local_authority" => "Leeds",
+            "ofsted_region" => "North East, Yorkshire and the Humber",
+            "provider_name" => "Daisy Chain Childcare",
+            "provider_status" => "Active",
+            "places" => 50,
+            "postcode" => "LS26 0NL",
+            "postcode_without_spaces" => "LS260NL",
+            "region" => "Yorkshire and The Humber",
+            "registered_person_name" => "Daisy Chain Childcare Limited",
+            "registered_person_urn" => "RP910702",
+            "registration_date" => "23/03/1996",
+            "town" => "Leeds",
+            "provider_urn" => "EY790942",
+          })
+        end
+      end
     end
 
     context "private childminder agencies" do
@@ -380,6 +498,82 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         it "returns the correct number of imported records" do
           run_import
           expect(subject.imported_records).to eq(1)
+        end
+      end
+
+      context "with records that already exist" do
+        let(:file_name) { "spec/fixtures/files/private_childminder_agencies_sample.csv" }
+
+        # the update file is the same as the import but the first record has been changed
+        let(:updates) do
+          described_class.new(
+            file_name: "spec/fixtures/files/private_childminder_agencies_sample_with_updates.csv",
+            csv_row_parser:,
+          )
+        end
+
+        let(:run_update) { updates.call }
+
+        before { run_import }
+
+        it "makes the correct number of updates" do
+          run_update
+
+          expect(updates.updated_records).to eql(1)
+        end
+
+        it "it doesn't reinsert existing records" do
+          run_update
+
+          expect(updates.imported_records).to eql(0)
+        end
+
+        it "makes the updates correctly" do
+          expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
+            "address_1" => "108 Regent Studios",
+            "address_2" => "1 Thane Villas",
+            "address_3" => "London",
+            "early_years_individual_registers" => %w[CCR VCR EYR],
+            "local_authority" => "Islington",
+            "ofsted_region" => nil,
+            "places" => nil,
+            "postcode" => "N7 7PH",
+            "postcode_without_spaces" => "N77PH",
+            "provider_compulsory_childcare_register_flag" => nil,
+            "provider_early_years_register_flag" => nil,
+            "provider_name" => "Daryel Care",
+            "provider_status" => "Active",
+            "provider_urn" => "CA000006",
+            "region" => nil,
+            "registered_person_name" => nil,
+            "registered_person_urn" => nil,
+            "registration_date" => nil,
+            "town" => nil,
+          })
+
+          run_update
+
+          expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
+            "address_1" => "109 Regent Studios", # changed in updates csv
+            "address_2" => "1 Thane Villas",
+            "address_3" => "London",
+            "early_years_individual_registers" => %w[CCR VCR EYR],
+            "local_authority" => "Islington",
+            "ofsted_region" => nil,
+            "places" => nil,
+            "postcode" => "N7 7PH",
+            "postcode_without_spaces" => "N77PH",
+            "provider_compulsory_childcare_register_flag" => nil,
+            "provider_early_years_register_flag" => nil,
+            "provider_name" => "Daryel Care",
+            "provider_status" => "Active",
+            "provider_urn" => "CA000006",
+            "region" => nil,
+            "registered_person_name" => nil,
+            "registered_person_urn" => nil,
+            "registration_date" => nil,
+            "town" => nil,
+          })
         end
       end
     end

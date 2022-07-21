@@ -3,12 +3,13 @@ require "csv"
 module Services
   module PrivateChildcareProviders
     class Importer
-      attr_reader :file_name, :import_errors, :imported_records, :csv_row_parser
+      attr_reader :file_name, :import_errors, :imported_records, :updated_records, :csv_row_parser
 
       def initialize(file_name:, csv_row_parser:)
         @file_name = file_name
         @import_errors = {}
         @imported_records = 0
+        @updated_records = 0
         @csv_row_parser = csv_row_parser
       end
 
@@ -46,32 +47,39 @@ module Services
         wrapped_csv_row = csv_row_parser.new(csv_row:)
 
         new_record = false
-        PrivateChildcareProvider.find_or_create_by!(provider_urn: wrapped_csv_row.provider_urn) do |private_childcare_provider|
-          new_record = true
+        updated_record = false
 
-          private_childcare_provider.assign_attributes(
-            address_1: wrapped_csv_row.address_1,
-            address_2: wrapped_csv_row.address_2,
-            address_3: wrapped_csv_row.address_3,
-            provider_status: wrapped_csv_row.provider_status,
-            early_years_individual_registers: wrapped_csv_row.early_years_individual_registers,
-            local_authority: wrapped_csv_row.local_authority,
-            ofsted_region: wrapped_csv_row.ofsted_region,
-            places: wrapped_csv_row.places,
-            postcode: wrapped_csv_row.postcode,
-            postcode_without_spaces: wrapped_csv_row.postcode_without_spaces,
-            provider_compulsory_childcare_register_flag: wrapped_csv_row.provider_compulsory_childcare_register_flag,
-            provider_early_years_register_flag: wrapped_csv_row.provider_early_years_register_flag,
-            provider_name: wrapped_csv_row.provider_name,
-            region: wrapped_csv_row.region,
-            registered_person_name: wrapped_csv_row.registered_person_name,
-            registered_person_urn: wrapped_csv_row.registered_person_urn,
-            registration_date: wrapped_csv_row.registration_date,
-            town: wrapped_csv_row.town,
-          )
+        private_childcare_provider = PrivateChildcareProvider.find_or_initialize_by(provider_urn: wrapped_csv_row.provider_urn) do
+          new_record = true
         end
 
+        private_childcare_provider.assign_attributes(
+          address_1: wrapped_csv_row.address_1,
+          address_2: wrapped_csv_row.address_2,
+          address_3: wrapped_csv_row.address_3,
+          provider_status: wrapped_csv_row.provider_status,
+          early_years_individual_registers: wrapped_csv_row.early_years_individual_registers,
+          local_authority: wrapped_csv_row.local_authority,
+          ofsted_region: wrapped_csv_row.ofsted_region,
+          places: wrapped_csv_row.places,
+          postcode: wrapped_csv_row.postcode,
+          postcode_without_spaces: wrapped_csv_row.postcode_without_spaces,
+          provider_compulsory_childcare_register_flag: wrapped_csv_row.provider_compulsory_childcare_register_flag,
+          provider_early_years_register_flag: wrapped_csv_row.provider_early_years_register_flag,
+          provider_name: wrapped_csv_row.provider_name,
+          region: wrapped_csv_row.region,
+          registered_person_name: wrapped_csv_row.registered_person_name,
+          registered_person_urn: wrapped_csv_row.registered_person_urn,
+          registration_date: wrapped_csv_row.registration_date,
+          town: wrapped_csv_row.town,
+        )
+
+        updated_record = private_childcare_provider.changed? unless new_record
+
+        private_childcare_provider.save!
+
         @imported_records += 1 if new_record
+        @updated_records += 1 if updated_record
       rescue StandardError => e
         # I've adjusted the row in the error here so that it'll properly line up with spreadsheeting software
         # when hunting for errors.
