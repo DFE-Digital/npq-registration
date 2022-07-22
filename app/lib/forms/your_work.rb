@@ -9,7 +9,7 @@ module Forms
     end
 
     def next_step
-      :funding_your_npq
+      :choose_your_provider
     end
 
     def previous_step

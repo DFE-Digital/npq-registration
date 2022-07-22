@@ -18,18 +18,18 @@ module Forms
     end
 
     def previous_step
-      if !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
-        :funding_your_npq
-      elsif course.npqh? && eligible_for_funding?
-        :possible_funding
-      elsif course.ehco?
+      if course.ehco?
         if eligible_for_funding?
           :aso_possible_funding
         else
           :funding_your_aso
         end
+      elsif eligible_for_funding?
+        :possible_funding
+      elsif ineligible_institution_type? && query_store.inside_catchment?
+        :your_work
       else
-        :choose_your_npq
+        :funding_your_npq
       end
     end
 
