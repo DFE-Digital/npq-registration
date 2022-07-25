@@ -3,17 +3,17 @@ module Helpers
     def navigate_to_page(path:, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
       visit(path)
 
-      expect(page.current_path).to eql(path)
-
-      page_checks(axe_check:, &block)
-
-      page.click_button(submit_button_text) if submit_form
+      expect_page_to_have(path:, submit_form:, submit_button_text:, axe_check:, &block)
     end
 
     def expect_page_to_have(path:, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
       expect(page.current_path).to eql(path)
 
-      page_checks(axe_check:, &block)
+      if axe_check && Capybara.current_driver != :rack_test
+        expect(page).to(be_axe_clean)
+      end
+
+      block.call if block_given?
 
       page.click_button(submit_button_text) if submit_form
     end
@@ -28,16 +28,6 @@ module Helpers
       }.to_h
 
       expect(summary_data).to eql(values)
-    end
-
-  private
-
-    def page_checks(axe_check:, &block)
-      if axe_check && Capybara.current_driver != :rack_test
-        expect(page).to(be_axe_clean)
-      end
-
-      block.call if block_given?
     end
   end
 end
