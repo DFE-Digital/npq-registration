@@ -90,7 +90,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     now_i_should_be_on_page("/registration/check-answers", submit_form: false) do
-      and_the_check_your_answers_page_should_contain(
+      expect_check_answers_page_to_have_answers(
         {
           "Full name" => "John Doe",
           "TRN" => "1234567",
@@ -193,7 +193,7 @@ RSpec.feature "Happy journeys", type: :feature do
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     now_i_should_be_on_page("/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
-      and_the_check_your_answers_page_should_contain(
+      expect_check_answers_page_to_have_answers(
         {
           "Full name" => "John Doe",
           "TRN" => "1234567",

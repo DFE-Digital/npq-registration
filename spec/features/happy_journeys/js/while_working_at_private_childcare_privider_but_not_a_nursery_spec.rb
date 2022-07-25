@@ -130,7 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     now_i_should_be_on_page("/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
-      and_the_check_your_answers_page_should_contain(
+      expect_check_answers_page_to_have_answers(
         {
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
           "Date of birth" => "13 December 1980",

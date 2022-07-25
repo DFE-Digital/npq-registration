@@ -20,7 +20,7 @@ module Helpers
 
     alias_method :now_i_should_be_on_page, :given_i_am_on_page
 
-    def and_the_check_your_answers_page_should_contain(values)
+    def expect_check_answers_page_to_have_answers(values)
       check_answers_page = CheckAnswersPage.new
 
       expect(check_answers_page).to be_displayed
