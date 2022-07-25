@@ -24,8 +24,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("England", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-in-school", submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
@@ -156,7 +156,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "What setting do you work in?" => "A school",
           "Where do you work?" => "England",
         },
       )
@@ -203,6 +203,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_childcare" => false,
       "works_in_nursery" => false,
       "works_in_school" => true,
+      "work_setting" => "a_school",
       "raw_application_data" => {
         "active_alert" => nil,
         "can_share_choices" => "1",
@@ -226,6 +227,9 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_verified" => false,
         "verified_trn" => nil,
         "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+        "work_setting" => "a_school",
       },
     )
   end

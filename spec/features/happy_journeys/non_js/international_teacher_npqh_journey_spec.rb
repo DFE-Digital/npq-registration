@@ -32,8 +32,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.select("China")
     end
 
-    expect_page_to_have(path: "/registration/work-in-school", submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("A school", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
@@ -105,7 +105,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Where do you work?" => "China",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "Yes",
+          "What setting do you work in?" => "A school",
           "Full name" => "John Doe",
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
@@ -170,6 +170,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_childcare" => false,
       "works_in_nursery" => false,
       "works_in_school" => true,
+      "work_setting" => "a_school",
       "raw_application_data" => {
         "active_alert" => false,
         "can_share_choices" => "1",
@@ -190,6 +191,9 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+        "work_setting" => "a_school",
       },
     )
   end

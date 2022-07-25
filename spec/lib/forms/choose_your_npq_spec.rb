@@ -162,8 +162,8 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     context "when inside catchment" do
       let(:teacher_catchment) { "england" }
 
-      it "returns work_in_childcare" do
-        expect(subject.previous_step).to eql(:work_in_childcare)
+      it "returns qualified_teacher_check" do
+        expect(subject.previous_step).to eql(:qualified_teacher_check)
       end
 
       context "when working in school" do

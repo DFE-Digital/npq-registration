@@ -8,7 +8,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_button("Continue")
     page.choose("England", visible: :all)
     page.click_button("Continue")
-    page.choose("Yes", visible: :all)
+    page.choose("A school", visible: :all)
     page.click_button("Continue")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
