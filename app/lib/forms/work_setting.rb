@@ -41,6 +41,8 @@ module Forms
     end
 
     def next_step
+      return :contact_details if work_setting == "other"
+
       :teacher_reference_number
     end
 

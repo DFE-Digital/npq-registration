@@ -28,10 +28,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Other", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
       expect(page).to have_text("What's your email address?")
       page.fill_in "What's your email address?", with: "user@example.com"
@@ -111,6 +107,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       expect(page).to have_content("Do you have a TRN?")
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/contact-details", submit_form: true) do

@@ -28,10 +28,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Other", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
       expect(page).to have_text("What's your email address?")
 
@@ -173,7 +169,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "teacher_catchment_country" => nil,
         "trn" => "1234567",
         "trn_auto_verified" => true,
-        "trn_knowledge" => "yes",
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_childcare" => "no",
