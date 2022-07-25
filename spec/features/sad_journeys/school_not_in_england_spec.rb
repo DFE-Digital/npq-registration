@@ -15,31 +15,31 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
-    now_i_should_be_on_page("/registration/provider-check") do
+    expect_page_to_have(path: "/registration/provider-check") do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # expect(page).to be_axe_clean
     # TODO: aria-expanded
-    now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
+    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false) do
       page.choose("England", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/work-in-school") do
+    expect_page_to_have(path: "/registration/work-in-school") do
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
+    expect_page_to_have(path: "/registration/teacher-reference-number") do
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/contact-details") do
+    expect_page_to_have(path: "/registration/contact-details") do
       expect(page).to have_text("What's your email address?")
       page.fill_in "What's your email address?", with: "user@example.com"
     end
 
-    now_i_should_be_on_page("/registration/confirm-email") do
+    expect_page_to_have(path: "/registration/confirm-email") do
       expect(page).to have_text("Confirm your code")
       expect(page).to have_text("user@example.com")
 
@@ -48,7 +48,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in("Enter your code", with: code)
     end
 
-    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+    expect_page_to_have(path: "/registration/qualified-teacher-check") do
       expect(page).to have_text("Check your details")
 
       page.fill_in "Teacher reference number (TRN)", with: "1234567"
@@ -61,12 +61,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
-    now_i_should_be_on_page("/registration/find-school") do
+    expect_page_to_have(path: "/registration/find-school") do
       expect(page).to have_text("Where is your school, college or academy trust?")
       page.fill_in "Workplace location", with: "wrexham"
     end
 
-    now_i_should_be_on_page("/registration/choose-school") do
+    expect_page_to_have(path: "/registration/choose-school") do
       expect(page).to have_text("Choose your workplace")
 
       within ".npq-js-reveal" do
@@ -78,13 +78,13 @@ RSpec.feature "Happy journeys", type: :feature do
       page.find("#school-picker__option--0").click
     end
 
-    now_i_should_be_on_page("/registration/school-not-in-england", submit_form: false) do
+    expect_page_to_have(path: "/registration/school-not-in-england", submit_form: false) do
       expect(page).to have_text("School or college must be in England")
 
       page.click_link("Back")
     end
 
-    now_i_should_be_on_page("/registration/choose-school", submit_form: false) do
+    expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
       expect(page).to have_text("Choose your workplace")
     end
 

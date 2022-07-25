@@ -22,39 +22,39 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
-    now_i_should_be_on_page("/registration/provider-check") do
+    expect_page_to_have(path: "/registration/provider-check") do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
+    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false) do
       page.choose("England", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/work-in-school") do
+    expect_page_to_have(path: "/registration/work-in-school") do
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
+    expect_page_to_have(path: "/registration/teacher-reference-number") do
       page.choose("No, I need help getting one", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/dont-have-teacher-reference-number", submit_form: false) do
+    expect_page_to_have(path: "/registration/dont-have-teacher-reference-number", submit_form: false) do
       expect(page).to have_text("Get a Teacher Reference Number (TRN)")
 
       page.click_link("Back")
     end
 
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
+    expect_page_to_have(path: "/registration/teacher-reference-number") do
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/contact-details") do
+    expect_page_to_have(path: "/registration/contact-details") do
       expect(page).to have_text("What's your email address?")
       page.fill_in "What's your email address?", with: "user@example.com"
     end
 
-    now_i_should_be_on_page("/registration/confirm-email") do
+    expect_page_to_have(path: "/registration/confirm-email") do
       expect(page).to have_text("Confirm your code")
       expect(page).to have_text("user@example.com")
 
@@ -63,7 +63,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in("Enter your code", with: code)
     end
 
-    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+    expect_page_to_have(path: "/registration/qualified-teacher-check") do
       expect(page).to have_text("Check your details")
 
       page.fill_in "Teacher reference number (TRN)", with: "RP12/345"
@@ -85,12 +85,12 @@ RSpec.feature "Happy journeys", type: :feature do
       number_of_pupils: 100,
     )
 
-    now_i_should_be_on_page("/registration/find-school") do
+    expect_page_to_have(path: "/registration/find-school") do
       expect(page).to have_text("Where is your school, college or academy trust?")
       page.fill_in "Workplace location", with: "manchester"
     end
 
-    now_i_should_be_on_page("/registration/choose-school") do
+    expect_page_to_have(path: "/registration/choose-school") do
       expect(page).to have_text("Choose your workplace")
       expect(page).to have_text("Choose from schools, trusts and 16 to 19 educational settings located in manchester")
 
@@ -118,7 +118,7 @@ RSpec.feature "Happy journeys", type: :feature do
         },
       )
 
-    now_i_should_be_on_page("/registration/choose-your-npq") do
+    expect_page_to_have(path: "/registration/choose-your-npq") do
       expect(page).to have_text("What are you applying for?")
       page.choose("NPQ for Senior Leadership (NPQSL)")
     end
@@ -137,23 +137,23 @@ RSpec.feature "Happy journeys", type: :feature do
         },
       )
 
-    now_i_should_be_on_page("/registration/possible-funding") do
+    expect_page_to_have(path: "/registration/possible-funding") do
       expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
     end
 
-    now_i_should_be_on_page("/registration/choose-your-provider") do
+    expect_page_to_have(path: "/registration/choose-your-provider") do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/share-provider") do
+    expect_page_to_have(path: "/registration/share-provider") do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree my information can be shared", visible: :all)
     end
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    now_i_should_be_on_page("/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
           "Where do you work?" => "England",
@@ -170,7 +170,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
     end
 

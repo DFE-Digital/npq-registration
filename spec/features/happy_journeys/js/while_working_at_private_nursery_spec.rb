@@ -15,30 +15,30 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
-    now_i_should_be_on_page("/registration/provider-check") do
+    expect_page_to_have(path: "/registration/provider-check") do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
-    now_i_should_be_on_page("/registration/teacher-catchment", axe_check: false) do
+    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false) do
       page.choose("England", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/work-in-school") do
+    expect_page_to_have(path: "/registration/work-in-school") do
       page.choose("No", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/teacher-reference-number") do
+    expect_page_to_have(path: "/registration/teacher-reference-number") do
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/contact-details") do
+    expect_page_to_have(path: "/registration/contact-details") do
       expect(page).to have_text("What's your email address?")
       page.fill_in "What's your email address?", with: "user@example.com"
     end
 
-    now_i_should_be_on_page("/registration/confirm-email") do
+    expect_page_to_have(path: "/registration/confirm-email") do
       expect(page).to have_text("Confirm your code")
       expect(page).to have_text("user@example.com")
 
@@ -47,7 +47,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in("Enter your code", with: code)
     end
 
-    now_i_should_be_on_page("/registration/qualified-teacher-check") do
+    expect_page_to_have(path: "/registration/qualified-teacher-check") do
       expect(page).to have_text("Check your details")
       page.fill_in "Teacher reference number (TRN)", with: "1234567"
       page.fill_in "Full name", with: "John Doe"
@@ -59,22 +59,22 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    now_i_should_be_on_page("/registration/work-in-childcare") do
+    expect_page_to_have(path: "/registration/work-in-childcare") do
       expect(page).to have_text("Do you work in early years or childcare?")
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/work-in-nursery") do
+    expect_page_to_have(path: "/registration/work-in-nursery") do
       expect(page).to have_text("Do you work in a nursery?")
       page.choose("Yes", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/kind-of-nursery") do
+    expect_page_to_have(path: "/registration/kind-of-nursery") do
       expect(page).to have_text("What kind of nursery do you work in?")
       page.choose("Private nursery", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/have-ofsted-urn") do
+    expect_page_to_have(path: "/registration/have-ofsted-urn") do
       expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
       page.choose("Yes", visible: :all)
     end
@@ -85,7 +85,7 @@ RSpec.feature "Happy journeys", type: :feature do
       early_years_individual_registers: %w[CCR VCR EYR]
     )
 
-    now_i_should_be_on_page("/registration/choose-private-childcare-provider") do
+    expect_page_to_have(path: "/registration/choose-private-childcare-provider") do
       expect(page).to have_text("Enter your or your employer's URN")
       within ".npq-js-reveal" do
         page.fill_in "private-childcare-provider-picker", with: "EY123"
@@ -100,7 +100,7 @@ RSpec.feature "Happy journeys", type: :feature do
     ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
 
     ineligible_courses.each do |course|
-      now_i_should_be_on_page("/registration/choose-your-npq") do
+      expect_page_to_have(path: "/registration/choose-your-npq") do
         expect(page).to have_text("What are you applying for?")
         page.choose(course, visible: :all)
       end
@@ -109,29 +109,29 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Back")
     end
 
-    now_i_should_be_on_page("/registration/choose-your-npq") do
+    expect_page_to_have(path: "/registration/choose-your-npq") do
       expect(page).to have_text("What are you applying for?")
       page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/possible-funding") do
+    expect_page_to_have(path: "/registration/possible-funding") do
       expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
       expect(page).to have_text("You’ll only be eligible for DfE funding for this NPQ once. If you start this NPQ, and then withdraw or fail, you will not be funded again for the same course.")
     end
 
-    now_i_should_be_on_page("/registration/choose-your-provider") do
+    expect_page_to_have(path: "/registration/choose-your-provider") do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
     end
 
-    now_i_should_be_on_page("/registration/share-provider") do
+    expect_page_to_have(path: "/registration/share-provider") do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree my information can be shared", visible: :all)
     end
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    now_i_should_be_on_page("/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
@@ -151,7 +151,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    now_i_should_be_on_page("/registration/confirmation", submit_form: false) do
+    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
     end
 

@@ -10,15 +10,13 @@ module Helpers
       page.click_button(submit_button_text) if submit_form
     end
 
-    def given_i_am_on_page(path, submit_form: true, submit_button_text: "Continue", axe_check: true, &block)
+    def expect_page_to_have(path:, submit_form: true, submit_button_text: "Continue", axe_check: true, &block)
       expect(page.current_path).to eql(path)
 
       page_checks(axe_check:, &block)
 
       page.click_button(submit_button_text) if submit_form
     end
-
-    alias_method :now_i_should_be_on_page, :given_i_am_on_page
 
     def expect_check_answers_page_to_have_answers(values)
       check_answers_page = CheckAnswersPage.new
