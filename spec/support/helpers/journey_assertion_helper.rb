@@ -1,6 +1,6 @@
 module Helpers
   module JourneyAssertionHelper
-    def navigate_to_page(path, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
+    def navigate_to_page(path:, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
       visit(path)
 
       expect(page.current_path).to eql(path)

@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", type: :feature do
   scenario "international teacher NPQH journey" do
     stub_participant_validation_request
 
-    navigate_to_page("/", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end
@@ -126,7 +126,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(User.count).to eql(1)
     expect(User.last.applications.count).to eql(1)
 
-    navigate_to_page("/account", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
       expect(page).to have_text("NPQ for Headship (NPQH)")
     end

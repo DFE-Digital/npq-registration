@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys", type: :feature do
   scenario "registration journey when outside of catchment area" do
     stub_participant_validation_request(nino: "")
 
-    navigate_to_page("/", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end

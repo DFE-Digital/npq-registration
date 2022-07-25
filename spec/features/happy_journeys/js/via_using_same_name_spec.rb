@@ -10,7 +10,7 @@ RSpec.feature "Happy journeys", type: :feature do
   scenario "registration journey via using same name" do
     stub_participant_validation_request
 
-    navigate_to_page("/", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end
@@ -164,7 +164,7 @@ RSpec.feature "Happy journeys", type: :feature do
       end
     end
 
-    navigate_to_page("/account", axe_check: false, submit_form: false) do
+    navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
       expect(page).to have_text("Teach First")
       expect(page).to have_text("NPQ for Headship (NPQH)")
     end

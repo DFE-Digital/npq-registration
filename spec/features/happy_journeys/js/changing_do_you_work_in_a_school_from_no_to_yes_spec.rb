@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys", type: :feature do
   scenario "registration journey changing do you work in a school from no to yes" do
     stub_participant_validation_request
 
-    navigate_to_page("/", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end

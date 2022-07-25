@@ -8,7 +8,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "stub course ecf to identifier mappings"
 
   scenario "DQT mismatch" do
-    navigate_to_page("/", submit_form: false, axe_check: false) do
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end
