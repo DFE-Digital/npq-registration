@@ -22,7 +22,7 @@ module Forms
     end
 
     def previous_step
-      :work_in_school
+      :work_setting
     end
 
     def title

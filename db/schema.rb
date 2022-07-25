@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_28_094940) do
+ActiveRecord::Schema.define(version: 2022_07_09_142735) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2022_06_28_094940) do
     t.boolean "targeted_delivery_funding_eligibility", default: false
     t.string "funding_eligiblity_status_code"
     t.jsonb "raw_application_data", default: {}
+    t.text "work_setting"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
