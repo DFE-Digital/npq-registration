@@ -67,9 +67,11 @@ class RegistrationWizard
                             value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 
-    array << OpenStruct.new(key: "Do you work in a school, academy trust, or 16 to 19 educational setting?",
-                            value: store["works_in_school"].capitalize,
-                            change_step: :work_in_school)
+    work_setting = store["work_setting"]
+
+    array << OpenStruct.new(key: "What setting do you work in?",
+                            value: I18n.t("registration_wizard.work_setting.#{work_setting}"),
+                            change_step: :work_setting)
 
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
@@ -94,10 +96,6 @@ class RegistrationWizard
                             change_step: :contact_details)
 
     unless query_store.works_in_school?
-      array << OpenStruct.new(key: "Do you work in early years or childcare?",
-                              value: store["works_in_childcare"].capitalize,
-                              change_step: :work_in_childcare)
-
       if inside_catchment? && query_store.works_in_childcare?
         array << OpenStruct.new(key: "Do you work in a nursery?",
                                 value: store["works_in_nursery"].capitalize,
@@ -253,7 +251,7 @@ private
       start
       closed
       teacher_catchment
-      work_in_school
+      work_setting
       provider_check
       about_npq
       teacher_reference_number
