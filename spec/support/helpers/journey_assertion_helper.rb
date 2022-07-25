@@ -10,7 +10,7 @@ module Helpers
       page.click_button(submit_button_text) if submit_form
     end
 
-    def expect_page_to_have(path:, submit_form: true, submit_button_text: "Continue", axe_check: true, &block)
+    def expect_page_to_have(path:, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
       expect(page.current_path).to eql(path)
 
       page_checks(axe_check:, &block)
