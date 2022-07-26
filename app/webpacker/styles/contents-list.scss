@@ -1,0 +1,46 @@
+// this is an abridged version of the contents list found in `govuk_publishing_components`
+// https://github.com/alphagov/govuk_publishing_components/blob/main/app/assets/stylesheets/govuk_publishing_components/components/_contents-list.scss
+.contents-list {
+  position: relative;
+  margin-bottom: 2em;
+  z-index: 1;
+  background: govuk-colour("white");
+  box-shadow: 0 20px 15px -10px govuk-colour("white");
+
+  &__title {
+    @include govuk-text-colour;
+    @include govuk-font($size: 16, $weight: regular, $line-height: 1.5);
+    margin: 0;
+  }
+
+  &__list {
+    @include govuk-text-colour;
+    @include govuk-font($size: 16);
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  &__list-item {
+    padding-top: govuk-spacing(2);
+    line-height: 1.3;
+    list-style-type: none;
+
+    @include govuk-media-query($from: tablet) {
+      padding-top: govuk-spacing(6) / 4;
+    }
+
+    $contents-spacing: govuk-spacing(5);
+    position: relative;
+    padding-left: $contents-spacing;
+    padding-right: $contents-spacing;
+
+    &:before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      width: govuk-spacing(4);
+      overflow: hidden;
+    }
+  }
+}
