@@ -35,6 +35,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :applications, only: %i[index show]
+    resource :manual_validations, path: "manual-validation" do
+      get "download"
+    end
   end
 
   get "/admin", to: "admin#show"

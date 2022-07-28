@@ -4,7 +4,11 @@
 
     <ul class="govuk-list govuk-list--bullet">
       <li>
-        <%= link_to "Applications", admin_applications_path, class: "govuk-link" %>
+        <%= govuk_link_to "Applications", admin_applications_path %>
+      </li>
+
+      <li>
+        <%= govuk_link_to "Manual validation", admin_manual_validations_path %>
       </li>
     </ul>
   </div>
