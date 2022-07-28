@@ -1,0 +1,54 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: admin_path
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <% if flash[:upload_info] %>
+      <%= govuk_notification_banner(title_text: "Upload successful", success: true) do |nb| %>
+        <% nb.heading do %>
+          Records updated: <%= flash[:upload_info][:updated] %>, records skipped: <%= flash[:upload_info][:skipped].size %>
+        <% end %>
+
+
+        <% if flash[:upload_info][:skipped].size > 0 %>
+          <p>Skipped IDs:</p>
+
+          <ul class="govuk-list govuk-list--bullet">
+            <% flash[:upload_info][:skipped].each do |item| %>
+              <li><%= item %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <h1 class="govuk-heading-l">Manual validation</h1>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    <h2 class="govuk-heading-m">Download the manual validation CSV file</h2>
+
+    <%= govuk_button_link_to("Download CSV", download_admin_manual_validations_path, secondary: true) %>
+  </div>
+
+  <div class="govuk-grid-column-one-half">
+    <%= form_for(@manual_validation_upload, url: admin_manual_validations_path) do |f| %>
+      <%= f.govuk_file_field :csv,
+        accept: "text/csv",
+        label: { tag: "h2", text: "Upload a validated CSV file", size: "m" },
+        hint: -> do %>
+          <p>The CSV should include a header row with the two headings:</p>
+          <ul class="govuk-list--bullet">
+            <li><code>application_ecf_id</code></li>
+            <li><code>validated_trn</code></li>
+          </ul>
+        <% end %>
+
+      <%= f.govuk_submit %>
+    <% end %>
+  </div>
+</div>
