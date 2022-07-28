@@ -3,6 +3,8 @@ SimpleCov.start "rails"
 
 require "webmock/rspec"
 require "with_model"
+require "support/helpers/journey_helper"
+require "support/helpers/journey_assertion_helper"
 
 WebMock.disable_net_connect!(
   allow_localhost: true,
