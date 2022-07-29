@@ -11,6 +11,7 @@ $govuk-image-url-function: frontend-image-url;
 
 @import "~govuk-frontend/govuk/all";
 @import "accessible-autocomplete";
+@import "contents-list";
 
 h1.govuk-fieldset__heading {
   margin-bottom: 10px;

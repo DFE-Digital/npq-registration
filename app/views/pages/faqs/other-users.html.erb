@@ -1,0 +1,43 @@
+<% content_for :title do %>
+  NPQ FAQs: I don’t work in a school or early years
+<% end %>
+
+<% content_for(:before_content) { govuk_back_link(href: "/") } %>
+
+<h1 class="govuk-heading-xl">NPQ FAQs: I don’t work in a school or early years</h1>
+
+<% questions_and_answers = {
+  "What do I need before registering for an NPQ?" => "pages/faqs/questions-and-answers/what-do-i-need-before-registering",
+  "Do I need a TRN if I'm not a teacher?" => "pages/faqs/questions-and-answers/do-i-need-a-trn-if-im-not-a-teacher",
+  "How do I get a TRN?" => "pages/faqs/questions-and-answers/how-do-i-get-a-trn",
+  "How do I choose a provider?" => "pages/faqs/questions-and-answers/how-do-i-choose-a-provider",
+  "How is my NPQ paid for?" => "pages/faqs/questions-and-answers/how-is-my-npq-paid-for",
+  "Where do I find my Ofsted URN?" => "pages/faqs/questions-and-answers/where-do-i-find-my-ofsted-urn",
+  "What is a full and relevant qualification?" => "pages/faqs/questions-and-answers/what-is-a-full-and-relevant-qualification",
+  "How do I register for an NPQ?" => "pages/faqs/questions-and-answers/how-do-i-register-for-an-npq",
+  "I need more support" => "pages/faqs/questions-and-answers/i-need-more-support",
+} %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render(
+      partial: "pages/faqs/contents-list",
+      locals: { questions_and_answers: questions_and_answers }
+    ) %>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <article class="govuk-grid-column-two-thirds">
+    <%= render(
+      partial: "pages/faqs/questions-and-answers",
+      locals: { questions_and_answers: questions_and_answers }
+    ) %>
+  </article>
+
+  <aside class="govuk-grid-column-one-third">
+    <p class="govuk-body">
+      Related content
+    </p>
+  </aside>
+</div>
