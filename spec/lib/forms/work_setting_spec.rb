@@ -1,0 +1,69 @@
+require "rails_helper"
+
+RSpec.describe Forms::WorkSetting, type: :model do
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:work_setting) }
+    it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::VALID_WORK_SETTING_OPTIONS) }
+  end
+
+  describe "#after_save" do
+    let(:session) { {} }
+    let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
+    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:) }
+
+    subject { described_class.new(work_setting:, wizard:) }
+
+    {
+      "a_school" => {
+        "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+      },
+      "an_academy_trust" => {
+        "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+      },
+      "a_16_to_19_educational_setting" => {
+        "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+      },
+      "early_years_or_childcare" => {
+        "works_in_school" => "no",
+        "works_in_childcare" => "yes",
+        "works_in_nursery" => nil,
+      },
+      "other" => {
+        "works_in_school" => "no",
+        "works_in_childcare" => "no",
+        "works_in_nursery" => nil,
+      },
+    }.each do |option, expectations|
+      context "when #{option}" do
+        let(:store) { {} }
+        let(:work_setting) { option }
+        let(:expecations) { expectations }
+
+        before { subject.after_save }
+
+        it "sets #{expectations} when '#{option}' is picked" do
+          expecations.each do |field, _value|
+            expect(subject.wizard.store[field]).to eql(expectations[field])
+          end
+        end
+      end
+    end
+
+    context "when going back and re-selecting 'early_years_or_childcare'" do
+      let(:store) { { "works_in_childcare" => "yes", "works_in_nursery" => "yes" } }
+      let(:work_setting) { "early_years_or_childcare" }
+
+      it "doesn't unset their previous nursery selection" do
+        expect(subject.wizard.store["works_in_nursery"]).to eql("yes")
+        subject.after_save
+        expect(subject.wizard.store["works_in_nursery"]).to eql("yes")
+      end
+    end
+  end
+end

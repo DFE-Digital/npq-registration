@@ -23,7 +23,7 @@ module Forms
     end
 
     def previous_step
-      :work_in_childcare
+      :qualified_teacher_check
     end
 
     def works_in_nursery?

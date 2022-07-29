@@ -13,8 +13,10 @@ module Forms
         else
           :choose_your_npq
         end
+      elsif wizard.query_store.inside_catchment? && wizard.query_store.works_in_nursery?
+        :work_in_nursery
       else
-        :work_in_childcare
+        :choose_your_npq
       end
     end
   end
