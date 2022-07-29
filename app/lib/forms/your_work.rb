@@ -9,6 +9,8 @@ module Forms
     end
 
     def next_step
+      return :choose_your_provider if wizard.query_store.works_in_other?
+
       :funding_your_npq
     end
 

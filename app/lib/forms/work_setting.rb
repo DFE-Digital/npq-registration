@@ -27,6 +27,7 @@ module Forms
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
         wizard.store["works_in_nursery"] = nil
+        wizard.store["funding"] = nil
       else
         raise(ArgumentError, "invalid work setting #{work_setting}")
       end

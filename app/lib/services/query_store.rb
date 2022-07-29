@@ -29,6 +29,10 @@ class Services::QueryStore
     store["works_in_nursery"] == "yes"
   end
 
+  def works_in_other?
+    store["work_setting"] == "other"
+  end
+
   def has_ofsted_urn?
     store["has_ofsted_urn"] == "yes"
   end
