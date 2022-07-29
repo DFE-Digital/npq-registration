@@ -25,8 +25,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("England", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-in-school", submit_form: true) do
-      page.choose("No", visible: :all)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Early years or childcare", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
@@ -59,11 +59,6 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/work-in-childcare", submit_form: true) do
-      expect(page).to have_text("Do you work in early years or childcare?")
-      page.choose("Yes", visible: :all)
-    end
 
     expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
       expect(page).to have_text("Do you work in a nursery?")
@@ -194,8 +189,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
           "Do you work in a nursery?" => "Yes",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
-          "Do you work in early years or childcare?" => "Yes",
+          "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => "EY123456 - searchable childcare provider",
           "Type of nursery" => "Private nursery",
@@ -245,6 +239,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_childcare" => true,
       "works_in_nursery" => true,
       "works_in_school" => false,
+      "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
         "active_alert" => false,
         "aso_funding_choice" => "self",
@@ -274,6 +269,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "works_in_childcare" => "yes",
         "works_in_nursery" => "yes",
         "works_in_school" => "no",
+        "work_setting" => "early_years_or_childcare",
       },
     )
   end

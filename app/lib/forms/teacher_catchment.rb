@@ -27,12 +27,12 @@ module Forms
     def next_step
       if changing_answer?
         if answers_will_change?
-          :work_in_school
+          :work_setting
         else
           :check_answers
         end
       else
-        :work_in_school
+        :work_setting
       end
     end
 

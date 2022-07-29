@@ -62,7 +62,7 @@ module Forms
           :have_ofsted_urn
         end
       else
-        :work_in_childcare
+        :qualified_teacher_check
       end
     end
 

@@ -64,6 +64,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "full_name" => "Jane Doe",
           "works_in_school" => "yes",
           "teacher_catchment" => "england",
+          "work_setting" => "a_school",
         }
       end
 
@@ -125,6 +126,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "works_in_childcare" => false,
           "works_in_nursery" => false,
           "works_in_school" => true,
+          "work_setting" => "a_school",
           "raw_application_data" => store,
         })
       end
@@ -147,6 +149,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "works_in_school" => "no",
           "kind_of_nursery" => "private_nursery",
           "teacher_catchment" => "england",
+          "work_setting" => "early_years_or_childcare",
         }
       end
 
@@ -208,6 +211,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_nursery" => true,
           "works_in_school" => false,
+          "work_setting" => "early_years_or_childcare",
           "raw_application_data" => store,
         })
       end
