@@ -174,11 +174,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in "Role", with: "Trainer"
     end
 
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How is your course being paid for?")
-      page.choose "I am paying", visible: :all
-    end
-
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)
@@ -202,7 +197,6 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "Employer" => "Big company",
           "Role" => "Trainer",
-          "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "Other",
           "Lead provider" => "Teach First",
           "Where do you work?" => "England",
@@ -237,7 +231,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
       "employment_role" => "Trainer",
-      "funding_choice" => "self",
+      "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
@@ -264,7 +258,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
         "full_name" => "John Doe",
-        "funding" => "self",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
