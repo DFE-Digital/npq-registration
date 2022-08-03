@@ -95,7 +95,7 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    if inside_catchment? && query_store.works_in_childcare? && !query_store.works_in_school?
+    if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Do you work in a nursery?",
                               value: store["works_in_nursery"].capitalize,
                               change_step: :work_in_nursery)
