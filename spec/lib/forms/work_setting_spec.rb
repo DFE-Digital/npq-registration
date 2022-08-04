@@ -43,9 +43,24 @@ RSpec.describe Forms::WorkSetting, type: :model do
         before { subject.after_save }
 
         it "sets #{expectations} when '#{option}' is picked" do
-          expecations.each do |field, _value|
+          expecations.each_key do |field|
             expect(subject.wizard.store[field]).to eql(expectations[field])
           end
+        end
+      end
+    end
+
+    %w[a_school other].each do |setting|
+      context "when #{setting}" do
+        let(:store) { { "works_in_nursery" => "yes", "kind_of_nursery" => "xyz", "has_ofsted_urn" => "yes" } }
+        let(:work_setting) { setting }
+
+        let(:childcare_specific_keys) { %w[works_in_nursery kind_of_nursery has_ofsted_urn] }
+
+        it "deletes 'works_in_nursery', 'kind_of_nursery' and 'has_ofted_urn'" do
+          expect(subject.wizard.store.keys).to include(*childcare_specific_keys)
+          subject.after_save
+          expect(subject.wizard.store.keys).not_to include(*childcare_specific_keys)
         end
       end
     end
