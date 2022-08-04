@@ -18,15 +18,16 @@ module Forms
       when "a_school", "an_academy_trust", "a_16_to_19_educational_setting"
         wizard.store["works_in_school"] = "yes"
         wizard.store["works_in_childcare"] = "no"
-        wizard.store["works_in_nursery"] = nil
+
+        %w[works_in_nursery kind_of_nursery has_ofsted_urn].map { |field| wizard.store.delete(field) }
       when "early_years_or_childcare"
         wizard.store["works_in_childcare"] = "yes"
         wizard.store["works_in_school"] = "no"
-        wizard.store["works_in_nursery"] ||= nil
       when "other"
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
-        wizard.store["works_in_nursery"] = nil
+
+        %w[works_in_nursery kind_of_nursery has_ofsted_urn].map { |field| wizard.store.delete(field) }
       else
         raise(ArgumentError, "invalid work setting #{work_setting}")
       end

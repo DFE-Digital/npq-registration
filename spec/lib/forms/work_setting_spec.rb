@@ -17,27 +17,22 @@ RSpec.describe Forms::WorkSetting, type: :model do
       "a_school" => {
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "works_in_nursery" => nil,
       },
       "an_academy_trust" => {
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "works_in_nursery" => nil,
       },
       "a_16_to_19_educational_setting" => {
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "works_in_nursery" => nil,
       },
       "early_years_or_childcare" => {
         "works_in_school" => "no",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => nil,
       },
       "other" => {
         "works_in_school" => "no",
         "works_in_childcare" => "no",
-        "works_in_nursery" => nil,
       },
     }.each do |option, expectations|
       context "when #{option}" do

@@ -170,7 +170,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",
-        "works_in_nursery" => nil,
         "work_setting" => "early_years_or_childcare",
       },
     )
