@@ -41,7 +41,7 @@ module Forms
                                 .limit(10)
     end
 
-    private
+  private
 
     def no_js_fallback_search_loop?
       institution_identifier == "other"
