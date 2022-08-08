@@ -161,8 +161,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      expect(page).to have_text("Where is your school, college or academy trust?")
-      page.fill_in "Workplace location", with: "manchester"
+      page.fill_in "Where is your workplace located?", with: "manchester"
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
