@@ -67,9 +67,11 @@ class RegistrationWizard
                             value: query_store.where_teach_humanized,
                             change_step: :teacher_catchment)
 
-    array << OpenStruct.new(key: "Do you work in a school, academy trust, or 16 to 19 educational setting?",
-                            value: store["works_in_school"].capitalize,
-                            change_step: :work_in_school)
+    work_setting = store["work_setting"]
+
+    array << OpenStruct.new(key: "What setting do you work in?",
+                            value: I18n.t("registration_wizard.work_setting.#{work_setting}"),
+                            change_step: :work_setting)
 
     array << OpenStruct.new(key: "Full name",
                             value: store["full_name"],
@@ -93,35 +95,29 @@ class RegistrationWizard
                             value: store["confirmed_email"],
                             change_step: :contact_details)
 
-    unless query_store.works_in_school?
-      array << OpenStruct.new(key: "Do you work in early years or childcare?",
-                              value: store["works_in_childcare"].capitalize,
-                              change_step: :work_in_childcare)
+    if inside_catchment? && query_store.works_in_childcare?
+      array << OpenStruct.new(key: "Do you work in a nursery?",
+                              value: store["works_in_nursery"].capitalize,
+                              change_step: :work_in_nursery)
 
-      if inside_catchment? && query_store.works_in_childcare?
-        array << OpenStruct.new(key: "Do you work in a nursery?",
-                                value: store["works_in_nursery"].capitalize,
-                                change_step: :work_in_nursery)
+      if query_store.works_in_nursery?
+        kind_of_nursery = store["kind_of_nursery"]
 
-        if query_store.works_in_nursery?
-          kind_of_nursery = store["kind_of_nursery"]
+        array << OpenStruct.new(key: "Type of nursery",
+                                value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
+                                change_step: :kind_of_nursery)
+      end
 
-          array << OpenStruct.new(key: "Type of nursery",
-                                  value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
-                                  change_step: :kind_of_nursery)
-        end
-
-        if query_store.kind_of_nursery_private? || !query_store.works_in_nursery?
-          array << if query_store.has_ofsted_urn?
-                     OpenStruct.new(key: "Ofsted registration details",
-                                    value: institution_from_store.registration_details,
-                                    change_step: :have_ofsted_urn)
-                   else
-                     OpenStruct.new(key: "Do you have a URN?",
-                                    value: store["has_ofsted_urn"].capitalize,
-                                    change_step: :have_ofsted_urn)
-                   end
-        end
+      if query_store.kind_of_nursery_private? || !query_store.works_in_nursery?
+        array << if query_store.has_ofsted_urn?
+                   OpenStruct.new(key: "Ofsted registration details",
+                                  value: institution_from_store.registration_details,
+                                  change_step: :have_ofsted_urn)
+                 else
+                   OpenStruct.new(key: "Do you have a URN?",
+                                  value: store["has_ofsted_urn"].capitalize,
+                                  change_step: :have_ofsted_urn)
+                 end
       end
     end
 
@@ -253,7 +249,7 @@ private
       start
       closed
       teacher_catchment
-      work_in_school
+      work_setting
       provider_check
       about_npq
       teacher_reference_number

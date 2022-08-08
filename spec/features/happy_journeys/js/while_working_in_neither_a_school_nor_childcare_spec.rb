@@ -24,12 +24,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("England", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/work-in-school", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
+    expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      page.choose("Other", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
@@ -65,11 +61,6 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/work-in-childcare", submit_form: true) do
-      expect(page).to have_text("Do you work in early years or childcare?")
-      page.choose("No", visible: :all)
-    end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("What are you applying for?")
@@ -111,8 +102,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Employer" => "Big company",
           "Role" => "Trainer",
           "How is your NPQ being paid for?" => "I am paying",
-          "Do you work in a school, academy trust, or 16 to 19 educational setting?" => "No",
-          "Do you work in early years or childcare?" => "No",
+          "What setting do you work in?" => "Other",
           "Lead provider" => "Teach First",
           "Where do you work?" => "England",
         },
@@ -160,6 +150,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_childcare" => false,
       "works_in_nursery" => false,
       "works_in_school" => false,
+      "work_setting" => "other",
       "raw_application_data" => {
         "active_alert" => false,
         "can_share_choices" => "1",
@@ -178,11 +169,11 @@ RSpec.feature "Happy journeys", type: :feature do
         "teacher_catchment_country" => nil,
         "trn" => "1234567",
         "trn_auto_verified" => true,
-        "trn_knowledge" => "yes",
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
+        "work_setting" => "other",
       },
     )
   end
