@@ -24,7 +24,6 @@ if (document.querySelector('#nursery-picker')) {
   institutionPicker.enhanceSelectElement({
     selectElement: document.querySelector('#nursery-picker'),
     lookupPath: 'institutions',
-    placeholder: "Start typing to search nurseries",
   })
 }
 
