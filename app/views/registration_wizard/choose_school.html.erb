@@ -16,7 +16,7 @@
 
       <h1 class="govuk-heading-xl">Choose your workplace</h1>
 
-      <% if @form.display_schools? %>
+      <% if @form.display_no_javascript_fallback_form? %>
         <% if @form.possible_institutions.blank? %>
           <p class="govuk-body">Please choose from schools, trusts and 16 to 19 educational settings located in <strong><%= @form.wizard.store["institution_location"] %></strong></p>
 

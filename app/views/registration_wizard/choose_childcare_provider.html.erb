@@ -16,7 +16,7 @@
 
       <h1 class="govuk-heading-xl">Choose your nursery</h1>
 
-      <% if @form.display_childcare_providers? %>
+      <% if @form.display_no_javascript_fallback_form? %>
         <% if @form.possible_institutions.blank? %>
           <p class="govuk-body">Choose from nurseries located in <strong><%= @form.wizard.store["institution_location"] %></strong></p>
 
