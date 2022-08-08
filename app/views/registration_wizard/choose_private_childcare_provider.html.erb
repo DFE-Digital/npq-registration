@@ -1,5 +1,8 @@
+<% question = "Enter your or your employer's URN" %>
+<% hint = "For example EY456789." %>
+
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Choose your nursery
+  <%= @form.errors.present? ? "Error: " : nil %><%= question %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -17,17 +20,19 @@
       <div class="npq-js-hidden">
         <%= f.govuk_text_field :institution_name,
                                width: "full",
-                               label: { text: "Enter your nursery name", class: "govuk-label govuk-label--s" } %>
+                               label: { text: question, size: "xl", tag: "h1" },
+                               hint: { text: hint } %>
       </div>
-
-      <%= f.label :institution_identifier, class: "govuk-label govuk-label--s", for: "private-childcare-provider-picker" do %>
-        <h1 class="govuk-heading-xl">Enter your or your employer's URN</h1>
-      <% end %>
 
       <div class="npq-js-reveal">
         <div class="govuk-form-group">
-          <span class="govuk-hint" id="private-childcare-provider-picker__hint">For example EY456789</span>
-          <%= f.text_field(:institution_identifier, id: "private-childcare-provider-picker", "aria-label" => "Enter your or your employer's URN") %>
+          <h1 class="govuk-label-wrapper">
+            <%= f.label :institution_identifier, question, class: "govuk-label govuk-label--xl", for: "private-childcare-provider-picker" %>
+          </h1>
+
+          <span class="govuk-hint" id="private-childcare-provider-picker-hint"><%= hint %></span>
+
+          <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "private-childcare-provider-picker" %>
         </div>
       </div>
       <%= f.govuk_submit %>
