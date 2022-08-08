@@ -17,7 +17,6 @@ if (document.querySelector('#school-picker')) {
   institutionPicker.enhanceSelectElement({
     selectElement: document.querySelector('#school-picker'),
     lookupPath: 'institutions',
-    placeholder: "Start typing to search schools and colleges",
   })
 }
 

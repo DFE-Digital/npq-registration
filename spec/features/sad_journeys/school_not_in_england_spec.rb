@@ -66,10 +66,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Choose your workplace")
-
       within ".npq-js-reveal" do
-        page.fill_in "Enter the name of your workplace", with: "open"
+        page.fill_in "What's the name of your workplace?", with: "open"
       end
 
       expect(page).to have_content("open welsh school")
@@ -84,7 +82,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
-      expect(page).to have_text("Choose your workplace")
+      expect(page).to have_text("What's the name of your workplace?")
     end
 
     expect(retrieve_latest_application_user_data).to eq(nil)
