@@ -27,7 +27,9 @@ module Forms
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
 
-        %w[works_in_nursery kind_of_nursery has_ofsted_urn].map { |field| wizard.store.delete(field) }
+        %w[funding works_in_nursery kind_of_nursery has_ofsted_urn].map do |field|
+          wizard.store.delete(field)
+        end
       else
         raise(ArgumentError, "invalid work setting #{work_setting}")
       end
