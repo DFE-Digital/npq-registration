@@ -7,21 +7,21 @@
 <h1 class="govuk-heading-xl">NPQ FAQs: Early years and childcare</h1>
 
 <% questions_and_answers = {
-  "What do I need to register for the NPQ for Early Years Leadership?" => "pages/faqs/early-years/what-do-i-need-to-register",
-  "Do I need a Teacher Reference Number (TRN) even though I’m not a teacher?" => "pages/faqs/early-years/do-i-need-a-trn",
-  "How do I get a TRN?" => "pages/faqs/early-years/how-do-i-get-a-trn",
-  "How do I choose a provider?" => "pages/faqs/early-years/how-do-i-choose-a-provider",
-  "How is my NPQ paid for?" => "pages/faqs/early-years/how-is-my-npq-paid-for",
-  "Where do I find my Ofsted URN?" => "pages/faqs/early-years/where-do-i-find-my-ofsted-urn",
-  "What is a full and relevant qualification?" => "pages/faqs/early-years/what-is-a-full-and-relevant-qualification",
-  "How do I register for an NPQ?" => "pages/faqs/early-years/how-do-i-register-for-an-npq",
-  "I need more support" => "pages/faqs/early-years/i-need-more-support",
+  "What do I need to register for the NPQ for Early Years Leadership?" => "pages/faqs/early_years/what_do_i_need_to_register",
+  "Do I need a Teacher Reference Number (TRN) even though I’m not a teacher?" => "pages/faqs/early_years/do_i_need_a_trn",
+  "How do I get a TRN?" => "pages/faqs/early_years/how_do_i_get_a_trn",
+  "How do I choose a provider?" => "pages/faqs/early_years/how_do_i_choose_a_provider",
+  "How is my NPQ paid for?" => "pages/faqs/early_years/how_is_my_npq_paid_for",
+  "Where do I find my Ofsted URN?" => "pages/faqs/early_years/where_do_i_find_my_ofsted_urn",
+  "What is a full and relevant qualification?" => "pages/faqs/early_years/what_is_a_full_and_relevant_qualification",
+  "How do I register for an NPQ?" => "pages/faqs/early_years/how_do_i_register_for_an_npq",
+  "I need more support" => "pages/faqs/early_years/i_need_more_support",
 } %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= render(
-      partial: "pages/faqs/contents-list",
+      partial: "pages/faqs/contents_list",
       locals: { questions_and_answers: questions_and_answers }
     ) %>
   </div>
@@ -30,7 +30,7 @@
 <div class="govuk-grid-row">
   <article class="govuk-grid-column-two-thirds">
     <%= render(
-      partial: "pages/faqs/questions-and-answers",
+      partial: "pages/faqs/questions_and_answers",
       locals: { questions_and_answers: questions_and_answers }
     ) %>
   </article>
