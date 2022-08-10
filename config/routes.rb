@@ -34,7 +34,11 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :applications, only: %i[index show]
+    resources :applications, only: %i[index show] do
+      resource :email, only: %i[edit update], controller: :email
+      resource :name, only: %i[edit update], controller: :name
+    end
+
     resource :manual_validations, path: "manual-validation" do
       get "download"
     end

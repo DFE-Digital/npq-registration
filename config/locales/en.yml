@@ -171,6 +171,15 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
+
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              taken: This email address has already been taken
+
   registration_wizard:
     kind_of_nursery:
       local_authority_maintained_nursery: Local authority maintained nursery

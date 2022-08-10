@@ -88,6 +88,10 @@
       </div>
 
       <main class="govuk-main-wrapper " id="main-content" role="main">
+        <% if flash[:success].present? %>
+          <%= govuk_notification_banner(text: flash[:success], success: true, title_text: "Success") %>
+        <% end %>
+
         <%= yield %>
       </main>
     </div>

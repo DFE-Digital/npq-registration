@@ -1,0 +1,18 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: admin_path
+  ) %>
+<% end %>
+
+<%= form_for(@user, url: admin_application_name_path(@user), method: "patch") do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_text_field(
+    :full_name,
+    label: { tag: "h1", size: "l", text: "Change #{@user.full_name}'s name" },
+  )
+  %>
+
+  <%= f.govuk_submit %>
+<% end %>

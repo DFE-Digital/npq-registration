@@ -23,11 +23,13 @@
       <%= summary_list.row do |row|
         row.key { 'Email' }
         row.value { @application.user.email }
+        row.action(text: "Change", visually_hidden_text: "email address", href: edit_admin_application_email_path(@application))
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Name' }
         row.value { @application.user.full_name }
+        row.action(text: "Change", visually_hidden_text: "name", href: edit_admin_application_name_path(@application))
       end %>
 
       <%= summary_list.row do |row|
