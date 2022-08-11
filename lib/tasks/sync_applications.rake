@@ -3,19 +3,24 @@ namespace :sync do
   task applications: :environment do
     Rails.logger.info "syncing applications"
 
-    count = Application.where("ecf_id is not null").count
-    errored_ids = []
-    Application.where("ecf_id is not null").order(created_at: :asc).each_with_index do |application, i|
-      sleep(0.1)
-      Rails.logger.info "syncing application #{application.id}, (#{i + 1},/#{count})"
-      Services::Ecf::NpqProfileUpdater.new(application:).call
-    rescue StandardError
-      Rails.logger.info "error with application #{application.id}"
-      errored_ids << application.id
+    applications = Application.where.not(ecf_id: nil)
+                              .order(created_at: :asc)
+
+    Services::Ecf::NpqProfileMassUpdater.new(applications:).call
+  end
+
+  desc "Sync applications attributes with ecf service"
+  task teacher_catchments: :environment do
+    Rails.logger.info "syncing application teacher catchments"
+
+    applications = Application.where(teacher_catchment_synced_to_ecf: false)
+                              .where.not(ecf_id: nil)
+                              .order(created_at: :asc)
+
+    mass_updater = Services::Ecf::NpqProfileMassUpdater.new(applications:) do |application|
+      application.update_column(teacher_catchment_synced_to_ecf: true)
     end
 
-    Rails.logger.info "done"
-
-    Rails.logger.info "errored applications: #{errored_ids}"
+    mass_updater.call
   end
 end

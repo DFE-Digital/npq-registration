@@ -17,6 +17,11 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
   let(:school) { create(:school) }
 
+  let(:old_teacher_catchment) { "england" }
+  let(:old_teacher_catchment_country) { nil }
+  let(:new_teacher_catchment) { "other" }
+  let(:new_teacher_catchment_country) { "United Kingdom" }
+
   let(:application) do
     Application.create!(
       user:,
@@ -29,6 +34,8 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
       funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       funding_choice: "trust",
       ecf_id: "1234",
+      teacher_catchment: new_teacher_catchment,
+      teacher_catchment_country: new_teacher_catchment_country,
     )
   end
 
@@ -48,6 +55,8 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
           headteacher_status: "no",
           eligible_for_funding: false,
           funding_choice: "trust",
+          teacher_catchment: old_teacher_catchment,
+          teacher_catchment_country: old_teacher_catchment_country,
         },
       },
     }.to_json
@@ -61,6 +70,8 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
         attributes: {
           eligible_for_funding: true,
           funding_eligiblity_status_code: "funded",
+          teacher_catchment: new_teacher_catchment,
+          teacher_catchment_country: new_teacher_catchment_country,
         },
       },
     }.to_json
