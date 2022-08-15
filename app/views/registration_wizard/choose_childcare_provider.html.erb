@@ -1,5 +1,10 @@
+<% question = "What's the name of your nursery?" %>
+<% hint = "Search for nurseries located in #{@form.wizard.store["institution_location"]}." %>
+<% js_fallback_question = "Please choose from nurseries located in #{@form.wizard.store["institution_location"]}" %>
+
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Choose your nursery
+  <%= @form.errors.present? ? "Error: " : nil %><%= question %>
+
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,39 +19,43 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Choose your nursery</h1>
-
-      <% if @form.display_childcare_providers? %>
+      <% if @form.display_no_javascript_fallback_form? %>
         <% if @form.possible_institutions.blank? %>
-          <p class="govuk-body">Choose from nurseries located in <strong><%= @form.wizard.store["institution_location"] %></strong></p>
-
-          <p class="govuk-body">No nurseries were found with that name, please try again</p>
-
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter your nursery name" } %>
+                                 label: { text: question, size: "xl", tag: "h1" },
+                                 hint: { text: hint } %>
         <% else %>
-          <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'm', text: "Please choose from nurseries located in #{@form.wizard.store["institution_location"]}" }) do %>
-            <% @form.possible_institutions.each do |institution| %>
-              <%= f.govuk_radio_button :institution_identifier, institution.identifier, label: { text: institution.name }, hint: { text: institution.address_string }, link_errors: true %>
+          <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'xl', text: js_fallback_question, tag: "h1" }) do %>
+            <% @form.possible_institutions.each_with_index do |institution, count| %>
+              <%= f.govuk_radio_button :institution_identifier,
+                                       institution.identifier,
+                                       label: { text: institution.name },
+                                       hint: { text: institution.address_string },
+                                       link_errors: count.zero? %>
             <% end %>
             <%= f.govuk_radio_divider %>
             <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "Nursery not shown above" } do %>
-              <%= f.govuk_text_field :institution_name, label: { text: "Search for another nursery name" } %>
+              <%= f.govuk_text_field :institution_name, hint: { text: hint }, label: { hidden: true, text: question } %>
             <% end %>
           <% end %>
         <% end %>
       <% else %>
-        <p class="govuk-body">Choose from nurseries located in <%= @form.wizard.store["institution_location"] %></p>
         <div class="npq-js-hidden">
           <%= f.govuk_text_field :institution_name,
                                  width: "full",
-                                 label: { text: "Enter your nursery name", class: "govuk-label govuk-label--s" } %>
+                                 label: { text: question, size: "xl", tag: "h1" },
+                                 hint: { text: hint } %>
         </div>
 
         <div class="npq-js-reveal">
           <div class="govuk-form-group">
-            <%= f.label :institution_identifier, "Enter your nursery name", class: "govuk-label govuk-label--s", for: "nursery-picker" %>
+            <h1 class="govuk-label-wrapper">
+              <%= f.label :institution_identifier, question, class: "govuk-label govuk-label--xl", for: "nursery-picker" %>
+            </h1>
+
+            <span class="govuk-hint" id="nursery-picker-hint"><%= hint %></span>
+
             <%= f.text_field :institution_identifier, data: { location: @form.wizard.store["institution_location"] }, id: "nursery-picker" %>
           </div>
         </div>

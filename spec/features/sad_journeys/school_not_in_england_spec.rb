@@ -62,15 +62,12 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 
     expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      expect(page).to have_text("Where is your school, college or academy trust?")
-      page.fill_in "Workplace location", with: "wrexham"
+      page.fill_in "Where is your workplace located?", with: "wrexham"
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Choose your workplace")
-
       within ".npq-js-reveal" do
-        page.fill_in "Enter the name of your workplace", with: "open"
+        page.fill_in "What's the name of your workplace?", with: "open"
       end
 
       expect(page).to have_content("open welsh school")
@@ -85,7 +82,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
-      expect(page).to have_text("Choose your workplace")
+      expect(page).to have_text("What's the name of your workplace?")
     end
 
     expect(retrieve_latest_application_user_data).to eq(nil)

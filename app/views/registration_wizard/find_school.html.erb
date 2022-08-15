@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Where is your school, college or academy trust?
+  <%= @form.errors.present? ? "Error: " : nil %>Where is your workplace located?
 <% end %>
 
 <% content_for :before_content do %>
@@ -14,18 +14,13 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Where is your school, college or academy trust?</h1>
-
-      <p class="govuk-body">We need this information to check if you can access Department for Education funding.</p>
-
-      <%= render GovukComponent::InsetTextComponent.new(text: "You can only select schools, trusts and 16 to 19 educational settings in England, Guernsey, Jersey or the Isle of Man. If your workplace is outside these locations, check with your training provider.") %>
-
       <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
-                             hint: { text: "Enter town, city or postcode" },
-                             label: { text: "Workplace location", class: "govuk-label--s" } %>
+                             label: { text: "Where is your workplace located?", size: "xl", tag: "h1" },
+                             hint: { text: "Enter the town, city or the first part of the postcode. For example Chester or CH1." } %>
 
       <%= f.govuk_submit %>
     <% end %>
   </div>
 </div>
+

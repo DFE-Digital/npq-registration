@@ -30,7 +30,7 @@ module Forms
       :find_school
     end
 
-    def display_schools?
+    def display_no_javascript_fallback_form?
       wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
     end
 
@@ -62,7 +62,7 @@ module Forms
     end
 
     def validate_school_name_returns_results
-      if display_schools? && possible_institutions.blank?
+      if display_no_javascript_fallback_form? && possible_institutions.blank?
         errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
       end
     end
