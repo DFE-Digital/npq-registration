@@ -27,6 +27,10 @@ Rails.application.routes.draw do
   get "/privacy-policy", to: "pages#show", page: "privacy_policy"
   get "/accessibility-statement", to: "pages#show", page: "accessibility"
 
+  get "/faqs/early-years", to: "pages#show", page: "faqs/early-years"
+  get "/faqs/schools", to: "pages#show", page: "faqs/schools"
+  get "/faqs/other-users", to: "pages#show", page: "faqs/other-users"
+
   resource :cookie_preferences do
     member do
       post "hide"

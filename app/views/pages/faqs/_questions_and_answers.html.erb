@@ -1,0 +1,5 @@
+<% questions_and_answers.each do |question, answer_partial| %>
+  <section class="govuk-!-margin-top-9">
+    <%= render partial: answer_partial, locals: { question_id: question.parameterize } %>
+  </section>
+<% end %>
