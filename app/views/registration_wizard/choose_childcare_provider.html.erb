@@ -27,8 +27,12 @@
                                  hint: { text: hint } %>
         <% else %>
           <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'xl', text: js_fallback_question, tag: "h1" }) do %>
-            <% @form.possible_institutions.each do |institution| %>
-              <%= f.govuk_radio_button :institution_identifier, institution.identifier, label: { text: institution.name }, hint: { text: institution.address_string }, link_errors: true %>
+            <% @form.possible_institutions.each_with_index do |institution, count| %>
+              <%= f.govuk_radio_button :institution_identifier,
+                                       institution.identifier,
+                                       label: { text: institution.name },
+                                       hint: { text: institution.address_string },
+                                       link_errors: count.zero? %>
             <% end %>
             <%= f.govuk_radio_divider %>
             <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "Nursery not shown above" } do %>

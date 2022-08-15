@@ -26,12 +26,12 @@
                                  hint: { text: hint } %>
         <% else %>
           <%= f.govuk_radio_buttons_fieldset(:institution_identifier, legend: { size: 'xl', text: js_fallback_question, tag: "h1" }) do %>
-            <% @form.possible_institutions.each do |institution| %>
+            <% @form.possible_institutions.each_with_index do |institution, count| %>
               <%= f.govuk_radio_button :institution_identifier,
                                        institution.identifier,
                                        label: { text: [institution.urn, institution.name].compact.join(" - ") },
                                        hint: { text: institution.address_string },
-                                       link_errors: true %>
+                                       link_errors: count.zero? %>
             <% end %>
             <%= f.govuk_radio_divider %>
             <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "My employer is not shown above" } do %>
