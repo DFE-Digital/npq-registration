@@ -29,6 +29,8 @@ module Services
           kind_of_nursery: application.kind_of_nursery,
           private_childcare_provider_urn: application.private_childcare_provider_urn,
           funding_eligiblity_status_code: application.funding_eligiblity_status_code,
+          teacher_catchment: application.teacher_catchment,
+          teacher_catchment_country: application.teacher_catchment_country,
           relationships: {
             user: ecf_user,
             npq_course: ecf_npq_course,
@@ -37,7 +39,10 @@ module Services
         )
 
         profile.save
-        application.update!(ecf_id: profile.id)
+        application.update!(
+          ecf_id: profile.id,
+          teacher_catchment_synced_to_ecf: true,
+        )
       end
 
     private

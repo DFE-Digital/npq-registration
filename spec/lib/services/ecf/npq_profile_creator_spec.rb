@@ -16,6 +16,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
   let(:school) { create(:school) }
+  let(:teacher_catchment_country) { Services::AutocompleteCountries.names.sample }
 
   let(:application) do
     Application.create!(
@@ -34,6 +35,8 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       kind_of_nursery: nil,
       private_childcare_provider_urn: nil,
       funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      teacher_catchment: "other",
+      teacher_catchment_country:,
     )
   end
 
@@ -85,6 +88,8 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             kind_of_nursery: nil,
             private_childcare_provider_urn: nil,
             funding_eligiblity_status_code: "funded",
+            teacher_catchment: "other",
+            teacher_catchment_country:,
           },
         },
       }.to_json
