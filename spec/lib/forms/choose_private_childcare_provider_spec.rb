@@ -30,6 +30,26 @@ RSpec.describe Forms::ChoosePrivateChildcareProvider, type: :model do
         expect(subject).to be_valid
       end
 
+      it "is invalid when the institution_identifier contains a URN that doesn't exist" do
+        missing_identifier = "PrivateChildcareProvider-000000"
+        expected_message = "No private childcare providers with the URN 000000 were found, please try again"
+
+        subject.institution_identifier = missing_identifier
+
+        expect(subject).to be_invalid
+        expect(subject.errors.messages[:institution_identifier]).to include(expected_message)
+      end
+
+      it "is invalid when the institution_identifier is in the wrong format" do
+        invalid_identifier = "PrivateChildcareProvider/999876"
+        expected_message = "No matching private childcare provider found"
+
+        subject.institution_identifier = invalid_identifier
+
+        expect(subject).to be_invalid
+        expect(subject.errors.messages[:institution_identifier]).to include(expected_message)
+      end
+
       it { is_expected.to validate_length_of(:institution_name).is_at_most(64) }
     end
   end
