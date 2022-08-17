@@ -18,7 +18,7 @@ namespace :sync do
                               .order(created_at: :asc)
 
     mass_updater = Services::Ecf::NpqProfileMassUpdater.new(applications:) do |application|
-      application.update_column(teacher_catchment_synced_to_ecf: true)
+      application.update_column(:teacher_catchment_synced_to_ecf, true)
     end
 
     mass_updater.call
