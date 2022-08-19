@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", type: :feature do
     page.click_button("Continue")
 
     expect(page).to be_axe_clean
-    expect(page).to have_text("Choosing an NPQ and Provider")
+    expect(page).to have_text("Choosing an NPQ and provider")
 
     expect(retrieve_latest_application_user_data).to eq(nil)
     expect(retrieve_latest_application_data).to eq(nil)
