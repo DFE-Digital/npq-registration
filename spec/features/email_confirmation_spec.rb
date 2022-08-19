@@ -12,7 +12,7 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_button("Continue")
     page.choose("Yes", visible: :all)
     page.click_button("Continue")
-    page.fill_in "What's your email address?", with: "user@example.com"
+    page.fill_in "What’s your email address?", with: "user@example.com"
     page.click_button("Continue")
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
@@ -50,13 +50,13 @@ RSpec.feature "Email confirmation", type: :feature do
     page.click_link("Back")
 
     # skips code page as email already confirmed
-    expect(page).to have_content("What's your email address?")
+    expect(page).to have_content("What’s your email address?")
     page.click_button("Continue")
 
     # change email address
     expect(page).to have_content("Check your details")
     page.click_link("Back")
-    page.fill_in "What's your email address?", with: "changed@example.com"
+    page.fill_in "What’s your email address?", with: "changed@example.com"
     page.click_button("Continue")
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
