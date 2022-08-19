@@ -16,7 +16,7 @@ RSpec.feature "admin", type: :feature do
     visit "/admin"
     expect(page.current_path).to eql("/sign-in")
 
-    page.fill_in "What's your email address?", with: admin.email
+    page.fill_in "What’s your email address?", with: admin.email
     page.click_button "Sign in"
     expect(page.current_path).to eql("/session/sign-in-code")
 
