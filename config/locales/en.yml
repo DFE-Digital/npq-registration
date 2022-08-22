@@ -223,3 +223,7 @@ en:
           studying_npqh: I am still studying for an NPQH
           will_start_npqh: I am about to start an NPQH
           none: None of the above
+
+        has_ofsted_urn_options:
+          "yes": "Yes"
+          "no": "No"
