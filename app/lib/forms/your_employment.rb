@@ -14,7 +14,7 @@ module Forms
       OpenStruct.new(
         type: :radio_button_group,
         name: QUESTION_NAME,
-        label: "How are you employed?",
+        label: I18n.t("registration_wizard.your_employment.label"),
         options:,
       )
     end

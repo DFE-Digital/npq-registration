@@ -14,7 +14,7 @@ module Forms
       OpenStruct.new(
         type: :text_field,
         name: QUESTION_NAME,
-        label: "What is the name of your employer?",
+        label: I18n.t("registration_wizard.your_employer.label"),
       )
     end
 

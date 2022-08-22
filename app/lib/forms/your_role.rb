@@ -14,8 +14,8 @@ module Forms
       OpenStruct.new(
         type: :text_field,
         name: QUESTION_NAME,
-        label: "What is your role?",
-        hint: "For example: Administrator, business manager",
+        label: I18n.t("registration_wizard.your_role.label"),
+        hint: I18n.t("registration_wizard.your_role.hint"),
       )
     end
 
