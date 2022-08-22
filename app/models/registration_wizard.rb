@@ -64,7 +64,7 @@ class RegistrationWizard
     array = []
 
     array << OpenStruct.new(key: "Where do you work?",
-                            value: query_store.where_teach_humanized,
+                            value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
     work_setting = store["work_setting"]

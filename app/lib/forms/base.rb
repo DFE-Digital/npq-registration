@@ -83,7 +83,7 @@ module Forms
       wizard.query_store
     end
 
-    def build_option_struct(value:, link_errors: false, divider: false, include_if: true)
+    def build_option_struct(value:, link_errors: false, divider: false, include_if: true, opts: {})
       return unless include_if
 
       options = {
@@ -92,6 +92,8 @@ module Forms
       }
 
       options[:divider] = divider if divider
+
+      options.merge!(opts) if opts.present?
 
       OpenStruct.new(options)
     end

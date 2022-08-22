@@ -23,12 +23,12 @@
           ) do %>
 
         <% @form.options.each do |struct| %>
-          <% if @form.options.last != struct %>
-            <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
-          <% else %>
-            <%= f.govuk_radio_divider %>
+          <% if struct.divider.present? %>
+            <%= f.govuk_radio_divider(struct.divider) %>
+          <% end  %>
 
-            <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors do %>
+          <%= f.govuk_radio_button :teacher_catchment, struct.value, label: { text: struct.text }, link_errors: struct.link_errors do %>
+            <% if struct.country_autocomplete %>
               <div data-module="app-country-autocomplete">
                 <%= f.govuk_collection_select(
                     :teacher_catchment_country,

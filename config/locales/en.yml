@@ -13,12 +13,6 @@ en:
       forms/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
-          england: England
-          scotland: Scotland
-          wales: Wales
-          northern_ireland: Northern Ireland
-          jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
-          another: Another country
       forms/npqh_status:
         status_options:
           completed_npqh: I have completed an NPQH
@@ -222,3 +216,12 @@ en:
           trust: "My trust is paying"
           self: "I am paying"
           another: "My NPQ is being paid in another way"
+
+        teacher_catchment_options:
+          england: "England"
+          scotland: "Scotland"
+          wales: "Wales"
+          northern_ireland: "Northern Ireland"
+          jersey_guernsey_isle_of_man: "Jersey, Guernsey or the Isle of Man"
+          another: "Another country"
+

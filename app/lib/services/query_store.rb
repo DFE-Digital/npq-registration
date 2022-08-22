@@ -9,11 +9,11 @@ class Services::QueryStore
     store["teacher_catchment"] == "england"
   end
 
-  def where_teach_humanized
+  def teacher_catchment_humanized
     if store["teacher_catchment"] == "another"
       store["teacher_catchment_country"]
     else
-      I18n.t(store["teacher_catchment"], scope: %i[activemodel attributes forms/teacher_catchment teacher_catchment])
+      I18n.t(store["teacher_catchment"], scope: %i[helpers label registration_wizard teacher_catchment_options])
     end
   end
 

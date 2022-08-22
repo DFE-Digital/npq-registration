@@ -42,24 +42,12 @@ module Forms
 
     def options
       [
-        OpenStruct.new(value: "england",
-                       text: "England",
-                       link_errors: true),
-        OpenStruct.new(value: "scotland",
-                       text: "Scotland",
-                       link_errors: false),
-        OpenStruct.new(value: "wales",
-                       text: "Wales",
-                       link_errors: false),
-        OpenStruct.new(value: "northern_ireland",
-                       text: "Northern Ireland",
-                       link_errors: false),
-        OpenStruct.new(value: "jersey_guernsey_isle_of_man",
-                       text: "Jersey, Guernsey or the Isle of Man",
-                       link_errors: false),
-        OpenStruct.new(value: "another",
-                       text: "Another country",
-                       link_errors: false),
+        build_option_struct(value: "england", link_errors: true),
+        build_option_struct(value: "scotland"),
+        build_option_struct(value: "wales"),
+        build_option_struct(value: "northern_ireland"),
+        build_option_struct(value: "jersey_guernsey_isle_of_man"),
+        build_option_struct(value: "another", divider: "or", opts: { country_autocomplete: true }),
       ]
     end
   end
