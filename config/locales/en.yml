@@ -13,13 +13,6 @@ en:
       forms/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
-      forms/npqh_status:
-        status_options:
-          completed_npqh: I have completed an NPQH
-          studying_npqh: I am still studying for an NPQH
-          will_start_npqh: I am about to start an NPQH
-          none: None of the above
-
     errors:
       models:
         forms/chosen_start_date:
@@ -225,3 +218,8 @@ en:
           jersey_guernsey_isle_of_man: "Jersey, Guernsey or the Isle of Man"
           another: "Another country"
 
+        npqh_status_options:
+          completed_npqh: I have completed an NPQH
+          studying_npqh: I am still studying for an NPQH
+          will_start_npqh: I am about to start an NPQH
+          none: None of the above
