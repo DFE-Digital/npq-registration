@@ -15,6 +15,7 @@ module Forms
         type: :text_field,
         name: QUESTION_NAME,
         label: I18n.t("registration_wizard.your_employer.label"),
+        hint: I18n.t("registration_wizard.your_employer.hint"),
       )
     end
 

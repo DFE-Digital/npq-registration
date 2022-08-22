@@ -200,4 +200,5 @@ en:
       hint: "For example: Administrator, business manager"
 
     your_employer:
-      label: "What is the name of your employer?"
+      label: "What organisation are you employed by?"
+      hint: "For example 'Essex County Council', or 'I'm self employed'"

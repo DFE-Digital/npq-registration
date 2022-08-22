@@ -65,7 +65,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
-      page.fill_in "What is the name of your employer?", with: "Big company"
+      page.fill_in "What organisation are you employed by?", with: "Big company"
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
