@@ -175,6 +175,7 @@ en:
         kind_of_nursery: "What kind of nursery do you work in?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
+        funding: "How is your course being paid for?"
     hint:
       registration_wizard:
         work_setting_options:
@@ -182,7 +183,9 @@ en:
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
         aso_funding_choice_options:
-          another: For example, I am sharing the costs with my workplace
+          another: "For example, I am sharing the costs with my workplace"
+        funding_options:
+          another: "For example, I am sharing the costs with my workplace"
     label:
       registration_wizard:
         kind_of_nursery_options:
@@ -213,3 +216,9 @@ en:
           trust: "My trust is paying"
           self: "I am paying"
           another: "The Early Headship Coaching Offer is being paid in another way"
+
+        funding_options:
+          school: "My workplace is covering the cost"
+          trust: "My trust is paying"
+          self: "I am paying"
+          another: "My NPQ is being paid in another way"

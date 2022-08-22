@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %><%= @form.title %>
+  <%= @form.errors.present? ? "Error: " : nil %><%= t("helpers.legend.registration_wizard.funding") %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -18,11 +18,9 @@
         @form.options,
         :value,
         :text,
-        :description,
         legend: {
           tag: "h1",
-          size: "xl",
-          text: @form.title,
+          size: "xl"
         },
         bold_labels: false
       %>

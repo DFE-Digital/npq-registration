@@ -162,7 +162,7 @@ class RegistrationWizard
                                 change_step: :funding_your_aso)
       elsif query_store.works_in_school? || query_store.works_in_childcare?
         array << OpenStruct.new(key: "How is your NPQ being paid for?",
-                                value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
+                                value: I18n.t(store["funding"], scope: "registration_wizard.funding_your_npq.funding_options"),
                                 change_step: :funding_your_npq)
       end
     end

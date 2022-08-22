@@ -26,22 +26,14 @@ module Forms
 
     def options
       [
-        option("school", "My workplace is covering the cost", link_errors: true),
-        (option("trust", "My trust is paying") if works_in_school? && inside_catchment?),
-        option("self", "I am paying"),
-        option("another", "My NPQ is being paid in another way", "For example, I am sharing the costs with my workplace"),
+        build_option_struct(value: "school", link_errors: true),
+        build_option_struct(value: "trust", include_if: works_in_school? && inside_catchment?),
+        build_option_struct(value: "self"),
+        build_option_struct(value: "another")
       ].compact.freeze
     end
 
-    def title
-      "How is your course being paid for?"
-    end
-
   private
-
-    def option(value, text, description = nil, link_errors: false)
-      OpenStruct.new(value:, text:, description:, link_errors:)
-    end
 
     delegate :query_store, to: :wizard
     delegate :works_in_school?, :inside_catchment?, to: :query_store
