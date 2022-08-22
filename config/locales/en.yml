@@ -10,12 +10,6 @@ en:
           trust: My trust is paying
           self: I am paying
           another: My NPQ is being paid in another way
-      forms/funding_your_aso:
-        funding_options:
-          school: My workplace is covering the cost
-          trust: My trust is paying
-          self: I am paying
-          another: The Early Headship Coaching Offer is being paid in another way
       forms/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
@@ -187,6 +181,8 @@ en:
           other: "For example a local authority, at a hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
+        aso_funding_choice_options:
+          another: For example, I am sharing the costs with my workplace
     label:
       registration_wizard:
         kind_of_nursery_options:
@@ -211,3 +207,9 @@ en:
         employment_role: "What is your role?"
 
         employer_name: "What organisation are you employed by?"
+
+        aso_funding_choice_options:
+          school: "My workplace is covering the cost"
+          trust: "My trust is paying"
+          self: "I am paying"
+          another: "The Early Headship Coaching Offer is being paid in another way"

@@ -83,17 +83,15 @@ module Forms
       wizard.query_store
     end
 
-    def option_locale_scope
-      raise NotImplementedError
-    end
+    def build_option_struct(value:, link_errors: false, divider: false, include_if: true)
+      return unless include_if
 
-    def build_option_struct(value:, link_errors: false, divider: false)
       options = {
         value:,
         link_errors:,
       }
 
-      options[:divider] = divider if divide
+      options[:divider] = divider if divider
 
       OpenStruct.new(options)
     end

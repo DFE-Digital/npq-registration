@@ -154,11 +154,11 @@ class RegistrationWizard
     unless eligible_for_funding?
       if course.aso?
         array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                value: I18n.t(store["aso_funding_choice"], scope: "registration_wizard.funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
       elsif course.ehco?
         array << OpenStruct.new(key: "How is your EHCO being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                value: I18n.t(store["aso_funding_choice"], scope: "registration_wizard.funding_your_aso.funding_options"),
                                 change_step: :funding_your_aso)
       elsif query_store.works_in_school? || query_store.works_in_childcare?
         array << OpenStruct.new(key: "How is your NPQ being paid for?",

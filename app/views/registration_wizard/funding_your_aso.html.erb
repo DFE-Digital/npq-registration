@@ -24,8 +24,6 @@
         <% @form.options.each do |struct| %>
           <%= f.govuk_radio_button :aso_funding_choice,
             struct.value,
-            label: { text: struct.text },
-            hint: { text: struct.hint },
             link_errors: struct.link_errors %>
         <% end %>
       <% end %>
