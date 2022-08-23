@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Confirm your code
+  <%= @form.errors.present? ? "Error: " : nil %>Confirm your email address
 <% end %>
 
 <% content_for :before_content do %>
@@ -23,7 +23,7 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <h1 class="govuk-heading-xl">Confirm your code</h1>
+      <h1 class="govuk-heading-xl">Confirm your email address</h1>
 
       <%= f.govuk_text_field :confirmation_code,
         width: 10,
