@@ -2,25 +2,17 @@
   form.govuk_radio_buttons_fieldset(
     question.name,
     legend: {
-      text: question.label,
       size: "xl",
       tag: "h1"
     }
   ) do
 %>
   <% question.options.each do |struct| %>
-    <% if struct.divider.present? %>
-      <%= form.govuk_radio_divider(struct.divider) %>
+    <% if struct.divider %>
+      <%= form.govuk_radio_divider %>
     <% end  %>
 
-    <%=
-      form.govuk_radio_button(
-        question.name,
-        struct.value,
-        label: { text: struct.text },
-        hint: { text: struct.hint },
-        link_errors: struct.link_errors
-      )
-    %>
+    <%= form.govuk_radio_button(question.name, struct.value, link_errors: struct.link_errors) %>
+
   <% end %>
 <% end  %>

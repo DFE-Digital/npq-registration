@@ -186,19 +186,23 @@ en:
       a_16_to_19_educational_setting: A 16 to 19 educational setting
       other: Other
 
-    your_employment:
-      label: "How are you employed?"
-      options:
-        local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
-        hospital_school: "In a hospital school"
-        young_offender_institution: "In a young offender institution"
-        local_authority_supply_teacher: "As a supply teacher employed by a local authority"
-        other: "Other"
+  helpers:
+    legend:
+      registration_wizard:
+        employment_type: "How are you employed?"
+    hint:
+      registration_wizard:
+        employment_role: "For example: Administrator, business manager"
+        employer_name: "For example 'Essex County Council', or 'I'm self employed'"
+    label:
+      registration_wizard:
+        employment_type_options:
+          local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
+          hospital_school: "In a hospital school"
+          young_offender_institution: "In a young offender institution"
+          local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          other: "Other"
 
-    your_role:
-      label: "What is your role?"
-      hint: "For example: Administrator, business manager"
+        employment_role: "What is your role?"
 
-    your_employer:
-      label: "What organisation are you employed by?"
-      hint: "For example 'Essex County Council', or 'I'm self employed'"
+        employer_name: "What organisation are you employed by?"

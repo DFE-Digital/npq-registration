@@ -14,7 +14,6 @@ module Forms
       OpenStruct.new(
         type: :radio_button_group,
         name: QUESTION_NAME,
-        label: I18n.t("registration_wizard.your_employment.label"),
         options:,
       )
     end
@@ -25,7 +24,7 @@ module Forms
         build_option(value: "hospital_school"),
         build_option(value: "young_offender_institution"),
         build_option(value: "local_authority_supply_teacher"),
-        build_option(value: "other", divider: "or"),
+        build_option(value: "other", divider: true),
       ].freeze
     end
 
@@ -39,18 +38,13 @@ module Forms
 
   private
 
-    def locale_scope
-      "registration_wizard.your_employment.options"
-    end
-
     def build_option(value:, link_errors: false, divider: false)
       options = {
         value:,
-        text: I18n.t(value, scope: locale_scope),
         link_errors:,
       }
 
-      options[:divider] = divider if divider.present?
+      options[:divider] = divider if divider
 
       OpenStruct.new(options)
     end
