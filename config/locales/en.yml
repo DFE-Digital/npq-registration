@@ -175,11 +175,6 @@ en:
               invalid: This email is invalid
               taken: This email has already been registered for interest
   registration_wizard:
-    kind_of_nursery:
-      local_authority_maintained_nursery: Local authority maintained nursery
-      preschool_class_as_part_of_school: Preschool class that's part of a school
-      private_nursery: Private nursery
-
     work_setting:
       early_years_or_childcare: Early years or childcare
       a_school: A school
@@ -190,6 +185,7 @@ en:
   helpers:
     legend:
       registration_wizard:
+        kind_of_nursery: "What kind of nursery do you work in?"
         employment_type: "How are you employed?"
     hint:
       registration_wizard:
@@ -197,6 +193,11 @@ en:
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
     label:
       registration_wizard:
+        kind_of_nursery_options:
+          local_authority_maintained_nursery: "Local authority maintained nursery"
+          preschool_class_as_part_of_school: "Preschool class that's part of a school"
+          private_nursery: "Private nursery"
+
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
