@@ -30,11 +30,10 @@ module Forms
     end
 
     def options
-      options_array.each_with_index.map do |option, index|
-        OpenStruct.new(value: option[:value],
-                       text: option[:text],
-                       link_errors: index.zero?)
-      end
+      [
+        build_option_struct(value: "yes", link_errors: true),
+        build_option_struct(value: "no"),
+      ]
     end
 
   private
@@ -55,19 +54,6 @@ module Forms
 
     def new_headteacher?
       aso_new_headteacher == "yes"
-    end
-
-    def options_array
-      [
-        {
-          text: "Yes",
-          value: "yes",
-        },
-        {
-          text: "No",
-          value: "no",
-        },
-      ]
     end
   end
 end

@@ -231,3 +231,7 @@ en:
         aso_headteacher_options:
           "yes": "Yes"
           "no": "No"
+
+        aso_new_headteacher_options:
+          "yes": "Yes"
+          "no": "No"
