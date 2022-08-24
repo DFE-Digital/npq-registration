@@ -174,12 +174,17 @@ class RegistrationWizard
                             change_step: :choose_your_provider)
 
     if employer_data_gathered?
+      array << OpenStruct.new(key: "Employment type",
+                              value: I18n.t(store["employment_type"], scope: "registration_wizard.your_employment.options"),
+                              change_step: :your_employment)
+
       array << OpenStruct.new(key: "Employer",
                               value: store["employer_name"],
-                              change_step: :your_work)
+                              change_step: :your_employer)
+
       array << OpenStruct.new(key: "Role",
                               value: store["employment_role"],
-                              change_step: :your_work)
+                              change_step: :your_role)
     end
 
     array
@@ -219,12 +224,12 @@ private
   def employer_data_gathered?
     return false if eligible_for_funding?
 
-    ineligible_institution_type? && inside_catchment?
+    works_in_other? && inside_catchment?
   end
 
   delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?, :inside_catchment?, to: :query_store
+  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, to: :query_store
 
   def course
     Course.find(store["course_id"])
@@ -281,7 +286,9 @@ private
       kind_of_nursery
       have_ofsted_urn
       choose_private_childcare_provider
-      your_work
+      your_employment
+      your_role
+      your_employer
       school_not_in_england
       possible_funding
       ineligible_for_funding

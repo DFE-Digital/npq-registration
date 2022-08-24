@@ -68,19 +68,16 @@ module Forms
         store_verified_trn(record)
         store_active_alert(record)
 
-        if changing_answer?
-          :check_answers
-        elsif wizard.query_store.works_in_school?
-          if wizard.query_store.inside_catchment?
-            :find_school
-          else
-            :choose_your_npq
-          end
-        elsif wizard.query_store.inside_catchment? && wizard.query_store.works_in_childcare?
-          :work_in_nursery
-        else
-          :choose_your_npq
+        return :check_answers if changing_answer?
+
+        if wizard.query_store.inside_catchment?
+          return :find_school if wizard.query_store.works_in_school?
+          return :work_in_nursery if wizard.query_store.works_in_childcare?
+
+          return :your_employment
         end
+
+        :choose_your_npq
       else
         mark_trn_as_unverified
 

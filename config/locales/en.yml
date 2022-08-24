@@ -56,12 +56,18 @@ en:
             email:
               blank: Email can’t be blank
               invalid: Enter a valid email address
-        forms/your_work:
+        forms/your_employment:
+          attributes:
+            employment_type:
+              blank: Select an employment type
+        forms/your_role:
+          attributes:
+            employment_role:
+              blank: Enter your employment role
+        forms/your_employer:
           attributes:
             employer_name:
               blank: Enter the name of your employer
-            employment_role:
-              blank: Enter your employment role
         forms/teacher_reference_number:
           attributes:
             trn_knowledge:
@@ -178,3 +184,10 @@ en:
       an_academy_trust: An academy trust
       a_16_to_19_educational_setting: A 16 to 19 educational setting
       other: Other
+    your_employment:
+      options:
+        local_authority_virtual_school: In a virtual school (local authority run organisations that support the education of children in care)
+        hospital_school: In a hospital school
+        young_offender_institution: In a young offender institution
+        local_authority_supply_teacher: As a supply teacher employed by a local authority
+        other: Other
