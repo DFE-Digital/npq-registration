@@ -175,7 +175,7 @@ class RegistrationWizard
 
     if employer_data_gathered?
       array << OpenStruct.new(key: "Employment type",
-                              value: I18n.t(store["employment_type"], scope: "registration_wizard.your_employment.options"),
+                              value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
 
       array << OpenStruct.new(key: "Employer",
