@@ -1,0 +1,11 @@
+<div data-module="app-country-autocomplete">
+  <%=
+    form.govuk_collection_select(
+      question.name,
+      Services::AutocompleteCountries.as_open_structs,
+      :name,
+      :name,
+      options: { include_blank: true }
+    )
+  %>
+</div>

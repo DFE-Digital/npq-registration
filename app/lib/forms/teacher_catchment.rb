@@ -40,6 +40,13 @@ module Forms
       :provider_check
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :teacher_catchment,
+        options:,
+      )
+    end
+
     def options
       [
         build_option_struct(value: "england", link_errors: true),
@@ -47,8 +54,14 @@ module Forms
         build_option_struct(value: "wales"),
         build_option_struct(value: "northern_ireland"),
         build_option_struct(value: "jersey_guernsey_isle_of_man"),
-        build_option_struct(value: "another", divider: "or", opts: { country_autocomplete: true }),
+        build_option_struct(value: "another", divider: true, revealed_question: autocomplete_country_question),
       ]
+    end
+
+    private
+
+    def autocomplete_country_question
+      Forms::QuestionTypes::AutoCompleteCountry.new(name: :teacher_catchment_country)
     end
   end
 end

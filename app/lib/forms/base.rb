@@ -83,19 +83,15 @@ module Forms
       wizard.query_store
     end
 
-    def build_option_struct(value:, link_errors: false, divider: false, include_if: true, opts: {})
+    def build_option_struct(value:, link_errors: false, divider: false, include_if: true, revealed_question: nil)
       return unless include_if
 
-      options = {
+      Forms::QuestionTypes::RadioOption.new(
         value:,
         link_errors:,
-      }
-
-      options[:divider] = divider if divider
-
-      options.merge!(opts) if opts.present?
-
-      OpenStruct.new(options)
+        divider:,
+        revealed_question:
+      )
     end
   end
 end

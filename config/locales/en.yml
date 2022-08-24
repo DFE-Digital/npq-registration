@@ -163,6 +163,7 @@ en:
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
         funding: "How is your course being paid for?"
+        teacher_catchment: "Where do you work?"
     hint:
       registration_wizard:
         work_setting_options:
@@ -217,6 +218,8 @@ en:
           northern_ireland: "Northern Ireland"
           jersey_guernsey_isle_of_man: "Jersey, Guernsey or the Isle of Man"
           another: "Another country"
+
+        teacher_catchment_country: "Which country do you teach in?"
 
         npqh_status_options:
           completed_npqh: I have completed an NPQH
