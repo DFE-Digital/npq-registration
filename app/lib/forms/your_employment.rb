@@ -13,7 +13,7 @@ module Forms
     def question
       Forms::QuestionTypes::RadioButtonGroup.new(
         name: QUESTION_NAME,
-        options:
+        options:,
       )
     end
 
