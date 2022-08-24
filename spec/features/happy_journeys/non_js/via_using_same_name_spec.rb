@@ -43,7 +43,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
-      expect(page).to have_text("Confirm your code")
+      expect(page).to have_text("Confirm your email address")
       expect(page).to have_text("user@example.com")
 
       code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
