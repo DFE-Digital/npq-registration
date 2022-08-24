@@ -11,10 +11,9 @@ module Forms
     end
 
     def question
-      OpenStruct.new(
-        type: :radio_button_group,
+      Forms::QuestionTypes::RadioButtonGroup.new(
         name: QUESTION_NAME,
-        options:,
+        options:
       )
     end
 

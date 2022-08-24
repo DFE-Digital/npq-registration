@@ -11,10 +11,7 @@ module Forms
     end
 
     def question
-      OpenStruct.new(
-        type: :text_field,
-        name: QUESTION_NAME
-      )
+      Forms::QuestionTypes::TextField.new(name: QUESTION_NAME)
     end
 
     def next_step
