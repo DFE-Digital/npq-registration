@@ -227,3 +227,7 @@ en:
         has_ofsted_urn_options:
           "yes": "Yes"
           "no": "No"
+
+        aso_headteacher_options:
+          "yes": "Yes"
+          "no": "No"
