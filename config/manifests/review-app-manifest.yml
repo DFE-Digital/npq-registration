@@ -1,0 +1,32 @@
+---
+applications:
+- name: ((APP_NAME))-((ENV_STUB))
+  processes:
+  - type: web
+    disk_quota: 2G
+    memory: 512M
+    health-check-http-endpoint: /healthcheck.json
+    health-check-type: http
+    health-check-invocation-timeout: 10
+    instances: 1
+  - type: worker
+    disk_quota: 2G
+    health-check-type: process
+    instances: 1
+    command: bundle exec rake jobs:work
+  services:
+    - ((APP_NAME))-((ENV_STUB_DB))
+  env:
+    DOCKER_IMAGE_ID: ((DOCKER_IMAGE_ID))
+    ENV: $HOME/.profile
+    SERVICE_ENV: development
+    SENTRY_CURRENT_ENV: development
+    SECRET_KEY_BASE: ((SECRET_KEY_BASE))
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
+    GOVUK_NOTIFY_API_KEY: ((GOVUK_NOTIFY_API_KEY))
+    GOOGLE_TAG_MANAGER_ID: "GTM-N58Z5PG"
+    GOOGLE_ANALYTICS_ID: "G-4QYNT5ZME8"
+    ECF_APP_BASE_URL: "https://ecf-dev.london.cloudapps.digital"
+    ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
+    SENTRY_DSN: ((SENTRY_DSN))
