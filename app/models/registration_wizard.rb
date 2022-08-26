@@ -133,6 +133,20 @@ class RegistrationWizard
       end
     end
 
+    if employer_data_gathered?
+      array << OpenStruct.new(key: "Employment type",
+                              value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
+                              change_step: :your_employment)
+
+      array << OpenStruct.new(key: "Role",
+                              value: store["employment_role"],
+                              change_step: :your_role)
+
+      array << OpenStruct.new(key: "Employer",
+                              value: store["employer_name"],
+                              change_step: :your_employer)
+    end
+
     array << OpenStruct.new(key: "Course",
                             value: query_store.course.name,
                             change_step: :choose_your_npq)
@@ -172,20 +186,6 @@ class RegistrationWizard
     array << OpenStruct.new(key: "Lead provider",
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
-
-    if employer_data_gathered?
-      array << OpenStruct.new(key: "Employment type",
-                              value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
-                              change_step: :your_employment)
-
-      array << OpenStruct.new(key: "Employer",
-                              value: store["employer_name"],
-                              change_step: :your_employer)
-
-      array << OpenStruct.new(key: "Role",
-                              value: store["employment_role"],
-                              change_step: :your_role)
-    end
 
     array
   end
