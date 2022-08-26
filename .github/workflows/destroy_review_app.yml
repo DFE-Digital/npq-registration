@@ -1,0 +1,50 @@
+name: Destroy Review App
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+jobs:
+  deploy:
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Install CloudFoundry CLI
+        shell: bash
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf7-cli
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_DEV_PASSWORD }}
+
+      - name: Destroy app on Gov.uk PaaS
+        id: deploy-to-paas
+        shell: bash
+        env:
+          CF_DOCKER_PASSWORD: ${{ secrets.DOCKER_DEV_PASSWORD }}
+          PAAS_ORGANISATION: dfe
+          # This is a shared PAAS space
+          PAAS_SPACE: earlycareers-framework-dev
+          ENV_STUB: review-app-${{ github.event.number }}
+          ENV_STUB_DB: review-app-db
+          APP_NAME: npq-registration
+          CF_USERNAME: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          CF_PASSWORD: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
+        run: |
+          cf api https://api.london.cloud.service.gov.uk
+          cf auth
+          cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
+          cf unbind-service "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" "${{ env.APP_NAME }}"-"${{ env.ENV_STUB_DB }}"
+          cf delete -r -f "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}"
