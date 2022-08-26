@@ -137,6 +137,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
       "employment_role" => "Trainer",
+      "employment_type" => "hospital_school",
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
