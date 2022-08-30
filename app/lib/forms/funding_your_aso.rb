@@ -25,7 +25,7 @@ module Forms
         build_option_struct(value: "school", link_errors: true),
         build_option_struct(value: "trust"),
         build_option_struct(value: "self"),
-        build_option_struct(value: "another")
+        build_option_struct(value: "another"),
       ].freeze
     end
   end

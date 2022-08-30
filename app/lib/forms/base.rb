@@ -90,7 +90,7 @@ module Forms
         value:,
         link_errors:,
         divider:,
-        revealed_question:
+        revealed_question:,
       )
     end
   end

@@ -58,7 +58,7 @@ module Forms
       ]
     end
 
-    private
+  private
 
     def autocomplete_country_question
       Forms::QuestionTypes::AutoCompleteCountry.new(name: :teacher_catchment_country)
