@@ -24,16 +24,21 @@ module Forms
       @course ||= Course.find(wizard.store["course_id"])
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :funding,
+        options:,
+      )
+    end
+
     def options
       [
         build_option_struct(value: "school", link_errors: true),
         build_option_struct(value: "trust", include_if: works_in_school? && inside_catchment?),
         build_option_struct(value: "self"),
-        build_option_struct(value: "another")
+        build_option_struct(value: "another"),
       ].compact.freeze
     end
-
-  private
 
     delegate :query_store, to: :wizard
     delegate :works_in_school?, :inside_catchment?, to: :query_store
