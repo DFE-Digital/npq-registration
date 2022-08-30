@@ -68,9 +68,3 @@ jobs:
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling
-
-      - name: Tag deployment
-        run: |
-          export TAG_FOR_RELEASE=dev-release-$(date +%Y-%m-%d-%H-%M)-$(git rev-parse --short HEAD)
-          git tag --force $TAG_FOR_RELEASE
-          git push --force origin refs/tags/$TAG_FOR_RELEASE
