@@ -21,8 +21,14 @@
                                            size: "xl"
                                          }
                                         ) do %>
-        <%= f.govuk_radio_button :works_in_nursery, "yes", label: { text: "Yes" }, link_errors: true %>
-        <%= f.govuk_radio_button :works_in_nursery, "no", label: { text: "No" } %>
+
+        <% @form.options.each do |struct| %>
+          <%=
+            f.govuk_radio_button :works_in_nursery,
+                                 struct.value,
+                                 link_errors: struct.link_errors
+          %>
+        <% end %>
       <% end %>
 
       <%= f.govuk_submit %>

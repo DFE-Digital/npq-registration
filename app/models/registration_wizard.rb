@@ -97,7 +97,7 @@ class RegistrationWizard
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Do you work in a nursery?",
-                              value: store["works_in_nursery"].capitalize,
+                              value: I18n.t(store["works_in_nursery"], scope: "helpers.label.registration_wizard.works_in_nursery_options"),
                               change_step: :work_in_nursery)
 
       if query_store.works_in_nursery?

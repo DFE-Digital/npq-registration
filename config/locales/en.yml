@@ -164,6 +164,7 @@ en:
         work_setting: "What setting do you work in?"
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
+        works_in_nursery: "Do you work in a nursery?"
     hint:
       registration_wizard:
         work_setting_options:
@@ -236,5 +237,9 @@ en:
           "no": "No"
 
         aso_new_headteacher_options:
+          "yes": "Yes"
+          "no": "No"
+
+        works_in_nursery_options:
           "yes": "Yes"
           "no": "No"
