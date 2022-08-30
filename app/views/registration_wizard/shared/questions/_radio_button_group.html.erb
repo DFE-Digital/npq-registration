@@ -1,0 +1,18 @@
+<%=
+  form.govuk_radio_buttons_fieldset(
+    question.name,
+    legend: {
+      size: "xl",
+      tag: "h1"
+    }
+  ) do
+%>
+  <% question.options.each do |struct| %>
+    <% if struct.divider %>
+      <%= form.govuk_radio_divider %>
+    <% end  %>
+
+    <%= form.govuk_radio_button(question.name, struct.value, link_errors: struct.link_errors) %>
+
+  <% end %>
+<% end  %>

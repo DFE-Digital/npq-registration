@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_10_135738) do
+ActiveRecord::Schema.define(version: 2022_08_26_154213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2022_08_10_135738) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
+    t.string "employment_type"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"

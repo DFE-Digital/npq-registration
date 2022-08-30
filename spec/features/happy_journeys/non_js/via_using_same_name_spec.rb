@@ -187,6 +187,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
+      "employment_type" => nil,
       "employment_role" => nil,
       "funding_choice" => "trust",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",

@@ -43,7 +43,7 @@ RSpec.describe Forms::DqtMismatch do
       let(:works_in_school) { "no" }
       let(:works_in_childcare) { "no" }
 
-      it { is_expected.to be :choose_your_npq }
+      it { is_expected.to be :your_employment }
     end
   end
 end

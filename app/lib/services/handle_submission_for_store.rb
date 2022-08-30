@@ -35,6 +35,7 @@ module Services
           works_in_school: store["works_in_school"] == "yes",
           employer_name:,
           employment_role:,
+          employment_type:,
           targeted_delivery_funding_eligibility:,
           works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
@@ -85,6 +86,10 @@ module Services
 
     def employment_role
       store["employment_role"].presence if store_employer_data?
+    end
+
+    def employment_type
+      store["employment_type"].presence if store_employer_data?
     end
 
     def institution_from_store

@@ -210,7 +210,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         end
 
         it "returns :choose_your_npq" do
-          expect(subject.next_step).to eql(:choose_your_npq)
+          expect(subject.next_step).to eql(:your_employment)
         end
       end
     end

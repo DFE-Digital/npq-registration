@@ -31,8 +31,8 @@ module Forms
         elsif course.ehco?
           :about_ehco
         elsif previously_eligible_for_funding? && !eligible_for_funding?
-          if gather_workplace_data?
-            :your_work
+          if wizard.query_store.works_in_other?
+            :choose_your_provider
           else
             :ineligible_for_funding
           end
@@ -43,8 +43,8 @@ module Forms
         :about_ehco
       elsif eligible_for_funding?
         :possible_funding
-      elsif gather_workplace_data?
-        :your_work
+      elsif wizard.query_store.works_in_other?
+        :choose_your_provider
       else
         :ineligible_for_funding
       end
@@ -119,12 +119,6 @@ module Forms
 
     def eligible_for_funding?
       funding_eligibility_calculator.funded?
-    end
-
-    def gather_workplace_data?
-      return if eligible_for_funding?
-
-      ineligible_institution_type? && query_store.inside_catchment?
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator

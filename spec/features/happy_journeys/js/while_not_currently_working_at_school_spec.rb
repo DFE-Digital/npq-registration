@@ -55,15 +55,22 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("In a hospital school", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
+      page.fill_in "What is your role?", with: "Trainer"
+    end
+
+    expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
+      page.fill_in "What organisation are you employed by?", with: "Big company"
+    end
+
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("What are you applying for?")
       page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-work", submit_form: true) do
-      expect(page).to have_text("Tell us about where you work")
-      page.fill_in "Name of employer", with: "Big company"
-      page.fill_in "Role", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -88,6 +95,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Email" => "user@example.com",
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "What setting do you work in?" => "Other",
+          "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Lead provider" => "Teach First",
           "Role" => "Trainer",
@@ -122,6 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
       "employment_role" => "Trainer",
+      "employment_type" => "hospital_school",
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
@@ -147,6 +156,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_id" => "6",
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
+        "employment_type" => "hospital_school",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
         "full_name" => "John Doe",

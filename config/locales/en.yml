@@ -56,12 +56,18 @@ en:
             email:
               blank: Email can’t be blank
               invalid: Enter a valid email address
-        forms/your_work:
+        forms/your_employment:
+          attributes:
+            employment_type:
+              blank: Select an employment type
+        forms/your_role:
+          attributes:
+            employment_role:
+              blank: Enter your employment role
+        forms/your_employer:
           attributes:
             employer_name:
               blank: Enter the name of your employer
-            employment_role:
-              blank: Enter your employment role
         forms/teacher_reference_number:
           attributes:
             trn_knowledge:
@@ -172,9 +178,31 @@ en:
       local_authority_maintained_nursery: Local authority maintained nursery
       preschool_class_as_part_of_school: Preschool class that's part of a school
       private_nursery: Private nursery
+
     work_setting:
       early_years_or_childcare: Early years or childcare
       a_school: A school
       an_academy_trust: An academy trust
       a_16_to_19_educational_setting: A 16 to 19 educational setting
       other: Other
+
+  helpers:
+    legend:
+      registration_wizard:
+        employment_type: "How are you employed?"
+    hint:
+      registration_wizard:
+        employment_role: "For example: Administrator, business manager"
+        employer_name: "For example 'Essex County Council', or 'I'm self employed'"
+    label:
+      registration_wizard:
+        employment_type_options:
+          local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
+          hospital_school: "In a hospital school"
+          young_offender_institution: "In a young offender institution"
+          local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          other: "Other"
+
+        employment_role: "What is your role?"
+
+        employer_name: "What organisation are you employed by?"
