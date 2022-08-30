@@ -67,8 +67,6 @@ class RegistrationWizard
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    work_setting = store["work_setting"]
-
     array << OpenStruct.new(key: "What setting do you work in?",
                             value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
                             change_step: :work_setting)
