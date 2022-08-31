@@ -1,12 +1,15 @@
-name: Promote to sandbox
+name: Deploy to Sandbox
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-      # this step is not ideal as we should be using contents from docker image
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -27,14 +30,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
-      - name: Tag docker image from staging for sandbox
-        shell: bash
-        run: |
-          docker pull dfedigital/early-careers-framework-staging:npq-registration-staging
-          docker tag dfedigital/early-careers-framework-staging:npq-registration-staging dfedigital/early-careers-framework-staging:npq-registration-sandbox
-          docker push dfedigital/early-careers-framework-staging:npq-registration-sandbox
-          export DOCKER_IMAGE_ID=$(docker image ls -q dfedigital/early-careers-framework-staging:npq-registration-sandbox)
-          echo "DOCKER_IMAGE_ID=$DOCKER_IMAGE_ID" >> $GITHUB_ENV
+      - name: Build and push docker image
+        uses: docker/build-push-action@v2
+        id: docker_build_push
+        with:
+          context: .
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+            GIT_COMMIT_SHA=${{ github.sha }}
+          push: true
+          tags: dfedigital/early-careers-framework-staging:npq-registration-sandbox
 
       - name: Deploy to Gov.uk PaaS
         id: deploy-to-paas
@@ -55,7 +60,7 @@ jobs:
           cf target -o "${{ env.PAAS_ORGANISATION }}" -s "${{ env.PAAS_SPACE }}"
           cf push "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --manifest ./config/manifests/"${{ env.ENV_STUB }}"-manifest.yml \
-            --var DOCKER_IMAGE_ID="${{ env.DOCKER_IMAGE_ID }}" \
+            --var DOCKER_IMAGE_ID="${{ steps.docker_build_push.outputs.digest }}" \
             --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_SANDBOX }}" \
             --var GOVUK_NOTIFY_API_KEY="${{ secrets.GOVUK_NOTIFY_API_KEY_SANDBOX }}" \
             --var ECF_APP_BEARER_TOKEN="${{ secrets.ECF_APP_BEARER_TOKEN_SANDBOX }}" \
@@ -63,3 +68,9 @@ jobs:
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling
+
+      - name: Tag deployment
+        run: |
+          export TAG_FOR_RELEASE=sandbox-release-$(date +%Y-%m-%d-%H-%M)-$(git rev-parse --short HEAD)
+          git tag --force $TAG_FOR_RELEASE
+          git push --force origin refs/tags/$TAG_FOR_RELEASE
