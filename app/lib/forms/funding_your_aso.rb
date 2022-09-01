@@ -20,6 +20,13 @@ module Forms
       :aso_funding_not_available
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :aso_funding_choice,
+        options:,
+      )
+    end
+
     def options
       [
         build_option_struct(value: "school", link_errors: true),
