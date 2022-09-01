@@ -157,6 +157,9 @@ en:
               taken: This email has already been registered for interest
 
   helpers:
+    title:
+      registration_wizard:
+        about_ehco: "Early Headship Coaching Offer"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
