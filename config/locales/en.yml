@@ -119,7 +119,8 @@ en:
         forms/choose_private_childcare_provider:
           attributes:
             institution_identifier:
-              invalid: No private childcare providers with the URN %{urn} were found, please try again
+              no_results: No private childcare providers with the URN %{urn} were found, please try again
+              invalid: No matching private childcare provider found
         forms/choose_school:
           attributes:
             institution_name:

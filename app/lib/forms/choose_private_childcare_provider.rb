@@ -4,10 +4,9 @@ module Forms
 
     attr_accessor :institution_name, :institution_identifier
 
-    validates :institution_identifier, format: { with: /\APrivateChildcareProvider-.+\z/, unless: -> { institution_identifier.blank? || institution_identifier == "other" } }
     validates :institution_name, length: { maximum: 64 }
 
-    validate :validate_institution_exists
+    validate :validate_institution_identifier
     validate :validate_private_childcare_provider_name_returns_results
 
     def self.permitted_params
@@ -53,12 +52,16 @@ module Forms
       end
     end
 
-    def validate_institution_exists
+    def validate_institution_identifier
       return if no_js_fallback_search_loop?
       return if institution_identifier.blank?
+
+      errors.add(:institution_identifier, :invalid, urn: institution_identifier) unless
+        institution_identifier.start_with?("PrivateChildcareProvider-")
+
       return if institution(source: institution_identifier).present?
 
-      errors.add(:institution_identifier, :invalid, urn: institution_identifier)
+      errors.add(:institution_identifier, :no_results, urn: institution_identifier.split("-").last)
     end
   end
 end
