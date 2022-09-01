@@ -26,6 +26,10 @@ module Forms
       :npqh_status
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(name: :aso_headteacher, options:)
+    end
+
     def options
       [
         build_option_struct(value: "yes", link_errors: true),
