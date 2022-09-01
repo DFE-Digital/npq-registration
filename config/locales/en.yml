@@ -163,6 +163,7 @@ en:
         aso_funding_not_available: "DfE scholarship funding not available"
         aso_possible_funding: "You may qualify for DfE scholarship funding"
         aso_previously_funded: "DfE scholarship funding not available"
+        aso_unavailable: "You cannot register for the Early Headship Coaching Offer"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"

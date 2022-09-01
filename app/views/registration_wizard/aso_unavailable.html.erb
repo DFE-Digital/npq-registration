@@ -1,26 +1,19 @@
-<% content_for :title do %>
-  You cannot register for the Early Headship Coaching Offer
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">You cannot register for the Early Headship Coaching Offer</h1>
+
+  <p class="govuk-body">You do not meet the eligibility criteria for taking the Early Headship Coaching Offer.</p>
+
+  <p class="govuk-body">You can only register if you meet one of the following criteria:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>have completed an NPQH</li>
+    <li>are studying for an NPQH</li>
+    <li>are about to start an NPQH</li>
+  </ul>
 <% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">You cannot register for the Early Headship Coaching Offer</h1>
-
-    <p class="govuk-body">You do not meet the eligibility criteria for taking the Early Headship Coaching Offer.</p>
-
-    <p class="govuk-body">You can only register if you meet one of the following criteria:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>have completed an NPQH</li>
-      <li>are studying for an NPQH</li>
-      <li>are about to start an NPQH</li>
-    </ul>
-  </div>
-</div>
