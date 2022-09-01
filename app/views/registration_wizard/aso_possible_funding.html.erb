@@ -1,28 +1,19 @@
-<% content_for :title do %>
-  You may qualify for DfE scholarship funding
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">If your provider accepts your application, you’ll qualify for DfE scholarship funding</h1>
+
+  <p class="govuk-body">
+    From the information you have provided, DfE scholarship funding should be available for the Early Headship Coaching Offer.
+  </p>
+
+  <p class="govuk-body">
+    Your training provider will give you more details and confirm if you qualify for funding.
+  </p>
+
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
 <% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">If your provider accepts your application, you’ll qualify for DfE scholarship funding</h1>
-
-    <p class="govuk-body">
-      From the information you have provided, DfE scholarship funding should be available for the Early Headship Coaching Offer.
-    </p>
-
-    <p class="govuk-body">
-      Your training provider will give you more details and confirm if you qualify for funding.
-    </p>
-
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>

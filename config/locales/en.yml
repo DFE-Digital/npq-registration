@@ -161,6 +161,7 @@ en:
       registration_wizard:
         about_ehco: "Early Headship Coaching Offer"
         aso_funding_not_available: "DfE scholarship funding not available"
+        aso_possible_funding: "You may qualify for DfE scholarship funding"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
