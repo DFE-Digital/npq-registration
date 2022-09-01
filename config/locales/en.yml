@@ -167,6 +167,7 @@ en:
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
+        aso_new_headteacher: "Are you in your first 5 years of a headship?"
         kind_of_nursery: "What kind of nursery do you work in?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
