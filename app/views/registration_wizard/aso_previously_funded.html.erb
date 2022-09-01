@@ -1,34 +1,27 @@
-<% content_for :title do %>
-  DfE scholarship funding not available
-<% end %>
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+  <p class="govuk-body">Our records show that you are already registered to study <b>Early Headship Coaching Offer</b> (previously known as the Additional Support Offer).</p>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>
+      You can only receive scholarship funding to study this offer with one provider. If you do not wish to proceed with your current provider you will need to contact them.
+    </li>
 
-    <p class="govuk-body">Our records show that you are already registered to study <b>Early Headship Coaching Offer</b> (previously known as the Additional Support Offer).</p>
+    <li>
+      If you have previously withdrawn from this offer, then you're not eligible for scholarship funding for the same offer again. If you do not believe you’ve withdrawn from this course please email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>
+    </li>
+  </ul>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        You can only receive scholarship funding to study this offer with one provider. If you do not wish to proceed with your current provider you will need to contact them.
-      </li>
+  <p class="govuk-body">
+    You can <%= link_to('go back and select an NPQ', registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for the Early Headship Coaching Offer. You'll need to pay for it another way. Contact your course provider to discuss your funding options.
+  </p>
 
-      <li>
-        If you have previously withdrawn from this offer, then you're not eligible for scholarship funding for the same offer again. If you do not believe you’ve withdrawn from this course please email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>
-      </li>
-    </ul>
-
-    <p class="govuk-body">
-      You can <%= link_to('go back and select an NPQ', registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for the Early Headship Coaching Offer. You'll need to pay for it another way. Contact your course provider to discuss your funding options.
-    </p>
-
-    <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
-  </div>
-</div>
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+<% end  %>
