@@ -6,7 +6,7 @@ module Helpers
       expect_page_to_have(path:, submit_form:, submit_button_text:, axe_check:, &block)
     end
 
-    def expect_page_to_have(path:, submit_form: false, submit_button_text: "Continue", axe_check: true, &block)
+    def expect_page_to_have(path:, submit_form: false, click_continue: false, submit_button_text: "Continue", axe_check: true, &block)
       expect(page.current_path).to eql(path)
 
       if axe_check && Capybara.current_driver != :rack_test
@@ -16,6 +16,7 @@ module Helpers
       block.call if block_given?
 
       page.click_button(submit_button_text) if submit_form
+      page.click_link("Continue") if click_continue
     end
 
     def expect_check_answers_page_to_have_answers(values)
