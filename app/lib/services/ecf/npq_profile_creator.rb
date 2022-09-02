@@ -22,6 +22,7 @@ module Services
           works_in_school: application.works_in_school,
           employer_name: application.employer_name,
           employment_role: application.employment_role,
+          employment_type: application.employment_type,
           cohort: application.cohort,
           targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
           works_in_nursery: application.works_in_nursery,

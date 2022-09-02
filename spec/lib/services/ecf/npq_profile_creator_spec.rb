@@ -37,6 +37,9 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       teacher_catchment: "other",
       teacher_catchment_country:,
+      employment_type: SecureRandom.uuid,
+      employment_role: SecureRandom.uuid,
+      employer_name: SecureRandom.uuid,
     )
   end
 
@@ -81,6 +84,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             works_in_school: application.works_in_school,
             employer_name: application.employer_name,
             employment_role: application.employment_role,
+            employment_type: application.employment_type,
             cohort: 2022,
             targeted_delivery_funding_eligibility: true,
             works_in_nursery: false,
