@@ -79,7 +79,7 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Enter your or your employer's URN")
+      expect(page).to have_text("Enter your or your employer’s URN")
       within ".npq-js-reveal" do
         page.fill_in "private-childcare-provider-picker", with: "EY123"
       end
