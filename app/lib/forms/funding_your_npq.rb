@@ -34,7 +34,7 @@ module Forms
     def options
       [
         build_option_struct(value: "school", link_errors: true),
-        build_option_struct(value: "trust", include_if: works_in_school? && inside_catchment?),
+        (build_option_struct(value: "trust") if works_in_school? && inside_catchment?),
         build_option_struct(value: "self"),
         build_option_struct(value: "another"),
       ].compact.freeze
