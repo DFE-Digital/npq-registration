@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>What kind of nursery do you work in?
+  <%= @form.errors.present? ? "Error: " : nil %><%= t('helpers.legend.registration_wizard.kind_of_nursery') %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,6 @@
 
       <%= f.govuk_radio_buttons_fieldset(:kind_of_nursery,
                                          legend: {
-                                           text: "What kind of nursery do you work in?",
                                            tag: "h1",
                                            size: "xl"
                                          }
@@ -26,7 +25,6 @@
             f.govuk_radio_button(
               :kind_of_nursery,
               nursery_kind,
-              label: { text: t(".#{nursery_kind}") },
               link_errors: index == 0
             )
           %>

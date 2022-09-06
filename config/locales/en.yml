@@ -10,28 +10,9 @@ en:
           trust: My trust is paying
           self: I am paying
           another: My NPQ is being paid in another way
-      forms/funding_your_aso:
-        funding_options:
-          school: My workplace is covering the cost
-          trust: My trust is paying
-          self: I am paying
-          another: The Early Headship Coaching Offer is being paid in another way
       forms/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
-          england: England
-          scotland: Scotland
-          wales: Wales
-          northern_ireland: Northern Ireland
-          jersey_guernsey_isle_of_man: Jersey, Guernsey or the Isle of Man
-          another: Another country
-      forms/npqh_status:
-        status_options:
-          completed_npqh: I have completed an NPQH
-          studying_npqh: I am still studying for an NPQH
-          will_start_npqh: I am about to start an NPQH
-          none: None of the above
-
     errors:
       models:
         forms/chosen_start_date:
@@ -174,29 +155,40 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
-  registration_wizard:
-    kind_of_nursery:
-      local_authority_maintained_nursery: Local authority maintained nursery
-      preschool_class_as_part_of_school: Preschool class that's part of a school
-      private_nursery: Private nursery
-
-    work_setting:
-      early_years_or_childcare: Early years or childcare
-      a_school: A school
-      an_academy_trust: An academy trust
-      a_16_to_19_educational_setting: A 16 to 19 educational setting
-      other: Other
 
   helpers:
     legend:
       registration_wizard:
+        kind_of_nursery: "What kind of nursery do you work in?"
         employment_type: "How are you employed?"
+        work_setting: "What setting do you work in?"
+        funding: "How is your course being paid for?"
+        teacher_catchment: "Where do you work?"
+        works_in_nursery: "Do you work in a nursery?"
     hint:
       registration_wizard:
+        work_setting_options:
+          other: "For example a local authority, at a hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
+        aso_funding_choice_options:
+          another: "For example, I am sharing the costs with my workplace"
+        funding_options:
+          another: "For example, I am sharing the costs with my workplace"
     label:
       registration_wizard:
+        kind_of_nursery_options:
+          local_authority_maintained_nursery: "Local authority maintained nursery"
+          preschool_class_as_part_of_school: "Preschool class that's part of a school"
+          private_nursery: "Private nursery"
+
+        work_setting_options:
+          early_years_or_childcare: "Early years or childcare"
+          a_school: "A school"
+          an_academy_trust: "An academy trust"
+          a_16_to_19_educational_setting: "A 16 to 19 educational setting"
+          other: "Other"
+
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
@@ -207,3 +199,47 @@ en:
         employment_role: "What is your role?"
 
         employer_name: "What organisation are you employed by?"
+
+        aso_funding_choice_options:
+          school: "My workplace is covering the cost"
+          trust: "My trust is paying"
+          self: "I am paying"
+          another: "The Early Headship Coaching Offer is being paid in another way"
+
+        funding_options:
+          school: "My workplace is covering the cost"
+          trust: "My trust is paying"
+          self: "I am paying"
+          another: "My NPQ is being paid in another way"
+
+        teacher_catchment_options:
+          england: "England"
+          scotland: "Scotland"
+          wales: "Wales"
+          northern_ireland: "Northern Ireland"
+          jersey_guernsey_isle_of_man: "Jersey, Guernsey or the Isle of Man"
+          another: "Another country"
+
+        teacher_catchment_country: "Which country do you teach in?"
+
+        npqh_status_options:
+          completed_npqh: I have completed an NPQH
+          studying_npqh: I am still studying for an NPQH
+          will_start_npqh: I am about to start an NPQH
+          none: None of the above
+
+        has_ofsted_urn_options:
+          "yes": "Yes"
+          "no": "No"
+
+        aso_headteacher_options:
+          "yes": "Yes"
+          "no": "No"
+
+        aso_new_headteacher_options:
+          "yes": "Yes"
+          "no": "No"
+
+        works_in_nursery_options:
+          "yes": "Yes"
+          "no": "No"

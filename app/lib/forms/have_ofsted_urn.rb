@@ -41,12 +41,8 @@ module Forms
 
     def options
       [
-        OpenStruct.new(value: "yes",
-                       text: "Yes",
-                       link_errors: true),
-        OpenStruct.new(value: "no",
-                       text: "No",
-                       link_errors: false),
+        build_option_struct(value: "yes", link_errors: true),
+        build_option_struct(value: "no"),
       ]
     end
   end

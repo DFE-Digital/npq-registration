@@ -1,0 +1,15 @@
+<% if radio_option.divider %>
+  <%= form.govuk_radio_divider %>
+<% end  %>
+
+<%= form.govuk_radio_button(question.name, radio_option.value, link_errors: radio_option.link_errors) do %>
+  <% if radio_option.revealed_question.present? %>
+    <%=
+      render(
+        "registration_wizard/shared/questions/#{radio_option.revealed_question.type}",
+        form: form,
+        question: radio_option.revealed_question
+      )
+    %>
+  <% end %>
+<% end  %>

@@ -27,33 +27,11 @@ module Forms
     end
 
     def options
-      options_array.each_with_index.map do |option, index|
-        OpenStruct.new(value: option[:value],
-                       text: option[:text],
-                       link_errors: index.zero?)
-      end
-    end
-
-  private
-
-    def options_array
       [
-        {
-          text: "I have completed an NPQH",
-          value: "completed_npqh",
-        },
-        {
-          text: "I am still studying for an NPQH",
-          value: "studying_npqh",
-        },
-        {
-          text: "I am about to start an NPQH",
-          value: "will_start_npqh",
-        },
-        {
-          text: "None of the above",
-          value: "none",
-        },
+        build_option_struct(value: "completed_npqh", link_errors: true),
+        build_option_struct(value: "studying_npqh"),
+        build_option_struct(value: "will_start_npqh"),
+        build_option_struct(value: "none", divider: true),
       ]
     end
   end

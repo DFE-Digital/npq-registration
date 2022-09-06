@@ -22,14 +22,15 @@
             }
           ) do %>
         <% @form.options.each do |struct| %>
-          <% if @form.options.last == struct %>
+          <% if struct.divider %>
             <%= f.govuk_radio_divider %>
           <% end %>
 
-          <%= f.govuk_radio_button :npqh_status, struct.value,
-            label: { text: struct.text },
-            hint: { text: struct.hint },
-            link_errors: struct.link_errors %>
+          <%=
+            f.govuk_radio_button :npqh_status,
+                                 struct.value,
+                                 link_errors: struct.link_errors
+          %>
         <% end %>
       <% end %>
 

@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>What setting do you work in?
+  <%= @form.errors.present? ? "Error: " : nil %><%= t("helpers.legend.registration_wizard.work_setting") %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,21 +16,16 @@
 
       <%= f.govuk_radio_buttons_fieldset(:work_setting,
                                          legend: {
-                                           text: "What setting do you work in?",
                                            tag: "h1",
                                            size: "xl"
                                          }
                                         ) do %>
-        <%= f.govuk_radio_button(:work_setting, "early_years_or_childcare", label: { text: "Early years or childcare" }, link_errors: true) %>
-        <%= f.govuk_radio_button(:work_setting, "a_school", label: { text: "A school" }) %>
-        <%= f.govuk_radio_button(:work_setting, "an_academy_trust", label: { text: "An academy trust" }) %>
-        <%= f.govuk_radio_button(:work_setting, "a_16_to_19_educational_setting", label: { text: "A 16 to 19 educational setting" }) %>
+        <%= f.govuk_radio_button(:work_setting, "early_years_or_childcare", link_errors: true) %>
+        <%= f.govuk_radio_button(:work_setting, "a_school") %>
+        <%= f.govuk_radio_button(:work_setting, "an_academy_trust") %>
+        <%= f.govuk_radio_button(:work_setting, "a_16_to_19_educational_setting") %>
         <%= f.govuk_radio_divider %>
-        <%= f.govuk_radio_button(:work_setting,
-          "other",
-          label: { text: "Other" },
-          hint: { text: "For example a local authority, at a hospital school or young offender institution"  },
-        ) %>
+        <%= f.govuk_radio_button(:work_setting, "other") %>
       <% end %>
 
       <%= f.govuk_submit %>

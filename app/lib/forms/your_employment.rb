@@ -19,11 +19,11 @@ module Forms
 
     def options
       [
-        build_option(value: "local_authority_virtual_school", link_errors: true),
-        build_option(value: "hospital_school"),
-        build_option(value: "young_offender_institution"),
-        build_option(value: "local_authority_supply_teacher"),
-        build_option(value: "other", divider: true),
+        build_option_struct(value: "local_authority_virtual_school", link_errors: true),
+        build_option_struct(value: "hospital_school"),
+        build_option_struct(value: "young_offender_institution"),
+        build_option_struct(value: "local_authority_supply_teacher"),
+        build_option_struct(value: "other", divider: true),
       ].freeze
     end
 
@@ -33,19 +33,6 @@ module Forms
 
     def previous_step
       :qualified_teacher_check
-    end
-
-  private
-
-    def build_option(value:, link_errors: false, divider: false)
-      options = {
-        value:,
-        link_errors:,
-      }
-
-      options[:divider] = divider if divider
-
-      OpenStruct.new(options)
     end
   end
 end

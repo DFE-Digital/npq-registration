@@ -7,12 +7,11 @@
     }
   ) do
 %>
-  <% question.options.each do |struct| %>
-    <% if struct.divider %>
-      <%= form.govuk_radio_divider %>
-    <% end  %>
-
-    <%= form.govuk_radio_button(question.name, struct.value, link_errors: struct.link_errors) %>
-
-  <% end %>
+  <%=
+    render(
+      partial: "registration_wizard/shared/questions/radio_option",
+      locals: { form: form, question: question },
+      collection: question.options
+    )
+  %>
 <% end  %>

@@ -22,19 +22,10 @@ module Forms
 
     def options
       [
-        OpenStruct.new(value: "school",
-                       text: "My workplace is covering the cost",
-                       link_errors: true),
-        OpenStruct.new(value: "trust",
-                       text: "My trust is paying",
-                       link_errors: false),
-        OpenStruct.new(value: "self",
-                       text: "I am paying",
-                       link_errors: false),
-        OpenStruct.new(value: "another",
-                       text: "The Early Headship Coaching Offer is being paid in another way",
-                       hint: "For example, I am sharing the costs with my workplace",
-                       link_errors: false),
+        build_option_struct(value: "school", link_errors: true),
+        build_option_struct(value: "trust"),
+        build_option_struct(value: "self"),
+        build_option_struct(value: "another"),
       ].freeze
     end
   end

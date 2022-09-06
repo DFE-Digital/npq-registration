@@ -64,13 +64,11 @@ class RegistrationWizard
     array = []
 
     array << OpenStruct.new(key: "Where do you work?",
-                            value: query_store.where_teach_humanized,
+                            value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    work_setting = store["work_setting"]
-
     array << OpenStruct.new(key: "What setting do you work in?",
-                            value: I18n.t("registration_wizard.work_setting.#{work_setting}"),
+                            value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
                             change_step: :work_setting)
 
     array << OpenStruct.new(key: "Full name",
@@ -97,14 +95,14 @@ class RegistrationWizard
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Do you work in a nursery?",
-                              value: store["works_in_nursery"].capitalize,
+                              value: I18n.t(store["works_in_nursery"], scope: "helpers.label.registration_wizard.works_in_nursery_options"),
                               change_step: :work_in_nursery)
 
       if query_store.works_in_nursery?
         kind_of_nursery = store["kind_of_nursery"]
 
         array << OpenStruct.new(key: "Type of nursery",
-                                value: I18n.t("registration_wizard.kind_of_nursery.#{kind_of_nursery}"),
+                                value: I18n.t(kind_of_nursery, scope: "helpers.label.registration_wizard.kind_of_nursery_options"),
                                 change_step: :kind_of_nursery)
       end
 
@@ -115,7 +113,7 @@ class RegistrationWizard
                                   change_step: :have_ofsted_urn)
                  else
                    OpenStruct.new(key: "Do you have a URN?",
-                                  value: store["has_ofsted_urn"].capitalize,
+                                  value: I18n.t(store["has_ofsted_urn"], scope: "helpers.label.registration_wizard.has_ofsted_urn_options"),
                                   change_step: :have_ofsted_urn)
                  end
       end
@@ -154,31 +152,31 @@ class RegistrationWizard
     unless eligible_for_funding?
       if course.aso?
         array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                value: I18n.t(store["aso_funding_choice"], scope: "helpers.label.registration_wizard.aso_funding_choice_options"),
                                 change_step: :funding_your_aso)
       elsif course.ehco?
         array << OpenStruct.new(key: "How is your EHCO being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "activemodel.attributes.forms/funding_your_aso.funding_options"),
+                                value: I18n.t(store["aso_funding_choice"], scope: "helpers.label.registration_wizard.aso_funding_choice_options"),
                                 change_step: :funding_your_aso)
       elsif query_store.works_in_school? || query_store.works_in_childcare?
         array << OpenStruct.new(key: "How is your NPQ being paid for?",
-                                value: I18n.t(store["funding"], scope: "activemodel.attributes.forms/funding_your_npq.funding_options"),
+                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
                                 change_step: :funding_your_npq)
       end
     end
 
     if course.ehco?
       array << OpenStruct.new(key: "Have you completed an NPQH?",
-                              value: I18n.t(store["npqh_status"], scope: "activemodel.attributes.forms/npqh_status.status_options"),
+                              value: I18n.t(store["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options"),
                               change_step: :npqh_status)
 
       array << OpenStruct.new(key: "Are you a headteacher?",
-                              value: store["aso_headteacher"].capitalize,
+                              value: I18n.t(store["aso_headteacher"], scope: "helpers.label.registration_wizard.aso_headteacher_options"),
                               change_step: :aso_headteacher)
 
       if store["aso_headteacher"] == "yes"
         array << OpenStruct.new(key: "Are you in your first 5 years of a headship?",
-                                value: store["aso_new_headteacher"].capitalize,
+                                value: I18n.t(store["aso_new_headteacher"], scope: "helpers.label.registration_wizard.aso_new_headteacher_options"),
                                 change_step: :aso_new_headteacher)
       end
     end

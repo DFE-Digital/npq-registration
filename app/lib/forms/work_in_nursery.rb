@@ -29,5 +29,12 @@ module Forms
     def works_in_nursery?
       works_in_nursery == "yes"
     end
+
+    def options
+      [
+        build_option_struct(value: "yes", link_errors: true),
+        build_option_struct(value: "no"),
+      ]
+    end
   end
 end

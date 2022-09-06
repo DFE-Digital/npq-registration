@@ -66,7 +66,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     public_nursery_type_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
-    public_nursery_type = I18n.t("registration_wizard.kind_of_nursery.#{public_nursery_type_key}")
+    public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("What kind of nursery do you work in?")
