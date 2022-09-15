@@ -1,40 +1,33 @@
-<% content_for :title do %>
-  Early Headship Coaching Offer
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+  ) do
+%>
+  <h1 class="govuk-heading-xl">Early Headship Coaching Offer</h1>
+
+  <p class="govuk-body">The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.</p>
+
+  <h2 class="govuk-heading-m">Who is this for?</h2>
+
+  <p class="govuk-body">You can register for the Early Headship Coaching Offer if you:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>have completed an NPQH</li>
+    <li>are studying for an NPQH</li>
+    <li>are about to start an NPQH</li>
+  </ul>
+
+  <h2 class="govuk-heading-m">How is this paid for?</h2>
+
+  <p class="govuk-body">
+    You may be eligible for DfE scholarship funding if you're employed in a state-funded school or a state-funded 16 to 19 educational setting in England upon starting the training.
+  </p>
+
+  <p class="govuk-body">Or you can pay the cost of your Early Headship Coaching Offer another way.</p>
+
+  <p class="govuk-body"><%= govuk_link_to "Read more about the Early Headship Coaching Offer.", "https://www.gov.uk/government/publications/national-professional-qualifications-npqs-reforms/national-professional-qualifications-npqs-reforms#additional-support-offer-for-the-npq-in-headship" %></p>
+
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
 <% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Early Headship Coaching Offer</h1>
-
-    <p class="govuk-body">The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.</p>
-
-    <h2 class="govuk-heading-m">Who is this for?</h2>
-
-    <p class="govuk-body">You can register for the Early Headship Coaching Offer if you:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>have completed an NPQH</li>
-      <li>are studying for an NPQH</li>
-      <li>are about to start an NPQH</li>
-    </ul>
-
-    <h2 class="govuk-heading-m">How is this paid for?</h2>
-
-    <p class="govuk-body">
-      You may be eligible for DfE scholarship funding if you're employed in a state-funded school or a state-funded 16 to 19 educational setting in England upon starting the training.
-    </p>
-
-    <p class="govuk-body">Or you can pay the cost of your Early Headship Coaching Offer another way.</p>
-
-    <p class="govuk-body"><%= govuk_link_to "Read more about the Early Headship Coaching Offer.", "https://www.gov.uk/government/publications/national-professional-qualifications-npqs-reforms/national-professional-qualifications-npqs-reforms#additional-support-offer-for-the-npq-in-headship" %></p>
-
-    <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
-  </div>
-</div>

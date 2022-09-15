@@ -117,7 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/aso-funding-not-available", submit_form: true) do
+    expect_page_to_have(path: "/registration/aso-funding-not-available", click_continue: true) do
       expect(page).to have_selector "h1", text: "DfE scholarship funding is not available"
     end
 
