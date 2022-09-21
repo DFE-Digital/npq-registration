@@ -51,7 +51,7 @@ end
 
 group :test do
   gem "factory_bot_rails"
-  gem "shoulda-matchers", "~> 5.1"
+  gem "shoulda-matchers", "~> 5.2"
   gem "simplecov", require: false
   gem "site_prism"
   gem "webdrivers"
