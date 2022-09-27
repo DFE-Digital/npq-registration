@@ -10,6 +10,7 @@ SecureHeaders::Configuration.default do |config|
   config.referrer_policy = %w[origin-when-cross-origin strict-origin-when-cross-origin]
 
   google_analytics = %w[www.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
+  tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
 
   config.csp = SecureHeaders::OPT_OUT
 
@@ -23,7 +24,7 @@ SecureHeaders::Configuration.default do |config|
     form_action: %w['self'],
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
-    img_src: %W['self' data: *.gov.uk] + google_analytics,
+    img_src: %W['self' data: *.gov.uk] + google_analytics + tracking_pixels,
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk] + google_analytics,
