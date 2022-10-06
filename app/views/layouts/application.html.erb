@@ -24,6 +24,10 @@
 
     <%= render partial: "shared/analytics/google" %>
 
+    <% if show_tracking_pixels? && Rails.env.production? %>
+      <%= render partial: "shared/analytics/tracking_pixels" %>
+    <% end %>
+
     <% if Rails.env.development? %>
       <script>
         console.log(<%= session.to_json.html_safe %>)
