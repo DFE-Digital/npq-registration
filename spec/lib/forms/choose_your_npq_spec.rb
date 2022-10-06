@@ -120,7 +120,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         end
 
         context "when lead provider is not valid for new course" do
-          let(:lead_providers) { LeadProvider.where.not(id: LeadProvider.for(course:)) }
+          let(:lead_providers) { [LeadProvider.create(name: :foo)] }
 
           it "redirects you towards picking your provider flow" do
             expect(subject.next_step).to eql(:ineligible_for_funding)
