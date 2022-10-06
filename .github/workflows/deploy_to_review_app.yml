@@ -1,4 +1,5 @@
 name: Push PR to Review App
+
 on:
   pull_request:
     branches: [ main ]
@@ -65,6 +66,10 @@ jobs:
             --var DOCKER_IMAGE_ID="${{ steps.docker_build_push.outputs.digest }}" \
             --var SECRET_KEY_BASE="${{ secrets.RAILS_SECRET_KEY_BASE_DEV }}" \
             --var GOVUK_NOTIFY_API_KEY="${{ secrets.GOVUK_NOTIFY_API_KEY_DEV }}" \
+            --var TRA_OIDC_DOMAIN="${{ secrets.TRA_OIDC_DOMAIN_DEV }}" \
+            --var TRA_OIDC_CLIENT_ID="${{ secrets.TRA_OIDC_CLIENT_ID_DEV }}" \
+            --var TRA_OIDC_CLIENT_SECRET="${{ secrets.TRA_OIDC_CLIENT_SECRET_DEV }}" \
+            --var TRA_OIDC_REDIRECT_URI="${{ secrets.TRA_OIDC_REDIRECT_URI_DEV }}" \
             --var APP_NAME="${{ env.APP_NAME }}" \
             --var ENV_STUB="${{ env.ENV_STUB }}" \
             --var ENV_STUB_DB="${{ env.ENV_STUB_DB }}" \
