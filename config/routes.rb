@@ -28,10 +28,6 @@ Rails.application.routes.draw do
   get "/accessibility-statement", to: "pages#show", page: "accessibility"
   get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
 
-  get "/faqs/early-years", to: "pages#show", page: "faqs/early-years"
-  get "/faqs/schools", to: "pages#show", page: "faqs/schools"
-  get "/faqs/other-users", to: "pages#show", page: "faqs/other-users"
-
   resource :cookie_preferences do
     member do
       post "hide"
