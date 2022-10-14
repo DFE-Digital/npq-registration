@@ -77,8 +77,8 @@ en:
         forms/choose_your_npq:
           attributes:
             course_id:
-              blank: Choose a National Professional Qualification
-              invalid: Choose a valid National Professional Qualification
+              blank: Choose a national professional qualification
+              invalid: Choose a valid national professional qualification
         forms/choose_your_provider:
           attributes:
             lead_provider_id:

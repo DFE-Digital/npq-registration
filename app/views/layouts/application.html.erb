@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <% if content_for?(:title) %>
-      <title><%= content_for(:title) %> - Register for a National Professional Qualification</title>
+      <title><%= content_for(:title) %> - Register for a national professional qualification</title>
     <% else %>
-      <title>Register for a National Professional Qualification</title>
+      <title>Register for a national professional qualification</title>
     <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -63,7 +63,7 @@
         </div>
 
         <div class="govuk-header__content">
-          <%= link_to "Register for a National Professional Qualification", "/", class: "govuk-header__link govuk-header__link--service-name" %>
+          <%= link_to "Register for a national professional qualification", "/", class: "govuk-header__link govuk-header__link--service-name" %>
 
           <% if current_user.admin? %>
             <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide navigation menu">Menu</button>
@@ -82,7 +82,7 @@
     <aside class="govuk-width-container">
       <%= render GovukComponent::PhaseBannerComponent.new(
         tag: { text: 'Beta' },
-        text: "This is a new service – #{govuk_mail_to("continuing-professional-development@digital.education.gov.uk", "give feedback or report a problem", subject: "Feedback about Register for a National Professional Qualification (NPQ)")}".html_safe
+        text: "This is a new service – #{govuk_mail_to("continuing-professional-development@digital.education.gov.uk", "give feedback or report a problem", subject: "Feedback about Register for a national professional qualification (NPQ)")}".html_safe
       ) %>
     </aside>
 
