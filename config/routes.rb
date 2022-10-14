@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get "/cookies", to: "pages#show", page: "cookies"
   get "/privacy-policy", to: "pages#show", page: "privacy_policy"
   get "/accessibility-statement", to: "pages#show", page: "accessibility"
+  get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
 
   get "/faqs/early-years", to: "pages#show", page: "faqs/early-years"
   get "/faqs/schools", to: "pages#show", page: "faqs/schools"

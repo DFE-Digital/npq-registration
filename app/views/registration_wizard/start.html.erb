@@ -2,42 +2,17 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Register for a national professional qualification (NPQ)</h1>
 
-    <p class="govuk-body">You will be able to use this service to register:</p>
+    <p class="govuk-body">Use this service to register for an NPQ or the early headship coaching offer.</p>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>to study for an NPQ</li>
-      <li>for the Early Headship Coaching Offer</li>
-    </ul>
-
-    <h2 class="govuk-heading-m">Frequently asked questions</h2>
-
-    <p class="govuk-body">Read our FAQs if you:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        work in
-        <%= govuk_link_to("early years or childcare", "/faqs/early-years") %>
-      </li>
-      <li>
-        work in a
-        <%= govuk_link_to("school, academy trust or 16 to 19 educational setting", "/faqs/schools") %>
-      </li>
-      <li>
-        <%= govuk_link_to("do not work in a school, childcare or early years", "/faqs/other-users") %>,
-        for example you work in a virtual school, hospital school or young offender institution
-      </li>
-    </ul>
+    <p class="govuk-body">You also need to apply separately with your training provider. They’ll contact you once you’ve registered.</p>
 
     <h2 class="govuk-heading-m">Before you start</h2>
 
-    <p class="govuk-body">You must:</p>
+    <p class="govuk-body"><%= govuk_link_to("Choose an NPQ and provider.", choose_an_npq_and_provider_path) %></p>
 
-    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-6">
-      <li>have a teacher reference number (TRN)</li>
-      <li>have your funding source confirmed – either a scholarship, school, college or personal funding</li>
-      <li>know which NPQ course you want to study</li>
-      <li>have chosen a provider</li>
-    </ul>
+    <p class="govuk-body">If you work in early years or childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %> and get their Ofsted unique reference number (URN) if they have one.</p>
+
+    <p class="govuk-body"><%= govuk_link_to("Check if you have a teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %>. If you’re not a teacher you can still register, but you’ll need to request a TRN. We’ll show you how to do this.</p>
 
     <%= render GovukComponent::StartButtonComponent.new(
           text: "Start now",
