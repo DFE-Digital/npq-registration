@@ -6,6 +6,6 @@ RSpec.feature "Accessibility Statement", type: :feature do
     click_link("Accessibility")
 
     expect(page).to be_axe_clean
-    expect(page).to have_content("Accessibility statement for Register for a national professional qualification service")
+    expect(page).to have_content("Accessibility statement")
   end
 end
