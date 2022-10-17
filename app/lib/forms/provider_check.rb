@@ -21,7 +21,7 @@ module Forms
       when "yes"
         :teacher_catchment
       when "no"
-        :about_npq
+        :choose_an_npq_and_provider
       end
     end
 

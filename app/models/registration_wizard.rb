@@ -254,7 +254,7 @@ private
       teacher_catchment
       work_setting
       provider_check
-      about_npq
+      choose_an_npq_and_provider
       teacher_reference_number
       change_dqt
       dont_have_teacher_reference_number

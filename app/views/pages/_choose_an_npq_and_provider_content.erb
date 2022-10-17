@@ -1,30 +1,17 @@
 <% content_for :title do %>
-  Choosing an NPQ and provider
-<% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
+  Choose an NPQ and provider
 <% end %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl" >Choosing an NPQ and provider</h1>
+    <h1 class="govuk-heading-xl">Choose an NPQ and provider</h1>
 
-    <p class="govuk-body">Speak to your employer about getting support to do an NPQ and for help choosing a training provider.</p>
+    <p class="govuk-body">Visit <a href="https://professional-development-for-teachers-leaders.education.gov.uk/">Professional development for teachers and leaders</a> to see what NPQs are available.</p>
 
-    <h2 class="govuk-heading-m">Available courses</h2>
+    <p class="govuk-body">Your employer can help you choose an NPQ that’s suitable for you. They may also have a recommended provider for your training.</p>
 
-    <p class="govuk-body">
-      Visit <a class="govuk-link" href="https://professional-development-for-teachers-leaders.education.gov.uk/">Professional development for teachers and leaders</a> to find out more about the courses available from September 2022.
-    </p>
+    <p class="govuk-body">Providers include:</p>
 
-    <h2 class="govuk-heading-m">Providers</h2>
-
-    <p class="govuk-body">There are 10 training providers running NPQ courses across England:</p>
-    <p class="govuk-body">They are:</p>
     <ul class="govuk-list govuk-list--bullet">
       <li><a class="govuk-link" href="https://www.ambition.org.uk/blog/how-new-npqs-will-make-professional-development-work-your-school/">Ambition Institute</a></li>
       <li><a class="govuk-link" href="https://www.outstandingleaders.org/npq">Best Practice Network (home of Outstanding Leaders Partnership)</a></li>
@@ -38,8 +25,7 @@
       <li><a class="govuk-link" href="https://www.ucl.ac.uk/ioe/departments-and-centres/centres/ucl-centre-educational-leadership/national-professional-qualification-programmes">UCL Institute of Education</a></li>
     </ul>
 
-    <p class="govuk-body">Some providers may offer different NPQs and have specific criteria depending on your circumstances.</p>
+    <p class="govuk-body">Not every provider will necessarily offer every NPQ. Talk to your employer or check with individual providers for advice.</p>
 
-    <p class="govuk-body">Check with your employer to see if they have recommended accredited partners for NPQ training.</p>
   </div>
 </div>
