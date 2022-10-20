@@ -5,7 +5,7 @@ module RouteConstraints
 
       current_user = User.find_by(id: current_user_id)
 
-      current_user.present? && current_user.respond_to?(:flipper_access?) && current_user.flipper_access?
+      current_user.present? && current_user.flipper_access?
     end
   end
 end
