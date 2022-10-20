@@ -9,7 +9,7 @@ module Helpers
     end
 
     def retrieve_latest_application_user_data
-      latest_application_user&.as_json(except: %i[id created_at updated_at])
+      latest_application_user&.as_json(except: %i[id feature_flag_id created_at updated_at])
     end
 
     def retrieve_latest_application_data

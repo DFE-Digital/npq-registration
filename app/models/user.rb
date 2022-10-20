@@ -6,4 +6,19 @@ class User < ApplicationRecord
   def null_user?
     false
   end
+
+  # Whether this user has admin access to the feature flagging interface
+  def flipper_access?
+    admin? && flipper_admin_access?
+  end
+
+  def flipper_id
+    "User;#{retrieve_or_persist_feature_flag_id}"
+  end
+
+  def retrieve_or_persist_feature_flag_id
+    self.feature_flag_id ||= SecureRandom.uuid
+    save!(validate: false) if feature_flag_id_changed?
+    self.feature_flag_id
+  end
 end
