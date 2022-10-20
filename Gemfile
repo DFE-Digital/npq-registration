@@ -37,7 +37,7 @@ group :development, :test do
   gem "capybara"
   gem "dotenv-rails"
   gem "pry-byebug"
-  gem "rspec-rails", "~> 6.0.0"
+  gem "rspec-rails", "~> 6.0.1"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
 end
