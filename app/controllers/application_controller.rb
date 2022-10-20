@@ -22,7 +22,7 @@ private
   helper_method :feature_flag_id
 
   def current_user
-    logged_in_user || NullUser.new(feature_flag_id: feature_flag_id)
+    logged_in_user || NullUser.new(feature_flag_id:)
   end
   helper_method :current_user
 

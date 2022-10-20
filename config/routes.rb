@@ -38,7 +38,7 @@ Rails.application.routes.draw do
     resources :applications, only: %i[index show]
 
     constraints RouteConstraints::HasFlipperAccess do
-      mount Flipper::UI.app(Flipper) => '/feature_flags'
+      mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
   end
 
