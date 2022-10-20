@@ -11,6 +11,12 @@ module Services
     ].freeze
 
     class << self
+      def initialize_feature_flags
+        FEATURE_FLAG_KEYS.each do |feature_flag_key|
+          Flipper.add(feature_flag_key)
+        end
+      end
+
       def get_an_identity_integration_active_for?(user)
         Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user)
       end
