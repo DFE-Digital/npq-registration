@@ -32,8 +32,6 @@ private
     end
   end
 
-  private
-
   # Use current_user instead!
   def logged_in_user
     User.find_by(id: session[:user_id])
