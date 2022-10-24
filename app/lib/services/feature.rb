@@ -1,25 +1,28 @@
 module Services
   class Feature
-    REGISTRATION_CLOSE_DATE = Time.zone.parse("12 March 2022 00:00")
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
-    REGISTRATION_CLOSED = (REGISTRATION_CLOSE_DATE..REGISTRATION_OPEN_DATE)
+
+    GAI_INTEGRATION_KEY = "Get an Identity integration".freeze
+    REGISTRATION_CLOSED_KEY = "Registration closed".freeze
+
+    FEATURE_FLAG_KEYS = [
+      GAI_INTEGRATION_KEY,
+      REGISTRATION_CLOSED_KEY,
+    ].freeze
 
     class << self
+      def initialize_feature_flags
+        FEATURE_FLAG_KEYS.each do |feature_flag_key|
+          Flipper.add(feature_flag_key)
+        end
+      end
+
+      def get_an_identity_integration_active_for?(user)
+        Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user)
+      end
+
       def registration_closed?
-        features_enabled? && (registration_closed_due_to_timing? || registration_closed_via_env_variable?)
-      end
-
-      # We only enable these feature in prod.
-      def features_enabled?
-        ENV["SERVICE_ENV"] == "production"
-      end
-
-      def registration_closed_due_to_timing?
-        REGISTRATION_CLOSED.cover?(Time.zone.now)
-      end
-
-      def registration_closed_via_env_variable?
-        ENV.fetch("REGISTRATION_CLOSED", "false") == "true"
+        Flipper.enabled?(REGISTRATION_CLOSED_KEY)
       end
     end
   end

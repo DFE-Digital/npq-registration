@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_26_154213) do
+ActiveRecord::Schema.define(version: 2022_10_20_102023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -75,6 +75,22 @@ ActiveRecord::Schema.define(version: 2022_08_26_154213) do
     t.datetime "created_at", precision: 6
     t.datetime "updated_at", precision: 6
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "flipper_features", force: :cascade do |t|
+    t.string "key", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["key"], name: "index_flipper_features_on_key", unique: true
+  end
+
+  create_table "flipper_gates", force: :cascade do |t|
+    t.string "feature_key", null: false
+    t.string "key", null: false
+    t.string "value"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
   create_table "lead_providers", force: :cascade do |t|
@@ -196,6 +212,8 @@ ActiveRecord::Schema.define(version: 2022_08_26_154213) do
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
     t.boolean "admin", default: false
+    t.boolean "flipper_admin_access", default: false
+    t.string "feature_flag_id"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end

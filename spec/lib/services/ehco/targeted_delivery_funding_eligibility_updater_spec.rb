@@ -11,7 +11,6 @@ RSpec.describe Services::Ehco::TargetedDeliveryFundingEligibilityUpdater do
     {
       course: ehco_course,
       targeted_delivery_funding_eligibility: true,
-      created_at: Services::Feature::REGISTRATION_OPEN_DATE + 1.day,
     }
   end
 

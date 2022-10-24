@@ -68,3 +68,8 @@ jobs:
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling
+
+          cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails feature_flags:initialize" \
+            --process worker \
+            --name initialize-feature-flags

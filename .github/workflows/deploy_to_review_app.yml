@@ -74,6 +74,11 @@ jobs:
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling
 
+          cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails feature_flags:initialize" \
+            --process worker \
+            --name initialize-feature-flags
+
       - name: Ensure review app base data is in place
         id: seed-db
         shell: bash
@@ -110,7 +115,6 @@ jobs:
             --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2021-08-31/childminder_agencies.csv, childminder_agencies]\"" \
             --process worker \
             --name import_childminder_agencies
-
 
       - name: comment on PR
         uses: unsplash/comment-on-pr@v1.3.0

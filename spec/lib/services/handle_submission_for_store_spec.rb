@@ -82,6 +82,8 @@ RSpec.describe Services::HandleSubmissionForStore do
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
           "admin" => false,
+          "feature_flag_id" => nil,
+          "flipper_admin_access" => false,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -101,6 +103,8 @@ RSpec.describe Services::HandleSubmissionForStore do
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
           "admin" => false,
+          "feature_flag_id" => nil,
+          "flipper_admin_access" => false,
         })
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({
@@ -169,6 +173,8 @@ RSpec.describe Services::HandleSubmissionForStore do
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
           "admin" => false,
+          "feature_flag_id" => nil,
+          "flipper_admin_access" => false,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -188,6 +194,8 @@ RSpec.describe Services::HandleSubmissionForStore do
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
           "admin" => false,
+          "feature_flag_id" => nil,
+          "flipper_admin_access" => false,
         })
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({

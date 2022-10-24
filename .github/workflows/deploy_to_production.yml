@@ -69,6 +69,11 @@ jobs:
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
             --strategy rolling
 
+          cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails feature_flags:initialize" \
+            --process worker \
+            --name initialize-feature-flags
+
       - name: Tag deployment
         run: |
           export TAG_FOR_RELEASE=prod-release-$(date +%Y-%m-%d-%H-%M)-$(git rev-parse --short HEAD)

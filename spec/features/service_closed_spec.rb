@@ -33,12 +33,10 @@ RSpec.feature "Service is hard closed", type: :feature do
 private
 
   def close_registration!
-    allow(Services::Feature).to receive(:features_enabled?).and_return(true)
-    allow(Services::Feature).to receive(:registration_closed?).and_return(true)
+    Flipper.enable(Services::Feature::REGISTRATION_CLOSED_KEY)
   end
 
   def open_registration!
-    allow(Services::Feature).to receive(:features_enabled?).and_return(true)
-    allow(Services::Feature).to receive(:registration_closed?).and_return(false)
+    Flipper.disable(Services::Feature::REGISTRATION_CLOSED_KEY)
   end
 end

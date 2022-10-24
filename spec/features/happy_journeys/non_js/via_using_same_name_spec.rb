@@ -172,6 +172,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
+      "flipper_admin_access" => false,
       "full_name" => "John Doe",
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
