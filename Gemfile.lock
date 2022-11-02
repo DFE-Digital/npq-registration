@@ -439,6 +439,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    stimulus-rails (1.1.0)
+      railties (>= 6.0.0)
     thor (1.2.1)
     thread_safe (0.3.6)
     timeout (0.3.0)
@@ -538,6 +540,7 @@ DEPENDENCIES
   shoulda-matchers (~> 5.2)
   simplecov
   site_prism
+  stimulus-rails
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers

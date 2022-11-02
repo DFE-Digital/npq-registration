@@ -6,6 +6,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "stub course ecf to identifier mappings"
+  include_context "Enable Get An Identity integration"
 
   scenario "school not in england" do
     stub_participant_validation_request
@@ -34,30 +35,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
-      expect(page).to have_text("What’s your email address?")
-      page.fill_in "What’s your email address?", with: "user@example.com"
-    end
-
-    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
-      expect(page).to have_text("Confirm your email address")
-      expect(page).to have_text("user@example.com")
-
-      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
-
-      page.fill_in("Enter your code", with: code)
-    end
-
-    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
-      expect(page).to have_text("Check your details")
-
-      page.fill_in "Teacher reference number (TRN)", with: "1234567"
-      page.fill_in "Full name", with: "John Doe"
-      page.fill_in "Day", with: "13"
-      page.fill_in "Month", with: "12"
-      page.fill_in "Year", with: "1980"
-      page.fill_in "National Insurance number", with: "AB123456C"
-    end
+    expect(page).not_to have_content("Do you have a TRN?")
 
     School.create!(urn: 100_000, name: "open welsh school", county: "Wrexham", establishment_status_code: "1", establishment_type_code: "30")
 

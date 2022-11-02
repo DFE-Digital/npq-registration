@@ -10,8 +10,22 @@
 <% end %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+  <div
+    <% if Services::Feature.get_an_identity_integration_active_for?(current_user) %>
+      data-controller="get-an-identity-redirect-button"
+    <% end %>
+    class="govuk-grid-column-two-thirds">
+    <%=
+      form_with(
+        model: @form,
+        url: registration_wizard_form_url(@form),
+        scope: 'registration_wizard',
+        method: :patch,
+        data: {
+          "get-an-identity-redirect-button-target": "questionForm"
+        }
+      ) do |f|
+    %>
       <%= f.govuk_error_summary %>
 
       <h1 class="govuk-heading-xl"><%= @form.title %></h1>
@@ -32,11 +46,27 @@
 
       <%= f.govuk_radio_buttons_fieldset(:trn_knowledege, legend: { text: "Do you have a TRN?" } ) do %>
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :trn_knowledge, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
+          <%=
+            f.govuk_radio_button(
+              :trn_knowledge,
+              struct.value,
+              label: { text: struct.text },
+              hint: { text: struct.hint },
+              link_errors: struct.link_errors,
+              data: {
+                action: "get-an-identity-redirect-button#onAnswerChange",
+                "get-an-identity-redirect-button-target": "answerRadio" + struct.value.camelize,
+              }
+            )
+          %>
         <% end %>
       <% end %>
 
       <%= f.govuk_submit %>
+    <% end %>
+
+    <% if Services::Feature.get_an_identity_integration_active_for?(current_user) %>
+      <%= render('shared/get_an_identity/redirect_button', hidden: true, button_text: "Continue to Get an Identity") %>
     <% end %>
   </div>
 </div>

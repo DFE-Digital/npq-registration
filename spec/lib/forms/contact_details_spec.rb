@@ -26,7 +26,7 @@ RSpec.describe Forms::ContactDetails, type: :model do
     let(:store) { {} }
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store:, request:) }
+    let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store:, request:, current_user: create(:user)) }
 
     subject { described_class.new(email: " User@example.com ", wizard:) }
 

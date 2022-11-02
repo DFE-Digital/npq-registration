@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.feature "Email confirmation", type: :feature do
   scenario "going back and changing their email address requires confirmation" do
+    allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+
     visit "/"
     page.click_link("Start now")
     page.choose("Yes", visible: :all)

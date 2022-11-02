@@ -7,19 +7,26 @@ class RegistrationWizard
 
   class InvalidStep < StandardError; end
 
-  attr_reader :current_step, :params, :store, :request
+  attr_reader :current_step, :params, :store, :request, :current_user
 
-  def initialize(current_step:, store:, request:, params: {})
+  def initialize(current_step:, store:, request:, current_user:, params: {})
     current_step = :closed if Services::Feature.registration_closed?
     set_current_step(current_step)
 
+    @current_user = current_user
     @params = params
     @store = store
     @request = request
+
+    load_current_user_into_store
   end
 
   def self.permitted_params_for_step(step)
     "Forms::#{step.to_s.camelcase}".constantize.permitted_params
+  end
+
+  def tra_get_an_identity_omniauth_integration_active?
+    Services::Feature.get_an_identity_integration_active_for?(current_user)
   end
 
   def before_render
@@ -60,6 +67,10 @@ class RegistrationWizard
     form.previous_step.to_s.dasherize
   end
 
+  def skip_step?
+    form.skip_step?
+  end
+
   def answers
     array = []
 
@@ -71,27 +82,29 @@ class RegistrationWizard
                             value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
                             change_step: :work_setting)
 
-    array << OpenStruct.new(key: "Full name",
-                            value: store["full_name"],
-                            change_step: :qualified_teacher_check)
-
-    array << OpenStruct.new(key: "TRN",
-                            value: store["trn"],
-                            change_step: :qualified_teacher_check)
-
-    array << OpenStruct.new(key: "Date of birth",
-                            value: query_store.formatted_date_of_birth,
-                            change_step: :qualified_teacher_check)
-
-    if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-      array << OpenStruct.new(key: "National Insurance number",
-                              value: store["national_insurance_number"],
+    unless tra_get_an_identity_omniauth_integration_active?
+      array << OpenStruct.new(key: "Full name",
+                              value: store["full_name"],
                               change_step: :qualified_teacher_check)
-    end
 
-    array << OpenStruct.new(key: "Email",
-                            value: store["confirmed_email"],
-                            change_step: :contact_details)
+      array << OpenStruct.new(key: "TRN",
+                              value: query_store.trn,
+                              change_step: :qualified_teacher_check)
+
+      array << OpenStruct.new(key: "Date of birth",
+                              value: query_store.formatted_date_of_birth,
+                              change_step: :qualified_teacher_check)
+
+      if form_for_step(:qualified_teacher_check).national_insurance_number.present?
+        array << OpenStruct.new(key: "National Insurance number",
+                                value: store["national_insurance_number"],
+                                change_step: :qualified_teacher_check)
+      end
+
+      array << OpenStruct.new(key: "Email",
+                              value: store["confirmed_email"],
+                              change_step: :contact_details)
+    end
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Do you work in a nursery?",
@@ -201,6 +214,10 @@ class RegistrationWizard
 
 private
 
+  def load_current_user_into_store
+    store["current_user"] = current_user
+  end
+
   def institution_from_store
     institution(source: store["institution_identifier"])
   end
@@ -211,7 +228,7 @@ private
       institution: institution_from_store,
       inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,
-      trn: store["trn"],
+      trn: query_store.trn,
     )
   end
 
@@ -258,6 +275,8 @@ private
       teacher_reference_number
       change_dqt
       dont_have_teacher_reference_number
+      get_an_identity
+      get_an_identity_callback
       contact_details
       confirm_email
       resend_code

@@ -1,12 +1,13 @@
 class RegistrationWizardController < ApplicationController
   def show
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, request:)
+    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, request:, current_user:)
 
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     @wizard.before_render
 
+    return redirect_to registration_wizard_show_path(@wizard.next_step_path) if @wizard.skip_step?
     return redirect_to root_path unless @form.requirements_met?
 
     render @wizard.current_step
@@ -15,20 +16,34 @@ class RegistrationWizardController < ApplicationController
   end
 
   def update
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:)
+    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:, current_user:)
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
-    if @form.valid?
-      if @form.changing_answer? && @form.next_step != :check_answers && !@form.return_to_regular_flow?
-        redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
-      else
-        redirect_to registration_wizard_show_path(@wizard.next_step_path)
+    respond_to do |format|
+      format.html do
+        if @form.valid?
+          if @form.redirect_to_change_path?
+            redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
+          else
+            redirect_to registration_wizard_show_path(@wizard.next_step_path)
+          end
+
+          @wizard.save!
+        else
+          render @wizard.current_step
+        end
       end
 
-      @wizard.save!
-    else
-      render @wizard.current_step
+      format.js do
+        if @form.valid?
+          @wizard.save!
+
+          render "registration_wizard/javascript_responses/#{params[:step].underscore}"
+        else
+          render "registration_wizard/javascript_responses/failed"
+        end
+      end
     end
   end
 

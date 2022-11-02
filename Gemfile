@@ -33,6 +33,7 @@ gem "secure_headers"
 gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
+gem "stimulus-rails"
 gem "webpacker"
 
 gem "net-imap", require: false

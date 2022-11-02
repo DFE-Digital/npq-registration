@@ -7,7 +7,7 @@ RSpec.describe Forms::DqtMismatch do
       "works_in_school" => works_in_school,
       "works_in_childcare" => works_in_childcare }
   end
-  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :dqt_mismatch) }
+  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :dqt_mismatch, current_user: create(:user)) }
 
   subject(:step) { described_class.new.tap { |s| s.wizard = wizard } }
 

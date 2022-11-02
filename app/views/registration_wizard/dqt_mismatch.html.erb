@@ -32,7 +32,7 @@
     <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
       <% summary_list.row do |row|
            row.key { "Teacher reference number (TRN)" }
-           row.value { @wizard.store["trn"] } %>
+           row.value { @wizard.query_store.trn } %>
       <% end %>
 
       <% summary_list.row do |row|

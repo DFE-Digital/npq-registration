@@ -7,6 +7,7 @@ RSpec.describe "registration_wizard/dqt_mismatch.html.erb", type: :view do
       current_step: :dqt_mismatch,
       store:,
       request:,
+      current_user: create(:user),
     )
   end
 

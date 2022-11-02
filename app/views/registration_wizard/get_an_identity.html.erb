@@ -1,0 +1,16 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <h1 class="govuk-heading-xl" >Get an identity</h1>
+
+  <p class="govuk-body">
+    You are now going to be directed to an external service to verify your identity.
+  </p>
+
+  <%= render('shared/get_an_identity/redirect_button') %>
+<% end %>

@@ -20,6 +20,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         current_step:,
         store:,
         request:,
+        current_user: create(:user),
       )
     end
 
@@ -220,6 +221,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         current_step:,
         store:,
         request:,
+        current_user: create(:user),
       )
     end
     let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
@@ -280,6 +282,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         current_step: :choose_your_npq,
         store:,
         request: nil,
+        current_user: create(:user),
       )
     end
 

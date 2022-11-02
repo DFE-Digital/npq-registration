@@ -96,6 +96,11 @@ RSpec.configure do |config|
   config.before(:suite) do
     Rails.application.load_seed
   end
+
+  config.before(:each) do
+    # Set GAI integration to enabled for all users by default
+    allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(true)
+  end
 end
 
 Shoulda::Matchers.configure do |config|

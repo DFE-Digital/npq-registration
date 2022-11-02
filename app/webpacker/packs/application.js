@@ -1,6 +1,7 @@
 require.context('govuk-frontend/govuk/assets');
 
 import '../styles/application.scss';
+import '../controllers';
 import Rails from 'rails-ujs';
 import { initAll } from 'govuk-frontend';
 import accessibleAutocomplete from 'accessible-autocomplete';

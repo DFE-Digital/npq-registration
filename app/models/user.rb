@@ -18,9 +18,15 @@ class User < ApplicationRecord
   def self.find_or_create_from_tra_data_on_uid(provider_data)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
 
+    trn = provider_data.info.trn
+
     user_from_provider_data.assign_attributes(
       email: provider_data.info.email,
+      date_of_birth: provider_data.info.date_of_birth,
+      trn:,
+      trn_verified: trn.present?,
       full_name: provider_data.info.name,
+      national_insurance_number: provider_data.info.nino,
       raw_tra_provider_data: provider_data,
     )
 
@@ -30,10 +36,16 @@ class User < ApplicationRecord
   def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data)
     user_from_provider_data = find_or_initialize_by(provider: nil, uid: nil, email: provider_data.info.email)
 
+    trn = provider_data.info.trn
+
     user_from_provider_data.assign_attributes(
       provider: provider_data.provider,
       uid: provider_data.uid,
+      date_of_birth: provider_data.info.date_of_birth,
+      trn:,
+      trn_verified: trn.present?,
       full_name: provider_data.info.name,
+      national_insurance_number: provider_data.info.nino,
       raw_tra_provider_data: provider_data,
     )
 

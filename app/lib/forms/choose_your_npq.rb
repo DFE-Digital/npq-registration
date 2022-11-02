@@ -61,6 +61,8 @@ module Forms
         else
           :have_ofsted_urn
         end
+      elsif wizard.tra_get_an_identity_omniauth_integration_active?
+        :teacher_reference_number
       else
         :qualified_teacher_check
       end
@@ -103,7 +105,7 @@ module Forms
         institution:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
-        trn: wizard.store["trn"],
+        trn: wizard.query_store.trn,
       ).funded?
     end
 
@@ -113,7 +115,7 @@ module Forms
         institution:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
-        trn: wizard.store["trn"],
+        trn: wizard.query_store.trn,
       )
     end
 
