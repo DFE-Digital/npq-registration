@@ -9,7 +9,7 @@ RSpec.describe Forms::WorkSetting, type: :model do
   describe "#after_save" do
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:) }
+    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:, current_user: create(:user)) }
 
     subject { described_class.new(work_setting:, wizard:) }
 

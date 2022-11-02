@@ -18,7 +18,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       .to_return(status: response_code, body: response_body, headers: {})
   end
 
-  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check) }
+  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
   let(:request) { nil }
   let(:store) do
     { "teacher_catchment" => "england" }
@@ -159,7 +159,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   end
 
   describe "#next_step" do
-    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check) }
+    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
     let(:request) { nil }
     let(:store) do
       { "teacher_catchment" => "england" }
@@ -269,6 +269,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         current_step: :qualified_teacher_check,
         store:,
         request:,
+        current_user: create(:user),
       )
     end
 

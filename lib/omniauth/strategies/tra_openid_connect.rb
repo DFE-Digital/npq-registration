@@ -15,12 +15,31 @@ module Omniauth
 
       uid { raw_info["sub"] }
 
-      info { { name: raw_info["name"], email: raw_info["email"] } }
+      info do
+        {
+          date_of_birth: parsed_date_of_birth,
+          email: raw_info["email"],
+          email_verified: parsed_email_verified,
+          full_name: raw_info["name"],
+          trn: raw_info["trn"],
+        }
+      end
 
       extra { { "raw_info" => raw_info } }
 
       def raw_info
         @raw_info ||= access_token.get("connect/userinfo").parsed
+      end
+
+      def parsed_date_of_birth
+        raw_date_of_birth = raw_info["birthdate"]
+        return if raw_date_of_birth.blank?
+
+        Date.parse(raw_date_of_birth, "%Y-%m-%d")
+      end
+
+      def parsed_email_verified
+        raw_info["email_verified"] == "True"
       end
 
       def build_access_token

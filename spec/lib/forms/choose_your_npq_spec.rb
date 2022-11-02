@@ -51,6 +51,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
             current_step: :choose_your_npq,
             store:,
             request:,
+            current_user: create(:user),
           )
         end
 
@@ -79,10 +80,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           subject.wizard = RegistrationWizard.new(
             current_step: :choose_your_npq,
             store:,
-            request:,
+            request:, current_user: create(:user)
           )
 
-          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding?npq_course_identifier=npq-headship")
+          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
             .with(
               headers: {
                 "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -96,7 +97,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
               },
             )
 
-          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding?npq_course_identifier=npq-leading-teaching")
+          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-leading-teaching")
             .with(
               headers: {
                 "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -137,7 +138,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       subject.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
         store:,
-        request:,
+        request:, current_user: create(:user)
       )
     end
 
@@ -162,8 +163,18 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     context "when inside catchment" do
       let(:teacher_catchment) { "england" }
 
-      it "returns qualified_teacher_check" do
-        expect(subject.previous_step).to eql(:qualified_teacher_check)
+      it "returns teacher_reference_number" do
+        expect(subject.previous_step).to eql(:teacher_reference_number)
+      end
+
+      context "when TRA feature flag is disabled" do
+        before do
+          allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+        end
+
+        it "returns qualified_teacher_check" do
+          expect(subject.previous_step).to eql(:qualified_teacher_check)
+        end
       end
 
       context "when working in school" do
@@ -241,7 +252,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       form.wizard = RegistrationWizard.new(
         current_step: :choose_your_npq,
         store:,
-        request: nil,
+        request: nil, current_user: create(:user)
       )
     end
 

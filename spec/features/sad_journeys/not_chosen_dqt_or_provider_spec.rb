@@ -5,7 +5,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-
+  include_context "Enable Get An Identity integration"
   scenario "Not chosen DQT or provider" do
     visit "/"
     expect(page).to have_text("Before you start")

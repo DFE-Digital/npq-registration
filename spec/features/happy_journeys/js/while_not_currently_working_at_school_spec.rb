@@ -5,7 +5,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-
+  include_context "Enable Get An Identity integration"
   scenario "registration journey while not currently working at school" do
     stub_participant_validation_request
 
@@ -28,30 +28,11 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Other", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
-      expect(page).to have_text("What’s your email address?")
-      page.fill_in "What’s your email address?", with: "user@example.com"
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
-      expect(page).to have_text("Confirm your email address")
-      expect(page).to have_text("user@example.com")
-
-      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
-
-      page.fill_in("Enter your code", with: code)
-    end
-
-    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
-      expect(page).to have_text("Check your details")
-
-      page.fill_in "Teacher reference number (TRN)", with: "1234567"
-      page.fill_in "Full name", with: "John Doe"
-      page.fill_in "Day", with: "13"
-      page.fill_in "Month", with: "12"
-      page.fill_in "Year", with: "1980"
-      page.fill_in "National Insurance number", with: "AB123456C"
-    end
+    expect(page).not_to have_content("Do you have a TRN?")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
@@ -88,11 +69,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Full name" => "John Doe",
-          "TRN" => "1234567",
-          "Date of birth" => "13 December 1980",
-          "National Insurance number" => "AB123456C",
-          "Email" => "user@example.com",
+
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "What setting do you work in?" => "Other",
           "Employment type" => "In a hospital school",
@@ -109,22 +86,22 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect(retrieve_latest_application_user_data).to eq(
-      "active_alert" => false,
+      "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
       "flipper_admin_access" => false,
       "full_name" => "John Doe",
-      "national_insurance_number" => nil,
+      "national_insurance_number" => "AB123456C",
       "otp_expires_at" => nil,
       "otp_hash" => nil,
-      "provider" => nil,
-      "raw_tra_provider_data" => nil,
+      "provider" => "tra_openid_connect",
+      "raw_tra_provider_data" => stubbed_callback_response,
       "trn" => "1234567",
-      "trn_auto_verified" => true,
+      "trn_auto_verified" => false,
       "trn_verified" => true,
-      "uid" => nil,
+      "uid" => user_uid,
     )
 
     expect(retrieve_latest_application_data).to eq(
@@ -153,25 +130,16 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "other",
       "raw_application_data" => {
-        "active_alert" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "confirmed_email" => "user@example.com",
         "course_id" => "6",
-        "date_of_birth" => "1980-12-13",
-        "email" => "user@example.com",
         "employment_type" => "hospital_school",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
-        "full_name" => "John Doe",
         "lead_provider_id" => "9",
-        "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "trn" => "1234567",
-        "trn_auto_verified" => true,
-        "trn_verified" => true,
-        "verified_trn" => "1234567",
+        "trn_knowledge" => "yes",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
         "work_setting" => "other",

@@ -4,7 +4,7 @@ RSpec.describe Forms::ConfirmEmail, type: :model do
   let(:store) { {} }
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-  let(:wizard) { RegistrationWizard.new(current_step: :confirm_email, store:, request:) }
+  let(:wizard) { RegistrationWizard.new(current_step: :confirm_email, store:, request:, current_user: create(:user)) }
 
   before do
     subject.wizard = wizard

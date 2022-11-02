@@ -44,7 +44,7 @@ module Forms
     end
 
     def next_step
-      return :contact_details if work_setting == "other"
+      return :contact_details if work_setting == "other" && !wizard.tra_get_an_identity_omniauth_integration_active?
 
       :teacher_reference_number
     end

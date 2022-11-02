@@ -15,7 +15,15 @@ module Forms
     def next_step
       case trn_knowledge
       when "yes"
-        :contact_details
+        # This should never happen, as the button that would lead here should be replaced
+        # in this scenario with a link to GAI. However, just in case we have this fallback to take
+        # you to an interstitial page that can only go to GAI.
+        # This can happen if JS is disabled.
+        if wizard.tra_get_an_identity_omniauth_integration_active?
+          :get_an_identity
+        else
+          :contact_details
+        end
       when "no-dont-have"
         :dont_have_teacher_reference_number
       end
