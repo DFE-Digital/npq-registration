@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
+  resource :feature_flags, only: [:show]
+
   resources :schools, only: [:index]
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
