@@ -2,7 +2,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: [:tra_openid_connect]
 
   def tra_openid_connect
-    @user = User.from_provider_data(request.env["omniauth.auth"])
+    @user = User.find_or_create_from_provider_data(
+      request.env["omniauth.auth"],
+      feature_flag_id: session["feature_flag_id"],
+    )
 
     if @user.persisted?
       session["user_id"] = @user.id
