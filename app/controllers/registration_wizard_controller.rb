@@ -39,9 +39,9 @@ class RegistrationWizardController < ApplicationController
         if @form.valid?
           @wizard.save!
 
-          render "registration_wizard/javascript_responses/#{params[:step].underscore}"
+          render @wizard.current_step
         else
-          render "registration_wizard/javascript_responses/failed"
+          render "failed_validation"
         end
       end
     end
