@@ -175,9 +175,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "national_insurance_number" => "AB123456C",
       "otp_expires_at" => nil,
       "otp_hash" => nil,
+      "provider" => nil,
+      "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => false,
       "trn_verified" => false,
+      "uid" => nil,
     )
 
     expect(retrieve_latest_application_data).to eq(

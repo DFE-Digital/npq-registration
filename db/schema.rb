@@ -214,8 +214,13 @@ ActiveRecord::Schema.define(version: 2022_10_20_102023) do
     t.boolean "admin", default: false
     t.boolean "flipper_admin_access", default: false
     t.string "feature_flag_id"
+    t.string "provider"
+    t.string "uid"
+    t.jsonb "raw_tra_provider_data"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider"], name: "index_users_on_provider"
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
 end
