@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  devise_for :users,
+             controllers: { omniauth_callbacks: "omniauth" }
+
+  resource :session, only: %i[new show]
+
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
   resources :schools, only: [:index]
