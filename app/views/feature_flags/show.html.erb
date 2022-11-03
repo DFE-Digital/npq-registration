@@ -1,0 +1,23 @@
+<h1 class="govuk-heading-xl">Current User Feature Flags</h1>
+
+<p class="govuk-body">These feature flags states are for the current user. Toggling flags impacts only the current user.</p>
+
+<dl>
+  <% Services::Feature::FEATURE_FLAG_KEYS.each do |feature_flag| %>
+    <% feature_flag_enabled = Flipper.enabled?(feature_flag, current_user) %>
+
+    <dt>
+      <%= feature_flag %>
+      <% if Services::Feature.feature_flag_flippable_by_user?(feature_flag) %>
+        <%= govuk_link_to('Toggle', feature_flags_path(feature_flag: feature_flag, status: feature_flag_enabled ? "off" : "on")) %>
+      <% end %>
+    </dt>
+    <dd>
+      <%= feature_flag_enabled ? "On" : "Off" %>
+    </dd>
+    <br>
+  <% end %>
+
+  <dt>Feature Flag ID</dt>
+  <dd><%= feature_flag_id %></dd>
+</dl>
