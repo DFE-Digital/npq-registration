@@ -5,18 +5,19 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
-  # TODO: What do we do if someone has already registered their email but not via TRA?
-  # Should it hook up to the existing record or deprecate the old one?
-  def self.from_provider_data(provider_data)
-    user = find_or_create_from_tra_data_on_uid(provider_data)
+  def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
+    user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 
     return user if user.persisted?
 
-    find_or_create_from_tra_data_on_unclaimed_email(provider_data)
+    find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
   end
 
-  def self.find_or_create_from_tra_data_on_uid(provider_data)
+  def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
+
+    # Only set this if the user doesn't already have a feature flag profile
+    user_from_provider_data.feature_flag_id ||= feature_flag_id
 
     trn = provider_data.info.trn
 
@@ -33,8 +34,11 @@ class User < ApplicationRecord
     user_from_provider_data.tap(&:save)
   end
 
-  def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data)
+  def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: nil, uid: nil, email: provider_data.info.email)
+
+    # Only set this if the user doesn't already have a feature flag profile
+    user_from_provider_data.feature_flag_id ||= feature_flag_id
 
     trn = provider_data.info.trn
 
