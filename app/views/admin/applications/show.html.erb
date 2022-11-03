@@ -21,6 +21,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'User GAI ID' }
+        row.value { @application.user.uid || "-" }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'Email' }
         row.value { @application.user.email }
       end %>
