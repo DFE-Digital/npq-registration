@@ -3,7 +3,7 @@ module Services
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
     GAI_INTEGRATION_KEY = "Get an Identity integration".freeze
-    REMOVE_USER_FROM_GAI_PILOT_KEY = "User from Get an Identity pilot (for use with individual user, do not change)".freeze
+    REMOVE_USER_FROM_GAI_PILOT_KEY = "Disable Get an Identity pilot for user (for use with individual users)".freeze
     REGISTRATION_CLOSED_KEY = "Registration closed".freeze
     CURRENT_USER_FEATURE_FLAG_MANAGER_ACTIVE = "Current user feature flag manager active".freeze
 
