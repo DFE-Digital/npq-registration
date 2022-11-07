@@ -1,5 +1,6 @@
 class OmniauthController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: [:tra_openid_connect]
+  before_action :remove_from_get_an_identity_pilot, only: :tra_openid_connect, if: :tra_response_excludes_trn?
 
   def tra_openid_connect
     @user = User.find_or_create_from_provider_data(
@@ -46,5 +47,17 @@ private
     )
 
     registration_wizard_show_path(wizard.next_step_path)
+  end
+
+  def tra_response_excludes_trn?
+    request.env["omniauth.auth"].info.trn.blank?
+  end
+
+  def remove_from_get_an_identity_pilot
+    # Turn off the feature flag for this user
+    Services::Feature.remove_user_from_get_an_identity_pilot(current_user)
+
+    # Redirect to the page the user would have gone to if they hadn't been sent to the GAI
+    redirect_to registration_wizard_show_path(:"contact-details")
   end
 end

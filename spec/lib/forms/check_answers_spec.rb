@@ -42,7 +42,8 @@ RSpec.describe Forms::CheckAnswers do
 
     context "when TRA feature flag is enabled" do
       before do
-        allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(true)
+        allow(Flipper).to receive(:enabled?).and_call_original
+        allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
       end
 
       context "when verified_trn and entered trn differ" do
@@ -72,7 +73,8 @@ RSpec.describe Forms::CheckAnswers do
 
     context "when TRA feature flag is disabled" do
       before do
-        allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+        allow(Flipper).to receive(:enabled?).and_call_original
+allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
       end
 
       context "when verified_trn and entered trn differ" do
