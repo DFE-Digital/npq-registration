@@ -3,6 +3,7 @@ module Services
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
     GAI_INTEGRATION_KEY = "Get an Identity integration".freeze
+    REMOVE_USER_FROM_GAI_PILOT_KEY = "User from Get an Identity pilot (for use with individual user, do not change)".freeze
     REGISTRATION_CLOSED_KEY = "Registration closed".freeze
     CURRENT_USER_FEATURE_FLAG_MANAGER_ACTIVE = "Current user feature flag manager active".freeze
 
@@ -10,6 +11,7 @@ module Services
       GAI_INTEGRATION_KEY,
       REGISTRATION_CLOSED_KEY,
       CURRENT_USER_FEATURE_FLAG_MANAGER_ACTIVE,
+      REMOVE_USER_FROM_GAI_PILOT_KEY,
     ].freeze
 
     # When CURRENT_USER_FEATURE_FLAG_MANAGER_ACTIVE is turned on users can visit /feature_flags
@@ -39,7 +41,12 @@ module Services
       end
 
       def get_an_identity_integration_active_for?(user)
-        Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user)
+        Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user) &&
+          !Flipper.enabled?(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
+      end
+
+      def remove_user_from_get_an_identity_pilot(user)
+        Flipper.enable_actor(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
       end
 
       def registration_closed?

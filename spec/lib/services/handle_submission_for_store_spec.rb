@@ -3,7 +3,8 @@ require "rails_helper"
 RSpec.describe Services::HandleSubmissionForStore do
   context "when TRA feature flag is disabled" do
     before do
-      allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+      allow(Flipper).to receive(:enabled?).and_call_original
+allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
     end
 
     let(:user) { create(:user, trn: nil) }
@@ -89,7 +90,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
@@ -113,7 +114,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
@@ -187,7 +188,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
@@ -211,7 +212,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
@@ -371,7 +372,8 @@ RSpec.describe Services::HandleSubmissionForStore do
 
   context "when TRA feature flag is enabled" do
     before do
-      allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(true)
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
     end
 
     let(:user_record_trn) { "0012345" }
@@ -451,7 +453,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "trn_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
           })
           expect(user.applications.reload.count).to eq 0
@@ -472,7 +474,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "trn_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
@@ -544,7 +546,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "trn_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
           })
           expect(user.applications.reload.count).to eq 0
@@ -565,7 +567,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "trn_verified" => false,
             "admin" => false,
-            "feature_flag_id" => nil,
+            "feature_flag_id" => user.feature_flag_id,
             "flipper_admin_access" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,

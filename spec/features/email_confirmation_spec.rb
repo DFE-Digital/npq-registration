@@ -2,7 +2,8 @@ require "rails_helper"
 
 RSpec.feature "Email confirmation", type: :feature do
   scenario "going back and changing their email address requires confirmation" do
-    allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+    allow(Flipper).to receive(:enabled?).and_call_original
+    allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
 
     visit "/"
     page.click_link("Start now")

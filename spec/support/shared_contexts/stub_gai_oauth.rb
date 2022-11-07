@@ -1,6 +1,9 @@
 RSpec.shared_context("Disable Get An Identity integration") do
   before do
-    allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(false)
+    allow(Flipper).to receive(:enabled?).and_call_original
+    allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
+    allow(Flipper).to receive(:enabled?).and_call_original
+    allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
   end
 end
 
@@ -45,7 +48,8 @@ RSpec.shared_context("Enable Get An Identity integration") do
   end
 
   before do
-    allow(Services::Feature).to receive(:get_an_identity_integration_active_for?).and_return(true)
+    allow(Flipper).to receive(:enabled?).and_call_original
+    allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
 
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(:tra_openid_connect, stubbed_callback_response)
