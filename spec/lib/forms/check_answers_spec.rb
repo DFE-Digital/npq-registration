@@ -74,7 +74,7 @@ RSpec.describe Forms::CheckAnswers do
     context "when TRA feature flag is disabled" do
       before do
         allow(Flipper).to receive(:enabled?).and_call_original
-allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
+        allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
       end
 
       context "when verified_trn and entered trn differ" do
