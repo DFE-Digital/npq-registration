@@ -8,7 +8,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
 gem "delayed_job_active_record"
 gem "email_validator", require: "email_validator/strict"
-gem "flipper", "~> 0.25.2"
+gem "flipper", "~> 0.25.4"
 gem "flipper-active_record", "~> 0.25.2"
 gem "flipper-ui", "~> 0.25.2"
 gem "govuk-components"
