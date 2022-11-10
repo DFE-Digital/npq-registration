@@ -21,6 +21,7 @@ module Services
     # toggle on and off for themselves.
     FLIPPABLE_BY_USER = [
       GAI_INTEGRATION_KEY,
+      REMOVE_USER_FROM_GAI_PILOT_KEY,
     ].freeze
 
     class << self
