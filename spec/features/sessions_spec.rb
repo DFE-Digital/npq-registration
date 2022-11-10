@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Sessions", type: :feature do
+  include_context "Enable Get An Identity integration"
+
   scenario "signing in when user does not exist" do
     visit "/sign-in"
     expect(page).to be_axe_clean

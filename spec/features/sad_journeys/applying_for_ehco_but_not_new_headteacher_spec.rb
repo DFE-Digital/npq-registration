@@ -7,7 +7,6 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "stub course ecf to identifier mappings"
   include_context "Enable Get An Identity integration"
-  include_context "Enable Get An Identity integration"
 
   scenario "applying for EHCO but not new headteacher" do
     stub_participant_validation_request
