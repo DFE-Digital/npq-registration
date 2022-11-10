@@ -60,15 +60,15 @@ module Forms
     def next_step
       if wizard.tra_get_an_identity_omniauth_integration_active?
         if wizard.query_store.inside_catchment?
-          return :find_school if self.works_in_school?
-          return :work_in_nursery if self.works_in_childcare?
+          return :find_school if works_in_school?
+          return :work_in_nursery if works_in_childcare?
 
           return :your_employment
         end
 
         :choose_your_npq
       else
-        return :contact_details if self.works_in_other?
+        return :contact_details if works_in_other?
 
         :teacher_reference_number
       end
