@@ -5,7 +5,11 @@ module Forms
     end
 
     def next_step
-      :provider_check
+      if wizard.tra_get_an_identity_omniauth_integration_active?
+        :teacher_reference_number
+      else
+        :provider_check
+      end
     end
   end
 end

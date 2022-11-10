@@ -19,6 +19,12 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect(page).not_to have_content("Do you have a TRN?")
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
@@ -37,10 +43,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect(page).not_to have_content("Do you have a TRN?")
-
-    # Because the Get An Identity service returned no TRN, we'll be redirected out of the pilot and
-    # back to the old flow.
     expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
       expect(page).to have_text("What’s your email address?")
 

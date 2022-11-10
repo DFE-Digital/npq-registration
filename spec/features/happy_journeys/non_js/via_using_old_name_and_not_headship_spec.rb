@@ -23,6 +23,12 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
@@ -35,22 +41,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("No, I need help getting one", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/dont-have-teacher-reference-number", submit_form: false) do
-      expect(page).to have_text("Get a Teacher Reference Number (TRN)")
-
-      page.click_link("Back")
-    end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
 
     School.create!(
       urn: 100_000,

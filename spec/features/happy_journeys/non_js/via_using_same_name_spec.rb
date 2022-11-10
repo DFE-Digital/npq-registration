@@ -22,6 +22,12 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_link("Start now")
     end
 
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
@@ -34,12 +40,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")

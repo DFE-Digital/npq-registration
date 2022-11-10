@@ -58,6 +58,8 @@ private
     Services::Feature.remove_user_from_get_an_identity_pilot(current_user)
 
     # Redirect to the page the user would have gone to if they hadn't been sent to the GAI
-    redirect_to registration_wizard_show_path(:"contact-details")
+    # Since with the pilot flag enabled the provider-check question was skipped we need to redirect back to the
+    # very beginning of the flow to ensure the user answers all questions
+    redirect_to registration_wizard_show_path(:"provider-check")
   end
 end

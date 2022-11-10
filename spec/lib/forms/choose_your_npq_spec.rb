@@ -164,7 +164,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       let(:teacher_catchment) { "england" }
 
       it "returns teacher_reference_number" do
-        expect(subject.previous_step).to eql(:get_an_identity)
+        expect(subject.previous_step).to eql(:work_setting)
       end
 
       context "when TRA feature flag is disabled" do

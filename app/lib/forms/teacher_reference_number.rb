@@ -12,6 +12,18 @@ module Forms
       ]
     end
 
+    # Required since this is the first question
+    # If it wasn't overridden it would check if any previous questions were answered
+    # and since there aren't any it would assume the user was trying to skip questions
+    # and redirect them to the start page
+    # Only overridden when this is the first question, which is now when the GAI pilot is on
+    # for the current user
+    def requirements_met?
+      return true if wizard.tra_get_an_identity_omniauth_integration_active?
+
+      super
+    end
+
     def next_step
       case trn_knowledge
       when "yes"
@@ -30,7 +42,11 @@ module Forms
     end
 
     def previous_step
-      :work_setting
+      if wizard.tra_get_an_identity_omniauth_integration_active?
+        :work_setting
+      else
+        :start
+      end
     end
 
     def title

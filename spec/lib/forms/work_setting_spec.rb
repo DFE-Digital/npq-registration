@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Forms::WorkSetting, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:work_setting) }
-    it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::VALID_WORK_SETTING_OPTIONS) }
+    it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::ALL_SETTINGS) }
   end
 
   describe "#after_save" do

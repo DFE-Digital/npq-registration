@@ -24,7 +24,7 @@ module Forms
 
     def previous_step
       if wizard.tra_get_an_identity_omniauth_integration_active?
-        :get_an_identity
+        :work_setting
       else
         :qualified_teacher_check
       end

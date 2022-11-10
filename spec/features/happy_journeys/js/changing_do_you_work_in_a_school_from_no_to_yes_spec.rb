@@ -6,6 +6,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Enable Get An Identity integration"
+
   scenario "registration journey changing do you work in a school from no to yes" do
     stub_participant_validation_request
 
@@ -13,6 +14,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end
+
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect(page).not_to have_content("Do you have a TRN?")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -27,12 +34,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
     end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect(page).not_to have_content("Do you have a TRN?")
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
@@ -84,12 +85,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/work-setting/change", submit_form: true) do
       page.choose("A school", visible: :all)
     end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect(page).not_to have_content("Do you have a TRN?")
 
     expect_page_to_have(path: "/registration/find-school", submit_form: true) do
       page.fill_in "Where is your workplace located?", with: "manchester"
