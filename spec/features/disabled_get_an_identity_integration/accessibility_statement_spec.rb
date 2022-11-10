@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Accessibility Statement", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "View info about accessibility statement" do
     visit "/"
     click_link("Accessibility")

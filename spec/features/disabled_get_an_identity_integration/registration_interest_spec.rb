@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Register interest", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "Sign up to notification with direct link" do
     visit "/registration-interest/sign-up"
 

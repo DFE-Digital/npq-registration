@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "admin", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   let(:admin) { create(:admin) }
 
   around do |example|

@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Service is hard closed", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "Service close date has passed" do
     close_registration!
 

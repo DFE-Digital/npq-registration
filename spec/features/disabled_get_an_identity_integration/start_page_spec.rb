@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Start page", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "Navigate to home" do
     visit "/"
 

@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Cookies", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "view info about cookies" do
     visit "/"
     click_link("View cookies")

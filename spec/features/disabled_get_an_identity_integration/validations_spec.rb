@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Validations", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "did not agree to share data with provider" do
     visit "/"
 

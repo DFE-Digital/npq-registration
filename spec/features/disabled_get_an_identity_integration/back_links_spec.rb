@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Back links", type: :feature do
+  include_context "Disable Get An Identity integration"
+
   scenario "back to previous page retains state" do
     visit "/"
     page.click_link("Start now")
