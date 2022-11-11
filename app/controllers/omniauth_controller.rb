@@ -26,7 +26,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
 private
 
   def failure_message
-    "An error was encountered saving your information, please try again in a few moments."
+    "There was an error. Please try again in a few moments. If this problem persists, contact us at continuing-professional-development@digital.education.gov.uk"
   end
 
   def registration_wizard_omniauth_step
