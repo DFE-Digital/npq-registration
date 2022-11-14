@@ -50,9 +50,9 @@ RSpec.shared_context("Enable Get An Identity integration") do
     }
   end
 
-  let(:stubbed_callback_response_as_json) {
+  let(:stubbed_callback_response_as_json) do
     stubbed_callback_response.as_json
-  }
+  end
 
   before do
     allow(Flipper).to receive(:enabled?).and_call_original
