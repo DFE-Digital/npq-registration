@@ -20,7 +20,7 @@ module Omniauth
           date_of_birth: parsed_date_of_birth,
           email: raw_info["email"],
           email_verified: parsed_email_verified,
-          full_name: raw_info["name"],
+          name: raw_info["name"],
           trn: raw_info["trn"],
         }
       end

@@ -26,7 +26,7 @@ class User < ApplicationRecord
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
       trn_verified: trn.present?,
-      full_name: provider_data.info.full_name,
+      full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
     )
 
@@ -47,7 +47,7 @@ class User < ApplicationRecord
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
       trn_verified: trn.present?,
-      full_name: provider_data.info.full_name,
+      full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
     )
 
