@@ -8,12 +8,14 @@ RSpec.shared_context("Disable Get An Identity integration") do
 end
 
 RSpec.shared_context("Enable Get An Identity integration") do
-  let(:user_full_name) { "John Doe" }
+  let(:user_first_name) { "John" }
+  let(:user_last_name) { "Doe" }
+  let(:user_full_name) { "#{user_first_name} #{user_last_name}" }
   let(:user_email) { "user@example.com" }
   let(:user_uid) { SecureRandom.uuid }
   let(:user_date_of_birth) { "1980-12-13" }
+  let(:user_date_of_birth_parsed) { Date.new(1980, 12, 13) }
   let(:user_trn) { "1234567" }
-  let(:user_nino) { "AB123456C" }
 
   let(:provider) { "tra_openid_connect" }
 
@@ -22,12 +24,11 @@ RSpec.shared_context("Enable Get An Identity integration") do
       "provider" => "tra_openid_connect",
       "uid" => user_uid,
       "info" => {
-        "date_of_birth" => user_date_of_birth,
+        "date_of_birth" => user_date_of_birth_parsed,
         "email" => user_email,
         "email_verified" => true,
         "trn" => user_trn,
         "name" => user_full_name,
-        "nino" => user_nino,
       },
       "credentials" => {
         "token" => SecureRandom.uuid,
@@ -42,10 +43,16 @@ RSpec.shared_context("Enable Get An Identity integration") do
           "name" => user_full_name,
           "birthdate" => user_date_of_birth,
           "trn" => user_trn,
+          "given_name" => user_first_name,
+          "family_name" => user_last_name,
         },
       },
     }
   end
+
+  let(:stubbed_callback_response_as_json) {
+    stubbed_callback_response.as_json
+  }
 
   before do
     allow(Flipper).to receive(:enabled?).and_call_original
