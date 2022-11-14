@@ -21,15 +21,15 @@ RSpec.feature "Back links", type: :feature do
     # Wait for GAI handler to finish
     expect(page).not_to have_content("Do you have a TRN?")
 
-    expect_page_to_have(path: "/registration/provider-check", submit_form: false)
+    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/teacher-catchment", submit_form: false, axe_check: false)
     page.click_link("Back")
 
-    expect_page_to_have(path: "/registration/get-an-identity", submit_form: false)
-    page.click_link("Back")
+    expect_page_to_have(path: "/registration/provider-check", submit_form: false, axe_check: false)
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: false)
-
-    expect(page).to be_axe_clean
     expect(page).to have_checked_field("Yes", visible: :all)
   end
 end
