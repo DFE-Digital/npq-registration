@@ -1,0 +1,37 @@
+<% if small %>
+  <div class="big-number-with-status">
+    <span class="big-number-status">
+      <% if url %>
+        <a class="govuk-link govuk-link--no-visited-state big-number-link" href="<%= url %>">
+      <% end %>
+        <%= number %> <%= label %>
+        <% if percentage %>
+          - <%= percentage %>%
+        <% end %>
+      <% if url %>
+        </a>
+      <% end %>
+    </span>
+  </div>
+<% else %>
+  <div class="big-number-with-status">
+    <span class="big-number-status">
+      <% if url %>
+        <a class="govuk-link govuk-link--no-visited-state big-number-link" href="<%= url %>">
+      <% end %>
+      <span class="big-number-number">
+            <%= number %>
+          </span>
+
+          <span class="big-number-label">
+            <%= label %>
+            <% if percentage %>
+              - <%= percentage %>%
+            <% end %>
+          </span>
+      <% if url %>
+        </a>
+      <% end %>
+    </span>
+  </div>
+<% end %>
