@@ -1,7 +1,7 @@
 module ApplicationHelper
   include Pagy::Frontend
 
-  def admin_funding_tag(bool)
+  def boolean_red_green_tag(bool)
     if bool
       '<strong class="govuk-tag govuk-tag--green">YES</strong>'
     else

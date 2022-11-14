@@ -21,8 +21,13 @@
       end %>
 
       <%= summary_list.row do |row|
-        row.key { 'User GAI ID' }
-        row.value { @application.user.uid || "-" }
+        row.key { 'User Identity Provider' }
+        row.value { @application.user.provider ? t("omniauth_providers.#{@application.user.provider}") : "-" }
+      end %>
+
+      <%= summary_list.row do |row|
+        row.key { 'User Identity UID' }
+        row.value { @application.user.uid || '-' }
       end %>
 
       <%= summary_list.row do |row|
@@ -82,12 +87,12 @@
 
       <%= summary_list.row do |row|
         row.key { 'Funding eligibility' }
-        row.value { admin_funding_tag(@application.eligible_for_funding) }
+        row.value { boolean_red_green_tag(@application.eligible_for_funding) }
       end %>
 
       <%= summary_list.row do |row|
         row.key { "Targeted delivery funding eligibility" }
-        row.value { admin_funding_tag(@application.targeted_delivery_funding_eligibility) }
+        row.value { boolean_red_green_tag(@application.targeted_delivery_funding_eligibility) }
       end %>
 
       <%= summary_list.row do |row|
