@@ -31,6 +31,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'In Get an Identity Pilot?' }
+        row.value { boolean_red_green_tag(@application.user.in_get_an_identity_pilot?) }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'Email' }
         row.value { @application.user.email }
       end %>

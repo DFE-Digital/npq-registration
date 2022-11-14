@@ -58,6 +58,10 @@ class User < ApplicationRecord
     false
   end
 
+  def in_get_an_identity_pilot?
+    provider == "tra_openid_connect"
+  end
+
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
     admin? && flipper_admin_access?
