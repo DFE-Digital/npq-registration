@@ -26,8 +26,8 @@ class User < ApplicationRecord
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
       trn_verified: trn.present?,
-      full_name: provider_data.info.name,
       national_insurance_number: provider_data.info.nino,
+      full_name: provider_data.info.full_name,
       raw_tra_provider_data: provider_data,
     )
 
@@ -48,8 +48,8 @@ class User < ApplicationRecord
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
       trn_verified: trn.present?,
-      full_name: provider_data.info.name,
       national_insurance_number: provider_data.info.nino,
+      full_name: provider_data.info.full_name,
       raw_tra_provider_data: provider_data,
     )
 
