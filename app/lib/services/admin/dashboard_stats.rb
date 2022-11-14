@@ -31,13 +31,13 @@ module Services
         (non_get_an_identity_applications_created / applications_created.to_f * 100).to_i
       end
 
-      private
+    private
 
       def applications_since_start_time
         @applications_since_start_time ||= if start_time.present?
                                              Application.where("applications.created_at >= ?", start_time)
                                            else
-                                              Application.all
+                                             Application.all
                                            end
       end
     end
