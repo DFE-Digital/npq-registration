@@ -1,0 +1,17 @@
+<h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+
+<%= render SubnavComponent.new do |component| %>
+  <%= component.nav_item(path: admin_path) do %>
+    <%= t(".dashboard") %>
+  <% end %>
+
+  <%= component.nav_item(path: admin_applications_path) do %>
+    <%= t(".applications") %>
+  <% end %>
+
+  <% if current_user.flipper_access? %>
+    <%= component.nav_item(path: "/admin/feature_flags") do %>
+      <%= t(".feature_flags") %>
+    <% end %>
+  <% end %>
+<% end %>

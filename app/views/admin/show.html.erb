@@ -1,16 +1,1 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Admin</h1>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        <%= link_to "Applications", admin_applications_path, class: "govuk-link" %>
-      </li>
-      <% if current_user.flipper_access? %>
-        <li>
-          <%= govuk_link_to 'Feature Flags', "/admin/feature_flags" %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-</div>
+<%= render "admin/layout", title: "Admin Dashboard" %>
