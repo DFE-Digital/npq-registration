@@ -115,5 +115,33 @@ RSpec.describe Services::Admin::DashboardStats do
         (non_get_an_identity_applications_created_all_time / applications_created_all_time.to_f * 100).to_i,
       )
     end
+
+    # context where no applications have been created
+    context "where no applications have been created" do
+      let(:get_an_identity_applications_created_before_start_time) { 0 }
+      let(:non_get_an_identity_applications_created_before_start_time) { 0 }
+      let(:get_an_identity_applications_created_since_start_time) { 0 }
+      let(:non_get_an_identity_applications_created_since_start_time) { 0 }
+
+      it "returns 0 for applications_created" do
+        expect(subject.applications_created).to eq(0)
+      end
+
+      it "returns 0 for get_an_identity_applications_created" do
+        expect(subject.get_an_identity_applications_created).to eq(0)
+      end
+
+      it "returns 0 for non_get_an_identity_applications_created" do
+        expect(subject.non_get_an_identity_applications_created).to eq(0)
+      end
+
+      it "returns 0 for get_an_identity_applications_created_percentage" do
+        expect(subject.get_an_identity_applications_created_percentage).to eq(nil)
+      end
+
+      it "returns 0 for non_get_an_identity_applications_created_percentage" do
+        expect(subject.non_get_an_identity_applications_created_percentage).to eq(nil)
+      end
+    end
   end
 end

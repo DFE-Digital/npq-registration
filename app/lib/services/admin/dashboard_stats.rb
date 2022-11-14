@@ -24,10 +24,14 @@ module Services
       end
 
       def get_an_identity_applications_created_percentage
+        return nil if applications_created.zero?
+
         (get_an_identity_applications_created / applications_created.to_f * 100).to_i
       end
 
       def non_get_an_identity_applications_created_percentage
+        return nil if applications_created.zero?
+
         (non_get_an_identity_applications_created / applications_created.to_f * 100).to_i
       end
 
