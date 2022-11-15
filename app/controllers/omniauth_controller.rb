@@ -9,6 +9,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
     )
 
     if @user.persisted?
+      Services::Feature.enroll_user_in_get_an_identity_pilot(@user)
       session["user_id"] = @user.id
 
       sign_in_and_redirect @user
