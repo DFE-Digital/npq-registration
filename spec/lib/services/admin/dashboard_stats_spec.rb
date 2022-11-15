@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Services::Admin::DashboardStats do
-  let(:start_time) { 7.days.ago }
+  let(:start_time) { 7.days.ago.at_beginning_of_day }
 
   let(:get_an_identity_applications_created_before_start_time) { 3 }
   let(:non_get_an_identity_applications_created_before_start_time) { 4 }
