@@ -4,7 +4,7 @@ module Services
       attr_reader :start_time
 
       def initialize(start_time: nil)
-        @start_time = start_time
+        @start_time = start_time&.at_beginning_of_day
       end
 
       def applications_created
