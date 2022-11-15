@@ -13,17 +13,43 @@ class OmniauthController < Devise::OmniauthCallbacksController
 
       sign_in_and_redirect @user
     else
+      send_error_to_sentry(
+        "Could not persist user after omniauth callback",
+        contexts: {
+          "Errors" => @user.errors.to_hash,
+        },
+      )
+
       flash[:error] = failure_message
       redirect_to failed_sign_in_path
     end
   end
 
   def failure
+    send_error_to_sentry(
+      "Omniauth login failure",
+      contexts: {
+        "Strategy" => { name: request.env["omniauth.error.strategy"].name },
+        "Error" => { "omniauth.error.type" => request.env["omniauth.error.type"] },
+      },
+    )
+
     flash[:error] = failure_message
     redirect_to failed_sign_in_path
   end
 
 private
+
+  def send_error_to_sentry(message, contexts: {})
+    Sentry.with_scope do |scope|
+      contexts.each do |context_name, context|
+        scope.set_context(context_name, context)
+      end
+
+      exception = RuntimeError.new(message)
+      Sentry.capture_exception(exception)
+    end
+  end
 
   def failure_message
     "There was an error. Please try again in a few moments. If this problem persists, contact us at continuing-professional-development@digital.education.gov.uk"
@@ -54,6 +80,15 @@ private
   end
 
   def remove_from_get_an_identity_pilot
+    send_error_to_sentry(
+      "User removed from Pilot",
+      contexts: {
+        status: {
+          trn_blank: tra_response_excludes_trn?,
+        },
+      },
+    )
+
     # Turn off the feature flag for this user
     Services::Feature.remove_user_from_get_an_identity_pilot(current_user)
 
