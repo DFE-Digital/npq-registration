@@ -12,17 +12,42 @@ module Forms
       ]
     end
 
+    # Required since this is the first question
+    # If it wasn't overridden it would check if any previous questions were answered
+    # and since there aren't any it would assume the user was trying to skip questions
+    # and redirect them to the start page
+    # Only overridden when this is the first question, which is now when the GAI pilot is on
+    # for the current user
+    def requirements_met?
+      return true if wizard.tra_get_an_identity_omniauth_integration_active?
+
+      super
+    end
+
     def next_step
       case trn_knowledge
       when "yes"
-        :contact_details
+        # As the button that would lead here should be replaced in this scenario with a link to GAI this is not an
+        # intended pathway, However, if JS is disabled then the request to the initial call to the form will have
+        # been a html request instead of a JS request, leading to needing to properly render a page to direct the user
+        # to. In case we have this fallback to take you to an interstitial page that can only go to the
+        # Get an Identity service.
+        if wizard.tra_get_an_identity_omniauth_integration_active?
+          :get_an_identity
+        else
+          :contact_details
+        end
       when "no-dont-have"
         :dont_have_teacher_reference_number
       end
     end
 
     def previous_step
-      :work_setting
+      if wizard.tra_get_an_identity_omniauth_integration_active?
+        :work_setting
+      else
+        :start
+      end
     end
 
     def title

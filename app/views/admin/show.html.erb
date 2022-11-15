@@ -1,16 +1,75 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Admin</h1>
+<%= render "admin/layout", title: "Admin Dashboard" %>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        <%= link_to "Applications", admin_applications_path, class: "govuk-link" %>
-      </li>
-      <% if current_user.flipper_access? %>
-        <li>
-          <%= govuk_link_to 'Feature Flags', "/admin/feature_flags" %>
-        </li>
-      <% end %>
-    </ul>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">Last 7 Days</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @last_seven_days.applications_created,
+            label: "Total Applications",
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @last_seven_days.get_an_identity_applications_created,
+            label: "GAI Applications",
+            percentage: @last_seven_days.get_an_identity_applications_created_percentage,
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @last_seven_days.non_get_an_identity_applications_created,
+            label: "Non-GAI Applications",
+            percentage: @last_seven_days.non_get_an_identity_applications_created_percentage,
+          )
+        %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">All Time</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @all_time.applications_created,
+            label: "Total Applications",
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @all_time.get_an_identity_applications_created,
+            label: "GAI Applications",
+            percentage: @all_time.get_an_identity_applications_created_percentage
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <%=
+          render StatusBox.new(
+            number: @all_time.non_get_an_identity_applications_created,
+            label: "Non-GAI Applications",
+            percentage: @all_time.non_get_an_identity_applications_created_percentage
+          )
+        %>
+      </div>
+    </div>
   </div>
 </div>

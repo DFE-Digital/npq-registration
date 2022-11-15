@@ -4,9 +4,10 @@ RSpec.describe RegistrationWizard do
   let(:store) { {} }
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
+  let(:user) { create(:user) }
   let(:current_step) { "share_provider" }
 
-  subject { described_class.new(current_step:, store:, request:) }
+  subject { described_class.new(current_step:, store:, request:, current_user: user) }
 
   describe "#current_step" do
     it "returns current step" do
@@ -14,7 +15,7 @@ RSpec.describe RegistrationWizard do
     end
 
     context "when invalid step" do
-      subject { described_class.new(current_step: "i_do_not_exist", store:, request:) }
+      subject { described_class.new(current_step: "i_do_not_exist", store:, request:, current_user: user) }
 
       it "raises an error" do
         expect {
@@ -38,7 +39,7 @@ RSpec.describe RegistrationWizard do
     let(:school) { create(:school, establishment_type_code: "1") }
 
     before do
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/123456?npq_course_identifier=npq-additional-support-offer")
+      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-additional-support-offer")
         .with(
           headers: {
             "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -111,7 +112,6 @@ RSpec.describe RegistrationWizard do
           "full_name" => "Maia Mack",
           "date_of_birth" => 30.years.ago,
           "national_insurance_number" => "123420",
-          "trn_verified" => false,
           "trn_auto_verified" => nil,
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
@@ -151,7 +151,6 @@ RSpec.describe RegistrationWizard do
           "trn" => "123456",
           "trn_auto_verified" => nil,
           "trn_knowledge" => "yes",
-          "trn_verified" => false,
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
           "works_in_nursery" => "yes",

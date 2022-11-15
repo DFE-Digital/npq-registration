@@ -5,6 +5,18 @@ class Services::QueryStore
     @store = store
   end
 
+  def current_user
+    store["current_user"]
+  end
+
+  def trn
+    # If the GAI flow was used then the updated TRN is already on the user record,
+    # other wise it will have been entered into the store by the user and should be retrieved from there.
+    return current_user.trn if current_user.present? && Services::Feature.get_an_identity_integration_active_for?(current_user)
+
+    store["trn"]
+  end
+
   def inside_catchment?
     store["teacher_catchment"] == "england"
   end

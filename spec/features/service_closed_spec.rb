@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Service is hard closed", type: :feature do
+  include_context "Enable Get An Identity integration"
+
   scenario "Service close date has passed" do
     close_registration!
 
@@ -20,12 +22,15 @@ RSpec.feature "Service is hard closed", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_link("Start now")
 
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
+    expect(page).to have_text("Do you have a TRN?")
     page.choose("Yes", visible: :all)
 
     # Registration is now closed
     close_registration!
     page.click_button("Continue")
+
+    # Wait for GAI handler to finish
+    expect(page).not_to have_content("Do you have a TRN?")
 
     expect(page).to have_content("Registration for NPQs has closed temporarily")
   end

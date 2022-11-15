@@ -22,6 +22,7 @@ RSpec.describe Forms::PossibleFunding do
         current_step: :possible_funding,
         store:,
         request:,
+        current_user: create(:user),
       )
     end
 

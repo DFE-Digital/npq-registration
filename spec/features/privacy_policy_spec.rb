@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.feature "Privacy Policy", type: :feature do
+  include_context "Enable Get An Identity integration"
+
   scenario "view info about privacy policy" do
     visit "/"
     click_link("Privacy")

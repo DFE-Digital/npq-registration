@@ -1,0 +1,173 @@
+/* From https://github.com/alphagov/notifications-admin */
+%big-number,
+.big-number {
+
+  display: block;
+
+  &-number,
+  &-label {
+    display: block;
+  }
+
+  &-number {
+    @include govuk-font(48, $weight: bold, $tabular: true);
+  }
+
+  &-label {
+    @include govuk-font(19);
+    padding-bottom: 10px;
+  }
+
+}
+
+.pill .big-number-number {
+
+  // reduce padding until screen is bigger than 420px / zoomed below 300%
+  padding-left: govuk-spacing(1);
+
+  @include govuk-media-query($from: 420px) {
+    padding-left: govuk-spacing(2);
+  }
+
+}
+
+.big-number-dark {
+  @extend %big-number;
+  padding: govuk-spacing(3);
+  position: relative;
+  background: govuk-colour("black");
+  color: govuk-colour("white");
+
+  .big-number-number {
+    @include govuk-font(36, $weight: bold, $tabular: true);
+  }
+}
+
+.big-number-smaller {
+
+  @extend %big-number;
+
+  .big-number-number {
+    @include govuk-font(36, $weight: bold, $tabular: true);
+  }
+
+}
+
+.big-number-smallest {
+
+  @extend %big-number;
+
+  .big-number-number {
+    @include govuk-font(24, $weight: bold, $tabular: true);
+  }
+
+}
+
+.big-number-with-status {
+
+  @extend %big-number;
+  position: relative;
+  margin-bottom: govuk-spacing(4);
+
+  .big-number,
+  .big-number-smaller {
+    padding: govuk-spacing(3);
+    position: relative;
+    background: govuk-colour("black");
+    color: govuk-colour("white");
+  }
+
+  .big-number-label {
+
+    padding-bottom: 0;
+
+    &:link,
+    &:visited {
+      color: $govuk-link-colour;
+    }
+
+  }
+
+  .big-number-link {
+
+    text-decoration: none;
+    background: $govuk-link-colour;
+    color: govuk-colour("white");
+    display: block;
+    border: 2px solid $govuk-link-colour;
+    margin-bottom: 5px;
+
+    &:hover {
+
+      color: govuk-tint(govuk-colour("light-blue"), 75);
+
+      .big-number,
+      .big-number-number,
+      .big-number-smaller,
+      .big-number-label {
+        color: govuk-tint(govuk-colour("light-blue"), 75);
+      }
+
+    }
+
+    &:active,
+    &:focus {
+      background: $govuk-focus-colour;
+      border: none;
+      padding: 2px; /* replace the spacing the border gave */
+      /* override the default focus style to inset the underline */
+      box-shadow: inset 0 -4px $govuk-focus-text-colour;
+
+      .big-number-number,
+      .big-number-smaller,
+      .big-number-label {
+        color: $govuk-focus-text-colour;
+        text-decoration: none;
+      }
+    }
+
+    .big-number,
+    .big-number-smaller {
+      background: transparent;
+    }
+
+    .big-number-label {
+      text-decoration: underline;
+    }
+
+  }
+
+  %big-number-status,
+  .big-number-status {
+
+    @include govuk-font(19);
+    display: block;
+    background: govuk-colour("green");
+    color: govuk-colour("white");
+    padding: 15px;
+
+    a {
+
+      &:link,
+      &:visited,
+      &:active,
+      &:hover {
+        color: govuk-colour("white");
+        text-decoration: underline;
+      }
+
+      &:active,
+      &:focus {
+        color: $govuk-focus-text-colour;
+      }
+
+    }
+
+  }
+
+  .big-number-status-failing {
+    @extend %big-number-status;
+    background: $govuk-error-colour;
+  }
+
+}

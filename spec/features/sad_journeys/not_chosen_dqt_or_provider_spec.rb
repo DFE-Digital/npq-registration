@@ -5,16 +5,26 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
+  include_context "Enable Get An Identity integration"
 
   scenario "Not chosen DQT or provider" do
-    visit "/"
-    expect(page).to have_text("Before you start")
-    page.click_link("Start now")
+    stub_participant_validation_request
 
-    expect(page).to be_axe_clean
-    expect(page).to have_text("Have you already chosen an NPQ and provider?")
-    page.choose("No", visible: :all)
-    page.click_button("Continue")
+    navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+      expect(page).to have_text("Before you start")
+      page.click_link("Start now")
+    end
+
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect(page).not_to have_content("Do you have a TRN?")
+
+    expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
+      expect(page).to have_text("Have you already chosen an NPQ and provider?")
+      page.choose("No", visible: :all)
+    end
 
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose an NPQ and provider")

@@ -9,6 +9,10 @@ module Forms
       []
     end
 
+    def skip_step?
+      false
+    end
+
     # Previous steps should lead to `closed` when registration is closed.
     def previous_step
       return :closed if Services::Feature.registration_closed?
@@ -21,6 +25,10 @@ module Forms
       return :closed if Services::Feature.registration_closed?
 
       raise NotImplementedError
+    end
+
+    def redirect_to_change_path?
+      changing_answer? && next_step != :check_answers && !return_to_regular_flow?
     end
 
     def before_render
@@ -72,7 +80,8 @@ module Forms
     end
 
     def requirements_met?
-      wizard.store.present?
+      # Have any questions been answered?
+      wizard.store.present? && wizard.store.keys != %w[current_user]
     end
 
     def reset_store!

@@ -6,7 +6,7 @@ RSpec.describe Forms::ChoosePrivateChildcareProvider, type: :model do
   let(:request) { nil }
 
   let(:wizard) do
-    RegistrationWizard.new(current_step:, store:, request:)
+    RegistrationWizard.new(current_step:, store:, request:, current_user: create(:user))
   end
 
   describe "validations" do

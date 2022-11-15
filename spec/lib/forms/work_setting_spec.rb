@@ -3,13 +3,13 @@ require "rails_helper"
 RSpec.describe Forms::WorkSetting, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:work_setting) }
-    it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::VALID_WORK_SETTING_OPTIONS) }
+    it { is_expected.to validate_inclusion_of(:work_setting).in_array(described_class::ALL_SETTINGS) }
   end
 
   describe "#after_save" do
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:) }
+    let(:wizard) { RegistrationWizard.new(current_step: :work_setting, store:, request:, current_user: create(:user)) }
 
     subject { described_class.new(work_setting:, wizard:) }
 

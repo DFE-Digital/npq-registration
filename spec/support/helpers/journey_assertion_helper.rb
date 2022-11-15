@@ -15,8 +15,8 @@ module Helpers
 
       block.call if block_given?
 
-      page.click_button(submit_button_text) if submit_form
-      page.click_link("Continue") if click_continue
+      page.click_button(submit_button_text, visible: :visible) if submit_form
+      page.click_link("Continue", visible: :visible) if click_continue
     end
 
     def expect_check_answers_page_to_have_answers(values)

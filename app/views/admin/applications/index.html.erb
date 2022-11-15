@@ -1,13 +1,6 @@
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: admin_path
-  ) %>
-<% end %>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Applications</h1>
+    <%= render "admin/layout", title: "Applications" %>
 
     <div class="admin-search-box">
       <%= form_with method: :get do |f| %>
@@ -30,6 +23,7 @@
           <th scope="col" class="govuk-table__header">Lead provider</th>
           <th scope="col" class="govuk-table__header">School</th>
           <th scope="col" class="govuk-table__header">Funding</th>
+          <th scope="col" class="govuk-table__header">User in GAI pilot?</th>
         </tr>
       </thead>
 
@@ -40,7 +34,8 @@
             <td class="govuk-table__cell"><%= app.course.name %></td>
             <td class="govuk-table__cell"><%= app.lead_provider.name %></td>
             <td class="govuk-table__cell"><%= app.school_urn %></td>
-            <td class="govuk-table__cell"><%= admin_funding_tag(app.eligible_for_funding) %></td>
+            <td class="govuk-table__cell"><%= boolean_red_green_tag(app.eligible_for_funding) %></td>
+            <td class="govuk-table__cell"><%= boolean_red_green_tag(app.user.in_get_an_identity_pilot?) %></td>
           </tr>
         <% end %>
       </tbody>

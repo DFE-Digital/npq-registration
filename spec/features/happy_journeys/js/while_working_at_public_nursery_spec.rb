@@ -5,7 +5,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-
+  include_context "Enable Get An Identity integration"
   scenario "registration journey while working at public nursery" do
     stub_participant_validation_request
 
@@ -13,6 +13,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Before you start")
       page.click_link("Start now")
     end
+
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect(page).not_to have_content("Do you have a TRN?")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -26,35 +32,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
-      expect(page).to have_text("What’s your email address?")
-      page.fill_in "What’s your email address?", with: "user@example.com"
-    end
-
-    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
-      expect(page).to have_text("Confirm your email address")
-      expect(page).to have_text("user@example.com")
-
-      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
-
-      page.fill_in("Enter your code", with: code)
-    end
-
-    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
-      expect(page).to have_text("Check your details")
-
-      page.fill_in "Teacher reference number (TRN)", with: "1234567"
-      page.fill_in "Full name", with: "John Doe"
-      page.fill_in "Day", with: "13"
-      page.fill_in "Month", with: "12"
-      page.fill_in "Year", with: "1980"
-      page.fill_in "National Insurance number", with: "AB123456C"
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -140,11 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Full name" => "John Doe",
-          "TRN" => "1234567",
-          "Date of birth" => "13 December 1980",
-          "National Insurance number" => "AB123456C",
-          "Email" => "user@example.com",
+
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "Early years or childcare",
@@ -162,7 +135,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect(retrieve_latest_application_user_data).to eq(
-      "active_alert" => false,
+      "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
@@ -172,9 +145,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
+      "provider" => "tra_openid_connect",
+      "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => "1234567",
-      "trn_auto_verified" => true,
+      "trn_auto_verified" => false,
       "trn_verified" => true,
+      "uid" => user_uid,
     )
 
     expect(retrieve_latest_application_data).to eq(
@@ -203,28 +179,18 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
-        "active_alert" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "confirmed_email" => "user@example.com",
         "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
-        "date_of_birth" => "1980-12-13",
-        "email" => "user@example.com",
-        "full_name" => "John Doe",
         "funding" => "school",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
         "kind_of_nursery" => public_nursery_type_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "trn" => "1234567",
-        "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
-        "trn_verified" => true,
-        "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
         "works_in_nursery" => "yes",
         "works_in_school" => "no",

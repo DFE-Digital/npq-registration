@@ -156,9 +156,20 @@ en:
               invalid: This email is invalid
               taken: This email has already been registered for interest
 
+  omniauth_providers:
+    tra_openid_connect: "Get an Identity"
+
+  admin:
+    layout:
+      title: "Admin"
+      dashboard: "Dashboard"
+      applications: "Applications"
+      feature_flags: "Feature Flags"
+
   helpers:
     title:
       registration_wizard:
+        get_an_identity: "Get an identity"
         about_ehco: "Early Headship Coaching Offer"
         aso_funding_not_available: "DfE scholarship funding not available"
         aso_possible_funding: "You may qualify for DfE scholarship funding"

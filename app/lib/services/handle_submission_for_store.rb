@@ -10,15 +10,7 @@ module Services
 
     def call
       ActiveRecord::Base.transaction do
-        user.update!(
-          trn: padded_verified_trn || padded_entered_trn,
-          trn_verified: store["trn_verified"],
-          trn_auto_verified: !!store["trn_auto_verified"],
-          active_alert: store["active_alert"],
-          full_name: store["full_name"],
-          date_of_birth: store["date_of_birth"],
-          national_insurance_number: ni_number_to_store,
-        )
+        user.update!(user_update_data)
 
         user.applications.create!(
           course_id: course.id,
@@ -42,7 +34,7 @@ module Services
           kind_of_nursery: store["kind_of_nursery"],
           work_setting: store["work_setting"],
           cohort: course.default_cohort,
-          raw_application_data:,
+          raw_application_data: raw_application_data.except("current_user"),
         )
 
         enqueue_job
@@ -50,6 +42,27 @@ module Services
     end
 
   private
+
+    def user_update_data
+      base_user_data = {
+        active_alert: store["active_alert"],
+      }
+
+      return base_user_data if Services::Feature.get_an_identity_integration_active_for?(user)
+
+      base_user_data.merge(non_get_an_identity_flow_user_data)
+    end
+
+    def non_get_an_identity_flow_user_data
+      {
+        trn: padded_verified_trn || padded_entered_trn,
+        trn_verified: store["trn_verified"],
+        trn_auto_verified: !!store["trn_auto_verified"],
+        full_name: store["full_name"],
+        date_of_birth: store["date_of_birth"],
+        national_insurance_number: ni_number_to_store,
+      }
+    end
 
     def raw_application_data
       # Cutting out confirmation keys since that is not application related data
@@ -59,7 +72,7 @@ module Services
     end
 
     def padded_entered_trn
-      store["trn"].rjust(7, "0")
+      query_store.trn.rjust(7, "0")
     end
 
     def padded_verified_trn
@@ -163,7 +176,7 @@ module Services
         institution: institution_from_store,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
-        trn: store["trn"],
+        trn: query_store.trn,
       )
     end
 
@@ -203,7 +216,7 @@ module Services
     end
 
     def user
-      @user ||= User.find_by(email: store["confirmed_email"])
+      @user ||= store["current_user"]
     end
   end
 end
