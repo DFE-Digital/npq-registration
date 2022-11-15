@@ -24,6 +24,10 @@ module Services
           !Flipper.enabled?(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
       end
 
+      def enroll_user_in_get_an_identity_pilot(user)
+        Flipper.enable_actor(Services::Feature::GAI_INTEGRATION_KEY, user)
+      end
+
       def remove_user_from_get_an_identity_pilot(user)
         Flipper.enable_actor(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
       end
