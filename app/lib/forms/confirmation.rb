@@ -14,6 +14,7 @@ module Forms
 
     def after_render
       wizard.store["submitted"] = true
+      wizard.session["clear_tra_login"] = true if wizard.tra_get_an_identity_omniauth_integration_active?
     end
 
     def display_npqh_information?

@@ -3,6 +3,9 @@ class OmniauthController < Devise::OmniauthCallbacksController
   before_action :remove_from_get_an_identity_pilot, only: :tra_openid_connect, if: :tra_response_excludes_trn?
 
   def tra_openid_connect
+    # Let user continue using current TRA login
+    session.delete("clear_tra_login")
+
     @user = User.find_or_create_from_provider_data(
       request.env["omniauth.auth"],
       feature_flag_id: session["feature_flag_id"],
