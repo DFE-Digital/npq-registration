@@ -164,6 +164,7 @@ en:
       title: "Admin"
       dashboard: "Dashboard"
       applications: "Applications"
+      schools: "Schools"
       feature_flags: "Feature Flags"
 
   helpers:
