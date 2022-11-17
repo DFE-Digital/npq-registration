@@ -23,6 +23,14 @@ module Services
                    .count
       end
 
+      def users_count
+        @users_count ||= users_since_start_time.count
+      end
+
+      def get_an_identity_users_count
+        @get_an_identity_users_count ||= users_since_start_time.where(provider: :tra_openid_connect).count
+      end
+
       def get_an_identity_applications_created_percentage
         return nil if applications_created.zero?
 
@@ -36,6 +44,14 @@ module Services
       end
 
     private
+
+      def users_since_start_time
+        @users_since_start_time ||= if start_time.present?
+                                      User.where("users.created_at >= ?", start_time)
+                                    else
+                                      User.all
+                                    end
+      end
 
       def applications_since_start_time
         @applications_since_start_time ||= if start_time.present?
