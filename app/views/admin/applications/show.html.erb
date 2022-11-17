@@ -96,6 +96,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'Funding eligibility status code' }
+        row.value { @application.funding_eligiblity_status_code }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { "Targeted delivery funding eligibility" }
         row.value { boolean_red_green_tag(@application.targeted_delivery_funding_eligibility) }
       end %>
