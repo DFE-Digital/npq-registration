@@ -164,6 +164,7 @@ en:
       title: "Admin"
       dashboard: "Dashboard"
       applications: "Applications"
+      unsynced_applications: "Unsynced applications"
       feature_flags: "Feature Flags"
 
   helpers:
