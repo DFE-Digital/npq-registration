@@ -27,6 +27,12 @@ module Omniauth
 
       extra { { "raw_info" => raw_info } }
 
+      def authorize_params
+        return super.merge(prompt: :login) if request.session["clear_tra_login"] == true
+
+        super
+      end
+
       def raw_info
         @raw_info ||= access_token.get("connect/userinfo").parsed
       end
