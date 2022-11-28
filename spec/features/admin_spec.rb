@@ -14,8 +14,7 @@ RSpec.feature "admin", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "when logged in, it shows admin homepage" do
-    visit "/admin"
+  def sign_in_as_admin
     expect(page.current_path).to eql("/sign-in")
 
     page.fill_in "What’s your email address?", with: admin.email
@@ -26,6 +25,13 @@ RSpec.feature "admin", type: :feature do
 
     page.fill_in "Enter your code", with: code
     page.click_button "Sign in"
+  end
+
+  scenario "when logged in, it shows admin homepage" do
+    visit "/admin"
+
+    sign_in_as_admin
+
     expect(page.current_path).to eql("/account")
 
     page.click_link("Admin")
@@ -55,5 +61,37 @@ RSpec.feature "admin", type: :feature do
 
     click_link selected_application.user.email
     expect(page.current_path).to eql("/admin/applications/#{selected_application.id}")
+  end
+
+  scenario "viewing the unsynced applications" do
+    visit "/admin"
+
+    sign_in_as_admin
+
+    expect(page.current_path).to eql("/account")
+    page.click_link("Admin")
+    expect(page.current_path).to eql("/admin")
+
+    # when there are no unsynced records
+    page.click_link("Unsynced applications")
+    expect(page).to have_content("All applications have been successfuly linked with an ECF user.")
+
+    # when there are some unsynced records
+    applications = create_list(:application, 3)
+    create_list(:application, 1, :with_ecf_id)
+
+    page.click_link("Unsynced applications")
+
+    applications.each do |app|
+      expect(page).to have_content(app.user.email)
+    end
+
+    expect(page.find_all("table tbody tr").size).to eql(applications.size)
+
+    # viewing an unsynced record
+    page.click_link applications.first.user.email
+    expect(page.current_path).to eql("/admin/unsynced-applications/#{applications.first.id}")
+
+    expect(page).to have_content(applications.first.user.full_name)
   end
 end

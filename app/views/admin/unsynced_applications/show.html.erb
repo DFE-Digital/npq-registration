@@ -1,13 +1,13 @@
 <% content_for :before_content do %>
   <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
-    href: admin_applications_path
+    href: admin_unsynced_applications_path
   ) %>
 <% end %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Application</h1>
+    <h1 class="govuk-heading-xl">Unsynced application</h1>
 
     <%= render partial: "admin/application_details", locals: { application: @application } %>
   </div>

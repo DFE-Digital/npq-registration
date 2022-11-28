@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :applications, only: %i[index show]
+    resources :unsynced_applications, only: %i[index show], path: "unsynced-applications"
 
     constraints RouteConstraints::HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
