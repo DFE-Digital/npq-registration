@@ -4,7 +4,7 @@
       <% if url %>
         <a class="govuk-link govuk-link--no-visited-state big-number-link" href="<%= url %>">
       <% end %>
-        <%= number %> <%= label %>
+        <%= number_with_delimiter(number) %> <%= label %>
         <% if percentage %>
           - <%= percentage %>%
         <% end %>
@@ -20,7 +20,7 @@
         <a class="govuk-link govuk-link--no-visited-state big-number-link" href="<%= url %>">
       <% end %>
       <span class="big-number-number">
-            <%= number %>
+            <%= number_with_delimiter(number) %>
           </span>
 
           <span class="big-number-label">
