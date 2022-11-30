@@ -22,7 +22,7 @@ namespace :eyl_eligible_schools do
         update_errors += 1
         Rails.logger.error("Failed to update school with GIAS URN: #{gias_urn}")
       else
-        school&.update!(eyl_eligible: true)
+        school&.update!(eyl_funding_eligible: true)
         updated_records += 1
       end
     end
