@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_203458) do
     t.boolean "high_pupil_premium", default: false, null: false
     t.text "postcode_without_spaces"
     t.integer "number_of_pupils"
-    t.boolean "eyl_eligible", default: false
+    t.boolean "eyl_funding_eligible", default: false
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end

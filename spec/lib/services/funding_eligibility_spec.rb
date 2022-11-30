@@ -6,7 +6,7 @@ RSpec.describe Services::FundingEligibility do
   let(:trn) { "1234567" }
   let(:previously_funded) { false }
   let(:course_identifier) { course.identifier }
-  let(:eyl_eligible) { false }
+  let(:eyl_funding_eligible) { false }
 
   subject { described_class.new(institution:, course:, inside_catchment:, trn:) }
 
@@ -23,7 +23,7 @@ RSpec.describe Services::FundingEligibility do
 
   describe ".funded? && .funding_eligiblity_status_code" do
     context "in the special URN list" do
-      let(:institution) { build(:school, urn: "146816", eyl_eligible:) }
+      let(:institution) { build(:school, urn: "146816", eyl_funding_eligible:) }
 
       Course.all.each do |course|
         context "studying #{course.name}" do
@@ -40,7 +40,7 @@ RSpec.describe Services::FundingEligibility do
     context "when institution is a School" do
       %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
         context "eligible establishment_type_code #{eligible_gias_code}" do
-          let(:institution) { build(:school, establishment_type_code: eligible_gias_code, eyl_eligible:) }
+          let(:institution) { build(:school, establishment_type_code: eligible_gias_code, eyl_funding_eligible:) }
 
           it "returns true" do
             expect(subject.funded?).to be_truthy
@@ -83,7 +83,7 @@ RSpec.describe Services::FundingEligibility do
           end
 
           context "when school offering funding for the NPQEYL course" do
-            let(:eyl_eligible) { true }
+            let(:eyl_funding_eligible) { true }
 
             context "when user has selected the NPQEYL course" do
               let(:course) { Course.all.find(&:eyl?) }
@@ -106,7 +106,7 @@ RSpec.describe Services::FundingEligibility do
 
       %w[11 25 27 29 30 37 56].each do |ineligible_gias_code|
         context "ineligible establishment_type_code #{ineligible_gias_code}" do
-          let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, eyl_eligible:) }
+          let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, eyl_funding_eligible:) }
 
           it "returns false" do
             expect(subject.funded?).to be_falsey
@@ -141,7 +141,7 @@ RSpec.describe Services::FundingEligibility do
             end
 
             context "when school offering funding for the NPQEYL course" do
-              let(:eyl_eligible) { true }
+              let(:eyl_funding_eligible) { true }
 
               context "when user has selected the NPQEYL course" do
                 let(:course) { Course.all.find(&:eyl?) }
