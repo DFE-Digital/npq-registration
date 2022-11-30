@@ -12,6 +12,10 @@
   <%= component.nav_item(path: admin_unsynced_applications_path) do %>
     <%= t(".unsynced_applications") %>
   <% end %>
+  
+  <%= component.nav_item(path: admin_schools_path) do %>
+    <%= t(".schools") %>
+  <% end %>
 
   <% if current_user.flipper_access? %>
     <%= component.nav_item(path: "/admin/feature_flags") do %>

@@ -165,6 +165,7 @@ en:
       dashboard: "Dashboard"
       applications: "Applications"
       unsynced_applications: "Unsynced applications"
+      schools: "Schools"
       feature_flags: "Feature Flags"
 
   helpers:

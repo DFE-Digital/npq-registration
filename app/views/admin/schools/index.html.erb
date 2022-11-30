@@ -1,0 +1,49 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: admin_path
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Schools</h1>
+
+    <div class="admin-search-box">
+      <%= form_with method: :get do |f| %>
+        <%= f.govuk_text_field(
+            :q,
+            value: params[:q],
+            label: { text: "Search by URN or Name", size: "s" },
+          )
+        %>
+
+        <%= f.govuk_submit "Search" %>
+      <% end %>
+    </div>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Name</th>
+          <th scope="col" class="govuk-table__header">URN</th>
+          <th scope="col" class="govuk-table__header">Establishment status</th>
+          <th scope="col" class="govuk-table__header">Establishment type</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        <% @schools.each do |school| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
+            <td class="govuk-table__cell"><%= school.urn %></td>
+            <td class="govuk-table__cell"><%= school.establishment_status_name %></td>
+            <td class="govuk-table__cell"><%= school.establishment_type_name %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%== pagy_govuk_nav(@pagy) %>
+  </div>
+</div>
