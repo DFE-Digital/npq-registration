@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_22_203458) do
+ActiveRecord::Schema.define(version: 2022_11_30_142333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 2022_11_22_203458) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "ecf_id"
+    t.string "hint"
   end
 
   create_table "local_authorities", force: :cascade do |t|

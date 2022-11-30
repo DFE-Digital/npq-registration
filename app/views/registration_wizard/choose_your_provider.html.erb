@@ -29,7 +29,15 @@
         <% end %>
 
         <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :lead_provider_id, struct.value, label: { text: struct.text }, link_errors: struct.link_errors %>
+          <%=
+            f.govuk_radio_button(
+              :lead_provider_id,
+              struct.value,
+              label: { text: struct.text },
+              hint: { text: struct.hint },
+              link_errors: struct.link_errors
+            )
+          %>
         <% end %>
       <% end %>
 

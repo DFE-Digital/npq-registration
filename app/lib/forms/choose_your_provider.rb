@@ -35,9 +35,12 @@ module Forms
 
     def options
       providers.each_with_index.map do |provider, index|
-        OpenStruct.new(value: provider.id,
-                       text: provider.name,
-                       link_errors: index.zero?)
+        OpenStruct.new(
+          value: provider.id,
+          text: provider.name,
+          hint: provider.hint,
+          link_errors: index.zero?,
+        )
       end
     end
 
