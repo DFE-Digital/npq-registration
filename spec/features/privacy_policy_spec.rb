@@ -8,6 +8,10 @@ RSpec.feature "Privacy Policy", type: :feature do
     click_link("Privacy")
 
     expect(page).to be_axe_clean
-    expect(page).to have_content("Who we are and why we process personal data")
+
+    aggregate_failures do
+      expect(page).to have_content("Privacy policy")
+      expect(page).to have_content("This policy refers to data collected as part of the national professional qualifications programme")
+    end
   end
 end

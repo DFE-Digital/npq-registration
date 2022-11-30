@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_20_102023) do
+ActiveRecord::Schema.define(version: 2022_11_18_124435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 2022_10_20_102023) do
     t.string "provider"
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
-    t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
+    t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["uid"], name: "index_users_on_uid", unique: true
