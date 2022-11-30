@@ -42,7 +42,9 @@ module Services
         case institution.class.name
         when "School"
           return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-          return INELIGIBLE_ESTABLISHMENT_TYPE unless eligible_establishment_type_codes.include?(institution.establishment_type_code)
+          unless eligible_establishment_type_codes.include?(institution.establishment_type_code) || (institution.eyl_funding_eligible? && course.eyl?)
+            return INELIGIBLE_ESTABLISHMENT_TYPE
+          end
           return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
           return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
