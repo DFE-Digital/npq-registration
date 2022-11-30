@@ -1,7 +1,7 @@
 require "csv"
 
-namespace :eyl_eligible_schools do
-  desc "Make schools eligible for NPQEYL courses"
+namespace :eyl_fundng_eligible_schools do
+  desc "Make schools funding eligible for NPQEYL courses"
   task :update, %i[file_name] => :environment do |_t, args|
     updated_records = 0
     update_errors = 0
