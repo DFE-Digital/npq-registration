@@ -25,8 +25,9 @@ def participant_validator_response(trn: "1234567", active_alert: false)
   }.to_json
 end
 
-def previously_funded_response(previously_funded)
+def ecf_funding_lookup_response(previously_funded:, previously_received_targeted_funding_support: false)
   {
     previously_funded:,
+    previously_received_targeted_funding_support:,
   }.to_json
 end

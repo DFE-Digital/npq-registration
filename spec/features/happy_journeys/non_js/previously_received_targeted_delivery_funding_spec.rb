@@ -16,7 +16,7 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey that is able to receive targeted delivery funding" do
+  scenario "registration journey that is blocked from targeted delivery funding because they were previously funded" do
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -71,7 +71,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "open manchester school"
     end
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/RP12%2F345?npq_course_identifier=npq-senior-leadership")
+    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -79,7 +79,10 @@ RSpec.feature "Happy journeys", type: :feature do
       )
       .to_return(
         status: 200,
-        body: ecf_funding_lookup_response(previously_funded: false),
+        body: ecf_funding_lookup_response(
+          previously_funded: false,
+          previously_received_targeted_funding_support: true,
+        ),
         headers: {
           "Content-Type" => "application/vnd.api+json",
         },
@@ -89,20 +92,6 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("What are you applying for?")
       page.choose("NPQ for Senior Leadership (NPQSL)")
     end
-
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
-      .with(
-        headers: {
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-        },
-      )
-      .to_return(
-        status: 200,
-        body: ecf_funding_lookup_response(previously_funded: false),
-        headers: {
-          "Content-Type" => "application/vnd.api+json",
-        },
-      )
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
       expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
@@ -175,7 +164,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
-      "targeted_delivery_funding_eligibility" => true,
+      "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,

@@ -111,7 +111,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
       .to_return(
         status: 200,
-        body: previously_funded_response(false),
+        body: ecf_funding_lookup_response(previously_funded: false),
         headers: {
           "Content-Type" => "application/vnd.api+json",
         },
@@ -130,7 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
       .to_return(
         status: 200,
-        body: previously_funded_response(false),
+        body: ecf_funding_lookup_response(previously_funded: false),
         headers: {
           "Content-Type" => "application/vnd.api+json",
         },

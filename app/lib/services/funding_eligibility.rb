@@ -63,11 +63,23 @@ module Services
       end
     end
 
+    def eligible_for_targeted_delivery_funding?
+      !previously_received_targeted_funding_support? &&
+        course_and_institution_eligible_for_targeted_delivery_funding?
+    end
+
     def ineligible_institution_type?
       [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
     end
 
   private
+
+    def course_and_institution_eligible_for_targeted_delivery_funding?
+      @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
+        institution:,
+        course:,
+      ).call
+    end
 
     def inside_catchment?
       @inside_catchment
@@ -120,10 +132,16 @@ module Services
       ]
     end
 
-    def previously_funded?
-      results = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(@trn)
+    def ecf_api_funding_lookup
+      @ecf_api_funding_lookup = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(@trn)
+    end
 
-      results["previously_funded"] == true
+    def previously_funded?
+      ecf_api_funding_lookup["previously_funded"] == true
+    end
+
+    def previously_received_targeted_funding_support?
+      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
     end
   end
 end
