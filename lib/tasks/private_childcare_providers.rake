@@ -1,7 +1,7 @@
 # Note before running, the file when downloaded from the correct link will need to be edited
 # the top three lines and the first column are note used and then you have to make sure the
 # top row is a header line as sometimes when converting it from .ods espeically on macs you
-# you may come across issues with first line causing the problem. Also the file you are 
+# you may come across issues with first line causing the problem. Also the file you are
 # looking for is called "Childcare provider level data as at.."
 
 # https://www.gov.uk/government/statistics/childcare-providers-and-inspections-as-at-31-march-2022
