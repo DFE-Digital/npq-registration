@@ -64,8 +64,8 @@ module Services
     end
 
     def eligible_for_targeted_delivery_funding?
-      !previously_received_targeted_funding_support? &&
-        course_and_institution_eligible_for_targeted_delivery_funding?
+      course_and_institution_eligible_for_targeted_delivery_funding? &&
+        !previously_received_targeted_funding_support? # Check last as it involves an API call
     end
 
     def ineligible_institution_type?
