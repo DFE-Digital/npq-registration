@@ -19,7 +19,7 @@ module Services
     NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
     EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
 
-    attr_reader :institution, :course
+    attr_reader :institution, :course, :trn
 
     def initialize(institution:, course:, inside_catchment:, trn:, new_headteacher: false)
       @institution = institution
@@ -133,7 +133,7 @@ module Services
     end
 
     def ecf_api_funding_lookup
-      @ecf_api_funding_lookup = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(@trn)
+      @ecf_api_funding_lookup = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(trn)
     end
 
     def previously_funded?
