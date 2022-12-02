@@ -38,10 +38,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-      expect(page).to have_text("Do you work in a nursery?")
-      page.choose("Yes", visible: :all)
-    end
+    # expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
+    #   expect(page).to have_text("Do you work in a nursery?")
+    #   page.choose("Yes", visible: :all)
+    # end
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
       expect(page).to have_text("What kind of nursery do you work in?")
@@ -162,7 +162,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Have you completed an NPQH?" => "I have completed an NPQH",
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
-          "Do you work in a nursery?" => "Yes",
+          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => "EY123456 - searchable childcare provider",

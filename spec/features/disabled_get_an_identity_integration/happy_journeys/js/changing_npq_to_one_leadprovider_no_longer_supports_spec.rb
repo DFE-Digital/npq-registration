@@ -62,10 +62,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-      expect(page).to have_text("Do you work in a nursery?")
-      page.choose("Yes", visible: :all)
-    end
+    # expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
+    #   expect(page).to have_text("Do you work in a nursery?")
+    #   page.choose("Yes", visible: :all)
+    # end
 
     public_nursery_type_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
     public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
@@ -135,7 +135,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
-          "Do you work in a nursery?" => "Yes",
+          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Nursery" => "open manchester school",
           "Type of nursery" => public_nursery_type,
@@ -193,7 +193,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Teacher Development Trust",
-          "Do you work in a nursery?" => "Yes",
+          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Nursery" => "open manchester school",
           "Type of nursery" => public_nursery_type,
