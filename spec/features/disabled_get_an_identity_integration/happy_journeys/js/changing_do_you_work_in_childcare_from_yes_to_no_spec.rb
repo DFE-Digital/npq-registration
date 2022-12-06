@@ -61,17 +61,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    # expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-    #   expect(page).to have_text("Do you work in a nursery?")
-    #   page.choose("Yes", visible: :all)
-    # end
-
-    public_nursery_type_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
-    public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
-
-    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("What kind of nursery do you work in?")
-      page.choose(public_nursery_type, visible: :all)
+    expect_page_to_have(path: "/registration/nursery-type", submit_form: true) do
+      expect(page).to have_text("Which early years setting do you work in?")
+      page.choose("Local authority-maintained nursery", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do

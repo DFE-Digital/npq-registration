@@ -1,6 +1,5 @@
-<!-- Delete this page -->
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Do you work in a nursery?
+  <%= @form.errors.present? ? "Error: " : nil %>Which early years setting do you work in?
 <% end %>
 
 <% content_for :before_content do %>
@@ -15,21 +14,18 @@
     <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <%= f.govuk_radio_buttons_fieldset(:works_in_nursery,
+      <%= f.govuk_radio_buttons_fieldset(:nursery_type,
                                          legend: {
-                                           text: "Do you work in a nursery?",
                                            tag: "h1",
                                            size: "xl"
                                          }
                                         ) do %>
+        <%= f.govuk_radio_button(:nursery_type, "local_authority_maintained_nursery", link_errors: true) %>
+        <%= f.govuk_radio_button(:nursery_type, "preschool_class_as_part_of_school") %>
+        <%= f.govuk_radio_button(:nursery_type, "private_nursery") %>
+        <%= f.govuk_radio_divider %>
+        <%= f.govuk_radio_button(:nursery_type, "another_early_years_setting") %>
 
-        <% @form.options.each do |struct| %>
-          <%=
-            f.govuk_radio_button :works_in_nursery,
-                                 struct.value,
-                                 link_errors: struct.link_errors
-          %>
-        <% end %>
       <% end %>
 
       <%= f.govuk_submit %>

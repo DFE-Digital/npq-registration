@@ -37,10 +37,6 @@ class Services::QueryStore
     store["works_in_childcare"] == "yes"
   end
 
-  def works_in_nursery?
-    store["works_in_nursery"] == "yes"
-  end
-
   def works_in_other?
     store["work_setting"] == "other"
   end
@@ -50,11 +46,11 @@ class Services::QueryStore
   end
 
   def kind_of_nursery_public?
-    Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["kind_of_nursery"])
+    Forms::NurseryType::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["nursery_type"])
   end
 
   def kind_of_nursery_private?
-    Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(store["kind_of_nursery"])
+    Forms::NurseryType::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(store["nursery_type"])
   end
 
   def course

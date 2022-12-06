@@ -181,7 +181,6 @@ en:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
         aso_new_headteacher: "Are you in your first 5 years of a headship?"
-        kind_of_nursery: "What kind of nursery do you work in?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
         funding: "How is your course being paid for?"
@@ -200,17 +199,18 @@ en:
           another: "For example, I am sharing the costs with my workplace"
     label:
       registration_wizard:
-        kind_of_nursery_options:
-          local_authority_maintained_nursery: "Local authority maintained nursery"
-          preschool_class_as_part_of_school: "Preschool class that's part of a school"
-          private_nursery: "Private nursery"
-
         work_setting_options:
           early_years_or_childcare: "Early years or childcare"
           a_school: "A school"
           an_academy_trust: "An academy trust"
           a_16_to_19_educational_setting: "A 16 to 19 educational setting"
           other: "Other"
+
+        nursery_type_options:
+          local_authority_maintained_nursery: "Local authority-maintained nursery"
+          preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
+          private_nursery: "Private nursery"
+          another_early_years_setting: "Another early years setting"
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
@@ -263,6 +263,3 @@ en:
           "yes": "Yes"
           "no": "No"
 
-        works_in_nursery_options:
-          "yes": "Yes"
-          "no": "No"

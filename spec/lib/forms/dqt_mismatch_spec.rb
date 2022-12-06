@@ -35,7 +35,7 @@ RSpec.describe Forms::DqtMismatch do
       let(:works_in_school) { "no" }
       let(:works_in_childcare) { "yes" }
 
-      it { is_expected.to be :work_in_nursery }
+      it { is_expected.to be :nursery_type }
     end
 
     context "when not working in school or nursery" do
