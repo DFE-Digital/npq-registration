@@ -188,16 +188,14 @@ module Services
       eligible_for_funding?
     end
 
-    delegate :ineligible_institution_type?,
+    def targeted_delivery_funding_eligibility
+      eligible_for_targeted_delivery_funding?
+    end
+
+    delegate :eligible_for_targeted_delivery_funding?,
+             :ineligible_institution_type?,
              :funding_eligiblity_status_code,
              to: :funding_eligibility_service
-
-    def targeted_delivery_funding_eligibility
-      @targeted_delivery_funding_eligibility ||= Services::Eligibility::TargetedDeliveryFunding.new(
-        institution: institution_from_store,
-        course:,
-      ).call
-    end
 
     def new_headteacher?
       %w[yes_in_first_two_years yes_in_first_five_years yes_when_course_starts].include?(headteacher_status)

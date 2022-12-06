@@ -1,5 +1,8 @@
 module Services
   module Eligibility
+    # Note that this doesn't take into account any details about the user or application. This is
+    # just for determining course+institution eligibility. Further checks related to do with the user
+    # are performed after this service is called.
     class TargetedDeliveryFunding
       attr_reader :institution, :course
 

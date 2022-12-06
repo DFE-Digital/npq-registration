@@ -33,7 +33,7 @@ RSpec.describe Forms::CheckAnswers do
         )
         .to_return(
           status: 200,
-          body: previously_funded_response(false),
+          body: ecf_funding_lookup_response(previously_funded: false),
           headers: {
             "Content-Type" => "application/vnd.api+json",
           },
