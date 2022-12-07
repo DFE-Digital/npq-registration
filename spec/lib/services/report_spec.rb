@@ -27,9 +27,8 @@ RSpec.describe Services::Report do
         funding_choice
         funding_eligiblity_status_code
         targeted_delivery_funding_eligibility
-        works_in_nursery
         works_in_childcare
-        kind_of_nursery
+        nursery_type
         private_childcare_provider_urn
         cohort
         school_urn
@@ -44,7 +43,7 @@ RSpec.describe Services::Report do
 
       csv_headers = CSV.parse(subject.call).first
 
-      expect(csv_headers).to eq(expected_headers)
+      expect(csv_headers).to match_array(expected_headers)
     end
   end
 end

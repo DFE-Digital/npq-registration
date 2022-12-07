@@ -38,9 +38,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
+    public_nursery_type_key = Forms::NurseryType::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
+    public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.nursery_type_options")
+
     expect_page_to_have(path: "/registration/nursery-type", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")
-      page.choose("Local authority-maintained nursery", visible: :all)
+      page.choose(public_nursery_type, visible: :all)
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
@@ -99,11 +102,10 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "Early years or childcare",
-          # "Do you work in a nursery?" => "Yes",
-          "Type of nursery" => public_nursery_type,
           "Lead provider" => "Teach First",
           "Nursery" => "open manchester school",
           "Where do you work?" => "England",
+          "Which early years setting do you work in?" => public_nursery_type,
         },
       )
 
@@ -195,6 +197,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
+      "nursery_type" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => nil,
@@ -205,8 +208,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "work_setting" => "other",
+      "works_in_nursery" => nil,
       "works_in_childcare" => false,
-      "works_in_nursery" => false,
       "works_in_school" => false,
       "raw_application_data" => {
         "can_share_choices" => "1",

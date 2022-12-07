@@ -62,9 +62,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
+    public_nursery_type_key = Forms::NurseryType::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
+    public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.nursery_type_options")
+
     expect_page_to_have(path: "/registration/nursery-type", submit_form: true) do
       expect(page).to have_text("Which early years setting do you work in?")
-      page.choose("Local authority-maintained nursery", visible: :all)
+      page.choose(public_nursery_type, visible: :all)
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
@@ -127,10 +130,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
-          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Nursery" => "open manchester school",
-          "Type of nursery" => public_nursery_type,
+          "Which early years setting do you work in?" => public_nursery_type,
           "Where do you work?" => "England",
         },
       )
@@ -185,10 +187,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Teacher Development Trust",
-          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Nursery" => "open manchester school",
-          "Type of nursery" => public_nursery_type,
+          "Which early years setting do you work in?" => public_nursery_type,
           "Where do you work?" => "England",
         },
       )
@@ -227,8 +228,9 @@ RSpec.feature "Happy journeys", type: :feature do
       "employment_role" => nil,
       "funding_choice" => "school",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "kind_of_nursery" => nil,
       "headteacher_status" => nil,
-      "kind_of_nursery" => public_nursery_type_key,
+      "nursery_type" => public_nursery_type_key,
       "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
@@ -239,7 +241,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => true,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -255,7 +257,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
-        "kind_of_nursery" => public_nursery_type_key,
+        "nursery_type" => public_nursery_type_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
@@ -266,7 +268,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

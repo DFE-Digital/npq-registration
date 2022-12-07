@@ -54,7 +54,6 @@ module Forms
       if query_store.inside_catchment? && query_store.works_in_school?
         :choose_school
       elsif query_store.inside_catchment? && query_store.works_in_childcare?
-        # binding.pry
         if query_store.kind_of_nursery_public?
           :choose_childcare_provider
         elsif query_store.has_ofsted_urn?

@@ -108,9 +108,8 @@ class RegistrationWizard
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Which early years setting do you work in?",
-                              value: I18n.t(store["works_in_nursery"], scope: "helpers.label.registration_wizard.nursery_type_options"),
+                              value: I18n.t(store["nursery_type"], scope: "helpers.label.registration_wizard.nursery_type_options"),
                               change_step: :nursery_type)
-
       if query_store.kind_of_nursery_private?
         array << if query_store.has_ofsted_urn?
                    OpenStruct.new(key: "Ofsted registration details",
@@ -129,7 +128,7 @@ class RegistrationWizard
         array << OpenStruct.new(key: "Workplace",
                                 value: institution_from_store.name,
                                 change_step: :find_school)
-      elsif query_store.works_in_childcare? && query_store.works_in_nursery? && query_store.kind_of_nursery_public?
+      elsif query_store.works_in_childcare? && query_store.kind_of_nursery_public?
         array << OpenStruct.new(key: "Nursery",
                                 value: institution_from_store.name,
                                 change_step: :find_childcare_provider)

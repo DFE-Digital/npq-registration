@@ -25,7 +25,6 @@ module Services
           employment_type: application.employment_type,
           cohort: application.cohort,
           targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-          works_in_nursery: application.works_in_nursery,
           works_in_childcare: application.works_in_childcare,
           nursery_type: application.nursery_type,
           private_childcare_provider_urn: application.private_childcare_provider_urn,

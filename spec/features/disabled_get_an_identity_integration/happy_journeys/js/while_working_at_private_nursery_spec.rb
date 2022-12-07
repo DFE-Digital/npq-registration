@@ -128,7 +128,6 @@ RSpec.feature "Happy journeys", type: :feature do
         {
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
           "Date of birth" => "13 December 1980",
-          # "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Email" => "user@example.com",
           "Full name" => "John Doe",
@@ -136,8 +135,8 @@ RSpec.feature "Happy journeys", type: :feature do
           "National Insurance number" => "AB123456C",
           "Ofsted registration details" => private_childcare_provider.registration_details,
           "TRN" => "1234567",
-          "Type of nursery" => "Private nursery",
           "Where do you work?" => "England",
+          "Which early years setting do you work in?" => "Private nursery",
         },
       )
     end
@@ -176,7 +175,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "funded",
       "headteacher_status" => nil,
-      "kind_of_nursery" => "private_nursery",
+      "nursery_type" => "private_nursery",
+      "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
@@ -187,7 +187,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => true,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -202,7 +202,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
-        "kind_of_nursery" => "private_nursery",
+        "nursery_type" => "private_nursery",
         "lead_provider_id" => "9",
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
@@ -213,7 +213,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

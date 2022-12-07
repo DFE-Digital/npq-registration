@@ -139,6 +139,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Ofsted registration details" => private_childcare_provider.registration_details,
           "TRN" => "1234567",
           "Where do you work?" => "England",
+          "Which early years setting do you work in?" => "Private nursery",
         },
       )
     end
@@ -178,6 +179,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_eligiblity_status_code" => "funded",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
+      "nursery_type" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
@@ -188,7 +190,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => false,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -204,6 +206,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "nursery_type" => "private_nursery",
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
@@ -213,7 +216,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_verified" => true,
         "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "no",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

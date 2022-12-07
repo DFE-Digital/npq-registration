@@ -29,7 +29,6 @@ module Services
           employment_role:,
           employment_type:,
           targeted_delivery_funding_eligibility:,
-          works_in_nursery: store["works_in_nursery"] == "yes",
           works_in_childcare: store["works_in_childcare"] == "yes",
           nursery_type: store["nursery_type"],
           work_setting: store["work_setting"],

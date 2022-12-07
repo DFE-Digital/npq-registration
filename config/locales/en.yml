@@ -185,7 +185,6 @@ en:
         work_setting: "What setting do you work in?"
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
-        # works_in_nursery: "Do you work in a nursery?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
     hint:
       registration_wizard:

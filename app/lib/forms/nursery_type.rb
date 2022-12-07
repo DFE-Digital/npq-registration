@@ -6,7 +6,7 @@ module Forms
     ].freeze
 
     KIND_OF_NURSERY_PRIVATE_OPTIONS = %w[
-      early_years_or_childcare
+      private_nursery
       another_early_years_setting
     ].freeze
 

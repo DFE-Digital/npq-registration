@@ -115,8 +115,7 @@ RSpec.describe RegistrationWizard do
           "trn_auto_verified" => nil,
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
-          "works_in_nursery" => "yes",
-          "kind_of_nursery" => "local_authority_maintained_nursery",
+          "nursery_type" => "local_authority_maintained_nursery",
           "institution_location" => "London",
           "institution_name" => "",
           "institution_identifier" => "School-#{school.urn}",
@@ -143,7 +142,7 @@ RSpec.describe RegistrationWizard do
           "institution_identifier" => institution_identifier,
           "institution_location" => "manchester",
           "institution_name" => "",
-          "kind_of_nursery" => "private_nursery",
+          "nursery_type" => "private_nursery",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "national_insurance_number" => "123420",
           "teacher_catchment" => "england",
@@ -153,7 +152,6 @@ RSpec.describe RegistrationWizard do
           "trn_knowledge" => "yes",
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
-          "works_in_nursery" => "yes",
           "works_in_school" => "no",
         }
       end
