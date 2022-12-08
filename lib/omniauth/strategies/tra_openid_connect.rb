@@ -18,7 +18,7 @@ module Omniauth
       info do
         {
           date_of_birth: parsed_date_of_birth,
-          email: raw_info["email"],
+          email: raw_info["email"].downcase,
           email_verified: parsed_email_verified,
           name: raw_info["name"],
           trn: raw_info["trn"],
