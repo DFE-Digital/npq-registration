@@ -2,15 +2,24 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    attr_accessor :course_id
+    QUESTION_NAME = :course_id
 
-    validates :course_id, presence: true
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
     def self.permitted_params
-      %i[
-        course_id
-      ]
+      [QUESTION_NAME]
+    end
+
+    def options
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       text: course.name,
+                       link_errors: index.zero?,
+                       hint: course.description)
+      end
     end
 
     def after_save
@@ -25,6 +34,7 @@ module Forms
       # If it is no longer valid due to the NPQ changing though we will need to be
       # reinserted back into the flow so that later on the user can be asked to
       # choose a new provider.
+
       if changing_answer? && lead_provider_valid?
         if no_answers_will_change?
           :check_answers
@@ -68,15 +78,6 @@ module Forms
       end
     end
 
-    def options
-      courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
-                       text: course.name,
-                       link_errors: index.zero?,
-                       hint: course.description)
-      end
-    end
-
     def course
       courses.find_by(id: course_id)
     end
@@ -99,10 +100,16 @@ module Forms
       Course.find_by(id: wizard.store["course_id"])
     end
 
+    def approved_itt_provider?
+      ::IttProvider.currently_approved
+        .find_by(legal_name: wizard.query_store.itt_provider).present?
+    end
+
     def previously_eligible_for_funding?
       Services::FundingEligibility.new(
         course: previous_course,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
@@ -113,6 +120,7 @@ module Forms
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,

@@ -28,6 +28,7 @@ class Course < ApplicationRecord
   scope :aso, -> { where(name: COURSE_NAMES[:ASO]) }
   scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
   scope :npqeyl, -> { where(name: COURSE_NAMES[:NPQEYL]) }
+  scope :npqltd, -> { where(name: COURSE_NAMES[:NPQLTD]) }
 
   def self.find_by_code(code:)
     find_by(name: COURSE_NAMES[code])
@@ -55,6 +56,10 @@ class Course < ApplicationRecord
 
   def eyl?
     name == COURSE_NAMES[:NPQEYL]
+  end
+
+  def npqltd?
+    name == COURSE_NAMES[:NPQLTD]
   end
 
   def identifier

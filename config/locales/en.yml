@@ -213,6 +213,7 @@ en:
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
+        itt_provider: "Enter the name of the ITT provider you are working with"
     hint:
       registration_wizard:
         work_setting_options:
@@ -243,7 +244,10 @@ en:
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited ITT provider"
           other: "Other"
+
+        itt_provider: "Enter the name of the ITT provider you are working with"
 
         employment_role: "What is your role?"
 
