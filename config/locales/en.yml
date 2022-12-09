@@ -243,6 +243,7 @@ en:
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited ITT provider"
           other: "Other"
 
         employment_role: "What is your role?"
