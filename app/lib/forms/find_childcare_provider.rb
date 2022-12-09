@@ -15,7 +15,7 @@ module Forms
     end
 
     def previous_step
-      :nursery_type
+      :kind_of_nursery
     end
   end
 end

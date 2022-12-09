@@ -30,7 +30,7 @@ module Services
           employment_type:,
           targeted_delivery_funding_eligibility:,
           works_in_childcare: store["works_in_childcare"] == "yes",
-          nursery_type: store["nursery_type"],
+          kind_of_nursery: store["kind_of_nursery"],
           work_setting: store["work_setting"],
           cohort: course.default_cohort,
           raw_application_data: raw_application_data.except("current_user"),

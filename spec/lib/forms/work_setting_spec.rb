@@ -52,12 +52,12 @@ RSpec.describe Forms::WorkSetting, type: :model do
 
     %w[a_school other].each do |setting|
       context "when #{setting}" do
-        let(:store) { { "nursery_type" => "Private nursery", "has_ofsted_urn" => "yes" } }
+        let(:store) { { "kind_of_nursery" => "Private nursery", "has_ofsted_urn" => "yes" } }
         let(:work_setting) { setting }
 
-        let(:childcare_specific_keys) { %w[nursery_type has_ofsted_urn] }
+        let(:childcare_specific_keys) { %w[kind_of_nursery has_ofsted_urn] }
 
-        it "deletes 'nursery_type' and 'has_ofted_urn'" do
+        it "deletes 'kind_of_nursery' and 'has_ofted_urn'" do
           expect(subject.wizard.store.keys).to include(*childcare_specific_keys)
           subject.after_save
           expect(subject.wizard.store.keys).not_to include(*childcare_specific_keys)

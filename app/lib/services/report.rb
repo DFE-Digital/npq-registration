@@ -57,7 +57,7 @@ module Services
         funding_eligiblity_status_code
         targeted_delivery_funding_eligibility
         works_in_childcare
-        nursery_type
+        kind_of_nursery
         private_childcare_provider_urn
         cohort
         school_urn

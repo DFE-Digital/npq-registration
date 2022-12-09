@@ -7,7 +7,7 @@ class Application < ApplicationRecord
 
   scope :unsynced, -> { where(ecf_id: nil) }
 
-  enum nursery_type: {
+  enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
     preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
     private_nursery: "private_nursery",

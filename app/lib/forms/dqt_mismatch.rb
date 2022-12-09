@@ -9,7 +9,7 @@ module Forms
 
       if wizard.query_store.inside_catchment?
         return :find_school if wizard.query_store.works_in_school?
-        return :nursery_type if wizard.query_store.works_in_childcare?
+        return :kind_of_nursery if wizard.query_store.works_in_childcare?
 
         return :your_employment
       end

@@ -33,7 +33,7 @@ module Forms
         wizard.store["works_in_school"] = "yes"
         wizard.store["works_in_childcare"] = "no"
 
-        %w[nursery_type has_ofsted_urn].map { |field| wizard.store.delete(field) }
+        %w[kind_of_nursery has_ofsted_urn].map { |field| wizard.store.delete(field) }
       when *CHILDCARE_SETTINGS
         wizard.store["works_in_childcare"] = "yes"
         wizard.store["works_in_school"] = "no"
@@ -41,7 +41,7 @@ module Forms
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
 
-        %w[funding nursery_type has_ofsted_urn].map do |field|
+        %w[funding kind_of_nursery has_ofsted_urn].map do |field|
           wizard.store.delete(field)
         end
       else
@@ -61,7 +61,7 @@ module Forms
       if wizard.tra_get_an_identity_omniauth_integration_active?
         if wizard.query_store.inside_catchment?
           return :find_school if works_in_school?
-          return :nursery_type if works_in_childcare?
+          return :kind_of_nursery if works_in_childcare?
 
           return :your_employment
         end
