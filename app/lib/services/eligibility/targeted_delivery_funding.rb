@@ -124,12 +124,9 @@ module Services
           10_027_384, # Sense College Loughborough
           10_028_480, # The Autism Project - CareTrade
           10_028_500, # Bemix
-          10_030_656, # The JCB Academy
           10_032_448, # Eat That Frog C.I.C
           10_032_637, # Novalis Trust
           10_032_898, # Trinity Specialist College
-          10_034_865, # Dove House School
-          10_034_999, # University Academy Holbeach
           10_038_981, # Sheiling College
           10_040_374, # St Martins Centre (St Roses School)
           10_040_375, # Lakeside Early Adult Provision - LEAP College (Wargrave House Ltd)
@@ -154,7 +151,6 @@ module Services
           10_056_251, # Brentwood Community College
           10_056_799, # Trinity Post 16 Solutions Ltd.
           10_056_854, # Wilson Stuart University College Birmingham Partnership Trust
-          10_057_010, # London Design and Engineering UTC
           10_057_205, # The Ridge Employability College
           10_057_307, # Woodpecker Court
           10_057_981, # Ada National College for Digital Skills
