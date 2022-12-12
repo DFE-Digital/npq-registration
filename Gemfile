@@ -48,6 +48,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0.1"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
+  gem "timecop", "~> 0.9"
 end
 
 group :development do

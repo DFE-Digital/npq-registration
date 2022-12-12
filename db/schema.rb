@@ -105,6 +105,17 @@ ActiveRecord::Schema.define(version: 2023_01_06_114221) do
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
+  create_table "itt_providers", force: :cascade do |t|
+    t.text "legal_name"
+    t.text "operating_name"
+    t.datetime "removed"
+    t.datetime "added"
+    t.boolean "approved"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
+  end
+
   create_table "lead_providers", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
