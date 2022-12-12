@@ -143,7 +143,7 @@ en:
         forms/kind_of_nursery:
           attributes:
             kind_of_nursery:
-              blank: Choose what work setting you work in
+              blank: Select your early years setting
         forms/teacher_catchment:
           attributes:
             teacher_catchment:

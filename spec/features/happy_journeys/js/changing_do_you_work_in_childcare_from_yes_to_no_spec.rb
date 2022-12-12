@@ -47,15 +47,15 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Where is your nursery located?")
-      page.fill_in "Where is your nursery located?", with: "manchester"
+      expect(page).to have_text("Where is your workplace located?")
+      page.fill_in "Where is your workplace located?", with: "manchester"
     end
 
     expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-      expect(page).to have_text("What’s the name of your nursery?")
+      expect(page).to have_text("What’s the name of your workplace?")
       expect(page).to have_text("Search for nurseries located in manchester")
       within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your nursery?", with: "open"
+        page.fill_in "What’s the name of your workplace?", with: "open"
       end
 
       expect(page).to have_content("open manchester school")

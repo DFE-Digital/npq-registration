@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Where is your nursery located?
+  <%= @form.errors.present? ? "Error: " : nil %>Where is your workplace located?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_text_field :institution_location,
                              width: "three-quarters",
-                             label: { text: "Where is your nursery located?", size: "xl", tag: "h1" },
+                             label: { text: "Where is your workplace located?", size: "xl", tag: "h1" },
                              hint: { text: "Enter the town, city or the first part of the postcode. For example Chester or CH1." } %>
 
       <%= f.govuk_submit %>
