@@ -17,8 +17,6 @@ module Forms
     def next_step
       if approved_itt_provider # check if its the NPQLTD course
         :choose_your_npq
-      else
-
       end
     end
 
@@ -26,7 +24,7 @@ module Forms
       :employment_type
     end
 
-    private
+  private
 
     def approved_itt_provider
       # look up the provider infomration
