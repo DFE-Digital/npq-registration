@@ -9,6 +9,10 @@ class Services::QueryStore
     store["current_user"]
   end
 
+  def itt_provider
+    store["itt_provider"]
+  end
+
   def trn
     # If the GAI flow was used then the updated TRN is already on the user record,
     # other wise it will have been entered into the store by the user and should be retrieved from there.

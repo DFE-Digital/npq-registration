@@ -29,7 +29,11 @@ module Forms
     end
 
     def next_step
-      :your_role
+      if employment_type == "lead_mentor_for_accredited_itt_provider"
+        :itt_provider
+      else
+        :your_role
+      end
     end
 
     def previous_step
