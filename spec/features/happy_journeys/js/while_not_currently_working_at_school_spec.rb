@@ -115,8 +115,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
-      "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "kind_of_nursery" => nil,
       "private_childcare_provider_urn" => nil,
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
@@ -126,7 +126,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => false,
-      "works_in_nursery" => false,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "other",
       "raw_application_data" => {

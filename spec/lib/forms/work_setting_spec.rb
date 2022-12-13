@@ -52,27 +52,16 @@ RSpec.describe Forms::WorkSetting, type: :model do
 
     %w[a_school other].each do |setting|
       context "when #{setting}" do
-        let(:store) { { "works_in_nursery" => "yes", "kind_of_nursery" => "xyz", "has_ofsted_urn" => "yes" } }
+        let(:store) { { "kind_of_nursery" => "Private nursery", "has_ofsted_urn" => "yes" } }
         let(:work_setting) { setting }
 
-        let(:childcare_specific_keys) { %w[works_in_nursery kind_of_nursery has_ofsted_urn] }
+        let(:childcare_specific_keys) { %w[kind_of_nursery has_ofsted_urn] }
 
-        it "deletes 'works_in_nursery', 'kind_of_nursery' and 'has_ofted_urn'" do
+        it "deletes 'kind_of_nursery' and 'has_ofted_urn'" do
           expect(subject.wizard.store.keys).to include(*childcare_specific_keys)
           subject.after_save
           expect(subject.wizard.store.keys).not_to include(*childcare_specific_keys)
         end
-      end
-    end
-
-    context "when going back and re-selecting 'early_years_or_childcare'" do
-      let(:store) { { "works_in_childcare" => "yes", "works_in_nursery" => "yes" } }
-      let(:work_setting) { "early_years_or_childcare" }
-
-      it "doesn't unset their previous nursery selection" do
-        expect(subject.wizard.store["works_in_nursery"]).to eql("yes")
-        subject.after_save
-        expect(subject.wizard.store["works_in_nursery"]).to eql("yes")
       end
     end
   end

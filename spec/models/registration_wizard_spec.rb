@@ -115,7 +115,6 @@ RSpec.describe RegistrationWizard do
           "trn_auto_verified" => nil,
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
-          "works_in_nursery" => "yes",
           "kind_of_nursery" => "local_authority_maintained_nursery",
           "institution_location" => "London",
           "institution_name" => "",
@@ -153,7 +152,6 @@ RSpec.describe RegistrationWizard do
           "trn_knowledge" => "yes",
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
-          "works_in_nursery" => "yes",
           "works_in_school" => "no",
         }
       end

@@ -170,8 +170,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => "Falkland Islands",
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "works_in_nursery" => nil,
       "works_in_childcare" => false,
-      "works_in_nursery" => false,
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {

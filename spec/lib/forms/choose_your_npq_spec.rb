@@ -147,7 +147,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         teacher_catchment:,
         works_in_school:,
         works_in_childcare:,
-        works_in_nursery:,
         kind_of_nursery:,
         has_ofsted_urn:,
       }.stringify_keys
@@ -156,7 +155,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     let(:teacher_catchment) { "another" }
     let(:works_in_school) { "no" }
     let(:works_in_childcare) { "no" }
-    let(:works_in_nursery) { "no" }
     let(:kind_of_nursery) { nil }
     let(:has_ofsted_urn) { "no" }
 
@@ -193,34 +191,30 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           expect(subject.previous_step).to eql(:have_ofsted_urn)
         end
 
-        context "when working in a nursery" do
-          let(:works_in_nursery) { "yes" }
+        it "return have_ofsted_urn" do
+          expect(subject.previous_step).to eql(:have_ofsted_urn)
+        end
+
+        context "when working for a public childcare provider" do
+          let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+
+          it "return choose_childcare_provider" do
+            expect(subject.previous_step).to eql(:choose_childcare_provider)
+          end
+        end
+
+        context "when working for a private childcare provider" do
+          let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
 
           it "return have_ofsted_urn" do
             expect(subject.previous_step).to eql(:have_ofsted_urn)
           end
 
-          context "when working for a public childcare provider" do
-            let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+          context "when user has declared they have an ofsted URN" do
+            let(:has_ofsted_urn) { "yes" }
 
-            it "return choose_childcare_provider" do
-              expect(subject.previous_step).to eql(:choose_childcare_provider)
-            end
-          end
-
-          context "when working for a private childcare provider" do
-            let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
-
-            it "return have_ofsted_urn" do
-              expect(subject.previous_step).to eql(:have_ofsted_urn)
-            end
-
-            context "when user has declared they have an ofsted URN" do
-              let(:has_ofsted_urn) { "yes" }
-
-              it "return choose_private_childcare_provider" do
-                expect(subject.previous_step).to eql(:choose_private_childcare_provider)
-              end
+            it "return choose_private_childcare_provider" do
+              expect(subject.previous_step).to eql(:choose_private_childcare_provider)
             end
           end
         end

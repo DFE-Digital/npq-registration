@@ -38,13 +38,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-      expect(page).to have_text("Do you work in a nursery?")
-      page.choose("Yes", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("What kind of nursery do you work in?")
+      expect(page).to have_text("Which early years setting do you work in?")
       page.choose("Private nursery", visible: :all)
     end
 
@@ -162,11 +157,10 @@ RSpec.feature "Happy journeys", type: :feature do
           "Have you completed an NPQH?" => "I have completed an NPQH",
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
-          "Do you work in a nursery?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => "EY123456 - searchable childcare provider",
-          "Type of nursery" => "Private nursery",
+          "Which early years setting do you work in?" => "Private nursery",
           "Where do you work?" => "England",
         },
       )
@@ -217,7 +211,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => true,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -237,7 +231,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "teacher_catchment_country" => nil,
         "trn_knowledge" => "yes",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

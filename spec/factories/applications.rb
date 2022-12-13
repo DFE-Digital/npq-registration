@@ -19,7 +19,6 @@ FactoryBot.define do
 
       works_in_school { true }
       works_in_childcare { false }
-      works_in_nursery { false }
       kind_of_nursery { nil }
     end
 
@@ -29,7 +28,6 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      works_in_nursery { true }
       kind_of_nursery { Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
     end
 
@@ -39,7 +37,6 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      works_in_nursery { true }
       kind_of_nursery { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
     end
   end

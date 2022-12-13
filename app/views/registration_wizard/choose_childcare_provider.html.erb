@@ -1,6 +1,6 @@
-<% question = "What’s the name of your nursery?" %>
-<% hint = "Search for nurseries located in #{@form.wizard.store["institution_location"]}." %>
-<% js_fallback_question = "Please choose from nurseries located in #{@form.wizard.store["institution_location"]}" %>
+<% question = "What’s the name of your workplace?" %>
+<% hint = "Search for workplaces located in #{@form.wizard.store["institution_location"]}." %>
+<% js_fallback_question = "Please choose from workplaces located in #{@form.wizard.store["institution_location"]}" %>
 
 <% content_for :title do %>
   <%= @form.errors.present? ? "Error: " : nil %><%= question %>
@@ -35,7 +35,7 @@
                                        link_errors: count.zero? %>
             <% end %>
             <%= f.govuk_radio_divider %>
-            <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "Nursery not shown above" } do %>
+            <%= f.govuk_radio_button :institution_identifier, 'other', label: { text: "Workplace not shown above" } do %>
               <%= f.govuk_text_field :institution_name, hint: { text: hint }, label: { hidden: true, text: question } %>
             <% end %>
           <% end %>

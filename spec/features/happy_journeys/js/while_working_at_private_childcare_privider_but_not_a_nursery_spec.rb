@@ -38,9 +38,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-      expect(page).to have_text("Do you work in a nursery?")
-      page.choose("No", visible: :all)
+    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+      expect(page).to have_text("Which early years setting do you work in?")
+      page.choose("Private nursery", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
@@ -106,11 +106,11 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "NPQ for Early Years Leadership (NPQEYL)",
-          "Do you work in a nursery?" => "No",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => private_childcare_provider.registration_details,
           "Where do you work?" => "England",
+          "Which early years setting do you work in?" => "Private nursery",
         },
       )
     end
@@ -149,7 +149,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "funded",
       "headteacher_status" => nil,
-      "kind_of_nursery" => nil,
+      "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
@@ -160,7 +160,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => false,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -171,11 +171,11 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "kind_of_nursery" => "private_nursery",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn_knowledge" => "yes",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "no",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

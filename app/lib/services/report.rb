@@ -56,7 +56,6 @@ module Services
         funding_choice
         funding_eligiblity_status_code
         targeted_delivery_funding_eligibility
-        works_in_nursery
         works_in_childcare
         kind_of_nursery
         private_childcare_provider_urn

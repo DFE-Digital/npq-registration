@@ -151,7 +151,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => false,
-      "works_in_nursery" => false,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "other",
       "raw_application_data" => {

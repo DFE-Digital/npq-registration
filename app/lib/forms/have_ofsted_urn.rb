@@ -32,11 +32,7 @@ module Forms
     end
 
     def previous_step
-      if wizard.query_store.works_in_nursery?
-        :kind_of_nursery
-      else
-        :work_in_nursery
-      end
+      :kind_of_nursery
     end
 
     def options

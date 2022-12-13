@@ -36,29 +36,24 @@ RSpec.feature "Happy journeys", type: :feature do
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/work-in-nursery", submit_form: true) do
-      expect(page).to have_text("Do you work in a nursery?")
-      page.choose("Yes", visible: :all)
-    end
-
-    public_nursery_type_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
-    public_nursery_type = I18n.t(public_nursery_type_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
+    public_kind_of_nursery_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
+    public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("What kind of nursery do you work in?")
-      page.choose(public_nursery_type, visible: :all)
+      expect(page).to have_text("Which early years setting do you work in?")
+      page.choose(public_kind_of_nursery, visible: :all)
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Where is your nursery located?")
-      page.fill_in "Where is your nursery located?", with: "manchester"
+      expect(page).to have_text("Where is your workplace located?")
+      page.fill_in "Where is your workplace located?", with: "manchester"
     end
 
     expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-      expect(page).to have_text("What’s the name of your nursery?")
-      expect(page).to have_text("Search for nurseries located in manchester")
+      expect(page).to have_text("What’s the name of your workplace?")
+      expect(page).to have_text("Search for workplaces located in manchester")
       within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your nursery?", with: "open"
+        page.fill_in "What’s the name of your workplace?", with: "open"
       end
 
       expect(page).to have_content("open manchester school")
@@ -121,10 +116,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "Early years or childcare",
-          "Do you work in a nursery?" => "Yes",
           "Lead provider" => "Teach First",
           "Nursery" => "open manchester school",
-          "Type of nursery" => public_nursery_type,
+          "Which early years setting do you work in?" => public_kind_of_nursery,
           "Where do you work?" => "England",
         },
       )
@@ -164,7 +158,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => "school",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "headteacher_status" => nil,
-      "kind_of_nursery" => public_nursery_type_key,
+      "kind_of_nursery" => public_kind_of_nursery_key,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
@@ -175,7 +169,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "works_in_childcare" => true,
-      "works_in_nursery" => true,
+      "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
@@ -186,13 +180,12 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
-        "kind_of_nursery" => public_nursery_type_key,
+        "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn_knowledge" => "yes",
         "works_in_childcare" => "yes",
-        "works_in_nursery" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",
       },

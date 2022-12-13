@@ -1,24 +1,26 @@
 module Forms
   class KindOfNursery < Base
-    attr_accessor :kind_of_nursery
-
     KIND_OF_NURSERY_PUBLIC_OPTIONS = %w[
       local_authority_maintained_nursery
       preschool_class_as_part_of_school
     ].freeze
-    KIND_OF_NURSERY_PRIVATE_OPTIONS = %w[private_nursery].freeze
+
+    KIND_OF_NURSERY_PRIVATE_OPTIONS = %w[
+      private_nursery
+      another_early_years_setting
+    ].freeze
     KIND_OF_NURSERY_OPTIONS = KIND_OF_NURSERY_PUBLIC_OPTIONS + KIND_OF_NURSERY_PRIVATE_OPTIONS
+
+    attr_accessor :kind_of_nursery
 
     validates :kind_of_nursery, presence: true, inclusion: { in: KIND_OF_NURSERY_OPTIONS }
 
     def self.permitted_params
-      %i[
-        kind_of_nursery
-      ]
+      %i[kind_of_nursery]
     end
 
     def next_step
-      if private_nursery?
+      if ofsted_route?
         :have_ofsted_urn
       else
         :find_childcare_provider
@@ -26,10 +28,30 @@ module Forms
     end
 
     def previous_step
-      :work_in_nursery
+      if wizard.tra_get_an_identity_omniauth_integration_active?
+        :work_setting
+      else
+        :qualified_teacher_check
+      end
     end
 
-    def private_nursery?
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :kind_of_nursery,
+        options:,
+      )
+    end
+
+    def options
+      [
+        build_option_struct(value: "local_authority_maintained_nursery", link_errors: true),
+        build_option_struct(value: "preschool_class_as_part_of_school"),
+        build_option_struct(value: "private_nursery"),
+        build_option_struct(value: "another_early_years_setting", divider: true),
+      ]
+    end
+
+    def ofsted_route?
       KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(kind_of_nursery)
     end
   end
