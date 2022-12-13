@@ -41,6 +41,8 @@ module Forms
         end
       elsif course.ehco?
         :about_ehco
+      elsif approved_itt_provider? && lead_mentor_course?
+        :possible_funding
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
@@ -82,6 +84,15 @@ module Forms
     end
 
   private
+
+    def lead_mentor_course?
+      Course.npqltd.include?(wizard.query_store.course)
+    end
+
+    def approved_itt_provider?
+      ::IttProvider.currently_approved
+        .find_by(legal_name: wizard.query_store.itt_provider).present?
+    end
 
     def lead_provider_valid?
       valid_providers.include?(wizard.query_store.lead_provider)

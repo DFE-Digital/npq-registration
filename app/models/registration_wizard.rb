@@ -185,6 +185,10 @@ class RegistrationWizard
       end
     end
 
+    array << OpenStruct.new(key: "ITT Provider",
+                            value: query_store.itt_provider.legal_name,
+                            change_step: :itt_provider)
+
     array << OpenStruct.new(key: "Lead provider",
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
@@ -283,6 +287,7 @@ private
       aso_previously_funded
       aso_possible_funding
       funding_your_aso
+      itt_provider
       choose_your_npq
       choose_your_provider
       find_school

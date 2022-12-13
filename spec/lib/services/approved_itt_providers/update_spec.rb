@@ -83,7 +83,7 @@ RSpec.describe Services::ApprovedIttProviders::Update do
     let(:file_name) { "invalid.csv" }
 
     it "will raise a file not found error" do
-      expect { subject }.to raise_error(RuntimeError) # "File not found #{file_name}"
+      expect { subject }.to raise_error(RuntimeError)
     end
   end
 end

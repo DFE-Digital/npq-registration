@@ -1,5 +1,5 @@
 module Forms
-  class ITTProvider < Base
+  class IttProvider < Base
     QUESTION_NAME = :itt_provider
 
     attr_accessor QUESTION_NAME
@@ -15,9 +15,11 @@ module Forms
     end
 
     def next_step
-      if approved_itt_provider # check if its the NPQLTD course
+      if approved_itt_provider?
         :choose_your_npq
       end
+
+      # not sure about where else to send the user?
     end
 
     def previous_step
@@ -26,8 +28,8 @@ module Forms
 
   private
 
-    def approved_itt_provider
-      # look up the provider infomration
+    def approved_itt_provider?
+      ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
     end
   end
 end

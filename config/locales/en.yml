@@ -246,6 +246,8 @@ en:
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited ITT provider"
           other: "Other"
 
+        itt_provider: "Enter the name of the ITT provider you are working with"
+
         employment_role: "What is your role?"
 
         employer_name: "What organisation are you employed by?"
