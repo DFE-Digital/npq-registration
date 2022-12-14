@@ -5,41 +5,9 @@ module Services
     def call
       CSV.generate do |csv|
         csv << headers
-
-        applications.each do |a|
-          csv << [
-            a.user.id,
-            a.user.ecf_id,
-            a.user.created_at,
-            a.user.trn_verified,
-            a.user.trn_auto_verified,
-            a.id,
-            a.ecf_id,
-            a.created_at,
-            a.headteacher_status,
-            a.eligible_for_funding,
-            a.funding_choice,
-            a.funding_eligiblity_status_code,
-            a.targeted_delivery_funding_eligibility,
-            a.works_in_nursery,
-            a.works_in_childcare,
-            a.kind_of_nursery,
-            a.private_childcare_provider_urn,
-            a.cohort,
-            a.school_urn,
-            a.school&.name,
-            a.school&.establishment_type_name,
-            a.school&.high_pupil_premium,
-            a.school&.la_name,
-            a.school&.postcode,
-            a.course.name,
-            a.lead_provider.name,
-          ]
-        end
+        csv << rows
       end
     end
-
-  private
 
     def headers
       %w[
@@ -69,6 +37,39 @@ module Services
         course_name
         provider_name
       ]
+    end
+
+    def rows
+      applications.map do |a|
+        [
+          a.user.id,
+          a.user.ecf_id,
+          a.user.created_at,
+          a.user.trn_verified,
+          a.user.trn_auto_verified,
+          a.id,
+          a.ecf_id,
+          a.created_at,
+          a.headteacher_status,
+          a.eligible_for_funding,
+          a.funding_choice,
+          a.funding_eligiblity_status_code,
+          a.targeted_delivery_funding_eligibility,
+          a.works_in_nursery,
+          a.works_in_childcare,
+          a.kind_of_nursery,
+          a.private_childcare_provider_urn,
+          a.cohort,
+          a.school_urn,
+          a.school&.name,
+          a.school&.establishment_type_name,
+          a.school&.high_pupil_premium,
+          a.school&.la_name,
+          a.school&.postcode,
+          a.course.name,
+          a.lead_provider.name,
+        ]
+      end
     end
 
     def applications
