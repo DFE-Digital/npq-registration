@@ -5,6 +5,8 @@ class Application < ApplicationRecord
   belongs_to :school, foreign_key: "school_urn", primary_key: "urn", optional: true
   belongs_to :private_childcare_provider, foreign_key: "private_childcare_provider_urn", primary_key: "provider_urn", optional: true
 
+  has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
+
   scope :unsynced, -> { where(ecf_id: nil) }
 
   enum kind_of_nursery: {
