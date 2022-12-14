@@ -45,5 +45,9 @@ RSpec.describe Services::Report do
 
       expect(csv_headers).to match_array(expected_headers)
     end
+
+    it "has the same number of headers and columns" do
+      expect(subject.headers.size).to eql(subject.rows.first.size)
+    end
   end
 end
