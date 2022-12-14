@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_30_142333) do
+ActiveRecord::Schema.define(version: 2022_12_13_151804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -75,6 +75,18 @@ ActiveRecord::Schema.define(version: 2022_11_30_142333) do
     t.datetime "created_at", precision: 6
     t.datetime "updated_at", precision: 6
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "ecf_sync_request_logs", force: :cascade do |t|
+    t.integer "syncable_id", null: false
+    t.string "syncable_type", null: false
+    t.string "status", null: false
+    t.string "sync_type", null: false
+    t.jsonb "error_messages", default: []
+    t.jsonb "response_body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
   end
 
   create_table "flipper_features", force: :cascade do |t|
