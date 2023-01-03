@@ -1,0 +1,36 @@
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">When?</th>
+    <th scope="col" class="govuk-table__header">Status</th>
+    <th scope="col" class="govuk-table__header">Error</th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% if logs.none? %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell govuk-!-text-align-centre" colspan="4">
+          No sync request logs found.
+          <div class="govuk-body-s govuk-!-margin-0 govuk-!-margin-top-1">
+            This may indicate that no sync has been attempted yet or the application was created before sync logging was introduced.
+          </div>
+        </td>
+      </tr>
+    <% end %>
+
+    <% logs.each do |log| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= log.created_at.to_formatted_s(:govuk_short) %></td>
+        <td class="govuk-table__cell">
+          <%= boolean_red_green_tag(log.success?, t(".#{log.status}")) %>
+        </td>
+        <td class="govuk-table__cell">
+          <%=
+            log.error_messages.presence&.join(", ") || "-"
+          %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

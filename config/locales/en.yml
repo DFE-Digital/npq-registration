@@ -169,8 +169,19 @@ en:
       dashboard: "Dashboard"
       applications: "Applications"
       unsynced_applications: "Unsynced applications"
+      users: "Users"
       schools: "Schools"
       feature_flags: "Feature Flags"
+    users:
+      show:
+        title: "User"
+        details: "Details"
+        sync_log: "ECF Sync Log"
+        tabs: "Tabs"
+        applications: "Applications"
+    ecf_sync_request_log:
+      failed: "Failed"
+      success: "Success"
 
   helpers:
     title:

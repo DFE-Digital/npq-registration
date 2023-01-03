@@ -1,0 +1,38 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: url_for(:back)
+  ) %>
+<% end %>
+
+<h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+
+<% if @user.ecf_id.blank? %>
+  <%= govuk_warning_text(text: "This user has not been synced to ECF yet") %>
+<% end %>
+
+<%= govuk_tabs(title: t(".tabs")) do |c| %>
+  <%= c.tab(label: t(".details")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render "user_details", user: @user %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= c.tab(label: t(".applications")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render('applications', applications: @user.applications) %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= c.tab(label: t(".sync_log")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render partial: "admin/ecf_sync_request_log", locals: { logs: @user.ecf_sync_request_logs } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

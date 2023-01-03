@@ -23,4 +23,8 @@ class Application < ApplicationRecord
   def new_headteacher?
     %w[yes_when_course_starts yes_in_first_five_years yes_in_first_two_years].include?(headteacher_status)
   end
+
+  def school
+    School.find_by(urn: school_urn)
+  end
 end
