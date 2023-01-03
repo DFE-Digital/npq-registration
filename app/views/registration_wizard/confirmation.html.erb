@@ -14,11 +14,11 @@
       }
     ) %>
 
-    <h2 class="govuk-heading-m">What happens next</h2>
+    <h2 class="govuk-heading-m">Apply through your provider</h2>
 
-    <p class="govuk-body"><%= @form.lead_provider.name %> will contact you to complete your registration.</p>
+    <p class="govuk-body">You still need to apply for your NPQ through <%= @form.lead_provider.name %>.</p>
 
-    <p class="govuk-body">They will provide details of timings, costs and deadlines.</p>
+    <p class="govuk-body">They’ll contact you to outline the next steps, including how to apply.</p>
 
     <% if @form.display_npqh_information?  %>
       <h2 class="govuk-heading-m">Early Headship Coaching Offer</h2>
@@ -41,7 +41,7 @@
     <% end %>
 
     <div class="govuk-inset-text">
-      <%= govuk_link_to "Tell us about your experience", "https://docs.google.com/forms/d/e/1FAIpQLScAD7XvFlHl8LzfSyxstYErWMiFPXGamrA_qBhBJTGXuP9efw/viewform?usp=sf_link", target: "_blank", rel: "noreferrer noopener" %> of registering for an NPQ. Your views help us improve this service. 
+      <%= govuk_link_to "Tell us about your experience", "https://docs.google.com/forms/d/e/1FAIpQLScAD7XvFlHl8LzfSyxstYErWMiFPXGamrA_qBhBJTGXuP9efw/viewform?usp=sf_link", target: "_blank", rel: "noreferrer noopener" %> of registering for an NPQ. Your views help us improve this service.
     </div>
   </div>
 </div>
