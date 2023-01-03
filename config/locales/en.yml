@@ -172,6 +172,12 @@ en:
       users: "Users"
       schools: "Schools"
       feature_flags: "Feature Flags"
+    applications:
+      show:
+        title: "Application"
+        details: "Details"
+        sync_log: "ECF Sync Log"
+        tabs: "Tabs"
     users:
       show:
         title: "User"
