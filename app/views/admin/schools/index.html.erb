@@ -37,8 +37,8 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
             <td class="govuk-table__cell"><%= school.urn %></td>
-            <td class="govuk-table__cell"><%= school.establishment_status_name %></td>
-            <td class="govuk-table__cell"><%= school.establishment_type_name %></td>
+            <td class="govuk-table__cell"><%= school.establishment_status_name || "-" %></td>
+            <td class="govuk-table__cell"><%= school.establishment_type_name || "-" %></td>
           </tr>
         <% end %>
       </tbody>

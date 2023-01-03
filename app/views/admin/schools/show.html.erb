@@ -12,122 +12,122 @@
     <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
       <%= summary_list.row do |row|
         row.key { 'URN' }
-        row.value { @school.urn }
+        row.value { @school.urn || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'UKPRN' }
-        row.value { @school.ukprn }
+        row.value { @school.ukprn || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Address 1' }
-        row.value { @school.address_1 }
+        row.value { @school.address_1 || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Address 2' }
-        row.value { @school.address_2 }
+        row.value { @school.address_2 || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Address 3' }
-        row.value { @school.address_3 }
+        row.value { @school.address_3 || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Town' }
-        row.value { @school.town }
+        row.value { @school.town || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'County' }
-        row.value { @school.county }
+        row.value { @school.county || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Postcode' }
-        row.value { @school.postcode }
+        row.value { @school.postcode || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Postcode without spaces' }
-        row.value { @school.postcode_without_spaces }
+        row.value { @school.postcode_without_spaces || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Easting' }
-        row.value { @school.easting }
+        row.value { @school.easting || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Northing' }
-        row.value { @school.northing }
+        row.value { @school.northing || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Region' }
-        row.value { @school.region }
+        row.value { @school.region || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Country' }
-        row.value { @school.country }
+        row.value { @school.country || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'LA Code' }
-        row.value { @school.la_code }
+        row.value { @school.la_code || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'LA Name' }
-        row.value { @school.la_name }
+        row.value { @school.la_name || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Establishment number' }
-        row.value { @school.establishment_number }
+        row.value { @school.establishment_number || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Establishment status code' }
-        row.value { @school.establishment_status_code }
+        row.value { @school.establishment_status_code || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Establishment status name' }
-        row.value { @school.establishment_status_name }
+        row.value { @school.establishment_status_name || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Close date' }
-        row.value { @school.close_date }
+        row.value { @school.close_date || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Last changed date' }
-        row.value { @school.last_changed_date }
+        row.value { @school.last_changed_date || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Establishment type code' }
-        row.value { @school.establishment_type_code }
+        row.value { @school.establishment_type_code || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Establishment type name' }
-        row.value { @school.establishment_type_name }
+        row.value { @school.establishment_type_name || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'High pupil premium' }
-        row.value { @school.high_pupil_premium }
+        row.value { @school.high_pupil_premium || "-" }
       end %>
 
       <%= summary_list.row do |row|
         row.key { 'Number of pupils' }
-        row.value { @school.number_of_pupils }
+        row.value { @school.number_of_pupils || "-" }
       end %>
 
       <%= summary_list.row do |row|
