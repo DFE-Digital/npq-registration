@@ -11,6 +11,7 @@ applications:
     instances: 2
   - type: worker
     disk_quota: 2G
+    memory: 2G
     health-check-type: process
     instances: 2
     command: bundle exec rake jobs:work
