@@ -1,9 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Report do
-  before do
-    create(:application, school: nil)
-  end
+  let(:number_of_rows) { 3 }
+  before { create_list(:application, number_of_rows, school: nil) }
 
   describe "#call" do
     context "for international applications without a school" do
@@ -48,6 +47,10 @@ RSpec.describe Services::Report do
 
     it "has the same number of headers and columns" do
       expect(subject.headers.size).to eql(subject.rows.first.size)
+    end
+
+    it "creates the right number of rows" do
+      expect(subject.rows.count).to eql(number_of_rows)
     end
   end
 end
