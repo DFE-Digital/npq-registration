@@ -5,10 +5,6 @@ class Admin::UnsyncedApplicationsController < AdminController
     @pagy, @applications = pagy(scope)
   end
 
-  def show
-    @application = Application.unsynced.includes(:user).find(params[:id])
-  end
-
 private
 
   def scope

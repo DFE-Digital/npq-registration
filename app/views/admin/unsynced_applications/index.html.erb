@@ -3,9 +3,7 @@
     <%= render "admin/layout", title: "Unsynced applications" %>
 
     <% if @applications.blank? %>
-
       <p class="govuk-body">All applications have been successfuly linked with an ECF user.</p>
-
     <% else %>
       <%=
         govuk_table do |table|
@@ -16,17 +14,19 @@
               row.cell(header: true, text: "Lead provider")
               row.cell(header: true, text: "School")
               row.cell(header: true, text: "Applied on")
+              row.cell(header: true, text: "")
             end
           end
 
           table.body do |body|
             @applications.each do |app|
               body.row do |row|
-                row.cell(text: govuk_link_to(app.user.email, admin_unsynced_application_path(app)))
+                row.cell(text: govuk_link_to(app.user.email, admin_application_path(app)))
                 row.cell(text: app.course.name)
                 row.cell(text: app.lead_provider.name)
                 row.cell(text: app.school_urn)
                 row.cell(text: app.created_at.to_date.to_formatted_s(:govuk))
+                row.cell(text: govuk_link_to("View", admin_application_path(app)))
               end
             end
           end
