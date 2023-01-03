@@ -20,7 +20,7 @@
     <% end %>
 
     <% logs.each do |log| %>
-      <tr class="govuk-table__row">
+      <tr class="govuk-table__row" id="log-row-<%= log.id %>">
         <td class="govuk-table__cell"><%= log.created_at.to_formatted_s(:govuk_short) %></td>
         <td class="govuk-table__cell">
           <%= boolean_red_green_tag(log.success?, t(".#{log.status}")) %>
