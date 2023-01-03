@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     resources :applications, only: %i[index show]
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
     resources :users, only: %i[index show]
+    resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
 
     constraints RouteConstraints::HasFlipperAccess do

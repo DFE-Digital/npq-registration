@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
+  scope :unsynced, -> { where(ecf_id: nil) }
+
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 

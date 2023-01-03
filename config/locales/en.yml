@@ -170,6 +170,7 @@ en:
       applications: "Applications"
       unsynced_applications: "Unsynced applications"
       users: "Users"
+      unsynced_users: "Unsynced users"
       schools: "Schools"
       feature_flags: "Feature Flags"
     applications:
