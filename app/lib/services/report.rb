@@ -5,7 +5,7 @@ module Services
     def call
       CSV.generate do |csv|
         csv << headers
-        csv << rows
+        rows.each { |row| csv << row }
       end
     end
 
