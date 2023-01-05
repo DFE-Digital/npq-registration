@@ -34,7 +34,7 @@ RSpec.feature "admin", type: :feature do
       admin_unsynced_applications_path,
       admin_users_path,
       admin_unsynced_users_path,
-      admin_schools_path
+      admin_schools_path,
     ].each do |href|
       visit href
       expect(page.current_path).to eql(sign_in_path)
@@ -61,12 +61,12 @@ RSpec.feature "admin", type: :feature do
       "Schools" => admin_schools_path,
     }.each do |text, href|
       # Check the links are present
-      expect(page).to have_link(text, href: href)
+      expect(page).to have_link(text, href:)
     end
 
     expect(page).to_not have_link("Feature Flags", href: "/admin/feature_flags")
 
-    admin.update(flipper_admin_access: true)
+    admin.update!(flipper_admin_access: true)
 
     page.click_link("Admin")
 
@@ -74,7 +74,7 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
-    applications = create_list :application, 4
+    create_list :application, 4
 
     visit "/admin"
 
@@ -120,17 +120,17 @@ RSpec.feature "admin", type: :feature do
     # Test application search and show page
     selected_application = applications.sample
 
-    successful_sync_log = selected_application.ecf_sync_request_logs.create(
+    successful_sync_log = selected_application.ecf_sync_request_logs.create!(
       status: :success,
       sync_type: :application_creation,
-      created_at: 15.days.ago
+      created_at: 15.days.ago,
     )
 
-    failed_sync_log = selected_application.ecf_sync_request_logs.create(
+    failed_sync_log = selected_application.ecf_sync_request_logs.create!(
       status: :failed,
       sync_type: :application_creation,
-      error_messages: ["foobar"],
-      created_at: 16.days.ago
+      error_messages: %w[foobar],
+      created_at: 16.days.ago,
     )
 
     page.fill_in "Search by email", with: selected_application.user.email
@@ -148,7 +148,7 @@ RSpec.feature "admin", type: :feature do
       expect(page.text).to eq [
         successful_sync_log.created_at.to_formatted_s(:govuk_short),
         "Success",
-        "-"
+        "-",
       ].join(" ")
     end
 
@@ -156,7 +156,7 @@ RSpec.feature "admin", type: :feature do
       expect(page.text).to eq [
         failed_sync_log.created_at.to_formatted_s(:govuk_short),
         "Failed",
-        failed_sync_log.error_messages.join(", ")
+        failed_sync_log.error_messages.join(", "),
       ].join(" ")
     end
 
@@ -193,17 +193,17 @@ RSpec.feature "admin", type: :feature do
     # Test application search and show page
     selected_user = users.sample
 
-    successful_sync_log = selected_user.ecf_sync_request_logs.create(
+    successful_sync_log = selected_user.ecf_sync_request_logs.create!(
       status: :success,
       sync_type: :user_creation,
-      created_at: 15.days.ago
+      created_at: 15.days.ago,
     )
 
-    failed_sync_log = selected_user.ecf_sync_request_logs.create(
+    failed_sync_log = selected_user.ecf_sync_request_logs.create!(
       status: :failed,
       sync_type: :user_creation,
-      error_messages: ["foobar"],
-      created_at: 16.days.ago
+      error_messages: %w[foobar],
+      created_at: 16.days.ago,
     )
 
     page.fill_in "Search by email", with: selected_user.email
@@ -219,18 +219,18 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{successful_sync_log.id}" do
       expect(page.text).to eq [
-                                successful_sync_log.created_at.to_formatted_s(:govuk_short),
-                                "Success",
-                                "-"
-                              ].join(" ")
+        successful_sync_log.created_at.to_formatted_s(:govuk_short),
+        "Success",
+        "-",
+      ].join(" ")
     end
 
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
-                                failed_sync_log.created_at.to_formatted_s(:govuk_short),
-                                "Failed",
-                                failed_sync_log.error_messages.join(", ")
-                              ].join(" ")
+        failed_sync_log.created_at.to_formatted_s(:govuk_short),
+        "Failed",
+        failed_sync_log.error_messages.join(", "),
+      ].join(" ")
     end
 
     expect(page).to have_link("Back", href: admin_users_url(q: selected_user.email))
@@ -253,7 +253,7 @@ RSpec.feature "admin", type: :feature do
 
     # when there are some unsynced records
     unsynced_applications = create_list(:application, 2)
-    synced_applications = create_list(:application, 1, :with_ecf_id)
+    create_list(:application, 1, :with_ecf_id) # synced applications
 
     page.click_link("Unsynced applications")
 
@@ -265,11 +265,11 @@ RSpec.feature "admin", type: :feature do
 
     unsynced_application_to_view = unsynced_applications.first
 
-    failed_sync_log = unsynced_application_to_view.ecf_sync_request_logs.create(
+    failed_sync_log = unsynced_application_to_view.ecf_sync_request_logs.create!(
       status: :failed,
       sync_type: :application_creation,
-      error_messages: ["foobar"],
-      created_at: 16.days.ago
+      error_messages: %w[foobar],
+      created_at: 16.days.ago,
     )
 
     # viewing an unsynced record
@@ -283,10 +283,10 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
-                                failed_sync_log.created_at.to_formatted_s(:govuk_short),
-                                "Failed",
-                                failed_sync_log.error_messages.join(", ")
-                              ].join(" ")
+        failed_sync_log.created_at.to_formatted_s(:govuk_short),
+        "Failed",
+        failed_sync_log.error_messages.join(", "),
+      ].join(" ")
     end
 
     expect(page).to have_link("Back", href: admin_unsynced_applications_url)
@@ -302,7 +302,6 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Admin")
     expect(page.current_path).to eql("/admin")
 
-
     expect(page).to have_link("Unsynced users", href: admin_unsynced_users_path)
     page.click_link("Unsynced users")
     expect(page.current_path).to eql(admin_unsynced_users_path)
@@ -310,7 +309,7 @@ RSpec.feature "admin", type: :feature do
 
     # when there are some unsynced records
     unsynced_users = create_list(:user, 2)
-    synced_users = create_list(:user, 1, :with_ecf_id)
+    create_list(:user, 1, :with_ecf_id) # synced users
 
     page.click_link("Unsynced users")
 
@@ -322,11 +321,11 @@ RSpec.feature "admin", type: :feature do
 
     unsynced_user_to_view = unsynced_users.first
 
-    failed_sync_log = unsynced_user_to_view.ecf_sync_request_logs.create(
+    failed_sync_log = unsynced_user_to_view.ecf_sync_request_logs.create!(
       status: :failed,
       sync_type: :user_creation,
-      error_messages: ["foobar"],
-      created_at: 16.days.ago
+      error_messages: %w[foobar],
+      created_at: 16.days.ago,
     )
 
     # viewing an unsynced record
@@ -340,17 +339,17 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
-                                failed_sync_log.created_at.to_formatted_s(:govuk_short),
-                                "Failed",
-                                failed_sync_log.error_messages.join(", ")
-                              ].join(" ")
+        failed_sync_log.created_at.to_formatted_s(:govuk_short),
+        "Failed",
+        failed_sync_log.error_messages.join(", "),
+      ].join(" ")
     end
 
     expect(page).to have_link("Back", href: admin_unsynced_users_url)
   end
 
   scenario "when logged in as a regular admin, it allows access to the schools interface" do
-    applications = create_list :application, 4
+    create_list :application, 4
 
     visit "/admin"
 
@@ -362,7 +361,7 @@ RSpec.feature "admin", type: :feature do
     expect(page.current_path).to eql("/admin")
 
     expect(page).to have_link("Schools", href: admin_schools_path)
-    page.click_link("Schools" )
+    page.click_link("Schools")
     expect(page.current_path).to eql(admin_schools_path)
   end
 end

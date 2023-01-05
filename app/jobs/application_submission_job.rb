@@ -24,12 +24,12 @@ class ApplicationSubmissionJob < ApplicationJob
     end
   end
 
-  private
+private
 
   def ecf_user_for(user:)
     Services::Ecf::EcfUserFinder.new(user:).call
   rescue StandardError => e
-    EcfSyncRequestLog.create(
+    EcfSyncRequestLog.create!(
       sync_type: :user_lookup,
       syncable: user,
       status: :failed,
