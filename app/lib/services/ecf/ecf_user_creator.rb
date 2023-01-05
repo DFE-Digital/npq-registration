@@ -32,6 +32,9 @@ module Services
         Sentry.with_scope do |scope|
           scope.set_context("User", { id: user.id })
           Sentry.capture_exception(e)
+
+          # Re-raise to fail the sync, we'll want to retry again later
+          raise e
         end
       end
     end

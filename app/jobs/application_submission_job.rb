@@ -2,8 +2,8 @@ class ApplicationSubmissionJob < ApplicationJob
   queue_as :default
 
   def perform(user:)
-    if user.ecf_id.blank?
-      ecf_user = Services::Ecf::EcfUserFinder.new(user:).call
+    unless user.synced_to_ecf?
+      ecf_user = ecf_user_for(user:)
 
       if ecf_user
         user.update!(ecf_id: ecf_user.id)
@@ -21,6 +21,29 @@ class ApplicationSubmissionJob < ApplicationJob
         provider_name: application.lead_provider.name,
         course_name: application.course.name,
       ).deliver_now
+    end
+  end
+
+  private
+
+  def ecf_user_for(user:)
+    Services::Ecf::EcfUserFinder.new(user:).call
+  rescue StandardError => e
+    EcfSyncRequestLog.create(
+      sync_type: :user_lookup,
+      syncable: user,
+      status: :failed,
+      error_messages: ["#{e.class} - #{e.message}"],
+      response_body: e.env["response_body"],
+    )
+    Sentry.with_scope do |scope|
+      scope.set_context("User", { id: user.id })
+      Sentry.capture_exception(e)
+
+      # Re-raise to fail the job, we don't want to continue if we couldn't confirm the existence
+      # or non-existence of an ECF user, a failure indicates some sort of communication issue and we should
+      # retry the job later.
+      raise e
     end
   end
 end
