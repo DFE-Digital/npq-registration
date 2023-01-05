@@ -67,7 +67,7 @@ RSpec.describe ApplicationSubmissionJob do
       let(:user) { create(:user) }
       let(:ecf_user) { EcfApi::User.new(email: user.email, id: "123") }
 
-      it "calls correct servivces" do
+      it "calls correct services" do
         user_finder_double = instance_double(Services::Ecf::EcfUserFinder, call: ecf_user)
         profile_creator_double = instance_double(Services::Ecf::NpqProfileCreator, call: nil)
 

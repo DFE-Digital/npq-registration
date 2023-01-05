@@ -1,6 +1,7 @@
 <table class="govuk-table">
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Type</th>
       <th scope="col" class="govuk-table__header">When?</th>
       <th scope="col" class="govuk-table__header">Status</th>
       <th scope="col" class="govuk-table__header">Error</th>
@@ -19,8 +20,9 @@
       </tr>
     <% end %>
 
-    <% logs.each do |log| %>
+    <% logs.order(created_at: :desc).each do |log| %>
       <tr class="govuk-table__row" id="log-row-<%= log.id %>">
+        <td class="govuk-table__cell"><%= t(".sync_type.#{log.sync_type}") %></td>
         <td class="govuk-table__cell"><%= log.created_at.to_formatted_s(:govuk_short) %></td>
         <td class="govuk-table__cell">
           <%= boolean_red_green_tag(log.success?, t(".#{log.status}")) %>

@@ -1,0 +1,29 @@
+<% existing_sync_job = user.ecf_sync_jobs.first %>
+<% record_type ||= "user" %>
+
+<% if existing_sync_job.present? %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <%=
+        scheduled_time = existing_sync_job.run_at.to_formatted_s(:govuk_short)
+        govuk_warning_text(text: "ECF sync scheduled for #{scheduled_time}.")
+      %>
+    </div>
+
+    <% if existing_sync_job.run_at > 5.minutes.from_now %>
+      <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+        <%= govuk_button_link_to("Reschedule sync user and applications to ECF", admin_user_application_submissions_path(user), method: :post) %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <%= govuk_warning_text(text: unsynced_message) %>
+    </div>
+
+    <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+      <%= govuk_button_link_to("Sync user and applications to ECF", admin_user_application_submissions_path(user), method: :post) %>
+    </div>
+  </div>
+<% end %>

@@ -40,8 +40,13 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :applications, only: %i[index show]
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
-    resources :users, only: %i[index show]
+
+    resources :users, only: %i[index show] do
+      resources :application_submissions, only: %i[create]
+    end
+
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
+
     resources :schools, only: %i[index show]
 
     constraints RouteConstraints::HasFlipperAccess do

@@ -16,6 +16,10 @@ class Application < ApplicationRecord
     another_early_years_setting: "another_early_years_setting",
   }
 
+  def synced_to_ecf?
+    ecf_id.present?
+  end
+
   def inside_catchment?
     %w[england].include?(teacher_catchment)
   end

@@ -189,6 +189,10 @@ en:
     ecf_sync_request_log:
       failed: "Failed"
       success: "Success"
+      sync_type:
+        user_lookup: "User Lookup"
+        user_creation: "User Creation"
+        application_creation: "Application Creation"
 
   helpers:
     title:

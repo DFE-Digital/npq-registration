@@ -7,8 +7,14 @@
 
 <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
 
-<% if @application.ecf_id.blank? %>
-  <%= govuk_warning_text(text: "This application has not been synced to ECF yet") %>
+<% unless @application.synced_to_ecf? %>
+  <%=
+    render(
+      "admin/application_submissions/ecf_sync_actions",
+      user: @application.user,
+      unsynced_message: "This application has not been synced to ECF yet"
+    )
+  %>
 <% end %>
 
 <%= govuk_tabs(title: t(".tabs")) do |c| %>
@@ -23,7 +29,7 @@
   <%= c.tab(label: t(".sync_log")) do %>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <%= render partial: "admin/ecf_sync_request_log", locals: { logs: @application.ecf_sync_request_logs } %>
+        <%= render partial: "admin/application_submissions/ecf_sync_request_log", locals: { logs: @application.ecf_sync_request_logs } %>
       </div>
     </div>
   <% end %>

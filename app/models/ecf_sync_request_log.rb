@@ -10,6 +10,7 @@ class EcfSyncRequestLog < ApplicationRecord
     failed: "failed",
   }
   enum sync_type: {
+    user_lookup: "user_lookup",
     user_creation: "user_creation",
     application_creation: "application_creation",
   }

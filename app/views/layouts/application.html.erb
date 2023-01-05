@@ -98,6 +98,12 @@
           <% end %>
         <% end %>
 
+        <% if flash[:success].present? %>
+          <%= govuk_notification_banner(title_text: "Success") do |banner| %>
+            <% banner.heading(text: flash[:success]) %>
+          <% end %>
+        <% end %>
+
         <%= yield %>
       </main>
     </div>
