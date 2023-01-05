@@ -8,6 +8,6 @@ class Admin::UnsyncedUsersController < AdminController
 private
 
   def scope
-    User.unsynced
+    User.unsynced.order(created_at: :desc)
   end
 end
