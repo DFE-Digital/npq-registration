@@ -324,11 +324,22 @@ RSpec.feature "admin", type: :feature do
     expect(page.current_path).to eql(admin_unsynced_users_path)
     expect(page).to have_content("All users have been successfuly linked with an ECF user.")
 
-    # when there are some unsynced records
+    # An unsynced user without applications shouldn't appear in the list
+    unsynced_without_application = create(:user)
+    # A synced user shouldn't appear in the list
+    synced_user = create(:user, :with_ecf_id)
+    create(:application, user: synced_user)
+
+    # Unsynced users with applications should appear in the list.
     unsynced_users = create_list(:user, 2)
-    create_list(:user, 1, :with_ecf_id) # synced users
+    unsynced_users.each do |unsynced_user|
+      create(:application, user: unsynced_user)
+    end
 
     page.click_link("Unsynced users")
+
+    expect(page).to_not have_content(unsynced_without_application.email)
+    expect(page).to_not have_content(synced_user.email)
 
     unsynced_users.each do |user|
       expect(page).to have_content(user.email)
