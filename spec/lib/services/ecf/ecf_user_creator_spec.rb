@@ -88,15 +88,21 @@ RSpec.describe Services::Ecf::EcfUserCreator do
 
         let(:response_code) { 400 }
 
-        it "does not set application.ecf_id " do
+        it "raises an error" do
           expect {
             subject.call
+          }.to raise_error(JsonApiClient::Errors::ClientError)
+        end
+
+        it "does not set application.ecf_id " do
+          expect {
+            begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
           }.to_not change(user, :ecf_id)
         end
 
         it "creates a EcfSyncRequestLog with status :failed" do
           expect {
-            subject.call
+            begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
           }.to change(EcfSyncRequestLog, :count).by(1)
 
           expect(
@@ -123,15 +129,21 @@ RSpec.describe Services::Ecf::EcfUserCreator do
         }
       end
 
-      it "does not set application.ecf_id " do
+      it "raises an error" do
         expect {
           subject.call
+        }.to raise_error(JsonApiClient::Errors::ClientError)
+      end
+
+      it "does not set application.ecf_id " do
+        expect {
+          begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
         }.to_not change(user, :ecf_id)
       end
 
       it "creates a EcfSyncRequestLog with status :failed" do
         expect {
-          subject.call
+          begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
         }.to change(EcfSyncRequestLog, :count).by(1)
 
         expect(
