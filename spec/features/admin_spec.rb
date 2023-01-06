@@ -333,7 +333,7 @@ RSpec.feature "admin", type: :feature do
     # Unsynced users with applications should appear in the list.
     unsynced_users = create_list(:user, 2)
     unsynced_users.each do |unsynced_user|
-      create(:application, user: unsynced_user)
+      create_list(:application, 2, user: unsynced_user)
     end
 
     page.click_link("Unsynced users")

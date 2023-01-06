@@ -8,6 +8,6 @@ class Admin::UnsyncedUsersController < AdminController
 private
 
   def scope
-    User.unsynced.joins(:applications).order(created_at: :desc)
+    User.unsynced.joins(:applications).distinct.order(created_at: :desc)
   end
 end
