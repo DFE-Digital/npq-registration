@@ -13,6 +13,7 @@ class Services::Admin::UsersSearch
       chain = chain.where(users[:email].matches("%#{q}%"))
       chain = chain.or(default_scope.where(users[:full_name].matches("%#{q}%")))
       chain = chain.or(default_scope.where(users[:ecf_id].matches("%#{q}%")))
+      chain = chain.or(default_scope.where(applications: { ecf_id: q }))
       chain = chain.or(default_scope.where(users[:trn].matches("%#{q}%")))
     end
 
@@ -22,6 +23,6 @@ class Services::Admin::UsersSearch
 private
 
   def default_scope
-    User.all
+    User.left_joins(:applications)
   end
 end
