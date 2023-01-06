@@ -1,0 +1,37 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Unsynced applications" %>
+
+    <% if @users.blank? %>
+      <p class="govuk-body">All users have been successfuly linked with an ECF user.</p>
+    <% else %>
+      <%=
+        govuk_table do |table|
+          table.head do |head|
+            head.row do |row|
+              row.cell(header: true, text: "Name")
+              row.cell(header: true, text: "Email")
+              row.cell(header: true, text: "In GAI Pilot?")
+              row.cell(header: true, text: "Registered On")
+              row.cell(header: true, text: "")
+            end
+          end
+
+          table.body do |body|
+            @users.each do |user|
+              body.row do |row|
+                row.cell(text: user.full_name.presence || "-")
+                row.cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
+                row.cell(text: boolean_red_green_tag(user.in_get_an_identity_pilot?))
+                row.cell(text: user.created_at.to_date.to_formatted_s(:govuk))
+                row.cell(text: govuk_link_to("View", admin_user_path(user)))
+              end
+            end
+          end
+        end
+      %>
+    <% end %>
+
+    <%== pagy_govuk_nav(@pagy) %>
+  </div>
+</div>

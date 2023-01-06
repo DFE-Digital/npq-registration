@@ -98,6 +98,17 @@
           <% end %>
         <% end %>
 
+        <% if flash[:success] %>
+          <%=
+            render GovukComponent::NotificationBannerComponent.new(
+              title_text: flash[:success_title] || "Success",
+              success: true,
+            ) do |banner|
+              banner.heading(text: flash[:success])
+            end
+          %>
+        <% end %>
+
         <%= yield %>
       </main>
     </div>

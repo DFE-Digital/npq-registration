@@ -1,12 +1,11 @@
 module ApplicationHelper
   include Pagy::Frontend
 
-  def boolean_red_green_tag(bool)
-    if bool
-      '<strong class="govuk-tag govuk-tag--green">YES</strong>'
-    else
-      '<strong class="govuk-tag govuk-tag--red">NO</strong>'
-    end.html_safe
+  def boolean_red_green_tag(bool, text = nil)
+    text ||= bool ? "YES" : "NO"
+    colour = bool ? "green" : "red"
+
+    content_tag(:strong, text, class: "govuk-tag govuk-tag--#{colour}")
   end
 
   def pagy_govuk_nav(pagy)

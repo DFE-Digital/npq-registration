@@ -1,0 +1,49 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: url_for(:back)
+  ) %>
+<% end %>
+
+<h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+
+<% unless @user.synced_to_ecf? && @user.applications_synced_to_ecf? %>
+  <%=
+    unsynced_message = if @user.synced_to_ecf?
+                         "This user's applications have not been synced to ECF yet"
+                       else
+                         "This user has not been synced to ECF yet"
+                       end
+    render(
+      "admin/application_submissions/ecf_sync_actions",
+      user: @user,
+      unsynced_message:
+    )
+  %>
+<% end %>
+
+<%= govuk_tabs(title: t(".tabs")) do |c| %>
+  <%= c.tab(label: t(".details")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render "user_details", user: @user %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= c.tab(label: t(".applications")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render('applications', applications: @user.applications) %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= c.tab(label: t(".sync_log")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render partial: "admin/application_submissions/ecf_sync_request_log", locals: { logs: @user.ecf_sync_request_logs } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

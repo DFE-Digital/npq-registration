@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
+  scope :unsynced, -> { where(ecf_id: nil) }
+
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 
@@ -57,6 +59,23 @@ class User < ApplicationRecord
 
   def null_user?
     false
+  end
+
+  def synced_to_ecf?
+    ecf_id.present?
+  end
+
+  def applications_synced_to_ecf?
+    applications.map(&:synced_to_ecf?).all?
+  end
+
+  def ecf_sync_jobs
+    arel_table = Delayed::Job.arel_table
+    job_name_query = arel_table[:handler].matches("%ApplicationSubmissionJob%")
+    user_id_query = arel_table[:handler].matches("%_aj_globalid: gid://npq-registration/User/#{id}%")
+    Delayed::Job.where(job_name_query)
+                .where(user_id_query)
+                .order(run_at: :asc)
   end
 
   def in_get_an_identity_pilot?

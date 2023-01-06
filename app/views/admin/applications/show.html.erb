@@ -1,14 +1,36 @@
 <% content_for :before_content do %>
   <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
-    href: admin_applications_path
+    href: url_for(:back)
   ) %>
 <% end %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-xl">Application</h1>
+<h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
 
-    <%= render partial: "admin/application_details", locals: { application: @application } %>
-  </div>
-</div>
+<% unless @application.synced_to_ecf? %>
+  <%=
+    render(
+      "admin/application_submissions/ecf_sync_actions",
+      user: @application.user,
+      unsynced_message: "This application has not been synced to ECF yet"
+    )
+  %>
+<% end %>
+
+<%= govuk_tabs(title: t(".tabs")) do |c| %>
+  <%= c.tab(label: t(".details")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render "application_details", application: @application %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= c.tab(label: t(".sync_log")) do %>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <%= render partial: "admin/application_submissions/ecf_sync_request_log", locals: { logs: @application.ecf_sync_request_logs } %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

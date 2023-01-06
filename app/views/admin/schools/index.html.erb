@@ -29,6 +29,7 @@
           <th scope="col" class="govuk-table__header">URN</th>
           <th scope="col" class="govuk-table__header">Establishment status</th>
           <th scope="col" class="govuk-table__header">Establishment type</th>
+          <th scope="col" class="govuk-table__header"></th>
         </tr>
       </thead>
 
@@ -37,8 +38,9 @@
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= govuk_link_to school.name, admin_school_path(school) %></td>
             <td class="govuk-table__cell"><%= school.urn %></td>
-            <td class="govuk-table__cell"><%= school.establishment_status_name %></td>
-            <td class="govuk-table__cell"><%= school.establishment_type_name %></td>
+            <td class="govuk-table__cell"><%= school.establishment_status_name || "-" %></td>
+            <td class="govuk-table__cell"><%= school.establishment_type_name || "-" %></td>
+            <td class="govuk-table__cell"><%= govuk_link_to("View", admin_school_path(school)) %></td>
           </tr>
         <% end %>
       </tbody>

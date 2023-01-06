@@ -5,13 +5,9 @@ class Admin::UnsyncedApplicationsController < AdminController
     @pagy, @applications = pagy(scope)
   end
 
-  def show
-    @application = Application.unsynced.includes(:user).find(params[:id])
-  end
-
 private
 
   def scope
-    Application.unsynced.joins(:user).eager_load(:user, :course, :lead_provider)
+    Application.unsynced.joins(:user).eager_load(:user, :course, :lead_provider).order(created_at: :desc)
   end
 end

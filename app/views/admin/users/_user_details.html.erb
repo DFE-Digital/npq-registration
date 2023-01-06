@@ -1,0 +1,48 @@
+<%=
+  govuk_summary_list do |sl|
+    sl.row do |row|
+      row.key(text: 'ECF ID')
+      row.value(text: user.ecf_id || govuk_tag(text: "Missing", colour: "red"))
+    end
+
+    sl.row do |row|
+      row.key(text: 'Identity Provider')
+      row.value(text: user.provider ? t("omniauth_providers.#{user.provider}") : "-")
+    end
+
+    sl.row do |row|
+      row.key(text: 'Identity UID')
+      row.value(text: user.uid || '-')
+    end
+
+    sl.row do |row|
+      row.key(text: 'In Get an Identity Pilot?')
+      row.value(text: boolean_red_green_tag(user.in_get_an_identity_pilot?))
+    end
+
+    sl.row do |row|
+      row.key(text: 'Email')
+      row.value(text: user.email)
+    end
+
+    sl.row do |row|
+      row.key(text: 'Name')
+      row.value(text: user.full_name)
+    end
+
+    sl.row do |row|
+      row.key(text: 'TRN')
+      row.value(text: user.trn)
+    end
+
+    sl.row do |row|
+      row.key(text: 'TRN validated')
+      row.value(text: user.trn_verified.to_s)
+    end
+
+    sl.row do |row|
+      row.key(text: 'TRN auto validated')
+      row.value(text: user.trn_auto_verified.to_s)
+    end
+  end
+%>
