@@ -62,6 +62,7 @@ module Forms
   private
 
     def set_flash_message
+      wizard.request.flash[:success_title] = "Email sent"
       wizard.request.flash[:success] = if sandbox? && whitelisted_domain?
                                          "Your code is #{code}"
                                        else

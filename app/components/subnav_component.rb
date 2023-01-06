@@ -16,7 +16,7 @@ class SubnavComponent < BaseComponent
       class_names(
         "app-subnav__list-item",
         "app-subnav__list-item--selected" => current_page?(path),
-        )
+      )
     end
   end
 end
