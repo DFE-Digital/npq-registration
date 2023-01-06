@@ -146,6 +146,7 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{successful_sync_log.id}" do
       expect(page.text).to eq [
+        "Application Creation",
         successful_sync_log.created_at.to_formatted_s(:govuk_short),
         "Success",
         "-",
@@ -154,6 +155,7 @@ RSpec.feature "admin", type: :feature do
 
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
+        "Application Creation",
         failed_sync_log.created_at.to_formatted_s(:govuk_short),
         "Failed",
         failed_sync_log.error_messages.join(", "),
@@ -219,6 +221,7 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{successful_sync_log.id}" do
       expect(page.text).to eq [
+        "User Creation",
         successful_sync_log.created_at.to_formatted_s(:govuk_short),
         "Success",
         "-",
@@ -227,6 +230,7 @@ RSpec.feature "admin", type: :feature do
 
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
+        "User Creation",
         failed_sync_log.created_at.to_formatted_s(:govuk_short),
         "Failed",
         failed_sync_log.error_messages.join(", "),
@@ -283,6 +287,7 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
+        "Application Creation",
         failed_sync_log.created_at.to_formatted_s(:govuk_short),
         "Failed",
         failed_sync_log.error_messages.join(", "),
@@ -339,6 +344,7 @@ RSpec.feature "admin", type: :feature do
     click_link "ECF Sync Log"
     within "#log-row-#{failed_sync_log.id}" do
       expect(page.text).to eq [
+        "User Creation",
         failed_sync_log.created_at.to_formatted_s(:govuk_short),
         "Failed",
         failed_sync_log.error_messages.join(", "),
