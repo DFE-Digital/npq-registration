@@ -11,15 +11,13 @@ module Forms
     end
 
     def question
-      Forms::QuestionTypes::TextField.new(name: QUESTION_NAME)
+      Forms::QuestionTypes::AutoCompleteIttProvider.new(name: QUESTION_NAME)
     end
 
     def next_step
       if approved_itt_provider?
         :choose_your_npq
       end
-
-      # not sure about where else to send the user?
     end
 
     def previous_step
