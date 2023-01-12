@@ -185,9 +185,11 @@ class RegistrationWizard
       end
     end
 
-    array << OpenStruct.new(key: "ITT Provider",
-                            value: query_store.itt_provider,
-                            change_step: :itt_provider)
+    if lead_mentor_for_accredited_itt_provider?
+      array << OpenStruct.new(key: "ITT Provider",
+                              value: query_store.itt_provider,
+                              change_step: :itt_provider)
+    end
 
     array << OpenStruct.new(key: "Lead provider",
                             value: query_store.lead_provider.name,
@@ -215,6 +217,10 @@ private
 
   def institution_from_store
     institution(source: store["institution_identifier"])
+  end
+
+  def lead_mentor_for_accredited_itt_provider?
+    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
   end
 
   def funding_eligibility_calculator
