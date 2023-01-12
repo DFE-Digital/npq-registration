@@ -1,12 +1,18 @@
 require "rails_helper"
 
 RSpec.describe Forms::YourEmployment, type: :model do
+  subject do
+    described_class.new(employment_type:)
+  end
+
+  let(:employment_type) { "other" }
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:employment_type) }
   end
 
   describe "#next_step" do
-    let(:other_employment_values) do
+    other_employment_values =
       %w[
         local_authority_virtual_school
         hospital_school
@@ -14,15 +20,10 @@ RSpec.describe Forms::YourEmployment, type: :model do
         local_authority_supply_teacher
         other
       ]
-    end
 
-    subject do
-      described_class.new(employment_type:)
-    end
-
-    context "when an employment type is anything but lead mentor" do
-      other_employment_values.each do |employment|
-        let(:employment_type) { employment }
+    other_employment_values.each do |employment_value|
+      context "when an employment type is #{employment_value}" do
+        let(:employment_type) { employment_value }
 
         it "returns your_role" do
           expect(subject.next_step).to eql(:your_role)
