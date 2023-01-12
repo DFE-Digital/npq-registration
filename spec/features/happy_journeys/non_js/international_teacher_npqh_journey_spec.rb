@@ -43,7 +43,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
+      expect(page).to have_text("Which NPQ do you want to do?")
       expect(page).not_to have_text("Additional Support Offer for new headteachers")
       page.choose("NPQ for Headship (NPQH)")
     end

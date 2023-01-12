@@ -15,7 +15,7 @@ module Forms
 
     def question
       Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :choose_your_npq,
+        name: :course_id,
         options:,
       )
     end
