@@ -96,7 +96,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("What are you applying for?")
+        expect(page).to have_text("Which NPQ do you want to do?")
         page.choose(course, visible: :all)
       end
 
@@ -105,7 +105,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
+      expect(page).to have_text("Which NPQ do you want to do?")
       page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
     end
 

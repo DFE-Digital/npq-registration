@@ -203,7 +203,7 @@ en:
         aso_possible_funding: "You may qualify for DfE scholarship funding"
         aso_previously_funded: "DfE scholarship funding not available"
         aso_unavailable: "You cannot register for the Early Headship Coaching Offer"
-        choose_your_npq: "Choose an NPQ"
+        course_id: "Choose an NPQ"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -213,7 +213,7 @@ en:
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
-        choose_your_npq: "Which NPQ do you want to do?"
+        course_id: "Which NPQ do you want to do?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
     hint:
       registration_wizard:
@@ -240,7 +240,7 @@ en:
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
 
-        choose_your_npq_options:
+        course_id_options:
           leading_behaviour_and_culture: "Leading behaviour and culture"
           leading_literacy: "Leading literacy"
           leading_teaching: "Leading teaching"
