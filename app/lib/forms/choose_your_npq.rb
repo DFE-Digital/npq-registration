@@ -2,14 +2,35 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    attr_accessor :course_id
+    QUESTION_NAME = :course_id
 
-    validates :course_id, presence: true
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
     def self.permitted_params
-      %i[
-        course_id
+      [QUESTION_NAME]
+    end
+
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :choose_your_npq,
+        options:,
+      )
+    end
+
+    def options
+      [
+        build_option_struct(value: "leading_behaviour_and_culture", link_errors: true),
+        build_option_struct(value: "leading_literacy"),
+        build_option_struct(value: "leading_teaching"),
+        build_option_struct(value: "leading_teacher_development"),
+        build_option_struct(value: "senior_leadership"),
+        build_option_struct(value: "headship"),
+        build_option_struct(value: "executive_leadership"),
+        build_option_struct(value: "early_years_leadership"),
+        build_option_struct(value: "early_headship_coaching_offer", divider: true),
       ]
     end
 
@@ -67,15 +88,6 @@ module Forms
         :work_setting
       else
         :qualified_teacher_check
-      end
-    end
-
-    def options
-      courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
-                       text: course.name,
-                       link_errors: index.zero?,
-                       hint: course.description)
       end
     end
 
