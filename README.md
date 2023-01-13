@@ -3,6 +3,8 @@
 
 # npq-registration (National professional qualification)
 
+Test
+
 ## Prerequisites
 
 - Ruby 3.1.2
