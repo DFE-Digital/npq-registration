@@ -33,6 +33,10 @@ class Services::QueryStore
     end
   end
 
+  def lead_mentor_for_accredited_itt_provider?
+    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
+  end
+
   def works_in_school?
     store["works_in_school"] == "yes"
   end

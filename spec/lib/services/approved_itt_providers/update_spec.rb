@@ -1,15 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Services::ApprovedIttProviders::Update do
-  let(:now) { "2022-12-12 18:00:00" }
-
-  around do |example|
-    Timecop.freeze(now) do
-      example.run
-    end
-  end
-
   subject { described_class.call(file_name:) }
+
+  # Clean the DB first
+  before { IttProvider.destroy_all }
 
   context "given a valid file_name" do
     let(:file_name) { "spec/fixtures/files/approved_itt_providers_sample.csv" }
@@ -17,30 +12,28 @@ RSpec.describe Services::ApprovedIttProviders::Update do
     context "with no data in the DB" do
       let(:expected_data) do
         [
-          { added: now,
-            approved: true,
+          { approved: true,
             legal_name: "Alban Academies Trust",
             operating_name: "Alban Federation SCITT",
-            removed: nil },
-          { added: now,
-            approved: true,
+            removed_at: nil },
+          { approved: true,
             legal_name: "Ambition Institute",
             operating_name: "Ambition Institute",
-            removed: nil },
-          { added: now,
-            approved: true,
+            removed_at: nil },
+          { approved: true,
             legal_name: "Anglia Ruskin University Higher Education Corporation",
             operating_name: "Anglia Ruskin University",
-            removed: nil },
-          { added: now,
-            approved: true,
+            removed_at: nil },
+          { approved: true,
             legal_name: "Archway Learning Trust",
             operating_name: "Bluecoat SCITT Alliance Nottingham",
-            removed: nil },
+            removed_at: nil },
         ]
       end
 
       it "will update the whole table" do
+        travel_to(Time.zone.parse("2022-12-12 18:00:00"))
+
         subject
 
         expect(
@@ -48,9 +41,8 @@ RSpec.describe Services::ApprovedIttProviders::Update do
             {
               legal_name: itt_provider.legal_name,
               operating_name: itt_provider.operating_name,
-              added: itt_provider.added,
               approved: itt_provider.approved,
-              removed: itt_provider.removed,
+              removed_at: itt_provider.removed_at,
             }
           end,
         ).to eq(expected_data)
@@ -69,6 +61,8 @@ RSpec.describe Services::ApprovedIttProviders::Update do
       let(:file_name) { "spec/fixtures/files/approved_itt_providers_exisiting_data_sample.csv" }
 
       it "will update the some of the table" do
+        travel_to(Time.zone.parse("2022-12-12 18:00:00"))
+
         expect(IttProvider.currently_approved.count).to eq(3)
         subject
 

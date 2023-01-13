@@ -203,7 +203,6 @@ en:
         aso_possible_funding: "You may qualify for DfE scholarship funding"
         aso_previously_funded: "DfE scholarship funding not available"
         aso_unavailable: "You cannot register for the Early Headship Coaching Offer"
-        course_id: "Choose an NPQ"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -213,12 +212,12 @@ en:
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
-        course_id: "Which NPQ do you want to do?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
+        itt_provider: "Enter the name of the ITT provider you are working with"
     hint:
       registration_wizard:
         work_setting_options:
-          other: "For example a local authority, at a hospital school or young offender institution"
+          other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
         aso_funding_choice_options:
@@ -240,23 +239,12 @@ en:
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
 
-        course_id_options:
-          leading_behaviour_and_culture: "Leading behaviour and culture"
-          leading_literacy: "Leading literacy"
-          leading_teaching: "Leading teaching"
-          leading_teacher_development: "Leading teacher development"
-          senior_leadership: "Senior leadership"
-          headship: "Headship"
-          executive_leadership: "Executive leadership"
-          early_years_leadership: "Early years leadership"
-          early_headship_coaching_offer: "Early headship coaching offer"
-
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
-          lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited ITT provider"
+          lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
 
         itt_provider: "Enter the name of the ITT provider you are working with"

@@ -16,8 +16,3 @@ namespace :approved_itt_providers do
     Rails.logger.info("Import finished")
   end
 end
-
-# add test file
-
-# how to add the dropdown
-# run tests and see flow break

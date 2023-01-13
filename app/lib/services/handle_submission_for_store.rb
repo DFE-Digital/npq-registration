@@ -173,10 +173,16 @@ module Services
       @funding_eligibility_service ||= Services::FundingEligibility.new(
         course:,
         institution: institution_from_store,
+        approved_itt_provider:,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: query_store.trn,
       )
+    end
+
+    def approved_itt_provider
+      ::IttProvider.currently_approved
+        .find_by(legal_name: store["itt_provider"]).present?
     end
 
     def eligible_for_funding?

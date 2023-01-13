@@ -164,6 +164,8 @@ RSpec.describe Services::FundingEligibility do
       end
     end
 
+    context "when the "
+
     context "when institution is a LocalAuthority" do
       let(:institution) { create(:local_authority) }
 
@@ -172,7 +174,7 @@ RSpec.describe Services::FundingEligibility do
         expect(subject.funding_eligiblity_status_code).to eq :funded
       end
 
-      context "when fundend in previous cohort" do
+      context "when funded in previous cohort" do
         let(:previously_funded) { true }
 
         it "is ineligible" do

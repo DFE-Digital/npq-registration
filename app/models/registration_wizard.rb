@@ -140,13 +140,15 @@ class RegistrationWizard
                               value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
 
-      array << OpenStruct.new(key: "Role",
-                              value: store["employment_role"],
-                              change_step: :your_role)
+      unless lead_mentor_course?
+        array << OpenStruct.new(key: "Role",
+                                value: store["employment_role"],
+                                change_step: :your_role)
 
-      array << OpenStruct.new(key: "Employer",
-                              value: store["employer_name"],
-                              change_step: :your_employer)
+        array << OpenStruct.new(key: "Employer",
+                                value: store["employer_name"],
+                                change_step: :your_employer)
+      end
     end
 
     array << OpenStruct.new(key: "Course",
@@ -185,7 +187,7 @@ class RegistrationWizard
       end
     end
 
-    if lead_mentor_for_accredited_itt_provider?
+    if lead_mentor_course?
       array << OpenStruct.new(key: "ITT Provider",
                               value: query_store.itt_provider,
                               change_step: :itt_provider)
@@ -211,16 +213,16 @@ class RegistrationWizard
 
 private
 
+  def lead_mentor_course?
+    Course.npqltd.include?(course)
+  end
+
   def load_current_user_into_store
     store["current_user"] = current_user
   end
 
   def institution_from_store
     institution(source: store["institution_identifier"])
-  end
-
-  def lead_mentor_for_accredited_itt_provider?
-    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
   end
 
   def funding_eligibility_calculator

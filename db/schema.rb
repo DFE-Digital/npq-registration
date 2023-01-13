@@ -108,8 +108,7 @@ ActiveRecord::Schema.define(version: 2023_01_06_114221) do
   create_table "itt_providers", force: :cascade do |t|
     t.text "legal_name"
     t.text "operating_name"
-    t.datetime "removed"
-    t.datetime "added"
+    t.datetime "removed_at"
     t.boolean "approved"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

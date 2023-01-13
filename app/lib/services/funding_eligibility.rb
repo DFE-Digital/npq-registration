@@ -19,14 +19,22 @@ module Services
     NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
     EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
 
-    attr_reader :institution, :course, :trn
+    attr_reader :institution, :course, :trn, :approved_itt_provider, :employment_role
 
-    def initialize(institution:, course:, inside_catchment:, trn:, new_headteacher: false)
+    def initialize(institution:,
+                   course:,
+                   inside_catchment:,
+                   trn:,
+                   approved_itt_provider: false,
+                   new_headteacher: false,
+                   employment_role: nil)
       @institution = institution
       @course = course
       @inside_catchment = inside_catchment
       @new_headteacher = new_headteacher
+      @approved_itt_provider = approved_itt_provider
       @trn = trn
+      @employment_role = employment_role
     end
 
     def funded?
@@ -35,9 +43,10 @@ module Services
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
-        return NO_INSTITUTION if institution.nil?
+        return NO_INSTITUTION if institution.nil? && !lead_mentor_course? && !approved_itt_provider
         return PREVIOUSLY_FUNDED if previously_funded?
-        return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.urn)
+        return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
+        return FUNDED_ELIGIBILITY_RESULT if lead_mentor_course? && approved_itt_provider
 
         case institution.class.name
         when "School"
@@ -78,6 +87,7 @@ module Services
       @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
         institution:,
         course:,
+        employment_role:,
       ).call
     end
 
@@ -87,6 +97,10 @@ module Services
 
     def new_headteacher?
       @new_headteacher
+    end
+
+    def lead_mentor_course?
+      Course.npqltd.include?(course)
     end
 
     def eligible_establishment_type_codes
