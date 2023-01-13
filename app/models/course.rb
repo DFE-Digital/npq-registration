@@ -58,6 +58,10 @@ class Course < ApplicationRecord
     name == COURSE_NAMES[:NPQEYL]
   end
 
+  def npqltd?
+    name == COURSE_NAMES[:NPQLTD]
+  end
+
   def identifier
     COURSE_ECF_ID_TO_IDENTIFIER_MAPPING[ecf_id]
   end

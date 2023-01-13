@@ -5,6 +5,7 @@ module Forms
     attr_accessor QUESTION_NAME
 
     validates QUESTION_NAME, presence: true
+    validate :validate_itt_provider
 
     def self.permitted_params
       [QUESTION_NAME]
@@ -15,9 +16,7 @@ module Forms
     end
 
     def next_step
-      if approved_itt_provider?
-        :choose_your_npq
-      end
+      :choose_your_npq
     end
 
     def previous_step
@@ -26,8 +25,12 @@ module Forms
 
   private
 
-    def approved_itt_provider?
-      ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
+    def validate_itt_provider
+      approved_itt_provider = ::IttProvider.currently_approved.find_by(legal_name: itt_provider)
+
+      if approved_itt_provider.nil?
+        errors.add(:itt_provider, :invalid)
+      end
     end
   end
 end

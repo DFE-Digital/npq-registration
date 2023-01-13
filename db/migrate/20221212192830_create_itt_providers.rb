@@ -3,8 +3,7 @@ class CreateIttProviders < ActiveRecord::Migration[6.1]
     create_table :itt_providers do |t|
       t.text :legal_name, unique: true
       t.text :operating_name
-      t.date :removed
-      t.date :added
+      t.date :removed_at
 
       t.boolean :approved
 

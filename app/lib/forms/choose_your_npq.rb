@@ -13,25 +13,13 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :course_id,
-        options:,
-      )
-    end
-
     def options
-      [
-        build_option_struct(value: "leading_behaviour_and_culture", link_errors: true),
-        build_option_struct(value: "leading_literacy"),
-        build_option_struct(value: "leading_teaching"),
-        build_option_struct(value: "leading_teacher_development"),
-        build_option_struct(value: "senior_leadership"),
-        build_option_struct(value: "headship"),
-        build_option_struct(value: "executive_leadership"),
-        build_option_struct(value: "early_years_leadership"),
-        build_option_struct(value: "early_headship_coaching_offer", divider: true),
-      ]
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       text: course.name,
+                       link_errors: index.zero?,
+                       hint: course.description)
+      end
     end
 
     def after_save
@@ -46,6 +34,7 @@ module Forms
       # If it is no longer valid due to the NPQ changing though we will need to be
       # reinserted back into the flow so that later on the user can be asked to
       # choose a new provider.
+
       if changing_answer? && lead_provider_valid?
         if no_answers_will_change?
           :check_answers
@@ -62,8 +51,6 @@ module Forms
         end
       elsif course.ehco?
         :about_ehco
-      elsif approved_itt_provider? && lead_mentor_course?
-        :possible_funding
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
@@ -97,15 +84,6 @@ module Forms
 
   private
 
-    def lead_mentor_course?
-      Course.npqltd.include?(wizard.query_store.course)
-    end
-
-    def approved_itt_provider?
-      ::IttProvider.currently_approved
-        .find_by(legal_name: wizard.query_store.itt_provider).present?
-    end
-
     def lead_provider_valid?
       valid_providers.include?(wizard.query_store.lead_provider)
     end
@@ -122,10 +100,16 @@ module Forms
       Course.find_by(id: wizard.store["course_id"])
     end
 
+    def approved_itt_provider?
+      ::IttProvider.currently_approved
+        .find_by(legal_name: wizard.query_store.itt_provider).present?
+    end
+
     def previously_eligible_for_funding?
       Services::FundingEligibility.new(
         course: previous_course,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
@@ -136,6 +120,7 @@ module Forms
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,

@@ -185,7 +185,7 @@ class RegistrationWizard
       end
     end
 
-    if lead_mentor_for_accredited_itt_provider?
+    if lead_mentor_course?
       array << OpenStruct.new(key: "ITT Provider",
                               value: query_store.itt_provider,
                               change_step: :itt_provider)
@@ -211,16 +211,16 @@ class RegistrationWizard
 
 private
 
+  def lead_mentor_course?
+    Course.npqltd.include?(course)
+  end
+
   def load_current_user_into_store
     store["current_user"] = current_user
   end
 
   def institution_from_store
     institution(source: store["institution_identifier"])
-  end
-
-  def lead_mentor_for_accredited_itt_provider?
-    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
   end
 
   def funding_eligibility_calculator

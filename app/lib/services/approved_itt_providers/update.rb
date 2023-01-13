@@ -51,7 +51,7 @@ module Services
           previously_approved = IttProvider.find_by(legal_name:)
 
           if previously_approved
-            previously_approved.update!(approved: true, removed: nil)
+            previously_approved.update!(approved: true, removed_at: nil)
             @previously_approved_records += 1
 
             next
@@ -60,7 +60,6 @@ module Services
           # Create new record if its new provider
           IttProvider.create!(legal_name: row["Legal accredited name"],
                               operating_name: row["Operating name"],
-                              added: Time.zone.now,
                               approved: true)
           @new_approved_records += 1
         end
@@ -71,7 +70,7 @@ module Services
 
         names_to_unapprove.each do |legal_name|
           itt_provider = IttProvider.find_by(legal_name:)
-          itt_provider.update!(approved: false, removed: Time.zone.now)
+          itt_provider.update!(approved: false, removed_at: Time.zone.now)
         end
 
         log_results

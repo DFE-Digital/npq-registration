@@ -444,7 +444,6 @@ GEM
       railties (>= 6.0.0)
     thor (1.2.1)
     thread_safe (0.3.6)
-    timecop (0.9.6)
     timeout (0.3.1)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
@@ -543,7 +542,6 @@ DEPENDENCIES
   simplecov
   site_prism
   stimulus-rails
-  timecop (~> 0.9)
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
