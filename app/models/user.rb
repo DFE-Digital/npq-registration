@@ -19,8 +19,7 @@ class User < ApplicationRecord
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
 
-    # Only set this if the user doesn't already have a feature flag profile
-    user_from_provider_data.feature_flag_id ||= feature_flag_id
+    user_from_provider_data.feature_flag_id = feature_flag_id
 
     trn = provider_data.info.trn
 
@@ -39,8 +38,7 @@ class User < ApplicationRecord
   def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: nil, uid: nil, email: provider_data.info.email)
 
-    # Only set this if the user doesn't already have a feature flag profile
-    user_from_provider_data.feature_flag_id ||= feature_flag_id
+    user_from_provider_data.feature_flag_id = feature_flag_id
 
     trn = provider_data.info.trn
 
