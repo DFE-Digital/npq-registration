@@ -9,7 +9,7 @@ def seed_courses!
     { position: 6, name: "NPQ for Headship (NPQH)", ecf_id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768", display: true },
     { position: 7, name: "NPQ for Executive Leadership (NPQEL)", ecf_id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a", display: true },
     { position: 8, name: "NPQ for Early Years Leadership (NPQEYL)", ecf_id: "66dff4af-a518-498f-9042-36a41f9e8aa7", display: true },
-    { position: 9, name: "Early Headship Coaching Offer", ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a", description: "The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.", display: true, default_cohort: 2021 },
+    { position: 9, name: "Early Headship Coaching Offer", ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a", description: "The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.", display: true },
   ].each do |hash|
     course = Course.find_or_initialize_by(ecf_id: hash[:ecf_id])
     course.update!(
