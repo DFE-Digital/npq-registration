@@ -14,9 +14,9 @@ module Services
       def call
         return false if institution.nil?
         return true  if eligible_fe_ukprns.include?(institution.ukprn)
+        return false if institution.number_of_pupils.nil?
         return false if institution.is_a?(LocalAuthority)
         return false if institution.is_a?(PrivateChildcareProvider)
-        return false if institution.number_of_pupils.nil?
         return false if institution.number_of_pupils.zero?
         return false unless course.supports_targeted_delivery_funding?
 
