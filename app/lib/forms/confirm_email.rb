@@ -24,11 +24,13 @@ module Forms
     end
 
     def after_save
-      user = User.find_or_create_by!(email: wizard.store["email"]) do |new_user|
-        # Transfer feature flag from NullUser to User when created, if the user
-        # already exists then the user will revert to their original set of flags.
-        new_user.feature_flag_id = wizard.session["feature_flag_id"]
-      end
+      user = User.find_or_create_by!(email: wizard.store["email"])
+
+      # Set the feature flag ID on the logged in user to match the session's existing ID.
+      # This way the user has a smooth journey through the app and isn't suddenly swapped
+      # from one A/B tested feature to another.
+      user.update!(feature_flag_id: wizard.session["feature_flag_id"])
+
       # TODO: protect against session fixation
       wizard.session["user_id"] = user.id
       wizard.store["confirmed_email"] = user.email
