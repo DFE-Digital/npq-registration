@@ -214,7 +214,7 @@ class RegistrationWizard
 private
 
   def lead_mentor_course?
-    Course.npqltd.include?(course)
+    course.npqltd?
   end
 
   def load_current_user_into_store

@@ -7,8 +7,17 @@ RSpec.describe Services::FundingEligibility do
   let(:previously_funded) { false }
   let(:course_identifier) { course.identifier }
   let(:eyl_funding_eligible) { false }
+  let(:approved_itt_provider) { nil }
+  let(:lead_mentor) { nil }
 
-  subject { described_class.new(institution:, course:, inside_catchment:, trn:) }
+  subject do
+    described_class.new(institution:,
+                        course:,
+                        inside_catchment:,
+                        trn:,
+                        approved_itt_provider:,
+                        lead_mentor:)
+  end
 
   before do
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/#{trn}?npq_course_identifier=#{course_identifier}")
@@ -164,7 +173,31 @@ RSpec.describe Services::FundingEligibility do
       end
     end
 
-    context "when the "
+    context "when there is no institution with at an approved ITT provider and they are a lead mentor" do
+      let(:institution) { nil }
+      let(:approved_itt_provider) { true }
+      let(:lead_mentor) { true }
+
+      context "and the course is NPQLTD" do
+        let(:course) { Course.all.find(&:npqltd?) }
+
+        it "is eligible" do
+          expect(subject.funded?).to be_truthy
+          expect(subject.funding_eligiblity_status_code).to eq :funded
+        end
+      end
+
+      context "and the course is not NPQLTD" do
+        Course.all.reject(&:npqltd?).each do |course|
+          let(:course) { course }
+
+          it "is not eligible for #{course.name}" do
+            expect(subject.funded?).to be_falsey
+            expect(subject.funding_eligiblity_status_code).to eq :not_lead_mentor_course
+          end
+        end
+      end
+    end
 
     context "when institution is a LocalAuthority" do
       let(:institution) { create(:local_authority) }
