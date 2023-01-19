@@ -16,6 +16,7 @@ module Forms
 
     def message_template
       return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
+      return "lead_mentor" if Course.npqltd.include?(course)
 
       "school"
     end
