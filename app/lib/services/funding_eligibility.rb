@@ -48,11 +48,13 @@ module Services
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
-        return NO_INSTITUTION if institution.nil? && !lead_mentor_course? && !approved_itt_provider
+        if approved_itt_provider && lead_mentor
+          return lead_mentor_eligibility_status
+        end
+
+        return NO_INSTITUTION if institution.nil?
         return PREVIOUSLY_FUNDED if previously_funded?
         return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
-        return FUNDED_ELIGIBILITY_RESULT if lead_mentor_course? && approved_itt_provider && lead_mentor
-        return NOT_LEAD_MENTOR_COURSE if approved_itt_provider && lead_mentor
 
         case institution.class.name
         when "School"
@@ -88,6 +90,16 @@ module Services
     end
 
   private
+
+    def lead_mentor_eligibility_status
+      if lead_mentor_course?
+        return PREVIOUSLY_FUNDED if previously_funded?
+
+        FUNDED_ELIGIBILITY_RESULT
+      else
+        NOT_LEAD_MENTOR_COURSE
+      end
+    end
 
     def course_and_institution_eligible_for_targeted_delivery_funding?
       @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
