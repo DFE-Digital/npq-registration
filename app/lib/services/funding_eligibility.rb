@@ -19,27 +19,14 @@ module Services
     NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
     EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
 
-    # Lead Mentor
-    NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
+    attr_reader :institution, :course, :trn
 
-    attr_reader :institution, :course, :trn, :approved_itt_provider, :lead_mentor, :employment_role
-
-    def initialize(institution:,
-                   course:,
-                   inside_catchment:,
-                   trn:,
-                   approved_itt_provider: false,
-                   lead_mentor: false,
-                   new_headteacher: false,
-                   employment_role: nil)
+    def initialize(institution:, course:, inside_catchment:, trn:, new_headteacher: false)
       @institution = institution
       @course = course
       @inside_catchment = inside_catchment
       @new_headteacher = new_headteacher
-      @approved_itt_provider = approved_itt_provider
-      @lead_mentor = lead_mentor
       @trn = trn
-      @employment_role = employment_role
     end
 
     def funded?
@@ -48,13 +35,9 @@ module Services
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
-        if approved_itt_provider && lead_mentor
-          return lead_mentor_eligibility_status
-        end
-
         return NO_INSTITUTION if institution.nil?
         return PREVIOUSLY_FUNDED if previously_funded?
-        return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
+        return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.urn)
 
         case institution.class.name
         when "School"
@@ -91,21 +74,10 @@ module Services
 
   private
 
-    def lead_mentor_eligibility_status
-      if lead_mentor_course?
-        return PREVIOUSLY_FUNDED if previously_funded?
-
-        FUNDED_ELIGIBILITY_RESULT
-      else
-        NOT_LEAD_MENTOR_COURSE
-      end
-    end
-
     def course_and_institution_eligible_for_targeted_delivery_funding?
       @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
         institution:,
         course:,
-        employment_role:,
       ).call
     end
 
@@ -115,10 +87,6 @@ module Services
 
     def new_headteacher?
       @new_headteacher
-    end
-
-    def lead_mentor_course?
-      course.npqltd?
     end
 
     def eligible_establishment_type_codes

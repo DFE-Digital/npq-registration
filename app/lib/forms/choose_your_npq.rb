@@ -2,24 +2,15 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    QUESTION_NAME = :course_id
+    attr_accessor :course_id
 
-    attr_accessor QUESTION_NAME
-
-    validates QUESTION_NAME, presence: true
+    validates :course_id, presence: true
     validate :validate_course_exists
 
     def self.permitted_params
-      [QUESTION_NAME]
-    end
-
-    def options
-      courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
-                       text: course.name,
-                       link_errors: index.zero?,
-                       hint: course.description)
-      end
+      %i[
+        course_id
+      ]
     end
 
     def after_save
@@ -53,11 +44,7 @@ module Forms
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
-        if lead_mentor?
-          :ineligible_for_funding
-        else
-          :choose_your_provider
-        end
+        :choose_your_provider
       else
         :ineligible_for_funding
       end
@@ -81,6 +68,15 @@ module Forms
       end
     end
 
+    def options
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       text: course.name,
+                       link_errors: index.zero?,
+                       hint: course.description)
+      end
+    end
+
     def course
       courses.find_by(id: course_id)
     end
@@ -95,10 +91,6 @@ module Forms
       LeadProvider.for(course:)
     end
 
-    def lead_mentor?
-      wizard.query_store.lead_mentor_for_accredited_itt_provider?
-    end
-
     def courses
       Course.where(display: true).order(:position)
     end
@@ -107,16 +99,10 @@ module Forms
       Course.find_by(id: wizard.store["course_id"])
     end
 
-    def approved_itt_provider?
-      ::IttProvider.currently_approved
-        .find_by(legal_name: wizard.query_store.itt_provider).present?
-    end
-
     def previously_eligible_for_funding?
       Services::FundingEligibility.new(
         course: previous_course,
         institution:,
-        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
@@ -127,8 +113,6 @@ module Forms
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution:,
-        approved_itt_provider: approved_itt_provider?,
-        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
