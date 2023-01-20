@@ -4,12 +4,11 @@ module Services
     # just for determining course+institution eligibility. Further checks related to do with the user
     # are performed after this service is called.
     class TargetedDeliveryFunding
-      attr_reader :institution, :course, :employment_role
+      attr_reader :institution, :course
 
-      def initialize(institution:, course:, employment_role: nil)
+      def initialize(institution:, course:)
         @institution = institution
         @course = course
-        @employment_role = employment_role
       end
 
       def call
@@ -19,8 +18,6 @@ module Services
         return false if institution.is_a?(PrivateChildcareProvider)
         return false if institution.number_of_pupils.nil?
         return false if institution.number_of_pupils.zero?
-
-        return false if employment_role == "lead_mentor_for_accredited_itt_provider"
         return false unless course.supports_targeted_delivery_funding?
 
         eligible_establishment_type_codes.include?(institution.establishment_type_code) &&

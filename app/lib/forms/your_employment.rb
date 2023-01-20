@@ -23,17 +23,12 @@ module Forms
         build_option_struct(value: "hospital_school"),
         build_option_struct(value: "young_offender_institution"),
         build_option_struct(value: "local_authority_supply_teacher"),
-        build_option_struct(value: "lead_mentor_for_accredited_itt_provider"),
         build_option_struct(value: "other", divider: true),
       ].freeze
     end
 
     def next_step
-      if employment_type == "lead_mentor_for_accredited_itt_provider"
-        :itt_provider
-      else
-        :your_role
-      end
+      :your_role
     end
 
     def previous_step

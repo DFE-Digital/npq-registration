@@ -7,7 +7,6 @@ import { initAll } from 'govuk-frontend';
 import accessibleAutocomplete from 'accessible-autocomplete';
 import institutionPicker from "./institution-picker";
 import countryPicker from "./country-picker";
-import ittProviderPicker from "./itt-provider-picker.js";
 
 Rails.start();
 initAll();
