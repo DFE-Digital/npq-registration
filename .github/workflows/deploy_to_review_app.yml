@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Install CloudFoundry CLI
         shell: bash
@@ -27,13 +27,13 @@ jobs:
           sudo apt-get install cf7-cli
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_DEV_PASSWORD }}
 
       - name: Build and push docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         id: docker_build_push
         with:
           context: .
@@ -42,6 +42,7 @@ jobs:
             GIT_COMMIT_SHA=${{ github.sha }}
           push: true
           tags: dfedigital/early-careers-framework-dev:npq-registration-review-app-${{ github.event.number }}
+          provenance: false
 
       - name: Deploy to Gov.uk PaaS
         id: deploy-to-paas
