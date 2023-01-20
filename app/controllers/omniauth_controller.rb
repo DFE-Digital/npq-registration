@@ -13,7 +13,9 @@ class OmniauthController < Devise::OmniauthCallbacksController
       feature_flag_id: session["feature_flag_id"],
     )
 
-    if @user.persisted?
+    # @user.persisted? checks that it exists and has been persisted to the database
+    # @user.save checks that any changes made to an existing record have been persisted to that persisted record
+    if @user.persisted? && @user.save
       Services::Feature.enroll_user_in_get_an_identity_pilot(@user)
       session["user_id"] = @user.id
 
