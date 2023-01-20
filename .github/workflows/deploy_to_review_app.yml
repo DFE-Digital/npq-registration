@@ -42,6 +42,7 @@ jobs:
             GIT_COMMIT_SHA=${{ github.sha }}
           push: true
           tags: dfedigital/early-careers-framework-dev:npq-registration-review-app-${{ github.event.number }}
+          provenance: false
 
       - name: Deploy to Gov.uk PaaS
         id: deploy-to-paas
