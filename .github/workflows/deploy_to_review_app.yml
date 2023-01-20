@@ -123,7 +123,7 @@ jobs:
             --name import_childminder_agencies
 
       - name: comment on PR
-        uses: unsplash/comment-on-pr@v1.3.0
+        uses: unsplash/comment-on-pr@v1.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
