@@ -1,7 +1,15 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::EcfUserCreator do
-  let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe") }
+  let(:get_an_identity_id) { SecureRandom.uuid }
+  let(:user) do
+    User.create!(
+      email: "john.doe@example.com",
+      full_name: "John Doe",
+      uid: get_an_identity_id,
+      provider: :tra_openid_connect,
+    )
+  end
 
   subject { described_class.new(user:) }
 
@@ -12,6 +20,7 @@ RSpec.describe Services::Ecf::EcfUserCreator do
           type: "users",
           attributes: {
             email: "john.doe@example.com",
+            get_an_identity_id:,
             full_name: "John Doe",
           },
         },
@@ -19,7 +28,7 @@ RSpec.describe Services::Ecf::EcfUserCreator do
     end
 
     before do
-      stub_request(:post, "https://ecf-app.gov.uk/api/v1/users")
+      stub_request(:post, "https://ecf-app.gov.uk/api/v1/npq/users")
         .with(
           body: request_body,
           headers: {
