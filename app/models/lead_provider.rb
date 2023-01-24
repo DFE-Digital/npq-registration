@@ -18,7 +18,6 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "Education Development Trust",
     "LLSE",
-    "School-Led Network",
     "National Institute of Teaching",
     "Teacher Development Trust",
     "Teach First",
@@ -28,7 +27,6 @@ class LeadProvider < ApplicationRecord
   EYL_LL_PROVIDERS = [
     "Ambition Institute",
     "Education Development Trust",
-    "School-Led Network",
     "National Institute of Teaching",
     "Teacher Development Trust",
     "Teach First",
