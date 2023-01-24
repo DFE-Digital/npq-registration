@@ -2,6 +2,7 @@ class Course < ApplicationRecord
   scope :aso, -> { where(identifier: "npq-additional-support-offer") }
   scope :ehco, -> { where(identifier: "npq-early-headship-coaching-offer") }
   scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
+  scope :npqltd, -> { where(identifier: "npq-leading-teaching-development") }
 
   def supports_targeted_delivery_funding?
     !ehco? && !aso?
@@ -25,5 +26,9 @@ class Course < ApplicationRecord
 
   def eyl?
     identifier == "npq-early-years-leadership"
+  end
+
+  def npqltd?
+    identifier == "npq-leading-teaching-development"
   end
 end

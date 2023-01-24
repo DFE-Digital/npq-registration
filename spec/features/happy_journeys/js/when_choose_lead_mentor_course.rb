@@ -155,7 +155,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "ecf_id" => nil,
       "eligible_for_funding" => true,
       "employer_name" => nil,
-      "employment_type" => nil,
+      "employment_type" => "lead_mentor_for_accredited_itt_provider",
       "employment_role" => nil,
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "funded",
@@ -174,6 +174,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "other",
+      "lead_mentor" => true,
+      "itt_provider" => approved_itt_provider_legal_name,
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",

@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
     t.string "employment_type"
+    t.string "itt_provider"
+    t.boolean "lead_mentor", default: false
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"

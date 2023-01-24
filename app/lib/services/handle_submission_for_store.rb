@@ -33,6 +33,8 @@ module Services
           kind_of_nursery: store["kind_of_nursery"],
           work_setting: store["work_setting"],
           cohort: course.default_cohort,
+          lead_mentor: lead_mentor?,
+          itt_provider:,
           raw_application_data: raw_application_data.except("current_user"),
         )
 
@@ -92,6 +94,14 @@ module Services
       ineligible_institution_type? && inside_catchment?
     end
 
+    def lead_mentor?
+      store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
+    end
+
+    def itt_provider
+      store["itt_provider"]
+    end
+
     def employer_name
       store["employer_name"].presence if store_employer_data?
     end
@@ -101,7 +111,7 @@ module Services
     end
 
     def employment_type
-      store["employment_type"].presence if store_employer_data?
+      store["employment_type"].presence if store_employer_data? || lead_mentor?
     end
 
     def institution_from_store
@@ -174,6 +184,7 @@ module Services
         course:,
         institution: institution_from_store,
         approved_itt_provider:,
+        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: query_store.trn,

@@ -32,6 +32,8 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       targeted_delivery_funding_eligibility: true,
       works_in_childcare: false,
       kind_of_nursery: nil,
+      itt_provider: nil,
+      lead_mentor: false,
       private_childcare_provider_urn: nil,
       funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       teacher_catchment: "other",
@@ -92,6 +94,8 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             funding_eligiblity_status_code: "funded",
             teacher_catchment: "other",
             teacher_catchment_country:,
+            itt_provider: nil,
+            lead_mentor: false,
           },
         },
       }.to_json
