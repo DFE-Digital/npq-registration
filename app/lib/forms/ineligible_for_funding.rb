@@ -6,6 +6,7 @@ module Forms
     SCHOOL_ALREADY_FUNDED = "school/has_already_been_funded".freeze
     EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
+    LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
 
     attr_accessor :version
 
@@ -19,6 +20,8 @@ module Forms
 
     def ineligible_template
       @ineligible_template ||= case funding_eligiblity_status_code
+                               when Services::FundingEligibility::NOT_LEAD_MENTOR_COURSE
+                                 return LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD
                                when Services::FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return SCHOOL_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
                                when Services::FundingEligibility::PREVIOUSLY_FUNDED

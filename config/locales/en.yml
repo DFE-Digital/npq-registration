@@ -215,10 +215,11 @@ en:
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
+        itt_provider: "Enter the name of the ITT provider you are working with"
     hint:
       registration_wizard:
         work_setting_options:
-          other: "For example a local authority, at a hospital school or young offender institution"
+          other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
         aso_funding_choice_options:
@@ -259,7 +260,10 @@ en:
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
+
+        itt_provider: "Enter the name of the ITT provider you are working with"
 
         employment_role: "What is your role?"
 
