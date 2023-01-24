@@ -54,12 +54,14 @@ module Services
           status: :success,
         )
       rescue StandardError => e
+        env = e.try(:env) || {}
+        response_body = env["response_body"]
         EcfSyncRequestLog.create(
           sync_type: :application_creation,
           syncable: application,
           status: :failed,
           error_messages: ["#{e.class} - #{e.message}"],
-          response_body: e.env["response_body"],
+          response_body:,
         )
         Sentry.with_scope do |scope|
           scope.set_context("Application", { id: application.id })

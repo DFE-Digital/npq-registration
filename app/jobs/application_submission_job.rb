@@ -29,12 +29,14 @@ private
   def ecf_user_for(user:)
     Services::Ecf::EcfUserFinder.new(user:).call
   rescue StandardError => e
+    env = e.try(:env) || {}
+    response_body = env["response_body"]
     EcfSyncRequestLog.create!(
       sync_type: :user_lookup,
       syncable: user,
       status: :failed,
       error_messages: ["#{e.class} - #{e.message}"],
-      response_body: e.env["response_body"],
+      response_body:,
     )
     Sentry.with_scope do |scope|
       scope.set_context("User", { id: user.id })
