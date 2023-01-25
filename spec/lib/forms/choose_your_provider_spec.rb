@@ -94,7 +94,6 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "Education Development Trust",
-            "School-Led Network",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
@@ -173,7 +172,6 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
             "Church of England",
             "Education Development Trust",
             "LLSE",
-            "School-Led Network",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
@@ -326,7 +324,6 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "Education Development Trust",
-            "School-Led Network",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
@@ -377,7 +374,6 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
             "Church of England",
             "Education Development Trust",
             "LLSE",
-            "School-Led Network",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
