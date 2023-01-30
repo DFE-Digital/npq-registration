@@ -98,7 +98,6 @@ module Services
           10_006_199, # St. John's College (Brighton)
           10_006_374, # Strathmore College
           10_007_031, # Treloar College
-          10_007_111, # Uckfield  College
           10_007_872, # South West Regional Assessment Centre
           10_008_456, # Regent College
           10_009_031, # Ruskin Mill College
