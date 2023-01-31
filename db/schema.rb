@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_06_114221) do
+ActiveRecord::Schema.define(version: 2023_01_31_142734) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -34,7 +34,6 @@ ActiveRecord::Schema.define(version: 2023_01_06_114221) do
     t.boolean "works_in_school"
     t.string "employer_name"
     t.string "employment_role"
-    t.boolean "targeted_support_funding_eligibility", default: false
     t.text "private_childcare_provider_urn"
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
@@ -46,6 +45,8 @@ ActiveRecord::Schema.define(version: 2023_01_06_114221) do
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
     t.string "employment_type"
+    t.string "itt_provider"
+    t.boolean "lead_mentor", default: false
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
@@ -103,6 +104,16 @@ ActiveRecord::Schema.define(version: 2023_01_06_114221) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
+  end
+
+  create_table "itt_providers", force: :cascade do |t|
+    t.text "legal_name"
+    t.text "operating_name"
+    t.datetime "removed_at"
+    t.boolean "approved"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
   end
 
   create_table "lead_providers", force: :cascade do |t|
