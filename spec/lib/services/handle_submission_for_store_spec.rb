@@ -137,7 +137,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => nil,
             "school_urn" => school.urn,
             "targeted_delivery_funding_eligibility" => false,
-            "targeted_support_funding_eligibility" => false,
+
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
@@ -234,7 +234,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
             "school_urn" => nil,
             "targeted_delivery_funding_eligibility" => false,
-            "targeted_support_funding_eligibility" => false,
+
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
@@ -494,7 +494,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => nil,
             "school_urn" => school.urn,
             "targeted_delivery_funding_eligibility" => false,
-            "targeted_support_funding_eligibility" => false,
+
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
@@ -586,7 +586,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
             "school_urn" => nil,
             "targeted_delivery_funding_eligibility" => false,
-            "targeted_support_funding_eligibility" => false,
+
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
