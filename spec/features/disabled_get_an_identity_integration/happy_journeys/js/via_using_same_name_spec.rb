@@ -89,8 +89,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Headship (NPQH)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Headship", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -131,7 +131,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Headship (NPQH)",
+          "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",
@@ -166,7 +166,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("NPQ for Headship (NPQH)")
+      expect(page).to have_text("Headship")
     end
 
     visit "/registration/share-provider"

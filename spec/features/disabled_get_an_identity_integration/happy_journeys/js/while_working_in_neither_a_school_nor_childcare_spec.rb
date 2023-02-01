@@ -77,8 +77,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -101,7 +101,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Role" => "Trainer",

@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> Are you studying for, or have you completed an NPQ for Headship (NPQH)?
+  <%= @form.errors.present? ? "Error: " : nil %> Are you studying for, or have you completed a Headship?
 <% end %>
 
 <% content_for :before_content do %>
@@ -16,7 +16,7 @@
 
       <%= f.govuk_radio_buttons_fieldset(:npqh_status,
             legend: {
-              text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?",
+              text: "Are you studying for, or have you completed a Headship?",
               size: "l",
               tag: "h1"
             }

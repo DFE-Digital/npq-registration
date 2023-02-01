@@ -54,7 +54,7 @@ class Services::QueryStore
   end
 
   def course
-    @course ||= Course.find(store["course_id"])
+    @course ||= Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[store["choose_your_npq"]])
   end
 
   def lead_provider

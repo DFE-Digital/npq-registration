@@ -36,7 +36,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+        let(:course) { Course.find_by(name: "Headship") }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
@@ -63,7 +63,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       context "when changing to something other than headship" do
         let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
         let(:school) { create(:school) }
-        let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+        let(:previous_course) { Course.find_by(name: "Headship") }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do

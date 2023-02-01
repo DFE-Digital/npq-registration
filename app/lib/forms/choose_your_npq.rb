@@ -10,7 +10,7 @@ module Forms
     validate :validate_course_exists
 
     def self.permitted_params
-      [QUESTION_NAME]
+      [QUESTION_NAME.to_sym]
     end
 
     def question
@@ -35,6 +35,8 @@ module Forms
     end
 
     def after_save
+      wizard.store["course_id"] = course.id.to_s
+
       return if lead_provider_valid?
 
       wizard.store["lead_provider_id"] = nil
@@ -90,7 +92,7 @@ module Forms
     end
 
     def course
-      courses.find_by(id: course_id)
+      courses.find_by(name: ::Course::LEGACY_NAME_MAPPING[choose_your_npq])
     end
 
   private
@@ -108,7 +110,7 @@ module Forms
     end
 
     def previous_course
-      Course.find_by(id: wizard.store["course_id"])
+      Course.find_by(id: wizard.store["choose_your_npq"])
     end
 
     def previously_eligible_for_funding?
@@ -140,7 +142,7 @@ module Forms
 
     def validate_course_exists
       if course.blank?
-        errors.add(:course_id, :invalid)
+        errors.add(:choose_your_npq, :invalid)
       end
     end
   end

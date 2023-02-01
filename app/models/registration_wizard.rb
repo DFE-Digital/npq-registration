@@ -238,7 +238,7 @@ private
   delegate :new_headteacher?, :inside_catchment?, :works_in_other?, to: :query_store
 
   def course
-    Course.find(store["course_id"])
+    Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[store["choose_your_npq"]])
   end
 
   def load_from_store

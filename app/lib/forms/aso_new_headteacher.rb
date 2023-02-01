@@ -43,7 +43,7 @@ module Forms
   private
 
     def course
-      Course.find_by(id: wizard.store["course_id"])
+      Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[store["choose_your_npq"]])
     end
 
     def funding_eligiblity_status_code

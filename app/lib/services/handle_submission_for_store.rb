@@ -68,6 +68,7 @@ module Services
       # Though I recognise that this means that even though this is meant to be raw
       # it still has a small layer of processing
       store.except("generated_confirmation_code")
+      store.except("choose_your_npq")
     end
 
     def padded_entered_trn
@@ -205,7 +206,7 @@ module Services
     end
 
     def course
-      @course ||= Course.find(store["course_id"])
+      @course ||= Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[store["choose_your_npq"]])
     end
 
     def school

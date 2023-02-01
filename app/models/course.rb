@@ -12,6 +12,18 @@ class Course < ApplicationRecord
     EHCO: "Early Headship Coaching Offer",
   }.with_indifferent_access.freeze
 
+  LEGACY_NAME_MAPPING = {
+    "leading_behaviour_and_culture" => "NPQ for Leading Behaviour and Culture (NPQLBC)",
+    "leading_literacy" => "NPQ for Leading Literacy (NPQLL)",
+    "leading_teaching" => "NPQ for Leading Teaching (NPQLT)",
+    "leading_teacher_development" => "NPQ for Leading Teacher Development (NPQLTD)",
+    "senior_leadership" => "NPQ for Senior Leadership (NPQSL)",
+    "headship" => "NPQ for Headship (NPQH)",
+    "executive_leadership" => "NPQ for Executive Leadership (NPQEL)",
+    "early_years_leadership" => "NPQ for Early Years Leadership (NPQEYL)",
+    "early_headship_coaching_offer" => "Early Headship Coaching Offer",
+  }.with_indifferent_access.freeze
+
   COURSE_ECF_ID_TO_IDENTIFIER_MAPPING = {
     "15c52ed8-06b5-426e-81a2-c2664978a0dc" => "npq-leading-teaching",
     "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5" => "npq-leading-behaviour-culture",

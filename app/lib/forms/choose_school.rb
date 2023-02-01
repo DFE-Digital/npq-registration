@@ -54,7 +54,7 @@ module Forms
   private
 
     def course
-      @course ||= Course.find(wizard.store["course_id"])
+      @course ||= Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[wizard.store["choose_your_npq"]])
     end
 
     def institution_location

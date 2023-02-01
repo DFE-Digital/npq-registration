@@ -64,13 +64,13 @@ RSpec.feature "Happy journeys", type: :feature do
       page.find("#private-childcare-provider-picker__option--0").click
     end
 
-    eyl_course = ["NPQ for Early Years Leadership (NPQEYL)"]
+    eyl_course = ["Early years leadership"]
 
     ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("What are you applying for?")
+        expect(page).to have_text("Which NPQ do you want to do?")
         page.choose(course, visible: :all)
       end
 
@@ -79,8 +79,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
@@ -103,7 +103,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => private_childcare_provider.registration_details,
