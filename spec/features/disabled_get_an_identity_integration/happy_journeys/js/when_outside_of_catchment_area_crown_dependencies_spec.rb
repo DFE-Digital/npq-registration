@@ -72,7 +72,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior Leadership", visible: :all)
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -112,7 +112,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
           "Email" => "user@example.com",
-          "Course" => "Senior Leadership",
+          "Course" => "NPQ for Senior Leadership (NPQSL)",
           "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",

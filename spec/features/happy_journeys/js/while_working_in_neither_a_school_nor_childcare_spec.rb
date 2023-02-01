@@ -70,7 +70,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
 
-          "Course" => "Early years leadership",
+          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Role" => "Trainer",

@@ -2,32 +2,28 @@ require "rails_helper"
 
 RSpec.describe Forms::ChooseYourNpq, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:course_id) }
+    it { is_expected.to validate_presence_of(:choose_your_npq) }
 
-    it "course for course_id must exist" do
-      subject.course_id = 0
-      subject.valid?
-      expect(subject.errors[:course_id]).to be_present
-
-      subject.course_id = Course.where(display: true).first.id
-      subject.valid?
-      expect(subject.errors[:course_id]).to be_blank
+    let(:valid_course_name) do
+      ::Course::LEGACY_NAME_MAPPING
+        .key(Course.where(display: true).first.name)
     end
 
-    it "course for course_id must be available to applicant" do
-      subject.course_id = Course.where(display: false).first
+    it "NPQ must exist" do
+      subject.choose_your_npq = 'NOT VALID NPQ'
       subject.valid?
-      expect(subject.errors[:course_id]).to be_present
+      expect(subject.errors[:choose_your_npq]).to be_present
 
-      subject.course_id = Course.where(display: true).first.id
+      subject.choose_your_npq = valid_course_name
       subject.valid?
-      expect(subject.errors[:course_id]).to be_blank
+      expect(subject.errors[:choose_your_npq]).to be_blank
     end
   end
 
   describe "#next_step" do
     subject do
-      described_class.new(course_id: course.id.to_s)
+      described_class
+        .new(choose_your_npq: Course::LEGACY_NAME_MAPPING.key(course_name))
     end
 
     context "when changing answers" do
@@ -36,11 +32,12 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course) { Course.find_by(name: "Headship") }
+        let(:course_name) { "NPQ for Headship (NPQH)" }
+        let(:course) { Course.find_by(name: course_name) }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
-            course_id: course.id.to_s,
+            course_id: Course.find_by(name: course_name).id.to_s,
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end
@@ -61,9 +58,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
+        let(:course_name) { "NPQ for Leading Teaching (NPQLT)" }
+        let(:course) { Course.find_by(name: course_name) }
         let(:school) { create(:school) }
-        let(:previous_course) { Course.find_by(name: "Headship") }
+        let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do
@@ -242,6 +240,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     let(:works_in_childcare) { "no" }
 
     let(:expected_courses) { Course.where(display: true) }
+    let(:expected_course_names) do
+      expected_courses.pluck(:name)
+        .map{ |name| Course::LEGACY_NAME_MAPPING.key(name)}.sort
+    end
 
     before do
       form.wizard = RegistrationWizard.new(
@@ -259,7 +261,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_childcare) { "no" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
 
@@ -267,7 +269,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_school) { "yes" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
 
@@ -275,7 +277,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_childcare) { "yes" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
     end
@@ -288,7 +290,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_childcare) { "no" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
 
@@ -296,7 +298,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_school) { "yes" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
 
@@ -304,7 +306,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:works_in_childcare) { "yes" }
 
         it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
+          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
     end

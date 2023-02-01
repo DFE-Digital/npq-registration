@@ -10,7 +10,7 @@ module Forms
     validate :validate_course_exists
 
     def self.permitted_params
-      [QUESTION_NAME.to_sym]
+      [QUESTION_NAME]
     end
 
     def question
@@ -110,7 +110,7 @@ module Forms
     end
 
     def previous_course
-      Course.find_by(id: wizard.store["choose_your_npq"])
+      Course.find_by(id: wizard.store["course_id"])
     end
 
     def previously_eligible_for_funding?
