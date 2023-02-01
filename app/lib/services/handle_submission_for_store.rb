@@ -67,7 +67,7 @@ module Services
       # Cutting out confirmation keys since that is not application related data
       # Though I recognise that this means that even though this is meant to be raw
       # it still has a small layer of processing
-      store.except("generated_confirmation_code","choose_your_npq")
+      store.except("generated_confirmation_code", "choose_your_npq")
     end
 
     def padded_entered_trn
@@ -205,7 +205,7 @@ module Services
     end
 
     def course
-      @course ||= Course.find_by(name: ::Course::LEGACY_NAME_MAPPING[store["choose_your_npq"]])
+      @course ||= Course.find(store["course_id"])
     end
 
     def school

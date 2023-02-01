@@ -10,7 +10,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     end
 
     it "NPQ must exist" do
-      subject.choose_your_npq = 'NOT VALID NPQ'
+      subject.choose_your_npq = "NOT VALID NPQ"
       subject.valid?
       expect(subject.errors[:choose_your_npq]).to be_present
 
@@ -242,7 +242,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     let(:expected_courses) { Course.where(display: true) }
     let(:expected_course_names) do
       expected_courses.pluck(:name)
-        .map{ |name| Course::LEGACY_NAME_MAPPING.key(name)}.sort
+        .map { |name| Course::LEGACY_NAME_MAPPING.key(name) }.sort
     end
 
     before do

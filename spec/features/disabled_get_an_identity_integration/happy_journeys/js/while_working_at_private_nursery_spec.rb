@@ -89,7 +89,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     eyl_course = ["Early years leadership"]
 
-    ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
+    ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
+
+    ineligible_courses = ineligible_courses_list.map { |name|
+      I18n
+        .t("helpers.label.registration_wizard.choose_your_npq_options.#{name}")
+    } - eyl_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
