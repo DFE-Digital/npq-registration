@@ -170,7 +170,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-      "targeted_support_funding_eligibility" => false,
+
       "teacher_catchment" => "another",
       "teacher_catchment_country" => "China",
       "teacher_catchment_synced_to_ecf" => false,
