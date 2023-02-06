@@ -22,7 +22,7 @@
               body.row do |row|
                 row.cell(text: user.full_name.presence || "-")
                 row.cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
-                row.cell(text: boolean_red_green_tag(user.in_get_an_identity_pilot?))
+                row.cell(text: boolean_red_green_tag(user.get_an_identity_provider?))
                 row.cell(text: user.created_at.to_date.to_formatted_s(:govuk))
                 row.cell(text: govuk_link_to("View", admin_user_path(user)))
               end

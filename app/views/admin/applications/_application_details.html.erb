@@ -26,7 +26,7 @@
 
     sl.row do |row|
       row.key(text: 'In Get an Identity Pilot?')
-      row.value(text: boolean_red_green_tag(application.user.in_get_an_identity_pilot?))
+      row.value(text: boolean_red_green_tag(application.user.get_an_identity_provider?))
       row.action
     end
 

@@ -8,7 +8,11 @@ module Services
       end
 
       def call
-        remote = EcfApi::User.new(email: user.email, full_name: user.full_name)
+        remote = EcfApi::Npq::User.new(
+          email: user.email,
+          get_an_identity_id: user.get_an_identity_id,
+          full_name: user.full_name,
+        )
 
         # JsonApiClient::Resource uses errors for flow control, so failed saves
         # will divert to the rescue block below

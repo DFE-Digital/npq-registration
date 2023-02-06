@@ -55,6 +55,14 @@ class User < ApplicationRecord
     user_from_provider_data.tap(&:save)
   end
 
+  def get_an_identity_provider?
+    provider == "tra_openid_connect"
+  end
+
+  def get_an_identity_id
+    uid if get_an_identity_provider?
+  end
+
   def null_user?
     false
   end
@@ -74,10 +82,6 @@ class User < ApplicationRecord
     Delayed::Job.where(job_name_query)
                 .where(user_id_query)
                 .order(run_at: :asc)
-  end
-
-  def in_get_an_identity_pilot?
-    provider == "tra_openid_connect"
   end
 
   # Whether this user has admin access to the feature flagging interface

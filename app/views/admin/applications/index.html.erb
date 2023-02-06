@@ -36,7 +36,7 @@
             <td class="govuk-table__cell"><%= app.lead_provider.name %></td>
             <td class="govuk-table__cell"><%= app.school_urn %></td>
             <td class="govuk-table__cell"><%= boolean_red_green_tag(app.eligible_for_funding) %></td>
-            <td class="govuk-table__cell"><%= boolean_red_green_tag(app.user.in_get_an_identity_pilot?) %></td>
+            <td class="govuk-table__cell"><%= boolean_red_green_tag(app.user.get_an_identity_provider?) %></td>
             <td class="govuk-table__cell"><%= govuk_link_to("View", admin_application_path(app)) %></td>
           </tr>
         <% end %>
