@@ -163,6 +163,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_id" => "6",
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
+        "choose_your_npq" => "senior_leadership",
         "employment_type" => "hospital_school",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",

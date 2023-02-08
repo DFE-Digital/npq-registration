@@ -174,6 +174,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
+        "choose_your_npq" => "early_years_leadership",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => "9",
         "teacher_catchment" => "england",

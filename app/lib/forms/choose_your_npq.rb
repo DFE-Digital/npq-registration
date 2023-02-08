@@ -92,7 +92,7 @@ module Forms
     end
 
     def course
-      courses.find_by(name: ::Course::LEGACY_NAME_MAPPING[choose_your_npq])
+      courses.find_by(name: ::Course::DISPLAY_NAME_MAPPING[choose_your_npq])
     end
 
   private

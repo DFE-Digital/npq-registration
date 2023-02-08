@@ -256,6 +256,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "email" => "user@example.com",
         "full_name" => "John Doe",
         "has_ofsted_urn" => "yes",
+        "choose_your_npq" => "early_headship_coaching_offer",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "kind_of_nursery" => "private_nursery",

@@ -223,6 +223,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "chosen_provider" => "yes",
         "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
         "has_ofsted_urn" => "yes",
+        "choose_your_npq" => "early_headship_coaching_offer",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "kind_of_nursery" => "private_nursery",

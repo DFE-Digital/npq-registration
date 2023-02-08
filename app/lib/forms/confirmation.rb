@@ -5,7 +5,7 @@ module Forms
     end
 
     def course
-      Course.find(wizard.store["course_id"])
+      Course.find_by(id: wizard.store["course_id"])
     end
 
     def lead_provider

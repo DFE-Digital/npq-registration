@@ -207,6 +207,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",
+        "choose_your_npq" => "early_years_leadership",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",

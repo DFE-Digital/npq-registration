@@ -14,7 +14,7 @@ RSpec.describe Services::HandleSubmissionForStore do
     let(:courses) { Course.all - Course.ehco - Course.aso }
 
     let(:course) { courses.sample }
-    let(:present_course_name) { Course::LEGACY_NAME_MAPPING.key(course.name) }
+    let(:present_course_name) { Course::DISPLAY_NAME_MAPPING.key(course.name) }
     let(:lead_provider) { LeadProvider.all.sample }
 
     let(:store) do
@@ -151,7 +151,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_childcare" => false,
             "works_in_school" => true,
             "work_setting" => "a_school",
-            "raw_application_data" => store.except("current_user", "choose_your_npq"),
+            "raw_application_data" => store.except("current_user"),
           })
         end
       end
@@ -251,7 +251,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_childcare" => true,
             "works_in_school" => false,
             "work_setting" => "early_years_or_childcare",
-            "raw_application_data" => store.except("current_user", "choose_your_npq"),
+            "raw_application_data" => store.except("current_user"),
           })
         end
       end
@@ -392,7 +392,7 @@ RSpec.describe Services::HandleSubmissionForStore do
     let(:courses) { Course.all - Course.ehco - Course.aso }
 
     let(:course) { courses.sample }
-    let(:present_course_name) { Course::LEGACY_NAME_MAPPING.key(course.name) }
+    let(:present_course_name) { Course::DISPLAY_NAME_MAPPING.key(course.name) }
     let(:lead_provider) { LeadProvider.all.sample }
 
     let(:store) do
@@ -519,7 +519,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_childcare" => false,
             "works_in_school" => true,
             "work_setting" => "a_school",
-            "raw_application_data" => store.except("current_user", "choose_your_npq"),
+            "raw_application_data" => store.except("current_user"),
           })
         end
       end
@@ -614,7 +614,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_childcare" => true,
             "works_in_school" => false,
             "work_setting" => "early_years_or_childcare",
-            "raw_application_data" => store.except("current_user", "choose_your_npq"),
+            "raw_application_data" => store.except("current_user"),
           })
         end
       end

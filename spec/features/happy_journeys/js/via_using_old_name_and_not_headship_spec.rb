@@ -158,6 +158,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "chosen_provider" => "yes",
         "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
         "funding" => "school",
+        "choose_your_npq" => "senior_leadership",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",

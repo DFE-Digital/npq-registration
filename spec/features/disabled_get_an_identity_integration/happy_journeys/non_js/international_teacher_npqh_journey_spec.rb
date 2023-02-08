@@ -189,6 +189,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",
+        "choose_your_npq" => "headship",
         "funding" => "school",
         "lead_provider_id" => "9",
         "national_insurance_number" => "AB123456C",

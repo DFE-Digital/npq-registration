@@ -12,7 +12,7 @@ class Course < ApplicationRecord
     EHCO: "Early Headship Coaching Offer",
   }.with_indifferent_access.freeze
 
-  LEGACY_NAME_MAPPING = {
+  DISPLAY_NAME_MAPPING = {
     "leading_behaviour_and_culture" => "NPQ for Leading Behaviour and Culture (NPQLBC)",
     "leading_literacy" => "NPQ for Leading Literacy (NPQLL)",
     "leading_teaching" => "NPQ for Leading Teaching (NPQLT)",

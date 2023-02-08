@@ -135,6 +135,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "choose_your_npq" => "senior_leadership",
         "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
         "funding" => "school",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,

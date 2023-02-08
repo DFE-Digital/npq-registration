@@ -142,6 +142,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "chosen_provider" => "yes",
         "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
         "funding" => "self",
+        "choose_your_npq" => "senior_leadership",
         "lead_provider_id" => "9",
         "teacher_catchment" => "another",
         "teacher_catchment_country" => "Falkland Islands",

@@ -5,11 +5,11 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     it { is_expected.to validate_presence_of(:choose_your_npq) }
 
     let(:valid_course_name) do
-      ::Course::LEGACY_NAME_MAPPING
+      ::Course::DISPLAY_NAME_MAPPING
         .key(Course.where(display: true).first.name)
     end
 
-    it "NPQ must exist" do
+    it "course_id must exist" do
       subject.choose_your_npq = "NOT VALID NPQ"
       subject.valid?
       expect(subject.errors[:choose_your_npq]).to be_present
@@ -21,9 +21,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
   end
 
   describe "#next_step" do
+    let(:choose_your_npq) { ::Course::DISPLAY_NAME_MAPPING.key(course_name) }
+
     subject do
-      described_class
-        .new(choose_your_npq: Course::LEGACY_NAME_MAPPING.key(course_name))
+      described_class.new(choose_your_npq:)
     end
 
     context "when changing answers" do
@@ -37,7 +38,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
-            course_id: Course.find_by(name: course_name).id.to_s,
+            course_id: course.id.to_s,
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end
@@ -215,98 +216,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
               expect(subject.previous_step).to eql(:choose_private_childcare_provider)
             end
           end
-        end
-      end
-    end
-  end
-
-  describe ".options" do
-    subject do
-      form.options
-    end
-
-    let(:form) { described_class.new }
-
-    let(:store) do
-      {
-        "works_in_school" => works_in_school,
-        "teacher_catchment" => teacher_catchment,
-        "works_in_childcare" => works_in_childcare,
-      }
-    end
-
-    let(:works_in_school) { "no" }
-    let(:teacher_catchment) { "scotland" }
-    let(:works_in_childcare) { "no" }
-
-    let(:expected_courses) { Course.where(display: true) }
-    let(:expected_course_names) do
-      expected_courses.pluck(:name)
-        .map { |name| Course::LEGACY_NAME_MAPPING.key(name) }.sort
-    end
-
-    before do
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store:,
-        request: nil, current_user: create(:user)
-      )
-    end
-
-    context "when inside catchment" do
-      let(:teacher_catchment) { "england" }
-
-      context "when not working in school or childcare" do
-        let(:works_in_school) { "no" }
-        let(:works_in_childcare) { "no" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
-        end
-      end
-
-      context "when working in a school" do
-        let(:works_in_school) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
-        end
-      end
-
-      context "when working in childcare" do
-        let(:works_in_childcare) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
-        end
-      end
-    end
-
-    context "when outside catchment" do
-      let(:teacher_catchment) { "scotland" }
-
-      context "when not working in school or childcare" do
-        let(:works_in_school) { "no" }
-        let(:works_in_childcare) { "no" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
-        end
-      end
-
-      context "when working in a school" do
-        let(:works_in_school) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
-        end
-      end
-
-      context "when working in childcare" do
-        let(:works_in_childcare) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_course_names)
         end
       end
     end

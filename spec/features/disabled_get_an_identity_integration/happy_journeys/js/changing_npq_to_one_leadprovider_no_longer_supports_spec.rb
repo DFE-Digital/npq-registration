@@ -257,6 +257,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
+        "choose_your_npq" => "early_years_leadership",
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
         "national_insurance_number" => "AB123456C",

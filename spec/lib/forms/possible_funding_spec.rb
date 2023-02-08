@@ -15,8 +15,8 @@ RSpec.describe Forms::PossibleFunding do
 
   describe "#course" do
     let(:course) { Course.all.sample }
-    let(:present_course_name) { Course::LEGACY_NAME_MAPPING.key(course.name) }
-    let(:store) { { "course_id" => course.id, "choose_your_npq" => present_course_name } }
+    let(:present_course_name) { Course::DISPLAY_NAME_MAPPING.key(course.name) }
+    let(:store) { { "course_id" => course.id } }
     let(:request) { nil }
     let(:wizard) do
       RegistrationWizard.new(

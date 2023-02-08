@@ -181,6 +181,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "full_name" => "John Doe",
         "funding" => "self",
         "lead_provider_id" => "9",
+        "choose_your_npq" => "senior_leadership",
         "national_insurance_number" => "",
         "teacher_catchment" => "jersey_guernsey_isle_of_man",
         "teacher_catchment_country" => nil,
