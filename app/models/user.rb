@@ -7,6 +7,12 @@ class User < ApplicationRecord
   validates :email, uniqueness: true
 
   scope :unsynced, -> { where(ecf_id: nil) }
+  scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
+
+  scope :with_get_an_identity_id, lambda {
+    where.not(uid: nil)
+         .where(provider: "tra_openid_connect")
+  }
 
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
@@ -55,12 +61,23 @@ class User < ApplicationRecord
     user_from_provider_data.tap(&:save)
   end
 
+  def ecf_user
+    return if ecf_id.blank?
+
+    EcfApi::Npq::User.find(ecf_id).first
+  end
+
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end
 
   def get_an_identity_id
     uid if get_an_identity_provider?
+  end
+
+  def get_an_identity_id=(new_get_an_identity_id)
+    self.uid = new_get_an_identity_id
+    self.provider = :tra_openid_connect
   end
 
   def null_user?
