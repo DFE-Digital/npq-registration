@@ -15,6 +15,8 @@ class Services::Admin::UsersSearch
       chain = chain.or(default_scope.where(users[:ecf_id].matches("%#{q}%")))
       chain = chain.or(default_scope.where(applications: { ecf_id: q }))
       chain = chain.or(default_scope.where(users[:trn].matches("%#{q}%")))
+      chain = chain.or(default_scope.where(applications: { school_urn: q }))
+      chain = chain.or(default_scope.where(applications: { private_childcare_provider_urn: q }))
     end
 
     chain

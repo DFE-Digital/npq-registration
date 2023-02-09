@@ -214,7 +214,7 @@ RSpec.feature "admin", type: :feature do
       created_at: 16.days.ago,
     )
 
-    page.fill_in "Search by email", with: selected_user.email
+    page.fill_in "Search records", with: selected_user.email
     page.click_button "Search"
 
     expect(page.find_all("table tbody tr").size).to eql(1)
