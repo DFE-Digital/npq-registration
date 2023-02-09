@@ -506,7 +506,7 @@ DEPENDENCIES
   byebug
   canonical-rails
   capybara
-  delayed_job
+  delayed_job (~> 4.1)
   delayed_job_active_record
   devise (~> 4.8)
   dotenv-rails
