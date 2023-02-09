@@ -93,6 +93,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "email" => "user@example.com",
       "flipper_admin_access" => false,
       "full_name" => "John Doe",
+      "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
