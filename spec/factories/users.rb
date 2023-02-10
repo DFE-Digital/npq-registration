@@ -8,6 +8,15 @@ FactoryBot.define do
     trait :with_ecf_id do
       ecf_id { SecureRandom.uuid }
     end
+
+    trait :with_get_an_identity_id do
+      transient do
+        get_an_identity_id { SecureRandom.uuid }
+      end
+
+      uid { uid }
+      provider { "tra_openid_connect" }
+    end
   end
 
   factory :admin, class: "User" do
