@@ -14,7 +14,7 @@ FactoryBot.define do
         get_an_identity_id { SecureRandom.uuid }
       end
 
-      uid { uid }
+      uid { get_an_identity_id }
       provider { "tra_openid_connect" }
     end
   end
