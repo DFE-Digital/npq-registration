@@ -213,7 +213,7 @@ en:
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
-        choose_your_npq: "Which NPQ do you want to do?"
+        choose_your_npq: ""
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
     hint:
       registration_wizard:
@@ -225,6 +225,8 @@ en:
           another: "For example, I am sharing the costs with my workplace"
         funding_options:
           another: "For example, I am sharing the costs with my workplace"
+        choose_your_npq_options:
+          early_headship_coaching_offer: "Structured support and networking opportunities if you’re in your first 5 years of head teaching."
     label:
       registration_wizard:
         work_setting_options:
