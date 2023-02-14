@@ -19,7 +19,8 @@
         render(
           "registration_wizard/shared/questions/#{form.question.type}",
           form: f,
-          question: form.question
+          question: form.question,
+          fieldset_legend_attributes: form.question.fieldset_legend_attributes
         )
       %>
 

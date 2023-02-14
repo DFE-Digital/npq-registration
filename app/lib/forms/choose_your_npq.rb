@@ -17,6 +17,7 @@ module Forms
       Forms::QuestionTypes::RadioButtonGroup.new(
         name: :choose_your_npq,
         options:,
+        opts: { fieldset: { legend: { size: "m", tag: "h1" } } },
       )
     end
 
