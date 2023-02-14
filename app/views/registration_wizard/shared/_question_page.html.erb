@@ -20,7 +20,7 @@
           "registration_wizard/shared/questions/#{form.question.type}",
           form: f,
           question: form.question,
-          fieldset_legend_attributes: form.question.fieldset_legend_attributes
+          fieldset_legend_attributes: form.question.try(:fieldset_legend_attributes)
         )
       %>
 
