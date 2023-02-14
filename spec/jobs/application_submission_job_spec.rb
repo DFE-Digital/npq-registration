@@ -59,10 +59,10 @@ RSpec.describe ApplicationSubmissionJob do
         expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
         expect(EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
-                                                    email: user.email,
-                                                    full_name: user.full_name,
-                                                    get_an_identity_id: user.get_an_identity_id
-                                                  })
+          email: user.email,
+          full_name: user.full_name,
+          get_an_identity_id: user.get_an_identity_id,
+        })
 
         subject.perform_now
 
@@ -84,10 +84,10 @@ RSpec.describe ApplicationSubmissionJob do
         expect(Services::Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
         expect(EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
-                                                    email: user.email,
-                                                    full_name: user.full_name,
-                                                    get_an_identity_id: user.get_an_identity_id
-                                                  })
+          email: user.email,
+          full_name: user.full_name,
+          get_an_identity_id: user.get_an_identity_id,
+        })
 
         subject.perform_now
 
@@ -113,7 +113,7 @@ RSpec.describe ApplicationSubmissionJob do
         expect(ecf_user).to receive(:update).with({
           email: user.email,
           full_name: user.full_name,
-          get_an_identity_id: user.get_an_identity_id
+          get_an_identity_id: user.get_an_identity_id,
         })
 
         subject.perform_now

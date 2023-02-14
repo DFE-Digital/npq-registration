@@ -35,14 +35,18 @@ private
   end
 
   def update_ecf_user_details(user:)
+    # rubocop:disable Rails/SaveBang
+    # This is not necessary
     user.ecf_user.update(
       email: user.email,
       full_name: user.full_name,
       get_an_identity_id: user.get_an_identity_id,
     )
+    # rubocop:enable Rails/SaveBang
+
     # Record that the GAI ID has been synced
-    user.update(get_an_identity_id_synced_to_ecf: true) if user.get_an_identity_id.present?
-  rescue => e
+    user.update_column(:get_an_identity_id_synced_to_ecf, true) if user.get_an_identity_id.present?
+  rescue StandardError => e
     Sentry.with_scope do |scope|
       scope.set_context("User", { id: user.id, ecf_id: user.ecf_id })
       Sentry.capture_exception(e)
