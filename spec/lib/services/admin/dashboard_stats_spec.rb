@@ -30,7 +30,7 @@ RSpec.describe Services::Admin::DashboardStats do
       :application,
       get_an_identity_applications_created_before_start_time,
       created_at: start_time - 1.day,
-      user: create(:user, provider: :tra_openid_connect),
+      user: create(:user, :with_get_an_identity_id),
     )
 
     create_list(
@@ -44,7 +44,7 @@ RSpec.describe Services::Admin::DashboardStats do
       :application,
       get_an_identity_applications_created_since_start_time,
       created_at: start_time + 1.day,
-      user: create(:user, provider: :tra_openid_connect),
+      user: create(:user, :with_get_an_identity_id),
     )
 
     create_list(
