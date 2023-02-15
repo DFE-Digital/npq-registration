@@ -224,7 +224,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => "",
         "lead_provider_id" => "9",
-        "choose_your_npq" => "senior_leadership",
+
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

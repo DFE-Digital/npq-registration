@@ -137,7 +137,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "employment_type" => "hospital_school",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
-        "choose_your_npq" => "senior_leadership",
+
         "lead_provider_id" => "9",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

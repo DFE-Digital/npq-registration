@@ -192,7 +192,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
-        "choose_your_npq" => "early_headship_coaching_offer",
         "lead_provider_id" => "9",
         "npqh_status" => "completed_npqh",
         "teacher_catchment" => "england",

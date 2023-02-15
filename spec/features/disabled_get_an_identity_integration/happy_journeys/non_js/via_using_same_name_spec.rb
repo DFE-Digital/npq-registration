@@ -223,7 +223,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "email" => "user@example.com",
         "full_name" => "John Doe",
         "funding" => "trust",
-        "choose_your_npq" => "headship",
+
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",

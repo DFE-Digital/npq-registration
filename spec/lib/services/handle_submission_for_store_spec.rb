@@ -14,7 +14,6 @@ RSpec.describe Services::HandleSubmissionForStore do
     let(:courses) { Course.all - Course.ehco - Course.aso }
 
     let(:course) { courses.sample }
-    let(:present_course_name) { Course::DISPLAY_NAME_MAPPING.key(course.name) }
     let(:lead_provider) { LeadProvider.all.sample }
 
     let(:store) do
@@ -32,7 +31,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         "works_in_school" => "no",
         "kind_of_nursery" => "private_nursery",
         "teacher_catchment" => "england",
-        "choose_your_npq" => present_course_name,
       }
     end
 
@@ -74,7 +72,6 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_school" => "yes",
             "teacher_catchment" => "england",
             "work_setting" => "a_school",
-            "choose_your_npq" => present_course_name,
           }
         end
 
@@ -174,7 +171,6 @@ RSpec.describe Services::HandleSubmissionForStore do
             "kind_of_nursery" => "private_nursery",
             "teacher_catchment" => "england",
             "work_setting" => "early_years_or_childcare",
-            "choose_your_npq" => present_course_name,
           }
         end
 
@@ -327,7 +323,6 @@ RSpec.describe Services::HandleSubmissionForStore do
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
               "aso_new_headteacher" => "no",
-              "choose_your_npq" => present_course_name,
             }
           end
 
@@ -349,7 +344,6 @@ RSpec.describe Services::HandleSubmissionForStore do
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
               "aso_new_headteacher" => "no",
-              "choose_your_npq" => present_course_name,
             }
           end
 
@@ -392,7 +386,6 @@ RSpec.describe Services::HandleSubmissionForStore do
     let(:courses) { Course.all - Course.ehco - Course.aso }
 
     let(:course) { courses.sample }
-    let(:present_course_name) { Course::DISPLAY_NAME_MAPPING.key(course.name) }
     let(:lead_provider) { LeadProvider.all.sample }
 
     let(:store) do
@@ -405,7 +398,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         "works_in_school" => "no",
         "kind_of_nursery" => "private_nursery",
         "teacher_catchment" => "england",
-        "choose_your_npq" => present_course_name,
       }
     end
 
@@ -442,7 +434,6 @@ RSpec.describe Services::HandleSubmissionForStore do
             "works_in_school" => "yes",
             "teacher_catchment" => "england",
             "work_setting" => "a_school",
-            "choose_your_npq" => present_course_name,
           }
         end
 
@@ -537,7 +528,6 @@ RSpec.describe Services::HandleSubmissionForStore do
             "kind_of_nursery" => "private_nursery",
             "teacher_catchment" => "england",
             "work_setting" => "early_years_or_childcare",
-            "choose_your_npq" => present_course_name,
           }
         end
 
@@ -679,7 +669,6 @@ RSpec.describe Services::HandleSubmissionForStore do
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
               "aso_new_headteacher" => "no",
-              "choose_your_npq" => present_course_name,
             }
           end
 
@@ -698,7 +687,6 @@ RSpec.describe Services::HandleSubmissionForStore do
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
               "aso_new_headteacher" => "no",
-              "choose_your_npq" => present_course_name,
             }
           end
 

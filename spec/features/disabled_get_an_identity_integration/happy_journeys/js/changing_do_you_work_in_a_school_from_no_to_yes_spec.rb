@@ -266,7 +266,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "employment_role" => "Trainer",
         "full_name" => "John Doe",
         "funding" => "school",
-        "choose_your_npq" => "senior_leadership",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",

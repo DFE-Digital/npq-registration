@@ -72,7 +72,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     ineligible_courses = ineligible_courses_list.map { |name|
       I18n
-        .t("helpers.label.registration_wizard.choose_your_npq_options.#{name}")
+        .t("helpers.label.registration_wizard.course_id_options.#{name}")
     } - eyl_course
 
     ineligible_courses.each do |course|
@@ -176,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
-        "choose_your_npq" => "early_years_leadership",
+
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "kind_of_nursery" => "private_nursery",
         "teacher_catchment" => "england",

@@ -228,7 +228,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "aso_new_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "choose_your_npq" => "early_headship_coaching_offer",
+
         "confirmed_email" => "user@example.com",
         "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
         "date_of_birth" => "1980-12-13",

@@ -2,7 +2,7 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    QUESTION_NAME = :choose_your_npq
+    QUESTION_NAME = :course_id
 
     attr_accessor QUESTION_NAME
 
@@ -15,29 +15,21 @@ module Forms
 
     def question
       Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :choose_your_npq,
+        name: :course_id,
         options:,
-        opts: { fieldset: { legend: { size: "m", tag: "h1" } } },
+        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
       )
     end
 
     def options
-      [
-        build_option_struct(value: "leading_behaviour_and_culture", link_errors: true),
-        build_option_struct(value: "leading_literacy"),
-        build_option_struct(value: "leading_teaching"),
-        build_option_struct(value: "leading_teacher_development"),
-        build_option_struct(value: "senior_leadership"),
-        build_option_struct(value: "headship"),
-        build_option_struct(value: "executive_leadership"),
-        build_option_struct(value: "early_years_leadership"),
-        build_option_struct(value: "early_headship_coaching_offer", divider: true),
-      ]
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       link_errors: index.zero?,
+                       divider: index == 8)
+      end
     end
 
     def after_save
-      wizard.store["course_id"] = course.id.to_s
-
       return if lead_provider_valid?
 
       wizard.store["lead_provider_id"] = nil
@@ -93,7 +85,7 @@ module Forms
     end
 
     def course
-      courses.find_by(name: ::Course::DISPLAY_NAME_MAPPING[choose_your_npq])
+      courses.find_by(id: course_id)
     end
 
   private
@@ -143,7 +135,7 @@ module Forms
 
     def validate_course_exists
       if course.blank?
-        errors.add(:choose_your_npq, :invalid)
+        errors.add(:course_id, :invalid)
       end
     end
   end

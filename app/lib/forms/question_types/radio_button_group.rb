@@ -6,9 +6,9 @@ module Forms
       end
 
       def fieldset_legend_attributes
-        return {} if @opts.empty?
+        return {} if @style_options.empty?
 
-        @opts.dig(:fieldset, :legend)
+        @style_options.dig(:fieldset, :legend)
       end
     end
   end

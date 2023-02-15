@@ -172,7 +172,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "employment_type" => "hospital_school",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
-        "choose_your_npq" => "early_years_leadership",
+
         "full_name" => "John Doe",
         "lead_provider_id" => "9",
         "national_insurance_number" => "AB123456C",

@@ -224,7 +224,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",
-        "choose_your_npq" => "senior_leadership",
+
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",

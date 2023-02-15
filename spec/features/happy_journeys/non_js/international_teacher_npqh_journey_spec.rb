@@ -156,7 +156,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_id" => Course.find_by_code(code: :NPQH).id.to_s,
         "funding" => "school",
         "lead_provider_id" => "9",
-        "choose_your_npq" => "headship",
         "teacher_catchment" => "another",
         "teacher_catchment_country" => "China",
         "trn_knowledge" => "yes",

@@ -168,7 +168,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "email" => "user@example.com",
         "full_name" => "John Doe",
         "funding" => "school",
-        "choose_your_npq" => "senior_leadership",
+
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "national_insurance_number" => "",
         "teacher_catchment" => "scotland",

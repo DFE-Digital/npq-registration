@@ -2,29 +2,28 @@ require "rails_helper"
 
 RSpec.describe Forms::ChooseYourNpq, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:choose_your_npq) }
+    it { is_expected.to validate_presence_of(:course_id) }
 
-    let(:valid_course_name) do
-      ::Course::DISPLAY_NAME_MAPPING
-        .key(Course.where(display: true).first.name)
+    let(:valid_course_id) do
+      Course.where(display: true).first.id
     end
 
-    it "course_id must exist" do
-      subject.choose_your_npq = "NOT VALID NPQ"
+    it "course for course_id must be available to applicant" do
+      subject.course_id = 0
       subject.valid?
-      expect(subject.errors[:choose_your_npq]).to be_present
+      expect(subject.errors[:course_id]).to be_present
 
-      subject.choose_your_npq = valid_course_name
+      subject.course_id = valid_course_id
       subject.valid?
-      expect(subject.errors[:choose_your_npq]).to be_blank
+      expect(subject.errors[:course_id]).to be_blank
     end
   end
 
   describe "#next_step" do
-    let(:choose_your_npq) { ::Course::DISPLAY_NAME_MAPPING.key(course_name) }
+    let(:course_id) { Course.where(display: true).first.id }
 
     subject do
-      described_class.new(choose_your_npq:)
+      described_class.new(course_id:)
     end
 
     context "when changing answers" do
