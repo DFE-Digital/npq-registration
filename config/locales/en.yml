@@ -172,7 +172,19 @@ en:
       users: "Users"
       unsynced_users: "Unsynced users"
       schools: "Schools"
+      admins: "Admin Users"
       feature_flags: "Feature Flags"
+    admins:
+      new:
+        title: "Add a new admin"
+      index:
+        super_admins:
+          summary_text: "What's the difference between super admins and regular admins?"
+          text_html: |
+            Regular admins are capable of logging into the admin interface to view the dashboard, users, applications, along with triggering syncs of unsynced data.
+            <br>
+            <br>
+            Super Admins are regular admins with the added capability of adding and removing other admins and NPQ feature flags. Regular admins cannot be given super admin permissions within the admin interface, these permissions require developer intervention.
     applications:
       show:
         title: "Application"

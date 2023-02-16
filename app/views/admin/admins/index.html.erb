@@ -1,0 +1,49 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Admins" do %>
+      <%= govuk_button_link_to("Add new admin", new_admin_admin_path) %>
+    <% end %>
+
+    <%= govuk_details(summary_text: t('.super_admins.summary_text'), text: t('.super_admins.text_html')) %>
+
+    <%=
+      govuk_table do |table|
+        table.head do |head|
+          head.row do |row|
+            row.cell(header: true, text: "Name")
+            row.cell(header: true, text: "Email")
+            row.cell(header: true, text: "Admin?")
+            row.cell(header: true, text: "Super Admin?")
+            row.cell(header: true, text: "")
+            row.cell(header: true, text: "")
+          end
+        end
+
+        table.body do |body|
+          @users.each do |user|
+            body.row do |row|
+              row.cell(text: user.full_name.presence || "-")
+              row.cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
+              row.cell(text: boolean_red_green_tag(user.admin?))
+              row.cell(text: boolean_red_green_tag(user.super_admin?))
+              row.cell(text: govuk_link_to("View", admin_user_path(user)))
+
+              delete_row_contents = govuk_link_to(
+                "Remove as admin",
+                admin_admin_path(user),
+                method: :delete,
+                data: {
+                  confirm: "Are you sure you want to remove this user's admin permissions? This will not delete their user record."
+                }
+              )
+
+              row.cell(text: delete_row_contents)
+            end
+          end
+        end
+      end
+    %>
+
+    <%== pagy_govuk_nav(@pagy) %>
+  </div>
+</div>

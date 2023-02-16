@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
+  scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
 

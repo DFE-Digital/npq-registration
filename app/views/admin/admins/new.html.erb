@@ -1,0 +1,18 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h1 class="govuk-heading-l"><%= t(".title") %></h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with model: @user, url: admin_admins_path do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_email_field :email,
+                              label: { text: "Email Address" },
+                              width: "three-quarters" %>
+
+      <%= f.govuk_submit "Confirm" %>
+    <% end %>
+  </div>
+</div>
