@@ -8,7 +8,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
 gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
-gem "devise", "~> 4.8"
+gem "devise", "~> 4.9"
 gem "email_validator", require: "email_validator/strict"
 gem "flipper", "~> 0.26.0"
 gem "flipper-active_record", "~> 0.26.0"
