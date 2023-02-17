@@ -2,15 +2,31 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    attr_accessor :course_id
+    QUESTION_NAME = :course_id
 
-    validates :course_id, presence: true
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
     def self.permitted_params
-      %i[
-        course_id
-      ]
+      [QUESTION_NAME]
+    end
+
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :course_id,
+        options:,
+        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+      )
+    end
+
+    def options
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.id,
+                       link_errors: index.zero?,
+                       divider: index == 8)
+      end
     end
 
     def after_save
@@ -65,15 +81,6 @@ module Forms
         :work_setting
       else
         :qualified_teacher_check
-      end
-    end
-
-    def options
-      courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
-                       text: course.name,
-                       link_errors: index.zero?,
-                       hint: course.description)
       end
     end
 

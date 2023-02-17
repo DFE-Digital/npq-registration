@@ -1,47 +1,11 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> What are you applying for?
-<% end %>
+<h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.course_id") %></h1>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+<p style="margin-bottom: 40px" class="govuk-body">To register for an NPQ and the <a href="https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer" class="govuk-link">early headship coaching offer</a>, submit 2 separate registrations.</p>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <%= f.govuk_radio_buttons_fieldset(:course_id,
-            legend: {
-              text: "What are you applying for?",
-              size: "xl",
-              tag: "h1"
-            }
-          ) do %>
-        <%= govuk_details(summary_text: "Help with NPQH and the Early Headship Coaching Offer") do %>
-          <p class="govuk-body">
-            If you’re applying to start an NPQ for Headship (NPQH), you might also be applying for the Early Headship Coaching Offer, a package of structured face-to-face support for new headteachers.
-          </p>
-
-          <p class="govuk-body">
-            To register for both you should:
-          </p>
-
-          <ul class="govuk-list govuk-list--bullet">
-            <li>complete your registration for an NPQH using this service</li>
-            <li>complete a separate registration for the Early Headship Coaching Offer, also using this service</li>
-          </ul>
-        <% end %>
-
-        <% @form.options.each do |struct| %>
-          <%= f.govuk_radio_button :course_id, struct.value, label: { text: struct.text }, hint: { text: struct.hint }, link_errors: struct.link_errors %>
-        <% end %>
-      <% end %>
-
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+<%=
+  render(
+    'registration_wizard/shared/question_page',
+    form: @form,
+    wizard: @wizard,
+  )
+%>

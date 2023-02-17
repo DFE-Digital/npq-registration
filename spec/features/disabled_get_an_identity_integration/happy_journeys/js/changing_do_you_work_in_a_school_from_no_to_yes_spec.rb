@@ -70,8 +70,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -151,8 +151,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
