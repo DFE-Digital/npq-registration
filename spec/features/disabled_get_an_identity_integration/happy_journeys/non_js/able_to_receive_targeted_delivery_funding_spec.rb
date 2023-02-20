@@ -110,8 +110,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership")
+      expect(page).to have_text("What are you applying for?")
+      page.choose("NPQ for Senior Leadership (NPQSL)")
     end
 
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
@@ -224,7 +224,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",
-
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",

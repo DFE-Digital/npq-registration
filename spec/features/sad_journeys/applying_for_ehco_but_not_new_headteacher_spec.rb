@@ -57,8 +57,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early headship coaching offer", visible: :all)
+      expect(page).to have_text("What are you applying for?")
+      page.choose("Early Headship Coaching Offer", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/about-ehco", submit_form: false) do
@@ -68,7 +68,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
+      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
 
       page.choose "None of the above", visible: :all
     end
@@ -80,7 +80,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
+      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed an NPQ for Headship (NPQH)?"
 
       page.choose "I have completed an NPQH", visible: :all
     end
