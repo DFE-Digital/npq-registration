@@ -54,7 +54,7 @@ class Services::QueryStore
   end
 
   def course
-    @course ||= Course.find(store["course_id"])
+    @course ||= Course.find_by(identifier: store["course_identifier"])
   end
 
   def lead_provider

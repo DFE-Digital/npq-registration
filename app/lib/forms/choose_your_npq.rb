@@ -2,7 +2,7 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    QUESTION_NAME = :course_id
+    QUESTION_NAME = :course_identifier
 
     attr_accessor QUESTION_NAME
 
@@ -15,7 +15,7 @@ module Forms
 
     def question
       Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :course_id,
+        name: :course_identifier,
         options:,
         style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
       )
@@ -23,7 +23,7 @@ module Forms
 
     def options
       courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
+        OpenStruct.new(value: course.identifier,
                        link_errors: index.zero?,
                        divider: index == 8)
       end
@@ -85,7 +85,7 @@ module Forms
     end
 
     def course
-      courses.find_by(id: course_id)
+      courses.find_by(identifier: course_identifier)
     end
 
   private
@@ -135,7 +135,7 @@ module Forms
 
     def validate_course_exists
       if course.blank?
-        errors.add(:course_id, :invalid)
+        errors.add(:course_identifier, :invalid)
       end
     end
   end
