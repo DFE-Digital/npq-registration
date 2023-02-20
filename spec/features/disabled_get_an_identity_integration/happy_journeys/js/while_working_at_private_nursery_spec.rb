@@ -87,13 +87,18 @@ RSpec.feature "Happy journeys", type: :feature do
       page.find("#private-childcare-provider-picker__option--0").click
     end
 
-    eyl_course = ["NPQ for Early Years Leadership (NPQEYL)"]
+    eyl_course = ["Early years leadership"]
 
-    ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
+    ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
+
+    ineligible_courses = ineligible_courses_list.map { |name|
+      I18n
+        .t("helpers.label.registration_wizard.course_id_options.#{name}")
+    } - eyl_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("What are you applying for?")
+        expect(page).to have_text("Which NPQ do you want to do?")
         page.choose(course, visible: :all)
       end
 
@@ -102,8 +107,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
@@ -200,6 +205,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "email" => "user@example.com",
         "full_name" => "John Doe",
         "has_ofsted_urn" => "yes",
+
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "kind_of_nursery" => "private_nursery",

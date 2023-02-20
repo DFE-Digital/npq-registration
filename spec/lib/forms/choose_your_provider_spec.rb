@@ -267,7 +267,9 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:form) { described_class.new }
 
     let(:store) do
-      { "course_id" => course_id }
+      {
+        "course_id" => course_id,
+      }
     end
 
     let(:course) { Course.ehco }

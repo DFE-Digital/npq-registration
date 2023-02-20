@@ -46,8 +46,8 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -122,8 +122,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -228,6 +228,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
+
         "lead_provider_id" => "9",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
