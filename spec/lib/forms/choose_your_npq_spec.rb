@@ -2,20 +2,20 @@ require "rails_helper"
 
 RSpec.describe Forms::ChooseYourNpq, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:course_id) }
+    it { is_expected.to validate_presence_of(:course_identifier) }
 
-    let(:valid_course_id) do
-      Course.where(display: true).first.id
+    let(:valid_course_identifier) do
+      Course.where(display: true).sample.identifier
     end
 
     it "course for course_id must be available to applicant" do
-      subject.course_id = 0
+      subject.course_identifier = "foo_bar"
       subject.valid?
-      expect(subject.errors[:course_id]).to be_present
+      expect(subject.errors[:course_identifier]).to be_present
 
-      subject.course_id = valid_course_id
+      subject.course_identifier = valid_course_identifier
       subject.valid?
-      expect(subject.errors[:course_id]).to be_blank
+      expect(subject.errors[:course_identifier]).to be_blank
     end
   end
 
@@ -32,8 +32,8 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course_name) { "NPQ for Headship (NPQH)" }
-        let(:course) { Course.find_by(name: course_name) }
+        let(:course_identifier) { "npq-headship" }
+        let(:course) { Course.find_by(identifier: course_identifier) }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
@@ -58,10 +58,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course_name) { "NPQ for Leading Teaching (NPQLT)" }
-        let(:course) { Course.find_by(name: course_name) }
+        let(:course_identifier) { "npq-leading-teaching" }
+        let(:course) { Course.find_by(identifier: course_identifier) }
         let(:school) { create(:school) }
-        let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+        let(:previous_course) { Course.find_by(identifier: "npq-headship") }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do

@@ -1,17 +1,4 @@
 class Course < ApplicationRecord
-  COURSE_NAMES = {
-    ASO: "Additional Support Offer for new headteachers",
-    NPQLT: "NPQ for Leading Teaching (NPQLT)",
-    NPQLBC: "NPQ for Leading Behaviour and Culture (NPQLBC)",
-    NPQLTD: "NPQ for Leading Teacher Development (NPQLTD)",
-    NPQLL: "NPQ for Leading Literacy (NPQLL)",
-    NPQSL: "NPQ for Senior Leadership (NPQSL)",
-    NPQH: "NPQ for Headship (NPQH)",
-    NPQEL: "NPQ for Executive Leadership (NPQEL)",
-    NPQEYL: "NPQ for Early Years Leadership (NPQEYL)",
-    EHCO: "Early Headship Coaching Offer",
-  }.with_indifferent_access.freeze
-
   COURSE_ECF_ID_TO_IDENTIFIER_MAPPING = {
     "15c52ed8-06b5-426e-81a2-c2664978a0dc" => "npq-leading-teaching",
     "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5" => "npq-leading-behaviour-culture",
@@ -25,35 +12,31 @@ class Course < ApplicationRecord
     "829fcd45-e39d-49a9-b309-26d26debfa90" => "npq-leading-literacy",
   }.with_indifferent_access.freeze
 
-  scope :aso, -> { where(name: COURSE_NAMES[:ASO]) }
-  scope :ehco, -> { where(name: COURSE_NAMES[:EHCO]) }
-  scope :npqeyl, -> { where(name: COURSE_NAMES[:NPQEYL]) }
-
-  def self.find_by_code(code:)
-    find_by(name: COURSE_NAMES[code])
-  end
+  scope :aso, -> { where(identifier: "npq-additional-support-offer") }
+  scope :ehco, -> { where(identifier: "npq-early-headship-coaching-offer") }
+  scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
 
   def supports_targeted_delivery_funding?
     !ehco? && !aso?
   end
 
   def npqh?
-    name == COURSE_NAMES[:NPQH]
+    identifier == "npq-headship"
   end
 
   def aso?
-    name == COURSE_NAMES[:ASO]
+    identifier == "npq-additional-support-offer"
   end
 
   def npqsl?
-    name == COURSE_NAMES[:NPQSL]
+    identifier == "npq-senior-leadership"
   end
 
   def ehco?
-    name == COURSE_NAMES[:EHCO]
+    identifier == "npq-early-headship-coaching-offer"
   end
 
   def eyl?
-    name == COURSE_NAMES[:NPQEYL]
+    identifier == "npq-early-years-leadership"
   end
 end

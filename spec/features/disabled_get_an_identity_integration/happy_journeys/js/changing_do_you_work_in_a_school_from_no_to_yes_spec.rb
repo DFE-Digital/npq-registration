@@ -230,7 +230,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQSL).id,
+      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,

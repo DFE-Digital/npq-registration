@@ -50,24 +50,24 @@ class LeadProvider < ApplicationRecord
   #       longterm having this handled in the DB so none of
   #       this data has to be hardcoded would be preferable.
   COURSE_TO_PROVIDER_MAPPING = {
-    Course::COURSE_NAMES[:NPQH] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:NPQSL] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:NPQLT] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:NPQLTD] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:NPQLBC] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:EHCO] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    Course::COURSE_NAMES[:ASO] => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-headship" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-senior-leadership" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-leading-teaching" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-leading-teaching-development" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-leading-behaviour-culture" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-early-headship-coaching-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-additional-support-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
 
-    Course::COURSE_NAMES[:NPQEYL] => EYL_LL_PROVIDERS,
-    Course::COURSE_NAMES[:NPQLL] => EYL_LL_PROVIDERS,
+    "npq-early-years-leadership" => EYL_LL_PROVIDERS,
+    "npq-leading-literacy" => EYL_LL_PROVIDERS,
 
-    Course::COURSE_NAMES[:NPQEL] => EL_PROVIDERS,
+    "npq-executive-leadership" => EL_PROVIDERS,
   }.freeze
 
   scope :alphabetical, -> { order(name: :asc) }
 
   def self.for(course:)
-    course_specific_list = COURSE_TO_PROVIDER_MAPPING[course.name]
+    course_specific_list = COURSE_TO_PROVIDER_MAPPING[course.identifier]
 
     return all if course_specific_list.blank?
 
