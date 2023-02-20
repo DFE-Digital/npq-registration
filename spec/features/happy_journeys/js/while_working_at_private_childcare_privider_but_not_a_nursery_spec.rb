@@ -110,7 +110,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => private_childcare_provider.registration_details,

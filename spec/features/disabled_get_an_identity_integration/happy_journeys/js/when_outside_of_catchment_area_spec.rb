@@ -121,7 +121,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",

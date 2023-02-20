@@ -171,7 +171,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => non_pilot_user_email,
-          "Course" => "NPQ for Headship (NPQH)",
+          "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",

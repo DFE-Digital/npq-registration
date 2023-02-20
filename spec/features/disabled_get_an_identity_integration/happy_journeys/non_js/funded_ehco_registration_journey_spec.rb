@@ -151,7 +151,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "Early Headship Coaching Offer",
+          "Course" => "Early headship coaching offer",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "Are you a headteacher?" => "Yes",

@@ -92,8 +92,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "A school",

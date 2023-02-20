@@ -116,7 +116,7 @@ RSpec.feature "Happy journeys", type: :feature do
         {
           "Where do you work?" => "England",
           "What setting do you work in?" => "A school",
-          "Course" => "NPQ for Headship (NPQH)",
+          "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",

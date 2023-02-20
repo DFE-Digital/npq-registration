@@ -101,7 +101,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Role" => "Trainer",

@@ -159,7 +159,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "TRN" => "1234567",
           "Date of birth" => "13 December 1980",
           "Email" => "user@example.com",
-          "Course" => "Early Headship Coaching Offer",
+          "Course" => "Early headship coaching offer",
           "Lead provider" => "Teach First",
           "How is your EHCO being paid for?" => "I am paying",
           "Workplace" => "open manchester school",

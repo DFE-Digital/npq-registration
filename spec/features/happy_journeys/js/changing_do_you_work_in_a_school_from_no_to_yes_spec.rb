@@ -68,8 +68,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "What setting do you work in?" => "Other",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
@@ -152,8 +151,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "A school",
           "Workplace" => "open manchester school",

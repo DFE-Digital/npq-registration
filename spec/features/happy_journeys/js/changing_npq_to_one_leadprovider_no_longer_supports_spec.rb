@@ -98,8 +98,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
           "What setting do you work in?" => "Early years or childcare",
@@ -151,8 +150,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "Lead provider" => "Teacher Development Trust",
           "What setting do you work in?" => "Early years or childcare",

@@ -105,8 +105,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "NPQ for Headship (NPQH)",
+          "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",

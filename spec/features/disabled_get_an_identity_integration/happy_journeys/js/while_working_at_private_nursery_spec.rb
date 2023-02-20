@@ -131,7 +131,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "Date of birth" => "13 December 1980",
           "What setting do you work in?" => "Early years or childcare",
           "Email" => "user@example.com",
