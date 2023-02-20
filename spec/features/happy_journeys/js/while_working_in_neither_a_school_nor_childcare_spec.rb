@@ -6,6 +6,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Enable Get An Identity integration"
+
   scenario "registration journey while working in neither a school nor childcare" do
     stub_participant_validation_request
 
