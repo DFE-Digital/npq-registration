@@ -43,7 +43,7 @@ module Forms
   private
 
     def course
-      Course.find_by(id: wizard.store["course_id"])
+      wizard.query_store.course
     end
 
     def funding_eligiblity_status_code

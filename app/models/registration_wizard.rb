@@ -235,11 +235,7 @@ private
 
   delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, to: :query_store
-
-  def course
-    Course.find(store["course_id"])
-  end
+  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, to: :query_store
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))

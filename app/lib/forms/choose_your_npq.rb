@@ -103,7 +103,7 @@ module Forms
     end
 
     def previous_course
-      Course.find_by(id: wizard.store["course_id"])
+      wizard.query_store.course
     end
 
     def previously_eligible_for_funding?

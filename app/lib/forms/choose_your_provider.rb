@@ -49,7 +49,7 @@ module Forms
     end
 
     def course
-      Course.find_by(id: wizard.store["course_id"])
+      wizard.query_store.course
     end
 
   private

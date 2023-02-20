@@ -205,7 +205,7 @@ module Services
     end
 
     def course
-      @course ||= Course.find(store["course_id"])
+      @course ||= query_store.course
     end
 
     def school
