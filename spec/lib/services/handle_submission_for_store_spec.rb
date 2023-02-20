@@ -22,7 +22,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         "confirmed_email" => user.email,
         "trn_verified" => false,
         "trn" => "12345",
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
         "lead_provider_id" => lead_provider.id,
         "date_of_birth" => (30.years.ago + 1.day).to_s,
@@ -64,7 +64,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "confirmed_email" => user.email,
             "trn_verified" => false,
             "trn" => "12345",
-            "course_id" => course.id,
+            "course_identifier" => course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => lead_provider.id,
             "date_of_birth" => (30.years.ago + 1.day).to_s,
@@ -161,7 +161,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "confirmed_email" => user.email,
             "trn_verified" => false,
             "trn" => "12345",
-            "course_id" => course.id,
+            "course_identifier" => course.identifier,
             "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
             "lead_provider_id" => lead_provider.id,
             "date_of_birth" => (30.years.ago + 1.day).to_s,
@@ -318,7 +318,7 @@ RSpec.describe Services::HandleSubmissionForStore do
               "confirmed_email" => user.email,
               "trn_verified" => false,
               "trn" => "12345",
-              "course_id" => Course.ehco.first.id,
+              "course_identifier" => Course.ehco.first.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -339,7 +339,7 @@ RSpec.describe Services::HandleSubmissionForStore do
               "confirmed_email" => user.email,
               "trn_verified" => false,
               "trn" => "12345",
-              "course_id" => Course.ehco.first.id,
+              "course_identifier" => Course.ehco.first.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -391,7 +391,7 @@ RSpec.describe Services::HandleSubmissionForStore do
     let(:store) do
       {
         "current_user" => user,
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
         "lead_provider_id" => lead_provider.id,
         "works_in_childcare" => "yes",
@@ -428,7 +428,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "course_id" => course.id,
+            "course_identifier" => course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => lead_provider.id,
             "works_in_school" => "yes",
@@ -520,7 +520,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "course_id" => course.id,
+            "course_identifier" => course.identifier,
             "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
             "lead_provider_id" => lead_provider.id,
             "works_in_childcare" => "yes",
@@ -664,7 +664,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           let(:store) do
             {
               "current_user" => user,
-              "course_id" => Course.ehco.first.id,
+              "course_identifier" => Course.ehco.first.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -682,7 +682,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           let(:store) do
             {
               "current_user" => user,
-              "course_id" => Course.ehco.first.id,
+              "course_identifier" => Course.ehco.first.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",

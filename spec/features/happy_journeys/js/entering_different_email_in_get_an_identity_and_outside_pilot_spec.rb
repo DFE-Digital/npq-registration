@@ -251,7 +251,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -265,12 +264,11 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "confirmed_email" => non_pilot_user_email,
-        "course_id" => Course.find_by_code(code: :NPQH).id.to_s,
+        "course_identifier" => "npq-headship",
         "date_of_birth" => "1980-12-13",
         "email" => non_pilot_user_email,
         "full_name" => "John Doe",
         "funding" => "trust",
-
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",

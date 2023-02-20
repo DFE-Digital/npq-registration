@@ -61,7 +61,7 @@ RSpec.describe RegistrationWizard do
           "works_in_school" => "yes",
           "institution_identifier" => "School-#{school.urn}",
           "teacher_catchment" => "england",
-          "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
+          "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "funding_choice" => "school",
           "aso_headteacher" => "yes",
@@ -87,7 +87,7 @@ RSpec.describe RegistrationWizard do
           "date_of_birth" => 30.years.ago,
           "works_in_school" => "yes",
           "institution_identifier" => "School-#{school.urn}",
-          "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
+          "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "aso_funding" => "yes",
           "aso_funding_choice" => "another",
@@ -119,7 +119,7 @@ RSpec.describe RegistrationWizard do
           "institution_location" => "London",
           "institution_name" => "",
           "institution_identifier" => "School-#{school.urn}",
-          "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
+          "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "funding" => "self",
         }
@@ -135,7 +135,7 @@ RSpec.describe RegistrationWizard do
       let(:store) do
         {
           "chosen_provider" => "yes",
-          "course_id" => Course.find_by(name: "Additional Support Offer for new headteachers").id,
+          "course_identifier" => "npq-additional-support-offer",
           "date_of_birth" => 30.years.ago,
           "full_name" => "Tatyana Christensen",
           "has_ofsted_urn" => has_ofsted_urn,

@@ -20,10 +20,10 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
   end
 
   describe "#next_step" do
-    let(:course_id) { Course.where(display: true).first.id }
+    let(:course_identifier) { Course.where(display: true).first.identifier }
 
     subject do
-      described_class.new(course_id:)
+      described_class.new(course_identifier:)
     end
 
     context "when changing answers" do
@@ -37,7 +37,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
-            course_id: course.id.to_s,
+            course_identifier: course.identifier,
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end
@@ -66,7 +66,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
         let(:lead_provider) { lead_providers.first }
         let(:store) do
           {
-            course_id: previous_course.id.to_s,
+            course_identifier: previous_course.identifier,
             institution_identifier: "School-#{school.urn}",
             works_in_school: "yes",
             lead_provider_id: lead_provider.id,

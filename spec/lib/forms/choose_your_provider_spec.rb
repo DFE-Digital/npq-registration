@@ -10,7 +10,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:store) do
       {
         "teacher_catchment" => "england",
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
       }
@@ -209,7 +209,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:store) do
       {
         "teacher_catchment" => "england",
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
       }
@@ -268,12 +268,12 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
 
     let(:store) do
       {
-        "course_id" => course_id,
+        "course_identifier" => course_identifier,
       }
     end
 
     let(:course) { Course.ehco }
-    let(:course_id) { course.id }
+    let(:course_identifier) { course.identifier }
 
     let(:expected_providers) { LeadProvider.all }
 

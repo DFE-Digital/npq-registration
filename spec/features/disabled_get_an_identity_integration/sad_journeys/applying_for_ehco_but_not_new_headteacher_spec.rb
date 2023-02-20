@@ -212,7 +212,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -228,9 +227,8 @@ RSpec.feature "Happy journeys", type: :feature do
         "aso_new_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-
         "confirmed_email" => "user@example.com",
-        "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
+        "course_identifier" => "npq-early-headship-coaching-offer",
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",

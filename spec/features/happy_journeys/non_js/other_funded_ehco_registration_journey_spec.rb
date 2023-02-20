@@ -183,7 +183,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -197,7 +196,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "aso_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
+        "course_identifier" => "npq-early-headship-coaching-offer",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",

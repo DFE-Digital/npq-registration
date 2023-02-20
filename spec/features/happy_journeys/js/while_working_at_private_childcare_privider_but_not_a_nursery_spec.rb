@@ -160,7 +160,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -172,11 +171,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => Course.find_by_code(code: :NPQEYL).id.to_s,
+        "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
-
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "kind_of_nursery" => "private_nursery",
         "teacher_catchment" => "england",

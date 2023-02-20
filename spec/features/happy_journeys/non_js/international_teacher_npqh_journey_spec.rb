@@ -141,7 +141,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "another",
       "teacher_catchment_country" => "China",
       "teacher_catchment_synced_to_ecf" => false,
@@ -153,7 +152,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => Course.find_by_code(code: :NPQH).id.to_s,
+        "course_identifier" => "npq-headship",
         "funding" => "school",
         "lead_provider_id" => "9",
         "teacher_catchment" => "another",
