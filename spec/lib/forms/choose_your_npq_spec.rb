@@ -9,7 +9,7 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     end
 
     it "course for course_id must be available to applicant" do
-      subject.course_identifier = "foo_bar"
+      subject.course_identifier = Course.find_by(display: false).identifier
       subject.valid?
       expect(subject.errors[:course_identifier]).to be_present
 
