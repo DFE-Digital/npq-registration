@@ -56,8 +56,4 @@ class Course < ApplicationRecord
   def eyl?
     name == COURSE_NAMES[:NPQEYL]
   end
-
-  def identifier
-    COURSE_ECF_ID_TO_IDENTIFIER_MAPPING[ecf_id]
-  end
 end
