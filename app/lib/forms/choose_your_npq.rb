@@ -22,10 +22,12 @@ module Forms
     end
 
     def options
+      divider_index = courses.length - 1 # Place the "Or" divider before the last course
+
       courses.each_with_index.map do |course, index|
         OpenStruct.new(value: course.identifier,
                        link_errors: index.zero?,
-                       divider: index == 8)
+                       divider: divider_index)
       end
     end
 
