@@ -7,6 +7,7 @@ module Courses
       identifier: "npq-additional-support-offer",
       description: "The Additional Support Offer is a targeted support package for new headteachers.",
       display: false,
+      default_cohort: 2022,
     },
     {
       position: 1,
@@ -14,6 +15,7 @@ module Courses
       ecf_id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5",
       identifier: "npq-leading-behaviour-culture",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 2,
@@ -21,6 +23,7 @@ module Courses
       ecf_id: "829fcd45-e39d-49a9-b309-26d26debfa90",
       identifier: "npq-leading-literacy",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 3,
@@ -28,6 +31,7 @@ module Courses
       ecf_id: "15c52ed8-06b5-426e-81a2-c2664978a0dc",
       identifier: "npq-leading-teaching",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 3,
@@ -35,6 +39,7 @@ module Courses
       ecf_id: "29fee78b-30ce-4b93-ba21-80be2fde286f",
       identifier: "npq-leading-teaching-development",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 5,
@@ -42,6 +47,7 @@ module Courses
       ecf_id: "a42736ad-3d0b-401d-aebe-354ef4c193ec",
       identifier: "npq-senior-leadership",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 6,
@@ -49,6 +55,7 @@ module Courses
       ecf_id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768",
       identifier: "npq-headship",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 7,
@@ -56,6 +63,7 @@ module Courses
       ecf_id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a",
       identifier: "npq-executive-leadership",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 8,
@@ -63,6 +71,7 @@ module Courses
       ecf_id: "66dff4af-a518-498f-9042-36a41f9e8aa7",
       identifier: "npq-early-years-leadership",
       display: true,
+      default_cohort: 2022,
     },
     {
       position: 9,
@@ -71,6 +80,7 @@ module Courses
       identifier: "npq-early-headship-coaching-offer",
       description: "A package of structured face-to-face support for new headteachers.",
       display: true,
+      default_cohort: 2022,
     },
   ].freeze
 end
