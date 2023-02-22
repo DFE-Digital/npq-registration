@@ -27,7 +27,7 @@ module Forms
       courses.each_with_index.map do |course, index|
         OpenStruct.new(value: course.identifier,
                        link_errors: index.zero?,
-                       divider: divider_index)
+                       divider: divider_index == index)
       end
     end
 
