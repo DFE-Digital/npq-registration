@@ -1,11 +1,11 @@
 module Forms
   class Confirmation < Base
     def requirements_met?
-      wizard.store["course_id"].present? && wizard.store["lead_provider_id"].present?
+      course.present? && wizard.store["lead_provider_id"].present?
     end
 
     def course
-      Course.find_by(id: wizard.store["course_id"])
+      wizard.query_store.course
     end
 
     def lead_provider

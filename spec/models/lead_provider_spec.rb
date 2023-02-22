@@ -4,14 +4,14 @@ RSpec.describe LeadProvider do
   describe "#for" do
     subject { described_class.for(course:).map(&:name) }
 
-    let(:course) { Course.find_by!(name: course_name) }
+    let(:course) { Course.find_by!(identifier: course_identifier) }
 
     before do
       Services::LeadProviders::Updater.call
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQH]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQH] }
+    context "with course npq-headship" do
+      let(:course_identifier) { "npq-headship" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -28,8 +28,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQSL]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQSL] }
+    context "with course npq-senior-leadership" do
+      let(:course_identifier) { "npq-senior-leadership" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -46,8 +46,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQLT]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQLT] }
+    context "with course npq-leading-teaching" do
+      let(:course_identifier) { "npq-leading-teaching" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -64,8 +64,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQLTD]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQLTD] }
+    context "with course npq-leading-teaching-development" do
+      let(:course_identifier) { "npq-leading-teaching-development" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -82,8 +82,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQLBC]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQLBC] }
+    context "with course npq-leading-behaviour-culture" do
+      let(:course_identifier) { "npq-leading-behaviour-culture" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -100,8 +100,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:EHCO]}" do
-      let(:course_name) { Course::COURSE_NAMES[:EHCO] }
+    context "with course npq-early-headship-coaching-offer" do
+      let(:course_identifier) { "npq-early-headship-coaching-offer" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -118,8 +118,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:ASO]}" do
-      let(:course_name) { Course::COURSE_NAMES[:ASO] }
+    context "with course npq-additional-support-offer" do
+      let(:course_identifier) { "npq-additional-support-offer" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -136,8 +136,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQEYL]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQEYL] }
+    context "with course npq-early-years-leadership" do
+      let(:course_identifier) { "npq-early-years-leadership" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -151,8 +151,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQLL]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQLL] }
+    context "with course npq-leading-literacy" do
+      let(:course_identifier) { "npq-leading-literacy" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([
@@ -166,8 +166,8 @@ RSpec.describe LeadProvider do
       end
     end
 
-    context "with course #{Course::COURSE_NAMES[:NPQEL]}" do
-      let(:course_name) { Course::COURSE_NAMES[:NPQEL] }
+    context "with course npq-executive-leadership" do
+      let(:course_identifier) { "npq-executive-leadership" }
 
       it "returns expected lead providers" do
         expect(subject).to eq([

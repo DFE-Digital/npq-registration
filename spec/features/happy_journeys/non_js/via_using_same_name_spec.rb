@@ -77,8 +77,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Headship (NPQH)")
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Headship")
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -116,7 +116,7 @@ RSpec.feature "Happy journeys", type: :feature do
         {
           "Where do you work?" => "England",
           "What setting do you work in?" => "A school",
-          "Course" => "NPQ for Headship (NPQH)",
+          "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",
@@ -134,7 +134,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("NPQ for Headship (NPQH)")
+      expect(page).to have_text("Headship")
     end
 
     visit("/registration/check-answers")
@@ -162,7 +162,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQH).id,
+      "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
@@ -176,7 +176,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -188,7 +187,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => Course.find_by_code(code: :NPQH).id.to_s,
+        "course_identifier" => "npq-headship",
         "funding" => "trust",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",

@@ -87,13 +87,18 @@ RSpec.feature "Happy journeys", type: :feature do
       page.find("#private-childcare-provider-picker__option--0").click
     end
 
-    eyl_course = ["NPQ for Early Years Leadership (NPQEYL)"]
+    eyl_course = ["Early years leadership"]
 
-    ineligible_courses = Forms::ChooseYourNpq.new.options.map(&:text) - eyl_course
+    ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
+
+    ineligible_courses = ineligible_courses_list.map { |name|
+      I18n
+        .t("helpers.label.registration_wizard.course_identifier_options.#{name}")
+    } - eyl_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("What are you applying for?")
+        expect(page).to have_text("Which NPQ do you want to do?")
         page.choose(course, visible: :all)
       end
 
@@ -102,8 +107,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
@@ -126,7 +131,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "NPQ for Early Years Leadership (NPQEYL)",
+          "Course" => "Early years leadership",
           "Date of birth" => "13 December 1980",
           "What setting do you work in?" => "Early years or childcare",
           "Email" => "user@example.com",
@@ -167,7 +172,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQEYL).id,
+      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
       "employer_name" => nil,
@@ -181,7 +186,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -195,7 +199,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "confirmed_email" => "user@example.com",
-        "course_id" => Course.find_by_code(code: :NPQEYL).id.to_s,
+        "course_identifier" => "npq-early-years-leadership",
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "full_name" => "John Doe",

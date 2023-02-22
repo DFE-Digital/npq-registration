@@ -76,7 +76,7 @@ en:
               too_long: National Insurance number is too long (maximum is %{count} characters)
         forms/choose_your_npq:
           attributes:
-            course_id:
+            course_identifier:
               blank: Choose a national professional qualification
               invalid: Choose a valid national professional qualification
         forms/choose_your_provider:
@@ -203,6 +203,7 @@ en:
         aso_possible_funding: "You may qualify for DfE scholarship funding"
         aso_previously_funded: "DfE scholarship funding not available"
         aso_unavailable: "You cannot register for the Early Headship Coaching Offer"
+        course_identifier: "Choose an NPQ"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -212,6 +213,7 @@ en:
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
+        course_identifier: "Which NPQ do you want to do?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
     hint:
       registration_wizard:
@@ -223,6 +225,8 @@ en:
           another: "For example, I am sharing the costs with my workplace"
         funding_options:
           another: "For example, I am sharing the costs with my workplace"
+        course_identifier_options:
+          "npq-early-headship-coaching-offer": "A package of structured face-to-face support for new headteachers."
     label:
       registration_wizard:
         work_setting_options:
@@ -237,6 +241,18 @@ en:
           preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
+
+        course_identifier_options:
+          "npq-leading-teaching": "Leading teaching"
+          "npq-leading-behaviour-culture": "Leading behaviour and culture"
+          "npq-leading-teaching-development": "Leading teacher development"
+          "npq-senior-leadership": "Senior leadership"
+          "npq-headship": "Headship"
+          "npq-executive-leadership": "Executive leadership"
+          "npq-additional-support-offer": "Additional Support Offer"
+          "npq-early-headship-coaching-offer": "Early headship coaching offer"
+          "npq-early-years-leadership": "Early years leadership"
+          "npq-leading-literacy": "Leading literacy"
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"

@@ -85,8 +85,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Early Years Leadership (NPQEYL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -99,7 +99,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      page.choose("Early Headship Coaching Offer", visible: :all)
+      page.choose("Early headship coaching offer", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/about-ehco", submit_form: false) do
@@ -109,7 +109,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_text("Are you studying for, or have you completed an NPQ for Headship (NPQH)?")
+      expect(page).to have_text("Are you studying for, or have you completed a Headship?")
       page.choose("I have completed an NPQH", visible: :all)
     end
 
@@ -151,8 +151,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-
-          "Course" => "Early Headship Coaching Offer",
+          "Course" => "Early headship coaching offer",
           "How is your EHCO being paid for?" => "I am paying",
           "Have you completed an NPQH?" => "I have completed an NPQH",
           "Are you a headteacher?" => "Yes",
@@ -192,7 +191,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :EHCO).id,
+      "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
@@ -206,7 +205,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -221,7 +219,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "aso_new_headteacher" => "yes",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => Course.find_by_code(code: :EHCO).id.to_s,
+        "course_identifier" => "npq-early-headship-coaching-offer",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",

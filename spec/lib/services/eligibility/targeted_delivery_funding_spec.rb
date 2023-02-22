@@ -2,14 +2,13 @@ require "rails_helper"
 
 RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
   unsupported_course_codes = %w[
-    EHCO
-    ASO
+    npq-additional-support-offer
+    npq-early-headship-coaching-offer
   ].freeze
-  supported_course_codes = Course::COURSE_NAMES.keys - unsupported_course_codes
+  supported_course_codes = Course.pluck(:identifier) - unsupported_course_codes
 
   describe "#call" do
-    let(:course_name) { Course::COURSE_NAMES[supported_course_codes.sample] }
-    let(:course) { Course.find_by!(name: course_name) }
+    let(:course) { Course.find_by!(identifier: supported_course_codes.sample) }
 
     context "when eligible" do
       let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
@@ -22,10 +21,8 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     unsupported_course_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
 
         subject { described_class.new(institution:, course:) }
@@ -37,10 +34,8 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     supported_course_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
 
         subject { described_class.new(institution:, course:) }

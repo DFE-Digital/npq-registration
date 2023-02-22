@@ -54,7 +54,7 @@ module Forms
   private
 
     def course
-      @course ||= Course.find(wizard.store["course_id"])
+      @course ||= wizard.query_store.course
     end
 
     def institution_location

@@ -2,32 +2,28 @@ require "rails_helper"
 
 RSpec.describe Forms::ChooseYourNpq, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:course_id) }
+    it { is_expected.to validate_presence_of(:course_identifier) }
 
-    it "course for course_id must exist" do
-      subject.course_id = 0
-      subject.valid?
-      expect(subject.errors[:course_id]).to be_present
-
-      subject.course_id = Course.where(display: true).first.id
-      subject.valid?
-      expect(subject.errors[:course_id]).to be_blank
+    let(:valid_course_identifier) do
+      Course.where(display: true).sample.identifier
     end
 
     it "course for course_id must be available to applicant" do
-      subject.course_id = Course.where(display: false).first
+      subject.course_identifier = Course.find_by(display: false).identifier
       subject.valid?
-      expect(subject.errors[:course_id]).to be_present
+      expect(subject.errors[:course_identifier]).to be_present
 
-      subject.course_id = Course.where(display: true).first.id
+      subject.course_identifier = valid_course_identifier
       subject.valid?
-      expect(subject.errors[:course_id]).to be_blank
+      expect(subject.errors[:course_identifier]).to be_blank
     end
   end
 
   describe "#next_step" do
+    let(:course_identifier) { Course.where(display: true).first.identifier }
+
     subject do
-      described_class.new(course_id: course.id.to_s)
+      described_class.new(course_identifier:)
     end
 
     context "when changing answers" do
@@ -36,11 +32,12 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+        let(:course_identifier) { "npq-headship" }
+        let(:course) { Course.find_by(identifier: course_identifier) }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
-            course_id: course.id.to_s,
+            course_identifier: course.identifier,
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end
@@ -61,14 +58,15 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course) { Course.find_by(name: "NPQ for Leading Teaching (NPQLT)") }
+        let(:course_identifier) { "npq-leading-teaching" }
+        let(:course) { Course.find_by(identifier: course_identifier) }
         let(:school) { create(:school) }
-        let(:previous_course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+        let(:previous_course) { Course.find_by(identifier: "npq-headship") }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do
           {
-            course_id: previous_course.id.to_s,
+            course_identifier: previous_course.identifier,
             institution_identifier: "School-#{school.urn}",
             works_in_school: "yes",
             lead_provider_id: lead_provider.id,
@@ -217,94 +215,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
               expect(subject.previous_step).to eql(:choose_private_childcare_provider)
             end
           end
-        end
-      end
-    end
-  end
-
-  describe ".options" do
-    subject do
-      form.options
-    end
-
-    let(:form) { described_class.new }
-
-    let(:store) do
-      {
-        "works_in_school" => works_in_school,
-        "teacher_catchment" => teacher_catchment,
-        "works_in_childcare" => works_in_childcare,
-      }
-    end
-
-    let(:works_in_school) { "no" }
-    let(:teacher_catchment) { "scotland" }
-    let(:works_in_childcare) { "no" }
-
-    let(:expected_courses) { Course.where(display: true) }
-
-    before do
-      form.wizard = RegistrationWizard.new(
-        current_step: :choose_your_npq,
-        store:,
-        request: nil, current_user: create(:user)
-      )
-    end
-
-    context "when inside catchment" do
-      let(:teacher_catchment) { "england" }
-
-      context "when not working in school or childcare" do
-        let(:works_in_school) { "no" }
-        let(:works_in_childcare) { "no" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
-        end
-      end
-
-      context "when working in a school" do
-        let(:works_in_school) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
-        end
-      end
-
-      context "when working in childcare" do
-        let(:works_in_childcare) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
-        end
-      end
-    end
-
-    context "when outside catchment" do
-      let(:teacher_catchment) { "scotland" }
-
-      context "when not working in school or childcare" do
-        let(:works_in_school) { "no" }
-        let(:works_in_childcare) { "no" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
-        end
-      end
-
-      context "when working in a school" do
-        let(:works_in_school) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
-        end
-      end
-
-      context "when working in childcare" do
-        let(:works_in_childcare) { "yes" }
-
-        it "returns all options" do
-          expect(subject.map(&:value).sort).to eq(expected_courses.pluck(:id).sort)
         end
       end
     end

@@ -26,7 +26,7 @@ RSpec.describe Services::FundingEligibility do
       let(:institution) { build(:school, urn: "146816", eyl_funding_eligible:) }
 
       Course.all.each do |course|
-        context "studying #{course.name}" do
+        context "studying #{course.identifier}" do
           let(:course) { course }
 
           it "returns true" do

@@ -2,15 +2,33 @@ module Forms
   class ChooseYourNpq < Base
     include Helpers::Institution
 
-    attr_accessor :course_id
+    QUESTION_NAME = :course_identifier
 
-    validates :course_id, presence: true
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
     def self.permitted_params
-      %i[
-        course_id
-      ]
+      [QUESTION_NAME]
+    end
+
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :course_identifier,
+        options:,
+        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+      )
+    end
+
+    def options
+      divider_index = courses.length - 1 # Place the "Or" divider before the last course
+
+      courses.each_with_index.map do |course, index|
+        OpenStruct.new(value: course.identifier,
+                       link_errors: index.zero?,
+                       divider: divider_index == index)
+      end
     end
 
     def after_save
@@ -68,17 +86,8 @@ module Forms
       end
     end
 
-    def options
-      courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.id,
-                       text: course.name,
-                       link_errors: index.zero?,
-                       hint: course.description)
-      end
-    end
-
     def course
-      courses.find_by(id: course_id)
+      courses.find_by(identifier: course_identifier)
     end
 
   private
@@ -96,7 +105,7 @@ module Forms
     end
 
     def previous_course
-      Course.find_by(id: wizard.store["course_id"])
+      wizard.query_store.course
     end
 
     def previously_eligible_for_funding?
@@ -128,7 +137,7 @@ module Forms
 
     def validate_course_exists
       if course.blank?
-        errors.add(:course_id, :invalid)
+        errors.add(:course_identifier, :invalid)
       end
     end
   end

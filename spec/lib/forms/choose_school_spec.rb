@@ -60,7 +60,7 @@ RSpec.describe Forms::ChooseSchool, type: :model do
     let(:course) { Course.all.sample }
     let(:store) do
       {
-        "course_id" => course.id.to_s,
+        "course_identifier" => course.identifier.to_s,
         "works_in_school" => "yes",
       }
     end

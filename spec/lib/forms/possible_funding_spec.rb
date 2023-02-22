@@ -15,7 +15,7 @@ RSpec.describe Forms::PossibleFunding do
 
   describe "#course" do
     let(:course) { Course.all.sample }
-    let(:store) { { "course_id" => course.id } }
+    let(:store) { { "course_identifier" => course.identifier } }
     let(:request) { nil }
     let(:wizard) do
       RegistrationWizard.new(

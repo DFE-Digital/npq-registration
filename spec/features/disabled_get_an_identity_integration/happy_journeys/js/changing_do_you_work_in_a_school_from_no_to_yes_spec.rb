@@ -70,8 +70,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -92,7 +92,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "What setting do you work in?" => "Other",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
@@ -151,8 +151,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Senior Leadership (NPQSL)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
@@ -193,7 +193,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
-          "Course" => "NPQ for Senior Leadership (NPQSL)",
+          "Course" => "Senior leadership",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "A school",
           "Workplace" => "open manchester school",
@@ -230,7 +230,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQSL).id,
+      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
@@ -244,7 +244,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
-
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -258,7 +257,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "confirmed_email" => "user@example.com",
-        "course_id" => Course.find_by_code(code: :NPQSL).id.to_s,
+        "course_identifier" => "npq-senior-leadership",
         "date_of_birth" => "1980-12-13",
         "email" => "user@example.com",
         "employment_type" => "hospital_school",

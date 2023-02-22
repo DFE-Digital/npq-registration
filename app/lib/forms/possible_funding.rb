@@ -11,7 +11,7 @@ module Forms
     end
 
     def course
-      @course ||= Course.find(wizard.store["course_id"])
+      @course ||= wizard.query_store.course
     end
 
     def message_template

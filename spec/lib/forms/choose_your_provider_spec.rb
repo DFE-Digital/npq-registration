@@ -4,13 +4,13 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
   describe "validations" do
     let(:current_step) { "choose_your_provider" }
     let(:request) { nil }
-    let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+    let(:course) { Course.find_by(identifier: "npq-headship") }
     let(:school) { create(:school) }
     let(:works_in_school) { "yes" }
     let(:store) do
       {
         "teacher_catchment" => "england",
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
       }
@@ -41,28 +41,26 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqeyl_and_npqll_codes = %w[
-      NPQEYL
-      NPQLL
+      npq-early-years-leadership
+      npq-leading-literacy
     ].freeze
     npqel_code = %w[
-      NPQEL
+      npq-executive-leadership
     ].freeze
     npqh_sl_lt_ltd_lbc_ehco_codes = %w[
-      NPQH
-      NPQSL
-      NPQLT
-      NPQLTD
-      NPQLBC
-      EHCO
-      ASO
+      npq-headship
+      npq-senior-leadership
+      npq-leading-teaching
+      npq-leading-teaching-development
+      npq-leading-behaviour-culture
+      npq-early-headship-coaching-offer
+      npq-additional-support-offer
     ].freeze
-    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
 
     other_npq_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:valid_lead_providers) { LeadProvider.all }
 
         let(:invalid_lead_providers) do
@@ -86,10 +84,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqeyl_and_npqll_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
@@ -122,10 +118,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqel_code.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
@@ -161,10 +155,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
@@ -203,13 +195,13 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
   describe "#previous_step" do
     let(:current_step) { "choose_your_provider" }
     let(:request) { nil }
-    let(:course) { Course.find_by(name: "NPQ for Headship (NPQH)") }
+    let(:course) { Course.find_by(identifier: "npq-headship") }
     let(:school) { create(:school) }
     let(:works_in_school) { "yes" }
     let(:store) do
       {
         "teacher_catchment" => "england",
-        "course_id" => course.id,
+        "course_identifier" => course.identifier,
         "institution_identifier" => "School-#{school.urn}",
         "works_in_school" => works_in_school,
       }
@@ -267,11 +259,13 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     let(:form) { described_class.new }
 
     let(:store) do
-      { "course_id" => course_id }
+      {
+        "course_identifier" => course_identifier,
+      }
     end
 
     let(:course) { Course.ehco }
-    let(:course_id) { course.id }
+    let(:course_identifier) { course.identifier }
 
     let(:expected_providers) { LeadProvider.all }
 
@@ -285,28 +279,26 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqeyl_and_npqll_codes = %w[
-      NPQEYL
-      NPQLL
+      npq-early-years-leadership
+      npq-leading-literacy
     ].freeze
     npqel_code = %w[
-      NPQEL
+      npq-executive-leadership
     ].freeze
     npqh_sl_lt_ltd_lbc_ehco_codes = %w[
-      NPQH
-      NPQSL
-      NPQLT
-      NPQLTD
-      NPQLBC
-      EHCO
-      ASO
+      npq-headship
+      npq-senior-leadership
+      npq-leading-teaching
+      npq-leading-teaching-development
+      npq-leading-behaviour-culture
+      npq-early-headship-coaching-offer
+      npq-additional-support-offer
     ].freeze
-    other_npq_codes = Course::COURSE_NAMES.keys - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
 
     other_npq_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:expected_providers) { LeadProvider.all }
 
         it "returns all options" do
@@ -316,10 +308,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqeyl_and_npqll_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
@@ -338,10 +328,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqel_code.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
@@ -363,10 +351,8 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
     end
 
     npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
-      course_name = Course::COURSE_NAMES[course_code]
-
       context "when applying for #{course_code}" do
-        let(:course) { Course.find_by!(name: course_name) }
+        let(:course) { Course.find_by!(identifier: course_code) }
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
