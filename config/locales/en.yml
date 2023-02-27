@@ -203,7 +203,7 @@ en:
         aso_possible_funding: "You may qualify for DfE scholarship funding"
         aso_previously_funded: "DfE scholarship funding not available"
         aso_unavailable: "You cannot register for the Early Headship Coaching Offer"
-        course_identifier: "Choose an NPQ"
+        choose_your_npq: "Choose an NPQ"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -217,6 +217,7 @@ en:
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
     hint:
       registration_wizard:
+        choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">early headship coaching offer</a>, submit 2 separate registrations."
         work_setting_options:
           other: "For example a local authority, at a hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
