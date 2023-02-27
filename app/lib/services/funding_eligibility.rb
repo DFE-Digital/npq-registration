@@ -165,7 +165,10 @@ module Services
     end
 
     def ecf_api_funding_lookup
-      @ecf_api_funding_lookup = EcfApi::NpqFunding.with_params(npq_course_identifier: course.identifier).find(trn)
+      @ecf_api_funding_lookup = EcfApi::Npq::PreviousFunding.with_params(
+        trn: trn,
+        npq_course_identifier: course.identifier,
+      ).find
     end
 
     def previously_funded?
