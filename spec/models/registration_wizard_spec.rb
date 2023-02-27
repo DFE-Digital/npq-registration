@@ -39,19 +39,11 @@ RSpec.describe RegistrationWizard do
     let(:school) { create(:school, establishment_type_code: "1") }
 
     before do
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-additional-support-offer")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-       .to_return(
-         status: 200,
-         body: ecf_funding_lookup_response(previously_funded: false),
-         headers: {
-           "Content-Type" => "application/vnd.api+json",
-         },
-       )
+      mock_previous_funding_api_request(
+        course_identifier: "npq-additional-support-offer",
+        trn: "1234567",
+        response: ecf_funding_lookup_response(previously_funded: false)
+      )
     end
 
     context "when ASO is selected course and is eligible for funding" do

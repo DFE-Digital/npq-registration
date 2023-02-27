@@ -81,33 +81,17 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
             request:, current_user: create(:user)
           )
 
-          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-headship")
-            .with(
-              headers: {
-                "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-              },
-            )
-            .to_return(
-              status: 200,
-              body: ecf_funding_lookup_response(previously_funded: false),
-              headers: {
-                "Content-Type" => "application/vnd.api+json",
-              },
-            )
+          mock_previous_funding_api_request(
+            course_identifier: "npq-headship",
+            trn: "1234567",
+            response: ecf_funding_lookup_response(previously_funded: false)
+          )
 
-          stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-leading-teaching")
-            .with(
-              headers: {
-                "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-              },
-            )
-            .to_return(
-              status: 200,
-              body: ecf_funding_lookup_response(previously_funded: false),
-              headers: {
-                "Content-Type" => "application/vnd.api+json",
-              },
-            )
+          mock_previous_funding_api_request(
+            course_identifier: "npq-leading-teaching",
+            trn: "1234567",
+            response: ecf_funding_lookup_response(previously_funded: false)
+          )
         end
 
         context "when lead provider is valid for new course" do

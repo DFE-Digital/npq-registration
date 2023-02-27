@@ -20,14 +20,11 @@ RSpec.describe Services::FundingEligibility do
   end
 
   before do
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/#{trn}?npq_course_identifier=#{course_identifier}")
-      .to_return(
-        status: 200,
-        body: ecf_funding_lookup_response(previously_funded:),
-        headers: {
-          "Content-Type" => "application/vnd.api+json",
-        },
-      )
+    mock_previous_funding_api_request(
+      course_identifier: course_identifier,
+      trn: trn,
+      response: ecf_funding_lookup_response(previously_funded:)
+    )
   end
 
   describe ".funded? && .funding_eligiblity_status_code" do

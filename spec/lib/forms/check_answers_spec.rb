@@ -25,19 +25,11 @@ RSpec.describe Forms::CheckAnswers do
 
   describe "#after_save" do
     before do
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=#{course.identifier}")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-        .to_return(
-          status: 200,
-          body: ecf_funding_lookup_response(previously_funded: false),
-          headers: {
-            "Content-Type" => "application/vnd.api+json",
-          },
-        )
+      mock_previous_funding_api_request(
+        course_identifier: course.identifier,
+        trn: "1234567",
+        response: ecf_funding_lookup_response(previously_funded: false)
+      )
     end
 
     context "when TRA feature flag is enabled" do
