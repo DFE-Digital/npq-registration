@@ -78,7 +78,7 @@ module Courses
       name: "Early Headship Coaching Offer",
       ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a",
       identifier: "npq-early-headship-coaching-offer",
-      description: "A package of structured face-to-face support for new headteachers.",
+      description: "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship.",
       display: true,
       default_cohort: 2022,
     },
