@@ -1,7 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
 inherit_gem:
   rubocop-govuk:
     - config/default.yml
     - config/rails.yml
+    - config/rspec.yml
 
 AllCops:
   Exclude:
@@ -46,3 +49,6 @@ Rails/Output:
 
 Naming/MethodParameterName:
   Enabled: false
+
+RSpec/FilePath:
+  Enabled: true
