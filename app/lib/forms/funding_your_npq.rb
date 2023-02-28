@@ -40,7 +40,6 @@ module Forms
       ].compact.freeze
     end
 
-    delegate :query_store, to: :wizard
     delegate :works_in_school?, :inside_catchment?, to: :query_store
   end
 end
