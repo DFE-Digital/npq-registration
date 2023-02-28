@@ -60,7 +60,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Leading behaviour and culture", visible: :all)
+      page.choose("Leading teacher development", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
@@ -84,7 +84,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
 
-          "Course" => "NPQ for Leading Teacher Development (NPQLTD)",
+          "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT Provider" => approved_itt_provider_legal_name,
           "Lead provider" => "Church of England",
@@ -112,7 +112,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to eq(true)
-        expect(application.targeted_support_funding_eligibility).to eq(false)
+        expect(application.targeted_delivery_funding_eligibility).to eq(false)
         expect(application.work_setting).to eql("other")
         expect(application.raw_application_data["employment_type"])
           .to eql("lead_mentor_for_accredited_itt_provider")
@@ -138,6 +138,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "email" => "user@example.com",
       "flipper_admin_access" => false,
       "full_name" => "John Doe",
+      "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
@@ -151,7 +152,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_data).to eq(
       "cohort" => 2022,
-      "course_id" => Course.find_by_code(code: :NPQLTD).id,
+      "course_id" => Course.find_by(identifier: "npq-leading-teaching-development").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
       "employer_name" => nil,
@@ -165,7 +166,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_urn" => nil,
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
-      "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
@@ -179,7 +179,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_id" => "4",
+        "course_identifier" => "npq-leading-teaching-development",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
