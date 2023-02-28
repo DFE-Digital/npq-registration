@@ -59,8 +59,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("What are you applying for?")
-      page.choose("NPQ for Leading Teacher Development (NPQLTD)", visible: :all)
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Leading behaviour and culture", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
