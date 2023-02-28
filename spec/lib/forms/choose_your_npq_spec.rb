@@ -171,10 +171,6 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           expect(subject.previous_step).to be(:have_ofsted_urn)
         end
 
-        it "return have_ofsted_urn" do
-          expect(subject.previous_step).to be(:have_ofsted_urn)
-        end
-
         context "when working for a public childcare provider" do
           let(:kind_of_nursery) { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
 

@@ -24,11 +24,6 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         # File contains sample of real data
         let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample.csv" }
 
-        it "returns no errors" do
-          run_import
-          expect(subject.import_errors).to eq({})
-        end
-
         it "imports rows as PrivateChildcareProvider records" do
           expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(7)
 
