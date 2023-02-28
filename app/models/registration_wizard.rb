@@ -135,7 +135,7 @@ class RegistrationWizard
       end
     end
 
-    if employer_data_gathered?
+    if employer_data_gathered? || query_store.lead_mentor_for_accredited_itt_provider?
       array << OpenStruct.new(key: "Employment type",
                               value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
