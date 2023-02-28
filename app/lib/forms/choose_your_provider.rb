@@ -48,10 +48,6 @@ module Forms
       providers.find_by(id: lead_provider_id)
     end
 
-    def course
-      wizard.query_store.course
-    end
-
   private
 
     def eligible_for_funding?
@@ -61,7 +57,7 @@ module Forms
         approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
-        trn: wizard.query_store.trn,
+        trn:,
       ).funded?
     end
 
@@ -73,7 +69,12 @@ module Forms
       wizard.store["institution_identifier"]
     end
 
-    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
+    delegate :approved_itt_provider?,
+             :course,
+             :inside_catchment?,
+             :new_headteacher?,
+             :trn,
+             to: :query_store
 
     def validate_lead_provider_exists
       if lead_provider.blank?
