@@ -140,7 +140,7 @@ class RegistrationWizard
                               value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
 
-      unless lead_mentor_course?
+      unless query_store.lead_mentor_for_accredited_itt_provider?
         array << OpenStruct.new(key: "Role",
                                 value: store["employment_role"],
                                 change_step: :your_role)
@@ -187,7 +187,7 @@ class RegistrationWizard
       end
     end
 
-    if lead_mentor_course?
+    if query_store.lead_mentor_for_accredited_itt_provider?
       array << OpenStruct.new(key: "ITT Provider",
                               value: query_store.itt_provider,
                               change_step: :itt_provider)
