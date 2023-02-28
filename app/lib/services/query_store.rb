@@ -17,6 +17,10 @@ class Services::QueryStore
     store["itt_provider"]
   end
 
+  def approved_itt_provider?
+    ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
+  end
+
   def trn
     # If the GAI flow was used then the updated TRN is already on the user record,
     # other wise it will have been entered into the store by the user and should be retrieved from there.

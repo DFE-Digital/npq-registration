@@ -45,12 +45,13 @@ module Forms
       @funding_eligiblity_status_code ||= Services::FundingEligibility.new(
         course:,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
       ).funding_eligiblity_status_code
     end
 
-    delegate :course, :new_headteacher?, :inside_catchment?, to: :query_store
+    delegate :course, :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
   end
 end

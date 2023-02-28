@@ -51,10 +51,13 @@ module Forms
         course:,
         institution:,
         inside_catchment: wizard.query_store.inside_catchment?,
+        approved_itt_provider: approved_itt_provider?,
         new_headteacher: new_headteacher?,
         trn: @wizard.query_store.trn,
       ).funding_eligiblity_status_code
     end
+
+    delegate :approved_itt_provider?, to: :query_store
 
     def new_headteacher?
       aso_new_headteacher == "yes"

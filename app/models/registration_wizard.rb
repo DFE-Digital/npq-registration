@@ -229,6 +229,7 @@ private
     Services::FundingEligibility.new(
       course:,
       institution: institution_from_store,
+      approved_itt_provider: approved_itt_provider?,
       inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,
       trn: query_store.trn,
@@ -247,7 +248,7 @@ private
 
   delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, to: :query_store
+  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, :approved_itt_provider?, to: :query_store
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))

@@ -38,13 +38,11 @@ module Forms
     end
 
     def next_step
-
       Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
       Rails.logger.info("next_step")
       Rails.logger.info("works in other #{wizard.query_store.works_in_other?}")
       Rails.logger.info("lead_mentor: #{lead_mentor?}")
       Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
 
       # If your lead provider remains valid we can progress down the changing answer path
       # as it is fine for us to end up going back to the check_answers page.
@@ -125,15 +123,10 @@ module Forms
       wizard.query_store.course
     end
 
-    def approved_itt_provider?
-      ::IttProvider.currently_approved.find_by(legal_name: wizard.query_store.itt_provider).present?
-    end
-
     def previously_eligible_for_funding?
       Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
       Rails.logger.info("previously_eligible_for_funding")
       Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
 
       Services::FundingEligibility.new(
         course: previous_course,
@@ -167,7 +160,7 @@ module Forms
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, to: :query_store
+    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
 
     def validate_course_exists
       if course.blank?
