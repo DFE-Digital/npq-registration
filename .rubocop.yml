@@ -52,3 +52,6 @@ Naming/MethodParameterName:
 
 RSpec/FilePath:
   Enabled: true
+
+RSpec/AnyInstance:
+  Enabled: false
