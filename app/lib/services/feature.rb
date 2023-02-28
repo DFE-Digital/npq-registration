@@ -20,12 +20,6 @@ module Services
       end
 
       def get_an_identity_integration_active_for?(user)
-        Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-        Rails.logger.info("user: #{user}>>>>>>>>>>>>>>")
-        Rails.logger.info("GAI_INTEGRATION_KEY?: #{Services::Feature::GAI_INTEGRATION_KEY}>>>>>>>>>>>>>>")
-        Rails.logger.info("REMOVE_USER_FROM_GAI_PILOT_KEY?: #{Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY}>>>>>>>>>>>>>>")
-        Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-
         Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user) &&
           !Flipper.enabled?(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
       end

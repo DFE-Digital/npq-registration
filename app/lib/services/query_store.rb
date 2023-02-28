@@ -10,10 +10,6 @@ class Services::QueryStore
   end
 
   def itt_provider
-    Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-    Rails.logger.info("itt_provider: #{store['itt_provider']}")
-    Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
     store["itt_provider"]
   end
 
@@ -42,10 +38,6 @@ class Services::QueryStore
   end
 
   def lead_mentor_for_accredited_itt_provider?
-    Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-    Rails.logger.info("employment_type: #{store['employment_type']}")
-    Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
     store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
   end
 
@@ -74,9 +66,6 @@ class Services::QueryStore
   end
 
   def course
-    Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-    Rails.logger.info("course: #{store['course_identifier']}")
-    Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
     @course ||= Course.find_by(identifier: store["course_identifier"])
   end
 

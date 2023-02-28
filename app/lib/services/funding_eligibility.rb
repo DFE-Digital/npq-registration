@@ -47,11 +47,6 @@ module Services
     end
 
     def funding_eligiblity_status_code
-      Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-      Rails.logger.info("itt_provider: #{approved_itt_provider}>>>>>>>>>>>>>>")
-      Rails.logger.info("lead_mentor: #{lead_mentor}>>>>>>>>>>>>>>")
-      Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-
       @funding_eligiblity_status_code ||= begin
         if approved_itt_provider
           return lead_mentor_eligibility_status

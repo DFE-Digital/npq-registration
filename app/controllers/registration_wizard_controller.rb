@@ -20,12 +20,6 @@ class RegistrationWizardController < ApplicationController
     @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
-    Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-    Rails.logger.info("form_valid?: #{@form.valid?}>>>>>>>>>>>>>>")
-    Rails.logger.info("redirect?: #{@form.redirect_to_change_path?}>>>>>>>>>>>>>>")
-    # Rails.logger.info("next_step: #{@wizard.next_step_path}>>>>>>>>>>>>>>")
-    Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-
     respond_to do |format|
       format.html do
         if @form.valid?

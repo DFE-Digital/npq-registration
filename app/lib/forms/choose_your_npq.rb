@@ -38,12 +38,6 @@ module Forms
     end
 
     def next_step
-      Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-      Rails.logger.info("next_step")
-      Rails.logger.info("works in other #{wizard.query_store.works_in_other?}")
-      Rails.logger.info("lead_mentor: #{lead_mentor?}")
-      Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
       # If your lead provider remains valid we can progress down the changing answer path
       # as it is fine for us to end up going back to the check_answers page.
       # If it is no longer valid due to the NPQ changing though we will need to be
@@ -69,7 +63,6 @@ module Forms
         :possible_funding
       elsif wizard.query_store.works_in_other?
         if lead_mentor?
-          Rails.logger.info(">>>>>>>>>>>>>>>>>>> LEAD_mentor!!!!")
           :ineligible_for_funding
         else
           :choose_your_provider
@@ -124,10 +117,6 @@ module Forms
     end
 
     def previously_eligible_for_funding?
-      Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-      Rails.logger.info("previously_eligible_for_funding")
-      Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
       Services::FundingEligibility.new(
         course: previous_course,
         institution:,
@@ -139,11 +128,6 @@ module Forms
     end
 
     def funding_eligibility_calculator
-      Rails.logger.info(">>>>>>>>#{self.class}>>>>>>>>>>>>>>")
-      Rails.logger.info("lead_mentor: #{lead_mentor?}")
-      Rails.logger.info("approved_itt_provider: #{approved_itt_provider?}")
-      Rails.logger.info(">>>>>>>>>>#{self.class}>>>>>>>>>>>>")
-
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution:,
