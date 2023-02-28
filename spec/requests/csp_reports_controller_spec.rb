@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe "CSP Reports Controller" do
-  RSpec.describe "CSP violation reporting" do
+  describe "CSP violation reporting" do
     subject { response }
 
     let(:params) { { "csp-report" => { "blocked-uri" => "https://malicious.com/script.js" } } }
@@ -38,7 +38,7 @@ RSpec.describe "CSP Reports Controller" do
     end
   end
 
-  RSpec.describe "Rate limiting" do
+  describe "Rate limiting" do
     let(:ip) { "1.2.3.4" }
 
     it_behaves_like "an IP-based rate limited endpoint", "POST /csp_reports", 5, 1.minute do
