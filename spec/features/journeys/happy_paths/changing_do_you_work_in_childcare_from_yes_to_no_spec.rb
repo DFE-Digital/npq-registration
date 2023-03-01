@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,7 +12,16 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey changing do you work in childcare from yes to no" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey changing do you work in childcare from yes to no (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    include_context "use rack_test driver"
+    scenario("registration journey changing do you work in childcare from yes to no (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -21,6 +31,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")
@@ -54,16 +68,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in "Where is your workplace located?", with: "manchester"
     end
 
-    expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-      expect(page).to have_text("What’s the name of your workplace?")
-      expect(page).to have_text("Search for workplaces located in manchester")
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-      page.find("#nursery-picker__option--0").click
-    end
+    choose_a_childcare_provider(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -222,7 +227,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "employment_role" => "Trainer",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => "",
+        "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

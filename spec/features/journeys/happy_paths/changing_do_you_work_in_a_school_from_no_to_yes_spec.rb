@@ -211,7 +211,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding" => "school",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => js ? "" : "open", # FIXME: i have no idea why this is different
+        "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
