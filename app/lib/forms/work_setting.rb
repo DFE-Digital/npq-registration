@@ -78,6 +78,23 @@ module Forms
       :teacher_catchment
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :work_setting,
+        options:,
+      )
+    end
+
+    def options
+      [
+        build_option_struct(value: "early_years_or_childcare", link_errors: true),
+        build_option_struct(value: "a_school"),
+        build_option_struct(value: "an_academy_trust"),
+        build_option_struct(value: "a_16_to_19_educational_setting"),
+        build_option_struct(value: "other", divider: true),
+      ]
+    end
+
   private
 
     def works_in_school?

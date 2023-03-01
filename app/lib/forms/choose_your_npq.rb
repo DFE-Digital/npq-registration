@@ -62,7 +62,11 @@ module Forms
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
-        :choose_your_provider
+        if lead_mentor?
+          :ineligible_for_funding
+        else
+          :choose_your_provider
+        end
       else
         :ineligible_for_funding
       end
@@ -100,6 +104,10 @@ module Forms
       LeadProvider.for(course:)
     end
 
+    def lead_mentor?
+      wizard.query_store.lead_mentor_for_accredited_itt_provider?
+    end
+
     def courses
       Course.where(display: true).order(:position)
     end
@@ -112,6 +120,7 @@ module Forms
       Services::FundingEligibility.new(
         course: previous_course,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
@@ -122,6 +131,8 @@ module Forms
       @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution:,
+        approved_itt_provider: approved_itt_provider?,
+        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
@@ -133,7 +144,7 @@ module Forms
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, to: :query_store
+    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
 
     def validate_course_exists
       if course.blank?

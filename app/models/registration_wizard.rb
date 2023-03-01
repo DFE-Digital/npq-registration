@@ -135,18 +135,20 @@ class RegistrationWizard
       end
     end
 
-    if employer_data_gathered?
+    if employer_data_gathered? || query_store.lead_mentor_for_accredited_itt_provider?
       array << OpenStruct.new(key: "Employment type",
                               value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
 
-      array << OpenStruct.new(key: "Role",
-                              value: store["employment_role"],
-                              change_step: :your_role)
+      unless query_store.lead_mentor_for_accredited_itt_provider?
+        array << OpenStruct.new(key: "Role",
+                                value: store["employment_role"],
+                                change_step: :your_role)
 
-      array << OpenStruct.new(key: "Employer",
-                              value: store["employer_name"],
-                              change_step: :your_employer)
+        array << OpenStruct.new(key: "Employer",
+                                value: store["employer_name"],
+                                change_step: :your_employer)
+      end
     end
 
     array << OpenStruct.new(key: "Course",
@@ -185,6 +187,12 @@ class RegistrationWizard
       end
     end
 
+    if query_store.lead_mentor_for_accredited_itt_provider?
+      array << OpenStruct.new(key: "ITT Provider",
+                              value: query_store.itt_provider,
+                              change_step: :itt_provider)
+    end
+
     array << OpenStruct.new(key: "Lead provider",
                             value: query_store.lead_provider.name,
                             change_step: :choose_your_provider)
@@ -205,6 +213,10 @@ class RegistrationWizard
 
 private
 
+  def lead_mentor_course?
+    course.npqltd?
+  end
+
   def load_current_user_into_store
     store["current_user"] = current_user
   end
@@ -217,6 +229,7 @@ private
     Services::FundingEligibility.new(
       course:,
       institution: institution_from_store,
+      approved_itt_provider: approved_itt_provider?,
       inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,
       trn: query_store.trn,
@@ -235,7 +248,7 @@ private
 
   delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, to: :query_store
+  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, :approved_itt_provider?, to: :query_store
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))
@@ -279,6 +292,7 @@ private
       aso_previously_funded
       aso_possible_funding
       funding_your_aso
+      itt_provider
       choose_your_npq
       choose_your_provider
       find_school

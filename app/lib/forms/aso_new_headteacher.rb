@@ -42,19 +42,22 @@ module Forms
 
   private
 
-    def course
-      wizard.query_store.course
-    end
-
     def funding_eligiblity_status_code
       Services::FundingEligibility.new(
         course:,
         institution:,
-        inside_catchment: wizard.query_store.inside_catchment?,
+        approved_itt_provider: approved_itt_provider?,
+        inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
-        trn: @wizard.query_store.trn,
+        trn:,
       ).funding_eligiblity_status_code
     end
+
+    delegate :approved_itt_provider?,
+             :course,
+             :inside_catchment?,
+             :trn,
+             to: :query_store
 
     def new_headteacher?
       aso_new_headteacher == "yes"

@@ -45,6 +45,8 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
     t.string "employment_type"
+    t.string "itt_provider"
+    t.boolean "lead_mentor", default: false
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
@@ -103,6 +105,16 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
+  end
+
+  create_table "itt_providers", force: :cascade do |t|
+    t.text "legal_name"
+    t.text "operating_name"
+    t.datetime "removed_at"
+    t.boolean "approved"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
   end
 
   create_table "lead_providers", force: :cascade do |t|

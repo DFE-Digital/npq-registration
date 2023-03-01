@@ -246,6 +246,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => "trust",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "kind_of_nursery" => nil,
+      "itt_provider" => nil,
+      "lead_mentor" => false,
       "headteacher_status" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,

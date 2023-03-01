@@ -9,6 +9,14 @@ class Services::QueryStore
     store["current_user"]
   end
 
+  def itt_provider
+    store["itt_provider"]
+  end
+
+  def approved_itt_provider?
+    ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
+  end
+
   def trn
     # If the GAI flow was used then the updated TRN is already on the user record,
     # other wise it will have been entered into the store by the user and should be retrieved from there.
@@ -27,6 +35,10 @@ class Services::QueryStore
     else
       I18n.t(store["teacher_catchment"], scope: %i[helpers label registration_wizard teacher_catchment_options])
     end
+  end
+
+  def lead_mentor_for_accredited_itt_provider?
+    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
   end
 
   def works_in_school?
