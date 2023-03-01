@@ -84,6 +84,7 @@ module Services
       course_and_institution_eligible_for_targeted_delivery_funding? &&
         !previously_received_targeted_funding_support? # Check last as it involves an API call
     end
+    # random comment
 
     def ineligible_institution_type?
       [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
