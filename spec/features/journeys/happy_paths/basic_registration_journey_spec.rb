@@ -13,15 +13,15 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "Enable Get An Identity integration"
 
   context "when JavaScript is enabled", :js do
-    scenario("registration journey (with JS)") { basic_registration_journey(js: true) }
+    scenario("registration journey (with JS)") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
     include_context "use rack_test driver"
-    scenario("registration journey (without JS)") { basic_registration_journey(js: false) }
+    scenario("registration journey (without JS)") { run_scenario(js: false) }
   end
 
-  def basic_registration_journey(js:)
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -63,7 +63,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    choose_a_workplace(js:, location: "manchester", name: "open")
+    choose_a_school(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

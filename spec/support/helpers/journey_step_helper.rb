@@ -1,6 +1,6 @@
 module Helpers
   module JourneyStepHelper
-    def choose_a_workplace(js:, location:, name:)
+    def choose_a_school(js:, location:, name:)
       build_sample_schools
 
       expect_page_to_have(path: "/registration/find-school", submit_form: true) do
@@ -18,7 +18,6 @@ module Helpers
           expect(page).to have_content("open manchester school")
 
           page.find("#school-picker__option--0").click
-          page.click_button("Continue")
         end
       else
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
