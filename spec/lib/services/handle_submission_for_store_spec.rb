@@ -38,7 +38,7 @@ RSpec.describe Services::HandleSubmissionForStore do
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "12345",
-        response: ecf_funding_lookup_response(previously_funded: false)
+        response: ecf_funding_lookup_response(previously_funded: false),
       )
     end
 
@@ -347,7 +347,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             mock_previous_funding_api_request(
               course_identifier: "npq-early-headship-coaching-offer",
               trn: "12345",
-              response: ecf_funding_lookup_response(previously_funded: false)
+              response: ecf_funding_lookup_response(previously_funded: false),
             )
           end
 
@@ -393,7 +393,7 @@ RSpec.describe Services::HandleSubmissionForStore do
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "0012345",
-        response: ecf_funding_lookup_response(previously_funded: false)
+        response: ecf_funding_lookup_response(previously_funded: false),
       )
     end
 
@@ -678,7 +678,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             mock_previous_funding_api_request(
               course_identifier: "npq-early-headship-coaching-offer",
               trn: "12345",
-              response: ecf_funding_lookup_response(previously_funded: false)
+              response: ecf_funding_lookup_response(previously_funded: false),
             )
           end
 

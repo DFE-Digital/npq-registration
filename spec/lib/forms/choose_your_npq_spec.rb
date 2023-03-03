@@ -84,13 +84,13 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
           mock_previous_funding_api_request(
             course_identifier: "npq-headship",
             trn: "1234567",
-            response: ecf_funding_lookup_response(previously_funded: false)
+            response: ecf_funding_lookup_response(previously_funded: false),
           )
 
           mock_previous_funding_api_request(
             course_identifier: "npq-leading-teaching",
             trn: "1234567",
-            response: ecf_funding_lookup_response(previously_funded: false)
+            response: ecf_funding_lookup_response(previously_funded: false),
           )
         end
 

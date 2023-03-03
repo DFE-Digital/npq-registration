@@ -76,7 +76,7 @@ RSpec.feature "Happy journeys", type: :feature do
     mock_previous_funding_api_request(
       course_identifier: "npq-senior-leadership",
       trn: "RP12%2F345",
-      response: ecf_funding_lookup_response(previously_funded: false)
+      response: ecf_funding_lookup_response(previously_funded: false),
     )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
@@ -87,7 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
     mock_previous_funding_api_request(
       course_identifier: "npq-headship",
       trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false)
+      response: ecf_funding_lookup_response(previously_funded: false),
     )
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do

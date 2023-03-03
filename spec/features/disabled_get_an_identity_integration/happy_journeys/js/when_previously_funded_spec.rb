@@ -99,7 +99,7 @@ RSpec.feature "Happy journeys", type: :feature do
       mock_previous_funding_api_request(
         course_identifier: identifier,
         trn: "1234567",
-        response: ecf_funding_lookup_response(previously_funded: true)
+        response: ecf_funding_lookup_response(previously_funded: true),
       )
     end
 
