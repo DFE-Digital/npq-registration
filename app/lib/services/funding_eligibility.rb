@@ -174,7 +174,7 @@ module Services
 
     def ecf_api_funding_lookup
       @ecf_api_funding_lookup = EcfApi::Npq::PreviousFunding.find_for(
-        trn: trn,
+        trn:,
         get_an_identity_id:,
         npq_course_identifier: course.identifier,
       )
