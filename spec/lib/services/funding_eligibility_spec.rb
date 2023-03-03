@@ -82,6 +82,8 @@ RSpec.describe Services::FundingEligibility do
                   new_headteacher: true,
                   get_an_identity_id:,
                   trn:,
+                  approved_itt_provider:,
+                  lead_mentor:
                 )
               end
 
@@ -135,6 +137,8 @@ RSpec.describe Services::FundingEligibility do
                   new_headteacher: true,
                   get_an_identity_id:,
                   trn:,
+                  approved_itt_provider:,
+                  lead_mentor:
                 )
               end
 
