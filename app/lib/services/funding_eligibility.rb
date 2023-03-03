@@ -22,12 +22,19 @@ module Services
     # Lead Mentor
     NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
 
-    attr_reader :institution, :course, :trn, :approved_itt_provider, :lead_mentor, :employment_role
+    attr_reader :institution,
+                :course,
+                :trn,
+                :approved_itt_provider,
+                :lead_mentor,
+                :employment_role,
+                :get_an_identity_id
 
     def initialize(institution:,
                    course:,
                    inside_catchment:,
                    trn:,
+                   get_an_identity_id:,
                    approved_itt_provider: false,
                    lead_mentor: false,
                    new_headteacher: false,
@@ -38,6 +45,7 @@ module Services
       @new_headteacher = new_headteacher
       @approved_itt_provider = approved_itt_provider
       @lead_mentor = lead_mentor
+      @get_an_identity_id = get_an_identity_id
       @trn = trn
       @employment_role = employment_role
     end
@@ -165,10 +173,11 @@ module Services
     end
 
     def ecf_api_funding_lookup
-      @ecf_api_funding_lookup = EcfApi::Npq::PreviousFunding.with_params(
+      @ecf_api_funding_lookup = EcfApi::Npq::PreviousFunding.find_for(
         trn: trn,
+        get_an_identity_id:,
         npq_course_identifier: course.identifier,
-      ).find
+      )
     end
 
     def previously_funded?

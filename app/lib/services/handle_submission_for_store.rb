@@ -188,6 +188,7 @@ module Services
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: query_store.trn,
+        get_an_identity_id: query_store.get_an_identity_id,
       )
     end
 

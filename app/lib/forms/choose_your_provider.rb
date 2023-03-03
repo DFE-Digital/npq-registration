@@ -58,6 +58,7 @@ module Forms
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn:,
+        get_an_identity_id:,
       ).funded?
     end
 
@@ -74,6 +75,7 @@ module Forms
              :inside_catchment?,
              :new_headteacher?,
              :trn,
+             :get_an_identity_id,
              to: :query_store
 
     def validate_lead_provider_exists

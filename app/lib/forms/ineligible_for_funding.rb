@@ -49,6 +49,7 @@ module Forms
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
+        get_an_identity_id: wizard.query_store.get_an_identity_id,
       ).funding_eligiblity_status_code
     end
 

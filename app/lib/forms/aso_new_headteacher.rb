@@ -50,6 +50,7 @@ module Forms
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn:,
+        get_an_identity_id:,
       ).funding_eligiblity_status_code
     end
 
@@ -57,6 +58,7 @@ module Forms
              :course,
              :inside_catchment?,
              :trn,
+             :get_an_identity_id,
              to: :query_store
 
     def new_headteacher?
