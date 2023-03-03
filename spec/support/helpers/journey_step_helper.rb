@@ -63,6 +63,37 @@ module Helpers
       end
     end
 
+    def choose_teacher_catchment(js:, region:, country_name:)
+      if js
+        expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
+          page.choose(region, visible: :all)
+
+          within "[data-module='app-country-autocomplete'" do
+            page.fill_in "Which country do you teach in?", with: country_name.first(4)
+          end
+
+          expect(page).to have_content(country_name)
+          page.find("#registration-wizard-teacher-catchment-country-field__option--0").click
+        end
+      else
+        # NOTE: we have more than one 'Falkland Islands' in the list, assuming it's there
+        #       because of the autocompletion. Either way, we can't select like this because
+        #       we'll get an ambiguous match:
+        #
+        # select(country_name, from: "Which country do you teach in?")
+        #
+        # instead we need to find all matches and select the first
+        expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
+          page.choose(region)
+
+          find("select#registration-wizard-teacher-catchment-country-field")
+            .all("option", text: country_name)
+            .first
+            .select_option
+        end
+      end
+    end
+
     def stub_npq_funding_request(previously_funded:)
       stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
         .with(

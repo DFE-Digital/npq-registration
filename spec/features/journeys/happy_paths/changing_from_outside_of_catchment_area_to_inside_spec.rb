@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,7 +12,16 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey changing from outside of catchment area to inside" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey changing from outside of catchment area to inside (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    include_context "use rack_test driver"
+    scenario("registration journey changing from outside of catchment area to inside (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request(nino: "")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -23,6 +33,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
+    end
+
     expect(page).not_to have_content("Do you have a TRN?")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
@@ -30,18 +44,9 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    choose_teacher_catchment(js:, region: "Another country", country_name: "Falkland Islands")
+
     # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Another country", visible: :all)
-
-      within "[data-module='app-country-autocomplete'" do
-        page.fill_in "Which country do you teach in?", with: "Falk"
-      end
-
-      expect(page).to have_content("Falkland Islands")
-      page.find("#registration-wizard-teacher-catchment-country-field__option--0").click
-    end
-
     expect_page_to_have(path: "/registration/work-setting", axe_check: false, submit_form: true) do
       page.choose("A school", visible: :all)
     end
@@ -105,23 +110,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for schools or 16 to 19 educational settings located in manchester. If you work for a trust, enter one of their schools.")
-
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-    end
+    choose_a_school(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -229,7 +218,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding" => "school",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => "",
+        "institution_name" => js ? "" : "open",
         "lead_provider_id" => "9",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
