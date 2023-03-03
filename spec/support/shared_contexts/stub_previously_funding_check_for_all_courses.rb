@@ -1,4 +1,4 @@
-RSpec.shared_context("stub course ecf to identifier mappings") do
+RSpec.shared_context("Stub previously funding check for all courses") do
   before do
     Course.pluck(:identifier).each do |course_identifier|
       mock_previous_funding_api_request(

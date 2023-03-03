@@ -4,7 +4,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
-  include_context "stub course ecf to identifier mappings"
+  include_context "Stub previously funding check for all courses"
   include_context "Disable Get An Identity integration"
 
   around do |example|

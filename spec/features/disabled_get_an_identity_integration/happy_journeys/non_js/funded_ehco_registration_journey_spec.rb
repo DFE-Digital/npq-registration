@@ -7,7 +7,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Disable Get An Identity integration"
-  include_context "stub course ecf to identifier mappings"
+  include_context "Stub previously funding check for all courses"
 
   around do |example|
     Capybara.current_driver = :rack_test
