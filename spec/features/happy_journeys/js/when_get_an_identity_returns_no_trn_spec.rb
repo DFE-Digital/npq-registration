@@ -5,14 +5,20 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses"
+  include_context "Stub previously funding check for all courses" do
+    # In this situation we fallback to a non-pilot set of checks
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { manually_entered_trn }
+  end
   include_context "Enable Get An Identity integration"
 
   # This controls what is returned from the Get An Identity API
   let(:user_trn) { "" }
 
+  let(:manually_entered_trn) { "3651763" }
+
   scenario "registration journey when get an identity returns no TRN" do
-    stub_participant_validation_request
+    stub_participant_validation_request(trn: manually_entered_trn, response: { trn: manually_entered_trn })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -67,7 +73,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
       expect(page).to have_text("Check your details")
 
-      page.fill_in "Teacher reference number (TRN)", with: "1234567"
+      page.fill_in "Teacher reference number (TRN)", with: manually_entered_trn
       page.fill_in "Full name", with: "John Doe"
       page.fill_in "Day", with: "13"
       page.fill_in "Month", with: "12"
@@ -135,7 +141,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Full name" => "John Doe",
-          "TRN" => "1234567",
+          "TRN" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Email" => "user@example.com",
@@ -159,7 +165,7 @@ RSpec.feature "Happy journeys", type: :feature do
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
       expect(user.full_name).to eql("John Doe")
-      expect(user.trn).to eql("1234567")
+      expect(user.trn).to eql(manually_entered_trn)
       expect(user.trn_verified).to be_truthy
       expect(user.trn_auto_verified).to be_truthy
       expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
@@ -197,7 +203,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "otp_hash" => nil,
       "provider" => nil,
       "raw_tra_provider_data" => nil,
-      "trn" => "1234567",
+      "trn" => manually_entered_trn,
       "trn_auto_verified" => true,
       "trn_verified" => true,
       "uid" => nil,
@@ -246,11 +252,11 @@ RSpec.feature "Happy journeys", type: :feature do
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "trn" => "1234567",
+        "trn" => manually_entered_trn,
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
-        "verified_trn" => "1234567",
+        "verified_trn" => manually_entered_trn,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
         "work_setting" => "a_school",

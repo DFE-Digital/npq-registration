@@ -5,7 +5,10 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses"
+  include_context "Stub previously funding check for all courses" do
+    let(:api_call_get_an_identity_id) { user_uid }
+    let(:api_call_trn) { user_trn }
+  end
   include_context "Enable Get An Identity integration"
 
   scenario "registration journey changing NPQ to one LeadProvider no longer supports" do

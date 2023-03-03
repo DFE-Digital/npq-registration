@@ -62,6 +62,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     mock_previous_funding_api_request(
       course_identifier: "npq-senior-leadership",
+      get_an_identity_id: user_uid,
       trn: "1234567",
       response: ecf_funding_lookup_response(previously_funded: false)
     )

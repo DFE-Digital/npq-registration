@@ -5,7 +5,6 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses"
   include_context "Enable Get An Identity integration"
 
   around do |example|
@@ -73,11 +72,12 @@ RSpec.feature "Happy journeys", type: :feature do
 
     mock_previous_funding_api_request(
       course_identifier: "npq-senior-leadership",
-      trn: "1234567",
+      trn: user_trn,
+      get_an_identity_id: user_uid,
       response: ecf_funding_lookup_response(
         previously_funded: false,
         previously_received_targeted_funding_support: true,
-      )
+      ),
     )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
