@@ -83,7 +83,7 @@ RSpec.describe Services::FundingEligibility do
                   get_an_identity_id:,
                   trn:,
                   approved_itt_provider:,
-                  lead_mentor:
+                  lead_mentor:,
                 )
               end
 
@@ -138,7 +138,7 @@ RSpec.describe Services::FundingEligibility do
                   get_an_identity_id:,
                   trn:,
                   approved_itt_provider:,
-                  lead_mentor:
+                  lead_mentor:,
                 )
               end
 
