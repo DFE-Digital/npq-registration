@@ -7,7 +7,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Disable Get An Identity integration"
-  include_context "Stub previously funding check for all courses"
+  include_context "Stub previously funding check for all courses" do
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { "1234567" }
+  end
 
   scenario "school not in england" do
     stub_participant_validation_request

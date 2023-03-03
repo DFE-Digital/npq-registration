@@ -4,7 +4,11 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
-  include_context "Stub previously funding check for all courses"
+  include_context "Stub previously funding check for all courses" do
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { "1234567" }
+  end
+
   include_context "Disable Get An Identity integration"
 
   around do |example|
