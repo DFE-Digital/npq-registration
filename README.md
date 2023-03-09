@@ -3,20 +3,28 @@
 
 # npq-registration (National professional qualification)
 
-## Prerequisites
+## Setting up the app
 
-- Ruby 3.1.2
-- PostgreSQL
-- NodeJS 16.19.1
-- Yarn 1.12.x
+### Local development
 
-## Setting up the app in development
+1. Install the prerequisites:
+  - Ruby 3.1.2
+  - PostgreSQL
+  - NodeJS 16.19.1
+  - Yarn 1.12.x
+2. Run `bundle install` to install the gem dependencies
+3. Run `yarn` to install node dependencies
+4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
+5. Run `bundle exec rails server` to launch the app on http://localhost:3000
+6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
 
-1. Run `bundle install` to install the gem dependencies
-2. Run `yarn` to install node dependencies
-3. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
-4. Run `bundle exec rails server` to launch the app on http://localhost:3000
-5. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+### Codespaces
+
+1. Click the green 'Code' button on the repository home page and click 'Create a Codespace'
+2. Run `bundle exec rails server` in the terminal window at the bottom of VS Code
+
+If you're unfamiliar with what Codespaces are or how they work [read the official guiude](https://docs.github.com/en/codespaces/overview). If you
+don't have access to them you can request it in `#digital-tools-support` on DfE Slack.
 
 ## Importing schools
 
