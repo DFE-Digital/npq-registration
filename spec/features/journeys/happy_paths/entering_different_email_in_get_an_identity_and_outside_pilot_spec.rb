@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -10,6 +11,15 @@ RSpec.feature "Happy journeys", type: :feature do
     let(:api_call_trn) { "1234567" }
   end
   include_context "Enable Get An Identity integration"
+
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when entering an email for a user record without a TRN after being removed from the pilot (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    include_context "use rack_test driver"
+    scenario("registration journey when entering an email for a user record without a TRN after being removed from the pilot (without JS)") { run_scenario(js: false) }
+  end
 
   # This controls what is returned from the Get An Identity API
   let(:user_trn) { "" }
@@ -46,7 +56,7 @@ RSpec.feature "Happy journeys", type: :feature do
   # This overall is a better approach IMO because it’s not a great idea to have any user suddenly jump from one set of flags to another.
   #
   # The solution was to copy the feature flags from the session ID to the user even if it isn't a new user being created.
-  scenario "registration journey when entering an email for a user record without a TRN after being removed from the pilot" do
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -56,6 +66,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")
@@ -110,26 +124,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.fill_in "National Insurance number", with: "AB123456C"
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for schools or 16 to 19 educational settings located in manchester. If you work for a trust, enter one of their schools.")
-
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-      page.click_button("Continue")
-    end
+    choose_a_school(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -276,7 +271,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding" => "trust",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => "",
+        "institution_name" => js ? "" : "open",
         "lead_provider_id" => "9",
         "national_insurance_number" => "AB123456C",
         "teacher_catchment" => "england",
