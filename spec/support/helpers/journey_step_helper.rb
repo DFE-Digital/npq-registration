@@ -63,6 +63,20 @@ module Helpers
       end
     end
 
+    def choose_an_itt_provider(js:, name:)
+      label = "Enter the name of the ITT provider you are working with"
+
+      expect_page_to_have(path: "/registration/itt-provider", submit_form: true) do
+        if js
+          page.fill_in(label, with: name)
+        else
+          page.select(name, from: label)
+        end
+      end
+
+      page.click_button("Continue")
+    end
+
     def choose_teacher_catchment(js:, region:, country_name:)
       if js
         expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
