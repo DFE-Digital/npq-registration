@@ -63,6 +63,38 @@ module Helpers
       end
     end
 
+    def choose_a_private_childcare_provider(js:, urn:, name:)
+      provider = PrivateChildcareProvider.create!(
+        provider_urn: urn,
+        provider_name: name,
+        address_1: "street 1",
+        town: "manchester",
+        early_years_individual_registers: %w[CCR VCR EYR],
+      )
+
+      if js
+        expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
+          expect(page).to have_text("Enter your or your employer’s URN")
+
+          within ".npq-js-reveal" do
+            page.fill_in "private-childcare-provider-picker", with: provider.urn
+          end
+
+          expect(page).to have_content("#{provider.urn} - #{provider.name} - #{provider.address_1}, #{provider.town}")
+
+          page.find("#private-childcare-provider-picker__option--0").click
+        end
+      else
+        # FIXME: This doesn't work, I think the real journey might be broken in prod. There's
+        # no way of getting beyond this page without JS
+        expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
+          within(".npq-js-hidden") do
+            page.fill_in("Enter your or your employer’s URN", with: provider.urn)
+          end
+        end
+      end
+    end
+
     def choose_an_itt_provider(js:, name:)
       label = "Enter the name of the ITT provider you are working with"
 

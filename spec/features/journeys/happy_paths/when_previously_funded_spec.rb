@@ -3,6 +3,16 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
+
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when previously funded (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    include_context "use rack_test driver"
+    scenario("registration journey when previously funded (without JS)") { run_scenario(js: false) }
+  end
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,7 +21,7 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey when previously funded" do
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -21,6 +31,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")
@@ -51,26 +65,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    PrivateChildcareProvider.create!(
-      provider_urn: "EY123456",
-      provider_name: "searchable childcare provider",
-      address_1: "street 1",
-      town: "manchester",
-      early_years_individual_registers: %w[CCR VCR EYR],
-    )
-
-    expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Enter your or your employer’s URN")
-
-      within ".npq-js-reveal" do
-        page.fill_in "private-childcare-provider-picker", with: "EY123"
-      end
-
-      expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
-
-      page.find("#private-childcare-provider-picker__option--0").click
-    end
-
     %w[npq-early-headship-coaching-offer npq-early-years-leadership].each do |identifier|
       mock_previous_funding_api_request(
         course_identifier: identifier,
@@ -79,6 +73,9 @@ RSpec.feature "Happy journeys", type: :feature do
         response: ecf_funding_lookup_response(previously_funded: true),
       )
     end
+
+    # FIXME: this isn't working in no_js mode
+    choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
