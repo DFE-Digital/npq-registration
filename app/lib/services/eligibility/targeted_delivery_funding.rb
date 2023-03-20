@@ -81,6 +81,7 @@ module Services
           10_002_396, # Fairfield Farm College (Fairfield Farm Trust)
           10_002_409, # Farleigh Further Education College - Frome
           10_002_546, # The Fortune Centre of Riding Therapy
+          10_002_560, # Foxes Academy
           10_003_029, # Hereward College of Further Education
           10_003_136, # Homefield College
           10_003_774, # Landmarks
@@ -90,7 +91,6 @@ module Services
           10_004_502, # St Piers College (Young Epilepsy)
           10_004_527, # National Star College
           10_004_665, # Works 4 U Support Services (Norman Mackie & Associates Ltd)
-          10_004_841, # Oakwood Court College (Phoenix Learning Care Ltd)
           10_005_036, # Camphill Wakefield (Pennine Camphill Community Ltd)
           10_005_151, # Portland College
           10_005_320, # Queen Alexandra College
@@ -110,7 +110,6 @@ module Services
           10_009_777, # Thornbeck College - North East Autism Society
           10_010_025, # ROC College (part of United Response)
           10_012_804, # Cambian Lufton College
-          10_012_806, # Pengwern College
           10_012_810, # Livability Nash College
           10_012_814, # Henshaws College
           10_012_822, # Cambian Dilston College
@@ -120,6 +119,7 @@ module Services
           10_024_163, # Area 51 Education Ltd
           10_024_771, # Exeter Royal Academy for Deaf Education
           10_024_772, # Royal College Manchester (Seashell Trust)
+          10_025_289, # Green Corridor
           10_025_914, # Glasshouse College
           10_025_915, # Freeman College
           10_027_379, # Cambian Wing College
@@ -127,15 +127,16 @@ module Services
           10_028_480, # The Autism Project - CareTrade
           10_028_500, # Bemix
           10_032_448, # Eat That Frog C.I.C
-          10_032_637, # Novalis Trust
           10_032_898, # Trinity Specialist College
+          10_034_865, # Dove House School
           10_038_981, # Sheiling College
           10_040_374, # St Martins Centre (St Roses School)
           10_040_375, # Lakeside Early Adult Provision - LEAP College (Wargrave House Ltd)
           10_041_170, # Expanse Learning (Expanse Group Ltd)
           10_041_272, # Liberty Training
           10_041_294, # White Rocks Farm
-          10_043_186, # Fir Tree Fishery CIC
+          10_043_186, # Fir Tree College
+          10_044_040, # Learning for Life
           10_044_455, # TMP Studios CIC
           10_044_946, # Brogdale CIC
           10_045_935, # SupaJam Education In Music and Media
@@ -148,20 +149,20 @@ module Services
           10_054_747, # Orchard Hill College of Further Education
           10_055_015, # LifeBridge ASEND
           10_055_371, # Community College Initiative Ltd
-          10_055_517, # My Life Learning
+          10_055_479, # Birtenshaw
           10_055_888, # Trinity Solutions Academy
           10_056_251, # Brentwood Community College
           10_056_799, # Trinity Post 16 Solutions Ltd.
-          10_056_854, # Wilson Stuart University College Birmingham Partnership Trust
+          10_056_854, # The Hive College
           10_057_205, # The Ridge Employability College
           10_057_307, # Woodpecker Court
           10_057_981, # Ada National College for Digital Skills
+          10_063_311, # Inclusion Hampshire
           10_063_538, # Chadsgrove Educational Trust Specialist College
           10_064_084, # Health Education England
-          10_064_516, # Calman Colaiste (Kisimul Group)
+          10_066_798, # Pinc College
           10_067_032, # Lighthouse Futures Trust
           10_067_033, # Catcote Futures
-          10_067_343, # KMS Kent Ltd
           10_067_359, # Victoria College
           10_067_674, # LINK19 College
           10_067_684, # Routes4Life Limited
@@ -172,8 +173,8 @@ module Services
           10_068_178, # Downs View Life Skills College
           10_068_204, # Newfriars College
           10_068_348, # Great Oaks Charitable Trust T/A Great Oaks College
+          10_081_018, # Future Finders Employability College
           10_082_882, # Future Horizons Leeds Ltd
-          10_083_399, # ROTHERHAM OPPORTUNITIES COLLEGE
           10_083_456, # Grow 19 LTD
           10_083_475, # Folkestone Beacon Plus
           10_083_544, # FORWARD2 EMPLOYMENT LIMITED
@@ -181,9 +182,11 @@ module Services
           10_084_353, # Valley College
           10_084_430, # Horizons College
           10_086_392, # The Park College
+          10_088_193, # The National College for Advanced Transport and Infrastructure
           10_088_608, # Willow Green CIO
+          10_088_702, # Digital Advantage
           10_088_810, # Employ My Ability (EMA) Ltd
-          10_089_242, # Richard Huish College
+          10_090_748, # Creating Tomorrow College
         ].map(&:to_s)
       end
     end
