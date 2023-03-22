@@ -4,9 +4,8 @@ module Forms
 
     include ActiveModel::Model
 
-    attr_accessor :consent, :return_path
+    attr_accessor :consent
 
     validates :consent, inclusion: { in: VALID_CONSENT_OPTIONS }
-    validates :return_path, format: { with: /\A\// }
   end
 end

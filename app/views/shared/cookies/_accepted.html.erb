@@ -11,8 +11,6 @@
     </div>
 
     <%= form_tag hide_cookie_preferences_path do |f| %>
-      <%= hidden_field_tag :return_path, (request.env["REQUEST_PATH"] || "/") %>
-
       <div class="govuk-button-group">
         <%= button_tag "Hide this message", class: "govuk-button", data: { module: "govuk-button" } %>
       </div>

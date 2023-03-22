@@ -12,7 +12,7 @@ class CookiePreferencesController < ApplicationController
         expires: 1.year.from_now,
       }
 
-      redirect_to(@form.return_path || "/")
+      redirect_back(fallback_location: "/")
     else
       render :new, status: :unprocessable_entity
     end
@@ -24,12 +24,12 @@ class CookiePreferencesController < ApplicationController
       expires: 1.year.from_now,
     }
 
-    redirect_to(params[:return_path] || "/")
+    redirect_back(fallback_location: "/")
   end
 
 private
 
   def cookie_preferences_params
-    params.require(:cookie_preferences).permit(:consent, :return_path)
+    params.require(:cookie_preferences).permit(:consent)
   end
 end
