@@ -512,7 +512,7 @@ DEPENDENCIES
   dotenv-rails
   email_validator
   factory_bot_rails
-  flipper (~> 0.26.0)
+  flipper (~> 0.26.2)
   flipper-active_record (~> 0.26.0)
   flipper-ui (~> 0.26.2)
   govuk-components
