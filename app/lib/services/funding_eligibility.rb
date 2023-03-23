@@ -88,9 +88,21 @@ module Services
       end
     end
 
-    def eligible_for_targeted_delivery_funding?
-      course_and_institution_eligible_for_targeted_delivery_funding? &&
-        !previously_received_targeted_funding_support? # Check last as it involves an API call
+    def tsf_eligibility_calculator
+      # Idea is to return a result with the results of the eligibility
+      # result will be (maybe with the previous funding result):
+      # {
+      #  tsf_primary_eligibility: true/false,
+      #  tsf_primary_plus_eligibility: true/false,
+      #  previously_received_targeted_funding_support: true/false,
+      #  targeted_delivery_funding: true/false
+      # }
+
+      @tsf_eligibility_calculator ||= Services::Eligibility::TSFCalculator.new(
+        institution:,
+        course:,
+        employment_role:,
+      ).call.merge({previously_received_targeted_funding_support: previously_received_targeted_funding_support?})
     end
 
     def ineligible_institution_type?
@@ -109,13 +121,13 @@ module Services
       end
     end
 
-    def course_and_institution_eligible_for_targeted_delivery_funding?
-      @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
-        institution:,
-        course:,
-        employment_role:,
-      ).call
-    end
+    # def course_and_institution_eligible_for_targeted_delivery_funding?
+    #   @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
+    #     institution:,
+    #     course:,
+    #     employment_role:,
+    #   ).call
+    # end
 
     def inside_catchment?
       @inside_catchment

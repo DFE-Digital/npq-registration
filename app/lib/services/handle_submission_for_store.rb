@@ -29,6 +29,13 @@ module Services
           employment_role:,
           employment_type:,
           targeted_delivery_funding_eligibility:,
+          # New fields to populate
+          primary_establishment:,
+          number_of_pupils:,
+
+          # New fields to populate from result of method
+          tsf_primary_eligibility:,
+          tsf_primary_plus_eligibility:,
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
           work_setting: store["work_setting"],
@@ -100,6 +107,16 @@ module Services
 
     def itt_provider
       store["itt_provider"]
+    end
+
+    def primary_establishment
+      # Might move this calculation from when getting it in the new elgibility calculator
+      institution_from_store.establishment_type_name == "Middle deemed primary" ||
+      institution_from_store.establishment_type_name == "Primary"
+    end
+
+    def number_of_pupils
+      institution_from_store.number_of_pupils
     end
 
     def employer_name
@@ -206,12 +223,33 @@ module Services
     end
 
     def targeted_delivery_funding_eligibility
-      eligible_for_targeted_delivery_funding?
+      tsf_elgibility['targeted_delivery_funding'] && !tsf_elgibility['previously_received_targeted_funding_support']
     end
 
-    delegate :eligible_for_targeted_delivery_funding?,
-             :ineligible_institution_type?,
+    def tsf_primary_eligibility
+      tsf_elgibility['tsf_primary_eligibility']
+    end
+
+    def tsf_primary_plus_eligibility
+      tsf_elgibility['tsf_primary_plus_eligibility']
+    end
+
+    def tsf_elgibility
+      # idea is to return a result with the results of the eligibility
+      # result will be (maybe with the previous funding result):
+      # {
+      #  tsf_primary_eligibility: true/false,
+      #  tsf_primary_plus_eligibility: true/false,
+      #  previously_received_targeted_funding_support: true/false,
+      #  targeted_delivery_funding: true/false
+      # }
+
+      @tsf_elgibility ||= tsf_eligibility_calculator
+    end
+
+    delegate :ineligible_institution_type?,
              :funding_eligiblity_status_code,
+             :tsf_eligibility_calculator,
              to: :funding_eligibility_service
 
     def new_headteacher?

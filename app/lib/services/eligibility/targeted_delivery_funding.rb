@@ -13,6 +13,9 @@ module Services
       end
 
       def call
+        # Need to record the pupil count for the school on application
+
+        # Move this to be in a different stage of cheking
         return false if institution.nil?
         return true  if eligible_fe_ukprns.include?(institution.ukprn)
         return false if institution.is_a?(LocalAuthority)

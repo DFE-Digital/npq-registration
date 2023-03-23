@@ -56,6 +56,10 @@ module Services
         establishment_type_code: row["TypeOfEstablishment (code)"],
         establishment_type_name: row["TypeOfEstablishment (name)"],
 
+        # Need to confirm if this is the correct name from data
+        school_phase_type: row["SchoolPhaseType (type)"],
+        school_phase_name: row["SchoolPhaseName (name)"],
+
         close_date: row["CloseDate"],
         ukprn: row["UKPRN"],
         last_changed_date: row["LastChangedDate"],
