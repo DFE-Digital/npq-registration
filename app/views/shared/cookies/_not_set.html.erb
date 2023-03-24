@@ -13,8 +13,6 @@
     </div>
 
     <%= form_with model: Forms::CookiePreferences.new, scope: "cookie_preferences", url: cookie_preferences_path do |f| %>
-      <%= f.hidden_field :return_path, value: (request.env["REQUEST_PATH"] || "/") %>
-
       <div class="govuk-button-group">
         <%= f.button "Accept additional cookies", name: "cookie_preferences[consent]", value: "accept", class: "govuk-button", data: { module: "govuk-button" } %>
 
