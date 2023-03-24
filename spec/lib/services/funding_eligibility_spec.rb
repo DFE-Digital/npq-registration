@@ -4,6 +4,7 @@ RSpec.describe Services::FundingEligibility do
   let(:course) { Course.all.find { |c| !c.aso? } }
   let(:inside_catchment) { true }
   let(:trn) { "1234567" }
+  let(:get_an_identity_id) { SecureRandom.uuid }
   let(:previously_funded) { false }
   let(:course_identifier) { course.identifier }
   let(:eyl_funding_eligible) { false }
@@ -15,19 +16,18 @@ RSpec.describe Services::FundingEligibility do
                         course:,
                         inside_catchment:,
                         trn:,
+                        get_an_identity_id:,
                         approved_itt_provider:,
                         lead_mentor:)
   end
 
   before do
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/#{trn}?npq_course_identifier=#{course_identifier}")
-      .to_return(
-        status: 200,
-        body: ecf_funding_lookup_response(previously_funded:),
-        headers: {
-          "Content-Type" => "application/vnd.api+json",
-        },
-      )
+    mock_previous_funding_api_request(
+      course_identifier:,
+      get_an_identity_id:,
+      trn:,
+      response: ecf_funding_lookup_response(previously_funded:),
+    )
   end
 
   describe ".funded? && .funding_eligiblity_status_code" do
@@ -80,7 +80,10 @@ RSpec.describe Services::FundingEligibility do
                   course:,
                   inside_catchment:,
                   new_headteacher: true,
+                  get_an_identity_id:,
                   trn:,
+                  approved_itt_provider:,
+                  lead_mentor:,
                 )
               end
 
@@ -132,7 +135,10 @@ RSpec.describe Services::FundingEligibility do
                   course:,
                   inside_catchment:,
                   new_headteacher: true,
+                  get_an_identity_id:,
                   trn:,
+                  approved_itt_provider:,
+                  lead_mentor:,
                 )
               end
 

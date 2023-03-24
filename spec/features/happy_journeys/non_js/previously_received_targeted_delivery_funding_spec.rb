@@ -5,7 +5,6 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "stub course ecf to identifier mappings"
   include_context "Enable Get An Identity integration"
 
   around do |example|
@@ -71,22 +70,15 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "open manchester school"
     end
 
-    stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
-      .with(
-        headers: {
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-        },
-      )
-      .to_return(
-        status: 200,
-        body: ecf_funding_lookup_response(
-          previously_funded: false,
-          previously_received_targeted_funding_support: true,
-        ),
-        headers: {
-          "Content-Type" => "application/vnd.api+json",
-        },
-      )
+    mock_previous_funding_api_request(
+      course_identifier: "npq-senior-leadership",
+      trn: user_trn,
+      get_an_identity_id: user_uid,
+      response: ecf_funding_lookup_response(
+        previously_funded: false,
+        previously_received_targeted_funding_support: true,
+      ),
+    )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

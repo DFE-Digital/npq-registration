@@ -187,14 +187,16 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Users")
     expect(page.current_path).to eql(admin_users_path)
 
+    display_users = User.all
+
     # Test application pagination
-    users[0..2].each do |user|
+    display_users[0..2].each do |user|
       expect(page).to have_content(user.email)
     end
 
     page.find("[aria-label=next]").click
 
-    users[3..].each do |user|
+    display_users[3..].each do |user|
       expect(page).to have_content(user.email)
     end
 

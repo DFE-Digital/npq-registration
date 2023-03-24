@@ -7,7 +7,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Disable Get An Identity integration"
-  include_context "stub course ecf to identifier mappings"
+  include_context "Stub previously funding check for all courses" do
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { "1234567" }
+  end
 
   scenario "registration journey when previously funded" do
     stub_participant_validation_request
@@ -93,19 +96,11 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     %w[npq-early-headship-coaching-offer npq-early-years-leadership].each do |identifier|
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=#{identifier}")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-        .to_return(
-          status: 200,
-          body: ecf_funding_lookup_response(previously_funded: true),
-          headers: {
-            "Content-Type" => "application/vnd.api+json",
-          },
-        )
+      mock_previous_funding_api_request(
+        course_identifier: identifier,
+        trn: "1234567",
+        response: ecf_funding_lookup_response(previously_funded: true),
+      )
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do

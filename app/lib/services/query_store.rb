@@ -17,6 +17,10 @@ class Services::QueryStore
     ::IttProvider.currently_approved.find_by(legal_name: itt_provider).present?
   end
 
+  def get_an_identity_id
+    current_user.get_an_identity_id
+  end
+
   def trn
     # If the GAI flow was used then the updated TRN is already on the user record,
     # other wise it will have been entered into the store by the user and should be retrieved from there.

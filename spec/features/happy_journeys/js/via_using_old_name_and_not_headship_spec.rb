@@ -5,7 +5,10 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "stub course ecf to identifier mappings"
+  include_context "Stub previously funding check for all courses" do
+    let(:api_call_get_an_identity_id) { user_uid }
+    let(:api_call_trn) { user_trn }
+  end
   include_context "Enable Get An Identity integration"
 
   scenario "registration journey via using old name and not headship" do
