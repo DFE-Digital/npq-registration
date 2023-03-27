@@ -34,6 +34,6 @@ RSpec.feature "Sessions", type: :feature do
     expect(page).not_to have_content("Admin")
 
     visit "/admin"
-    expect(page.current_path).to eql("/sign-in")
+    expect(page).to have_current_path("/sign-in")
   end
 end

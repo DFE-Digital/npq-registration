@@ -123,7 +123,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(User.count).to eql(1)
+    expect(User.count).to be(1)
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -133,7 +133,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.trn_auto_verified).to be_falsey
       expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
       expect(user.national_insurance_number).to eq(nil)
-      expect(user.applications.count).to eql(1)
+      expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to be_falsey

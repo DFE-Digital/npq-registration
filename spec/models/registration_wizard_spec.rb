@@ -1,17 +1,17 @@
 require "rails_helper"
 
 RSpec.describe RegistrationWizard do
+  subject { described_class.new(current_step:, store:, request:, current_user: user) }
+
   let(:store) { {} }
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
   let(:user) { create(:user) }
   let(:current_step) { "share_provider" }
 
-  subject { described_class.new(current_step:, store:, request:, current_user: user) }
-
   describe "#current_step" do
     it "returns current step" do
-      expect(subject.current_step).to eql(:share_provider)
+      expect(subject.current_step).to be(:share_provider)
     end
 
     context "when invalid step" do
@@ -30,7 +30,7 @@ RSpec.describe RegistrationWizard do
       end
 
       it "always returns closed" do
-        expect(subject.current_step).to eql(:closed)
+        expect(subject.current_step).to be(:closed)
       end
     end
   end
@@ -65,11 +65,11 @@ RSpec.describe RegistrationWizard do
       end
 
       it "does not show How is your NPQ being paid for?" do
-        expect(subject.answers.map(&:key)).to_not include("How is your NPQ being paid for?")
+        expect(subject.answers.map(&:key)).not_to include("How is your NPQ being paid for?")
       end
 
       it "does not show ASO funding option" do
-        expect(subject.answers.map(&:key)).to_not include("How is the Additional Support Offer being paid for?")
+        expect(subject.answers.map(&:key)).not_to include("How is the Additional Support Offer being paid for?")
       end
     end
 
@@ -118,7 +118,7 @@ RSpec.describe RegistrationWizard do
       end
 
       it "does not show Ofsted registration details" do
-        expect(subject.answers.map(&:key)).to_not include("Ofsted registration details")
+        expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
       end
     end
 
@@ -153,7 +153,7 @@ RSpec.describe RegistrationWizard do
         let(:institution_identifier) { "" }
 
         it "does not show Ofsted registration details" do
-          expect(subject.answers.map(&:key)).to_not include("Ofsted registration details")
+          expect(subject.answers.map(&:key)).not_to include("Ofsted registration details")
         end
 
         it "shows Do you have a URN?" do
@@ -161,7 +161,7 @@ RSpec.describe RegistrationWizard do
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).to_not include("Nursery")
+          expect(subject.answers.map(&:key)).not_to include("Nursery")
         end
       end
 
@@ -174,11 +174,11 @@ RSpec.describe RegistrationWizard do
         end
 
         it "does not show Do you have a URN?" do
-          expect(subject.answers.map(&:key)).to_not include("Do you have a URN?")
+          expect(subject.answers.map(&:key)).not_to include("Do you have a URN?")
         end
 
         it "does not show Nursery" do
-          expect(subject.answers.map(&:key)).to_not include("Nursery")
+          expect(subject.answers.map(&:key)).not_to include("Nursery")
         end
       end
     end

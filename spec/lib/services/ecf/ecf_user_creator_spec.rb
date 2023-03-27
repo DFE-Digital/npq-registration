@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::EcfUserCreator do
+  subject { described_class.new(user:) }
+
   let(:get_an_identity_id) { SecureRandom.uuid }
   let(:user) do
     User.create!(
@@ -10,8 +12,6 @@ RSpec.describe Services::Ecf::EcfUserCreator do
       provider: :tra_openid_connect,
     )
   end
-
-  subject { described_class.new(user:) }
 
   describe "#call" do
     let(:request_body) do
@@ -106,7 +106,7 @@ RSpec.describe Services::Ecf::EcfUserCreator do
         it "does not set application.ecf_id " do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-          }.to_not change(user, :ecf_id)
+          }.not_to change(user, :ecf_id)
         end
 
         it "creates a EcfSyncRequestLog with status :failed" do
@@ -147,7 +147,7 @@ RSpec.describe Services::Ecf::EcfUserCreator do
       it "does not set application.ecf_id " do
         expect {
           begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-        }.to_not change(user, :ecf_id)
+        }.not_to change(user, :ecf_id)
       end
 
       it "creates a EcfSyncRequestLog with status :failed" do

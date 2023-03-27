@@ -57,6 +57,8 @@ RSpec.describe Forms::ChooseSchool, type: :model do
   end
 
   describe "#next_step" do
+    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
+
     let(:course) { Course.all.sample }
     let(:store) do
       {
@@ -66,10 +68,8 @@ RSpec.describe Forms::ChooseSchool, type: :model do
     end
     let(:school) { create(:school) }
 
-    subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
-
     it "goes to choose_your_npq" do
-      expect(subject.next_step).to eql(:choose_your_npq)
+      expect(subject.next_step).to be(:choose_your_npq)
     end
   end
 end

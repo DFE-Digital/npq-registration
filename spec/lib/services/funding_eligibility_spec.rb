@@ -1,16 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Services::FundingEligibility do
-  let(:course) { Course.all.find { |c| !c.aso? } }
-  let(:inside_catchment) { true }
-  let(:trn) { "1234567" }
-  let(:get_an_identity_id) { SecureRandom.uuid }
-  let(:previously_funded) { false }
-  let(:course_identifier) { course.identifier }
-  let(:eyl_funding_eligible) { false }
-  let(:approved_itt_provider) { nil }
-  let(:lead_mentor) { nil }
-
   subject do
     described_class.new(institution:,
                         course:,
@@ -20,6 +10,16 @@ RSpec.describe Services::FundingEligibility do
                         approved_itt_provider:,
                         lead_mentor:)
   end
+
+  let(:course) { Course.all.find { |c| !c.aso? } }
+  let(:inside_catchment) { true }
+  let(:trn) { "1234567" }
+  let(:get_an_identity_id) { SecureRandom.uuid }
+  let(:previously_funded) { false }
+  let(:course_identifier) { course.identifier }
+  let(:eyl_funding_eligible) { false }
+  let(:approved_itt_provider) { nil }
+  let(:lead_mentor) { nil }
 
   before do
     mock_previous_funding_api_request(
@@ -39,7 +39,7 @@ RSpec.describe Services::FundingEligibility do
           let(:course) { course }
 
           it "returns true" do
-            expect(subject.funded?).to be_truthy
+            expect(subject).to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :funded
           end
         end
@@ -52,7 +52,7 @@ RSpec.describe Services::FundingEligibility do
           let(:institution) { build(:school, establishment_type_code: eligible_gias_code, eyl_funding_eligible:) }
 
           it "returns true" do
-            expect(subject.funded?).to be_truthy
+            expect(subject).to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :funded
           end
 
@@ -69,7 +69,7 @@ RSpec.describe Services::FundingEligibility do
             let(:course) { Course.all.find(&:aso?) }
 
             it "returns false" do
-              expect(subject.funded?).to be_falsey
+              expect(subject).not_to be_funded
               expect(subject.funding_eligiblity_status_code).to eq :not_new_headteacher_requesting_aso
             end
 
@@ -88,7 +88,7 @@ RSpec.describe Services::FundingEligibility do
               end
 
               it "returns true" do
-                expect(subject.funded?).to be_truthy
+                expect(subject).to be_funded
                 expect(subject.funding_eligiblity_status_code).to eq :funded
               end
             end
@@ -101,7 +101,7 @@ RSpec.describe Services::FundingEligibility do
               let(:course) { Course.all.find(&:eyl?) }
 
               it "returns true" do
-                expect(subject.funded?).to be_truthy
+                expect(subject).to be_funded
               end
             end
 
@@ -109,7 +109,7 @@ RSpec.describe Services::FundingEligibility do
               let(:course) { Course.all.find(&:npqsl?) }
 
               it "returns true" do
-                expect(subject.funded?).to be_truthy
+                expect(subject).to be_funded
               end
             end
           end
@@ -121,7 +121,7 @@ RSpec.describe Services::FundingEligibility do
           let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, eyl_funding_eligible:) }
 
           it "returns false" do
-            expect(subject.funded?).to be_falsey
+            expect(subject).not_to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
           end
 
@@ -143,14 +143,14 @@ RSpec.describe Services::FundingEligibility do
               end
 
               it "returns false" do
-                expect(subject.funded?).to be_falsey
+                expect(subject).not_to be_funded
                 expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
               end
             end
 
             context "not a new headteacher" do
               it "returns false" do
-                expect(subject.funded?).to be_falsey
+                expect(subject).not_to be_funded
                 expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
               end
             end
@@ -162,7 +162,7 @@ RSpec.describe Services::FundingEligibility do
                 let(:course) { Course.all.find(&:eyl?) }
 
                 it "returns true" do
-                  expect(subject.funded?).to be_truthy
+                  expect(subject).to be_funded
                 end
               end
 
@@ -170,7 +170,7 @@ RSpec.describe Services::FundingEligibility do
                 let(:course) { Course.all.find(&:npqsl?) }
 
                 it "returns false" do
-                  expect(subject.funded?).to be_falsey
+                  expect(subject).not_to be_funded
                 end
               end
             end
@@ -209,7 +209,7 @@ RSpec.describe Services::FundingEligibility do
       let(:institution) { create(:local_authority) }
 
       it "is eligible" do
-        expect(subject.funded?).to be_truthy
+        expect(subject).to be_funded
         expect(subject.funding_eligiblity_status_code).to eq :funded
       end
 
@@ -230,7 +230,7 @@ RSpec.describe Services::FundingEligibility do
         let(:inside_catchment) { true }
 
         it "is eligible" do
-          expect(subject.funded?).to be_truthy
+          expect(subject).to be_funded
           expect(subject.funding_eligiblity_status_code).to eq :funded
         end
       end
@@ -256,7 +256,7 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :early_years_outside_catchment
           end
 
-          it "it is not eligible" do
+          it "is not eligible" do
             expect(subject.funded?).to be false
           end
         end
@@ -268,7 +268,7 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :early_years_invalid_npq
           end
 
-          it "it is not eligible" do
+          it "is not eligible" do
             expect(subject.funded?).to be false
           end
         end
@@ -280,7 +280,7 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :not_on_early_years_register
           end
 
-          it "it is not eligible" do
+          it "is not eligible" do
             expect(subject.funded?).to be false
           end
         end

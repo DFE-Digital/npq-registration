@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Services::HandleSubmissionForStore do
   context "when TRA feature flag is disabled" do
+    subject { described_class.new(store:) }
+
     before do
       allow(Flipper).to receive(:enabled?).and_call_original
       allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
@@ -41,8 +43,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         response: ecf_funding_lookup_response(previously_funded: false),
       )
     end
-
-    subject { described_class.new(store:) }
 
     describe "#call" do
       def stable_as_json(record)
@@ -265,7 +265,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is true" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT)
           end
 
           it "clears the funding choice to nil on the application" do
@@ -276,7 +276,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is false" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
           end
 
           it "saves the funding choice to school on the application" do
@@ -286,7 +286,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           context "when the course is EHCO" do
             before do
-              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
             end
 
             let(:courses) { Course.ehco }
@@ -324,7 +324,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           it "applies 2021 cohort" do
             subject.call
-            expect(user.applications.first.cohort).to eql(2022)
+            expect(user.applications.first.cohort).to be(2022)
           end
         end
 
@@ -361,6 +361,8 @@ RSpec.describe Services::HandleSubmissionForStore do
   end
 
   context "when TRA feature flag is enabled" do
+    subject { described_class.new(store:) }
+
     before do
       allow(Flipper).to receive(:enabled?).and_call_original
       allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
@@ -396,8 +398,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         response: ecf_funding_lookup_response(previously_funded: false),
       )
     end
-
-    subject { described_class.new(store:) }
 
     describe "#call" do
       def stable_as_json(record)
@@ -602,7 +602,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is true" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT)
           end
 
           it "clears the funding choice to nil on the application" do
@@ -613,7 +613,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is false" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
           end
 
           it "saves the funding choice to school on the application" do
@@ -623,7 +623,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           context "when the course is EHCO" do
             before do
-              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
             end
 
             let(:courses) { Course.ehco }
@@ -658,7 +658,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           it "applies 2021 cohort" do
             subject.call
-            expect(user.applications.first.cohort).to eql(2022)
+            expect(user.applications.first.cohort).to be(2022)
           end
         end
 

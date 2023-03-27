@@ -1,11 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Services::ParticipantValidator do
-  let(:trn) { rand(1_000_000..9_999_999).to_s }
-  let(:full_name) { "Jane Doe" }
-  let(:date_of_birth) { rand(60.years.ago..20.years.ago).to_date }
-  let(:national_insurance_number) { "AB123456C" }
-
   subject do
     described_class.new(
       trn:,
@@ -14,6 +9,11 @@ RSpec.describe Services::ParticipantValidator do
       national_insurance_number:,
     )
   end
+
+  let(:trn) { rand(1_000_000..9_999_999).to_s }
+  let(:full_name) { "Jane Doe" }
+  let(:date_of_birth) { rand(60.years.ago..20.years.ago).to_date }
+  let(:national_insurance_number) { "AB123456C" }
 
   describe "#call" do
     context "when matching trn found" do

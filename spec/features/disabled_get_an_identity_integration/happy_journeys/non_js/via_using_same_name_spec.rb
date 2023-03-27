@@ -149,8 +149,8 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(User.count).to eql(1)
-    expect(User.last.applications.count).to eql(1)
+    expect(User.count).to be(1)
+    expect(User.last.applications.count).to be(1)
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
@@ -158,7 +158,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     visit("/registration/check-answers")
-    expect(page.current_path).to eql("/")
+    expect(page).to have_current_path("/")
 
     expect(retrieve_latest_application_user_data).to eq(
       "active_alert" => false,

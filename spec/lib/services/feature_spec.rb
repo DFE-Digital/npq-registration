@@ -8,7 +8,7 @@ RSpec.describe Services::Feature do
       end
 
       it "returns true" do
-        expect(Services::Feature.registration_closed?).to eq true
+        expect(described_class.registration_closed?).to eq true
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe Services::Feature do
       end
 
       it "returns false" do
-        expect(Services::Feature.registration_closed?).to eq false
+        expect(described_class.registration_closed?).to eq false
       end
     end
   end

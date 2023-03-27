@@ -6,16 +6,16 @@ RSpec.describe Forms::TeacherCatchment, type: :model do
 
     it "must have teacher_catchment_country if teacher_catchment is another" do
       subject.teacher_catchment = "egerklgjknee"
-      expect(subject.valid?).to be_falsey
+      expect(subject).not_to be_valid
 
       subject.teacher_catchment = "another"
-      expect(subject.valid?).to be_falsey
+      expect(subject).not_to be_valid
 
       subject.teacher_catchment_country = "rgnerjkgnerkjgn"
-      expect(subject.valid?).to be_falsey
+      expect(subject).not_to be_valid
 
       subject.teacher_catchment_country = "China"
-      expect(subject.valid?).to be_truthy
+      expect(subject).to be_valid
     end
   end
 end

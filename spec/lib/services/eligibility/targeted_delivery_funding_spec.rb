@@ -11,9 +11,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     let(:course) { Course.find_by!(identifier: supported_course_codes.sample) }
 
     context "when eligible" do
-      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
 
       it "returns true" do
         expect(subject.call).to be_truthy
@@ -22,10 +22,10 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
 
     unsupported_course_codes.each do |course_code|
       context "when applying for #{course_code}" do
+        subject { described_class.new(institution:, course:) }
+
         let(:course) { Course.find_by!(identifier: course_code) }
         let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
-
-        subject { described_class.new(institution:, course:) }
 
         it "returns false" do
           expect(subject.call).to be_falsey
@@ -35,10 +35,10 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
 
     supported_course_codes.each do |course_code|
       context "when applying for #{course_code}" do
+        subject { described_class.new(institution:, course:) }
+
         let(:course) { Course.find_by!(identifier: course_code) }
         let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 100) }
-
-        subject { described_class.new(institution:, course:) }
 
         it "returns true" do
           expect(subject.call).to be_truthy
@@ -47,9 +47,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when institution is an LA" do
-      let(:institution) { build(:local_authority) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:local_authority) }
 
       it "returns false" do
         expect(subject.call).to be_falsey
@@ -57,9 +57,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when correct type but pupil count to high" do
-      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 600) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 600) }
 
       it "returns false" do
         expect(subject.call).to be_falsey
@@ -67,9 +67,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when incorrect type but pupil count low enough" do
-      let(:institution) { build(:school, establishment_type_code: "4", number_of_pupils: 100) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, establishment_type_code: "4", number_of_pupils: 100) }
 
       it "returns false" do
         expect(subject.call).to be_falsey
@@ -77,9 +77,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when correct type but pupil count is zero" do
-      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 0) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: 0) }
 
       it "returns false" do
         expect(subject.call).to be_falsey
@@ -87,9 +87,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when correct type but pupil count is null" do
-      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: nil) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, establishment_type_code: "1", number_of_pupils: nil) }
 
       it "returns false" do
         expect(subject.call).to be_falsey
@@ -97,9 +97,9 @@ RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
     end
 
     context "when FE applicable body" do
-      let(:institution) { build(:school, ukprn: "10000350", number_of_pupils: 1000) }
-
       subject { described_class.new(institution:, course:) }
+
+      let(:institution) { build(:school, ukprn: "10000350", number_of_pupils: 1000) }
 
       it "returns true" do
         expect(subject.call).to be_truthy

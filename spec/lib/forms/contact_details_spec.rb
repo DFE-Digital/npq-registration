@@ -18,17 +18,17 @@ RSpec.describe Forms::ContactDetails, type: :model do
 
   describe "#previous_step" do
     it "return name_changes" do
-      expect(subject.previous_step).to eql(:teacher_reference_number)
+      expect(subject.previous_step).to be(:teacher_reference_number)
     end
   end
 
   describe "#after_save" do
+    subject { described_class.new(email: " User@example.com ", wizard:) }
+
     let(:store) { {} }
     let(:session) { {} }
     let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
     let(:wizard) { RegistrationWizard.new(current_step: :contact_details, store:, request:, current_user: create(:user)) }
-
-    subject { described_class.new(email: " User@example.com ", wizard:) }
 
     it "sends email to downcased version" do
       expect {

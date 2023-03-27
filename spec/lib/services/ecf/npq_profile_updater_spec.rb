@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::NpqProfileUpdater do
+  subject { described_class.new(application:) }
+
   let(:user) do
     User.create!(
       email: "john.doe@example.com",
@@ -12,6 +14,24 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
       date_of_birth: Date.new(1980, 12, 13),
       national_insurance_number: "AB123456C",
     )
+  end
+  let!(:update_ecf_stub) do
+    stub_request(:patch, "https://ecf-app.gov.uk/api/v1/npq-profiles/#{application.ecf_id}")
+      .with(
+        body: request_body,
+        headers: {
+          "Accept" => "application/vnd.api+json",
+          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          "Content-Type" => "application/vnd.api+json",
+        },
+      )
+        .to_return(
+          status: 200,
+          body: response_body,
+          headers: {
+            "Content-Type" => "application/vnd.api+json",
+          },
+        )
   end
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
@@ -86,8 +106,6 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
     }.to_json
   end
 
-  subject { described_class.new(application:) }
-
   before do
     stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-profiles/#{application.ecf_id}")
       .to_return(
@@ -97,25 +115,6 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
           "Content-Type" => "application/vnd.api+json",
         },
       )
-  end
-
-  let!(:update_ecf_stub) do
-    stub_request(:patch, "https://ecf-app.gov.uk/api/v1/npq-profiles/#{application.ecf_id}")
-      .with(
-        body: request_body,
-        headers: {
-          "Accept" => "application/vnd.api+json",
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          "Content-Type" => "application/vnd.api+json",
-        },
-      )
-        .to_return(
-          status: 200,
-          body: response_body,
-          headers: {
-            "Content-Type" => "application/vnd.api+json",
-          },
-        )
   end
 
   it "calls ecf to update the eligible_for_funding attribute" do
