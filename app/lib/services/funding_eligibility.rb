@@ -89,8 +89,7 @@ module Services
     end
 
     def tsf_eligibility_calculator
-      # Idea is to return a result with the results of the eligibility
-      # result will be (maybe with the previous funding result):
+      # This returns the tsf calculation plus the previously received funding result from ECF:
       # {
       #  tsf_primary_eligibility: true/false,
       #  tsf_primary_plus_eligibility: true/false,
@@ -102,7 +101,7 @@ module Services
         institution:,
         course:,
         employment_role:,
-      ).call.merge({previously_received_targeted_funding_support: previously_received_targeted_funding_support?})
+      ).call.merge({ previously_received_targeted_funding_support: previously_received_targeted_funding_support? })
     end
 
     def ineligible_institution_type?
@@ -120,14 +119,6 @@ module Services
         NOT_LEAD_MENTOR_COURSE
       end
     end
-
-    # def course_and_institution_eligible_for_targeted_delivery_funding?
-    #   @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
-    #     institution:,
-    #     course:,
-    #     employment_role:,
-    #   ).call
-    # end
 
     def inside_catchment?
       @inside_catchment

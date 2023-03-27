@@ -110,9 +110,7 @@ module Services
     end
 
     def primary_establishment
-      # Might move this calculation from when getting it in the new elgibility calculator
-      institution_from_store.establishment_type_name == "Middle deemed primary" ||
-      institution_from_store.establishment_type_name == "Primary"
+      institution_from_store.primary_education_phase?
     end
 
     def number_of_pupils
@@ -223,15 +221,15 @@ module Services
     end
 
     def targeted_delivery_funding_eligibility
-      tsf_elgibility['targeted_delivery_funding'] && !tsf_elgibility['previously_received_targeted_funding_support']
+      tsf_elgibility[:targeted_delivery_funding] && !tsf_elgibility[:previously_received_targeted_funding_support]
     end
 
     def tsf_primary_eligibility
-      tsf_elgibility['tsf_primary_eligibility']
+      tsf_elgibility[:tsf_primary_eligibility]
     end
 
     def tsf_primary_plus_eligibility
-      tsf_elgibility['tsf_primary_plus_eligibility']
+      tsf_elgibility[:tsf_primary_plus_eligibility]
     end
 
     def tsf_elgibility
