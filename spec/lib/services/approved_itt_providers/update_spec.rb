@@ -6,7 +6,7 @@ RSpec.describe Services::ApprovedIttProviders::Update do
   # Clean the DB first
   before { IttProvider.destroy_all }
 
-  context "given a valid file_name" do
+  context "when given a valid file_name" do
     let(:file_name) { "spec/fixtures/files/approved_itt_providers_sample.csv" }
 
     context "with no data in the DB" do
@@ -51,14 +51,13 @@ RSpec.describe Services::ApprovedIttProviders::Update do
 
     context "with some data in the DB" do
       let(:unapproved_provider_name) { "not_approved" }
+      let(:file_name) { "spec/fixtures/files/approved_itt_providers_exisiting_data_sample.csv" }
 
       before do
         create(:itt_provider, legal_name: "Bath Spa University", operating_name: "Bath Spa University")
         create(:itt_provider, legal_name: "ARK Schools", operating_name: "ARK Teacher Training")
         create(:itt_provider, legal_name: unapproved_provider_name)
       end
-
-      let(:file_name) { "spec/fixtures/files/approved_itt_providers_exisiting_data_sample.csv" }
 
       it "will update the some of the table" do
         travel_to(Time.zone.parse("2022-12-12 18:00:00"))
@@ -73,7 +72,7 @@ RSpec.describe Services::ApprovedIttProviders::Update do
     end
   end
 
-  context "given an invalid file_name" do
+  context "when given an invalid file_name" do
     let(:file_name) { "invalid.csv" }
 
     it "will raise a file not found error" do

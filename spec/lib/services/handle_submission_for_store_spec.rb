@@ -385,30 +385,14 @@ RSpec.describe Services::HandleSubmissionForStore do
     end
 
     before do
-<<<<<<< HEAD
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
+
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "0012345",
         response: ecf_funding_lookup_response(previously_funded: false),
       )
-=======
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
-
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/0012345?npq_course_identifier=#{course.identifier}")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-        .to_return(
-          status: 200,
-          body: ecf_funding_lookup_response(previously_funded: false),
-          headers: {
-            "Content-Type" => "application/vnd.api+json",
-          },
-        )
->>>>>>> af808bfb (Combine multiple befores)
     end
 
     describe "#call" do

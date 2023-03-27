@@ -188,7 +188,7 @@ RSpec.describe Services::FundingEligibility do
         let(:course) { Course.all.find(&:npqltd?) }
 
         it "is eligible" do
-          expect(subject.funded?).to be_truthy
+          expect(subject).to be_funded
           expect(subject.funding_eligiblity_status_code).to eq :funded
         end
       end
@@ -198,7 +198,7 @@ RSpec.describe Services::FundingEligibility do
           let(:course) { course }
 
           it "is not eligible for #{course.name}" do
-            expect(subject.funded?).to be_falsey
+            expect(subject).not_to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :not_lead_mentor_course
           end
         end
