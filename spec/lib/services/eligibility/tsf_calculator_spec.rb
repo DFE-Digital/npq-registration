@@ -88,12 +88,12 @@ RSpec.describe Services::Eligibility::TsfCalculator do
       end
 
       let(:result) do
-          {
-            tsf_primary_eligibility: false,
-            tsf_primary_plus_eligibility: false,
-            targeted_delivery_funding: false,
-          }
-        end
+        {
+          tsf_primary_eligibility: false,
+          tsf_primary_plus_eligibility: false,
+          targeted_delivery_funding: false,
+        }
+      end
 
       it "returns result with all checks to be false", :aggregate_failures do
         expect(subject).to eq(result)

@@ -29,11 +29,8 @@ module Services
           employment_role:,
           employment_type:,
           targeted_delivery_funding_eligibility:,
-          # New fields to populate
           primary_establishment:,
           number_of_pupils:,
-
-          # New fields to populate from result of method
           tsf_primary_eligibility:,
           tsf_primary_plus_eligibility:,
           works_in_childcare: store["works_in_childcare"] == "yes",

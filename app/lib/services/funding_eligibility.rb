@@ -97,7 +97,7 @@ module Services
       #  targeted_delivery_funding: true/false
       # }
 
-      @tsf_eligibility_calculator ||= Services::Eligibility::TSFCalculator.new(
+      @tsf_eligibility_calculator ||= Services::Eligibility::TsfCalculator.new(
         institution:,
         course:,
         employment_role:,
