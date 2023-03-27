@@ -93,7 +93,6 @@ module Services
       # {
       #  tsf_primary_eligibility: true/false,
       #  tsf_primary_plus_eligibility: true/false,
-      #  previously_received_targeted_funding_support: true/false,
       #  targeted_delivery_funding: true/false
       # }
 
@@ -101,7 +100,12 @@ module Services
         institution:,
         course:,
         employment_role:,
-      ).call.merge({ previously_received_targeted_funding_support: previously_received_targeted_funding_support? })
+      ).call
+    end
+
+    def previously_received_targeted_funding_support?
+      # This makes an api call so limit usage
+      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
     end
 
     def ineligible_institution_type?
@@ -185,10 +189,6 @@ module Services
 
     def previously_funded?
       ecf_api_funding_lookup["previously_funded"] == true
-    end
-
-    def previously_received_targeted_funding_support?
-      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
     end
   end
 end

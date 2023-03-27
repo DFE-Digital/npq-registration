@@ -107,11 +107,11 @@ module Services
     end
 
     def primary_establishment
-      institution_from_store.primary_education_phase?
+      institution_from_store.is_a?(School) && institution_from_store.primary_education_phase?
     end
 
     def number_of_pupils
-      institution_from_store.number_of_pupils
+      institution_from_store.is_a?(School) && institution_from_store.number_of_pupils
     end
 
     def employer_name
@@ -218,7 +218,7 @@ module Services
     end
 
     def targeted_delivery_funding_eligibility
-      tsf_elgibility[:targeted_delivery_funding] && !tsf_elgibility[:previously_received_targeted_funding_support]
+      tsf_elgibility[:targeted_delivery_funding] && !previously_received_targeted_funding_support?
     end
 
     def tsf_primary_eligibility
@@ -235,7 +235,6 @@ module Services
       # {
       #  tsf_primary_eligibility: true/false,
       #  tsf_primary_plus_eligibility: true/false,
-      #  previously_received_targeted_funding_support: true/false,
       #  targeted_delivery_funding: true/false
       # }
 
@@ -244,6 +243,7 @@ module Services
 
     delegate :ineligible_institution_type?,
              :funding_eligiblity_status_code,
+             :previously_received_targeted_funding_support?,
              :tsf_eligibility_calculator,
              to: :funding_eligibility_service
 

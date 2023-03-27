@@ -5,7 +5,6 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
-  include_context "stub course ecf to identifier mappings"
   include_context "Enable Get An Identity integration"
 
   scenario "registration journey" do
@@ -72,6 +71,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.find("#school-picker__option--0").click
       page.click_button("Continue")
     end
+
+    stub_previously_funded_request(get_an_identity_id: User.last.get_an_identity_id, npq_course_identifier: "npq-headship")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

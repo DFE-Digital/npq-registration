@@ -54,9 +54,8 @@ RSpec.describe Services::ImportGiasSchools do
         expect(school.establishment_type_code).to eql(row["TypeOfEstablishment (code)"])
         expect(school.establishment_type_name).to eql(row["TypeOfEstablishment (name)"])
 
-        # Need to confirm if this is the correct name from data
-        expect(school.school_phase_type).to eql(row["SchoolPhaseType (type)"])
-        expect(school.school_phase_name).to eql(row["SchoolPhaseName (name)"])
+        expect(school.phase_type).to eql(row["PhaseOfEducation (code)"].to_i)
+        expect(school.phase_name).to eql(row["PhaseOfEducation (name)"])
 
         expect(school.close_date ? school.close_date.strftime("%d-%m-%Y") : nil).to eql(row["CloseDate"])
         expect(school.ukprn).to eql(row["UKPRN"])
