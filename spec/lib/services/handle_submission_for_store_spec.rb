@@ -4,11 +4,6 @@ RSpec.describe Services::HandleSubmissionForStore do
   context "when TRA feature flag is disabled" do
     subject { described_class.new(store:) }
 
-    before do
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
-    end
-
     let(:user) { create(:user, trn: nil) }
     let(:school) { create(:school, :funding_eligible_establishment_type_code) }
     let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
@@ -37,6 +32,9 @@ RSpec.describe Services::HandleSubmissionForStore do
     end
 
     before do
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
+
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "12345",
@@ -363,11 +361,6 @@ RSpec.describe Services::HandleSubmissionForStore do
   context "when TRA feature flag is enabled" do
     subject { described_class.new(store:) }
 
-    before do
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
-    end
-
     let(:user_record_trn) { "0012345" }
     let(:user) { create(:user, trn: user_record_trn) }
     let(:school) { create(:school, :funding_eligible_establishment_type_code) }
@@ -392,11 +385,30 @@ RSpec.describe Services::HandleSubmissionForStore do
     end
 
     before do
+<<<<<<< HEAD
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "0012345",
         response: ecf_funding_lookup_response(previously_funded: false),
       )
+=======
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
+
+      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/0012345?npq_course_identifier=#{course.identifier}")
+        .with(
+          headers: {
+            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+          },
+        )
+        .to_return(
+          status: 200,
+          body: ecf_funding_lookup_response(previously_funded: false),
+          headers: {
+            "Content-Type" => "application/vnd.api+json",
+          },
+        )
+>>>>>>> af808bfb (Combine multiple befores)
     end
 
     describe "#call" do
