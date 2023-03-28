@@ -140,22 +140,6 @@ module Helpers
       end
     end
 
-    def stub_npq_funding_request(previously_funded:)
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq-funding/1234567?npq_course_identifier=npq-senior-leadership")
-        .with(
-          headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-          },
-        )
-        .to_return(
-          status: 200,
-          body: ecf_funding_lookup_response(previously_funded:),
-          headers: {
-            "Content-Type" => "application/vnd.api+json",
-          },
-        )
-    end
-
   private
 
     def build_sample_schools(location: "manchester", other_location: "newcastle")
