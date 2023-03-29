@@ -2,7 +2,7 @@ module Services
   module GetAnIdentity
     class UserUpdater
       def self.call(user:)
-        new(user: user).call
+        new(user:).call
       end
 
       attr_reader :user

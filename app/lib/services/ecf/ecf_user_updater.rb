@@ -2,7 +2,7 @@ module Services
   module Ecf
     class EcfUserUpdater
       def self.call(user:)
-        new(user: user).call
+        new(user:).call
       end
 
       attr_reader :user
@@ -24,14 +24,14 @@ module Services
         return unless remote.changed?
 
         if remote.save
-          EcfSyncRequestLog.create(
+          EcfSyncRequestLog.create!(
             sync_type: :user_update,
             syncable: user,
             status: :success,
           )
           true
         else
-          EcfSyncRequestLog.create(
+          EcfSyncRequestLog.create!(
             sync_type: :user_update,
             syncable: user,
             status: :failed,
@@ -43,7 +43,7 @@ module Services
       rescue StandardError => e
         env = e.try(:env) || {}
         response_body = env["response_body"]
-        EcfSyncRequestLog.create(
+        EcfSyncRequestLog.create!(
           sync_type: :user_update,
           syncable: user,
           status: :failed,

@@ -53,7 +53,7 @@ namespace :users do
 
       user = User.synced_to_ecf # Must have an ecf_id
                  .with_get_an_identity_id # Must have a get_an_identity_id
-                 .find_by(id: id)
+                 .find_by(id:)
 
       GetAnIdentityDataSyncJob.perform_now(user:)
       Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
