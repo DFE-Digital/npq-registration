@@ -14,7 +14,6 @@ class EcfSyncRequestLog < ApplicationRecord
     user_update: "user_update",
     user_creation: "user_creation",
     get_an_identity_id_sync: "get_an_identity_id_sync",
-    get_an_identity_data_sync: "get_an_identity_data_sync",
     application_creation: "application_creation",
   }
 end
