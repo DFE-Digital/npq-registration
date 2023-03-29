@@ -44,7 +44,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
@@ -405,7 +405,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
