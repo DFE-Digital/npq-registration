@@ -37,6 +37,8 @@ gem "sentry-ruby"
 gem "stimulus-rails"
 gem "webpacker"
 
+gem "httparty"
+
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "net-smtp", require: false
