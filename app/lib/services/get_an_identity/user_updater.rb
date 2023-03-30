@@ -12,7 +12,6 @@ module Services
       end
 
       def call
-        user = User.first
         get_an_identity_user = ::GetAnIdentity::User.find(user.get_an_identity_id)
 
         # GetAnIdentity::User#uid may not be the same as User#get_an_identity_id
