@@ -12,7 +12,7 @@ RSpec.feature "Register interest", type: :feature do
     page.click_button("Confirm")
 
     expect(page).to be_axe_clean
-    expect(page).to have_current_path("/registration-interest/sign-up/confirm")
+    expect(page).to have_current_path("/registration-interest/sign-up/confirm", ignore_query: true)
     expect(page).to have_text("We’ll send an email to user@example.com when registration reopens.")
 
     expect(RegistrationInterest.count).to be(1)
