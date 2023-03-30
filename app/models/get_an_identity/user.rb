@@ -1,7 +1,10 @@
 module GetAnIdentity
   class User
+    class InvalidTokenError < StandardError; end
+    class NotFoundError < StandardError; end
+
     def self.find(id)
-      new(id:).tap(&:load)
+      new(id:)
     end
 
     attr_reader :id,
@@ -16,12 +19,27 @@ module GetAnIdentity
 
     def initialize(id:)
       @id = id
+      self.load
+    end
+
+  private
+
+    def request_user
+      url = "#{ENV.fetch('TRA_OIDC_DOMAIN')}/api/v1/users/#{id}"
+      headers = { "Authorization" => "Bearer #{GetAnIdentity::AccessToken.new}" }
+
+      HTTParty.get(url, headers:).tap do |response|
+        case response.code
+        when 400
+          raise NotFoundError, "User with id #{id} not found"
+        when 401
+          raise InvalidTokenError, "Invalid access token"
+        end
+      end
     end
 
     def load
-      url = "#{ENV.fetch('TRA_OIDC_DOMAIN')}/api/v1/users/#{id}"
-
-      response = HTTParty.get(url, headers: { "Authorization" => "Bearer #{GetAnIdentity::AccessToken.new}" })
+      response = request_user
 
       @uid = response["userId"]
       @email = response["email"]
