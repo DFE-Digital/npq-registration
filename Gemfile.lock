@@ -520,7 +520,7 @@ DEPENDENCIES
   flipper-ui (~> 0.28.0)
   govuk-components
   govuk_design_system_formbuilder
-  httparty
+  httparty (~> 0.21)
   i18n-debug
   iconv
   jbuilder

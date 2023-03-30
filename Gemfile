@@ -15,6 +15,7 @@ gem "flipper-active_record", "~> 0.28.0"
 gem "flipper-ui", "~> 0.28.0"
 gem "govuk-components"
 gem "govuk_design_system_formbuilder"
+gem "httparty", "~> 0.21"
 gem "iconv"
 gem "jbuilder"
 gem "json_api_client"
@@ -36,8 +37,6 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "stimulus-rails"
 gem "webpacker"
-
-gem "httparty"
 
 gem "net-imap", require: false
 gem "net-pop", require: false
