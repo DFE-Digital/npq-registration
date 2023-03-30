@@ -46,7 +46,7 @@ namespace :users do
   end
 
   namespace :get_an_identity_data_sync do
-    desc "Schedules background job to gather updated data from GAI and sync to NPQ DB and to ECF, applies only to users with updated_from_tra_at: nil"
+    desc "Schedules background job to gather updated data from GAI and sync to NPQ DB and to ECF, applies only to a single user with given id"
     task :user, %i[id] => :environment do
       id = args[:id]
       Rails.logger.info "Enqueueing Sync Jobs for user with id: #{id}"
