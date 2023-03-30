@@ -30,7 +30,7 @@ RSpec.describe Services::Ehco::TargetedDeliveryFundingEligibilityUpdater do
   end
 
   it "does not update the targeted_delivery_funding_eligibility flag for inapplicable records" do
-    expect { subject }.to_not(change do
+    expect { subject }.not_to(change do
       [
         application_before_cutoff,
         application_wrong_course,

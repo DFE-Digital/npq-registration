@@ -168,7 +168,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).to_not have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
+      expect(page).not_to have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
       page.choose("Teacher Development Trust", visible: :all)
     end
 

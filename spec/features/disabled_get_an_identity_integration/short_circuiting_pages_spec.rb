@@ -5,6 +5,6 @@ RSpec.feature "Short circuiting pages", type: :feature do
 
   scenario "visit /registration/check-answers directly" do
     visit "/registration/check-answers"
-    expect(page.current_path).to eql("/")
+    expect(page).to have_current_path("/")
   end
 end

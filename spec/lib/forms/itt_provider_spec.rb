@@ -6,15 +6,15 @@ RSpec.describe Forms::IttProvider, type: :model do
   end
 
   describe "#next_step" do
-    let!(:approved_itt_provider) { create(:itt_provider) }
-
     subject do
       described_class.new(itt_provider: approved_itt_provider.legal_name)
     end
 
+    let!(:approved_itt_provider) { create(:itt_provider) }
+
     context "when an approved itt provider" do
       it "returns choose_your_npq" do
-        expect(subject.next_step).to eql(:choose_your_npq)
+        expect(subject.next_step).to be(:choose_your_npq)
       end
     end
   end

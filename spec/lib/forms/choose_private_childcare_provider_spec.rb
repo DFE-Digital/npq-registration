@@ -10,9 +10,9 @@ RSpec.describe Forms::ChoosePrivateChildcareProvider, type: :model do
   end
 
   describe "validations" do
-    before { create(:private_childcare_provider, provider_urn: "123456") }
-
     subject { described_class.new(wizard:) }
+
+    before { create(:private_childcare_provider, provider_urn: "123456") }
 
     describe "#institution_identifier" do
       it "can have institution_identifier as empty string" do
@@ -57,7 +57,7 @@ RSpec.describe Forms::ChoosePrivateChildcareProvider, type: :model do
   describe "#next_step" do
     context "when institution_identifier is blank" do
       it "is choose_private_childcare_provider" do
-        expect(subject.next_step).to eql(:choose_private_childcare_provider)
+        expect(subject.next_step).to be(:choose_private_childcare_provider)
       end
     end
 
@@ -65,12 +65,12 @@ RSpec.describe Forms::ChoosePrivateChildcareProvider, type: :model do
       before { allow(subject).to receive(:institution_identifier).and_return("12345") }
 
       it "is choose_private_childcare_provider" do
-        expect(subject.next_step).to eql(:choose_your_npq)
+        expect(subject.next_step).to be(:choose_your_npq)
       end
     end
   end
 
   describe "#previous_step" do
-    it { expect(subject.previous_step).to eql(:have_ofsted_urn) }
+    it { expect(subject.previous_step).to be(:have_ofsted_urn) }
   end
 end

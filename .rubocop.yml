@@ -1,7 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
 inherit_gem:
   rubocop-govuk:
     - config/default.yml
     - config/rails.yml
+    - config/rspec.yml
 
 AllCops:
   Exclude:
@@ -45,4 +48,10 @@ Rails/Output:
     - "app/lib/services/exporters/*"
 
 Naming/MethodParameterName:
+  Enabled: false
+
+RSpec/FilePath:
+  Enabled: true
+
+RSpec/AnyInstance:
   Enabled: false

@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Forms::SignInCode, type: :model do
+  subject do
+    described_class.new(code:)
+  end
+
   let(:user) { User.create!(email: "user@example.com") }
   let(:code) { nil }
   let(:store) { { "email" => user.email } }
@@ -9,10 +13,6 @@ RSpec.describe Forms::SignInCode, type: :model do
     SessionWizard.new(store:,
                       current_step: "sign_in_code",
                       session:)
-  end
-
-  subject do
-    described_class.new(code:)
   end
 
   before do
@@ -33,7 +33,7 @@ RSpec.describe Forms::SignInCode, type: :model do
       let(:code) { "123456" }
 
       it "passes" do
-        expect(subject.valid?).to be_truthy
+        expect(subject).to be_valid
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Forms::SignInCode, type: :model do
 
       it "fails" do
         subject.valid?
-        expect(subject.errors.of_kind?(:code, :expired)).to be_truthy
+        expect(subject.errors).to be_of_kind(:code, :expired)
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe Forms::SignInCode, type: :model do
       it "fails" do
         subject.valid?
 
-        expect(subject.errors.of_kind?(:code, :incorrect)).to be_truthy
+        expect(subject.errors).to be_of_kind(:code, :incorrect)
       end
     end
   end

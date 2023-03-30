@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::NpqProfileMassUpdater do
-  let(:applications) { Application.all }
-  let(:provided_proc) { proc { |_application| :arbitrary } }
-
   subject do
     described_class.new(applications: Application.all, &provided_proc)
   end
+
+  let(:applications) { Application.all }
+  let(:provided_proc) { proc { |_application| :arbitrary } }
 
   before do
     create_list(:application, 5)

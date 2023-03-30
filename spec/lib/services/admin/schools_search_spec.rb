@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Services::Admin::SchoolsSearch do
-  let!(:school) { create(:school) }
-
   subject { described_class.new(q:) }
+
+  let!(:school) { create(:school) }
 
   describe "#call" do
     context "when partial name match" do

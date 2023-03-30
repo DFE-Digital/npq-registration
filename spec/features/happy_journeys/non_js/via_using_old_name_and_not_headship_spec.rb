@@ -122,12 +122,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(User.count).to eql(1)
-    expect(Application.count).to eql(1)
+    expect(User.count).to be(1)
+    expect(Application.count).to be(1)
 
     visit "/"
     visit "/registration/confirmation"
-    expect(page.current_path).to eql("/")
+    expect(page).to have_current_path("/")
 
     expect(retrieve_latest_application_user_data).to eq(
       "active_alert" => nil,

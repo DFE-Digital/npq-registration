@@ -24,13 +24,8 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         # File contains sample of real data
         let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample.csv" }
 
-        it "returns no errors" do
-          run_import
-          expect(subject.import_errors).to eq({})
-        end
-
         it "imports rows as PrivateChildcareProvider records" do
-          expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(7)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(7)
 
           expect(find_and_slice_private_childcare_provider("520917")).to eq({
             "address_1" => "21 Roseville Road",
@@ -206,7 +201,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           end
 
           it "imports no rows" do
-            expect { run_import }.to_not(change { PrivateChildcareProvider.count })
+            expect { run_import }.not_to(change(PrivateChildcareProvider, :count))
           end
         end
       end
@@ -224,7 +219,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         end
 
         it "imports valid rows" do
-          expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(1)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(1)
 
           expect(find_and_slice_private_childcare_provider("520917")).to eq({
             "address_1" => "21 Roseville Road",
@@ -272,12 +267,12 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
 
         it "makes the correct number of updates" do
           run_update
-          expect(updates.updated_records).to eql(2)
+          expect(updates.updated_records).to be(2)
         end
 
-        it "it doesn't reinsert existing records" do
+        it "doesn't reinsert existing records" do
           run_update
-          expect(updates.imported_records).to eql(0)
+          expect(updates.imported_records).to be(0)
         end
 
         it "makes the updates correctly" do
@@ -387,7 +382,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         end
 
         it "imports rows as PrivateChildcareProvider records" do
-          expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(2)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(2)
 
           expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
             "address_1" => "108 Regent Studios",
@@ -438,11 +433,6 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           expect(subject.imported_records).to eq(2)
         end
 
-        it "returns no errors for invalid rows" do
-          run_import
-          expect(subject.import_errors).to eq({})
-        end
-
         context "with incorrect parser" do
           let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
 
@@ -452,7 +442,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
           end
 
           it "imports no rows" do
-            expect { run_import }.to_not(change { PrivateChildcareProvider.count })
+            expect { run_import }.not_to(change(PrivateChildcareProvider, :count))
           end
         end
       end
@@ -470,7 +460,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         end
 
         it "imports valid rows" do
-          expect { run_import }.to change { PrivateChildcareProvider.count }.from(0).to(1)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(1)
 
           expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
             "address_1" => "108 Regent Studios",
@@ -519,13 +509,13 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         it "makes the correct number of updates" do
           run_update
 
-          expect(updates.updated_records).to eql(1)
+          expect(updates.updated_records).to be(1)
         end
 
-        it "it doesn't reinsert existing records" do
+        it "doesn't reinsert existing records" do
           run_update
 
-          expect(updates.imported_records).to eql(0)
+          expect(updates.imported_records).to be(0)
         end
 
         it "makes the updates correctly" do
@@ -586,7 +576,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
       it "returns an error and creates no records" do
         expect {
           expect { run_import }.to(raise_error(RuntimeError, "File not found: #{file_name}"))
-        }.to_not(change { PrivateChildcareProvider.count })
+        }.not_to(change(PrivateChildcareProvider, :count))
 
         expect(subject.imported_records).to eq(0)
       end

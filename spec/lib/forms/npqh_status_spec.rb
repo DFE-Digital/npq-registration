@@ -5,7 +5,7 @@ RSpec.describe Forms::NpqhStatus, type: :model do
 
   describe "#previous_step" do
     it do
-      expect(subject.previous_step).to eql(:about_ehco)
+      expect(subject.previous_step).to be(:about_ehco)
     end
   end
 end

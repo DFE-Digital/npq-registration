@@ -1,13 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Services::Admin::UsersSearch do
+  subject { described_class.new(q:) }
+
   let!(:user) { create(:user) }
   let!(:application) do
     create(:application,
            user:)
   end
-
-  subject { described_class.new(q:) }
 
   describe "#call" do
     context "when partial email match" do
