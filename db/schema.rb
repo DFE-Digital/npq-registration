@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_20_114340) do
+ActiveRecord::Schema.define(version: 2023_03_23_184936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -47,6 +47,10 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.string "employment_type"
     t.string "itt_provider"
     t.boolean "lead_mentor", default: false
+    t.boolean "primary_establishment", default: false
+    t.integer "number_of_pupils", default: 0
+    t.boolean "tsf_primary_eligibility", default: false
+    t.boolean "tsf_primary_plus_eligibility", default: false
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
@@ -210,6 +214,8 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "postcode_without_spaces"
     t.integer "number_of_pupils"
     t.boolean "eyl_funding_eligible", default: false
+    t.integer "phase_type", default: 0
+    t.string "phase_name", default: "Not applicable"
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end

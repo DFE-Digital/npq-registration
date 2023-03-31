@@ -121,6 +121,11 @@
       end %>
 
       <%= summary_list.row do |row|
+        row.key { 'School phase' }
+        row.value { @school.phase_name || "-" }
+      end %>
+
+      <%= summary_list.row do |row|
         row.key { 'High pupil premium' }
         row.value { @school.high_pupil_premium || "-" }
       end %>
