@@ -27,7 +27,6 @@ module Services
         works_in_childcare
         kind_of_nursery
         private_childcare_provider_urn
-        cohort
         school_urn
         school_name
         establishment_type_name
@@ -58,7 +57,6 @@ module Services
           a.works_in_childcare,
           a.kind_of_nursery,
           a.private_childcare_provider_urn,
-          a.cohort,
           a.school_urn,
           a.school&.name,
           a.school&.establishment_type_name,
