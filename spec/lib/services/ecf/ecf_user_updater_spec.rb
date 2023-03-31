@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::EcfUserUpdater do
+  subject { described_class.new(user:) }
+
   let(:old_get_an_identity_id) { SecureRandom.uuid }
   let(:new_get_an_identity_id) { SecureRandom.uuid }
   let(:ecf_id) { SecureRandom.uuid }
@@ -13,8 +15,6 @@ RSpec.describe Services::Ecf::EcfUserUpdater do
       ecf_id:,
     )
   end
-
-  subject { described_class.new(user:) }
 
   describe "#call" do
     let(:get_body) do
@@ -133,7 +133,7 @@ RSpec.describe Services::Ecf::EcfUserUpdater do
         it "does not set application.ecf_id " do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-          }.to_not change(user, :ecf_id)
+          }.not_to change(user, :ecf_id)
         end
 
         it "creates a EcfSyncRequestLog with status :failed" do
@@ -170,7 +170,7 @@ RSpec.describe Services::Ecf::EcfUserUpdater do
         it "does not set application.ecf_id " do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-          }.to_not change(user, :ecf_id)
+          }.not_to change(user, :ecf_id)
         end
 
         it "creates a EcfSyncRequestLog with status :failed" do
@@ -211,7 +211,7 @@ RSpec.describe Services::Ecf::EcfUserUpdater do
       it "does not set application.ecf_id " do
         expect {
           begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-        }.to_not change(user, :ecf_id)
+        }.not_to change(user, :ecf_id)
       end
 
       it "creates a EcfSyncRequestLog with status :failed" do

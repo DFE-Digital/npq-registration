@@ -44,7 +44,7 @@ RSpec.describe GetAnIdentity::User do
       let(:response_status_code) { 200 }
 
       let(:loaded_user) do
-        GetAnIdentity::User.find("123456")
+        described_class.find("123456")
       end
 
       it "returns a user that responds to the correct attributes" do
@@ -90,7 +90,7 @@ RSpec.describe GetAnIdentity::User do
       let(:response_status_code) { 400 }
 
       it "raises an error" do
-        expect { GetAnIdentity::User.find(uid) }.to raise_error(GetAnIdentity::User::NotFoundError)
+        expect { described_class.find(uid) }.to raise_error(GetAnIdentity::User::NotFoundError)
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe GetAnIdentity::User do
       let(:response_status_code) { 401 }
 
       it "raises an error" do
-        expect { GetAnIdentity::User.find(uid) }.to raise_error(GetAnIdentity::User::InvalidTokenError)
+        expect { described_class.find(uid) }.to raise_error(GetAnIdentity::User::InvalidTokenError)
       end
     end
   end
