@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_23_184936) do
+ActiveRecord::Schema.define(version: 2023_03_31_120924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -244,7 +244,6 @@ ActiveRecord::Schema.define(version: 2023_03_23_184936) do
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
     t.boolean "admin", default: false
-    t.boolean "flipper_admin_access", default: false
     t.string "feature_flag_id"
     t.string "provider"
     t.string "uid"
