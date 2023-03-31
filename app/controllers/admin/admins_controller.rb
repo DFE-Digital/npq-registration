@@ -26,6 +26,7 @@ class Admin::AdminsController < SuperAdminController
 
     if @user == current_user || @user.super_admin?
       flash[:error] = "You cannot remove admin permissions from yourself or another super admin."
+      redirect_back fallback_location: admin_admins_path
     elsif @user.update(admin: false)
       redirect_to admin_admins_path
     else
