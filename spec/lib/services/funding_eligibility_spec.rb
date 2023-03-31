@@ -56,7 +56,7 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :funded
           end
 
-          context "when fundend in previous cohort" do
+          context "when previously funded" do
             let(:previously_funded) { true }
 
             it "is ineligible" do
@@ -213,7 +213,7 @@ RSpec.describe Services::FundingEligibility do
         expect(subject.funding_eligiblity_status_code).to eq :funded
       end
 
-      context "when funded in previous cohort" do
+      context "when previously funded" do
         let(:previously_funded) { true }
 
         it "is ineligible" do
@@ -240,7 +240,7 @@ RSpec.describe Services::FundingEligibility do
         let(:course) { Course.all.find(&:eyl?) }
         let(:inside_catchment) { true }
 
-        context "when fundend in previous cohort" do
+        context "when previously funded" do
           let(:previously_funded) { true }
 
           it "is ineligible" do

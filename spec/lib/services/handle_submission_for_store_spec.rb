@@ -113,7 +113,6 @@ RSpec.describe Services::HandleSubmissionForStore do
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => true,
@@ -218,7 +217,6 @@ RSpec.describe Services::HandleSubmissionForStore do
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => false,
@@ -320,7 +318,7 @@ RSpec.describe Services::HandleSubmissionForStore do
               "confirmed_email" => user.email,
               "trn_verified" => false,
               "trn" => "12345",
-              "course_identifier" => Course.ehco.first.identifier,
+              "course_identifier" => ehco_course.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -328,9 +326,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             }
           end
 
-          it "applies 2021 cohort" do
+          let(:ehco_course) { Course.ehco.first }
+
+          it "applies the correct course" do
             subject.call
-            expect(user.applications.first.cohort).to be(2022)
+            expect(user.applications.first.course).to be(ehco_course)
           end
         end
 
@@ -469,7 +469,6 @@ RSpec.describe Services::HandleSubmissionForStore do
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => true,
@@ -569,7 +568,6 @@ RSpec.describe Services::HandleSubmissionForStore do
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => false,
@@ -659,7 +657,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           let(:store) do
             {
               "current_user" => user,
-              "course_identifier" => Course.ehco.first.identifier,
+              "course_identifier" => ehco_course.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -667,9 +665,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             }
           end
 
-          it "applies 2021 cohort" do
+          let(:ehco_course) { Course.ehco.first }
+
+          it "applies the correct course" do
             subject.call
-            expect(user.applications.first.cohort).to be(2022)
+            expect(user.applications.first.course).to be(ehco_course)
           end
         end
 

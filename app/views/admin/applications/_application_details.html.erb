@@ -129,12 +129,5 @@
       row.value { l application.created_at, format: :admin }
       row.action
     end
-
-    sl.row do |row|
-      row.key(text: "Cohort")
-      row.value(text: application.cohort.to_s)
-      row.action
-      :wa
-    end
   end
 %>
