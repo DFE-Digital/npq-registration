@@ -12,8 +12,8 @@
           head.row do |row|
             row.cell(header: true, text: "Name")
             row.cell(header: true, text: "Email")
-            row.cell(header: true, text: "Admin?")
-            row.cell(header: true, text: "Super Admin?")
+            row.cell(header: true, text: "")
+            row.cell(header: true, text: "")
             row.cell(header: true, text: "")
             row.cell(header: true, text: "")
           end
@@ -24,20 +24,10 @@
             body.row do |row|
               row.cell(text: user.full_name.presence || "-")
               row.cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
-              row.cell(text: boolean_red_green_tag(user.admin?))
-              row.cell(text: boolean_red_green_tag(user.super_admin?))
+              row.cell(text: admin_type_cell_contents(user))
               row.cell(text: govuk_link_to("View", admin_user_path(user)))
-
-              delete_row_contents = govuk_link_to(
-                "Remove as admin",
-                admin_admin_path(user),
-                method: :delete,
-                data: {
-                  confirm: "Are you sure you want to remove this user's admin permissions? This will not delete their user record."
-                }
-              )
-
-              row.cell(text: delete_row_contents)
+              row.cell(text: remove_as_admin_cell_contents(user))
+              row.cell(text: elevate_to_super_admin_cell_contents(user))
             end
           end
         end

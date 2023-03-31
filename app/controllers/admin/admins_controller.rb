@@ -14,6 +14,7 @@ class Admin::AdminsController < SuperAdminController
     @user.admin = true
 
     if @user.save
+      flash[:success] = "Admin permissions granted to #{@user.email}"
       redirect_to admin_admins_path
     else
       render :new

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     resources :schools, only: %i[index show]
 
     resources :admins, only: %i[index new create destroy]
+    resources :super_admins, only: %i[update]
 
     constraints RouteConstraints::HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
