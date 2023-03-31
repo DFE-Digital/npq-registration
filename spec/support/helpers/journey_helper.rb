@@ -26,19 +26,5 @@ module Helpers
         )
         .to_return(status: 200, body: participant_validator_response(**response), headers: {})
     end
-
-    def stub_previously_funded_request(get_an_identity_id:, npq_course_identifier:, trn: "1234567")
-      stub_request(:get, "https://ecf-app.gov.uk/api/v1/npq/previous_funding?get_an_identity_id=#{get_an_identity_id}&npq_course_identifier=#{npq_course_identifier}&trn=#{trn}")
-        .with(
-          headers: {
-            "Accept" => "application/vnd.api+json",
-            "Accept-Encoding" => "gzip,deflate",
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-            "Content-Type" => "application/vnd.api+json",
-            "User-Agent" => "Faraday v1.10.0",
-          },
-        )
-        .to_return(status: 200, body: "", headers: {})
-    end
   end
 end

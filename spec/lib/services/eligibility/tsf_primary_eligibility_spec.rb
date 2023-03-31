@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Eligibility::TsfPrimaryEligibility do
+  subject { described_class.call(institution:) }
+
   let(:institution) do
     build(:school,
           phase_name:,
@@ -16,8 +18,6 @@ RSpec.describe Services::Eligibility::TsfPrimaryEligibility do
   let(:tsf_primary_eligibility) { true }
   let(:tsf_primary_plus_eligibility) { false }
   let(:phase_name) { School::PRIMARY_PHASE }
-
-  subject { described_class.call(institution:) }
 
   context "when the institution has equal or less than 150 pupils" do
     let(:tsf_primary_plus_eligibility) { true }

@@ -1,6 +1,8 @@
 require "rails_helper"
 
-RSpec.describe Services::Eligibility::TsfCalculator do
+RSpec.describe Services::Eligibility::TargetedFunding do
+  subject { described_class.call(institution:, course:, employment_role:) }
+
   let(:institution) do
     build(:school,
           phase_name:,
@@ -9,11 +11,9 @@ RSpec.describe Services::Eligibility::TsfCalculator do
 
   let(:establishment_type_code) { eligible_establishment_type_code }
   let(:eligible_establishment_type_code) { 1 }
-  let(:course) { double(:course) }
+  let(:course) { instance_double(Course) }
   let(:employment_role) { "Teacher" }
   let(:phase_name) { "Not applicable" }
-
-  subject { described_class.call(institution:, course:, employment_role:) }
 
   describe ".call" do
     context "when the institution is eligible" do
@@ -51,20 +51,19 @@ RSpec.describe Services::Eligibility::TsfCalculator do
 
       context "when the school is not in the primary phase of education" do
         let(:targeted_delivery_funding) { true }
-
-        before do
-          allow(Services::Eligibility::TargetedDeliveryFunding)
-            .to receive(:call)
-            .with(institution:, course:, employment_role:)
-            .and_return(true)
-        end
-
         let(:result) do
           {
             tsf_primary_eligibility: false,
             tsf_primary_plus_eligibility: false,
             targeted_delivery_funding: true,
           }
+        end
+
+        before do
+          allow(Services::Eligibility::TargetedDeliveryFunding)
+            .to receive(:call)
+            .with(institution:, course:, employment_role:)
+            .and_return(true)
         end
 
         it "returns result with primary check to both be false", :aggregate_failures do
@@ -78,6 +77,13 @@ RSpec.describe Services::Eligibility::TsfCalculator do
 
     context "when the institution is ineligible" do
       let(:establishment_type_code) { ineligible_establishment_type_code }
+      let(:result) do
+        {
+          tsf_primary_eligibility: false,
+          tsf_primary_plus_eligibility: false,
+          targeted_delivery_funding: false,
+        }
+      end
       let(:ineligible_establishment_type_code) { 0 }
 
       before do
@@ -85,14 +91,6 @@ RSpec.describe Services::Eligibility::TsfCalculator do
           .to receive(:call)
           .with(institution:, course:, employment_role:)
           .and_return(false)
-      end
-
-      let(:result) do
-        {
-          tsf_primary_eligibility: false,
-          tsf_primary_plus_eligibility: false,
-          targeted_delivery_funding: false,
-        }
       end
 
       it "returns result with all checks to be false", :aggregate_failures do

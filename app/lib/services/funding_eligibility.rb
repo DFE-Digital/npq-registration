@@ -88,15 +88,8 @@ module Services
       end
     end
 
-    def tsf_eligibility_calculator
-      # This returns the tsf calculation plus the previously received funding result from ECF:
-      # {
-      #  tsf_primary_eligibility: true/false,
-      #  tsf_primary_plus_eligibility: true/false,
-      #  targeted_delivery_funding: true/false
-      # }
-
-      @tsf_eligibility_calculator ||= Services::Eligibility::TsfCalculator.new(
+    def targeted_funding
+      @targeted_funding ||= Services::Eligibility::TargetedFunding.new(
         institution:,
         course:,
         employment_role:,

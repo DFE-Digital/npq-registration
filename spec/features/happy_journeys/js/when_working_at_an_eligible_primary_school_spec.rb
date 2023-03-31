@@ -72,7 +72,12 @@ RSpec.feature "Happy journeys", type: :feature do
       page.click_button("Continue")
     end
 
-    stub_previously_funded_request(get_an_identity_id: User.last.get_an_identity_id, npq_course_identifier: "npq-headship")
+    mock_previous_funding_api_request(
+      course_identifier: "npq-headship",
+      response: ecf_funding_lookup_response(previously_funded: false),
+      trn: "1234567",
+      get_an_identity_id: User.last.get_an_identity_id,
+    )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -112,7 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(User.count).to eql(1)
+    expect(User.count).to be(1)
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -122,7 +127,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.trn_auto_verified).to be_falsey
       expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
       expect(user.national_insurance_number).to eq(nil)
-      expect(user.applications.count).to eql(1)
+      expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to be_truthy

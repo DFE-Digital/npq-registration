@@ -1,6 +1,6 @@
 module Services
   module Eligibility
-    class TsfCalculator
+    class TargetedFunding
       attr_reader :institution, :course, :employment_role
 
       def self.call(institution:, course:, employment_role: nil)

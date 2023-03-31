@@ -17,7 +17,7 @@ RSpec.describe School do
        described_class::MIDDLE_DEEMED_PRIMARY_PHASE].each do |phase|
         let(:phase) { phase }
         it "returns true" do
-          expect(school.primary_education_phase?).to be_truthy
+          expect(school).to be_primary_education_phase
         end
       end
     end
@@ -26,7 +26,7 @@ RSpec.describe School do
       let(:phase) { non_primary_phase }
 
       it "returns false" do
-        expect(school.primary_education_phase?).to be_falsey
+        expect(school).not_to be_primary_education_phase
       end
     end
   end
