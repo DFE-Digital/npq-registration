@@ -15,7 +15,6 @@
             row.cell(header: true, text: "")
             row.cell(header: true, text: "")
             row.cell(header: true, text: "")
-            row.cell(header: true, text: "")
           end
         end
 
@@ -25,7 +24,6 @@
               row.cell(text: user.full_name.presence || "-")
               row.cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
               row.cell(text: admin_type_cell_contents(user))
-              row.cell(text: govuk_link_to("View", admin_user_path(user)))
               row.cell(text: remove_as_admin_cell_contents(user))
               row.cell(text: elevate_to_super_admin_cell_contents(user))
             end
