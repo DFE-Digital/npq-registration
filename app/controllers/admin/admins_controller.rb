@@ -11,6 +11,7 @@ class Admin::AdminsController < SuperAdminController
 
   def create
     @user = User.find_or_initialize_by(email: user_params[:email])
+    @user.assign_attributes(user_params)
     @user.admin = true
 
     if @user.save

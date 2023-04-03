@@ -8,6 +8,9 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @user, url: admin_admins_path do |f| %>
       <%= f.govuk_error_summary %>
+      <%= f.govuk_email_field :full_name,
+                              label: { text: "Full Name" },
+                              width: "three-quarters" %>
       <%= f.govuk_email_field :email,
                               label: { text: "Email Address" },
                               width: "three-quarters" %>
