@@ -250,6 +250,7 @@ ActiveRecord::Schema.define(version: 2023_03_23_184936) do
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
+    t.boolean "super_admin", default: false, null: false
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"

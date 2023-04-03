@@ -66,7 +66,7 @@ RSpec.feature "admin", type: :feature do
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
 
-    admin.update!(flipper_admin_access: true)
+    admin.update!(super_admin: true)
 
     page.click_link("Admin")
 

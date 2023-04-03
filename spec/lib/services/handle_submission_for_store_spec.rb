@@ -44,7 +44,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at flipper_admin_access])
       end
 
       context "when store includes information from the school path" do
@@ -81,7 +81,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -106,7 +106,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -186,7 +186,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -211,7 +211,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -405,7 +405,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at flipper_admin_access])
       end
 
       context "when store includes information from the school path" do
@@ -440,7 +440,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
           })
           expect(user.applications.reload.count).to eq 0
           expect(stable_as_json(user.applications.last)).to match(nil)
@@ -462,7 +462,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -540,7 +540,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
           })
           expect(user.applications.reload.count).to eq 0
           expect(stable_as_json(user.applications.last)).to match(nil)
@@ -562,7 +562,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,

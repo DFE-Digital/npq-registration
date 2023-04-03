@@ -103,7 +103,7 @@ class User < ApplicationRecord
 
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
-    admin? && flipper_admin_access?
+    admin? && super_admin?
   end
 
   def get_an_identity_integration_active?
