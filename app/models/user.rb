@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
+  scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
 
@@ -103,7 +104,7 @@ class User < ApplicationRecord
 
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
-    admin? && flipper_admin_access?
+    admin? && super_admin?
   end
 
   def get_an_identity_integration_active?

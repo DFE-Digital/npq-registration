@@ -172,7 +172,32 @@ en:
       users: "Users"
       unsynced_users: "Unsynced users"
       schools: "Schools"
+      admins: "Admin Users"
       feature_flags: "Feature Flags"
+    super_admins:
+      update:
+        success: Super admin permissions granted to %{email}
+        failure: Failed to grant super admin permissions to %{email}, please contact technical support if this problem persists.
+    admins:
+      new:
+        title: "Add a new admin"
+      index:
+        super_admins:
+          summary_text: "What's the difference between super admins and regular admins?"
+          text_html: |
+            Regular admins are capable of logging into the admin interface to view the dashboard, users, applications, along with triggering syncs of unsynced data.
+            <br>
+            <br>
+            Super Admins also have the ability to add and remove other admins, create new super admins, and manage feature flags.
+        admin_type:
+          super_admin: Super Admin
+          admin: Admin
+        buttons:
+          remove: "Remove as admin"
+          elevate: "Make Super Admin"
+        confirm:
+          elevate: "Are you sure you want to make this user a super admin? This will give them access to all admin features and the ability to make other users super admins. It cannot be reverted without developer intervention."
+          remove: "Are you sure you want to remove this user's admin permissions? This will not delete their user record."
     applications:
       show:
         title: "Application"

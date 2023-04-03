@@ -65,12 +65,43 @@ RSpec.feature "admin", type: :feature do
     end
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).not_to have_link("Admin Users", href: "/admin/admins")
+  end
 
-    admin.update!(flipper_admin_access: true)
+  scenario "when logged in as a super admin, it allows access to the admin homepage with super admin permissions" do
+    visit "/admin"
+
+    admin.update!(super_admin: true)
+    sign_in_as_admin
+
+    expect(page).to have_current_path("/account")
 
     page.click_link("Admin")
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).to have_link("Admin Users", href: "/admin/admins")
+  end
+
+  scenario "when logged in as a super admin, it allows management of admins" do
+    visit "/admin"
+
+    admin.update!(super_admin: true)
+    sign_in_as_admin
+
+    expect(page).to have_current_path("/account")
+
+    page.click_link("Admin")
+    page.click_link("Admin Users")
+
+    expect {
+      page.click_link("Add new admin")
+      expect(page).to have_current_path("/admin/admins/new")
+      page.fill_in "Email", with: "foobar@example.com"
+      page.click_button "Add admin"
+    }.to change { User.admins.count }.by(1)
+
+    expect(page).to have_current_path("/admin/admins")
+    expect(page).to have_content("foobar@example.com")
   end
 
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
