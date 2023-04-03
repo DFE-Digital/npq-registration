@@ -15,11 +15,13 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: @user, url: admin_admins_path do |f| %>
       <%= f.govuk_error_summary %>
-      <%= f.govuk_email_field :full_name,
-                              label: { text: "Full Name" },
-                              width: "three-quarters" %>
       <%= f.govuk_email_field :email,
                               label: { text: "Email Address" },
+                              hint: { text: "This can be for a new or existing user" },
+                              width: "three-quarters" %>
+      <%= f.govuk_email_field :full_name,
+                              label: { text: "Full Name" },
+                              hint: { text: "This will set the name for the admin created using the above entered email" },
                               width: "three-quarters" %>
 
       <%= f.govuk_submit "Add admin" %>
