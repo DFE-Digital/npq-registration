@@ -37,6 +37,7 @@ class User < ApplicationRecord
       trn_verified: trn.present?,
       full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
+      updated_from_tra_at: Time.zone.now,
     )
 
     user_from_provider_data.tap(&:save)
@@ -57,6 +58,7 @@ class User < ApplicationRecord
       trn_verified: trn.present?,
       full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
+      updated_from_tra_at: Time.zone.now,
     )
 
     user_from_provider_data.tap(&:save)
