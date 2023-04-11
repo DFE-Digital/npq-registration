@@ -23,7 +23,7 @@ RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
           allow(ENV).to receive(:[]).with("GET_AN_IDENTITY_WEBHOOK_SECRET").and_return(stubbed_secret)
         end
 
-        it "handles #{file}" do
+        it "responds with a success response code" do
           send_request
           expect(response).to be_successful
         end
