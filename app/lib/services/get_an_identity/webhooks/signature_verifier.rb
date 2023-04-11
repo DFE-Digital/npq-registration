@@ -16,42 +16,42 @@ module Services
         end
 
         def call
-          if secret.blank?
-            Sentry.capture_message("GetAnIdentity webhook secret missing")
-            return false
-          end
+          return log_failure(message: "Secret Missing") if secret.blank?
+          return log_failure(message: "Signature Blank") if signature.blank?
+          return log_failure(message: "Request Body Empty") if request_body.blank?
 
-          if signature.blank?
-            Sentry.capture_message("GetAnIdentity webhook signature missing")
-            return false
-          end
+          return true if signatures_match?
 
-          if request_body.blank?
-            Sentry.capture_message("GetAnIdentity webhook request body missing")
-            return false
-          end
+          log_failure(message: "Signature Mismatch", include_signatures: true)
+        end
 
-          return true if signature == expected_signature
+      private
 
+        def log_failure(message:, include_signatures: false)
           Sentry.with_scope do |scope|
-            scope.set_context("Signatures", {
-              request_signature: signature,
-              hashed_body_signature: expected_signature,
-            })
-            Sentry.capture_message("GetAnIdentity webhook signature mismatch")
+            if include_signatures
+              scope.set_context("Signatures", {
+                request_signature: signature,
+                hashed_body_signature: expected_signature,
+              })
+            end
+
+            Sentry.capture_message("GetAnIdentity webhook: #{message}")
           end
 
           false
         end
 
-      private
+        def signatures_match?
+          signature == expected_signature
+        end
 
         def secret
           ENV["GET_AN_IDENTITY_WEBHOOK_SECRET"]
         end
 
         def expected_signature
-          OpenSSL::HMAC.hexdigest("SHA256", secret, request_body)
+          @expected_signature ||= OpenSSL::HMAC.hexdigest("SHA256", secret, request_body)
         end
       end
     end
