@@ -43,7 +43,7 @@ module Services
         end
 
         def signatures_match?
-          signature == expected_signature
+          signature.casecmp(expected_signature).zero? # case insensitive comparison
         end
 
         def secret
