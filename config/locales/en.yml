@@ -172,7 +172,7 @@ en:
       users: "Users"
       unsynced_users: "Unsynced users"
       schools: "Schools"
-      webhook_messages: "Get An Identity Messages"
+      webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
 
