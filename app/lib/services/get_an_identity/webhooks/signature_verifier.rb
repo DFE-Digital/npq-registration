@@ -16,6 +16,7 @@ module Services
         end
 
         def call
+          return false if secret.blank?
           return false if signature.blank?
           return false if request_body.blank?
 
