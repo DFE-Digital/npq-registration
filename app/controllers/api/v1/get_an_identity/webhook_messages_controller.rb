@@ -26,7 +26,10 @@ module Api
 
         def signature_valid?
           signature = request.headers["X-Hub-Signature-256"]
-          return false if signature.blank?
+          if signature.blank?
+            Sentry.capture_message("GetAnIdentity webhook signature missing")
+            return false
+          end
 
           Services::GetAnIdentity::Webhooks::SignatureVerifier.call(
             request_body: request.raw_post,

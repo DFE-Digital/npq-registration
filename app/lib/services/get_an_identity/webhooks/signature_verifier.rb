@@ -16,11 +16,32 @@ module Services
         end
 
         def call
-          return false if secret.blank?
-          return false if signature.blank?
-          return false if request_body.blank?
+          if secret.blank?
+            Sentry.capture_message("GetAnIdentity webhook secret missing")
+            return false
+          end
 
-          signature == expected_signature
+          if signature.blank?
+            Sentry.capture_message("GetAnIdentity webhook signature missing")
+            return false
+          end
+
+          if request_body.blank?
+            Sentry.capture_message("GetAnIdentity webhook request body missing")
+            return false
+          end
+
+          return true if signature == expected_signature
+
+          Sentry.with_scope do |scope|
+            scope.set_context("Signatures", {
+              request_signature: signature,
+              hashed_body_signature: expected_signature,
+            })
+            Sentry.capture_message("GetAnIdentity webhook signature mismatch")
+          end
+
+          false
         end
 
       private
