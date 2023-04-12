@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_12_110012) do
+ActiveRecord::Schema.define(version: 2023_04_12_110152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -64,7 +64,6 @@ ActiveRecord::Schema.define(version: 2023_04_12_110012) do
     t.text "description"
     t.integer "position", default: 0
     t.boolean "display", default: true
-    t.integer "default_cohort", default: 2022
     t.string "identifier"
   end
 
