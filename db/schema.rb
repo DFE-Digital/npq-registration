@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_12_110152) do
+ActiveRecord::Schema.define(version: 2023_04_12_111432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2023_04_12_110152) do
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
     t.text "kind_of_nursery"
-    t.integer "cohort"
+    t.integer "DEPRECATED_cohort"
     t.boolean "targeted_delivery_funding_eligibility", default: false
     t.string "funding_eligiblity_status_code"
     t.jsonb "raw_application_data", default: {}
