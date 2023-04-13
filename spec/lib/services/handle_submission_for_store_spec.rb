@@ -330,7 +330,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           it "applies the correct course" do
             subject.call
-            expect(user.applications.first.course).to be(ehco_course)
+            expect(user.applications.first.course).to eq(ehco_course)
           end
         end
 
@@ -669,7 +669,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           it "applies the correct course" do
             subject.call
-            expect(user.applications.first.course).to be(ehco_course)
+            expect(user.applications.first.course).to eq(ehco_course)
           end
         end
 
