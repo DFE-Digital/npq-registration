@@ -28,7 +28,7 @@ RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
           expect(response).to be_successful
         end
 
-        it "creates a ::GetAnIdentity::WebhookMessage record with thesend_request body parsed into the record" do
+        it "creates a ::GetAnIdentity::WebhookMessage record with the send_request body parsed into the record" do
           expect {
             send_request
           }.to change(::GetAnIdentity::WebhookMessage, :count).by(1)
@@ -58,7 +58,7 @@ RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
             expect(response).to have_http_status(:ok)
           end
 
-          it "creates a ::GetAnIdentity::WebhookMessage record with thesend_request body parsed into the record" do
+          it "creates a ::GetAnIdentity::WebhookMessage record with the send_request body parsed into the record" do
             expect {
               send_request
             }.to change(::GetAnIdentity::WebhookMessage, :count).by(1)
