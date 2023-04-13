@@ -1,4 +1,10 @@
 class Application < ApplicationRecord
+  # These columns are no longer populated with data for future applications
+  # but are still in place because they contain historical data.
+  # This constant is set so that despite still existing they won't be hooked up
+  # within the rails model
+  self.ignored_columns = %w[cohort]
+
   belongs_to :user
   belongs_to :course
   belongs_to :lead_provider

@@ -36,7 +36,6 @@ module Services
           works_in_childcare: store["works_in_childcare"] == "yes",
           kind_of_nursery: store["kind_of_nursery"],
           work_setting: store["work_setting"],
-          cohort: course.default_cohort,
           lead_mentor: lead_mentor?,
           itt_provider:,
           raw_application_data: raw_application_data.except("current_user"),

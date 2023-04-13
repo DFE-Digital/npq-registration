@@ -30,7 +30,6 @@ RSpec.describe Services::Report do
         works_in_childcare
         kind_of_nursery
         private_childcare_provider_urn
-        cohort
         school_urn
         school_name
         establishment_type_name

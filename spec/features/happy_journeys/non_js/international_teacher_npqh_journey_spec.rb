@@ -126,7 +126,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "uid" => user_uid,
     )
     expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
