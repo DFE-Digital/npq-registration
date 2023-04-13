@@ -119,27 +119,6 @@ RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
             }.not_to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
           end
         end
-
-        context "when an already received message is repeated but the event type is different" do
-          before do
-            ::GetAnIdentity::WebhookMessage.create!(
-              message_id: message["messageId"],
-              message_type: "something else",
-            )
-          end
-
-          it "creates a new webhook record" do
-            expect {
-              send_request
-            }.to change(::GetAnIdentity::WebhookMessage, :count).by(1)
-          end
-
-          it "enqueues a job to process the webhook" do
-            expect {
-              send_request
-            }.to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
-          end
-        end
       end
     end
   end

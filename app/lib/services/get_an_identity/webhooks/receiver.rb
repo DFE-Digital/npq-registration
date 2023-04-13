@@ -49,10 +49,7 @@ module Services
         end
 
         def existing_webhook_message
-          @existing_webhook_message ||= ::GetAnIdentity::WebhookMessage.find_by(
-            message_id:,
-            message_type:,
-          )
+          @existing_webhook_message ||= ::GetAnIdentity::WebhookMessage.find_by(message_id:)
         end
 
         def new_webhook
