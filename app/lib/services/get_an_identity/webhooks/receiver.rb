@@ -1,5 +1,3 @@
-# Services::GetAnIdentity::Webhooks::Persister
-
 module Services
   module GetAnIdentity
     module Webhooks
