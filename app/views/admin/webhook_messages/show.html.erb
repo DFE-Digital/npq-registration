@@ -1,11 +1,17 @@
 <% content_for :before_content do %>
   <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
-    href: url_for(:back)
+    href: admin_webhook_messages_path
   ) %>
 <% end %>
 
 <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+
+<% if @webhook_message.retryable? %>
+  <%=
+    link_to("Queue retry", admin_webhook_message_processing_jobs_path(webhook_message_id: @webhook_message.id), class: "govuk-button", method: :post)
+  %>
+<% end %>
 
 <%=
   govuk_summary_list do |sl|

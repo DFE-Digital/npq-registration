@@ -18,7 +18,7 @@ module Services
           return existing_webhook_message if existing_webhook_message.present?
 
           if new_webhook.save
-            enqueue_process_webhook_job(new_webhook)
+            new_webhook.enqueue_processing_job
             true
           else
             false
@@ -63,10 +63,6 @@ module Services
             sent_at:,
             raw: webhook_params,
           )
-        end
-
-        def enqueue_process_webhook_job(webhook_message)
-          ::GetAnIdentity::ProcessWebhookMessageJob.perform_later(webhook_message:)
         end
       end
     end
