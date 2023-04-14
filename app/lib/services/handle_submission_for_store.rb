@@ -61,6 +61,7 @@ module Services
       {
         trn: padded_verified_trn || padded_entered_trn,
         trn_verified: store["trn_verified"],
+        trn_lookup_status: store["trn_lookup_status"],
         trn_auto_verified: !!store["trn_auto_verified"],
         full_name: store["full_name"],
         date_of_birth: store["date_of_birth"],
