@@ -12,9 +12,9 @@ module Services
       end
 
       def call
-        get_an_identity_user = ::GetAnIdentity::User.find(user.get_an_identity_id)
+        get_an_identity_user = ::GetAnIdentity::External::User.find(user.get_an_identity_id)
 
-        # GetAnIdentity::User#uid may not be the same as User#get_an_identity_id
+        # GetAnIdentity::External::User#uid may not be the same as User#get_an_identity_id
         # This is because while those two values both refer to the same thing,
         # in cases of deduping we may get a new uid from GetAnIdentity when the user we
         # looked up has been merged into another.
