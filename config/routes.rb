@@ -59,6 +59,14 @@ Rails.application.routes.draw do
 
   get "/admin", to: "admin#show"
 
+  namespace :api do
+    namespace :v1 do
+      namespace :get_an_identity do
+        resource :webhook_messages, only: %i[create]
+      end
+    end
+  end
+
   resource :csp_reports, only: %i[create]
 
   get "/404", to: "errors#not_found", via: :all

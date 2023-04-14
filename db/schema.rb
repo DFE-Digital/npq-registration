@@ -110,6 +110,19 @@ ActiveRecord::Schema.define(version: 2023_04_12_111432) do
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
+  create_table "get_an_identity_webhook_messages", force: :cascade do |t|
+    t.jsonb "raw"
+    t.jsonb "message"
+    t.string "message_id"
+    t.string "message_type"
+    t.string "status", default: "pending"
+    t.string "status_comment"
+    t.datetime "sent_at"
+    t.datetime "processed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "itt_providers", force: :cascade do |t|
     t.text "legal_name"
     t.text "operating_name"
