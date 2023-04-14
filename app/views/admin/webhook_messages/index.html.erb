@@ -1,0 +1,33 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Webhook Messages" %>
+
+    <%=
+      govuk_table do |table|
+        table.head do |head|
+          head.row do |row|
+            row.cell(header: true, text: "Message Type")
+            row.cell(header: true, text: "Message ID")
+            row.cell(header: true, text: "Status")
+            row.cell(header: true, text: "Sent At")
+            row.cell(header: true, text: "")
+          end
+        end
+
+        table.body do |body|
+          @webhook_messages.each do |webhook_message|
+            body.row do |row|
+              row.cell(text: webhook_message.message_type)
+              row.cell(text: webhook_message.message_id)
+              row.cell(text: webhook_message_status_tag(webhook_message))
+              row.cell(text: webhook_message.sent_at.to_s(:govuk_short))
+              row.cell(text: govuk_link_to("View", admin_webhook_message_path(webhook_message)))
+            end
+          end
+        end
+      end
+    %>
+
+    <%== pagy_govuk_nav(@pagy) %>
+  </div>
+</div>

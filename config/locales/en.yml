@@ -172,8 +172,10 @@ en:
       users: "Users"
       unsynced_users: "Unsynced users"
       schools: "Schools"
+      webhook_messages: "Get An Identity Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
+
     super_admins:
       update:
         success: Super admin permissions granted to %{email}
@@ -218,6 +220,17 @@ en:
         user_lookup: "User Lookup"
         user_creation: "User Creation"
         application_creation: "Application Creation"
+    webhook_messages:
+      show:
+        title: "Webhook Message"
+        message_id: "Message ID"
+        message_type: "Message Type"
+        status: "Status"
+        sent_at: "Sent at"
+        created_at: "Received at"
+        processed_at: "Processed at"
+        status_comment: "Status Comment"
+        message: "Message"
 
   helpers:
     title:

@@ -52,6 +52,8 @@ Rails.application.routes.draw do
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
 
+    resources :webhook_messages, only: %i[index show]
+
     constraints RouteConstraints::HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
