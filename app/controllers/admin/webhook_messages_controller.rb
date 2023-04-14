@@ -9,7 +9,7 @@ class Admin::WebhookMessagesController < AdminController
     @webhook_message = GetAnIdentity::WebhookMessage.find(params[:id])
   end
 
-  private
+private
 
   def scope
     GetAnIdentity::WebhookMessage.all.order(created_at: :desc)

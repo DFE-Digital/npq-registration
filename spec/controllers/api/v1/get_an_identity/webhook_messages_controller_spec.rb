@@ -15,7 +15,7 @@ RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
         let(:signature_secret) { stubbed_secret }
 
         def send_request
-          @request.headers["X-Hub-Signature-256"] = signature
+          @request.headers["X-Hub-Signature-256"] = signature # rubocop:disable RSpec/InstanceVariable
           post(:create, params: message, as: :json)
         end
 
