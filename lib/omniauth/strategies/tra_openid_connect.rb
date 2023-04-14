@@ -22,6 +22,7 @@ module Omniauth
           email_verified: parsed_email_verified,
           name: raw_info["name"],
           trn: raw_info["trn"],
+          trn_lookup_status: raw_info["trn_lookup_status"],
         }
       end
 
