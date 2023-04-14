@@ -3,6 +3,8 @@ module GetAnIdentity
     queue_as :default
 
     def perform(webhook_message:)
+      webhook_message.update(status: :processing)
+
       webhook_processor_klass = webhook_message.processor_klass
 
       if webhook_processor_klass.blank?
