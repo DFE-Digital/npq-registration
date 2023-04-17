@@ -73,7 +73,7 @@ RSpec.describe GetAnIdentity::External::User do
       let(:response_status_code) { 400 }
 
       it "raises an error" do
-        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::NotFoundError)
+        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::User::NotFoundError)
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe GetAnIdentity::External::User do
       let(:response_status_code) { 401 }
 
       it "raises an error" do
-        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::InvalidTokenError)
+        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::User::InvalidTokenError)
       end
     end
   end
