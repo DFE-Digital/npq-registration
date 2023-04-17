@@ -33,6 +33,10 @@
     <%= t(".schools") %>
   <% end %>
 
+  <%= component.nav_item(path: admin_webhook_messages_path) do %>
+    <%= t(".webhook_messages") %>
+  <% end %>
+
   <% if current_user.super_admin? %>
     <%= component.nav_item(path: admin_admins_path) do %>
       <%= t(".admins") %>

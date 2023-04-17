@@ -52,12 +52,24 @@ Rails.application.routes.draw do
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
 
+    resources :webhook_messages, only: %i[index show] do
+      resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
+    end
+
     constraints RouteConstraints::HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
   end
 
   get "/admin", to: "admin#show"
+
+  namespace :api do
+    namespace :v1 do
+      namespace :get_an_identity do
+        resource :webhook_messages, only: %i[create]
+      end
+    end
+  end
 
   resource :csp_reports, only: %i[create]
 
