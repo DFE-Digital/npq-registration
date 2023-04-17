@@ -29,7 +29,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to be_axe_clean
     expect(page).to have_text("Choose an NPQ and provider")
 
-    expect(retrieve_latest_application_user_data).to eq(nil)
-    expect(retrieve_latest_application_data).to eq(nil)
+    expect(retrieve_latest_application_user_data).to match(nil)
+    expect(retrieve_latest_application_data).to match(nil)
   end
 end

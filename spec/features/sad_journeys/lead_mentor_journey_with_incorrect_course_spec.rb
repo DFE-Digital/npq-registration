@@ -146,7 +146,7 @@ RSpec.feature "Sad journeys", type: :feature do
       expect(page).to have_content("Before you start")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
@@ -162,11 +162,12 @@ RSpec.feature "Sad journeys", type: :feature do
       "super_admin" => false,
       "trn" => "1234567",
       "trn_auto_verified" => false,
+      "trn_lookup_status" => nil,
       "trn_verified" => true,
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to eq(
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,

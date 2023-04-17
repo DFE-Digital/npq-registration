@@ -66,7 +66,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("What’s the name of your workplace?")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(nil)
-    expect(retrieve_latest_application_data).to eq(nil)
+    expect(retrieve_latest_application_user_data).to match(nil)
+    expect(retrieve_latest_application_data).to match(nil)
   end
 end
