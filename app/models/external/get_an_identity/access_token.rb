@@ -1,5 +1,5 @@
-module GetAnIdentity
-  module External
+module External
+  module GetAnIdentity
     class AccessToken
       attr_reader :token
 

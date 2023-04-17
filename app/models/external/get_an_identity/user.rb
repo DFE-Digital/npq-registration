@@ -1,5 +1,5 @@
-module GetAnIdentity
-  module External
+module External
+  module GetAnIdentity
     class User
       class InvalidTokenError < StandardError; end
       class NotFoundError < StandardError; end
@@ -28,7 +28,7 @@ module GetAnIdentity
 
       def request_user
         url = "#{ENV.fetch('TRA_OIDC_DOMAIN')}/api/v1/users/#{id}"
-        headers = { "Authorization" => "Bearer #{GetAnIdentity::External::AccessToken.new}" }
+        headers = { "Authorization" => "Bearer #{::External::GetAnIdentity::AccessToken.new}" }
 
         HTTParty.get(url, headers:).tap do |response|
           case response.code

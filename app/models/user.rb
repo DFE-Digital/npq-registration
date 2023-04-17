@@ -71,7 +71,7 @@ class User < ApplicationRecord
   def get_an_identity_user
     return if get_an_identity_id.blank?
 
-    GetAnIdentity::External::User.find(get_an_identity_id)
+    External::GetAnIdentity::User.find(get_an_identity_id)
   end
 
   def ecf_user

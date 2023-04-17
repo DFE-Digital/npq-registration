@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe GetAnIdentity::External::User do
+RSpec.describe External::GetAnIdentity::User do
   describe "#find" do
     let(:access_token) { SecureRandom.uuid }
     let(:stubbed_url) { "https://example.com" }
@@ -10,8 +10,8 @@ RSpec.describe GetAnIdentity::External::User do
     before do
       allow(ENV).to receive(:fetch).with("TRA_OIDC_DOMAIN").and_return(stubbed_url)
 
-      stubbed_access_token = instance_double(GetAnIdentity::External::AccessToken, to_s: access_token)
-      allow(GetAnIdentity::External::AccessToken).to receive(:new).and_return(stubbed_access_token)
+      stubbed_access_token = instance_double(External::GetAnIdentity::AccessToken, to_s: access_token)
+      allow(External::GetAnIdentity::AccessToken).to receive(:new).and_return(stubbed_access_token)
 
       stub_request(:get, "#{stubbed_url}/api/v1/users/#{uid}")
         .with(
@@ -73,7 +73,7 @@ RSpec.describe GetAnIdentity::External::User do
       let(:response_status_code) { 400 }
 
       it "raises an error" do
-        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::User::NotFoundError)
+        expect { described_class.find(uid) }.to raise_error(::External::GetAnIdentity::User::NotFoundError)
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe GetAnIdentity::External::User do
       let(:response_status_code) { 401 }
 
       it "raises an error" do
-        expect { described_class.find(uid) }.to raise_error(::GetAnIdentity::External::User::InvalidTokenError)
+        expect { described_class.find(uid) }.to raise_error(::External::GetAnIdentity::User::InvalidTokenError)
       end
     end
   end

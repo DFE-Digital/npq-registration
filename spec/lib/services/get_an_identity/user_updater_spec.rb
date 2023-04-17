@@ -35,8 +35,8 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
   before do
     allow(ENV).to receive(:fetch).with("TRA_OIDC_DOMAIN").and_return(stubbed_url)
 
-    stubbed_access_token = instance_double(GetAnIdentity::External::AccessToken, to_s: access_token)
-    allow(GetAnIdentity::External::AccessToken).to receive(:new).and_return(stubbed_access_token)
+    stubbed_access_token = instance_double(External::GetAnIdentity::AccessToken, to_s: access_token)
+    allow(External::GetAnIdentity::AccessToken).to receive(:new).and_return(stubbed_access_token)
 
     stub_request(:get, "#{stubbed_url}/api/v1/users/#{uid}")
       .with(
@@ -87,7 +87,7 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
     it "raises an error" do
       expect {
         described_class.call(user:)
-      }.to raise_error(::GetAnIdentity::External::User::NotFoundError)
+      }.to raise_error(::External::GetAnIdentity::User::NotFoundError)
     end
   end
 
@@ -97,7 +97,7 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
     it "raises an error" do
       expect {
         described_class.call(user:)
-      }.to raise_error(::GetAnIdentity::External::User::InvalidTokenError)
+      }.to raise_error(::External::GetAnIdentity::User::InvalidTokenError)
     end
   end
 end
