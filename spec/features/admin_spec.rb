@@ -122,7 +122,7 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the applications interfaces" do
-    applications = create_list :application, 4
+    create_list(:application, 4)
 
     visit "/admin"
 
@@ -136,6 +136,8 @@ RSpec.feature "admin", type: :feature do
     expect(page).to have_link("Applications", href: admin_applications_path)
     page.click_link("Applications")
     expect(page).to have_current_path(admin_applications_path)
+
+    applications = Application.all.order(id: :asc)
 
     # Test application pagination
     applications[0..2].each do |app|
@@ -218,7 +220,7 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Users")
     expect(page).to have_current_path(admin_users_path)
 
-    display_users = User.all
+    display_users = User.all.order(email: :asc)
 
     # Test application pagination
     display_users[0..2].each do |user|
