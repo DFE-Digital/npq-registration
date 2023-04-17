@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_12_111432) do
+ActiveRecord::Schema.define(version: 2023_04_14_121939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -263,6 +263,7 @@ ActiveRecord::Schema.define(version: 2023_04_12_111432) do
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
     t.boolean "super_admin", default: false, null: false
     t.datetime "updated_from_tra_at"
+    t.string "trn_lookup_status"
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"

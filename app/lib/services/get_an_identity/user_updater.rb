@@ -12,7 +12,7 @@ module Services
       end
 
       def call
-        get_an_identity_user = ::GetAnIdentity::External::User.find(user.get_an_identity_id)
+        get_an_identity_user = user.get_an_identity_user
 
         # GetAnIdentity::External::User#uid may not be the same as User#get_an_identity_id
         # This is because while those two values both refer to the same thing,
@@ -25,6 +25,7 @@ module Services
           trn: get_an_identity_user.trn,
           uid: get_an_identity_user.uid,
           email: get_an_identity_user.email,
+          trn_lookup_status: get_an_identity_user.trn_lookup_status,
           updated_from_tra_at: Time.zone.now,
         )
       end

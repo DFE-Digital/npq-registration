@@ -23,6 +23,7 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
       "dateOfBirth" => "1990-01-01",
       "trn" => "1234567",
       "mobileNumber" => "",
+      "trnLookupStatus" => "Found",
       "mergedUserIds" => [],
     }
   end
@@ -64,6 +65,7 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
           :uid,
           :email,
           :updated_from_tra_at,
+          :trn_lookup_status,
         )
       }.to(
         {
@@ -73,6 +75,7 @@ RSpec.describe Services::GetAnIdentity::UserUpdater do
           "uid" => response_uid,
           "email" => "mail@example.com",
           "updated_from_tra_at" => frozen_at,
+          "trn_lookup_status" => "Found",
         },
       )
     end

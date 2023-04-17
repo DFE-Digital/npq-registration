@@ -15,6 +15,10 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
+  def self.find_by_get_an_identity_id(get_an_identity_id)
+    with_get_an_identity_id.find_by(uid: get_an_identity_id)
+  end
+
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 
@@ -62,6 +66,12 @@ class User < ApplicationRecord
     )
 
     user_from_provider_data.tap(&:save)
+  end
+
+  def get_an_identity_user
+    return if get_an_identity_id.blank?
+
+    GetAnIdentity::External::User.find(get_an_identity_id)
   end
 
   def ecf_user

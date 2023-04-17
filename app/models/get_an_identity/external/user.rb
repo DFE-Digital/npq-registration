@@ -16,6 +16,7 @@ module GetAnIdentity
                   :trn,
                   :mobile_number,
                   :merged_user_ids,
+                  :trn_lookup_status,
                   :raw
 
       def initialize(id:)
@@ -49,6 +50,7 @@ module GetAnIdentity
         @trn = response["trn"]
         @mobile_number = response["mobileNumber"]
         @merged_user_ids = response["mergedUserIds"]
+        @trn_lookup_status = response["trnLookupStatus"]
         @raw = response.parsed_response
       end
     end
