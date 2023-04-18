@@ -202,7 +202,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
@@ -218,11 +218,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => true,
+      "trn_lookup_status" => nil,
       "trn_verified" => true,
       "uid" => nil,
     )
 
-    expect(retrieve_latest_application_data).to eq(
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,

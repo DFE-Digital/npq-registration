@@ -44,4 +44,46 @@ namespace :users do
       end
     end
   end
+
+  namespace :get_an_identity_data_sync do
+    desc "Schedules background job to gather updated data from GAI and sync to NPQ DB and to ECF, applies only to a single user with given id"
+    task :user, %i[id] => :environment do
+      id = args[:id]
+      Rails.logger.info "Enqueueing Sync Jobs for user with id: #{id}"
+
+      user = User.synced_to_ecf # Must have an ecf_id
+                 .with_get_an_identity_id # Must have a get_an_identity_id
+                 .find_by(id:)
+
+      GetAnIdentityDataSyncJob.perform_now(user:)
+      Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
+    end
+
+    desc "Schedules background job to gather updated data from GAI and sync to NPQ DB and to ECF, applies only to users with updated_from_tra_at: nil"
+    task without_updated_at: :environment do
+      Rails.logger.info "Enqueueing Sync Jobs for all users without updated_from_tra_at set"
+
+      users = User.synced_to_ecf # Must have an ecf_id
+                  .with_get_an_identity_id # Must have a get_an_identity_id
+                  .where(updated_from_tra_at: nil)
+
+      users.each do |user|
+        GetAnIdentityDataSyncJob.perform_now(user:)
+        Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
+      end
+    end
+
+    desc "Schedules background job to gather updated data from GAI and sync to NPQ DB and to ECF"
+    task all: :environment do
+      Rails.logger.info "Enqueueing Sync Jobs for all users"
+
+      users = User.synced_to_ecf # Must have an ecf_id
+                  .with_get_an_identity_id # Must have a get_an_identity_id
+
+      users.each do |user|
+        GetAnIdentityDataSyncJob.perform_now(user:)
+        Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
+      end
+    end
+  end
 end

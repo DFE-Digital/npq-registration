@@ -20,6 +20,6 @@ class Services::Admin::ApplicationsSearch
 private
 
   def default_scope
-    Application.joins(:user).includes(:user, :course, :lead_provider)
+    Application.joins(:user).includes(:user, :course, :lead_provider).order(id: :asc)
   end
 end

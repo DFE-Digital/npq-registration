@@ -44,7 +44,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
@@ -74,6 +74,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_hash" => nil,
             "otp_expires_at" => nil,
             "date_of_birth" => 30.years.ago.to_date.to_s,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "active_alert" => false,
             "get_an_identity_id_synced_to_ecf" => false,
@@ -100,6 +101,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_expires_at" => nil,
             "date_of_birth" => (30.years.ago + 1.day).to_date.to_s,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "active_alert" => nil,
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
@@ -179,6 +181,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_expires_at" => nil,
             "date_of_birth" => 30.years.ago.to_date.to_s,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "active_alert" => false,
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
@@ -208,6 +211,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => nil,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
             "super_admin" => false,
@@ -405,7 +409,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
@@ -437,6 +441,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
@@ -460,6 +465,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
             "super_admin" => false,
@@ -536,6 +542,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
@@ -559,6 +566,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
             "super_admin" => false,
