@@ -120,10 +120,10 @@ RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
       }.from(
         "status" => "pending",
         "status_comment" => nil,
-        ).to({
-         "status" => "failed",
-         "status_comment" => "Wrong processor used for message type: #{message_type}",
-       })
+      ).to({
+        "status" => "failed",
+        "status_comment" => "Wrong processor used for message type: #{message_type}",
+      })
     end
   end
 end
