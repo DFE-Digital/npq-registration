@@ -38,6 +38,7 @@ RSpec.describe Services::Report do
         school_postcode
         course_name
         provider_name
+        employment_type
       ]
 
       csv_headers = CSV.parse(subject.call).first
