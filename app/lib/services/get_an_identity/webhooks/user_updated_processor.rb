@@ -16,6 +16,7 @@ module Services
 
         def call
           return wrong_processor_failure unless webhook_message.message_type == "UserUpdated"
+          return incorrect_format_failure unless decorated_message.correct_formatting?
           return no_user_found_failure if user.blank?
 
           if user.updated_from_tra_at.present? && user.updated_from_tra_at > webhook_message.sent_at
@@ -51,6 +52,10 @@ module Services
 
         def no_user_found_failure
           record_error("No user found with get_an_identity_id: #{decorated_message.uid}")
+        end
+
+        def incorrect_format_failure
+          record_error("Invalid message format")
         end
 
         def more_recent_data_recorded_success

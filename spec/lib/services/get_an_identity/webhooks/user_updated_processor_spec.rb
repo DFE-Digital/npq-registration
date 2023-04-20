@@ -106,6 +106,26 @@ RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
         })
       end
     end
+
+    context "when the message is nonsense" do
+      let(:message) { SecureRandom.uuid }
+
+      it "stores the data without the TRN" do
+        expect(Services::Ecf::EcfUserUpdater).not_to receive(:call).with(user:)
+
+        expect {
+          described_class.call(webhook_message:)
+        }.to change {
+          webhook_message.reload.slice(:status, :status_comment)
+        }.from(
+          "status" => "pending",
+          "status_comment" => nil,
+        ).to({
+          "status" => "failed",
+          "status_comment" => "Invalid message format",
+        })
+      end
+    end
   end
 
   context "when passed the incorrect message_type" do

@@ -7,6 +7,10 @@ module GetAnIdentity
         @webhook_message = webhook_message
       end
 
+      def correct_formatting?
+        message_json.is_a?(Hash) && uid.present?
+      end
+
       def uid
         message_json["uid"]
       end
