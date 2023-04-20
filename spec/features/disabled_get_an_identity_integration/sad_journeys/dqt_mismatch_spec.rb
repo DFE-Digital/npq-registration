@@ -184,7 +184,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => false,
-      "trn_lookup_status" => nil,
+      "trn_lookup_status" => "Failed",
       "trn_verified" => false,
       "uid" => nil,
     )
@@ -239,6 +239,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_auto_verified" => nil,
         "trn_knowledge" => "yes",
         "trn_verified" => false,
+        "trn_lookup_status" => "Failed",
         "verified_trn" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",

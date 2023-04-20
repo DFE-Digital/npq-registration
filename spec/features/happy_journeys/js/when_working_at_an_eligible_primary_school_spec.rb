@@ -161,7 +161,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "super_admin" => false,
       "trn" => "1234567",
       "trn_auto_verified" => false,
-      "trn_lookup_status" => nil,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => user_uid,
     )

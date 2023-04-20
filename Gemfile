@@ -61,6 +61,7 @@ end
 
 group :test do
   gem "factory_bot_rails"
+  gem "faker"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov", require: false
   gem "site_prism"

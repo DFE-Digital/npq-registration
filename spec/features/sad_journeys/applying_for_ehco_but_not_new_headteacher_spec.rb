@@ -156,7 +156,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => "1234567",
       "trn_auto_verified" => false,
-      "trn_lookup_status" => nil,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => user_uid,
     )
