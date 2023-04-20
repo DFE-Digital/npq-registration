@@ -55,7 +55,7 @@ namespace :users do
                  .with_get_an_identity_id # Must have a get_an_identity_id
                  .find_by(id:)
 
-      GetAnIdentityDataSyncJob.perform_now(user:)
+      GetAnIdentityDataSyncJob.perform_later(user:)
       Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
     end
 
@@ -68,7 +68,7 @@ namespace :users do
                   .where(updated_from_tra_at: nil)
 
       users.each do |user|
-        GetAnIdentityDataSyncJob.perform_now(user:)
+        GetAnIdentityDataSyncJob.perform_later(user:)
         Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
       end
     end
@@ -81,7 +81,7 @@ namespace :users do
                   .with_get_an_identity_id # Must have a get_an_identity_id
 
       users.each do |user|
-        GetAnIdentityDataSyncJob.perform_now(user:)
+        GetAnIdentityDataSyncJob.perform_later(user:)
         Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
       end
     end

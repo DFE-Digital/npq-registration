@@ -1,4 +1,4 @@
-name: Resync User data for all unsyncd GAI users
+name: Resync User data for all unsynced GAI users
 
 on: workflow_dispatch
 
