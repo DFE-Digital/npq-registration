@@ -35,6 +35,7 @@ module Services
         school_postcode
         course_name
         provider_name
+        employment_type
       ]
     end
 
@@ -65,6 +66,7 @@ module Services
           a.school&.postcode,
           a.course.name,
           a.lead_provider.name,
+          a.employment_type,
         ]
       end
     end
