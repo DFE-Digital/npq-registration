@@ -21,7 +21,7 @@ namespace :users do
                   .with_get_an_identity_id # Must have a get_an_identity_id
                   .where(get_an_identity_id_synced_to_ecf: false) # Must not have already been synced
 
-      users.each do |user|
+      users.find_each do |user|
         GetAnIdentityIdSyncJob.perform_later(user:)
         Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
       end
@@ -67,7 +67,7 @@ namespace :users do
                   .with_get_an_identity_id # Must have a get_an_identity_id
                   .where(updated_from_tra_at: nil)
 
-      users.each do |user|
+      users.find_each do |user|
         GetAnIdentityDataSyncJob.perform_later(user:)
         Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
       end
@@ -80,7 +80,7 @@ namespace :users do
       users = User.synced_to_ecf # Must have an ecf_id
                   .with_get_an_identity_id # Must have a get_an_identity_id
 
-      users.each do |user|
+      users.find_each do |user|
         GetAnIdentityDataSyncJob.perform_later(user:)
         Rails.logger.info "User Sync Job Enqueued for User##{user.id}"
       end
