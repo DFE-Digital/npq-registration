@@ -23,7 +23,7 @@ module Forms
     end
 
     def previous_step
-      :about_ehco
+      :choose_your_npq
     end
 
     def options

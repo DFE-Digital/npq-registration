@@ -96,12 +96,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Early headship coaching offer")
     end
 
-    expect_page_to_have(path: "/registration/about-ehco", submit_form: false) do
-      expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
-
-      click_link("Continue")
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
       page.choose "None of the above"

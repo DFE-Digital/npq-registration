@@ -47,7 +47,7 @@ module Forms
         if no_answers_will_change?
           :check_answers
         elsif course.ehco?
-          :about_ehco
+          :npqh_status
         elsif previously_eligible_for_funding? && !eligible_for_funding?
           if wizard.query_store.works_in_other?
             :choose_your_provider
@@ -58,7 +58,7 @@ module Forms
           :check_answers
         end
       elsif course.ehco?
-        :about_ehco
+        :npqh_status
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
