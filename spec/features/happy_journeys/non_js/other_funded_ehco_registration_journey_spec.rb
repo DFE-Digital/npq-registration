@@ -72,7 +72,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
+      expect(page).to have_selector "h1", text: "What stage are you at with the headship NPQ?"
       page.choose "None of the above"
     end
 
@@ -83,8 +83,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
-      page.choose "I have completed an NPQH"
+      expect(page).to have_selector "h1", text: "What stage are you at with the headship NPQ?"
+      page.choose "I've completed it"
     end
 
     expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
@@ -122,7 +122,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "Are you a headteacher?" => "No",
-          "Have you completed an NPQH?" => "I have completed an NPQH",
+          "Have you completed an NPQH?" => "I've completed it",
           "How is your EHCO being paid for?" => "I am paying",
         },
       )

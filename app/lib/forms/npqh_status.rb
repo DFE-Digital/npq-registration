@@ -26,12 +26,20 @@ module Forms
       :choose_your_npq
     end
 
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :npqh_status,
+        options:,
+        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+      )
+    end
+
     def options
       [
         build_option_struct(value: "completed_npqh", link_errors: true),
         build_option_struct(value: "studying_npqh"),
         build_option_struct(value: "will_start_npqh"),
-        build_option_struct(value: "none", divider: true),
+        build_option_struct(value: "none"),
       ]
     end
   end
