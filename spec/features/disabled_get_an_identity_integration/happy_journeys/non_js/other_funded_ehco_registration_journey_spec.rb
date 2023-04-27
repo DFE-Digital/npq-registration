@@ -101,7 +101,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/aso-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+      expect(page).to have_selector "h1", text: "You cannot register for the Early headship coaching offer"
 
       page.click_link("Back")
     end
