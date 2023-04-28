@@ -97,7 +97,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/funding-your-aso", submit_form: true) do
-      expect(page).to have_text("How is the Early Headship Coaching Offer being paid for?")
+      expect(page).to have_text("How is the Early headship coaching offer being paid for?")
       page.choose "I am paying", visible: :all
     end
 
@@ -130,7 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).not_to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).not_to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
     expect(User.count).to be(1)
@@ -138,7 +138,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("Early Headship Coaching Offer")
+      expect(page).to have_text("Early headship coaching offer")
     end
 
     visit "/registration/check-answers"
