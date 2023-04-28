@@ -72,7 +72,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "What stage are you at with the headship NPQ?"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
       page.choose "None of the above"
     end
 
@@ -83,7 +83,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "What stage are you at with the headship NPQ?"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
       page.choose "I've completed it"
     end
 

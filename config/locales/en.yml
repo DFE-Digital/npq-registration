@@ -254,7 +254,7 @@ en:
         course_identifier: "Which NPQ do you want to do?"
         aso_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
-        npqh_status: "What stage are you at with the headship NPQ?"
+        npqh_status: "What stage are you at with the Headship NPQ?"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">early headship coaching offer</a>, submit 2 separate registrations."
@@ -268,7 +268,7 @@ en:
           another: "For example, I am sharing the costs with my workplace"
         course_identifier_options:
           "npq-early-headship-coaching-offer": "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship."
-        npqh_status_title_hint: "To be eligible for the Early headship coaching offer you need to do the headship NPQ."
+        npqh_status_title_hint: "To be eligible for the Early headship coaching offer you need to do the Headship NPQ."
     label:
       registration_wizard:
         work_setting_options:
