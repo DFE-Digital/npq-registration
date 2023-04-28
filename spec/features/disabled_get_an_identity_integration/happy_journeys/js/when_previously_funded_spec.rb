@@ -123,7 +123,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
       expect(page).to have_text("What stage are you at with the Headship NPQ?")
-      page.choose("I've completed it", visible: :all)
+      page.choose("I’ve completed it", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
@@ -171,7 +171,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Email" => "user@example.com",
           "Course" => "Early headship coaching offer",
           "How is your EHCO being paid for?" => "I am paying",
-          "Have you completed an NPQH?" => "I've completed it",
+          "Have you completed an NPQH?" => "I’ve completed it",
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
           "What setting do you work in?" => "Early years or childcare",
