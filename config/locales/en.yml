@@ -333,9 +333,9 @@ en:
         teacher_catchment_country: "Which country do you teach in?"
 
         npqh_status_options:
-          completed_npqh: I've completed it
-          studying_npqh: I'm doing it
-          will_start_npqh: I'm starting it soon
+          completed_npqh: I’ve completed it
+          studying_npqh: I’m doing it
+          will_start_npqh: I’m starting it soon
           none: None of the above
 
         has_ofsted_urn_options:
