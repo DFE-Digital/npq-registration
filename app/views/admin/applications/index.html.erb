@@ -32,7 +32,7 @@
         <% @applications.each do |app| %>
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= govuk_link_to app.user.email, admin_application_path(app) %></td>
-            <td class="govuk-table__cell"><%= app.course.name %></td>
+            <td class="govuk-table__cell"><%= localise_course_name(app.course) %></td>
             <td class="govuk-table__cell"><%= app.lead_provider.name %></td>
             <td class="govuk-table__cell"><%= app.school_urn %></td>
             <td class="govuk-table__cell"><%= boolean_red_green_tag(app.eligible_for_funding) %></td>
