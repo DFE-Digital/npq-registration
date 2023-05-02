@@ -62,7 +62,7 @@
 
     sl.row do |row|
       row.key(text: 'Course')
-      row.value(text: application.course.name)
+      row.value(text: localise_course_name(application.course))
       row.action
     end
 

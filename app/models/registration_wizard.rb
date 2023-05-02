@@ -284,7 +284,6 @@ private
       qualified_teacher_check
       not_sure_updated_name
       dqt_mismatch
-      about_ehco
       npqh_status
       aso_unavailable
       aso_headteacher

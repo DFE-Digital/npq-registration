@@ -1,40 +1,21 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> Are you studying for, or have you completed a Headship?
-<% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.npqh_status") %></h1>
+  </div>
+</div>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <%= f.govuk_radio_buttons_fieldset(:npqh_status,
-            legend: {
-              text: "Are you studying for, or have you completed a Headship?",
-              size: "l",
-              tag: "h1"
-            }
-          ) do %>
-        <% @form.options.each do |struct| %>
-          <% if struct.divider %>
-            <%= f.govuk_radio_divider %>
-          <% end %>
-
-          <%=
-            f.govuk_radio_button :npqh_status,
-                                 struct.value,
-                                 link_errors: struct.link_errors
-          %>
-        <% end %>
-      <% end %>
-
-      <%= f.govuk_submit %>
-    <% end %>
+    <p class="govuk-body govuk-!-margin-bottom-7">
+      <%= t("helpers.hint.registration_wizard.npqh_status_title_hint") %>
+    </p>
   </div>
 </div>
+
+<%=
+  render(
+    'registration_wizard/shared/question_page',
+    form: @form,
+    wizard: @wizard,
+  )
+%>

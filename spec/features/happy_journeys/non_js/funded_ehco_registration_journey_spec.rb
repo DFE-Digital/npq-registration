@@ -72,26 +72,20 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Early headship coaching offer")
     end
 
-    expect_page_to_have(path: "/registration/about-ehco", submit_form: false) do
-      expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
-
-      click_link("Continue")
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
       page.choose "None of the above"
     end
 
     expect_page_to_have(path: "/registration/aso-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+      expect(page).to have_selector "h1", text: "You cannot register for the Early headship coaching offer"
 
       page.click_link("Back")
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
-      page.choose "I have completed an NPQH"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
+      page.choose "I’ve completed it"
     end
 
     expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
@@ -130,14 +124,14 @@ RSpec.feature "Happy journeys", type: :feature do
           "Workplace" => "open manchester school",
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
-          "Have you completed an NPQH?" => "I have completed an NPQH",
+          "Have you completed an NPQH?" => "I’ve completed it",
         },
       )
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).not_to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).not_to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
     expect(User.count).to be(1)
@@ -145,7 +139,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("Early Headship Coaching Offer")
+      expect(page).to have_text("Early headship coaching offer")
     end
 
     visit "/registration/check-answers"

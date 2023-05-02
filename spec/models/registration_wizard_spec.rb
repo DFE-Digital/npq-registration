@@ -88,7 +88,7 @@ RSpec.describe RegistrationWizard do
       end
 
       it "shows ASO funding option" do
-        expect(subject.answers.find { |el| el.key == "How is the Additional Support Offer being paid for?" }.value).to eql("The Early Headship Coaching Offer is being paid in another way")
+        expect(subject.answers.find { |el| el.key == "How is the Additional Support Offer being paid for?" }.value).to eql("The Early headship coaching offer is being paid in another way")
       end
     end
 
