@@ -38,6 +38,10 @@ module Forms
       return if lead_provider_valid?
 
       wizard.store["lead_provider_id"] = nil
+      wizard.store["targeted_delivery_funding_eligibility"] = funding_eligibility_calculator.targeted_funding[:targeted_delivery_funding]
+      wizard.store["tsf_primary_plus_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_plus_eligibility]
+      wizard.store["tsf_primary_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_eligibility]
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
     end
 
     def next_step

@@ -2,32 +2,23 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
+
   include Helpers::JourneyAssertionHelper
-  include Helpers::JourneyStepHelper
-
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey when previously funded (with JS)") { run_scenario(js: true) }
-  end
-
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey when previously funded (without JS)") { run_scenario(js: false) }
-  end
 
   include_context "retrieve latest application data"
+  include_context "Disable Get An Identity integration"
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { "1234567" }
   end
-  include_context "Stub Get An Identity Omniauth Responses"
 
-  def run_scenario(js:)
+  scenario "registration journey when previously funded" do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_button("Start now")
+      page.click_link("Start now")
     end
-
-    expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -43,6 +34,35 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Early years or childcare", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
+      expect(page).to have_text("What’s your email address?")
+      page.fill_in "What’s your email address?", with: "user@example.com"
+    end
+
+    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
+      expect(page).to have_text("Confirm your email address")
+      expect(page).to have_text("user@example.com")
+
+      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+      page.fill_in("Enter your code", with: code)
+    end
+
+    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
+      expect(page).to have_text("Check your details")
+
+      page.fill_in "Teacher reference number (TRN)", with: "1234567"
+      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Day", with: "13"
+      page.fill_in "Month", with: "12"
+      page.fill_in "Year", with: "1980"
+      page.fill_in "National Insurance number", with: "AB123456C"
+    end
+
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
@@ -55,16 +75,33 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    PrivateChildcareProvider.create!(
+      provider_urn: "EY123456",
+      provider_name: "searchable childcare provider",
+      address_1: "street 1",
+      town: "manchester",
+      early_years_individual_registers: %w[CCR VCR EYR],
+    )
+
+    expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
+      expect(page).to have_text("Enter your or your employer’s URN")
+
+      within ".npq-js-reveal" do
+        page.fill_in "private-childcare-provider-picker", with: "EY123"
+      end
+
+      expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
+
+      page.find("#private-childcare-provider-picker__option--0").click
+    end
+
     %w[npq-early-headship-coaching-offer npq-early-years-leadership].each do |identifier|
       mock_previous_funding_api_request(
         course_identifier: identifier,
         trn: "1234567",
-        get_an_identity_id: user_uid,
         response: ecf_funding_lookup_response(previously_funded: true),
       )
     end
-
-    choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -127,6 +164,11 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Full name" => "John Doe",
+          "TRN" => "1234567",
+          "Date of birth" => "13 December 1980",
+          "National Insurance number" => "AB123456C",
+          "Email" => "user@example.com",
           "Course" => "Early headship coaching offer",
           "How is your EHCO being paid for?" => "I am paying",
           "Have you completed an NPQH?" => "I’ve completed it",
@@ -157,16 +199,16 @@ RSpec.feature "Happy journeys", type: :feature do
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
-      "raw_tra_provider_data" => stubbed_callback_response_as_json,
-      "provider" => "tra_openid_connect",
-      "trn_auto_verified" => false,
+      "raw_tra_provider_data" => nil,
+      "provider" => nil,
+      "trn" => "1234567",
+      "trn_auto_verified" => true,
       "trn_lookup_status" => "Found",
       "trn_verified" => true,
-      "trn" => "1234567",
-      "uid" => user_uid,
+      "uid" => nil,
     )
 
-    deep_compare_application_data(
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -174,14 +216,14 @@ RSpec.feature "Happy journeys", type: :feature do
       "employment_type" => nil,
       "employment_role" => nil,
       "funding_choice" => "self",
-      "itt_provider" => nil,
-      "lead_mentor" => false,
       "funding_eligiblity_status_code" => "previously_funded",
       "headteacher_status" => "yes_in_first_five_years",
       "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => "EY123456",
       "school_urn" => nil,
+      "itt_provider" => nil,
+      "lead_mentor" => false,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
@@ -196,20 +238,32 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
+        "active_alert" => false,
         "ehco_funding_choice" => "self",
         "ehco_headteacher" => "yes",
         "ehco_new_headteacher" => "yes",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "confirmed_email" => "user@example.com",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "date_of_birth" => "1980-12-13",
+        "email" => "user@example.com",
+        "full_name" => "John Doe",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
-        "institution_name" => js ? "" : "EY123456",
+        "institution_name" => "",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "national_insurance_number" => "AB123456C",
         "npqh_status" => "completed_npqh",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
+        "trn" => "1234567",
+        "trn_auto_verified" => true,
+        "trn_knowledge" => "yes",
+        "trn_verified" => true,
+        "trn_lookup_status" => "Found",
+        "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",

@@ -1,11 +1,11 @@
 module Forms
-  class AsoPossibleFunding < Base
+  class EhcoPossibleFunding < Base
     def next_step
       :choose_your_provider
     end
 
     def previous_step
-      :aso_new_headteacher
+      :ehco_new_headteacher
     end
 
     def course

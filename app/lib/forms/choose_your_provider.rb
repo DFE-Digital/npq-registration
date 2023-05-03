@@ -33,9 +33,9 @@ module Forms
         :possible_funding
       elsif course.ehco?
         if eligible_for_funding?
-          :aso_possible_funding
+          :ehco_possible_funding
         else
-          :funding_your_aso
+          :funding_your_ehco
         end
       else
         :choose_your_npq

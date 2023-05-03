@@ -8,7 +8,6 @@ module Services
     PREVIOUSLY_FUNDED = :previously_funded
 
     # EHCO
-    NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
     # School
@@ -21,6 +20,8 @@ module Services
 
     # Lead Mentor
     NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
+
+    NOT_IN_ENGLAND = :not_in_england
 
     attr_reader :institution,
                 :course,
@@ -63,6 +64,7 @@ module Services
         return NO_INSTITUTION if institution.nil?
         return PREVIOUSLY_FUNDED if previously_funded?
         return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
+        return NOT_IN_ENGLAND unless inside_catchment?
 
         case institution.class.name
         when "School"
@@ -70,7 +72,6 @@ module Services
           unless eligible_establishment_type_codes.include?(institution.establishment_type_code) || (institution.eyl_funding_eligible? && course.eyl?)
             return INELIGIBLE_ESTABLISHMENT_TYPE
           end
-          return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
           return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
           FUNDED_ELIGIBILITY_RESULT

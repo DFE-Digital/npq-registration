@@ -1,0 +1,19 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">Funding eligibility</h1>
+
+  <p class="govuk-body">
+    You're elgiible for scholarship funding for the Early headship coaching offer (EHCO).
+  </p>
+
+  <p class="govuk-body">
+    This means that you will not have to pay for the EHCO.
+  </p>
+
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+<% end %>

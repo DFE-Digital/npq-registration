@@ -1,0 +1,15 @@
+<% content_for :title do %>
+  <%= @form.errors.present? ? "Error: " : nil %> Funding eligibility
+<% end %>
+
+<h1 class="govuk-heading-xl">Funding eligibility</h1>
+
+<p class="govuk-body">You've already been allocated scholarship funding for the <%= course_name %> with <%= lead_provider %></p>
+
+<p class="govuk-body">If you need to change somethiung about your NPQ or provider, email continuing-professional-development@digital.educaation.gov.uk.</p>
+
+<h2 class="govuk-heading-m">If you're taking the course again</h2>
+
+<p class="govuk-body">Continue to register.</p>
+
+<p class="govuk-body">You would not be elgibile for scholarship funding for the <%= course_name %> if you were previously funded but you failed or withdrew from the course.</p>

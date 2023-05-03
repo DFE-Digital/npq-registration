@@ -16,9 +16,9 @@ module Forms
 
     def next_step
       if npqh_status == "none"
-        :aso_unavailable
+        :ehco_unavailable
       else
-        :aso_headteacher
+        :ehco_headteacher
       end
     end
 

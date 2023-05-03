@@ -5,9 +5,11 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
+    let(:api_call_get_an_identity_id) { nil }
+    let(:api_call_trn) { "1234567" }
   end
-  include_context "Stub Get An Identity Omniauth Responses"
+
+  include_context "Disable Get An Identity integration"
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -22,10 +24,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_button("Start now")
+      page.click_link("Start now")
     end
-
-    expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -38,6 +38,35 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
+      page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
+      expect(page).to have_text("What’s your email address?")
+      page.fill_in "What’s your email address?", with: "user@example.com"
+    end
+
+    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
+      expect(page).to have_text("Confirm your email address")
+      expect(page).to have_text("user@example.com")
+
+      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+
+      page.fill_in("Enter your code", with: code)
+    end
+
+    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
+      expect(page).to have_text("Check your details")
+
+      page.fill_in "Teacher reference number (TRN)", with: "1234567"
+      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Day", with: "13"
+      page.fill_in "Month", with: "12"
+      page.fill_in "Year", with: "1980"
+      page.fill_in "National Insurance number", with: "AB123456C"
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -57,7 +86,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
       page.click_button("Continue")
 
-      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
       page.choose "open manchester school"
     end
 
@@ -92,7 +120,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      expect(page).to have_text("How is the Early headship Coaching Offer being paid for?")
+      expect(page).to have_text("How is the Early Headship Coaching Offer being paid for?")
       page.choose "I am paying", visible: :all
     end
 
@@ -113,6 +141,11 @@ RSpec.feature "Happy journeys", type: :feature do
         {
           "Where do you work?" => "England",
           "What setting do you work in?" => "A school",
+          "Full name" => "John Doe",
+          "TRN" => "1234567",
+          "Date of birth" => "13 December 1980",
+          "National Insurance number" => "AB123456C",
+          "Email" => "user@example.com",
           "Course" => "Early headship coaching offer",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
@@ -151,16 +184,16 @@ RSpec.feature "Happy journeys", type: :feature do
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
-      "provider" => "tra_openid_connect",
-      "raw_tra_provider_data" => stubbed_callback_response_as_json,
+      "provider" => nil,
+      "raw_tra_provider_data" => nil,
       "trn" => "1234567",
-      "trn_auto_verified" => false,
+      "trn_auto_verified" => true,
       "trn_lookup_status" => "Found",
       "trn_verified" => true,
-      "uid" => user_uid,
+      "uid" => nil,
     )
 
-    deep_compare_application_data(
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -169,13 +202,13 @@ RSpec.feature "Happy journeys", type: :feature do
       "employment_role" => nil,
       "funding_choice" => "self",
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
-      "headteacher_status" => "no",
       "kind_of_nursery" => nil,
+      "headteacher_status" => "no",
+      "itt_provider" => nil,
+      "lead_mentor" => false,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
-      "itt_provider" => nil,
-      "lead_mentor" => false,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
@@ -185,23 +218,35 @@ RSpec.feature "Happy journeys", type: :feature do
       "number_of_pupils" => nil,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => false,
       "works_in_nursery" => nil,
+      "works_in_childcare" => false,
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
+        "active_alert" => false,
         "ehco_funding_choice" => "self",
         "ehco_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "confirmed_email" => "user@example.com",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "date_of_birth" => "1980-12-13",
+        "email" => "user@example.com",
+        "full_name" => "John Doe",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "national_insurance_number" => "AB123456C",
         "npqh_status" => "completed_npqh",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
+        "trn" => "1234567",
+        "trn_auto_verified" => true,
+        "trn_knowledge" => "yes",
+        "trn_verified" => true,
+        "trn_lookup_status" => "Found",
+        "verified_trn" => "1234567",
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
         "work_setting" => "a_school",

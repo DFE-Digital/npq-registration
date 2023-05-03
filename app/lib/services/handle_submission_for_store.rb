@@ -129,7 +129,7 @@ module Services
       if funding_eligibility
         nil
       elsif course.ehco?
-        store["aso_funding_choice"]
+        store["ehco_funding_choice"]
       else
         store["funding"]
       end
@@ -137,9 +137,9 @@ module Services
 
     def headteacher_status
       if course.ehco?
-        case store["aso_headteacher"]
+        case store["ehco_headteacher"]
         when "yes"
-          case store["aso_new_headteacher"]
+          case store["ehco_new_headteacher"]
           when "yes"
             "yes_in_first_five_years"
           when "no"
@@ -154,7 +154,7 @@ module Services
     end
 
     def enqueue_job
-      ApplicationSubmissionJob.perform_later(user:)
+      ApplicationSubmissionJob.perform_later(user:, email_template:)
     end
 
     def funding_eligibility_service
@@ -183,26 +183,25 @@ module Services
       eligible_for_funding?
     end
 
+    def email_template
+      store["email_template"]
+    end
+
     def targeted_delivery_funding_eligibility
-      targeted_funding[:targeted_delivery_funding] && !previously_received_targeted_funding_support?
+      store["targeted_delivery_funding_eligibility"] && !previously_received_targeted_funding_support?
     end
 
     def tsf_primary_eligibility
-      targeted_funding[:tsf_primary_eligibility]
+      store["tsf_primary_eligibility"]
     end
 
     def tsf_primary_plus_eligibility
-      targeted_funding[:tsf_primary_plus_eligibility]
-    end
-
-    def targeted_funding
-      @targeted_funding ||= targeted_funding
+      store["tsf_primary_plus_eligibility"]
     end
 
     delegate :ineligible_institution_type?,
              :funding_eligiblity_status_code,
              :previously_received_targeted_funding_support?,
-             :targeted_funding,
              to: :funding_eligibility_service
 
     def new_headteacher?

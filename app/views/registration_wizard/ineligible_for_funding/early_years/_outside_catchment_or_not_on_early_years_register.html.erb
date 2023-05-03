@@ -1,14 +1,9 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
+  <%= @form.errors.present? ? "Error: " : nil %> Funding elgibility
 <% end %>
 
-<h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
+<h1 class="govuk-heading-xl">Funding elgibility</h1>
 
-<p class="govuk-body">To be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %> you must:</p>
+<p class="govuk-body">You're not elgible for scholarship funding for the <%= localise_sentence_embedded_course_name(course) %> because you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency.</p>
 
-<ul class="govuk-list govuk-list--bullet">
-  <li>Work in England</li>
-  <li>Be registered with Ofsted on the Early Years Register or the Childcare Register, or be registered with a Childminder Agency (CMA)</li>
-</ul>
-
-<p class="govuk-body">You can still register for <%= localise_sentence_embedded_course_name(course) %>, but you need to pay for it another way. Contact your course provider to discuss your funding options.</p>
+<p class="govuk-body">This means you would have to pay for the course another way.</p>

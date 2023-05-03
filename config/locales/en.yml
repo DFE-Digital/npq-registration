@@ -105,22 +105,22 @@ en:
           attributes:
             npqh_status:
               blank: Information about NPQH can’t be blank
-        forms/aso_headteacher:
+        forms/ehco_headteacher:
           attributes:
-            aso_headteacher:
+            ehco_headteacher:
               blank: Choose whether or not you are a headteacher
-        forms/aso_funding_not_available:
+        forms/ehco_funding_not_available:
           attributes:
-            aso_funding:
-              blank: Choose whether or not you want to pay for the Early headship coaching offer in another way?
-        forms/funding_your_aso:
+            ehco_funding:
+              blank: Choose whether or not you want to pay for the Early Headship Coaching Offer in another way?
+        forms/funding_your_ehco:
           attributes:
-            aso_funding_choice:
+            ehco_funding_choice:
               inclusion: Choose one of the following funding options
               blank: Choose one of the following funding options
-        forms/aso_new_headteacher:
+        forms/ehco_new_headteacher:
           attributes:
-            aso_new_headteacher:
+            ehco_new_headteacher:
               blank: Choose whether or not you are in your first 2 years of headship
         forms/kind_of_nursery:
           attributes:
@@ -245,10 +245,11 @@ en:
     title:
       registration_wizard:
         get_an_identity: "Get an identity"
-        aso_funding_not_available: "DfE scholarship funding not available"
-        aso_possible_funding: "You may qualify for DfE scholarship funding"
-        aso_previously_funded: "DfE scholarship funding not available"
-        aso_unavailable: "You cannot register for the Early headship coaching offer"
+        about_ehco: "Early Headship Coaching Offer"
+        ehco_funding_not_available: "DfE scholarship funding not available"
+        ehco_possible_funding: "You may qualify for DfE scholarship funding"
+        ehco_previously_funded: "DfE scholarship funding not available"
+        ehco_unavailable: "You cannot register for the Early Headship Coaching Offer"
         choose_your_npq: "Choose an NPQ"
         npqh_status: "Eligibility for the Early headship coaching offer"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
@@ -261,16 +262,16 @@ en:
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
     legend:
       registration_wizard:
-        aso_headteacher: "Are you a headteacher?"
         can_share_choices: "Sharing your NPQ information"
-        aso_new_headteacher: "Are you in your first 5 years of a headship?"
+        ehco_headteacher: "Are you a headteacher?"
+        ehco_new_headteacher: "Are you in your first 5 years of a headship?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
         funding: "How is your course being paid for?"
         teacher_catchment: "Where do you work?"
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
-        aso_funding_choice: "How is the Early headship coaching offer being paid for?"
+        ehco_funding_choice: "How is the Early Headship Coaching Offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
         trn_knowledge: "Do you have a TRN?"
@@ -283,7 +284,7 @@ en:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
-        aso_funding_choice_options:
+        ehco_funding_choice_options:
           another: "For example, I am sharing the costs with my workplace"
         funding_options:
           another: "For example, I am sharing the costs with my workplace"
@@ -332,8 +333,7 @@ en:
 
         can_share_choices_options:
           1: Yes, I agree my information can be shared
-
-        aso_funding_choice_options:
+        ehco_funding_choice_options:
           school: "My workplace is covering the cost"
           trust: "My trust is paying"
           self: "I am paying"
@@ -365,11 +365,11 @@ en:
           "yes": "Yes"
           "no": "No"
 
-        aso_headteacher_options:
+        ehco_headteacher_options:
           "yes": "Yes"
           "no": "No"
 
-        aso_new_headteacher_options:
+        ehco_new_headteacher_options:
           "yes": "Yes"
           "no": "No"
 

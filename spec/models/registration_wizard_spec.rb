@@ -56,10 +56,10 @@ RSpec.describe RegistrationWizard do
           "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "funding_choice" => "school",
-          "aso_headteacher" => "yes",
-          "aso_new_headteacher" => "yes",
-          "aso_funding" => "yes",
-          "aso_funding_choice" => "another",
+          "ehco_headteacher" => "yes",
+          "ehco_new_headteacher" => "yes",
+          "ehco_funding" => "yes",
+          "ehco_funding_choice" => "another",
           "trn" => "123456",
         }
       end
@@ -81,8 +81,8 @@ RSpec.describe RegistrationWizard do
           "institution_identifier" => "School-#{school.urn}",
           "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
-          "aso_funding" => "yes",
-          "aso_funding_choice" => "another",
+          "ehco_funding" => "yes",
+          "ehco_funding_choice" => "another",
           "trn" => "123456",
         }
       end

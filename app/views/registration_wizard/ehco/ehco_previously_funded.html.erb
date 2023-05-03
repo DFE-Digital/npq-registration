@@ -1,0 +1,21 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">Funding elgibility</h1>
+
+  <p class="govuk-body">You've already been allocated scholarship funding for the Early headship coaching offer (EHCO) with <%= lead_provider %></p>
+
+  <p class="govuk-body">If you need to change something about your registration for the EHCO, email continuning-professional-development@digital.education.gov.uk. </p>
+
+  <h2 class="govuk-heading-m">If you're taking the EHCO again</h2>
+
+  <p class="govuk-body">Continue to register</p>
+
+  <p class="govuk-body">You would need to pay for the EHCO if you were previously funded but you withdrew.</p>
+
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+<% end  %>

@@ -11,7 +11,6 @@ RSpec.describe Services::FundingEligibility do
                         lead_mentor:)
   end
 
-  let(:course) { Course.all.find { |c| !c.aso? } }
   let(:inside_catchment) { true }
   let(:trn) { "1234567" }
   let(:get_an_identity_id) { SecureRandom.uuid }
@@ -62,35 +61,6 @@ RSpec.describe Services::FundingEligibility do
             it "is ineligible" do
               expect(subject.funded?).to be false
               expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-            end
-          end
-
-          context "when undertaking ASO" do
-            let(:course) { Course.all.find(&:aso?) }
-
-            it "returns false" do
-              expect(subject).not_to be_funded
-              expect(subject.funding_eligiblity_status_code).to eq :not_new_headteacher_requesting_aso
-            end
-
-            context "new headteacher" do
-              subject do
-                described_class.new(
-                  institution:,
-                  course:,
-                  inside_catchment:,
-                  new_headteacher: true,
-                  get_an_identity_id:,
-                  trn:,
-                  approved_itt_provider:,
-                  lead_mentor:,
-                )
-              end
-
-              it "returns true" do
-                expect(subject).to be_funded
-                expect(subject.funding_eligiblity_status_code).to eq :funded
-              end
             end
           end
 

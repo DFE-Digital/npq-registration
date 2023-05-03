@@ -71,8 +71,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "None of the above"
     end
 
-    expect_page_to_have(path: "/registration/aso-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early headship coaching offer"
+    expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
+      expect(page).to have_selector "h1", text: "You cannot register for the Early headship Coaching Offer"
 
       page.click_link("Back")
     end
@@ -82,17 +82,17 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "I’ve completed it"
     end
 
-    expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
+    expect_page_to_have(path: "/registration/ehco-headteacher", submit_form: true) do
       expect(page).to have_text("Are you a headteacher?")
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/aso-new-headteacher", submit_form: true) do
+    expect_page_to_have(path: "/registration/ehco-new-headteacher", submit_form: true) do
       expect(page).to have_text("Are you in your first 5 years of a headship?")
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/aso-possible-funding", click_continue: true) do
+    expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: true) do
       expect(page).to have_selector "h1", text: "If your provider accepts your application, you’ll qualify for DfE scholarship funding"
     end
 
@@ -190,8 +190,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
-        "aso_headteacher" => "yes",
-        "aso_new_headteacher" => "yes",
+        "ehco_headteacher" => "yes",
+        "ehco_new_headteacher" => "yes",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",

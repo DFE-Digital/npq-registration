@@ -1,20 +1,15 @@
 class Course < ApplicationRecord
-  scope :aso, -> { where(identifier: "npq-additional-support-offer") }
   scope :ehco, -> { where(identifier: "npq-early-headship-coaching-offer") }
   scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
   scope :npqltd, -> { where(identifier: "npq-leading-teaching-development") }
   scope :npqh, -> { where(identifier: "npq-headship") }
 
   def supports_targeted_delivery_funding?
-    !ehco? && !aso?
+    !ehco?
   end
 
   def npqh?
     identifier == "npq-headship"
-  end
-
-  def aso?
-    identifier == "npq-additional-support-offer"
   end
 
   def npqsl?

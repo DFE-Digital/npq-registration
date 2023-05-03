@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ApplicationSubmissionJob do
-  subject { described_class.new(user:) }
+  subject { described_class.new(user:, email_template: :ehco_scholarship_funding) }
 
   describe "#perform" do
     let(:application) { create(:application, user:, school:) }
