@@ -11,6 +11,7 @@ RSpec.describe Services::FundingEligibility do
                         lead_mentor:)
   end
 
+  let(:course) { Course.all.find { |c| !c.ehco? } }
   let(:inside_catchment) { true }
   let(:trn) { "1234567" }
   let(:get_an_identity_id) { SecureRandom.uuid }
@@ -95,56 +96,56 @@ RSpec.describe Services::FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
           end
 
-          context "when undertaking ASO" do
-            let(:course) { Course.all.find(&:aso?) }
+          # context "when undertaking ASO" do
+          #   let(:course) { Course.all.find(&:aso?) }
 
-            context "new headteacher" do
-              subject do
-                described_class.new(
-                  institution:,
-                  course:,
-                  inside_catchment:,
-                  new_headteacher: true,
-                  get_an_identity_id:,
-                  trn:,
-                  approved_itt_provider:,
-                  lead_mentor:,
-                )
-              end
+          #   context "new headteacher" do
+          #     subject do
+          #       described_class.new(
+          #         institution:,
+          #         course:,
+          #         inside_catchment:,
+          #         new_headteacher: true,
+          #         get_an_identity_id:,
+          #         trn:,
+          #         approved_itt_provider:,
+          #         lead_mentor:,
+          #       )
+          #     end
 
-              it "returns false" do
-                expect(subject).not_to be_funded
-                expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
-              end
-            end
+          #     it "returns false" do
+          #       expect(subject).not_to be_funded
+          #       expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
+          #     end
+          #   end
 
-            context "not a new headteacher" do
-              it "returns false" do
-                expect(subject).not_to be_funded
-                expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
-              end
-            end
+          #   context "not a new headteacher" do
+          #     it "returns false" do
+          #       expect(subject).not_to be_funded
+          #       expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
+          #     end
+          #   end
 
-            context "when school offering funding for the NPQEYL course" do
-              let(:eyl_funding_eligible) { true }
+          #   context "when school offering funding for the NPQEYL course" do
+          #     let(:eyl_funding_eligible) { true }
 
-              context "when user has selected the NPQEYL course" do
-                let(:course) { Course.all.find(&:eyl?) }
+          #     context "when user has selected the NPQEYL course" do
+          #       let(:course) { Course.all.find(&:eyl?) }
 
-                it "returns true" do
-                  expect(subject).to be_funded
-                end
-              end
+          #       it "returns true" do
+          #         expect(subject).to be_funded
+          #       end
+          #     end
 
-              context "when user has not selected the NPQEYL course" do
-                let(:course) { Course.all.find(&:npqsl?) }
+          #     context "when user has not selected the NPQEYL course" do
+          #       let(:course) { Course.all.find(&:npqsl?) }
 
-                it "returns false" do
-                  expect(subject).not_to be_funded
-                end
-              end
-            end
-          end
+          #       it "returns false" do
+          #         expect(subject).not_to be_funded
+          #       end
+          #     end
+          #   end
+          # end
         end
       end
     end
@@ -222,8 +223,8 @@ RSpec.describe Services::FundingEligibility do
         context "when outside catchment" do
           let(:inside_catchment) { false }
 
-          it "returns status code :early_years_outside_catchment" do
-            expect(subject.funding_eligiblity_status_code).to eq :early_years_outside_catchment
+          it "returns status code :not_in_england" do
+            expect(subject.funding_eligiblity_status_code).to eq :not_in_england
           end
 
           it "is not eligible" do

@@ -1,6 +1,7 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys",
+              type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
@@ -134,15 +135,21 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-senior-leadership",
-        "employment_type" => "hospital_school",
+        "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
+        "funding_amount" => nil,
+        "employment_type" => "hospital_school",
+        "funding_eligiblity_status_code" => "no_institution",
         "lead_provider_id" => "9",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "work_setting" => "other",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
-        "work_setting" => "other",
       },
     )
   end

@@ -72,7 +72,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early headship Coaching Offer"
+      expect(page).to have_selector "p", text: "not eligible for the scholarship funding"
 
       page.click_link("Back")
     end
@@ -93,7 +93,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ehco-possible-funding", click_continue: true) do
-      expect(page).to have_selector "h1", text: "If your provider accepts your application, you’ll qualify for DfE scholarship funding"
+      expect(page).to have_selector "p", text: "eligible for scholarship funding"
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -190,20 +190,26 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
-        "ehco_headteacher" => "yes",
-        "ehco_new_headteacher" => "yes",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "ehco_headteacher" => "yes",
+        "ehco_new_headteacher" => "yes",
+        "email_template" => "ehco_scholarship_funding",
+        "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "funding_amount" => nil,
         "npqh_status" => "completed_npqh",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
       },
     )

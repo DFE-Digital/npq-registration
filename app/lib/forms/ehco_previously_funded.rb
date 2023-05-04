@@ -11,5 +11,7 @@ module Forms
     def next_step
       :funding_your_ehco
     end
+
+    delegate :lead_provider, to: :query_store
   end
 end

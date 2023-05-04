@@ -63,12 +63,13 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     eyl_course = ["Early years leadership"]
+    ehco_course = ["Early headship coaching offer"]
 
     ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
 
     ineligible_courses = ineligible_courses_list.map { |name|
       I18n.t("course.name.#{name}")
-    } - eyl_course
+    } - eyl_course - ehco_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
@@ -76,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
         page.choose(course, visible: :all)
       end
 
-      expect(page).not_to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+      expect(page).to have_text("go back and select the the Early years leadership NPQ")
       page.click_link("Back")
     end
 
@@ -86,8 +87,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
-      expect(page).to have_text("You’ll only be eligible for DfE funding for this NPQ once. If you start this NPQ, and then withdraw or fail, you will not be funded again for the same course.")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("eligible for scholarship funding")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -170,10 +171,16 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
+        "targeted_delivery_funding_eligibility" => false,
+        "email_template" => "eligible_scholarship_funding_not_tsf",
+        "funding_eligiblity_status_code" => "funded",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
+        "funding_amount" => nil,
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
         "kind_of_nursery" => "private_nursery",

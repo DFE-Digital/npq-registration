@@ -201,7 +201,7 @@ RSpec.feature "admin", type: :feature do
 
     expect {
       click_link "Sync user and applications to ECF"
-    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_application.user)
+    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_application.user, email_template: nil)
   end
 
   scenario "when logged in as a regular admin, it allows access to the users interface" do
@@ -284,7 +284,7 @@ RSpec.feature "admin", type: :feature do
 
     expect {
       click_link "Sync user and applications to ECF"
-    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_user)
+    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_user, email_template: nil)
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced applications interface" do

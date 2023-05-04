@@ -16,15 +16,9 @@ RSpec.describe Services::HandleSubmissionForStore do
   let(:store) do
     {
       "current_user" => user,
-      "confirmed_email" => user.email,
-      "trn_verified" => false,
-      "trn" => "12345",
-      "trn_lookup_status" => "Found",
       "course_identifier" => course.identifier,
       "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
       "lead_provider_id" => lead_provider.id,
-      "date_of_birth" => (30.years.ago + 1.day).to_s,
-      "full_name" => "Jane Doe",
       "works_in_childcare" => "yes",
       "works_in_school" => "no",
       "kind_of_nursery" => "private_nursery",
@@ -33,12 +27,9 @@ RSpec.describe Services::HandleSubmissionForStore do
   end
 
   before do
-    allow(Flipper).to receive(:enabled?).and_call_original
-    allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
-
     mock_previous_funding_api_request(
       course_identifier: course.identifier,
-      trn: "12345",
+      trn: "0012345",
       response: ecf_funding_lookup_response(previously_funded: false),
     )
   end
@@ -52,15 +43,9 @@ RSpec.describe Services::HandleSubmissionForStore do
       let(:store) do
         {
           "current_user" => user,
-          "confirmed_email" => user.email,
-          "trn_verified" => false,
-          "trn" => "12345",
-          "trn_lookup_status" => "Found",
           "course_identifier" => course.identifier,
           "institution_identifier" => "School-#{school.urn}",
           "lead_provider_id" => lead_provider.id,
-          "date_of_birth" => (30.years.ago + 1.day).to_s,
-          "full_name" => "Jane Doe",
           "works_in_school" => "yes",
           "teacher_catchment" => "england",
           "work_setting" => "a_school",
@@ -71,23 +56,23 @@ RSpec.describe Services::HandleSubmissionForStore do
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
           "ecf_id" => nil,
-          "trn" => nil,
+          "trn" => "0012345",
           "full_name" => "John Doe",
           "otp_hash" => nil,
           "otp_expires_at" => nil,
+          "provider" => nil,
+          "raw_tra_provider_data" => nil,
           "date_of_birth" => 30.years.ago.to_date.to_s,
-          "trn_lookup_status" => nil,
-          "trn_verified" => false,
+          "uid" => nil,
           "active_alert" => false,
           "get_an_identity_id_synced_to_ecf" => false,
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
+          "trn_lookup_status" => nil,
+          "trn_verified" => false,
           "admin" => false,
           "feature_flag_id" => user.feature_flag_id,
           "super_admin" => false,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -98,16 +83,16 @@ RSpec.describe Services::HandleSubmissionForStore do
           "email" => user.email,
           "ecf_id" => nil,
           "trn" => "0012345",
-          "full_name" => "Jane Doe",
+          "full_name" => "John Doe",
           "otp_hash" => nil,
           "otp_expires_at" => nil,
-          "date_of_birth" => (30.years.ago + 1.day).to_date.to_s,
-          "trn_verified" => false,
-          "trn_lookup_status" => "Found",
-          "active_alert" => nil,
+          "date_of_birth" => 30.years.ago.to_date.to_s,
+          "active_alert" => false,
           "get_an_identity_id_synced_to_ecf" => false,
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
+          "trn_verified" => false,
+          "trn_lookup_status" => nil,
           "admin" => false,
           "feature_flag_id" => user.feature_flag_id,
           "super_admin" => false,
@@ -126,15 +111,13 @@ RSpec.describe Services::HandleSubmissionForStore do
           "funding_choice" => nil,
           "funding_eligiblity_status_code" => "funded",
           "headteacher_status" => nil,
+          "kind_of_nursery" => nil,
           "itt_provider" => nil,
           "lead_mentor" => false,
-          "kind_of_nursery" => nil,
-          "works_in_nursery" => nil,
           "lead_provider_id" => lead_provider.id,
           "private_childcare_provider_urn" => nil,
           "school_urn" => school.urn,
           "targeted_delivery_funding_eligibility" => false,
-
           "teacher_catchment" => "england",
           "teacher_catchment_country" => nil,
           "teacher_catchment_synced_to_ecf" => false,
@@ -144,6 +127,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           "tsf_primary_eligibility" => false,
           "tsf_primary_plus_eligibility" => false,
           "user_id" => user.id,
+          "works_in_nursery" => nil,
           "works_in_childcare" => false,
           "works_in_school" => true,
           "work_setting" => "a_school",
@@ -157,15 +141,9 @@ RSpec.describe Services::HandleSubmissionForStore do
       let(:store) do
         {
           "current_user" => user,
-          "confirmed_email" => user.email,
-          "trn_verified" => false,
-          "trn" => "12345",
-          "trn_lookup_status" => "Found",
           "course_identifier" => course.identifier,
           "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
           "lead_provider_id" => lead_provider.id,
-          "date_of_birth" => (30.years.ago + 1.day).to_s,
-          "full_name" => "Jane Doe",
           "works_in_childcare" => "yes",
           "works_in_school" => "no",
           "kind_of_nursery" => "private_nursery",
@@ -178,23 +156,23 @@ RSpec.describe Services::HandleSubmissionForStore do
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
           "ecf_id" => nil,
-          "trn" => nil,
+          "trn" => "0012345",
           "full_name" => "John Doe",
           "otp_hash" => nil,
+          "provider" => nil,
+          "raw_tra_provider_data" => nil,
+          "uid" => nil,
           "otp_expires_at" => nil,
           "date_of_birth" => 30.years.ago.to_date.to_s,
-          "trn_verified" => false,
-          "trn_lookup_status" => nil,
           "active_alert" => false,
           "get_an_identity_id_synced_to_ecf" => false,
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
+          "trn_lookup_status" => nil,
+          "trn_verified" => false,
           "admin" => false,
           "feature_flag_id" => user.feature_flag_id,
           "super_admin" => false,
-          "provider" => nil,
-          "raw_tra_provider_data" => nil,
-          "uid" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -205,16 +183,16 @@ RSpec.describe Services::HandleSubmissionForStore do
           "email" => user.email,
           "ecf_id" => nil,
           "trn" => "0012345",
-          "full_name" => "Jane Doe",
+          "full_name" => "John Doe",
           "otp_hash" => nil,
           "otp_expires_at" => nil,
-          "date_of_birth" => (30.years.ago + 1.day).to_date.to_s,
-          "trn_verified" => false,
-          "active_alert" => nil,
+          "date_of_birth" => 30.years.ago.to_date.to_s,
+          "active_alert" => false,
           "get_an_identity_id_synced_to_ecf" => false,
           "national_insurance_number" => nil,
           "trn_auto_verified" => false,
-          "trn_lookup_status" => "Found",
+          "trn_verified" => false,
+          "trn_lookup_status" => nil,
           "admin" => false,
           "feature_flag_id" => user.feature_flag_id,
           "super_admin" => false,
@@ -231,17 +209,15 @@ RSpec.describe Services::HandleSubmissionForStore do
           "employment_type" => nil,
           "employment_role" => nil,
           "funding_choice" => nil,
+          "itt_provider" => nil,
+          "lead_mentor" => false,
           "funding_eligiblity_status_code" => "early_years_invalid_npq",
           "headteacher_status" => nil,
           "lead_provider_id" => lead_provider.id,
-          "works_in_nursery" => nil,
-          "itt_provider" => nil,
-          "lead_mentor" => false,
           "kind_of_nursery" => "private_nursery",
           "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
           "school_urn" => nil,
           "targeted_delivery_funding_eligibility" => false,
-
           "teacher_catchment" => "england",
           "teacher_catchment_country" => nil,
           "teacher_catchment_synced_to_ecf" => false,
@@ -251,19 +227,12 @@ RSpec.describe Services::HandleSubmissionForStore do
           "tsf_primary_eligibility" => false,
           "tsf_primary_plus_eligibility" => false,
           "user_id" => user.id,
+          "works_in_nursery" => nil,
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
           "raw_application_data" => store.except("current_user"),
         })
-      end
-    end
-
-    context "when entered trn is shorter than 7 characters" do
-      it "pads by prefixing zeros to 7 characters" do
-        subject.call
-
-        expect(user.reload.trn).to eql("0012345")
       end
     end
 
@@ -309,7 +278,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             )
           end
 
-          it "saves funding choice from the ehco funding choice question instead of the regular path" do
+          it "saves funding choice from the aso funding choice question instead of the regular path" do
             subject.call
             expect(user.applications.first.reload.funding_choice).to eq "trust"
           end
@@ -322,9 +291,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "confirmed_email" => user.email,
-            "trn_verified" => false,
-            "trn" => "12345",
             "course_identifier" => ehco_course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -345,9 +311,6 @@ RSpec.describe Services::HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "confirmed_email" => user.email,
-            "trn_verified" => false,
-            "trn" => "12345",
             "course_identifier" => Course.ehco.first.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
@@ -359,7 +322,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         before do
           mock_previous_funding_api_request(
             course_identifier: "npq-early-headship-coaching-offer",
-            trn: "12345",
+            trn: "0012345",
             response: ecf_funding_lookup_response(previously_funded: false),
           )
         end
@@ -371,12 +334,4 @@ RSpec.describe Services::HandleSubmissionForStore do
       end
     end
   end
-end
-
-before do
-  mock_previous_funding_api_request(
-    course_identifier: course.identifier,
-    trn: "0012345",
-    response: ecf_funding_lookup_response(previously_funded: false),
-  )
 end

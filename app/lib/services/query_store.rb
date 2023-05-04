@@ -29,8 +29,8 @@ class Services::QueryStore
     current_user.trn
   end
 
-  def tsf_funding_amount
-    store["tsf_funding_amount"]
+  def funding_amount
+    store["funding_amount"]
   end
 
   def inside_catchment?

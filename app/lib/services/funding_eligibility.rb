@@ -61,10 +61,10 @@ module Services
           return lead_mentor_eligibility_status
         end
 
+        return NOT_IN_ENGLAND unless inside_catchment?
         return NO_INSTITUTION if institution.nil?
         return PREVIOUSLY_FUNDED if previously_funded?
         return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
-        return NOT_IN_ENGLAND unless inside_catchment?
 
         case institution.class.name
         when "School"

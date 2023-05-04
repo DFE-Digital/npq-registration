@@ -1,16 +1,12 @@
 require "rails_helper"
 
 RSpec.describe ApplicationSubmissionJob do
-  subject { described_class.new(user:, email_template: :ehco_scholarship_funding) }
+  subject { described_class.new(user:, email_template: "b8b53310-fa6f-4587-972a-f3f3c6e0892e") }
 
   describe "#perform" do
-    let(:application) { create(:application, user:, school:) }
+    let!(:application) { create(:application, user:, school:) }
     let(:user) { create(:user, :with_get_an_identity_id) }
     let(:school) { create(:school) }
-
-    before do
-      application
-    end
 
     it "calls correct services" do
       user_finder_double = instance_double(Services::Ecf::EcfUserFinder, call: nil)
@@ -40,6 +36,8 @@ RSpec.describe ApplicationSubmissionJob do
 
       allow(ApplicationSubmissionMailer).to receive(:application_submitted_mail).and_call_original
       expect(ApplicationSubmissionMailer).to receive(:application_submitted_mail).with(
+        "b8b53310-fa6f-4587-972a-f3f3c6e0892e",
+        amount: nil,
         to: user.email,
         full_name: user.full_name,
         provider_name: application.lead_provider.name,

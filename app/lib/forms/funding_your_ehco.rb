@@ -17,7 +17,7 @@ module Forms
     end
 
     def previous_step
-      :ehco_funding_not_available
+      "ehco_funding_not_available"
     end
 
     def question

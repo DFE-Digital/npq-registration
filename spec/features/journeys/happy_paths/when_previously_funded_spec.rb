@@ -72,10 +72,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("You can only receive scholarship funding to study this NPQ with one provider")
-      expect(page).to have_text("If you have previously failed or withdrawn from this course")
-      expect(page).to have_text("You can go back and select a different NPQ")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("already been allocated scholarship funding for")
 
       page.click_link("Back")
     end
@@ -100,15 +98,14 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ehco-previously-funded", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("You can only receive scholarship funding to study this offer with one provider")
-      expect(page).to have_text("If you have previously withdrawn from this offer")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("You would need to pay for the EHCO if you were previously funded but you withdrew")
 
       page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      expect(page).to have_text("How is the Early Headship Coaching Offer being paid for?")
+      expect(page).to have_text("How is the Early headship coaching offer being paid for?")
       page.choose "I am paying", visible: :all
     end
 
@@ -196,23 +193,29 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
-        "ehco_funding_choice" => "self",
-        "ehco_headteacher" => "yes",
-        "ehco_new_headteacher" => "yes",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "email_template" => "already_funded_not_elgible_ehco_funding",
+        "ehco_funding_choice" => "self",
+        "ehco_headteacher" => "yes",
+        "ehco_new_headteacher" => "yes",
+        "funding_eligiblity_status_code" => "previously_funded",
+        "funding_amount" => nil,
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => js ? "" : "EY123456",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "work_setting" => "early_years_or_childcare",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",
-        "work_setting" => "early_years_or_childcare",
       },
     )
   end

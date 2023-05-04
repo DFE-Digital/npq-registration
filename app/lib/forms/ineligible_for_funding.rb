@@ -23,10 +23,6 @@ module Forms
       :choose_your_npq
     end
 
-    def after_save
-      wizard.store["email_template"] = ineligible_template
-    end
-
     def ineligible_template
       @ineligible_template ||= case funding_eligiblity_status_code
                                when Services::FundingEligibility::NOT_IN_ENGLAND
@@ -57,7 +53,15 @@ module Forms
     end
 
     def funding_eligiblity_status_code
-      wizard.query_store.funding_eligiblity_status_code
+      @funding_eligiblity_status_code ||= Services::FundingEligibility.new(
+        course:,
+        institution:,
+        approved_itt_provider: approved_itt_provider?,
+        inside_catchment: inside_catchment?,
+        new_headteacher: new_headteacher?,
+        trn: wizard.query_store.trn,
+        get_an_identity_id: wizard.query_store.get_an_identity_id,
+      ).funding_eligiblity_status_code
     end
 
     def tsf_elgible?
@@ -66,6 +70,11 @@ module Forms
         wizard.query_store.tsf_primary_plus_eligibility?
     end
 
-    delegate :course, :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
+    delegate :course,
+             :lead_provider,
+             :new_headteacher?,
+             :inside_catchment?,
+             :approved_itt_provider?,
+             to: :query_store
   end
 end

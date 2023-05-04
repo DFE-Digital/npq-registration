@@ -17,7 +17,7 @@ module Services
           school_urn:,
           ukprn:,
           headteacher_status:,
-          eligible_for_funding: funding_eligibility,
+          eligible_for_funding: eligible_for_funding?,
           funding_eligiblity_status_code:,
           funding_choice:,
           teacher_catchment: store["teacher_catchment"],
@@ -126,7 +126,7 @@ module Services
       # It is possible that the applicant had chosen a non-funded path and selected a funding choice
       # before going back a few steps and choosing a funded route. We should clear the funding choice
       # to nil here to reduce confusion
-      if funding_eligibility
+      if eligible_for_funding?
         nil
       elsif course.ehco?
         store["ehco_funding_choice"]
@@ -179,29 +179,31 @@ module Services
       funding_eligibility_service.funded?
     end
 
-    def funding_eligibility
-      eligible_for_funding?
-    end
-
     def email_template
+      Services::EmailTemplateLookup.call(store["email_template"])
       store["email_template"]
     end
 
     def targeted_delivery_funding_eligibility
-      store["targeted_delivery_funding_eligibility"] && !previously_received_targeted_funding_support?
+      targeted_funding[:targeted_delivery_funding] && !previously_received_targeted_funding_support?
     end
 
     def tsf_primary_eligibility
-      store["tsf_primary_eligibility"]
+      targeted_funding[:tsf_primary_eligibility]
     end
 
     def tsf_primary_plus_eligibility
-      store["tsf_primary_plus_eligibility"]
+      targeted_funding[:tsf_primary_plus_eligibility]
+    end
+
+    def targeted_funding
+      @targeted_funding ||= targeted_funding
     end
 
     delegate :ineligible_institution_type?,
              :funding_eligiblity_status_code,
              :previously_received_targeted_funding_support?,
+             :targeted_funding,
              to: :funding_eligibility_service
 
     def new_headteacher?

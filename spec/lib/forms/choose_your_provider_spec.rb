@@ -206,6 +206,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         "works_in_school" => works_in_school,
       }
     end
+
     let(:wizard) do
       RegistrationWizard.new(
         current_step:,
@@ -214,6 +215,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
         current_user: create(:user),
       )
     end
+
     let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
 
     before do

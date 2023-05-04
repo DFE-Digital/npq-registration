@@ -1,11 +1,9 @@
 <h1 class="govuk-heading-xl">Funding eligibility</h1>
 
-<p class="govuk-body">
-  You’re eligible for scholarship funding for the <%= course_name %> NPQ.
-  <br>
-  This means that you will not have to pay for the course fees.
-  <br>
-  Your workplace is also eligible for targeted support funding.
-  <br>
-  They’ll receive £<%= amount %> to support you to do this NPQ.
-</p>
+<p class="govuk-body">You’re eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %>.</p>
+
+<p class="govuk-body">This means that you will not have to pay for the course fees.</p>
+
+<p class="govuk-body">Your workplace is also eligible for targeted support funding.</p>
+
+<p class="govuk-body">They’ll receive £<%= funding_amount %> to support you to do this NPQ.</p>

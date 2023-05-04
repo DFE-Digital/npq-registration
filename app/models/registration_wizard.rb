@@ -20,13 +20,13 @@ class RegistrationWizard
     qualified_teacher_check
     dqt_mismatch
     npqh_status
-    aso_unavailable
-    aso_headteacher
-    aso_new_headteacher
-    aso_funding_not_available
-    aso_previously_funded
-    aso_possible_funding
-    funding_your_aso
+    ehco_unavailable
+    ehco_headteacher
+    ehco_new_headteacher
+    ehco_funding_not_available
+    ehco_previously_funded
+    ehco_possible_funding
+    funding_your_ehco
     itt_provider
     choose_your_npq
     choose_your_provider

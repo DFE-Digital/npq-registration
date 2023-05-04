@@ -7,12 +7,12 @@
 <h1 class="govuk-heading-xl">Funding eligibility</h1>
 
 <p class="govuk-body">
-You’re not eligible for scholarship funding for the <b><%= localise_sentence_embedded_course_name(course) %></b>
+You’re not eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %>
 as you do not work in one of the eligible settings, such as state-funded schools.
-<br>
-This means that you would need to pay for this course another way.
-<br>
-However, you are elgible for scholarship funding for the <%= course_short_code(npqeyl) %>.
-<br>
-You can go back and select the <%= course_short_code(npqeyl) %> instead.
 </p>
+
+<p class="govuk-body">This means that you would need to pay for the course another way.</p>
+
+<p class="govuk-body">However, you are eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqeyl) %>.</p>
+
+<p class="govuk-body">You can <a href="<%= registration_wizard_show_path(@wizard.previous_step_path) %>" class="govuk-skip-link">go back and select the <%= localise_sentence_embedded_course_name(npqeyl) %></a> instead.</p>

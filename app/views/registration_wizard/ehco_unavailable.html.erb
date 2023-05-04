@@ -1,0 +1,19 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl" >Funding eligibility</h1>
+
+  <p class="govuk-body">
+    You’re not eligible for the scholarship funding for <%= localise_sentence_embedded_course_name(Course.ehco.first) %>.
+  </p>
+
+  <p class="govuk-body">
+    This means that you would need to pay for the EHCO another way.
+  </p>
+<% end %>
+
+
