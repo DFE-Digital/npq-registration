@@ -242,6 +242,7 @@ en:
         aso_unavailable: "You cannot register for the Early headship coaching offer"
         choose_your_npq: "Choose an NPQ"
         npqh_status: "Eligibility for the Early headship coaching offer"
+        change_dqt: "Change your details on the Teaching Regulation Agency records"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
