@@ -1,34 +1,27 @@
-<% content_for :title do %>
-  Check your answers and confirm
-<% end %>
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">Check your answers and confirm</h1>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Check your answers and confirm</h1>
-
-    <%= render GovukComponent::SummaryListComponent.new do |component|
-          @wizard.answers.each do |answer|
-            component.row do |row|
-              row.key { answer.key }
-              row.value { answer.value }
-              row.action(
-                text: 'Change',
-                visually_hidden_text: answer.key,
-                href: "/registration/#{answer.change_step.to_s.dasherize}/change",
-              )
-            end
+  <%= render GovukComponent::SummaryListComponent.new do |component|
+        @wizard.answers.each do |answer|
+          component.row do |row|
+            row.key { answer.key }
+            row.value { answer.value }
+            row.action(
+              text: 'Change',
+              visually_hidden_text: answer.key,
+              href: "/registration/#{answer.change_step.to_s.dasherize}/change",
+            )
           end
-    end %>
+        end
+  end %>
 
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_submit "Submit" %>
-    <% end %>
-  </div>
-</div>
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit "Submit" %>
+  <% end %>
+<% end %>
