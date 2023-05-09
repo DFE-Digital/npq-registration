@@ -307,6 +307,7 @@ private
       your_role
       your_employer
       school_not_in_england
+      childcare_provider_not_in_england
       possible_funding
       ineligible_for_funding
       funding_your_npq
