@@ -9,7 +9,7 @@
         text: "Your initial registration is complete"
       },
       body: {
-        text: "You’ve registered for an <strong>#{@form.course.name}</strong> with <strong>#{@form.lead_provider.name}</strong>".html_safe,
+        text: "You’ve registered for an <strong>#{localise_course_name(@form.course)}</strong> with <strong>#{@form.lead_provider.name}</strong>".html_safe,
         classes: ["govuk-!-font-size-19"]
       }
     ) %>
