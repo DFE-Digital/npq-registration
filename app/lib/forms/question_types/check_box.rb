@@ -6,6 +6,7 @@ module Forms
           size: "xl",
           tag: "h1",
         }.freeze,
+        hint: nil,
       }.freeze
 
       attr_reader :checked_value, :unchecked_value, :required, :body
