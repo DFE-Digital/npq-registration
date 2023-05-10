@@ -24,7 +24,7 @@
 
         <% if @form.course %>
           <p class="govuk-body">
-            These are the training providers who provide <b><%= @form.course.name %></b>. Providers may have different entry requirements.
+            These are the training providers who provide <b><%= localise_course_name(@form.course) %></b>. Providers may have different entry requirements.
           </p>
         <% end %>
 
