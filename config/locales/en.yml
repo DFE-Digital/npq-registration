@@ -234,6 +234,19 @@ en:
         status_comment: "Status Comment"
         message: "Message"
 
+  course:
+    identifier: &course_identifiers
+      "npq-leading-teaching": "Leading teaching"
+      "npq-leading-behaviour-culture": "Leading behaviour and culture"
+      "npq-leading-teaching-development": "Leading teacher development"
+      "npq-senior-leadership": "Senior leadership"
+      "npq-headship": "Headship"
+      "npq-executive-leadership": "Executive leadership"
+      "npq-additional-support-offer": "Additional Support Offer"
+      "npq-early-headship-coaching-offer": "Early headship coaching offer"
+      "npq-early-years-leadership": "Early years leadership"
+      "npq-leading-literacy": "Leading literacy"
+
   helpers:
     title:
       registration_wizard:
@@ -299,17 +312,7 @@ en:
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
 
-        course_identifier_options:
-          "npq-leading-teaching": "Leading teaching"
-          "npq-leading-behaviour-culture": "Leading behaviour and culture"
-          "npq-leading-teaching-development": "Leading teacher development"
-          "npq-senior-leadership": "Senior leadership"
-          "npq-headship": "Headship"
-          "npq-executive-leadership": "Executive leadership"
-          "npq-additional-support-offer": "Additional Support Offer"
-          "npq-early-headship-coaching-offer": "Early headship coaching offer"
-          "npq-early-years-leadership": "Early years leadership"
-          "npq-leading-literacy": "Leading literacy"
+        course_identifier_options: *course_identifiers
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"

@@ -95,8 +95,7 @@ RSpec.feature "Happy journeys", type: :feature do
     ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
 
     ineligible_courses = ineligible_courses_list.map { |name|
-      I18n
-        .t("helpers.label.registration_wizard.course_identifier_options.#{name}")
+      I18n.t("course.identifier.#{name}")
     } - eyl_course
 
     ineligible_courses.each do |course|

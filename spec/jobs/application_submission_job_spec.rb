@@ -36,10 +36,7 @@ RSpec.describe ApplicationSubmissionJob do
       expect(Services::Ecf::EcfUserCreator).to receive(:new).and_return(user_creator_double)
       expect(Services::Ecf::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
 
-      localised_course_name = I18n.t(
-        application.course.identifier,
-        scope: "helpers.label.registration_wizard.course_identifier_options"
-      )
+      localised_course_name = I18n.t(application.course.identifier, scope: "course.identifier")
 
       allow(ApplicationSubmissionMailer).to receive(:application_submitted_mail).and_call_original
       expect(ApplicationSubmissionMailer).to receive(:application_submitted_mail).with(
