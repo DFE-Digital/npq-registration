@@ -226,7 +226,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       end
 
       it "returns :possible_funding" do
-        expect(subject.previous_step).to eql(:possible_funding)
+        expect(subject.previous_step).to be(:possible_funding)
       end
     end
 
@@ -238,7 +238,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       end
 
       it "returns :funding_your_npq" do
-        expect(subject.previous_step).to eql(:funding_your_npq)
+        expect(subject.previous_step).to be(:funding_your_npq)
       end
     end
 
@@ -246,7 +246,7 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       let(:works_in_school) { "no" }
 
       it "returns :funding_your_npq" do
-        expect(subject.previous_step).to eql(:funding_your_npq)
+        expect(subject.previous_step).to be(:funding_your_npq)
       end
     end
   end

@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Services::Admin::ApplicationsSearch do
+  subject { described_class.new(q:) }
+
   let!(:application) { create(:application) }
   let!(:user) { application.user }
-
-  subject { described_class.new(q:) }
 
   describe "#call" do
     context "when partial email match" do

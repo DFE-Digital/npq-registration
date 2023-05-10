@@ -1,4 +1,4 @@
-RSpec.shared_context("Stub previously funding check for all courses") do
+RSpec.shared_context("Stub previously funding check for all courses") do # rubocop:disable RSpec/ContextWording:
   let(:api_call_get_an_identity_id) { raise NotImplementedError }
   let(:api_call_trn) { raise NotImplementedError }
 

@@ -88,9 +88,17 @@ module Services
       end
     end
 
-    def eligible_for_targeted_delivery_funding?
-      course_and_institution_eligible_for_targeted_delivery_funding? &&
-        !previously_received_targeted_funding_support? # Check last as it involves an API call
+    def targeted_funding
+      @targeted_funding ||= Services::Eligibility::TargetedFunding.new(
+        institution:,
+        course:,
+        employment_role:,
+      ).call
+    end
+
+    def previously_received_targeted_funding_support?
+      # This makes an api call so limit usage
+      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
     end
 
     def ineligible_institution_type?
@@ -107,14 +115,6 @@ module Services
       else
         NOT_LEAD_MENTOR_COURSE
       end
-    end
-
-    def course_and_institution_eligible_for_targeted_delivery_funding?
-      @course_and_institution_eligible_for_targeted_delivery_funding ||= Services::Eligibility::TargetedDeliveryFunding.new(
-        institution:,
-        course:,
-        employment_role:,
-      ).call
     end
 
     def inside_catchment?
@@ -182,10 +182,6 @@ module Services
 
     def previously_funded?
       ecf_api_funding_lookup["previously_funded"] == true
-    end
-
-    def previously_received_targeted_funding_support?
-      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
     end
   end
 end

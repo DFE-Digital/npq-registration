@@ -30,6 +30,7 @@ RSpec.describe Services::Importers::LocalAuthorities do
 
     context "when incorrect headers" do
       subject { described_class.new(path_to_csv: file.path) }
+
       let(:file) { Tempfile.new("test.csv") }
 
       before do

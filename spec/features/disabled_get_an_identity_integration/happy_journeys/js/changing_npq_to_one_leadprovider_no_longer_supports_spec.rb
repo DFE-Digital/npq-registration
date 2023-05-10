@@ -168,7 +168,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).to_not have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
+      expect(page).not_to have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
       page.choose("Teacher Development Trust", visible: :all)
     end
 
@@ -202,13 +202,13 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -218,12 +218,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => true,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => nil,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -244,6 +244,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => nil,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => true,
       "works_in_nursery" => nil,
       "works_in_school" => false,
@@ -270,6 +274,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
+        "trn_lookup_status" => "Found",
         "verified_trn" => "1234567",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",

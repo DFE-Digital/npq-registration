@@ -1,4 +1,12 @@
-<h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
+  </div>
+
+  <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+    <%= yield %>
+  </div>
+</div>
 
 <%= render SubnavComponent.new do |component| %>
   <%= component.nav_item(path: admin_path) do %>
@@ -23,6 +31,16 @@
 
   <%= component.nav_item(path: admin_schools_path) do %>
     <%= t(".schools") %>
+  <% end %>
+
+  <%= component.nav_item(path: admin_webhook_messages_path) do %>
+    <%= t(".webhook_messages") %>
+  <% end %>
+
+  <% if current_user.super_admin? %>
+    <%= component.nav_item(path: admin_admins_path) do %>
+      <%= t(".admins") %>
+    <% end %>
   <% end %>
 
   <% if current_user.flipper_access? %>

@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true
 
+  scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
 
@@ -13,6 +14,10 @@ class User < ApplicationRecord
     where.not(uid: nil)
          .where(provider: "tra_openid_connect")
   }
+
+  def self.find_by_get_an_identity_id(get_an_identity_id)
+    with_get_an_identity_id.find_by(uid: get_an_identity_id)
+  end
 
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
@@ -33,9 +38,11 @@ class User < ApplicationRecord
       email: provider_data.info.email,
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
+      trn_lookup_status: provider_data.info.trn_lookup_status,
       trn_verified: trn.present?,
       full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
+      updated_from_tra_at: Time.zone.now,
     )
 
     user_from_provider_data.tap(&:save)
@@ -53,12 +60,20 @@ class User < ApplicationRecord
       uid: provider_data.uid,
       date_of_birth: provider_data.info.date_of_birth,
       trn:,
+      trn_lookup_status: provider_data.info.trn_lookup_status,
       trn_verified: trn.present?,
       full_name: provider_data.info.name,
       raw_tra_provider_data: provider_data,
+      updated_from_tra_at: Time.zone.now,
     )
 
     user_from_provider_data.tap(&:save)
+  end
+
+  def get_an_identity_user
+    return if get_an_identity_id.blank?
+
+    External::GetAnIdentity::User.find(get_an_identity_id)
   end
 
   def ecf_user
@@ -103,7 +118,7 @@ class User < ApplicationRecord
 
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
-    admin? && flipper_admin_access?
+    admin? && super_admin?
   end
 
   def get_an_identity_integration_active?

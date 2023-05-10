@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Forms::RegistrationInterestNotification, type: :model do
   let(:existing_registration) { FactoryBot.create(:registration_interest) }
+
   before do
     subject { described_class.new }
   end

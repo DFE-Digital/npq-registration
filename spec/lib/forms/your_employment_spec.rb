@@ -26,7 +26,7 @@ RSpec.describe Forms::YourEmployment, type: :model do
         let(:employment_type) { employment_value }
 
         it "returns your_role" do
-          expect(subject.next_step).to eql(:your_role)
+          expect(subject.next_step).to be(:your_role)
         end
       end
     end
@@ -35,7 +35,7 @@ RSpec.describe Forms::YourEmployment, type: :model do
       let(:employment_type) { "lead_mentor_for_accredited_itt_provider" }
 
       it "returns itt_provider" do
-        expect(subject.next_step).to eql(:itt_provider)
+        expect(subject.next_step).to be(:itt_provider)
       end
     end
   end

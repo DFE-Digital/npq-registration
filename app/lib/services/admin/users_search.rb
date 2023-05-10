@@ -25,6 +25,6 @@ class Services::Admin::UsersSearch
 private
 
   def default_scope
-    User.left_joins(:applications)
+    User.left_joins(:applications).order(email: :asc)
   end
 end

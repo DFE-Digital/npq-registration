@@ -29,6 +29,7 @@ RSpec.shared_context("Enable Get An Identity integration") do
         "email_verified" => true,
         "trn" => user_trn,
         "name" => user_full_name,
+        "trn_lookup_status" => "Found",
       },
       "credentials" => {
         "token" => SecureRandom.uuid,
@@ -45,6 +46,7 @@ RSpec.shared_context("Enable Get An Identity integration") do
           "trn" => user_trn,
           "given_name" => user_first_name,
           "family_name" => user_last_name,
+          "trn_lookup_status" => "Found",
         },
       },
     }

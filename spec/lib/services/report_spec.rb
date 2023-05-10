@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Services::Report do
   let(:number_of_rows) { 3 }
+
   before { create_list(:application, number_of_rows, school: nil) }
 
   describe "#call" do
@@ -29,7 +30,6 @@ RSpec.describe Services::Report do
         works_in_childcare
         kind_of_nursery
         private_childcare_provider_urn
-        cohort
         school_urn
         school_name
         establishment_type_name
@@ -38,6 +38,7 @@ RSpec.describe Services::Report do
         school_postcode
         course_name
         provider_name
+        employment_type
       ]
 
       csv_headers = CSV.parse(subject.call).first

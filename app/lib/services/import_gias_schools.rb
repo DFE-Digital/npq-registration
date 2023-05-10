@@ -34,6 +34,8 @@ module Services
         case field_info.header
         when "TypeOfEstablishment (code)"
           value.to_i
+        when "PhaseOfEducation (code)"
+          value.to_i
         when "CloseDate", "LastChangedDate"
           Date.parse(value) if value.present?
         else
@@ -55,6 +57,9 @@ module Services
 
         establishment_type_code: row["TypeOfEstablishment (code)"],
         establishment_type_name: row["TypeOfEstablishment (name)"],
+
+        phase_type: row["PhaseOfEducation (code)"],
+        phase_name: row["PhaseOfEducation (name)"],
 
         close_date: row["CloseDate"],
         ukprn: row["UKPRN"],

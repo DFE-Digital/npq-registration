@@ -160,20 +160,20 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(User.count).to eql(1)
-    expect(Application.count).to eql(1)
+    expect(User.count).to be(1)
+    expect(Application.count).to be(1)
 
     visit "/"
     visit "/registration/confirmation"
-    expect(page.current_path).to eql("/")
+    expect(page).to have_current_path("/")
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -183,12 +183,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "0012345",
       "trn_auto_verified" => true,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => nil,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
@@ -209,6 +209,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => 100,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
@@ -233,6 +237,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
+        "trn_lookup_status" => "Found",
         "verified_trn" => "12345",
         "works_in_school" => "yes",
         "works_in_childcare" => "no",

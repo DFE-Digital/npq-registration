@@ -149,22 +149,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       it "must be a valid date" do
         subject.date_of_birth = { 3 => 1, 2 => 13, 1 => 1990 }
         subject.valid?
-        expect(subject.errors.of_kind?(:date_of_birth, :invalid)).to be_truthy
+        expect(subject.errors).to be_of_kind(:date_of_birth, :invalid)
 
         subject.date_of_birth = { 3 => 1, 2 => 12, 1 => 1990 }
         subject.valid?
-        expect(subject.errors.of_kind?(:date_of_birth, :invalid)).to be_falsey
+        expect(subject.errors).not_to be_of_kind(:date_of_birth, :invalid)
       end
     end
   end
 
   describe "#next_step" do
-    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
-    let(:request) { nil }
-    let(:store) do
-      { "teacher_catchment" => "england" }
-    end
-
     subject do
       described_class.new(
         trn: "RP12/34567",
@@ -172,6 +166,12 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
       )
+    end
+
+    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
+    let(:request) { nil }
+    let(:store) do
+      { "teacher_catchment" => "england" }
     end
 
     before do
@@ -191,7 +191,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "marks trn_verified as truthy" do
         subject.next_step
-        expect(subject.trn_verified?).to be_truthy
+        expect(subject).to be_trn_verified
       end
 
       context "when user selected they work in a school" do
@@ -200,7 +200,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         end
 
         it "returns :find_school" do
-          expect(subject.next_step).to eql(:find_school)
+          expect(subject.next_step).to be(:find_school)
         end
       end
 
@@ -210,7 +210,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         end
 
         it "returns :choose_your_npq" do
-          expect(subject.next_step).to eql(:your_employment)
+          expect(subject.next_step).to be(:your_employment)
         end
       end
     end
@@ -227,12 +227,12 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "returns :dqt_mismatch" do
-        expect(subject.next_step).to eql(:dqt_mismatch)
+        expect(subject.next_step).to be(:dqt_mismatch)
       end
 
       it "marks trn_verified as falsey" do
         subject.next_step
-        expect(subject.trn_verified?).to be_falsey
+        expect(subject).not_to be_trn_verified
       end
     end
 
@@ -244,12 +244,12 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "returns :dqt_mismatch" do
-        expect(subject.next_step).to eql(:dqt_mismatch)
+        expect(subject.next_step).to be(:dqt_mismatch)
       end
 
       it "marks trn_verified as falsey" do
         subject.next_step
-        expect(subject.trn_verified?).to be_falsey
+        expect(subject).not_to be_trn_verified
       end
 
       it "notifies sentry" do
@@ -261,6 +261,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   end
 
   describe "#after_save" do
+    subject do
+      described_class.new(
+        trn: "1234567",
+        full_name: "John Doe",
+        date_of_birth: Date.parse("1960-12-13"),
+        national_insurance_number: "AB123456C",
+        wizard:,
+      )
+    end
+
     let(:store) { {} }
     let(:request) { nil }
 
@@ -270,16 +280,6 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         store:,
         request:,
         current_user: create(:user),
-      )
-    end
-
-    subject do
-      described_class.new(
-        trn: "1234567",
-        full_name: "John Doe",
-        date_of_birth: Date.parse("1960-12-13"),
-        national_insurance_number: "AB123456C",
-        wizard:,
       )
     end
 
@@ -298,7 +298,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "persists to store" do
         subject.after_save
-        expect(wizard.store["active_alert"]).to eql(false)
+        expect(wizard.store["active_alert"]).to be(false)
       end
     end
 
@@ -317,7 +317,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "persists to store" do
         subject.after_save
-        expect(wizard.store["active_alert"]).to eql(true)
+        expect(wizard.store["active_alert"]).to be(true)
       end
     end
 
@@ -336,8 +336,8 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "persists to store" do
         subject.after_save
-        expect(wizard.store["trn_verified"]).to eql(true)
-        expect(wizard.store["trn_auto_verified"]).to eql(true)
+        expect(wizard.store["trn_verified"]).to be(true)
+        expect(wizard.store["trn_auto_verified"]).to be(true)
         expect(wizard.store["verified_trn"]).to eql("1234567")
       end
     end
@@ -357,8 +357,8 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "persists to store" do
         subject.after_save
-        expect(wizard.store["trn_verified"]).to eql(true)
-        expect(wizard.store["trn_auto_verified"]).to eql(true)
+        expect(wizard.store["trn_verified"]).to be(true)
+        expect(wizard.store["trn_auto_verified"]).to be(true)
         expect(wizard.store["verified_trn"]).to eql("1111111")
       end
     end
@@ -378,7 +378,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
       it "persists to store" do
         subject.after_save
-        expect(wizard.store["trn_verified"]).to eql(false)
+        expect(wizard.store["trn_verified"]).to be(false)
         expect(wizard.store["trn_auto_verified"]).to be_falsey
       end
     end

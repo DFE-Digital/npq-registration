@@ -27,12 +27,6 @@ module Services
             identifier: hash[:identifier],
           )
 
-          if hash[:default_cohort].present?
-            course.update!(
-              default_cohort: hash[:default_cohort],
-            )
-          end
-
           unless silent
             Rails.logger.info("Course #{course.identifier} updated:")
             Rails.logger.info(JSON.pretty_generate(course.as_json))

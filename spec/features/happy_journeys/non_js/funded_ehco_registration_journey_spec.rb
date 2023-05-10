@@ -72,26 +72,20 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Early headship coaching offer")
     end
 
-    expect_page_to_have(path: "/registration/about-ehco", submit_form: false) do
-      expect(page).to have_selector "h1", text: "Early Headship Coaching Offer"
-
-      click_link("Continue")
-    end
-
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
       page.choose "None of the above"
     end
 
     expect_page_to_have(path: "/registration/aso-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early Headship Coaching Offer"
+      expect(page).to have_selector "h1", text: "You cannot register for the Early headship coaching offer"
 
       page.click_link("Back")
     end
 
     expect_page_to_have(path: "/registration/npqh-status", submit_form: true) do
-      expect(page).to have_selector "h1", text: "Are you studying for, or have you completed a Headship?"
-      page.choose "I have completed an NPQH"
+      expect(page).to have_selector "h1", text: "What stage are you at with the Headship NPQ?"
+      page.choose "I’ve completed it"
     end
 
     expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
@@ -130,34 +124,34 @@ RSpec.feature "Happy journeys", type: :feature do
           "Workplace" => "open manchester school",
           "Are you a headteacher?" => "Yes",
           "Are you in your first 5 years of a headship?" => "Yes",
-          "Have you completed an NPQH?" => "I have completed an NPQH",
+          "Have you completed an NPQH?" => "I’ve completed it",
         },
       )
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).not_to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(User.count).to eql(1)
-    expect(User.last.applications.count).to eql(1)
+    expect(User.count).to be(1)
+    expect(User.last.applications.count).to be(1)
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("Early Headship Coaching Offer")
+      expect(page).to have_text("Early headship coaching offer")
     end
 
     visit "/registration/check-answers"
-    expect(page.current_path).to eql("/")
+    expect(page).to have_current_path("/")
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -167,12 +161,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => "1234567",
       "trn_auto_verified" => false,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
@@ -193,6 +187,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => nil,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,

@@ -3,13 +3,13 @@ require "rails_helper"
 RSpec.describe Forms::PossibleFunding do
   describe "#next_step" do
     it "returns choose_your_provider" do
-      expect(subject.next_step).to eql(:choose_your_provider)
+      expect(subject.next_step).to be(:choose_your_provider)
     end
   end
 
   describe "#previous_step" do
     it "returns choose_your_npq" do
-      expect(subject.previous_step).to eql(:choose_your_npq)
+      expect(subject.previous_step).to be(:choose_your_npq)
     end
   end
 

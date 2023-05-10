@@ -162,16 +162,16 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to_not have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).not_to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -181,12 +181,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => "1234567",
       "trn_auto_verified" => false,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -207,6 +207,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => nil,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,

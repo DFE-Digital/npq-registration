@@ -5,15 +5,9 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-xl">You cannot register for the Early Headship Coaching Offer</h1>
+  <h1 class="govuk-heading-xl">You cannot register for the Early headship coaching offer</h1>
 
-  <p class="govuk-body">You do not meet the eligibility criteria for taking the Early Headship Coaching Offer.</p>
+  <p class="govuk-body">To be eligible for the Early headship coaching offer you need to do the Headship NPQ.</p>
 
-  <p class="govuk-body">You can only register if you meet one of the following criteria:</p>
-
-  <ul class="govuk-list govuk-list--bullet">
-    <li>have completed an NPQH</li>
-    <li>are studying for an NPQH</li>
-    <li>are about to start an NPQH</li>
-  </ul>
+  <p class="govuk-body">Go back if you want to <%= govuk_link_to("register for the Headship NPQ", registration_wizard_show_path(:choose_your_npq)) %>.</p>
 <% end %>

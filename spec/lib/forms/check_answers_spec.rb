@@ -91,7 +91,7 @@ RSpec.describe Forms::CheckAnswers do
 
           user.reload
 
-          expect(user.trn_auto_verified).to eql(false)
+          expect(user.trn_auto_verified).to be(false)
         end
       end
     end
@@ -99,7 +99,7 @@ RSpec.describe Forms::CheckAnswers do
 
   describe "#previous_step" do
     it "goes to share_provider" do
-      expect(subject.previous_step).to eql(:share_provider)
+      expect(subject.previous_step).to be(:share_provider)
     end
   end
 end

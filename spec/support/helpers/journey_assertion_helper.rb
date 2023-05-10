@@ -7,7 +7,7 @@ module Helpers
     end
 
     def expect_page_to_have(path:, submit_form: false, click_continue: false, submit_button_text: "Continue", axe_check: true, &block)
-      expect(page.current_path).to eql(path)
+      expect(page).to have_current_path(path)
 
       if axe_check && Capybara.current_driver != :rack_test
         expect(page).to(be_axe_clean)

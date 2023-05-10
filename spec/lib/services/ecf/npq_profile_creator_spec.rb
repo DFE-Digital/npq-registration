@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::NpqProfileCreator do
+  subject { described_class.new(application:) }
+
   let(:user) do
     User.create!(
       email: "john.doe@example.com",
@@ -28,7 +30,6 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       headteacher_status: "no",
       eligible_for_funding: true,
       funding_choice: "trust",
-      cohort: 2022,
       targeted_delivery_funding_eligibility: true,
       works_in_childcare: false,
       kind_of_nursery: nil,
@@ -43,8 +44,6 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       employer_name: SecureRandom.uuid,
     )
   end
-
-  subject { described_class.new(application:) }
 
   describe "#call" do
     let(:request_body) do
@@ -86,7 +85,6 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
             employer_name: application.employer_name,
             employment_role: application.employment_role,
             employment_type: application.employment_type,
-            cohort: 2022,
             targeted_delivery_funding_eligibility: true,
             works_in_childcare: false,
             kind_of_nursery: nil,
@@ -197,7 +195,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
         it "does not set application.ecf_id " do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-          }.to_not change(application, :ecf_id)
+          }.not_to change(application, :ecf_id)
         end
 
         it "creates a EcfSyncRequestLog with status :failed" do
@@ -236,7 +234,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       it "does not set application.ecf_id " do
         expect {
           begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
-        }.to_not change(application, :ecf_id)
+        }.not_to change(application, :ecf_id)
       end
 
       it "creates a EcfSyncRequestLog with status :failed" do

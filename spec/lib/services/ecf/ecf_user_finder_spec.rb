@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Services::Ecf::EcfUserFinder do
-  let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe") }
-
   subject { described_class.new(user:) }
+
+  let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe") }
 
   describe "#call" do
     before do

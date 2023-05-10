@@ -146,10 +146,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to have_text("The Early Headship Coaching Offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
-    expect(User.count).to eql(1)
+    expect(User.count).to be(1)
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -159,7 +159,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.trn_auto_verified).to be_truthy
       expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
       expect(user.national_insurance_number).to be_blank
-      expect(user.applications.count).to eql(1)
+      expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to be_falsey
@@ -178,13 +178,13 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_content("Before you start")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -194,12 +194,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => true,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => nil,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -218,6 +218,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => nil,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "itt_provider" => nil,
       "lead_mentor" => false,
       "works_in_childcare" => false,
@@ -245,6 +249,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_auto_verified" => true,
         "trn_knowledge" => "yes",
         "trn_verified" => true,
+        "trn_lookup_status" => "Found",
         "verified_trn" => "1234567",
         "works_in_school" => "yes",
         "works_in_childcare" => "no",

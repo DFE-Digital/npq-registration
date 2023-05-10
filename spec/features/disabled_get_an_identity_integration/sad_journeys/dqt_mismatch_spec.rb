@@ -168,13 +168,13 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
+      "super_admin" => false,
       "full_name" => "John Doeeeeee",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => "AB123456C",
@@ -184,12 +184,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_tra_provider_data" => nil,
       "trn" => "1234567",
       "trn_auto_verified" => false,
+      "trn_lookup_status" => "Failed",
       "trn_verified" => false,
       "uid" => nil,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -210,6 +210,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => nil,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_nursery" => nil,
       "works_in_childcare" => false,
       "works_in_school" => true,
@@ -235,6 +239,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "trn_auto_verified" => nil,
         "trn_knowledge" => "yes",
         "trn_verified" => false,
+        "trn_lookup_status" => "Failed",
         "verified_trn" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",

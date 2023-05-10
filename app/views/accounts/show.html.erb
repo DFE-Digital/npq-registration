@@ -6,7 +6,7 @@
       <% current_user.applications.each do |application| %>
         <% component.row do |row|
              row.key { 'Course' }
-             row.value { application.course.name }
+             row.value { localise_course_name(application.course) }
           end %>
 
         <% component.row do |row|

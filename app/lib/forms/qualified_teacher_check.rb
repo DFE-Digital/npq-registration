@@ -107,6 +107,11 @@ module Forms
       @trn_verified
     end
 
+    def trn_lookup_status
+      # This mimics the lookup status that the get an identity service would give
+      trn_verified? ? "Found" : "Failed"
+    end
+
     def trn_auto_verified?
       @trn_auto_verified
     end
@@ -117,6 +122,7 @@ module Forms
 
     def after_save
       wizard.store["trn_verified"] = trn_verified?
+      wizard.store["trn_lookup_status"] = trn_lookup_status
       wizard.store["trn_auto_verified"] = trn_auto_verified?
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?

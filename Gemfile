@@ -15,6 +15,7 @@ gem "flipper-active_record", "~> 0.28.0"
 gem "flipper-ui", "~> 0.28.0"
 gem "govuk-components"
 gem "govuk_design_system_formbuilder"
+gem "httparty", "~> 0.21"
 gem "iconv"
 gem "jbuilder"
 gem "json_api_client"
@@ -27,7 +28,7 @@ gem "omniauth-rails_csrf_protection"
 gem "pagy"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
-gem "puma", "~> 6.1"
+gem "puma", "~> 6.2"
 gem "rack-attack"
 gem "rails", "~> 6.1.7"
 gem "secure_headers"
@@ -46,7 +47,7 @@ group :development, :test do
   gem "capybara"
   gem "dotenv-rails"
   gem "pry-byebug"
-  gem "rspec-rails", "~> 6.0.1"
+  gem "rspec-rails", "~> 6.0.2"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
 end
@@ -60,6 +61,7 @@ end
 
 group :test do
   gem "factory_bot_rails"
+  gem "faker"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov", require: false
   gem "site_prism"

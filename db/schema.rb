@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_20_114340) do
+ActiveRecord::Schema.define(version: 2023_04_14_121939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
     t.text "kind_of_nursery"
-    t.integer "cohort", default: 2021
+    t.integer "DEPRECATED_cohort"
     t.boolean "targeted_delivery_funding_eligibility", default: false
     t.string "funding_eligiblity_status_code"
     t.jsonb "raw_application_data", default: {}
@@ -47,6 +47,10 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.string "employment_type"
     t.string "itt_provider"
     t.boolean "lead_mentor", default: false
+    t.boolean "primary_establishment", default: false
+    t.integer "number_of_pupils", default: 0
+    t.boolean "tsf_primary_eligibility", default: false
+    t.boolean "tsf_primary_plus_eligibility", default: false
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
@@ -60,7 +64,6 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "description"
     t.integer "position", default: 0
     t.boolean "display", default: true
-    t.integer "default_cohort", default: 2022
     t.string "identifier"
   end
 
@@ -105,6 +108,19 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
+  end
+
+  create_table "get_an_identity_webhook_messages", force: :cascade do |t|
+    t.jsonb "raw"
+    t.jsonb "message"
+    t.string "message_id"
+    t.string "message_type"
+    t.string "status", default: "pending"
+    t.string "status_comment"
+    t.datetime "sent_at"
+    t.datetime "processed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "itt_providers", force: :cascade do |t|
@@ -210,6 +226,8 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "postcode_without_spaces"
     t.integer "number_of_pupils"
     t.boolean "eyl_funding_eligible", default: false
+    t.integer "phase_type", default: 0
+    t.string "phase_name", default: "Not applicable"
     t.index "to_tsvector('english'::regconfig, COALESCE(name, ''::text))", name: "school_name_search_idx", using: :gin
     t.index ["urn"], name: "index_schools_on_urn"
   end
@@ -238,12 +256,14 @@ ActiveRecord::Schema.define(version: 2023_02_20_114340) do
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
     t.boolean "admin", default: false
-    t.boolean "flipper_admin_access", default: false
     t.string "feature_flag_id"
     t.string "provider"
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
+    t.boolean "super_admin", default: false, null: false
+    t.datetime "updated_from_tra_at"
+    t.string "trn_lookup_status"
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"

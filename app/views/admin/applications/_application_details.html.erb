@@ -62,7 +62,7 @@
 
     sl.row do |row|
       row.key(text: 'Course')
-      row.value(text: application.course.name)
+      row.value(text: localise_course_name(application.course))
       row.action
     end
 
@@ -128,13 +128,6 @@
       row.key(text: "Created at")
       row.value { l application.created_at, format: :admin }
       row.action
-    end
-
-    sl.row do |row|
-      row.key(text: "Cohort")
-      row.value(text: application.cohort.to_s)
-      row.action
-      :wa
     end
   end
 %>

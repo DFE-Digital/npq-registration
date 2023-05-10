@@ -2,10 +2,7 @@ require "rails_helper"
 
 RSpec.describe Services::HandleSubmissionForStore do
   context "when TRA feature flag is disabled" do
-    before do
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
-    end
+    subject { described_class.new(store:) }
 
     let(:user) { create(:user, trn: nil) }
     let(:school) { create(:school, :funding_eligible_establishment_type_code) }
@@ -22,6 +19,7 @@ RSpec.describe Services::HandleSubmissionForStore do
         "confirmed_email" => user.email,
         "trn_verified" => false,
         "trn" => "12345",
+        "trn_lookup_status" => "Found",
         "course_identifier" => course.identifier,
         "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
         "lead_provider_id" => lead_provider.id,
@@ -35,6 +33,9 @@ RSpec.describe Services::HandleSubmissionForStore do
     end
 
     before do
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
+
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "12345",
@@ -42,11 +43,9 @@ RSpec.describe Services::HandleSubmissionForStore do
       )
     end
 
-    subject { described_class.new(store:) }
-
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
@@ -56,6 +55,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "confirmed_email" => user.email,
             "trn_verified" => false,
             "trn" => "12345",
+            "trn_lookup_status" => "Found",
             "course_identifier" => course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => lead_provider.id,
@@ -76,6 +76,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_hash" => nil,
             "otp_expires_at" => nil,
             "date_of_birth" => 30.years.ago.to_date.to_s,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "active_alert" => false,
             "get_an_identity_id_synced_to_ecf" => false,
@@ -83,7 +84,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -102,20 +103,20 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_expires_at" => nil,
             "date_of_birth" => (30.years.ago + 1.day).to_date.to_s,
             "trn_verified" => false,
+            "trn_lookup_status" => "Found",
             "active_alert" => nil,
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => true,
@@ -138,6 +139,10 @@ RSpec.describe Services::HandleSubmissionForStore do
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
             "ukprn" => nil,
+            "number_of_pupils" => nil,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
             "user_id" => user.id,
             "works_in_childcare" => false,
             "works_in_school" => true,
@@ -155,6 +160,7 @@ RSpec.describe Services::HandleSubmissionForStore do
             "confirmed_email" => user.email,
             "trn_verified" => false,
             "trn" => "12345",
+            "trn_lookup_status" => "Found",
             "course_identifier" => course.identifier,
             "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
             "lead_provider_id" => lead_provider.id,
@@ -178,13 +184,14 @@ RSpec.describe Services::HandleSubmissionForStore do
             "otp_expires_at" => nil,
             "date_of_birth" => 30.years.ago.to_date.to_s,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "active_alert" => false,
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
@@ -207,16 +214,16 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => "Found",
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => false,
@@ -239,6 +246,10 @@ RSpec.describe Services::HandleSubmissionForStore do
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
             "ukprn" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
             "user_id" => user.id,
             "works_in_childcare" => true,
             "works_in_school" => false,
@@ -265,7 +276,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is true" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT)
           end
 
           it "clears the funding choice to nil on the application" do
@@ -276,7 +287,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is false" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
           end
 
           it "saves the funding choice to school on the application" do
@@ -286,7 +297,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           context "when the course is EHCO" do
             before do
-              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
             end
 
             let(:courses) { Course.ehco }
@@ -314,7 +325,7 @@ RSpec.describe Services::HandleSubmissionForStore do
               "confirmed_email" => user.email,
               "trn_verified" => false,
               "trn" => "12345",
-              "course_identifier" => Course.ehco.first.identifier,
+              "course_identifier" => ehco_course.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -322,9 +333,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             }
           end
 
-          it "applies 2021 cohort" do
+          let(:ehco_course) { Course.ehco.first }
+
+          it "applies the correct course" do
             subject.call
-            expect(user.applications.first.cohort).to eql(2022)
+            expect(user.applications.first.course).to eq(ehco_course)
           end
         end
 
@@ -361,10 +374,7 @@ RSpec.describe Services::HandleSubmissionForStore do
   end
 
   context "when TRA feature flag is enabled" do
-    before do
-      allow(Flipper).to receive(:enabled?).and_call_original
-      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
-    end
+    subject { described_class.new(store:) }
 
     let(:user_record_trn) { "0012345" }
     let(:user) { create(:user, trn: user_record_trn) }
@@ -390,6 +400,9 @@ RSpec.describe Services::HandleSubmissionForStore do
     end
 
     before do
+      allow(Flipper).to receive(:enabled?).and_call_original
+      allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(true)
+
       mock_previous_funding_api_request(
         course_identifier: course.identifier,
         trn: "0012345",
@@ -397,11 +410,9 @@ RSpec.describe Services::HandleSubmissionForStore do
       )
     end
 
-    subject { described_class.new(store:) }
-
     describe "#call" do
       def stable_as_json(record)
-        record.as_json(except: %i[id created_at updated_at])
+        record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
       end
 
       context "when store includes information from the school path" do
@@ -433,10 +444,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
           })
           expect(user.applications.reload.count).to eq 0
           expect(stable_as_json(user.applications.last)).to match(nil)
@@ -456,16 +468,16 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => true,
@@ -482,11 +494,14 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => nil,
             "school_urn" => school.urn,
             "targeted_delivery_funding_eligibility" => false,
-
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
             "ukprn" => nil,
+            "number_of_pupils" => nil,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
             "user_id" => user.id,
             "works_in_nursery" => nil,
             "works_in_childcare" => false,
@@ -529,10 +544,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             "get_an_identity_id_synced_to_ecf" => false,
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
+            "trn_lookup_status" => nil,
             "trn_verified" => false,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
           })
           expect(user.applications.reload.count).to eq 0
           expect(stable_as_json(user.applications.last)).to match(nil)
@@ -552,16 +568,16 @@ RSpec.describe Services::HandleSubmissionForStore do
             "national_insurance_number" => nil,
             "trn_auto_verified" => false,
             "trn_verified" => false,
+            "trn_lookup_status" => nil,
             "admin" => false,
             "feature_flag_id" => user.feature_flag_id,
-            "flipper_admin_access" => false,
+            "super_admin" => false,
             "provider" => nil,
             "raw_tra_provider_data" => nil,
             "uid" => nil,
           })
           expect(user.applications.reload.count).to eq 1
           expect(stable_as_json(user.applications.last)).to match({
-            "cohort" => 2022,
             "course_id" => course.id,
             "ecf_id" => nil,
             "eligible_for_funding" => false,
@@ -578,11 +594,14 @@ RSpec.describe Services::HandleSubmissionForStore do
             "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
             "school_urn" => nil,
             "targeted_delivery_funding_eligibility" => false,
-
             "teacher_catchment" => "england",
             "teacher_catchment_country" => nil,
             "teacher_catchment_synced_to_ecf" => false,
             "ukprn" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
             "user_id" => user.id,
             "works_in_nursery" => nil,
             "works_in_childcare" => true,
@@ -602,7 +621,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is true" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT)
           end
 
           it "clears the funding choice to nil on the application" do
@@ -613,7 +632,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
         context "when there is a funding choice selected and eligible for funding is false" do
           before do
-            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+            allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
           end
 
           it "saves the funding choice to school on the application" do
@@ -623,7 +642,7 @@ RSpec.describe Services::HandleSubmissionForStore do
 
           context "when the course is EHCO" do
             before do
-              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code) { Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE }
+              allow_any_instance_of(Services::FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
             end
 
             let(:courses) { Course.ehco }
@@ -648,7 +667,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           let(:store) do
             {
               "current_user" => user,
-              "course_identifier" => Course.ehco.first.identifier,
+              "course_identifier" => ehco_course.identifier,
               "institution_identifier" => "School-#{school.urn}",
               "lead_provider_id" => LeadProvider.all.sample.id,
               "aso_headteacher" => "yes",
@@ -656,9 +675,11 @@ RSpec.describe Services::HandleSubmissionForStore do
             }
           end
 
-          it "applies 2021 cohort" do
+          let(:ehco_course) { Course.ehco.first }
+
+          it "applies the correct course" do
             subject.call
-            expect(user.applications.first.cohort).to eql(2022)
+            expect(user.applications.first.course).to eq(ehco_course)
           end
         end
 
@@ -677,7 +698,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           before do
             mock_previous_funding_api_request(
               course_identifier: "npq-early-headship-coaching-offer",
-              trn: "12345",
+              trn: "0012345",
               response: ecf_funding_lookup_response(previously_funded: false),
             )
           end

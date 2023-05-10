@@ -284,7 +284,6 @@ private
       qualified_teacher_check
       not_sure_updated_name
       dqt_mismatch
-      about_ehco
       npqh_status
       aso_unavailable
       aso_headteacher
@@ -308,6 +307,7 @@ private
       your_role
       your_employer
       school_not_in_england
+      childcare_provider_not_in_england
       possible_funding
       ineligible_for_funding
       funding_your_npq

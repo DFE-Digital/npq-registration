@@ -114,7 +114,7 @@ RSpec.feature "Sad journeys", type: :feature do
       expect(page).to have_text("Your initial registration is complete")
     end
 
-    expect(User.count).to eql(1)
+    expect(User.count).to be(1)
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -124,7 +124,7 @@ RSpec.feature "Sad journeys", type: :feature do
       expect(user.trn_auto_verified).to be_falsey
       expect(user.date_of_birth).to eql(Date.new(1980, 12, 13))
       expect(user.national_insurance_number).to eq(nil)
-      expect(user.applications.count).to eql(1)
+      expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to eq(false)
@@ -137,7 +137,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
       expect(page).to have_text("Church of England")
-      expect(page).to have_text("NPQ for Senior Leadership (NPQSL)")
+      expect(page).to have_text("Senior leadership")
     end
 
     visit "/registration/share-provider"
@@ -146,13 +146,12 @@ RSpec.feature "Sad journeys", type: :feature do
       expect(page).to have_content("Before you start")
     end
 
-    expect(retrieve_latest_application_user_data).to eq(
+    expect(retrieve_latest_application_user_data).to match(
       "active_alert" => nil,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "flipper_admin_access" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -160,14 +159,15 @@ RSpec.feature "Sad journeys", type: :feature do
       "otp_hash" => nil,
       "provider" => "tra_openid_connect",
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
+      "super_admin" => false,
       "trn" => "1234567",
       "trn_auto_verified" => false,
+      "trn_lookup_status" => "Found",
       "trn_verified" => true,
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to eq(
-      "cohort" => 2022,
+    expect(retrieve_latest_application_data).to match(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -186,6 +186,10 @@ RSpec.feature "Sad journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
+      "primary_establishment" => false,
+      "number_of_pupils" => 0,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => false,
