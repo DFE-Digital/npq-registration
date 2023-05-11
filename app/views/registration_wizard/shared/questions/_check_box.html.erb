@@ -1,0 +1,6 @@
+<%= form.govuk_check_boxes_fieldset(question.name, multiple: false, **question.style_options) do %>
+  <% question.body.each do |body_text| %>
+    <p class="govuk-body"><%= body_text %></p>
+  <% end %>
+  <%= form.govuk_check_box question.name, question.checked_value, question.unchecked_value, multiple: false, required: question.required %>
+<% end  %>

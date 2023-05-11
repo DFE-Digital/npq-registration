@@ -10,6 +10,14 @@ module Forms
       ]
     end
 
+    def question
+      @question ||= Forms::QuestionTypes::CheckBox.new(
+        name: :can_share_choices,
+        required: true,
+        body: I18n.t("helpers.hint.registration_wizard.can_share_choices"),
+      )
+    end
+
     def next_step
       :check_answers
     end

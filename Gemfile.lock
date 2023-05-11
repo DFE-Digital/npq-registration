@@ -301,6 +301,8 @@ GEM
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
+    pry-rails (0.3.9)
+      pry (>= 0.10.4)
     public_suffix (5.0.1)
     puma (6.2.2)
       nio4r (~> 2.0)
@@ -542,6 +544,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   pg_search
   pry-byebug
+  pry-rails
   puma (~> 6.2)
   rack-attack
   rails (~> 6.1.7)
