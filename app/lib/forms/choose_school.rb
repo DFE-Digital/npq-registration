@@ -30,8 +30,28 @@ module Forms
       :find_school
     end
 
-    def display_no_javascript_fallback_form?
-      wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
+    def question
+      @question ||= Forms::QuestionTypes::AutoCompleteSchool.new(
+        name: :institution_identifier,
+        options: possible_institutions,
+        locale_keys: {
+          # This is here so that the question does not use institution_identifier as the locale key,
+          # that question key is not specific to ChooseChildcareProvider so we need to use a more specific
+          # key for finding the right locale string.
+          name: :choose_school,
+        },
+        display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
+        institution_location:,
+        search_question: Forms::QuestionTypes::TextField.new(
+          name: :institution_name,
+          locale_keys: {
+            # This is here so that the question does not use institution_name as the locale key,
+            # that question key is not specific to ChooseChildcareProvider so we need to use a more specific
+            # key for finding the right locale string.
+            name: :choose_school_search,
+          },
+        ),
+      )
     end
 
     def possible_institutions
@@ -53,6 +73,14 @@ module Forms
 
   private
 
+    def search_term_entered_in_no_js_fallback_form?
+      # This combination of fields is only used in the no-js fallback form
+      # institution_location will be set from the previous question
+      # institution_name will be set from the search term being entered into the search
+      # field that is only visible when JS is disabled.
+      institution_location.present? && wizard.store["institution_name"].present?
+    end
+
     def course
       @course ||= wizard.query_store.course
     end
@@ -62,7 +90,7 @@ module Forms
     end
 
     def validate_school_name_returns_results
-      if display_no_javascript_fallback_form? && possible_institutions.blank?
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
         errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
       end
     end
