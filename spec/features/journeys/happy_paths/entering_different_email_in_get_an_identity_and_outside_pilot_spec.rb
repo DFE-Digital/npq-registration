@@ -12,23 +12,21 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
+  let(:non_pilot_user_email) { "mail@example.com" }
+  # This controls what is returned from the Get An Identity API
+  let(:user_trn) { "" }
+
+  before do
+    # create the user that the user will log in as in the non-pilot journey
+    create(:user, email: non_pilot_user_email, trn: nil)
+  end
+
   context "when JavaScript is enabled", :js do
     scenario("registration journey when entering an email for a user record without a TRN after being removed from the pilot (with JS)") { run_scenario(js: true) }
   end
 
   context "when JavaScript is disabled", :no_js do
-    include_context "use rack_test driver"
     scenario("registration journey when entering an email for a user record without a TRN after being removed from the pilot (without JS)") { run_scenario(js: false) }
-  end
-
-  # This controls what is returned from the Get An Identity API
-  let(:user_trn) { "" }
-
-  let(:non_pilot_user_email) { "mail@example.com" }
-
-  before do
-    # create the user that the user will log in as in the non-pilot journey
-    create(:user, email: non_pilot_user_email, trn: nil)
   end
 
   # This spec was created to replicate a bug that’s triggered 80 times over about 3 months and leads to a full error page

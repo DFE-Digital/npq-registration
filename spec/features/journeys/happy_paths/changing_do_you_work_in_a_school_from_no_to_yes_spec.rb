@@ -13,7 +13,6 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   context "when JavaScript is disabled", :no_js do
-    include_context "use rack_test driver"
     scenario("registration journey changing do you work in a school from no to yes (without JS)") { run_scenario(js: false) }
   end
 
