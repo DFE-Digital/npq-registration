@@ -31,25 +31,16 @@ module Forms
     end
 
     def question
-      @question ||= Forms::QuestionTypes::AutoCompleteSchool.new(
+      @question ||= Forms::QuestionTypes::AutoCompleteInstitution.new(
         name: :institution_identifier,
+        locale_name: :choose_school,
+        picker: :school,
         options: possible_institutions,
-        locale_keys: {
-          # This is here so that the question does not use institution_identifier as the locale key,
-          # that question key is not specific to ChooseChildcareProvider so we need to use a more specific
-          # key for finding the right locale string.
-          name: :choose_school,
-        },
+        data_attributes: { institution_location: },
         display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
-        institution_location:,
         search_question: Forms::QuestionTypes::TextField.new(
           name: :institution_name,
-          locale_keys: {
-            # This is here so that the question does not use institution_name as the locale key,
-            # that question key is not specific to ChooseChildcareProvider so we need to use a more specific
-            # key for finding the right locale string.
-            name: :choose_school_search,
-          },
+          locale_name: :choose_school_search,
         ),
       )
     end

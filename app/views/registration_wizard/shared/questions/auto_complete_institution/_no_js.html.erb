@@ -14,10 +14,12 @@
   text field, but with an error message.
 %>
 
+<% search_question = question.search_question %>
+
 <% if question.options.blank? %>
   <%=
     form.govuk_text_field(
-      question.search_question.name,
+      search_question.name,
       width: "full",
       label: { text: question_text, size: "xl", tag: "h1" },
       hint: { text: hint_text }
@@ -25,12 +27,8 @@
   %>
 <% else %>
   <%
-    search_question = question.search_question
-    search_question_locale_key = search_question.locale_keys[:name]
-    search_question_text = t(
-      "helpers.label.registration_wizard.#{search_question_locale_key}",
-      **question.locale_params
-    )
+    name_locale_key = search_question.name_locale_key
+    search_question_text = t("helpers.label.registration_wizard.#{name_locale_key}", **question.data_attributes)
   %>
 
   <%=
@@ -62,7 +60,7 @@
     %>
       <%=
         form.govuk_text_field(
-          question.search_question.name,
+          search_question.name,
           hint: { text: hint_text },
           label: { hidden: true, text: question_text }
         )

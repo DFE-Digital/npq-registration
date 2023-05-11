@@ -1,17 +1,14 @@
 module Forms
   module QuestionTypes
     class Base
-      attr_reader :name, :options, :locale_keys, :question_data
+      attr_reader :name, :options, :locale_name, :question_data
 
-      def initialize(name:, options: [], style_options: {}, locale_keys: {}, **question_data)
+      def initialize(name:, options: [], style_options: {}, locale_name: nil)
         @name = name
         @options = options
         @style_options = style_options # Freeform optional parameters that can differ for each subclass
-        @locale_keys = locale_keys
-        @question_data = OpenStruct.new(question_data)
+        @locale_name = locale_name
       end
-
-      delegate_missing_to :question_data
 
       # For determining which partial to use
       def type
@@ -27,7 +24,7 @@ module Forms
       end
 
       def name_locale_key
-        locale_keys[:name] || name
+        locale_name || name
       end
 
     private

@@ -15,19 +15,49 @@ module Forms
     #
     # Forms::QuestionTypes::AutoCompleteInstitution parameters:
     #  name: The name of the field
+    #
     #  options: The list of possible institutions to display in the radio buttons, only used in no-js scenario
-    #  locale_keys: The locale keys to use for the question title
+    #
+    #  style_options: Freeform optional parameters that can differ for each subclass
+    #
+    #  locale_name: The locale key to use for the question name instead of name
+    #
+    #  data_attributes: The hash to pass into the data-attributes of the input field along with into locale strings
+    #
+    #  picker: The type of institution to search for, either :school, :nursery, or :"private-childcare-provider".
+    #          Controls which JS searcher to load
+    #
     #  display_no_javascript_fallback_form: Whether to display the fallback form
-    #  search_question_name: The name of the field to use for the search term in the fallback form
-    #  institution_location: The location to render into hints and labels
+    #
+    #  search_question: The question used to display the search term input field in the fallback form
 
     class AutoCompleteInstitution < Base
-      def picker_type
-        raise NotImplementedError
+      attr_reader :data_attributes,
+                  :picker,
+                  :search_question
+
+      def initialize(
+        name:,
+        picker:,
+        display_no_javascript_fallback_form:,
+        search_question:,
+        options: [],
+        style_options: {},
+        locale_name: nil,
+        data_attributes: {}
+      )
+        @name = name
+        @options = options
+        @style_options = style_options # Freeform optional parameters that can differ for each subclass
+        @locale_name = locale_name
+        @data_attributes = data_attributes
+        @picker = picker
+        @display_no_javascript_fallback_form = display_no_javascript_fallback_form
+        @search_question = search_question
       end
 
       def display_no_javascript_fallback_form?
-        display_no_javascript_fallback_form
+        @display_no_javascript_fallback_form
       end
     end
   end

@@ -33,7 +33,7 @@
   The below is the JS version of the form. It is hidden by default and
   revealed by the CSS only when .js-enabled is set on the body.
 
-  "#{question.picker_type}-picker" is in place so that the question can load in
+  "#{question.picker}-picker" is in place so that the question can load in
   the correct searchable select logic. This is detected and the picker set up in
   app/webpacker/packs/application.js.
 
@@ -43,7 +43,7 @@
     - "private-childcare-provider-picker"
 %>
 
-<% question_id = "#{question.picker_type}-picker" %>
+<% question_id = "#{question.picker}-picker" %>
 
 <div class="npq-js-reveal">
   <div class="govuk-form-group">
@@ -63,7 +63,7 @@
     <%=
       form.text_field(
         question.name,
-        data: { location: question.institution_location },
+        data: question.data_attributes,
         id: question_id
       )
     %>

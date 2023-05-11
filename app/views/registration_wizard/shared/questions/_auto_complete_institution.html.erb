@@ -1,6 +1,6 @@
-<% question_text = t("helpers.label.registration_wizard.#{question.locale_keys[:name]}") %>
-<% hint_text = t("helpers.hint.registration_wizard.#{question.locale_keys[:name]}", **question.locale_params) %>
-<% other_text = t("helpers.label.registration_wizard.#{question.locale_keys[:name]}_other") %>
+<% question_text = t("helpers.label.registration_wizard.#{question.name_locale_key}") %>
+<% hint_text = t("helpers.hint.registration_wizard.#{question.name_locale_key}", **question.data_attributes) %>
+<% other_text = t("helpers.label.registration_wizard.#{question.name_locale_key}_other") %>
 
 <% if question.display_no_javascript_fallback_form? %>
   <%=
