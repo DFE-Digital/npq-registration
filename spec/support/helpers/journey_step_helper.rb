@@ -92,6 +92,10 @@ module Helpers
             page.fill_in("Enter your or your employer’s URN", with: provider.urn)
           end
         end
+
+        expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
+          page.choose([provider.urn, provider.name].compact.join(" - "))
+        end
       end
     end
 

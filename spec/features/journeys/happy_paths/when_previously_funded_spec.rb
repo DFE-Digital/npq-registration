@@ -74,7 +74,6 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    # FIXME: this isn't working in no_js mode
     choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
@@ -215,7 +214,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-early-headship-coaching-offer",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
-        "institution_name" => "",
+        "institution_name" => js ? "" : "EY123456",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
