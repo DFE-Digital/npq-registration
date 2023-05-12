@@ -2,6 +2,19 @@ en:
   time:
     formats:
       admin: "%R on %d/%m/%Y"
+  courses:
+    alternative_names:
+      npq-leading-teaching: Leading teaching
+      npq-leading-behaviour-culture: Leading behaviour and culture
+      npq-leading-teaching-development: Leading teacher development
+      npq-senior-leadership: Senior leadership
+      npq-headship: Headship
+      npq-executive-leadership: Executive leadership
+      npq-additional-support-offer: Additional Support Offer
+      npq-early-headship-coaching-offer: Early headship coaching offer
+      npq-early-years-leadership: Early years leadership
+      npq-leading-literacy: Leading literacy
+
   activemodel:
     attributes:
       forms/funding_your_npq:

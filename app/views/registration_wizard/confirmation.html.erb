@@ -6,11 +6,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= render NpqPanel.new(
       title: {
-        text: "Your initial registration is complete"
-      },
-      body: {
-        text: "You’ve registered for an <strong>#{@form.course.name}</strong> with <strong>#{@form.lead_provider.name}</strong>".html_safe,
-        classes: ["govuk-!-font-size-19"]
+        text: "You’ve registered for the #{ t(@form.course.identifier, scope: 'courses.alternative_names', default: @form.course.name) }#{' NPQ' unless @form.course.ehco?} with #{@form.lead_provider.name}"
       }
     ) %>
 

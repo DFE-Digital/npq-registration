@@ -119,7 +119,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("Your initial registration is complete")
+      expect(page).to have_text("You’ve registered for the Headship NPQ with Teach First")
       expect(page).to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 

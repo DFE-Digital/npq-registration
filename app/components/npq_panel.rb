@@ -1,7 +1,7 @@
 class NpqPanel < ViewComponent::Base
   attr_reader :title, :body
 
-  def initialize(title:, body:)
+  def initialize(title:, body: nil)
     @title = title
     @body = body
   end
@@ -9,7 +9,7 @@ class NpqPanel < ViewComponent::Base
   def body_classes
     array = %w[govuk-panel__body]
 
-    if body[:classes]
+    if body && body[:classes]
       array.concat(body[:classes])
     end
 
