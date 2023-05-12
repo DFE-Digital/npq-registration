@@ -1,0 +1,10 @@
+module Forms
+  module QuestionTypes
+    # See Forms::QuestionTypes::AutoCompleteInstitution for info on this class
+    class AutoCompleteNursery < AutoCompleteInstitution
+      def picker_type
+        :nursery
+      end
+    end
+  end
+end

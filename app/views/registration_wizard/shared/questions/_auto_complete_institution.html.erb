@@ -1,0 +1,26 @@
+<% question_text = t("helpers.label.registration_wizard.#{question.locale_keys[:name]}") %>
+<% hint_text = t("helpers.hint.registration_wizard.#{question.locale_keys[:name]}", institution_location: question.institution_location) %>
+<% other_text = t("helpers.label.registration_wizard.#{question.locale_keys[:name]}_other") %>
+
+<% if question.display_no_javascript_fallback_form? %>
+  <%=
+    render(
+      "registration_wizard/shared/questions/auto_complete_institution/no_js",
+      form: form,
+      question: question,
+      question_text: question_text,
+      hint_text: hint_text,
+      other_text: other_text,
+    )
+  %>
+<% else %>
+  <%=
+    render(
+      "registration_wizard/shared/questions/auto_complete_institution/js",
+      form: form,
+      question: question,
+      question_text: question_text,
+      hint_text: hint_text
+    )
+  %>
+<% end %>

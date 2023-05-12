@@ -278,6 +278,7 @@ en:
         can_share_choices:
           - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
           - If you do not share this, you cannot progress with your NPQ.
+        choose_childcare_provider: "Search for workplaces located in %{institution_location}."
     label:
       registration_wizard:
         work_setting_options:
@@ -362,3 +363,6 @@ en:
           "yes": "Yes"
           "no": "No"
 
+        choose_childcare_provider: "What’s the name of your workplace?"
+        choose_childcare_provider_other: "Workplace not shown above"
+        choose_childcare_provider_search: "Please choose from workplaces located in %{institution_location}"
