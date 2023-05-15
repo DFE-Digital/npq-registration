@@ -37,23 +37,19 @@ module Forms
                   :search_question
 
       def initialize(
-        name:,
+        *args,
         picker:,
         display_no_javascript_fallback_form:,
         search_question:,
-        options: [],
-        style_options: {},
-        locale_name: nil,
-        data_attributes: {}
+        data_attributes: {},
+        **opts
       )
-        @name = name
-        @options = options
-        @style_options = style_options # Freeform optional parameters that can differ for each subclass
-        @locale_name = locale_name
         @data_attributes = data_attributes
         @picker = picker
         @display_no_javascript_fallback_form = display_no_javascript_fallback_form
         @search_question = search_question
+
+        super(*args, **opts)
       end
 
       def display_no_javascript_fallback_form?
