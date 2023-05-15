@@ -21,14 +21,18 @@ module Forms
       uclconsultants.com
     ].freeze
 
-    attr_reader :email
+    QUESTION_NAME = :email
 
-    validates :email, presence: true, email: true, length: { maximum: 128 }
+    attr_reader QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true, email: true, length: { maximum: 128 }
 
     def self.permitted_params
-      %i[
-        email
-      ]
+      [QUESTION_NAME]
+    end
+
+    def question
+      Forms::QuestionTypes::TextField.new(name: QUESTION_NAME)
     end
 
     def email=(value)
