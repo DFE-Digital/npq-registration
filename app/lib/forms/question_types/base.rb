@@ -1,7 +1,7 @@
 module Forms
   module QuestionTypes
     class Base
-      attr_reader :name, :options, :locale_name, :question_data
+      attr_reader :name, :options, :locale_name
 
       def initialize(name:, options: [], style_options: {}, locale_name: nil)
         @name = name
