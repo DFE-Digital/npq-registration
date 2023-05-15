@@ -259,6 +259,7 @@ en:
         aso_funding_choice: "How is the Early headship coaching offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
+        lead_provider_id: Select your provider
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -276,6 +277,7 @@ en:
         can_share_choices:
           - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
           - If you do not share this, you cannot progress with your NPQ.
+        lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
     label:
       registration_wizard:
         work_setting_options:

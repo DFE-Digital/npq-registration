@@ -63,7 +63,7 @@ module Forms
 
     def set_flash_message
       wizard.request.flash[:success_title] = "Email sent"
-      wizard.request.flash[:success] = if sandbox? && whitelisted_domain?
+      wizard.request.flash[:success] = if development? || sandbox? && whitelisted_domain?
                                          "Your code is #{code}"
                                        else
                                          "We’ve emailed a confirmation code to #{email}"
@@ -72,6 +72,10 @@ module Forms
 
     def sandbox?
       ENV["SERVICE_ENV"] == "sandbox"
+    end
+
+    def development?
+      Rails.env.development?
     end
 
     def whitelisted_domain?

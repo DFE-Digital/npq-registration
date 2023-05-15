@@ -17,7 +17,7 @@ module Forms
       Forms::QuestionTypes::RadioButtonGroup.new(
         name: :course_identifier,
         options:,
-        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+        style_options: { legend: { size: "m", tag: "h1" } },
       )
     end
 
@@ -25,9 +25,11 @@ module Forms
       divider_index = courses.length - 1 # Place the "Or" divider before the last course
 
       courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.identifier,
-                       link_errors: index.zero?,
-                       divider: divider_index == index)
+        build_option_struct(
+          value: course.identifier,
+          link_errors: index.zero?,
+          divider: divider_index == index
+        )
       end
     end
 

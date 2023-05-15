@@ -1,12 +1,7 @@
-<%=
-  form.govuk_radio_buttons_fieldset(
-    question.name,
-    legend: {
-      size: "xl",
-      tag: "h1"
-    }.merge(question.fieldset_legend_attributes)
-  ) do
-%>
+<%= form.govuk_radio_buttons_fieldset(question.name,  **question.fieldset_styles) do %>
+  <% question.body.each do |paragraph| %>
+    <p class="govuk-body"><%= paragraph %></p>
+  <% end %>
   <%=
     render(
       partial: "registration_wizard/shared/questions/radio_option",

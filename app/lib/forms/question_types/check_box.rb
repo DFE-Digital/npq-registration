@@ -11,11 +11,10 @@ module Forms
 
       attr_reader :checked_value, :unchecked_value, :required, :body
 
-      def initialize(*args, checked_value: "1", unchecked_value: "0", required: false, body: nil, **opts)
+      def initialize(*args, checked_value: "1", unchecked_value: "0", required: false, **opts)
         @checked_value = checked_value
         @unchecked_value = unchecked_value
         @required = required
-        @body = Array.wrap(body)
 
         super(*args, **opts)
       end
