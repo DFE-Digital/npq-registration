@@ -11,6 +11,18 @@ module Forms
       ]
     end
 
+    def question
+      @question ||= QuestionTypes::TextField.new(
+        name: :confirmation_code,
+        form: self,
+        header: "Confirm your email address",
+        style_options: {
+          width: 10,
+          label: { text: "Enter your code" },
+        },
+      )
+    end
+
     def next_step
       if changing_answer?
         :check_answers
