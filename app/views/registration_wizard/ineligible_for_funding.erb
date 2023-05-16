@@ -14,7 +14,7 @@
     <%=
       render(
         "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}",
-        course_name: localise_course_name(@form.course),
+        course: @form.course,
       )
     %>
 

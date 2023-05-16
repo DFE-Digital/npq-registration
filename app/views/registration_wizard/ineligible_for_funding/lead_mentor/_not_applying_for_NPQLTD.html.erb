@@ -4,7 +4,7 @@
 
 <h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
 
-<p class="govuk-body">To be eligible for scholarship funding for the <b><%= course_name %></b> you must work in one of these settings in England:</p>
+<p class="govuk-body">To be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %> you must work in one of these settings in England:</p>
 
 <ul class="govuk-list govuk-list--bullet">
   <li>state-funded schools</li>
@@ -15,4 +15,6 @@
   <li>young offender institutions</li>
 </ul>
 
-<p class="govuk-body">From the answers you have given us you should be eligible for scholarship funding for the NPQ Leading Teacher Development (NPQLTD). you can go back and select the NPQLTD or continue with your registration for <b><%= course_name %></b>.</p>
+<% npqltd = Course.npqltd.first %>
+
+<p class="govuk-body">From the answers you have given us you should be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqltd) %> you can go back and select the <%= course_short_code(npqltd) %> or continue with your registration for <%= localise_sentence_embedded_course_name(course) %>.</p>

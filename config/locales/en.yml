@@ -235,6 +235,20 @@ en:
         message: "Message"
 
   course:
+    embedded_sentence:
+      default: "the %{course_name} NPQ"
+      ehco: "the %{course_name}"
+    short_code:
+      "npq-leading-teaching": "NPQLT"
+      "npq-leading-behaviour-culture": "NPQLBC"
+      "npq-leading-teaching-development": "NPQLTD"
+      "npq-senior-leadership": "NPQSL"
+      "npq-headship": "NPQH"
+      "npq-executive-leadership": "NPQEL"
+      "npq-additional-support-offer": "ASO"
+      "npq-early-headship-coaching-offer": "EHCO"
+      "npq-early-years-leadership": "NPQEYL"
+      "npq-leading-literacy": "NPQLL"
     name: &course_names
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"
