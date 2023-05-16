@@ -235,7 +235,7 @@ en:
         message: "Message"
 
   course:
-    identifier: &course_identifiers
+    name: &course_names
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"
       "npq-leading-teaching-development": "Leading teacher development"
@@ -312,7 +312,7 @@ en:
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
 
-        course_identifier_options: *course_identifiers
+        course_identifier_options: *course_names
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
