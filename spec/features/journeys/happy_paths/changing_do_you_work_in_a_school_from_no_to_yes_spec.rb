@@ -106,7 +106,6 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     choose_a_school(js:, location: "manchester", name: "open")
-    stub_npq_funding_request(previously_funded: false)
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
