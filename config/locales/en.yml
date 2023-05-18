@@ -278,12 +278,12 @@ en:
         can_share_choices:
           - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
           - If you do not share this, you cannot progress with your NPQ.
-        choose_childcare_provider: "Search for workplaces located in %{institution_location}."
-        choose_childcare_provider_search: "Search for workplaces located in %{institution_location}."
-        choose_school: "Search for schools or 16 to 19 educational settings located in %{institution_location}. If you work for a trust, enter one of their schools."
-        choose_school_search: "Search for schools or 16 to 19 educational settings located in england. If you work for a trust, enter one of their schools."
-        choose_private_childcare_provider: "For example EY456789."
-        choose_private_childcare_provider_search: "Enter your or your employer’s URN."
+        choose_childcare_provider: "Search for your workplace in %{institution_location}"
+        choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
+        choose_school: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
+        choose_school_search: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
+        choose_private_childcare_provider: "For example EY456789"
+        choose_private_childcare_provider_search: "Enter your or your employer’s URN"
     label:
       registration_wizard:
         work_setting_options:
@@ -370,12 +370,12 @@ en:
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
-        choose_childcare_provider_fallback: "Please choose from workplaces located in %{institution_location}"
+        choose_childcare_provider_fallback: "Select your workplace in %{institution_location}"
 
         choose_school: "What’s the name of your workplace?"
-        choose_school_search: "School or college not shown above"
-        choose_school_fallback: "Please choose from schools or 16 to 19 educational settings located in england"
+        choose_school_search: "School or 16 to 19 educational setting not shown above"
+        choose_school_fallback: "Select your school or 16 to 19 educational setting in %{institution_location}"
 
         choose_private_childcare_provider: "Enter your or your employer’s URN"
         choose_private_childcare_provider_search: "My employer is not shown above"
-        choose_private_childcare_provider_fallback: "Please choose your employer"
+        choose_private_childcare_provider_fallback: "Select yourself or your employer"
