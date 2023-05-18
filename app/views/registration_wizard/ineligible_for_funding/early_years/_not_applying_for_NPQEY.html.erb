@@ -18,6 +18,6 @@
 <% npqeyl = Course.npqeyl.first %>
 
 <div class="govuk-inset-text">
-  From the answers you have given us you should be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqeyl) %>. You can <%= link_to("go back and select the #{course_short_code(npqeyl)}", registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for NPQ for <%= localise_sentence_embedded_course_name(course) %>.
+  From the answers you have given us you should be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqeyl) %> (<%= course_short_code(npqeyl) %>). You can <%= link_to("go back and select the #{course_short_code(npqeyl)}", registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for NPQ for <%= localise_sentence_embedded_course_name(course) %>.
 </div>
 
