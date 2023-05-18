@@ -250,6 +250,7 @@ en:
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
+        can_share_choices: "Sharing your NPQ information"
         aso_new_headteacher: "Are you in your first 5 years of a headship?"
         employment_type: "How are you employed?"
         work_setting: "What setting do you work in?"
@@ -274,6 +275,9 @@ en:
         course_identifier_options:
           "npq-early-headship-coaching-offer": "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship."
         npqh_status_title_hint: "To be eligible for the Early headship coaching offer you need to do the Headship NPQ."
+        can_share_choices:
+          - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
+          - If you do not share this, you cannot progress with your NPQ.
     label:
       registration_wizard:
         work_setting_options:
@@ -314,6 +318,9 @@ en:
         employment_role: "What is your role?"
 
         employer_name: "What organisation are you employed by?"
+
+        can_share_choices_options:
+          1: Yes, I agree my information can be shared
 
         aso_funding_choice_options:
           school: "My workplace is covering the cost"

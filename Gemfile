@@ -46,7 +46,9 @@ group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
   gem "dotenv-rails"
+  gem "parallel_tests"
   gem "pry-byebug"
+  gem "pry-rails"
   gem "rspec-rails", "~> 6.0.2"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
