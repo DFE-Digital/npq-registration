@@ -27,14 +27,17 @@
   %>
 <% else %>
   <%
-    name_locale_key = search_question.name_locale_key
-    search_question_text = t("helpers.label.registration_wizard.#{name_locale_key}", **question.data_attributes)
+    name_locale_key = question.name_locale_key
+    fallback_question_text = t("helpers.label.registration_wizard.#{name_locale_key}_fallback", **question.data_attributes)
+
+    search_question_text = t("helpers.label.registration_wizard.#{search_question.name_locale_key}", **question.data_attributes)
+    search_question_hint = t("helpers.hint.registration_wizard.#{search_question.name_locale_key}", **question.data_attributes)
   %>
 
   <%=
     form.govuk_radio_buttons_fieldset(
       question.name,
-      legend: { size: 'xl', text: search_question_text, tag: "h1" }
+      legend: { size: 'xl', text: fallback_question_text, tag: "h1" }
     ) do
   %>
     <% question.options.each_with_index do |institution, index| %>
@@ -55,14 +58,14 @@
       form.govuk_radio_button(
         question.name,
         'other',
-        label: { text: other_text }
+        label: { text: search_question_text }
       ) do
     %>
       <%=
         form.govuk_text_field(
           search_question.name,
-          hint: { text: hint_text },
-          label: { hidden: true, text: question_text }
+          hint: { text: search_question_hint },
+          label: { hidden: true, text: nil }
         )
       %>
     <% end %>

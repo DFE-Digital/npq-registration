@@ -70,8 +70,9 @@ module Forms
       return if no_js_fallback_search_loop?
       return if institution_identifier.blank?
 
-      errors.add(:institution_identifier, :invalid, urn: institution_identifier) unless
-        institution_identifier.start_with?("PrivateChildcareProvider-")
+      unless institution_identifier.start_with?("PrivateChildcareProvider-")
+        errors.add(:institution_identifier, :invalid, urn: institution_identifier)
+      end
 
       return if institution(source: institution_identifier).present?
 
