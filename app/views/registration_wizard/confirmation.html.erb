@@ -30,11 +30,11 @@
       <p class="govuk-body">You may be eligible for DfE scholarship funding if you are in the first 5 years of a headship and:</p>
 
       <ul class="govuk-list govuk-list--bullet">
-        <% npqh_name = course_short_code(Course.npqh.first) %>
+        <% npqh_name = localise_sentence_embedded_course_name(Course.npqh.first) %>
 
-        <li>have completed an <%= npqh_name %></li>
-        <li>are studying for an <%= npqh_name %></li>
-        <li>are about to start an <%= npqh_name %></li>
+        <li>have completed <%= npqh_name %></li>
+        <li>are studying for <%= npqh_name %></li>
+        <li>are about to start <%= npqh_name %></li>
       </ul>
 
       <p class="govuk-body">If eligible, your training provider will share further details with you.</p>
