@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,7 +12,15 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -33,6 +42,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
+    end
+
     expect(page).not_to have_content("Do you have a TRN?")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
@@ -40,62 +53,36 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("England", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Other", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-    School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
-    School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("As a lead mentor for an accredited initial teacher training (ITT) provider", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for schools or 16 to 19 educational settings located in manchester. If you work for a trust, enter one of their schools.")
+    approved_itt_provider_legal_name = ::IttProvider.currently_approved.sample.legal_name
 
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-      page.click_button("Continue")
-    end
+    choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Headship", visible: :all)
+      page.choose("Leading teacher development", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
-
-      page.click_link("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How is your course being paid for?")
-      page.choose "My trust is paying", visible: :all
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the NPQ for Leading Teacher Development (NPQLTD).")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+      page.choose("Church of England", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -108,11 +95,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "Headship",
-          "Lead provider" => "Teach First",
-          "Workplace" => "open manchester school",
-          "How is your NPQ being paid for?" => "My trust is paying",
-          "What setting do you work in?" => "A school",
+
+          "Course" => "Leading teacher development",
+          "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
+          "ITT Provider" => approved_itt_provider_legal_name,
+          "Lead provider" => "Church of England",
+          "What setting do you work in?" => "Other",
           "Where do you work?" => "England",
         },
       )
@@ -120,7 +108,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
       expect(page).to have_text("Your initial registration is complete")
-      expect(page).to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
     end
 
     expect(User.count).to be(1)
@@ -136,14 +123,17 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
-        expect(application.eligible_for_funding).to be_falsey
-        expect(application.funding_choice).to eql("trust")
+        expect(application.eligible_for_funding).to eq(true)
+        expect(application.targeted_delivery_funding_eligibility).to eq(false)
+        expect(application.work_setting).to eql("other")
+        expect(application.raw_application_data["employment_type"])
+          .to eql("lead_mentor_for_accredited_itt_provider")
       end
     end
 
     navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
-      expect(page).to have_text("Teach First")
-      expect(page).to have_text("Headship")
+      expect(page).to have_text("Church of England")
+      expect(page).to have_text("Leading teacher development")
     end
 
     visit "/registration/share-provider"
@@ -158,7 +148,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
-      "super_admin" => false,
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
@@ -166,6 +155,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "otp_hash" => nil,
       "provider" => "tra_openid_connect",
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
+      "super_admin" => false,
       "trn" => "1234567",
       "trn_auto_verified" => false,
       "trn_lookup_status" => "Found",
@@ -174,49 +164,47 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect(retrieve_latest_application_data).to match(
-      "course_id" => Course.find_by(identifier: "npq-headship").id,
+      "course_id" => Course.find_by(identifier: "npq-leading-teaching-development").id,
       "ecf_id" => nil,
-      "eligible_for_funding" => false,
+      "eligible_for_funding" => true,
       "employer_name" => nil,
-      "employment_type" => nil,
+      "employment_type" => "lead_mentor_for_accredited_itt_provider",
       "employment_role" => nil,
-      "funding_choice" => "trust",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_choice" => nil,
+      "funding_eligiblity_status_code" => "funded",
       "kind_of_nursery" => nil,
       "headteacher_status" => nil,
-      "itt_provider" => nil,
-      "lead_mentor" => false,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id,
       "private_childcare_provider_urn" => nil,
-      "school_urn" => "100000",
+      "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
-      "number_of_pupils" => nil,
+      "number_of_pupils" => 0,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
-      "works_in_school" => true,
-      "work_setting" => "a_school",
+      "works_in_school" => false,
+      "work_setting" => "other",
+      "lead_mentor" => true,
+      "itt_provider" => approved_itt_provider_legal_name,
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_identifier" => "npq-headship",
-        "funding" => "trust",
-        "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
-        "institution_name" => "",
-        "lead_provider_id" => "9",
+        "course_identifier" => "npq-leading-teaching-development",
+        "employment_type" => "lead_mentor_for_accredited_itt_provider",
+        "itt_provider" => approved_itt_provider_legal_name,
+        "lead_provider_id" => "3",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn_knowledge" => "yes",
-        "works_in_school" => "yes",
+        "work_setting" => "other",
         "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "works_in_school" => "no",
       },
     )
   end

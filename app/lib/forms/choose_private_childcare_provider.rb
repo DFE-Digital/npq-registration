@@ -29,7 +29,7 @@ module Forms
     end
 
     def display_no_javascript_fallback_form?
-      wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
+      wizard.store["institution_name"].present?
     end
 
     def possible_institutions
@@ -48,7 +48,7 @@ module Forms
 
     def validate_private_childcare_provider_name_returns_results
       if display_no_javascript_fallback_form? && possible_institutions.blank?
-        errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
+        errors.add(:institution_name, :no_results, urn: institution_name)
       end
     end
 
