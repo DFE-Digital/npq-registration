@@ -59,42 +59,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/contact-details", submit_form: true) do
-      expect(page).to have_text("What’s your email address?")
-
-      page.fill_in "What’s your email address?", with: "user@example.com"
-    end
-
-    expect_page_to_have(path: "/registration/confirm-email", submit_form: true) do
-      expect(page).to have_text("Confirm your email address")
-      expect(page).to have_text("user@example.com")
-      page.fill_in "Enter your code", with: "000000"
-      page.click_button("Continue")
-
-      expect(page).to have_text("Confirm your email address")
-      expect(page).to have_text("Code is not correct")
-
-      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
-
-      page.fill_in "Enter your code", with: code
-      page.click_button("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
-      expect(page).to have_text("Check your details")
-
-      page.fill_in "Teacher reference number (TRN)", with: manually_entered_trn
-      page.fill_in "Full name", with: "John Doe"
-      page.fill_in "Day", with: "13"
-      page.fill_in "Month", with: "12"
-      page.fill_in "Year", with: "1980"
-      page.fill_in "National Insurance number", with: "AB123456C"
-    end
-
     choose_a_school(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
