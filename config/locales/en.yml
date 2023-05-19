@@ -246,6 +246,7 @@ en:
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         check_answers: "Check your answers and confirm"
         confirmation_code: Confirm your email address
+        institution_location: Where is your workplace located?
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -311,6 +312,8 @@ en:
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
+
+        find_school:
 
         itt_provider: "Enter the name of the ITT provider you are working with"
 

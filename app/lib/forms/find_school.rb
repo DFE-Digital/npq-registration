@@ -10,6 +10,18 @@ module Forms
       ]
     end
 
+    def question
+      @question ||= QuestionTypes::TextField.new(
+        name: :institution_location,
+        form: self,
+        style_options: {
+          label: { text: "Where is your workplace located?" },
+          hint: { text: "Enter the town, city or the first part of the postcode. For example Chester or CH1." },
+          width: "three-quarters",
+        },
+      )
+    end
+
     def next_step
       :choose_school
     end

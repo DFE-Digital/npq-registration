@@ -1,26 +1,2 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Where is your workplace located?
-<% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <%= f.govuk_text_field :institution_location,
-                             width: "three-quarters",
-                             label: { text: "Where is your workplace located?", size: "xl", tag: "h1" },
-                             hint: { text: "Enter the town, city or the first part of the postcode. For example Chester or CH1." } %>
-
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+<%= render @form.question %>
 
