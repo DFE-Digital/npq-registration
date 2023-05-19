@@ -1,3 +1,6 @@
+require "webdrivers"
+Webdrivers.install_dir = [Webdrivers.install_dir, ENV["TEST_ENV_NUMBER"]].compact.join(File::SEPARATOR)
+
 if ENV["TEST_ENV_NUMBER"].nil?
   require "simplecov"
   SimpleCov.start "rails"
