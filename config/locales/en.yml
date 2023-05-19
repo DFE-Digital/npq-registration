@@ -280,6 +280,7 @@ en:
           - If you do not share this, you cannot progress with your NPQ.
         choose_childcare_provider: "Search for workplaces located in %{institution_location}."
         choose_school: "Search for schools or 16 to 19 educational settings located in %{institution_location}. If you work for a trust, enter one of their schools."
+        choose_private_childcare_provider: "For example EY456789"
     label:
       registration_wizard:
         work_setting_options:
@@ -371,3 +372,7 @@ en:
         choose_school: "What’s the name of your workplace?"
         choose_school_other: "School or college not shown above"
         choose_school_search: "Please choose from schools or 16 to 19 educational settings located in %{institution_location}."
+
+        choose_private_childcare_provider: "Enter your or your employer’s URN"
+        choose_private_childcare_provider_other: "My employer is not shown above"
+        choose_private_childcare_provider_search: "Please choose your employer"

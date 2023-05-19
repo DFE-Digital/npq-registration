@@ -1,13 +1,13 @@
 module Forms
   module QuestionTypes
     # See Forms::QuestionTypes::AutoCompleteInstitution for info on this class
-    class AutoCompleteSchool < AutoCompleteInstitution
+    class AutoCompletePrivateChildcareProvider < AutoCompleteInstitution
       def picker_type
-        :school
+        :"private-childcare-provider"
       end
 
       def locale_params
-        { institution_location: institution_location }
+        {}
       end
     end
   end

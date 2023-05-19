@@ -5,6 +5,10 @@ module Forms
       def picker_type
         :nursery
       end
+
+      def locale_params
+        { institution_location: institution_location }
+      end
     end
   end
 end

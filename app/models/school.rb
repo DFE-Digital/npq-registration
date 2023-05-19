@@ -22,6 +22,10 @@ class School < ApplicationRecord
 
   scope :open, -> { where(establishment_status_code: %w[1 3 4]) }
 
+  def display_name
+    name
+  end
+
   def primary_education_phase?
     phase_name == MIDDLE_DEEMED_PRIMARY_PHASE ||
       phase_name == PRIMARY_PHASE

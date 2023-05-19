@@ -29,7 +29,7 @@
     search_question_locale_key = search_question.locale_keys[:name]
     search_question_text = t(
       "helpers.label.registration_wizard.#{search_question_locale_key}",
-      institution_location: question.institution_location
+      **question.locale_params
     )
   %>
 
@@ -44,7 +44,7 @@
         form.govuk_radio_button(
           question.name,
           institution.identifier,
-          label: { text: institution.name },
+          label: { text: institution.display_name },
           hint: { text: institution.address_string },
           link_errors: index.zero?,
         )
