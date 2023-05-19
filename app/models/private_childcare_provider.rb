@@ -41,7 +41,7 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def display_name
-    provider_name || urn
+    [urn, provider_name].compact.join(" - ")
   end
 
   def address
