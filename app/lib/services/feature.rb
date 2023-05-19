@@ -15,6 +15,13 @@ module Services
         end
       end
 
+      # This is always true but is checked so that it is explicit
+      # why certain checks are made, rather than leaving implicit the reason behind TRN
+      # presence checks. This also makes it clear what needs changing when TRNs become optional.
+      #
+      # Used in app/helpers/forms/flow_helper.rb to determine whether user's require TRNs
+      # and should be directed to the qualified_teacher_check flow to enter a TRN if
+      # the get an identity service did not provide one
       def trn_required?
         true
       end
