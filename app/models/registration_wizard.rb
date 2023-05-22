@@ -152,7 +152,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Course",
-                            value: I18n.t(query_store.course.identifier, scope: "helpers.label.registration_wizard.course_identifier_options"),
+                            value: I18n.t(query_store.course.identifier, scope: "course.name"),
                             change_step: :choose_your_npq)
 
     unless eligible_for_funding?

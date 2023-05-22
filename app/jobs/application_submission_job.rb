@@ -1,4 +1,6 @@
 class ApplicationSubmissionJob < ApplicationJob
+  include CourseHelper
+
   queue_as :default
 
   def perform(user:)
@@ -15,7 +17,7 @@ class ApplicationSubmissionJob < ApplicationJob
         to: user.email,
         full_name: user.full_name,
         provider_name: application.lead_provider.name,
-        course_name: application.course.name,
+        course_name: localise_course_name(application.course),
       ).deliver_now
     end
   end

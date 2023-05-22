@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
       expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
-      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the NPQ for Leading Teacher Development (NPQLTD).")
+      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the Leading teacher development NPQ.")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
