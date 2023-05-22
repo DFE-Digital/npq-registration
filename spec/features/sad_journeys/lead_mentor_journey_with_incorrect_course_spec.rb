@@ -111,7 +111,7 @@ RSpec.feature "Sad journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("Your initial registration is complete")
+      expect(page).to have_text("You’ve registered for the Senior leadership NPQ with Church of England")
     end
 
     expect(User.count).to be(1)

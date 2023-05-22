@@ -249,7 +249,7 @@ en:
       "npq-early-headship-coaching-offer": "EHCO"
       "npq-early-years-leadership": "NPQEYL"
       "npq-leading-literacy": "NPQLL"
-    name: &course_names
+    name:
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"
       "npq-leading-teaching-development": "Leading teacher development"
@@ -325,8 +325,6 @@ en:
           preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
-
-        course_identifier_options: *course_names
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
