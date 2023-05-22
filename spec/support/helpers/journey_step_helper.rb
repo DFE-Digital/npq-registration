@@ -9,7 +9,7 @@ module Helpers
 
       if js
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Search for schools or 16 to 19 educational settings located in #{location}. If you work for a trust, enter one of their schools.")
+          expect(page).to have_text("Search for your school or 16 to 19 educational setting in #{location}. If you work for a trust, enter one of their schools.")
 
           within ".npq-js-reveal" do
             page.fill_in "What’s the name of your workplace?", with: name
@@ -21,7 +21,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Search for schools or 16 to 19 educational settings located in #{location}. If you work for a trust, enter one of their schools.")
+          expect(page).to have_text("Search for your school or 16 to 19 educational setting in #{location}. If you work for a trust, enter one of their schools.")
 
           within ".npq-js-hidden" do
             page.fill_in "What’s the name of your workplace?", with: name
@@ -29,7 +29,7 @@ module Helpers
 
           page.click_button("Continue")
 
-          expect(page).to have_text("What’s the name of your workplace?")
+          expect(page).to have_text("Search for your school or 16 to 19 educational setting in #{location}. If you work for a trust, enter one of their schools.")
           page.choose "open #{location} school"
         end
       end
@@ -39,7 +39,7 @@ module Helpers
       if js
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           expect(page).to have_text("What’s the name of your workplace?")
-          expect(page).to have_text("Search for workplaces located in #{location}")
+          expect(page).to have_text("Search for your workplace in #{location}")
           within ".npq-js-reveal" do
             page.fill_in "What’s the name of your workplace?", with: "open"
           end
@@ -49,7 +49,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_text("Search for workplaces located in #{location}")
+          expect(page).to have_text("Search for your workplace in #{location}")
 
           within ".npq-js-hidden" do
             page.fill_in "What’s the name of your workplace?", with: name
@@ -57,7 +57,7 @@ module Helpers
 
           page.click_button("Continue")
 
-          expect(page).to have_text("What’s the name of your workplace?")
+          expect(page).to have_text("Search for your workplace in #{location}")
           page.choose "open #{location} school"
         end
       end
@@ -85,8 +85,6 @@ module Helpers
           page.find("#private-childcare-provider-picker__option--0").click
         end
       else
-        # FIXME: This doesn't work, I think the real journey might be broken in prod. There's
-        # no way of getting beyond this page without JS
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
           within(".npq-js-hidden") do
             page.fill_in("Enter your or your employer’s URN", with: provider.urn)

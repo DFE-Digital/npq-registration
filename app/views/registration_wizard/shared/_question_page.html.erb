@@ -1,6 +1,6 @@
 <% content_for :title do %>
   <%= form.errors.present? ? "Error: " : nil %>
-  <%= t("helpers.#{form.question.title_locale_type}.registration_wizard.#{form.question.name}") %>
+  <%= t("helpers.#{form.question.title_locale_type}.registration_wizard.#{form.question.name_locale_key}") %>
 <% end %>
 
 <% content_for :before_content do %>

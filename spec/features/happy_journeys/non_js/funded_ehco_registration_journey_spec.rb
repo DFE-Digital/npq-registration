@@ -55,7 +55,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for schools or 16 to 19 educational settings located in manchester. If you work for a trust, enter one of their schools.")
+      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
 
       within ".npq-js-hidden" do
         page.fill_in "What’s the name of your workplace?", with: "open"
@@ -63,7 +63,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
       page.click_button("Continue")
 
-      expect(page).to have_text("What’s the name of your workplace?")
       page.choose "open manchester school"
     end
 
