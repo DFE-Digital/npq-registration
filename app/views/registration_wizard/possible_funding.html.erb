@@ -5,10 +5,10 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-xl">You may qualify for DfE scholarship funding</h1>
 
   <%= render "registration_wizard/possible_funding/#{@form.message_template}", course_name: @form.course.name %>
 
   <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
     <%= f.govuk_submit %>
   <% end %>
+<% end %>
