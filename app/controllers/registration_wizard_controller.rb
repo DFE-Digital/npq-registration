@@ -39,7 +39,7 @@ class RegistrationWizardController < ApplicationController
         if @form.valid?
           @wizard.save!
 
-          if lookup_context.template_exists?("#{@wizard.current_step}.js", "registration_wizard", false)
+          if lookup_context.template_exists?(@wizard.current_step, "registration_wizard", false, formats: %i[js])
             render @wizard.current_step
           else
             render "navigate_to_next_step"
