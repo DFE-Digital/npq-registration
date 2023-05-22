@@ -13,6 +13,10 @@ class LocalAuthority < ApplicationRecord
   pg_search_scope :search_by_location,
                   against: %i[address_1 address_2 address_3 town county postcode postcode_without_spaces]
 
+  def display_name
+    name
+  end
+
   def urn
     nil
   end

@@ -3,11 +3,20 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey when outside of catchment area (crown dependencies)" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when outside of catchment area - crown dependencies (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey when outside of catchment area - crown dependencies (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request(nino: "")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -17,6 +26,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")

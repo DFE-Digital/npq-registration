@@ -76,7 +76,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
       expect(page).to have_text("What’s the name of your workplace?")
-      expect(page).to have_text("Search for workplaces located in manchester")
+      expect(page).to have_text("Search for your workplace in manchester")
       within ".npq-js-reveal" do
         page.fill_in "What’s the name of your workplace?", with: "open"
       end

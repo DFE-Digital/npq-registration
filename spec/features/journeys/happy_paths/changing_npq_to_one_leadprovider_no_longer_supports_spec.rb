@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,8 +12,16 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey changing from outside of catchment area to inside" do
-    stub_participant_validation_request(nino: "")
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey changing NPQ to one LeadProvider no longer supports (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey changing NPQ to one LeadProvider no longer supports (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
+    stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -21,6 +30,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")
@@ -32,96 +45,29 @@ RSpec.feature "Happy journeys", type: :feature do
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Another country", visible: :all)
-
-      within "[data-module='app-country-autocomplete'" do
-        page.fill_in "Which country do you teach in?", with: "Falk"
-      end
-
-      expect(page).to have_content("Falkland Islands")
-      page.find("#registration-wizard-teacher-catchment-country-field__option--0").click
-    end
-
-    expect_page_to_have(path: "/registration/work-setting", axe_check: false, submit_form: true) do
-      page.choose("A school", visible: :all)
-    end
-
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-      expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
-
-      page.click_link("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How is your course being paid for?")
-      page.choose "I am paying", visible: :all
-    end
-
-    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
-      expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
-      expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree my information can be shared", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
-      expect_check_answers_page_to_have_answers(
-        {
-          "Course" => "Senior leadership",
-          "How is your NPQ being paid for?" => "I am paying",
-          "What setting do you work in?" => "A school",
-          "Lead provider" => "Teach First",
-          "Where do you work?" => "Falkland Islands",
-        },
-      )
-
-      page.click_link("Change", href: "/registration/teacher-catchment/change")
-    end
-
-    # TODO: aria-expanded
-    expect_page_to_have(path: "/registration/teacher-catchment/change", axe_check: false, submit_form: true) do
       page.choose("England", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("A school", visible: :all)
+      page.choose("Early years or childcare", visible: :all)
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
+    public_kind_of_nursery_key = Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
+    public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
+
+    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
+      expect(page).to have_text("Which early years setting do you work in?")
+      page.choose(public_kind_of_nursery, visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
+      expect(page).to have_text("Where is your workplace located?")
       page.fill_in "Where is your workplace located?", with: "manchester"
     end
 
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for schools or 16 to 19 educational settings located in manchester. If you work for a trust, enter one of their schools.")
-
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-
-      page.find("#school-picker__option--0").click
-    end
+    choose_a_childcare_provider(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -148,7 +94,57 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      page.choose("Teach First", visible: :all)
+      page.choose("Best Practice Network (home of Outstanding Leaders Partnership)", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
+      expect(page).to have_text("Sharing your NPQ information")
+      page.check("Yes, I agree my information can be shared", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
+      expect_check_answers_page_to_have_answers(
+        {
+          "Course" => "Senior leadership",
+          "How is your NPQ being paid for?" => "My workplace is covering the cost",
+          "Lead provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "What setting do you work in?" => "Early years or childcare",
+          "Nursery" => "open manchester school",
+          "Which early years setting do you work in?" => public_kind_of_nursery,
+          "Where do you work?" => "England",
+        },
+      )
+
+      page.click_link("Change", href: "/registration/choose-your-npq/change")
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-npq/change", submit_form: true) do
+      expect(page).to have_text("Which NPQ do you want to do?")
+      page.choose("Early years leadership", visible: :all) # Needs changing to an early years course once added
+    end
+
+    expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
+      expect(page).to have_text("DfE scholarship funding is not available")
+      expect(page).to have_text("To be eligible for scholarship funding for")
+      expect(page).to have_text("state-funded schools")
+      expect(page).to have_text("state-funded 16 to 19 organisations")
+      expect(page).to have_text("independent special schools")
+      expect(page).to have_text("virtual schools")
+      expect(page).to have_text("hospital schools")
+      expect(page).to have_text("young offenders institutions")
+
+      page.click_link("Continue")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      expect(page).to have_text("How is your course being paid for?")
+      page.choose "My workplace is covering the cost", visible: :all
+    end
+
+    expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
+      expect(page).to have_text("Select your provider")
+      expect(page).not_to have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
+      page.choose("Teacher Development Trust", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -161,19 +157,19 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course" => "Senior leadership",
-          "Workplace" => "open manchester school",
+          "Course" => "Early years leadership",
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "What setting do you work in?" => "A school",
-          "Lead provider" => "Teach First",
+          "Lead provider" => "Teacher Development Trust",
+          "What setting do you work in?" => "Early years or childcare",
+          "Nursery" => "open manchester school",
+          "Which early years setting do you work in?" => public_kind_of_nursery,
           "Where do you work?" => "England",
         },
       )
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Senior leadership NPQ with Teach First")
-      expect(page).not_to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
+      expect(page).to have_text("You’ve registered for the Early years leadership NPQ with Teacher Development Trust")
     end
 
     expect(retrieve_latest_application_user_data).to match(
@@ -198,19 +194,19 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect(retrieve_latest_application_data).to match(
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
       "funding_choice" => "school",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "itt_provider" => nil,
       "lead_mentor" => false,
+      "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "headteacher_status" => nil,
-      "kind_of_nursery" => nil,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "kind_of_nursery" => public_kind_of_nursery_key,
+      "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
       "private_childcare_provider_urn" => nil,
       "school_urn" => "100000",
       "targeted_delivery_funding_eligibility" => false,
@@ -222,25 +218,26 @@ RSpec.feature "Happy journeys", type: :feature do
       "number_of_pupils" => nil,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => false,
+      "works_in_childcare" => true,
       "works_in_nursery" => nil,
-      "works_in_school" => true,
-      "work_setting" => "a_school",
+      "works_in_school" => false,
+      "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_identifier" => "npq-senior-leadership",
+        "course_identifier" => "npq-early-years-leadership",
         "funding" => "school",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => "",
-        "lead_provider_id" => "9",
+        "institution_name" => js ? "" : "open",
+        "kind_of_nursery" => public_kind_of_nursery_key,
+        "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "trn_knowledge" => "yes",
-        "works_in_school" => "yes",
-        "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "works_in_childcare" => "yes",
+        "works_in_school" => "no",
+        "work_setting" => "early_years_or_childcare",
       },
     )
   end

@@ -28,8 +28,18 @@ module Forms
       :have_ofsted_urn
     end
 
-    def display_no_javascript_fallback_form?
-      wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
+    def question
+      @question ||= Forms::QuestionTypes::AutoCompleteInstitution.new(
+        name: :institution_identifier,
+        locale_name: :choose_private_childcare_provider,
+        picker: :"private-childcare-provider",
+        options: possible_institutions,
+        display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
+        search_question: Forms::QuestionTypes::TextField.new(
+          name: :institution_name,
+          locale_name: :choose_private_childcare_provider_search,
+        ),
+      )
     end
 
     def possible_institutions
@@ -42,13 +52,17 @@ module Forms
 
   private
 
+    def search_term_entered_in_no_js_fallback_form?
+      wizard.store["institution_name"].present?
+    end
+
     def no_js_fallback_search_loop?
       institution_identifier == "other"
     end
 
     def validate_private_childcare_provider_name_returns_results
-      if display_no_javascript_fallback_form? && possible_institutions.blank?
-        errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
+        errors.add(:institution_name, :no_results, urn: institution_name)
       end
     end
 
@@ -56,8 +70,9 @@ module Forms
       return if no_js_fallback_search_loop?
       return if institution_identifier.blank?
 
-      errors.add(:institution_identifier, :invalid, urn: institution_identifier) unless
-        institution_identifier.start_with?("PrivateChildcareProvider-")
+      unless institution_identifier.start_with?("PrivateChildcareProvider-")
+        errors.add(:institution_identifier, :invalid, urn: institution_identifier)
+      end
 
       return if institution(source: institution_identifier).present?
 

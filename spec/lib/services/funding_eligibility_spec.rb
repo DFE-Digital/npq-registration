@@ -197,7 +197,7 @@ RSpec.describe Services::FundingEligibility do
         Course.all.reject(&:npqltd?).each do |course|
           let(:course) { course }
 
-          it "is not eligible for #{course.name}" do
+          it "is not eligible for #{course.identifier}" do
             expect(subject).not_to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :not_lead_mentor_course
           end

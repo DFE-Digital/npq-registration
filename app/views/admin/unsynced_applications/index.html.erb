@@ -22,7 +22,7 @@
             @applications.each do |app|
               body.row do |row|
                 row.cell(text: govuk_link_to(app.user.email, admin_application_path(app)))
-                row.cell(text: app.course.name)
+                row.cell(text: localise_course_name(app.course))
                 row.cell(text: app.lead_provider.name)
                 row.cell(text: app.school_urn)
                 row.cell(text: app.created_at.to_date.to_formatted_s(:govuk))

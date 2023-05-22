@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,7 +12,15 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Enable Get An Identity integration"
 
-  scenario "registration journey when choosing lead mentor journey and approved ITT provider" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -31,6 +40,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    unless js
+      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
     end
 
     expect(page).not_to have_content("Do you have a TRN?")
@@ -55,11 +68,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     approved_itt_provider_legal_name = ::IttProvider.currently_approved.sample.legal_name
 
-    expect_page_to_have(path: "/registration/itt-provider", submit_form: true) do
-      expect(page).to have_text("Enter the name of the ITT provider you are working with")
-      page.fill_in("Enter the name of the ITT provider you are working with", with: approved_itt_provider_legal_name)
-      page.click_button("Continue")
-    end
+    choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
@@ -68,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
       expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
-      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the NPQ for Leading Teacher Development (NPQLTD).")
+      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the Leading teacher development NPQ.")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do

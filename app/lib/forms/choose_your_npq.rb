@@ -29,7 +29,7 @@ module Forms
           value: course.identifier,
           link_errors: index.zero?,
           divider: divider_index == index,
-          label: { text: I18n.t("courses.alternative_names.#{course.identifier}", default: course.name) },
+          label: { text: I18n.t("course.name.#{course.identifier}", default: course.name) },
         )
       end
     end

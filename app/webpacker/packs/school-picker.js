@@ -47,7 +47,7 @@ schoolPicker.enhanceSelectElement = (configurationOptions) => {
     }
   }
 
-  const location = configurationOptions.selectElement.getAttribute("data-location")
+  const location = configurationOptions.selectElement.getAttribute("data-institution-location")
 
   configurationOptions.source = debounce( async ( query, populateResults ) => {
     const res = await fetchSource(query, location);
