@@ -1,22 +1,16 @@
-<% content_for :title do %>
-  School or college must be in England, Guernsey, Jersey or the Isle of Man
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <h1 class="govuk-heading-xl">School or college must be in England, Guernsey, Jersey or the Isle of Man</h1>
+
+  <p class="govuk-body">The school or college you have selected is not in England, Guernsey, Jersey or the Isle of Man.</p>
+
+  <p class="govuk-body">This NPQ application can only be completed by teachers working in these locations.</p>
+
+  <p class="govuk-body">If you teach in a school or college outside these locations and you want to study for an NPQ, check with your training provider, school or college’s training contact.</p>
 <% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">School or college must be in England, Guernsey, Jersey or the Isle of Man</h1>
-
-    <p class="govuk-body">The school or college you have selected is not in England, Guernsey, Jersey or the Isle of Man.</p>
-
-    <p class="govuk-body">This NPQ application can only be completed by teachers working in these locations.</p>
-
-    <p class="govuk-body">If you teach in a school or college outside these locations and you want to study for an NPQ, check with your training provider, school or college’s training contact.</p>
-  </div>
-</div>
