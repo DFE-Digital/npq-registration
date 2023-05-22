@@ -274,6 +274,7 @@ en:
         change_dqt: "Change your details on the Teaching Regulation Agency records"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         check_answers: "Check your answers and confirm"
+        possible_funding: "You may qualify for DfE scholarship funding"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"

@@ -1,25 +1,14 @@
-<% content_for :title do %>
-  You may qualify for DfE scholarship funding
-<% end %>
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">You may qualify for DfE scholarship funding</h1>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+  <%= render "registration_wizard/possible_funding/#{@form.message_template}", course_name: @form.course.name %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%=
-      render(
-        "registration_wizard/possible_funding/#{@form.message_template}",
-        course: @form.course
-      )
-    %>
-
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit %>
+  <% end %>
