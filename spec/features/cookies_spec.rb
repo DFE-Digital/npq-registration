@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Cookies", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "view info about cookies" do
     visit "/"

@@ -18,6 +18,21 @@ module Forms
       ]
     end
 
+    def question
+      @question ||= Forms::QuestionTypes::AutoCompleteInstitution.new(
+        name: :institution_identifier,
+        locale_name: :choose_childcare_provider,
+        picker: :nursery,
+        options: possible_institutions,
+        data_attributes: { institution_location: },
+        display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
+        search_question: Forms::QuestionTypes::TextField.new(
+          name: :institution_name,
+          locale_name: :choose_childcare_provider_search,
+        ),
+      )
+    end
+
     def next_step
       if institution_identifier == "other" || institution_identifier.blank?
         :choose_childcare_provider
@@ -32,8 +47,12 @@ module Forms
       :find_childcare_provider
     end
 
-    def display_no_javascript_fallback_form?
-      wizard.store["institution_location"].present? && wizard.store["institution_name"].present?
+    def search_term_entered_in_no_js_fallback_form?
+      # This combination of fields is only used in the no-js fallback form
+      # institution_location will be set from the previous question
+      # institution_name will be set from the search term being entered into the search
+      # field that is only visible when JS is disabled.
+      institution_location.present? && wizard.store["institution_name"].present?
     end
 
     def possible_institutions
@@ -60,7 +79,7 @@ module Forms
     end
 
     def validate_childcare_provider_name_returns_results
-      if display_no_javascript_fallback_form? && possible_institutions.blank?
+      if search_term_entered_in_no_js_fallback_form? && possible_institutions.blank?
         errors.add(:institution_name, :no_results, location: institution_location, name: institution_name)
       end
     end

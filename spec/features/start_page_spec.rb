@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Start page", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "Navigate to home" do
     visit "/"

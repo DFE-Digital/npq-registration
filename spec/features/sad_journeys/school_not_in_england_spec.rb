@@ -6,24 +6,19 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_get_an_identity_id) { user_uid }
     let(:api_call_trn) { user_trn }
   end
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "school not in england" do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_link("Start now")
+      page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect(page).not_to have_content("Do you have a TRN?")
+    expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")

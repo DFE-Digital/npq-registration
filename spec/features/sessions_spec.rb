@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Sessions", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "signing in when user does not exist" do
     visit "/sign-in"

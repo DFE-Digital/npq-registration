@@ -2,6 +2,7 @@ module Forms
   class Base
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
+    include Forms::FlowHelper
 
     attr_accessor :wizard
 
@@ -80,8 +81,17 @@ module Forms
     end
 
     def requirements_met?
-      # Have any questions been answered?
-      wizard.store.present? && wizard.store.keys != %w[current_user]
+      # Ensures the user is:
+      # a) logged in
+      # b) has answered at least one question
+      # Before allowing them to proceed into any questions.
+      # Certain questions, such as start and provider_check, override this
+      # as they are the first questions in the flow.
+      # Some questions add additional requirements, such as the confirmation page which requires
+      # a lead provider and a course to have been selected.
+      wizard.store.present? &&
+        query_store.current_user.present? &&
+        wizard.store.keys != %w[current_user]
     end
 
     def reset_store!
@@ -92,12 +102,13 @@ module Forms
       wizard.query_store
     end
 
-    def build_option_struct(value:, link_errors: false, divider: false, revealed_question: nil)
+    def build_option_struct(value:, link_errors: false, divider: false, revealed_question: nil, label: {})
       Forms::QuestionTypes::RadioOption.new(
         value:,
         link_errors:,
         divider:,
         revealed_question:,
+        label:,
       )
     end
   end

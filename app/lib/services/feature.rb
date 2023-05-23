@@ -2,14 +2,10 @@ module Services
   class Feature
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
-    GAI_INTEGRATION_KEY = "Get an Identity integration".freeze
-    REMOVE_USER_FROM_GAI_PILOT_KEY = "Disable Get an Identity pilot for user (for use with individual users)".freeze
     REGISTRATION_CLOSED_KEY = "Registration closed".freeze
 
     FEATURE_FLAG_KEYS = [
-      GAI_INTEGRATION_KEY,
       REGISTRATION_CLOSED_KEY,
-      REMOVE_USER_FROM_GAI_PILOT_KEY,
     ].freeze
 
     class << self
@@ -19,17 +15,15 @@ module Services
         end
       end
 
-      def get_an_identity_integration_active_for?(user)
-        Flipper.enabled?(Services::Feature::GAI_INTEGRATION_KEY, user) &&
-          !Flipper.enabled?(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
-      end
-
-      def enroll_user_in_get_an_identity_pilot(user)
-        Flipper.enable_actor(Services::Feature::GAI_INTEGRATION_KEY, user)
-      end
-
-      def remove_user_from_get_an_identity_pilot(user)
-        Flipper.enable_actor(Services::Feature::REMOVE_USER_FROM_GAI_PILOT_KEY, user)
+      # This is always true but is checked so that it is explicit
+      # why certain checks are made, rather than leaving implicit the reason behind TRN
+      # presence checks. This also makes it clear what needs changing when TRNs become optional.
+      #
+      # Used in app/helpers/forms/flow_helper.rb to determine whether user's require TRNs
+      # and should be directed to the qualified_teacher_check flow to enter a TRN if
+      # the get an identity service did not provide one
+      def trn_required?
+        true
       end
 
       def registration_closed?

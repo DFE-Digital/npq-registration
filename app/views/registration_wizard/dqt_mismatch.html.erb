@@ -1,74 +1,68 @@
-<% content_for :title do %>
-  We cannot find your details
-<% end %>
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+  <h1 class="govuk-heading-xl">We cannot find your details</h1>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">We cannot find your details</h1>
+  <p class="govuk-body">
+    We cannot find a match with the details you’ve given.
+  </p>
 
-    <p class="govuk-body">
-      We cannot find a match with the details you’ve given.
-    </p>
+  <p class="govuk-body">
+    This could be because:
+  </p>
 
-    <p class="govuk-body">
-      This could be because:
-    </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>you have abbreviated your first name, for example Rob/Robert</li>
+    <li>your surname is different to the name held on the Teaching Regulation Agency records</li>
+    <li>mistyped or entered some incorrect information</li>
+  </ul>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>you have abbreviated your first name, for example Rob/Robert</li>
-      <li>your surname is different to the name held on the Teaching Regulation Agency records</li>
-      <li>mistyped or entered some incorrect information</li>
-    </ul>
+  <h2 class="govuk-heading-m">Check your details and try again</h2>
 
-    <h2 class="govuk-heading-m">Check your details and try again</h2>
-
-    <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
-      <% summary_list.row do |row|
-           row.key { "Teacher reference number (TRN)" }
-           row.value { @wizard.query_store.trn } %>
-      <% end %>
-
-      <% summary_list.row do |row|
-           row.key { "Full name" }
-           row.value { @wizard.store["full_name"] } %>
-      <% end %>
-
-      <% summary_list.row do |row|
-           row.key { "Date of birth" }
-           row.value { @wizard.query_store.formatted_date_of_birth } %>
-      <% end %>
-
-      <% if @wizard.store["national_insurance_number"].present? %>
-        <% summary_list.row do |row|
-             row.key { "National Insurance number" }
-             row.value { @wizard.store["national_insurance_number"] } %>
-        <% end %>
-      <% end %>
+  <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
+    <% summary_list.row do |row|
+          row.key { "Teacher reference number (TRN)" }
+          row.value { @wizard.query_store.trn } %>
     <% end %>
 
-    <p class="govuk-body">
-      <% if @wizard.store["national_insurance_number"].present? %>
-        Try again to enter your details.
-      <% else %>
-        Try again to enter your details – entering your National Insurance number will help us match your details.
+    <% summary_list.row do |row|
+          row.key { "Full name" }
+          row.value { @wizard.store["full_name"] } %>
+    <% end %>
+
+    <% summary_list.row do |row|
+          row.key { "Date of birth" }
+          row.value { @wizard.query_store.formatted_date_of_birth } %>
+    <% end %>
+
+    <% if @wizard.store["national_insurance_number"].present? %>
+      <% summary_list.row do |row|
+            row.key { "National Insurance number" }
+            row.value { @wizard.store["national_insurance_number"] } %>
       <% end %>
-    </p>
+    <% end %>
+  <% end %>
 
-    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
+  <p class="govuk-body">
+    <% if @wizard.store["national_insurance_number"].present? %>
+      Try again to enter your details.
+    <% else %>
+      Try again to enter your details – entering your National Insurance number will help us match your details.
+    <% end %>
+  </p>
 
-    <h2 class="govuk-heading-m">Still can’t match your details?</h2>
+<%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), class: "govuk-button--secondary" %>
 
-    <p class="govuk-body">
-      You can still continue to register - our support team will manually match your details over the next few weeks. You will only be contacted if we cannot match your details.
-    </p>
+  <h2 class="govuk-heading-m">Still can’t match your details?</h2>
 
-    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), class: "govuk-button--secondary" %>
-  </div>
-</div>
+  <p class="govuk-body">
+    You can still continue to register - our support team will manually match your details over the next few weeks. You will only be contacted if we cannot match your details.
+  </p>
+
+  <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path) %>
+<% end %>

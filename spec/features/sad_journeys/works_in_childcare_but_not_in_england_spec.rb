@@ -6,24 +6,19 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_get_an_identity_id) { user_uid }
     let(:api_call_trn) { user_trn }
   end
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "works in childcare but not in england" do
     stub_participant_validation_request(nino: "")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_link("Start now")
+      page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect(page).not_to have_content("Do you have a TRN?")
+    expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -86,11 +81,11 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("Your initial registration is complete")
+      expect(page).to have_text("You’ve registered for the Senior leadership NPQ with Teach First")
     end
 
     expect(retrieve_latest_application_user_data).to match(
-      "active_alert" => nil,
+      "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
@@ -110,7 +105,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to match(
+    deep_compare_application_data(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -147,7 +142,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "teacher_catchment" => "scotland",
         "teacher_catchment_country" => nil,
-        "trn_knowledge" => "yes",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",
         "work_setting" => "early_years_or_childcare",

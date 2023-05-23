@@ -6,11 +6,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= render NpqPanel.new(
       title: {
-        text: "Your initial registration is complete"
-      },
-      body: {
-        text: "You’ve registered for an <strong>#{@form.course.name}</strong> with <strong>#{@form.lead_provider.name}</strong>".html_safe,
-        classes: ["govuk-!-font-size-19"]
+        text: "You’ve registered for #{localise_sentence_embedded_course_name(@form.course)} with #{@form.lead_provider.name}"
       }
     ) %>
 
@@ -21,22 +17,26 @@
     <p class="govuk-body">They’ll contact you to outline the next steps, including how to apply.</p>
 
     <% if @form.display_npqh_information?  %>
-      <h2 class="govuk-heading-m">Early headship coaching offer</h2>
+      <% ehco_course = Course.ehco.first %>
 
-      <p class="govuk-body">The Early headship coaching offer is a package of structured face-to-face support for new headteachers.</p>
+      <h2 class="govuk-heading-m"><%= localise_course_name(ehco_course) %></h2>
+
+      <p class="govuk-body">The <%= localise_course_name(ehco_course) %> is a package of structured face-to-face support for new headteachers.</p>
 
       <p class="govuk-body">You may be eligible for DfE scholarship funding if you are in the first 5 years of a headship and:</p>
 
       <ul class="govuk-list govuk-list--bullet">
-        <li>have completed an NPQH</li>
-        <li>are studying for an NPQH</li>
-        <li>are about to start an NPOH</li>
+        <% npqh_name = localise_sentence_embedded_course_name(Course.npqh.first) %>
+
+        <li>have completed <%= npqh_name %></li>
+        <li>are studying for <%= npqh_name %></li>
+        <li>are about to start <%= npqh_name %></li>
       </ul>
 
       <p class="govuk-body">If eligible, your training provider will share further details with you.</p>
 
       <p class="govuk-body">
-        <%= govuk_link_to "Read more about the Early headship coaching offer", @form.ehco_more_information_url %>
+        <%= govuk_link_to "Read more about #{localise_sentence_embedded_course_name(ehco_course)}", @form.ehco_more_information_url %>
       </p>
     <% end %>
 

@@ -4,6 +4,7 @@ on: [push]
 
 env:
   RAILS_ENV: test
+  DATABASE_URL: postgres://postgres:@localhost:5432
 
 jobs:
   tests:
@@ -67,17 +68,13 @@ jobs:
         run: yarn install
 
       - name: Set up test database
-        run: bin/rails db:prepare
-        env:
-          DATABASE_URL: postgres://postgres:@localhost:5432/test
+        run: bin/rails parallel:setup
 
       - name: Run rubocop
         run: bundle exec rubocop --format clang --parallel
 
       - name: Run tests
-        run: bundle exec rake
-        env:
-          DATABASE_URL: postgres://postgres:@localhost:5432/test
+        run: bundle exec rake parallel:spec
 
       - name: Run brakeman
         run: bundle exec brakeman

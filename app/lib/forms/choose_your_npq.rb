@@ -25,9 +25,12 @@ module Forms
       divider_index = courses.length - 1 # Place the "Or" divider before the last course
 
       courses.each_with_index.map do |course, index|
-        OpenStruct.new(value: course.identifier,
-                       link_errors: index.zero?,
-                       divider: divider_index == index)
+        build_option_struct(
+          value: course.identifier,
+          link_errors: index.zero?,
+          divider: divider_index == index,
+          label: { text: I18n.t("course.name.#{course.identifier}", default: course.name) },
+        )
       end
     end
 
@@ -83,10 +86,8 @@ module Forms
         else
           :have_ofsted_urn
         end
-      elsif wizard.tra_get_an_identity_omniauth_integration_active?
-        :work_setting
       else
-        :qualified_teacher_check
+        :work_setting
       end
     end
 

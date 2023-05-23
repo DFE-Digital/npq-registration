@@ -1,3 +1,6 @@
+require "webdrivers"
+Webdrivers.install_dir = [Webdrivers.install_dir, ENV["TEST_ENV_NUMBER"]].compact.join(File::SEPARATOR)
+
 if ENV["TEST_ENV_NUMBER"].nil?
   require "simplecov"
   SimpleCov.start "rails"
@@ -7,6 +10,7 @@ require "webmock/rspec"
 require "with_model"
 require "support/helpers/journey_helper"
 require "support/helpers/journey_assertion_helper"
+require "support/helpers/journey_step_helper"
 
 WebMock.disable_net_connect!(
   allow_localhost: true,

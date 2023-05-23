@@ -40,6 +40,11 @@ module Forms
       ]
     end
 
+    def requirements_met?
+      # The user has to have logged in via GAI to reach this question
+      wizard.store.present? && query_store.current_user.present?
+    end
+
     def validate_processed_trn
       if processed_trn !~ /\A\d+\z/
         errors.add(:trn, :invalid)
@@ -70,14 +75,7 @@ module Forms
 
         return :check_answers if changing_answer?
 
-        if wizard.query_store.inside_catchment?
-          return :find_school if wizard.query_store.works_in_school?
-          return :kind_of_nursery if wizard.query_store.works_in_childcare?
-
-          return :your_employment
-        end
-
-        :choose_your_npq
+        :provider_check
       else
         mark_trn_as_unverified
 
@@ -91,16 +89,16 @@ module Forms
       :dqt_mismatch
     end
 
+    def previous_step
+      :start
+    end
+
     def store_verified_trn(record)
       @verified_trn = record.trn
     end
 
     def store_active_alert(record)
       @active_alert = record.active_alert
-    end
-
-    def previous_step
-      :contact_details
     end
 
     def trn_verified?
@@ -120,12 +118,33 @@ module Forms
       @active_alert
     end
 
+    def before_render
+      # Load info from current_user into store if it isn't already set
+      # This way this info will be pre-populated in the forms.
+      # This is useful for when the user is logged in and we already know this info.
+      @full_name ||= query_store.current_user.full_name
+      @trn ||= query_store.current_user.trn
+      @date_of_birth ||= query_store.current_user.date_of_birth # rubocop:disable Naming/MemoizedInstanceVariableName
+    end
+
     def after_save
       wizard.store["trn_verified"] = trn_verified?
       wizard.store["trn_lookup_status"] = trn_lookup_status
       wizard.store["trn_auto_verified"] = trn_auto_verified?
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
+
+      query_store.current_user.update!(
+        trn: trn_to_store,
+        full_name:,
+        date_of_birth:,
+        national_insurance_number: ni_number_to_store,
+        trn_verified: trn_verified?,
+        trn_lookup_status:,
+        trn_auto_verified: !!trn_auto_verified?,
+        active_alert: active_alert?,
+      )
+      wizard.store["trn_set_via_fallback_verification_question"] = true
     end
 
     def ni_number_required?
@@ -135,6 +154,18 @@ module Forms
   private
 
     attr_reader :verified_trn
+
+    def trn_to_store
+      if trn_verified?
+        verified_trn.rjust(7, "0")
+      else
+        trn.rjust(7, "0")
+      end
+    end
+
+    def ni_number_to_store
+      national_insurance_number unless trn_verified?
+    end
 
     def strip_full_name_whitespace
       full_name&.squish!

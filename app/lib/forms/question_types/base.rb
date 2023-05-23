@@ -13,6 +13,7 @@ module Forms
       attribute :options, default: -> { {} } # TODO: options should be moved to appropriate subclass!
       attribute :form
       attribute :style_options, default: -> { {} }
+      attribute :locale_name
 
       def initialize(**attrs)
         super
@@ -38,6 +39,10 @@ module Forms
 
       def default_styles
         {}
+      end
+
+      def name_locale_key
+        locale_name || name
       end
     end
   end

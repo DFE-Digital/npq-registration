@@ -1,0 +1,71 @@
+<%#
+  This form of the institution picker is used when JavaScript is enabled.
+
+  The user enters the name of the institution they want to search for, and
+  the JavaScript code will make an AJAX request to the server to get a list
+  of matching institutions. The user can then select one of the institutions
+  from the list.
+%>
+
+<div class="npq-js-hidden">
+  <%#
+    This question is here in the JS version of the form so that the
+    user can still submit the form if JavaScript is disabled.
+
+    Initially all users are presented the results of rendering _js.html.erb
+    which includes this section for non-js users.
+    Once submitted from here the user will be presented with the no_js
+    version of the questions so they can pick out their institution from
+    a set of radio options. See _no_js.html.erb for how this works.
+  %>
+  <%=
+    form.govuk_text_field(
+      question.search_question.name,
+      width: "full",
+      label: { text: question_text, size: "xl", tag: "h1" },
+      hint: { text: hint_text }
+    )
+  %>
+</div>
+
+
+<%#
+  The below is the JS version of the form. It is hidden by default and
+  revealed by the CSS only when .js-enabled is set on the body.
+
+  "#{question.picker}-picker" is in place so that the question can load in
+  the correct searchable select logic. This is detected and the picker set up in
+  app/webpacker/packs/application.js.
+
+  Available options:
+    - "nursery-picker"
+    - "school-picker"
+    - "private-childcare-provider-picker"
+%>
+
+<% question_id = "#{question.picker}-picker" %>
+
+<div class="npq-js-reveal">
+  <div class="govuk-form-group">
+    <h1 class="govuk-label-wrapper">
+      <%=
+        form.label(
+          question.name,
+          question_text,
+          class: "govuk-label govuk-label--xl",
+          for: question_id
+        )
+      %>
+    </h1>
+
+    <span class="govuk-hint" id="nursery-picker-hint"><%= hint_text %></span>
+
+    <%=
+      form.text_field(
+        question.name,
+        data: question.data_attributes,
+        id: question_id
+      )
+    %>
+  </div>
+</div>

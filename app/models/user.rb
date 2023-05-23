@@ -121,10 +121,6 @@ class User < ApplicationRecord
     admin? && super_admin?
   end
 
-  def get_an_identity_integration_active?
-    Services::Feature.get_an_identity_integration_active_for?(self)
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end

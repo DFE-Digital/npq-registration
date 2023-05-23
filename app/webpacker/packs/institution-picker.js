@@ -45,7 +45,7 @@ institutionPicker.enhanceSelectElement = (configurationOptions) => {
     }
   }
 
-  const location = configurationOptions.selectElement.getAttribute("data-location")
+  const location = configurationOptions.selectElement.getAttribute("data-institution-location")
 
   configurationOptions.source = debounce( async ( query, populateResults ) => {
     const res = await fetchSource(configurationOptions.lookupPath, query, location);

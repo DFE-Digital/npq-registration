@@ -27,16 +27,6 @@ en:
           attributes:
             can_share_choices:
               accepted: You must agree to share data with providers to continue
-        forms/contact_details:
-          attributes:
-            email:
-              blank: Email can’t be blank
-              invalid: Enter a valid email address
-        forms/resend_code:
-          attributes:
-            email:
-              blank: Email can’t be blank
-              invalid: Enter a valid email address
         forms/your_employment:
           attributes:
             employment_type:
@@ -49,16 +39,6 @@ en:
           attributes:
             employer_name:
               blank: Enter the name of your employer
-        forms/teacher_reference_number:
-          attributes:
-            trn_knowledge:
-              blank: Choose an option regarding your teacher reference number
-        forms/confirm_email:
-          attributes:
-            confirmation_code:
-              blank: Code can’t be blank
-              wrong_length: Code should be 6 characters long
-              incorrect: Code is not correct. Please try again
         forms/qualified_teacher_check:
           attributes:
             trn:
@@ -102,6 +82,8 @@ en:
             institution_identifier:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
               invalid: No matching private childcare provider found
+            institution_name:
+              no_results: No private childcare providers with the URN %{urn} were found, please try again
         forms/choose_school:
           attributes:
             institution_name:
@@ -232,6 +214,33 @@ en:
         status_comment: "Status Comment"
         message: "Message"
 
+  course:
+    embedded_sentence:
+      default: "the %{course_name} NPQ"
+      ehco: "the %{course_name}"
+    short_code:
+      "npq-leading-teaching": "NPQLT"
+      "npq-leading-behaviour-culture": "NPQLBC"
+      "npq-leading-teaching-development": "NPQLTD"
+      "npq-senior-leadership": "NPQSL"
+      "npq-headship": "NPQH"
+      "npq-executive-leadership": "NPQEL"
+      "npq-additional-support-offer": "ASO"
+      "npq-early-headship-coaching-offer": "EHCO"
+      "npq-early-years-leadership": "NPQEYL"
+      "npq-leading-literacy": "NPQLL"
+    name:
+      "npq-leading-teaching": "Leading teaching"
+      "npq-leading-behaviour-culture": "Leading behaviour and culture"
+      "npq-leading-teaching-development": "Leading teacher development"
+      "npq-senior-leadership": "Senior leadership"
+      "npq-headship": "Headship"
+      "npq-executive-leadership": "Executive leadership"
+      "npq-additional-support-offer": "Additional Support Offer"
+      "npq-early-headship-coaching-offer": "Early headship coaching offer"
+      "npq-early-years-leadership": "Early years leadership"
+      "npq-leading-literacy": "Leading literacy"
+
   helpers:
     title:
       registration_wizard:
@@ -245,8 +254,11 @@ en:
         change_dqt: "Change your details on the Teaching Regulation Agency records"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         check_answers: "Check your answers and confirm"
-        confirmation_code: Confirm your email address
         institution_location: Where is your workplace located?
+        possible_funding: "You may qualify for DfE scholarship funding"
+        school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
+        ineligible_for_funding: "DfE scholarship funding is not available"
+        dqt_mismatch: "We cannot find your details"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -278,6 +290,12 @@ en:
         can_share_choices:
           - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
           - If you do not share this, you cannot progress with your NPQ.
+        choose_childcare_provider: "Search for your workplace in %{institution_location}"
+        choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
+        choose_school: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
+        choose_school_search: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
+        choose_private_childcare_provider: "For example EY456789"
+        choose_private_childcare_provider_search: "Enter your or your employer’s URN"
     label:
       registration_wizard:
         work_setting_options:
@@ -293,18 +311,6 @@ en:
           private_nursery: "Private nursery"
           another_early_years_setting: "Another early years setting"
 
-        course_identifier_options:
-          "npq-leading-teaching": "Leading teaching"
-          "npq-leading-behaviour-culture": "Leading behaviour and culture"
-          "npq-leading-teaching-development": "Leading teacher development"
-          "npq-senior-leadership": "Senior leadership"
-          "npq-headship": "Headship"
-          "npq-executive-leadership": "Executive leadership"
-          "npq-additional-support-offer": "Additional Support Offer"
-          "npq-early-headship-coaching-offer": "Early headship coaching offer"
-          "npq-early-years-leadership": "Early years leadership"
-          "npq-leading-literacy": "Leading literacy"
-
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
@@ -312,8 +318,6 @@ en:
           local_authority_supply_teacher: "As a supply teacher employed by a local authority"
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
-
-        find_school:
 
         itt_provider: "Enter the name of the ITT provider you are working with"
 
@@ -364,3 +368,14 @@ en:
           "yes": "Yes"
           "no": "No"
 
+        choose_childcare_provider: "What’s the name of your workplace?"
+        choose_childcare_provider_search: "Workplace not shown above"
+        choose_childcare_provider_fallback: "Select your workplace in %{institution_location}"
+
+        choose_school: "What’s the name of your workplace?"
+        choose_school_search: "School or 16 to 19 educational setting not shown above"
+        choose_school_fallback: "Select your school or 16 to 19 educational setting in %{institution_location}"
+
+        choose_private_childcare_provider: "Enter your or your employer’s URN"
+        choose_private_childcare_provider_search: "My employer is not shown above"
+        choose_private_childcare_provider_fallback: "Select yourself or your employer"

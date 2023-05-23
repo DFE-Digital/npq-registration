@@ -2,8 +2,7 @@ require "rails_helper"
 
 RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
   def stub_api_request(trn:, date_of_birth:, full_name:, nino:, response_code: 200, response_body: "")
-    stub_request(:post,
-                 "https://ecf-app.gov.uk/api/v1/participant-validation")
+    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
       .with(
         headers: {
           "Authorization" => "Bearer ECFAPPBEARERTOKEN",
@@ -18,7 +17,18 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       .to_return(status: response_code, body: response_body, headers: {})
   end
 
-  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
+  let(:current_user) do
+    create(:user,
+           email: "mail@example.com",
+           date_of_birth: Date.new(1980, 10, 20),
+           trn: nil,
+           trn_lookup_status: "Failed",
+           trn_verified: false,
+           full_name: "Jane Doe",
+           raw_tra_provider_data: {},
+           updated_from_tra_at: Time.zone.now)
+  end
+  let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user:) }
   let(:request) { nil }
   let(:store) do
     { "teacher_catchment" => "england" }
@@ -32,7 +42,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     subject do
       described_class.new(
         trn: "  1234  567  ",
-        full_name: "  John     O’Doe   ",
+        full_name: "  Jane     O’Doe   ",
         national_insurance_number: "  AB 12 34 56 C ",
       )
     end
@@ -44,7 +54,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     it "strips superflous whitespace from full_name + converts smart quotes" do
       subject.valid?
-      expect(subject.full_name).to eql("John O'Doe")
+      expect(subject.full_name).to eql("Jane O'Doe")
     end
 
     it "strips superflous whitespace from NI number" do
@@ -54,21 +64,21 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
 
     context "full_name with titles" do
       it "removes leading titles from full_name" do
-        subject.full_name = "Mr John Doe"
-        subject.valid?
-        expect(subject.full_name).to eql("John Doe")
-
-        subject.full_name = "MR JOHN DOE"
-        subject.valid?
-        expect(subject.full_name).to eql("JOHN DOE")
-
-        subject.full_name = "Mr. John Doe"
-        subject.valid?
-        expect(subject.full_name).to eql("John Doe")
-
         subject.full_name = "Ms Jane Doe"
         subject.valid?
         expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "MS JANE DOE"
+        subject.valid?
+        expect(subject.full_name).to eql("JANE DOE")
+
+        subject.full_name = "Ms. Jane Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("Jane Doe")
+
+        subject.full_name = "Mr John Doe"
+        subject.valid?
+        expect(subject.full_name).to eql("John Doe")
 
         subject.full_name = "Ms. Jane Doe"
         subject.valid?
@@ -162,13 +172,13 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     subject do
       described_class.new(
         trn: "RP12/34567",
-        full_name: "John Doe",
+        full_name: "Jane Doe",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
       )
     end
 
-    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user: create(:user)) }
+    let(:wizard) { RegistrationWizard.new(store:, request:, current_step: :qualified_teacher_check, current_user:) }
     let(:request) { nil }
     let(:store) do
       { "teacher_catchment" => "england" }
@@ -183,7 +193,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Doe",
           nino: "AB123456C",
           response_body: participant_validator_response,
         )
@@ -194,24 +204,8 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         expect(subject).to be_trn_verified
       end
 
-      context "when user selected they work in a school" do
-        before do
-          store["works_in_school"] = "yes"
-        end
-
-        it "returns :find_school" do
-          expect(subject.next_step).to be(:find_school)
-        end
-      end
-
-      context "when user selected they do not work in a school" do
-        before do
-          store["works_in_school"] = "no"
-        end
-
-        it "returns :choose_your_npq" do
-          expect(subject.next_step).to be(:your_employment)
-        end
+      it "returns :provider_check" do
+        expect(subject.next_step).to be(:provider_check)
       end
     end
 
@@ -220,7 +214,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Doe",
           nino: "AB123456C",
           response_code: 404,
         )
@@ -264,7 +258,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
     subject do
       described_class.new(
         trn: "1234567",
-        full_name: "John Doe",
+        full_name: "Jane Smith",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
         wizard:,
@@ -279,16 +273,16 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         current_step: :qualified_teacher_check,
         store:,
         request:,
-        current_user: create(:user),
+        current_user:,
       )
     end
 
-    context "has no active alerts" do
+    context "trn has been verified" do
       before do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response,
         )
@@ -297,8 +291,42 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "persists to store" do
-        subject.after_save
-        expect(wizard.store["active_alert"]).to be(false)
+        expect {
+          subject.after_save
+        }.to change {
+          current_user.reload.slice(
+            :active_alert,
+            :date_of_birth,
+            :full_name,
+            :national_insurance_number,
+            :trn,
+            :trn_auto_verified,
+            :trn_lookup_status,
+            :trn_verified,
+          )
+        }.from(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1980, 10, 20),
+            "full_name" => "Jane Doe",
+            "national_insurance_number" => nil,
+            "trn" => nil,
+            "trn_auto_verified" => false,
+            "trn_lookup_status" => "Failed",
+            "trn_verified" => false,
+          },
+        ).to(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1960, 12, 13),
+            "full_name" => "Jane Smith",
+            "national_insurance_number" => nil,
+            "trn" => "1234567",
+            "trn_auto_verified" => true,
+            "trn_lookup_status" => "Found",
+            "trn_verified" => true,
+          },
+        )
       end
     end
 
@@ -307,7 +335,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response(active_alert: true),
         )
@@ -316,29 +344,42 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "persists to store" do
-        subject.after_save
-        expect(wizard.store["active_alert"]).to be(true)
-      end
-    end
-
-    context "trn has been verified" do
-      before do
-        stub_api_request(
-          trn: "1234567",
-          date_of_birth: "1960-12-13",
-          full_name: "John Doe",
-          nino: "AB123456C",
-          response_body: participant_validator_response,
+        expect {
+          subject.after_save
+        }.to change {
+          current_user.reload.slice(
+            :active_alert,
+            :date_of_birth,
+            :full_name,
+            :national_insurance_number,
+            :trn,
+            :trn_auto_verified,
+            :trn_lookup_status,
+            :trn_verified,
+          )
+        }.from(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1980, 10, 20),
+            "full_name" => "Jane Doe",
+            "national_insurance_number" => nil,
+            "trn" => nil,
+            "trn_auto_verified" => false,
+            "trn_lookup_status" => "Failed",
+            "trn_verified" => false,
+          },
+        ).to(
+          {
+            "active_alert" => true,
+            "date_of_birth" => Date.new(1960, 12, 13),
+            "full_name" => "Jane Smith",
+            "national_insurance_number" => nil,
+            "trn" => "1234567",
+            "trn_auto_verified" => true,
+            "trn_lookup_status" => "Found",
+            "trn_verified" => true,
+          },
         )
-
-        subject.next_step
-      end
-
-      it "persists to store" do
-        subject.after_save
-        expect(wizard.store["trn_verified"]).to be(true)
-        expect(wizard.store["trn_auto_verified"]).to be(true)
-        expect(wizard.store["verified_trn"]).to eql("1234567")
       end
     end
 
@@ -347,7 +388,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response(trn: "1111111"),
         )
@@ -356,10 +397,43 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "persists to store" do
-        subject.after_save
-        expect(wizard.store["trn_verified"]).to be(true)
-        expect(wizard.store["trn_auto_verified"]).to be(true)
-        expect(wizard.store["verified_trn"]).to eql("1111111")
+        expect {
+          subject.after_save
+        }.to change {
+          current_user.reload.slice(
+            :active_alert,
+            :date_of_birth,
+            :full_name,
+            :national_insurance_number,
+            :national_insurance_number,
+            :trn,
+            :trn_auto_verified,
+            :trn_lookup_status,
+            :trn_verified,
+          )
+        }.from(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1980, 10, 20),
+            "full_name" => "Jane Doe",
+            "national_insurance_number" => nil,
+            "trn" => nil,
+            "trn_auto_verified" => false,
+            "trn_lookup_status" => "Failed",
+            "trn_verified" => false,
+          },
+        ).to(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1960, 12, 13),
+            "full_name" => "Jane Smith",
+            "national_insurance_number" => nil,
+            "trn" => "1111111",
+            "trn_auto_verified" => true,
+            "trn_lookup_status" => "Found",
+            "trn_verified" => true,
+          },
+        )
       end
     end
 
@@ -368,7 +442,7 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "John Doe",
+          full_name: "Jane Smith",
           nino: "AB123456C",
           response_code: 404,
         )
@@ -377,9 +451,42 @@ RSpec.describe Forms::QualifiedTeacherCheck, type: :model do
       end
 
       it "persists to store" do
-        subject.after_save
-        expect(wizard.store["trn_verified"]).to be(false)
-        expect(wizard.store["trn_auto_verified"]).to be_falsey
+        expect {
+          subject.after_save
+        }.to change {
+          current_user.reload.slice(
+            :active_alert,
+            :date_of_birth,
+            :full_name,
+            :national_insurance_number,
+            :trn,
+            :trn_auto_verified,
+            :trn_lookup_status,
+            :trn_verified,
+          )
+        }.from(
+          {
+            "active_alert" => false,
+            "date_of_birth" => Date.new(1980, 10, 20),
+            "full_name" => "Jane Doe",
+            "national_insurance_number" => nil,
+            "trn" => nil,
+            "trn_auto_verified" => false,
+            "trn_lookup_status" => "Failed",
+            "trn_verified" => false,
+          },
+        ).to(
+          {
+            "active_alert" => nil,
+            "date_of_birth" => Date.new(1960, 12, 13),
+            "full_name" => "Jane Smith",
+            "national_insurance_number" => "AB123456C",
+            "trn" => "1234567",
+            "trn_auto_verified" => false,
+            "trn_lookup_status" => "Failed",
+            "trn_verified" => false,
+          },
+        )
       end
     end
   end

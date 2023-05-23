@@ -1,7 +1,0 @@
-<%= render @form.question do |component| %>
-  <% component.with_after_question do %>
-    <p class="govuk-body">
-      <%= govuk_link_to "I have not received an email", registration_wizard_show_path(step: "resend-code") %>
-    </p>
-  <% end %>
-<% end %>
