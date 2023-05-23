@@ -21,12 +21,12 @@ class Services::QueryStore
     current_user.get_an_identity_id
   end
 
-  def trn
-    # If the GAI flow was used then the updated TRN is already on the user record,
-    # other wise it will have been entered into the store by the user and should be retrieved from there.
-    return current_user.trn if current_user.present? && Services::Feature.get_an_identity_integration_active_for?(current_user)
+  def trn_set_via_fallback_verification_question?
+    store["trn_set_via_fallback_verification_question"]
+  end
 
-    store["trn"]
+  def trn
+    current_user.trn
   end
 
   def inside_catchment?

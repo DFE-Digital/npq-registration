@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Register interest", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "Sign up to notification with direct link" do
     visit "/registration-interest/sign-up"

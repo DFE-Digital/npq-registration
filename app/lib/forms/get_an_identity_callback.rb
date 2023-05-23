@@ -5,11 +5,11 @@ module Forms
     end
 
     def next_step
-      :provider_check
+      after_login_next_step
     end
 
     def previous_step
-      :get_an_identity
+      :start
     end
   end
 end

@@ -58,20 +58,14 @@ module Forms
     end
 
     def next_step
-      if wizard.tra_get_an_identity_omniauth_integration_active?
-        if wizard.query_store.inside_catchment?
-          return :find_school if works_in_school?
-          return :kind_of_nursery if works_in_childcare?
+      if wizard.query_store.inside_catchment?
+        return :find_school if works_in_school?
+        return :kind_of_nursery if works_in_childcare?
 
-          return :your_employment
-        end
-
-        :choose_your_npq
-      else
-        return :contact_details if works_in_other?
-
-        :teacher_reference_number
+        return :your_employment
       end
+
+      :choose_your_npq
     end
 
     def previous_step

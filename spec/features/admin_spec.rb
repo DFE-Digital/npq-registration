@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "admin", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin, :with_ecf_id) }
 

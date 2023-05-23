@@ -61,7 +61,7 @@
       <% end %>
     </p>
 
-    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
+    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), class: "govuk-button--secondary" %>
 
     <h2 class="govuk-heading-m">Still can’t match your details?</h2>
 
@@ -69,6 +69,6 @@
       You can still continue to register - our support team will manually match your details over the next few weeks. You will only be contacted if we cannot match your details.
     </p>
 
-    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), class: "govuk-button--secondary" %>
+    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path) %>
   </div>
 </div>

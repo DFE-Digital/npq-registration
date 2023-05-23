@@ -25,10 +25,6 @@ class RegistrationWizard
     "Forms::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
-  def tra_get_an_identity_omniauth_integration_active?
-    Services::Feature.get_an_identity_integration_active_for?(current_user)
-  end
-
   def before_render
     form.before_render
   end
@@ -82,7 +78,7 @@ class RegistrationWizard
                             value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
                             change_step: :work_setting)
 
-    unless tra_get_an_identity_omniauth_integration_active?
+    if query_store.trn_set_via_fallback_verification_question?
       array << OpenStruct.new(key: "Full name",
                               value: store["full_name"],
                               change_step: :qualified_teacher_check)
@@ -100,10 +96,6 @@ class RegistrationWizard
                                 value: store["national_insurance_number"],
                                 change_step: :qualified_teacher_check)
       end
-
-      array << OpenStruct.new(key: "Email",
-                              value: store["confirmed_email"],
-                              change_step: :contact_details)
     end
 
     if inside_catchment? && query_store.works_in_childcare?
@@ -273,14 +265,8 @@ private
       work_setting
       provider_check
       choose_an_npq_and_provider
-      teacher_reference_number
       change_dqt
-      dont_have_teacher_reference_number
-      get_an_identity
       get_an_identity_callback
-      contact_details
-      confirm_email
-      resend_code
       qualified_teacher_check
       not_sure_updated_name
       dqt_mismatch

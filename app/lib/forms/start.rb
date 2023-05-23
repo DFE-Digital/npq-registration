@@ -5,10 +5,13 @@ module Forms
     end
 
     def next_step
-      if wizard.tra_get_an_identity_omniauth_integration_active?
-        :teacher_reference_number
+      if query_store.current_user.present?
+        after_login_next_step
       else
-        :provider_check
+        # This shouldn't really be reached, in this situation the user should have been
+        # presented the omniauth kickoff button on the start back. This is here as a fallback
+        # to send the user back to the start page where they'll be presented the oauth button again.
+        :start
       end
     end
   end
