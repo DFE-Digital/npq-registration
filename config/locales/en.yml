@@ -258,6 +258,8 @@ en:
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
         dqt_mismatch: "We cannot find your details"
+        teacher_reference_number: "You need a teacher reference number to register for an NPQ"
+        dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -272,6 +274,7 @@ en:
         aso_funding_choice: "How is the Early headship coaching offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
+        trn_knowledge: "Do you have a TRN?"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -366,6 +369,10 @@ en:
         aso_new_headteacher_options:
           "yes": "Yes"
           "no": "No"
+
+        trn_knowledge_options:
+          "yes": "Yes"
+          "no-dont-have": "No, I need help getting one"
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
