@@ -1,13 +1,20 @@
 module Forms
   class FindChildcareProvider < Base
-    attr_accessor :institution_location
+    QUESTION_NAME = :institution_location
 
-    validates :institution_location, presence: true, length: { maximum: 64 }
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true, length: { maximum: 64 }
 
     def self.permitted_params
-      %i[
-        institution_location
-      ]
+      [QUESTION_NAME]
+    end
+
+    def question
+      @question ||= Forms::QuestionTypes::TextField.new(
+        name: QUESTION_NAME,
+        locale_name: :find_childcare_provider,
+      )
     end
 
     def next_step
