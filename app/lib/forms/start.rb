@@ -6,7 +6,7 @@ module Forms
 
     def next_step
       if query_store.current_user.present?
-        after_login_next_step
+        first_questionnaire_step
       else
         # This shouldn't really be reached, in this situation the user should have been
         # presented the omniauth kickoff button on the start back. This is here as a fallback

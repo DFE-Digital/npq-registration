@@ -5,7 +5,7 @@ module Forms
     end
 
     def next_step
-      after_login_next_step
+      first_questionnaire_step
     end
 
     def previous_step
