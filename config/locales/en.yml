@@ -257,6 +257,7 @@ en:
         possible_funding: "You may qualify for DfE scholarship funding"
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
+        dqt_mismatch: "We cannot find your details"
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
