@@ -27,6 +27,10 @@ module Forms
         locale_name || name
       end
 
+      def question_text
+        I18n.t("helpers.#{title_locale_type}.registration_wizard.#{name_locale_key}")
+      end
+
     private
 
       attr_reader :style_options
