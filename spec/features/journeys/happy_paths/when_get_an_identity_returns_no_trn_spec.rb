@@ -8,10 +8,9 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
     # In this situation we fallback to a non-pilot set of checks
-    let(:api_call_get_an_identity_id) { nil }
     let(:api_call_trn) { manually_entered_trn }
   end
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   # This controls what is returned from the Get An Identity API
   let(:user_trn) { "" }
@@ -30,18 +29,21 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_link("Start now")
+      page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
+    expect(page).not_to have_content("Before you start")
 
-    unless js
-      expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
-    end
+    expect_page_to_have(path: "/registration/qualified-teacher-check", submit_form: true) do
+      expect(page).to have_text("Check your details")
 
-    expect(page).not_to have_content("Do you have a TRN?")
+      page.fill_in "Teacher reference number (TRN)", with: manually_entered_trn
+      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Day", with: "13"
+      page.fill_in "Month", with: "12"
+      page.fill_in "Year", with: "1980"
+      page.fill_in "National Insurance number", with: "AB123456C"
+    end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -137,7 +139,6 @@ RSpec.feature "Happy journeys", type: :feature do
           "TRN" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
-          "Email" => "user@example.com",
           "Course" => "Headship",
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
@@ -194,16 +195,16 @@ RSpec.feature "Happy journeys", type: :feature do
       "national_insurance_number" => nil,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
-      "provider" => nil,
-      "raw_tra_provider_data" => nil,
+      "provider" => "tra_openid_connect",
+      "raw_tra_provider_data" => stubbed_callback_response_as_json,
       "trn" => manually_entered_trn,
       "trn_auto_verified" => true,
       "trn_lookup_status" => "Found",
       "trn_verified" => true,
-      "uid" => nil,
+      "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to match(
+    deep_compare_application_data(
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
@@ -236,10 +237,8 @@ RSpec.feature "Happy journeys", type: :feature do
         "active_alert" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "confirmed_email" => "user@example.com",
         "course_identifier" => "npq-headship",
         "date_of_birth" => "1980-12-13",
-        "email" => "user@example.com",
         "full_name" => "John Doe",
         "funding" => "trust",
         "institution_identifier" => "School-100000",
@@ -251,12 +250,12 @@ RSpec.feature "Happy journeys", type: :feature do
         "teacher_catchment_country" => nil,
         "trn" => manually_entered_trn,
         "trn_auto_verified" => true,
-        "trn_knowledge" => "yes",
         "trn_verified" => true,
         "trn_lookup_status" => "Found",
         "verified_trn" => manually_entered_trn,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
+        "trn_set_via_fallback_verification_question" => true,
         "work_setting" => "a_school",
       },
     )

@@ -10,8 +10,6 @@ module Services
 
     def call
       ActiveRecord::Base.transaction do
-        user.update!(user_update_data)
-
         user.applications.create!(
           course_id: course.id,
           lead_provider_id: store["lead_provider_id"],
@@ -47,43 +45,11 @@ module Services
 
   private
 
-    def user_update_data
-      base_user_data = {
-        active_alert: store["active_alert"],
-      }
-
-      return base_user_data if Services::Feature.get_an_identity_integration_active_for?(user)
-
-      base_user_data.merge(non_get_an_identity_flow_user_data)
-    end
-
-    def non_get_an_identity_flow_user_data
-      {
-        trn: padded_verified_trn || padded_entered_trn,
-        trn_verified: store["trn_verified"],
-        trn_lookup_status: store["trn_lookup_status"],
-        trn_auto_verified: !!store["trn_auto_verified"],
-        full_name: store["full_name"],
-        date_of_birth: store["date_of_birth"],
-        national_insurance_number: ni_number_to_store,
-      }
-    end
-
     def raw_application_data
       # Cutting out confirmation keys since that is not application related data
       # Though I recognise that this means that even though this is meant to be raw
       # it still has a small layer of processing
       store.except("generated_confirmation_code")
-    end
-
-    def padded_entered_trn
-      query_store.trn.rjust(7, "0")
-    end
-
-    def padded_verified_trn
-      if store["verified_trn"].present?
-        store["verified_trn"].rjust(7, "0")
-      end
     end
 
     def query_store
@@ -241,10 +207,6 @@ module Services
 
     def new_headteacher?
       %w[yes_in_first_two_years yes_in_first_five_years yes_when_course_starts].include?(headteacher_status)
-    end
-
-    def ni_number_to_store
-      store["national_insurance_number"] unless store["trn_verified"]
     end
 
     def course

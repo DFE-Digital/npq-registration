@@ -5,10 +5,9 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
 
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_get_an_identity_id) { user_uid }
     let(:api_call_trn) { user_trn }
   end
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -23,14 +22,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
-      page.click_link("Start now")
+      page.click_button("Start now")
     end
 
-    expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("Yes", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/get-an-identity", submit_form: true)
+    expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you already chosen an NPQ and provider?")
@@ -129,7 +124,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).to have_current_path("/")
 
     expect(retrieve_latest_application_user_data).to match(
-      "active_alert" => nil,
+      "active_alert" => false,
       "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
@@ -149,7 +144,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "uid" => user_uid,
     )
 
-    expect(retrieve_latest_application_data).to match(
+    deep_compare_application_data(
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
@@ -188,7 +183,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "lead_provider_id" => "9",
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "trn_knowledge" => "yes",
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
         "work_setting" => "a_school",

@@ -86,10 +86,8 @@ module Forms
         else
           :have_ofsted_urn
         end
-      elsif wizard.tra_get_an_identity_omniauth_integration_active?
-        :work_setting
       else
-        :qualified_teacher_check
+        :work_setting
       end
     end
 

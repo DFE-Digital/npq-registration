@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.feature "Account", type: :feature do
-  include_context "Enable Get An Identity integration"
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "when not logged in, it redirects to sign in" do
     visit "/account"

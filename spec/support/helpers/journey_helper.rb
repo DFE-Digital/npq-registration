@@ -16,6 +16,14 @@ module Helpers
       latest_application&.as_json(except: %i[id created_at updated_at user_id])
     end
 
+    def deep_compare_application_data(expected_data)
+      latest_application_data = retrieve_latest_application_data
+
+      # Doing these separately lets us get proper diffs on raw_application_data
+      expect(latest_application_data.except("raw_application_data")).to match(expected_data.except("raw_application_data"))
+      expect(latest_application_data["raw_application_data"]).to match(expected_data["raw_application_data"])
+    end
+
     def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", full_name: "John Doe", nino: "AB123456C", response: {})
       stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
         .with(

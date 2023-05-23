@@ -2,13 +2,11 @@
   <%= @form.errors.present? ? "Error: " : nil %>Have you already chosen an NPQ and provider?
 <% end %>
 
-<% unless Services::Feature.get_an_identity_integration_active_for?(current_user) %>
-  <% content_for :before_content do %>
-    <%= render GovukComponent::BackLinkComponent.new(
-      text: "Back",
-      href: registration_wizard_show_path(@wizard.previous_step_path)
-    ) %>
-  <% end %>
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: registration_wizard_show_path(@wizard.previous_step_path)
+  ) %>
 <% end %>
 
 <div class="govuk-grid-row">

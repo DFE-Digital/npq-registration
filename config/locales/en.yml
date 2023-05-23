@@ -27,16 +27,6 @@ en:
           attributes:
             can_share_choices:
               accepted: You must agree to share data with providers to continue
-        forms/contact_details:
-          attributes:
-            email:
-              blank: Email can’t be blank
-              invalid: Enter a valid email address
-        forms/resend_code:
-          attributes:
-            email:
-              blank: Email can’t be blank
-              invalid: Enter a valid email address
         forms/your_employment:
           attributes:
             employment_type:
@@ -49,16 +39,6 @@ en:
           attributes:
             employer_name:
               blank: Enter the name of your employer
-        forms/teacher_reference_number:
-          attributes:
-            trn_knowledge:
-              blank: Choose an option regarding your teacher reference number
-        forms/confirm_email:
-          attributes:
-            confirmation_code:
-              blank: Code can’t be blank
-              wrong_length: Code should be 6 characters long
-              incorrect: Code is not correct. Please try again
         forms/qualified_teacher_check:
           attributes:
             trn:

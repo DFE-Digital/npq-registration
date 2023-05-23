@@ -141,19 +141,8 @@ RSpec.describe Forms::ChooseYourNpq, type: :model do
     context "when inside catchment" do
       let(:teacher_catchment) { "england" }
 
-      it "returns teacher_reference_number" do
+      it "returns work_setting" do
         expect(subject.previous_step).to be(:work_setting)
-      end
-
-      context "when TRA feature flag is disabled" do
-        before do
-          allow(Flipper).to receive(:enabled?).and_call_original
-          allow(Flipper).to receive(:enabled?).with(Services::Feature::GAI_INTEGRATION_KEY, anything).and_return(false)
-        end
-
-        it "returns qualified_teacher_check" do
-          expect(subject.previous_step).to be(:qualified_teacher_check)
-        end
       end
 
       context "when working in school" do
