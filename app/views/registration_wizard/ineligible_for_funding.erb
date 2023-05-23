@@ -1,23 +1,13 @@
-<% content_for :title do %>
-  DfE scholarship funding is not available
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <%= render "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}", course: @form.course %>
+
+  <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
+
 <% end %>
-
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%=
-      render(
-        "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}",
-        course: @form.course,
-      )
-    %>
-
-    <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
-  </div>
-</div>
