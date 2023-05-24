@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_14_121939) do
+ActiveRecord::Schema.define(version: 2023_05_02_125316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "plpgsql"
+  enable_extension "postgis"
 
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -108,6 +109,14 @@ ActiveRecord::Schema.define(version: 2023_04_14_121939) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
+  end
+
+  create_table "geo_local_authorities", force: :cascade do |t|
+    t.string "name"
+    t.geometry "geometry", limit: {:srid=>27700, :type=>"geometry"}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["geometry"], name: "index_geo_local_authorities_on_geometry", using: :gist
   end
 
   create_table "get_an_identity_webhook_messages", force: :cascade do |t|

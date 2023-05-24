@@ -38,6 +38,12 @@ gem "sentry-ruby"
 gem "stimulus-rails"
 gem "webpacker"
 
+gem "activerecord-postgis-adapter"
+gem "geocoder"
+gem "rgeo"
+gem "rgeo-geojson"
+gem "rgeo-proj4"
+
 gem "net-imap", require: false
 gem "net-pop", require: false
 gem "net-smtp", require: false
