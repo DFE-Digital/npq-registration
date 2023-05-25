@@ -145,6 +145,10 @@ en:
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 
+  accounts:
+    show:
+      title: "Your registration"
+
   admin:
     layout:
       title: "Admin"

@@ -1,51 +1,51 @@
 <%=
   govuk_summary_list do |sl|
-    sl.row do |row|
-      row.key(text: 'Application ECF ID')
-      row.value(text: application.ecf_id || govuk_tag(text: "Missing", colour: "red"))
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Application ECF ID')
+      row.with_value(text: application.ecf_id || govuk_tag(text: "Missing", colour: "red"))
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'User ECF ID')
-      row.value(text: application.user.ecf_id || govuk_tag(text: "Missing", colour: "red"))
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'User ECF ID')
+      row.with_value(text: application.user.ecf_id || govuk_tag(text: "Missing", colour: "red"))
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'User Identity Provider')
-      row.value(text: application.user.provider ? t("omniauth_providers.#{application.user.provider}") : "-")
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'User Identity Provider')
+      row.with_value(text: application.user.provider ? t("omniauth_providers.#{application.user.provider}") : "-")
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'User Identity UID')
-      row.value(text: application.user.uid || '-')
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'User Identity UID')
+      row.with_value(text: application.user.uid || '-')
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'In Get an Identity Pilot?')
-      row.value(text: boolean_red_green_tag(application.user.get_an_identity_provider?))
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'In Get an Identity Pilot?')
+      row.with_value(text: boolean_red_green_tag(application.user.get_an_identity_provider?))
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Email')
-      row.value(text: application.user.email)
-      row.action(text: "View User", href: admin_user_path(application.user))
+    sl.with_row do |row|
+      row.with_key(text: 'Email')
+      row.with_value(text: application.user.email)
+      row.with_action(text: "View User", href: admin_user_path(application.user))
     end
 
-    sl.row do |row|
-      row.key(text: 'Name')
-      row.value(text: application.user.full_name)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Name')
+      row.with_value(text: application.user.full_name)
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'TRN')
-      row.value(text: application.user.trn)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'TRN')
+      row.with_value(text: application.user.trn)
+      row.with_action
     end
 
     sl.row do |row|
@@ -60,58 +60,59 @@
       row.action
     end
 
-    sl.row do |row|
-      row.key(text: 'Course')
-      row.value(text: localise_course_name(application.course))
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Course')
+      row.with_value(text: localise_course_name(application.course))
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Lead provider')
-      row.value(text: application.lead_provider.name)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Lead provider')
+      row.with_value(text: application.lead_provider.name)
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'School URN')
-      row.value(text: application.school_urn)
+    sl.with_row do |row|
+      row.with_key(text: 'School URN')
+      row.with_value(text: application.school_urn)
       if application.school.present?
-        row.action(text: "View School", href: admin_school_path(application.school))
+        row.with_action(text: "View School", href: admin_school_path(application.school))
       else
-        row.action
+        row.with_action
       end
     end
 
-    sl.row do |row|
-      row.key(text: 'School UKPRN')
-      row.value(text: application.ukprn || "-")
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'School UKPRN')
+      row.with_value(text: application.ukprn || "-")
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Private Childcare Provider URN')
-      row.value(text: application.private_childcare_provider_urn || "-")
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Private Childcare Provider URN')
+      row.with_value(text: application.private_childcare_provider_urn || "-")
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Headteacher')
-      row.value(text: application.headteacher_status)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Headteacher')
+      row.with_value(text: application.headteacher_status)
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Funding eligibility')
-      row.value(text: boolean_red_green_tag(application.eligible_for_funding))
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Funding eligibility')
+      row.with_value(text: boolean_red_green_tag(application.eligible_for_funding))
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Funding eligibility status code')
-      row.value(text: application.funding_eligiblity_status_code || "-")
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Funding eligibility status code')
+      row.with_value(text: application.funding_eligiblity_status_code || "-")
+      row.with_action
     end
 
+<<<<<<< HEAD
     sl.row do |row|
       row.key(text: 'Primary establishment')
       row.value{ boolean_red_green_tag(application.primary_establishment) }
@@ -134,18 +135,24 @@
       row.key(text: "Targeted delivery funding eligibility")
       row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
       row.action
+=======
+    sl.with_row do |row|
+      row.with_key(text: "Targeted delivery funding eligibility")
+      row.with_value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
+      row.with_action
+>>>>>>> Create view page for user account information
     end
 
-    sl.row do |row|
-      row.key(text: 'Funding choice')
-      row.value(text: application.funding_choice || "-")
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Funding choice')
+      row.with_value(text: application.funding_choice || "-")
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: "Created at")
-      row.value { l application.created_at, format: :admin }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: "Created at")
+      row.with_value { l application.created_at, format: :admin }
+      row.with_action
     end
   end
 %>

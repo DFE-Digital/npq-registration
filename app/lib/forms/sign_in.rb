@@ -21,6 +21,8 @@ module Forms
     end
 
     def after_save
+      return if skip_sending_otp
+
       user = User.find_by(email:)
 
       if user
@@ -29,6 +31,10 @@ module Forms
         user.update!(otp_hash: code, otp_expires_at: 15.minutes.from_now)
         ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
       end
+    end
+
+    def skip_sending_otp
+      Rails.env.development? && (email == "admin@example.com" || email == "user@example.com" || email == "user2@example.com")
     end
   end
 end
