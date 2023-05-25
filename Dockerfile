@@ -12,7 +12,7 @@ RUN apk add --update --no-cache tzdata && \
 # build-base: complication tools for bundle
 # yarn: node package manager
 # postgresql-dev: postgres driver and libraries
-RUN apk add --no-cache build-base yarn postgresql-dev
+RUN apk add --no-cache build-base yarn postgresql-dev postgis proj proj-dev
 
 # Install bundler to run bundle exec
 # This should be the same version as the Gemfile.lock
