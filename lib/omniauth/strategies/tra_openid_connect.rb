@@ -11,7 +11,7 @@ module Omniauth
              }
       option :pkce, true
       option :scope,
-             %i[email openid profile trn].join(" ") # This is a space separated string, comma separated will fail
+             %i[email openid preferred_name profile trn].join(" ") # This is a space separated string, comma separated will fail
 
       uid { raw_info["sub"] }
 
@@ -21,6 +21,7 @@ module Omniauth
           email: raw_info["email"].downcase,
           email_verified: parsed_email_verified,
           name: raw_info["name"],
+          preferred_name: raw_info["preferred_name"],
           trn: raw_info["trn"],
           trn_lookup_status: raw_info["trn_lookup_status"],
         }
