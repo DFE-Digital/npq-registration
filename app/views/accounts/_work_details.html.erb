@@ -1,0 +1,17 @@
+<%= govuk_summary_card(title: "Personal details") do |card|
+
+card.with_summary_list(rows: [
+    {
+      key: { text: "Do you work in England?" },
+      value: { text: application.teacher_catchment? }
+    },
+    {
+      key: { text: "Work Setting" },
+      value: { text: application.work_setting },
+    },
+    {
+      key: { text: "Employer" },
+      value: { text: application.employer_name },
+    },
+  ])
+end %>
