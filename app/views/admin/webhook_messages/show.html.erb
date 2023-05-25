@@ -15,46 +15,46 @@
 
 <%=
   govuk_summary_list do |sl|
-    sl.row do |row|
-      row.key(text: t('.message_id'))
-      row.value(text: @webhook_message.message_id)
+    sl.with_row do |row|
+      row.with_key(text: t('.message_id'))
+      row.with_value(text: @webhook_message.message_id)
     end
 
-    sl.row do |row|
-      row.key(text: t('.message_type'))
-      row.value(text: @webhook_message.message_type)
+    sl.with_row do |row|
+      row.with_key(text: t('.message_type'))
+      row.with_value(text: @webhook_message.message_type)
     end
 
-    sl.row do |row|
-      row.key(text: t('.status'))
-      row.value(text: webhook_message_status_tag(@webhook_message))
+    sl.with_row do |row|
+      row.with_key(text: t('.status'))
+      row.with_value(text: webhook_message_status_tag(@webhook_message))
     end
 
     if @webhook_message.status_comment.present?
-      sl.row do |row|
-        row.key(text: t('.status_comment'))
-        row.value(text: @webhook_message.status_comment)
+      sl.with_row do |row|
+        row.with_key(text: t('.status_comment'))
+        row.with_value(text: @webhook_message.status_comment)
       end
     end
 
-    sl.row do |row|
-      row.key(text: t('.sent_at'))
-      row.value(text: @webhook_message.sent_at.to_s(:govuk_short))
+    sl.with_row do |row|
+      row.with_key(text: t('.sent_at'))
+      row.with_value(text: @webhook_message.sent_at.to_s(:govuk_short))
     end
 
-    sl.row do |row|
-      row.key(text: t('.created_at'))
-      row.value(text: @webhook_message.created_at.to_s(:govuk_short))
+    sl.with_row do |row|
+      row.with_key(text: t('.created_at'))
+      row.with_value(text: @webhook_message.created_at.to_s(:govuk_short))
     end
 
-    sl.row do |row|
-      row.key(text: t('.processed_at'))
-      row.value(text: @webhook_message.processed_at&.to_s(:govuk_short) || "-")
+    sl.with_row do |row|
+      row.with_key(text: t('.processed_at'))
+      row.with_value(text: @webhook_message.processed_at&.to_s(:govuk_short) || "-")
     end
 
-    sl.row do |row|
-      row.key(text: t('.message'))
-      row.value(text: pre_tagged_pretty_json(@webhook_message.message))
+    sl.with_row do |row|
+      row.with_key(text: t('.message'))
+      row.with_value(text: pre_tagged_pretty_json(@webhook_message.message))
     end
   end
 %>

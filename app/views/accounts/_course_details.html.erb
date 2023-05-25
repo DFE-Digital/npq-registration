@@ -1,0 +1,21 @@
+<%= govuk_summary_card(title: "Personal details") do |card|
+
+card.with_summary_list(rows: [
+    {
+      key: { text: "Course" },
+      value: { text: application.course.name }
+    },
+    {
+      key: { text: "Registration" },
+      value: { text: 'unknown' },
+    },
+    {
+      key: { text: "Scholarship funding" },
+      value: { text: application.targeted_delivery_funding_eligibility },
+    },
+    {
+      key: { text: "Targeted support funding" },
+      value: { text: application.tsf_primary_eligibility },
+    },
+  ])
+end %>
