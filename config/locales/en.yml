@@ -260,6 +260,7 @@ en:
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
         lead_provider_id: Select your provider
+        chosen_provider: "Have you already chosen an NPQ and provider?"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."

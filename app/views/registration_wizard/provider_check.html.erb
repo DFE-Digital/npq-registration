@@ -1,33 +1,7 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Have you already chosen an NPQ and provider?
-<% end %>
-
-<% unless Services::Feature.get_an_identity_integration_active_for?(current_user) %>
-  <% content_for :before_content do %>
-    <%= render GovukComponent::BackLinkComponent.new(
-      text: "Back",
-      href: registration_wizard_show_path(@wizard.previous_step_path)
-    ) %>
-  <% end %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <%= f.govuk_radio_buttons_fieldset(:chosen_provider,
-                                         legend: {
-                                           text: "Have you already chosen an NPQ and provider?",
-                                           tag: "h1",
-                                           size: "xl"
-                                         }
-                                        ) do %>
-        <%= f.govuk_radio_button :chosen_provider, "yes", label: { text: "Yes" }, link_errors: true %>
-        <%= f.govuk_radio_button :chosen_provider, "no", label: { text: "No" } %>
-      <% end %>
-
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+<%=
+  render(
+    'registration_wizard/shared/question_page',
+    form: @form,
+    wizard: @wizard,
+    )
+%>
