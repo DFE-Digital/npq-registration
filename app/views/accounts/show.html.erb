@@ -28,7 +28,7 @@
             row.with_cell(text: application.created_at)
             row.with_cell(text: 'pending')
             row.with_cell(text: application.lead_provider.name)
-            row.with_cell(text: govuk_link_to(application.user.full_name, admin_npq_applications_edge_case_path(application)))
+            row.with_cell(text: 'More Details')
           end
         end
       end
