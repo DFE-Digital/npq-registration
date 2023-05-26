@@ -70,6 +70,12 @@ private
   end
 
   def after_sign_in_path_for(user)
+    return account_path if user.applications.any?
+
+    start_questionnaire_path(user)
+  end
+
+  def start_questionnaire_path(user)
     wizard = RegistrationWizard.new(
       current_step: :get_an_identity_callback,
       store: session["registration_store"],

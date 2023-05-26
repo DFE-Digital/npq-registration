@@ -18,13 +18,15 @@ seed_courses!
 seed_lead_providers!
 seed_itt_providers!
 
+otp_testing_code = "00000"
+
 # Create admin user
 User.create!(
   email: "admin@example.com",
   ecf_id: nil,
   trn: nil,
   full_name: "example admin",
-  otp_hash: "000000",
+  otp_hash: otp_testing_code,
   otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
   date_of_birth: "1962-02-10",
   trn_verified: false,
@@ -70,7 +72,7 @@ single_app_user = User.create!(
   ecf_id: SecureRandom.uuid,
   trn: "1234567",
   full_name: Faker::Name.name,
-  otp_hash: "000000",
+  otp_hash: otp_testing_code,
   otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
   date_of_birth: "1988-07-10",
   trn_verified: true,
@@ -90,7 +92,7 @@ multiple_app_user = User.create!(
   ecf_id: SecureRandom.uuid,
   trn: "1234567",
   full_name: Faker::Name.name,
-  otp_hash: "000000",
+  otp_hash: otp_testing_code,
   otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
   date_of_birth: "1993-07-14",
   trn_verified: true,
@@ -105,11 +107,14 @@ multiple_app_user = User.create!(
   get_an_identity_id_synced_to_ecf: false,
 )
 
+school_settings = %w[a_school an_academy_trust a_16_to_19_educational_setting]
+
 Application.create!(
   user: single_app_user,
   ecf_id: SecureRandom.uuid,
   lead_provider: LeadProvider.last,
   course: Course.all.sample,
+  work_setting: school_settings.sample,
 )
 
 5.times do
@@ -118,5 +123,6 @@ Application.create!(
     ecf_id: SecureRandom.uuid,
     lead_provider: LeadProvider.all.sample,
     course: Course.all.sample,
+    work_setting: school_settings.sample,
   )
 end

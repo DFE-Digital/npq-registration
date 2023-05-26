@@ -31,6 +31,11 @@ class SessionWizardController < ApplicationController
     end
   end
 
+  def signed_out
+    reset_session
+    redirect_to root_path
+  end
+
 private
 
   def store

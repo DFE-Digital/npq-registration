@@ -5,7 +5,7 @@ RSpec.describe Forms::SignInCode, type: :model do
     described_class.new(code:)
   end
 
-  let(:user) { User.create!(email: "user@example.com") }
+  let(:user) { User.create!(email: "test@example.com") }
   let(:code) { nil }
   let(:store) { { "email" => user.email } }
   let(:session) { {} }
@@ -29,7 +29,7 @@ RSpec.describe Forms::SignInCode, type: :model do
     it { is_expected.to validate_length_of(:code).is_equal_to(6) }
 
     context "when correct code given" do
-      let(:user) { User.create!(email: "user@example.com", otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
+      let(:user) { User.create!(email: "test@example.com", otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
       let(:code) { "123456" }
 
       it "passes" do
@@ -38,7 +38,7 @@ RSpec.describe Forms::SignInCode, type: :model do
     end
 
     context "when code expired" do
-      let(:user) { User.create!(email: "user@example.com", otp_hash: "123456", otp_expires_at: 1.minute.ago) }
+      let(:user) { User.create!(email: "test@example.com", otp_hash: "123456", otp_expires_at: 1.minute.ago) }
       let(:code) { "123456" }
 
       it "fails" do
@@ -48,7 +48,7 @@ RSpec.describe Forms::SignInCode, type: :model do
     end
 
     context "when incorrect code given" do
-      let(:user) { User.create!(email: "user@example.com", otp_hash: "123456") }
+      let(:user) { User.create!(email: "test@example.com", otp_hash: "123456") }
       let(:code) { "111111" }
 
       it "fails" do
