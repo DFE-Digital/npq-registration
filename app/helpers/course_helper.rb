@@ -18,4 +18,14 @@ module CourseHelper
   def course_short_code(course)
     I18n.t(course.identifier, scope: "course.short_code")
   end
+
+  def title_embedded_course_name(course)
+    embed_mode = if course.ehco?
+                   :title_ehco
+                 else
+                   :title
+                 end
+
+    I18n.t("course.embedded_sentence.#{embed_mode}", course_name: localise_course_name(course))
+  end
 end
