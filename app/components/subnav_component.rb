@@ -3,7 +3,7 @@
 class SubnavComponent < BaseComponent
   include ViewComponent::Slotable
 
-  renders_many :nav_items, 'NavItemComponent'
+  renders_many :nav_items, "NavItemComponent"
 
   class NavItemComponent < BaseComponent
     attr_reader :path
