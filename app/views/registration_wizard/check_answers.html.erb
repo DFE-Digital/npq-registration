@@ -9,10 +9,10 @@
 
   <%= render GovukComponent::SummaryListComponent.new do |component|
         @wizard.answers.each do |answer|
-          component.row do |row|
-            row.key { answer.key }
-            row.value { answer.value }
-            row.action(
+          component.with_row do |row|
+            row.with_key { answer.key }
+            row.with_value { answer.value }
+            row.with_action(
               text: 'Change',
               visually_hidden_text: answer.key,
               href: "/registration/#{answer.change_step.to_s.dasherize}/change",

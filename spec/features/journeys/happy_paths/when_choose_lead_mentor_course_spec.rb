@@ -114,7 +114,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
       expect(page).to have_text("Church of England")
-      expect(page).to have_text("Leading teacher development")
+      expect(page).to have_text("NPQ for Leading Teacher Development")
     end
 
     visit "/registration/share-provider"
