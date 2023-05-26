@@ -9,42 +9,42 @@
 </div>
 
 <%= render SubnavComponent.new do |component| %>
-  <%= component.nav_item(path: admin_path) do %>
+  <%= component.with_nav_item(path: admin_path) do %>
     <%= t(".dashboard") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_applications_path) do %>
+  <%= component.with_nav_item(path: admin_applications_path) do %>
     <%= t(".applications") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_users_path) do %>
+  <%= component.with_nav_item(path: admin_users_path) do %>
     <%= t(".users") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_unsynced_applications_path) do %>
+  <%= component.with_nav_item(path: admin_unsynced_applications_path) do %>
     <%= t(".unsynced_applications") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_unsynced_users_path) do %>
+  <%= component.with_nav_item(path: admin_unsynced_users_path) do %>
     <%= t(".unsynced_users") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_schools_path) do %>
+  <%= component.with_nav_item(path: admin_schools_path) do %>
     <%= t(".schools") %>
   <% end %>
 
-  <%= component.nav_item(path: admin_webhook_messages_path) do %>
+  <%= component.with_nav_item(path: admin_webhook_messages_path) do %>
     <%= t(".webhook_messages") %>
   <% end %>
 
   <% if current_user.super_admin? %>
-    <%= component.nav_item(path: admin_admins_path) do %>
+    <%= component.with_nav_item(path: admin_admins_path) do %>
       <%= t(".admins") %>
     <% end %>
   <% end %>
 
   <% if current_user.flipper_access? %>
-    <%= component.nav_item(path: "/admin/feature_flags") do %>
+    <%= component.with_nav_item(path: "/admin/feature_flags") do %>
       <%= t(".feature_flags") %>
     <% end %>
   <% end %>

@@ -10,7 +10,7 @@
       end
 
       table.with_body do |body|
-        current_user.applications.where(course: Course.last).each do |application|
+        current_user.applications.where(course: course).each do |application|
           body.with_row do |row|
             row.with_cell(text: application.created_at)
             row.with_cell(text: 'pending')
