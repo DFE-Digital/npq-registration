@@ -24,26 +24,28 @@
 
   <h2 class="govuk-heading-m">Check your details and try again</h2>
 
+  <h2 class="govuk-heading-m">Check your details and try again</h2>
+
   <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
-    <% summary_list.row do |row|
-          row.key { "Teacher reference number (TRN)" }
-          row.value { @wizard.query_store.trn } %>
+    <% summary_list.with_row do |row|
+         row.with_key { "Teacher reference number (TRN)" }
+         row.with_value { @wizard.query_store.trn } %>
     <% end %>
 
-    <% summary_list.row do |row|
-          row.key { "Full name" }
-          row.value { @wizard.store["full_name"] } %>
+    <% summary_list.with_row do |row|
+         row.with_key { "Full name" }
+         row.with_value { @wizard.store["full_name"] } %>
     <% end %>
 
-    <% summary_list.row do |row|
-          row.key { "Date of birth" }
-          row.value { @wizard.query_store.formatted_date_of_birth } %>
+    <% summary_list.with_row do |row|
+         row.with_key { "Date of birth" }
+         row.with_value { @wizard.query_store.formatted_date_of_birth } %>
     <% end %>
 
     <% if @wizard.store["national_insurance_number"].present? %>
-      <% summary_list.row do |row|
-            row.key { "National Insurance number" }
-            row.value { @wizard.store["national_insurance_number"] } %>
+      <% summary_list.with_row do |row|
+           row.with_key { "National Insurance number" }
+           row.with_value { @wizard.store["national_insurance_number"] } %>
       <% end %>
     <% end %>
   <% end %>
