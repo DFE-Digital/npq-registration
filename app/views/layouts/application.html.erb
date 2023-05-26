@@ -94,7 +94,7 @@
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <% if flash[:error].present? %>
           <%= govuk_notification_banner(title_text: "Error") do |banner| %>
-            <% banner.heading(text: flash[:error]) %>
+            <% banner.with_heading(text: flash[:error]) %>
           <% end %>
         <% end %>
 
@@ -104,7 +104,7 @@
               title_text: flash[:success_title] || "Success",
               success: true,
             ) do |banner|
-              banner.heading(text: flash[:success])
+              banner.with_heading(text: flash[:success])
             end
           %>
         <% end %>
