@@ -40,7 +40,7 @@ class User < ApplicationRecord
       trn:,
       trn_lookup_status: provider_data.info.trn_lookup_status,
       trn_verified: trn.present?,
-      full_name: provider_data.info.name,
+      full_name: provider_data.info.preferred_name || provider_data.info.name,
       raw_tra_provider_data: provider_data,
       updated_from_tra_at: Time.zone.now,
     )
@@ -62,7 +62,7 @@ class User < ApplicationRecord
       trn:,
       trn_lookup_status: provider_data.info.trn_lookup_status,
       trn_verified: trn.present?,
-      full_name: provider_data.info.name,
+      full_name: provider_data.info.preferred_name || provider_data.info.name,
       raw_tra_provider_data: provider_data,
       updated_from_tra_at: Time.zone.now,
     )
