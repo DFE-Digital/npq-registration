@@ -15,6 +15,7 @@ module Omniauth
 
       uid { raw_info["sub"] }
 
+      # Test
       info do
         {
           date_of_birth: parsed_date_of_birth,
