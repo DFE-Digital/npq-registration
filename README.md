@@ -8,6 +8,7 @@
 1. [Environments](docs/environments.md)
    1. [Accessing environment databases and consoles](docs/using_govpaas.md)
    1. [Monitoring, logging, and alerting](docs/logging.md)
+1. [Github Actions](docs/github_actions.md)
 1. [Feature Flags](docs/feature_flags.md)
    1. [Maintenance Mode](docs/maintenance_mode.md)
 1. [Admins and Superadmins](docs/admins.md)
