@@ -2,6 +2,12 @@
 
 # Get an Identity
 
+1. [What is Get an Identity?](#what-is-get-an-identity)
+1. [Omniauth Login](#omniauth-login)
+1. [Webhooks](#webhooks)
+
+# What is Get an Identity?
+
 The Get an Identity service is integrated into the NPQ application to abstract identity verification away from the NPQ application. This allows the NPQ application to be agnostic of the identity verification process and allows the identity verification process to be changed without affecting the NPQ application.
 
 ## Omniauth Login

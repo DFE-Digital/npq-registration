@@ -1,7 +1,13 @@
 [< Back to Navigation](../README.md)
 
 # Environments
+
 There are three permanent environments for NPQ and a fourth set of transient environments, the three permanent are sandbox, dev , and production. The fourth transient set are review apps
+
+1. [Sandbox](#sandbox)
+1. [Dev](#dev)
+1. [Production](#production)
+1. [Review Apps](#review-apps)
 
 ## Sandbox
 

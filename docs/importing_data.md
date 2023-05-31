@@ -2,6 +2,10 @@
 
 # Importing Data
 
+1. [Importing schools](#importing-schools)
+1. [Importing Private Childcare Provider data](#importing-private-childcare-provider-data)
+1. [Importing premium pupils data](#importing-premium-pupils-data)
+
 ## Importing schools
 
 ### Locally

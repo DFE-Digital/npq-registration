@@ -2,6 +2,10 @@
 
 # Setting up the app
 
+1. [Local development](#local-development)
+2. [Codespaces](#codespaces)
+3. [Docker](#docker)
+
 ## Local development
 
 1. Install the prerequisites:
