@@ -15,12 +15,12 @@
 # gem 'pg'
 #
 default: &default
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV.fetch("DATABASE_URL", "postgres://localhost:5432") %>
+  url: <%= ENV.fetch("DATABASE_URL", "postgis://localhost:5432") %>
 
 development:
   <<: *default
