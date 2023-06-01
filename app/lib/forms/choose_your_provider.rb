@@ -13,6 +13,15 @@ module Forms
       ]
     end
 
+    def question
+      @question ||= QuestionTypes::RadioButtonGroup.new(
+        name: :lead_provider_id,
+        body: I18n.t('helpers.hint.registration_wizard.lead_provider_id', course_name: course.name).html_safe,
+        style_options: { hint: nil },
+        options:,
+      )
+    end
+
     def next_step
       :share_provider
     end
@@ -35,9 +44,9 @@ module Forms
 
     def options
       providers.each_with_index.map do |provider, index|
-        OpenStruct.new(
+        build_option_struct(
           value: provider.id,
-          text: provider.name,
+          label: provider.name,
           hint: provider.hint,
           link_errors: index.zero?,
         )
