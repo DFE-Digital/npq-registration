@@ -16,7 +16,7 @@ module Forms
     def question
       @question ||= QuestionTypes::RadioButtonGroup.new(
         name: :lead_provider_id,
-        body: I18n.t('helpers.hint.registration_wizard.lead_provider_id', course_name: course.name).html_safe,
+        body: I18n.t("helpers.hint.registration_wizard.lead_provider_id", course_name: course.name).html_safe,
         style_options: { hint: nil },
         options:,
       )

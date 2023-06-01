@@ -11,10 +11,10 @@ module Forms
         }.compact
       end
 
-      private
+    private
 
       def normalize_text_for(value)
-        return value.presence if value.blank? || value.kind_of?(Hash)
+        return value.presence if value.blank? || value.is_a?(Hash)
 
         { text: value }
       end

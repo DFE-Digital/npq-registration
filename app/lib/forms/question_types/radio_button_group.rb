@@ -5,7 +5,7 @@ module Forms
         legend: {
           size: "xl",
           tag: "h1",
-        }.freeze
+        }.freeze,
       }.freeze
 
       def title_locale_type

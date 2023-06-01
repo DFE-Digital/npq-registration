@@ -110,7 +110,6 @@ module Forms
         link_errors:,
         divider:,
         revealed_question:,
-        label:,
       )
     end
   end
