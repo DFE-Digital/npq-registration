@@ -18,7 +18,6 @@ class RegistrationWizard
     teacher_reference_number
     dont_have_teacher_reference_number
     qualified_teacher_check
-    not_sure_updated_name
     dqt_mismatch
     npqh_status
     aso_unavailable
