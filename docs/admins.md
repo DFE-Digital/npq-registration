@@ -11,7 +11,7 @@ The admin console can be accessed by navigating to `/admin` and logging in. The 
 
 ## Admins 
 
-Admins have the ability to access the admin panel and view/manage information regarding users and  applications. They are able to retrigger syncs between NPQ and ECF for data that has failed to sync.
+Admins have the ability to access the admin panel and view/manage information regarding users and applications. They are able to retrigger syncs between NPQ and ECF for data that has failed to sync.
 
 Admin permissions are controlled by the `admin` boolean flag on the `users` table.
 
