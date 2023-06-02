@@ -1,0 +1,48 @@
+name: Rebuild flow visualisation
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Install yarn
+        run: npm install yarn -g
+
+      - name: Install Graphviz
+        run: sudo apt install graphviz
+
+      - run: mkdir -p tmp/visualisations
+
+      - name: Build visualisation
+        run: |
+          dot -v
+          bundle exec rails "registration_wizard:visualise[png]"
+
+      - name: Checkout wiki code
+        uses: actions/checkout@v3
+        with:
+          repository: ${{github.repository}}.wiki
+          path: markdown
+
+      - name: Push updated visualisation to repo Wiki
+        run: |
+          cp tmp/visualisations/registration_wizard_visualisation.png markdown/visualisations/registration_wizard_visualisation.png
+          cd markdown
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add visualisations/registration_wizard_visualisation.png
+          git diff-index --quiet HEAD || git commit -m "Update flow visualisation" && git push
