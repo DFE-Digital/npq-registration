@@ -14,7 +14,6 @@ class RegistrationWizard
     work_setting
     provider_check
     choose_an_npq_and_provider
-    change_dqt
     get_an_identity_callback
     teacher_reference_number
     dont_have_teacher_reference_number
