@@ -2,6 +2,11 @@
 
 # Acquiring new Private Childcare Provider CSV data for import
 
+1. [Overview](#overview)
+1. [Acquiring the ODS files](#acquiring-the-ods-files)
+1. [Extracting the data](#extracting-the-data)
+1. [Importing the data](../docs/importing_data.md#importing-private-childcare-provider-data)
+
 ## Overview
 
 Private Childcare Provider data is acquired twice a year from Ofsted. The data is used to populate the `private_childcare_provider` table in the database through the `import_private_childcare_providers` rake task.
@@ -28,6 +33,6 @@ Downloading the file named `Childcare provider level data as at 31 March 2022` a
 
 We care about two of these sheets, `D1-_Childcare_providers` and `D2-_Childminder_Agency`. Extracting these two files to CSV files and stripping out the non-data rows gives us two CSV files that can be imported into the database.
 
-As the exact structure of these files can differ year to year it is worth running these files through the import process locally to ensure the data is being imported correctly before committing the files to the repository. Any changes would mean that the [import rake task](lib/tasks/private_childcare_providers.rake) would need to be updated to reflect the new structure, these changes would be made in the CSV row wrapper classes:
+As the exact structure of these files can differ year to year it is worth running these files through the import process locally to ensure the data is being imported correctly before committing the files to the repository. Any changes would mean that the [import rake task](../lib/tasks/private_childcare_providers.rake) would need to be updated to reflect the new structure, these changes would be made in the CSV row wrapper classes:
 - [Services::PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow](../app/lib/services/private_childcare_providers/importer.rb)
 - [Services::PrivateChildcareProviders::Importer::ChildminderAgencyWrappedCSVRow](../app/lib/services/private_childcare_providers/importer.rb)

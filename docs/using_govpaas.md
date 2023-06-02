@@ -1,14 +1,24 @@
 [< Back to Navigation](../README.md)
 
-## Using GovPaaS
+# Using GovPaaS
+
 There situations in the dev environment where it would be useful to see server logs, have database access, or rails console access.
 This should not be used in other environments.
 
-### Setup
+1. [Setup](#setup)
+1. [Changing Space](#changing-space)
+1. [View logs](#view-logs)
+1. [Database access](#database-access)
+1. [Rails console](#rails-console)
+1. [Other SSH access (SCP)](#other-ssh-access-scp)
+
+## Setup
+
 The following assumed you have the cloudfoundry CLI set up on your machine, and have logged in.
 When you log in, you should select the dev space. Instructions can be found [here](https://docs.cloud.service.gov.uk/get_started.html#set-up-the-cloud-foundry-command-line)
 
-### Changing Space
+## Changing Space
+
 If you need to change space, for example to move between the dev space and the staging space you can use the following commands.
 
 To view available spaces:
@@ -19,7 +29,8 @@ To change to a different space:
 
 ```cf target -s <space_name>```
 
-### View logs
+## View logs
+
 To view logs, you will first need to know the service name. `cf a` will list services, but the service name will probably be `ecf-dev`.
 
 To view recent logs:
@@ -30,7 +41,8 @@ To tail logs (view them as they are generated)
 
 ```cf logs <app_name>```
 
-### Get access to the database
+## Database Access
+
 You will need to have the `psql` command on your path for this to work.
 For a Debian/Ubuntu based system, this can be achieved with `sudo apt-get install postgresql-client-12`
 On mac, installing through homebrew with `brew install postgres` is probably easiest. Alternative instructions [here](https://www.postgresql.org/download/macosx/).
@@ -43,7 +55,7 @@ You can list the services with `cf s`, but the service name will generally be `e
 
 `cf conduit ecf-postgres-dev -- psql`
 
-### Rails console
+## Rails console
 First, ssh into the host instance
 
 `cf ssh <app_name>`
@@ -56,7 +68,7 @@ and finally
 
 `/usr/local/bin/bundle exec rails console`
 
-### Other SSH access (SCP)
+## Other SSH access (SCP)
 Find the instance guid
 
 `GUID=$(cf app ecf-production-worker --guid)`
