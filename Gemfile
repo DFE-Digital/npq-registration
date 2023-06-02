@@ -45,6 +45,7 @@ gem "net-smtp", require: false
 group :development, :test do
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
+  gem "capybara-screenshot"
   gem "dotenv-rails"
   gem "parallel_tests"
   gem "pry-byebug"

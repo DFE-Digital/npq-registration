@@ -1,13 +1,13 @@
 module Forms
   class HaveOfstedUrn < Base
-    attr_accessor :has_ofsted_urn
+    QUESTION_NAME = :has_ofsted_urn
 
-    validates :has_ofsted_urn, presence: true, inclusion: { in: %w[yes no] }
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true, inclusion: { in: %w[yes no] }
 
     def self.permitted_params
-      %i[
-        has_ofsted_urn
-      ]
+      [QUESTION_NAME]
     end
 
     # If you say you have no ofsted URN, then we should
@@ -33,6 +33,15 @@ module Forms
 
     def previous_step
       :kind_of_nursery
+    end
+
+    def question
+      @question ||= Forms::QuestionTypes::RadioButtonGroup.new(
+        name: QUESTION_NAME,
+        locale_name: QUESTION_NAME,
+        options: options,
+        style_options: { legend: { size: "xl", tag: "h1" } },
+      )
     end
 
     def options
