@@ -34,7 +34,6 @@ class RegistrationWizard
     choose_school
     find_childcare_provider
     choose_childcare_provider
-    work_in_childcare
     kind_of_nursery
     have_ofsted_urn
     choose_private_childcare_provider
