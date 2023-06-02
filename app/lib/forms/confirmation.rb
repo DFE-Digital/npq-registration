@@ -26,5 +26,7 @@ module Forms
     end
 
     def reset_store!; end
+
+    def next_step; end
   end
 end
