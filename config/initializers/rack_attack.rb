@@ -9,8 +9,6 @@ class Rack::Attack
     "/registration/contact_details/change",
     "/registration/confirm_email",
     "/registration/confirm_email/change",
-    "/registration/resend_code",
-    "/registration/resend_code/change",
     "/registration/qualified_teacher_check",
     "/registration/qualified_teacher_check/change",
     "/session/sign_in",

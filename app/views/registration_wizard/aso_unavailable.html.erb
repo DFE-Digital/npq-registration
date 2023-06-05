@@ -3,7 +3,7 @@
     'registration_wizard/shared/copy_page',
     form: @form,
     wizard: @wizard,
-    ) do
+  ) do
 %>
   <%
     ehco = Course.ehco.first
@@ -16,5 +16,5 @@
 
   <p class="govuk-body">To be eligible for <%= ehco_course_name_string %> you need to do <%= npqh_course_name_string %>.</p>
 
-  <p class="govuk-body">Go back if you want to <%= govuk_link_to("register for #{npqh_course_name_string}", registration_wizard_show_path(:choose_your_npq)) %>.</p>
+  <p class="govuk-body">Go back if you want to <%= govuk_link_to("register for #{npqh_course_name_string}", registration_wizard_show_path(@wizard.next_step_path)) %>.</p>
 <% end %>

@@ -1,7 +1,8 @@
 RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
   let(:user_first_name) { "John" }
   let(:user_last_name) { "Doe" }
-  let(:user_full_name) { "#{user_first_name} #{user_last_name}" }
+  let(:user_preferred_name) { "#{user_first_name} #{user_last_name}" }
+  let(:user_full_name) { user_preferred_name || "#{user_first_name} #{user_last_name}" }
   let(:user_email) { "user@example.com" }
   let(:user_uid) { SecureRandom.uuid }
   let(:user_date_of_birth) { "1980-12-13" }
@@ -20,6 +21,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
         "email_verified" => true,
         "trn" => user_trn,
         "name" => user_full_name,
+        "preferred_name" => user_preferred_name,
         "trn_lookup_status" => "Found",
       },
       "credentials" => {
@@ -33,6 +35,7 @@ RSpec.shared_context("Stub Get An Identity Omniauth Responses") do
           "email" => user_email,
           "email_verified" => "True",
           "name" => user_full_name,
+          "preferred_name" => user_preferred_name,
           "birthdate" => user_date_of_birth,
           "trn" => user_trn,
           "given_name" => user_first_name,

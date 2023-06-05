@@ -7,6 +7,49 @@ class RegistrationWizard
 
   class InvalidStep < StandardError; end
 
+  VALID_REGISTRATION_STEPS = %i[
+    start
+    closed
+    teacher_catchment
+    work_setting
+    provider_check
+    choose_an_npq_and_provider
+    get_an_identity_callback
+    teacher_reference_number
+    dont_have_teacher_reference_number
+    qualified_teacher_check
+    dqt_mismatch
+    npqh_status
+    aso_unavailable
+    aso_headteacher
+    aso_new_headteacher
+    aso_funding_not_available
+    aso_previously_funded
+    aso_possible_funding
+    funding_your_aso
+    itt_provider
+    choose_your_npq
+    choose_your_provider
+    find_school
+    choose_school
+    find_childcare_provider
+    choose_childcare_provider
+    kind_of_nursery
+    have_ofsted_urn
+    choose_private_childcare_provider
+    your_employment
+    your_role
+    your_employer
+    school_not_in_england
+    childcare_provider_not_in_england
+    possible_funding
+    ineligible_for_funding
+    funding_your_npq
+    share_provider
+    check_answers
+    confirmation
+  ].freeze
+
   attr_reader :current_step, :params, :store, :request, :current_user
 
   def initialize(current_step:, store:, request:, current_user:, params: {})
@@ -258,51 +301,7 @@ private
   end
 
   def steps
-    %i[
-      start
-      closed
-      teacher_catchment
-      work_setting
-      provider_check
-      choose_an_npq_and_provider
-      change_dqt
-      get_an_identity_callback
-      teacher_reference_number
-      dont_have_teacher_reference_number
-      qualified_teacher_check
-      not_sure_updated_name
-      dqt_mismatch
-      npqh_status
-      aso_unavailable
-      aso_headteacher
-      aso_new_headteacher
-      aso_funding_not_available
-      aso_previously_funded
-      aso_possible_funding
-      funding_your_aso
-      itt_provider
-      choose_your_npq
-      choose_your_provider
-      find_school
-      choose_school
-      find_childcare_provider
-      choose_childcare_provider
-      work_in_childcare
-      kind_of_nursery
-      have_ofsted_urn
-      choose_private_childcare_provider
-      your_employment
-      your_role
-      your_employer
-      school_not_in_england
-      childcare_provider_not_in_england
-      possible_funding
-      ineligible_for_funding
-      funding_your_npq
-      share_provider
-      check_answers
-      confirmation
-    ]
+    VALID_REGISTRATION_STEPS
   end
 
   def submission_params

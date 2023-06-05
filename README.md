@@ -1,131 +1,25 @@
 ![Tests](https://github.com/DFE-Digital/npq-registration/actions/workflows/test.yml/badge.svg)
-![Deployment](https://github.com/DFE-Digital/npq-registration/actions/workflows/deploy_to_dev.yml/badge.svg)
+![Deployment](https://github.com/DFE-Digital/npq-registration/actions/workflows/deploy_to_prod.yml/badge.svg)
 
 # npq-registration (National professional qualification)
 
-## Setting up the app
+1. [Setting up the App](docs/setup.md)
+1. [What is NPQ and how does it work](docs/how_does_npq_work.md)
+1. [Merging, Deployment, and Environment Variables](docs/merging_deployment_and_env_variables.md)
+1. [Environments](docs/environments.md)
+   1. [Accessing environment databases and consoles](docs/using_govpaas.md)
+   1. [Monitoring, logging, and alerting](docs/logging.md)
+1. [Github Actions](docs/github_actions.md)
+1. [Feature Flags](docs/feature_flags.md)
+   1. [Maintenance Mode](docs/maintenance_mode.md)
+1. [Admins and Superadmins](docs/admins.md)
+1. [Specs && Linting](docs/specs_and_linting.md)
+1. [Importing Data](docs/importing_data.md)
+    1. [Acquiring New Private Childcare Provider data](docs/acquiring_new_private_childcare_provider_data.md)
+1. [Get an Identity](docs/get_an_identity.md)
+1. [Manual validation lifecycle](docs/manual_validation_lifecycle.md)
+1. [BigQuery Reports](docs/bigquery_reports.md)
 
-### Local development
+## Flow Visualisation
 
-1. Install the prerequisites:
-  - Ruby 3.1.2
-  - PostgreSQL
-  - NodeJS 16.19.1
-  - Yarn 1.12.x
-2. Run `bundle install` to install the gem dependencies
-3. Run `yarn` to install node dependencies
-4. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
-5. Run `bundle exec rails server` to launch the app on http://localhost:3000
-6. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
-
-### Codespaces
-
-1. Click the green 'Code' button on the repository home page and click 'Create a Codespace'
-2. Run `bundle exec rails server` in the terminal window at the bottom of VS Code
-
-If you're unfamiliar with what Codespaces are or how they work [read the official guiude](https://docs.github.com/en/codespaces/overview). If you
-don't have access to them you can request it in `#digital-tools-support` on DfE Slack.
-
-## Importing schools
-
-- fire up a rails console and run the following
-- `Services::ImportGiasSchools.new.call`
-
-## Importing premium pupils data
-
-- fire up a rails console and run the following
-- `Services::SetHighPupilPremiums.new(path_to_csv: Rails.root.join("config/data/high_pupil_premiums_2021_2022.csv")).call`
-
-## Running specs, linter(without auto correct) and annotate models and serializers
-```
-bundle exec rake
-```
-
-## Running specs
-```
-bundle exec rspec
-```
-
-## Linting
-
-It's best to lint just your app directories and not those belonging to the framework, e.g.
-
-```bash
-bundle exec rubocop app config db lib spec Gemfile --format clang -a
-
-or
-
-bundle exec scss-lint app/webpacker/styles
-```
-
-## Docker
-
-### Prerequisites
-- Docker >= 19.03.12
-
-### Build
-```
-make build-local-image
-```
-
-### Single docker image
-The docker image doesn't contain a default command. Any command can be appended:
-```
-% docker run -p 3001:3000 dfedigital/govuk-rails-boilerplate:latest rails -vT
-rails about                              # List versions of all Rails frameworks and the environment
-rails action_mailbox:ingress:exim        # Relay an inbound email from Exim to Action Mailbox (URL and INGRESS_PASSWORD required)
-...
-```
-
-### Run in production mode
-Docker compose provides a default empty database to run rails in production mode.
-
-```
-docker-compose up
-```
-
-Open: http://localhost:3000
-
-## Deploying on GOV.UK PaaS
-
-- Deployments are performed through GitHub actions
-
-## ssh-ing into an environment
-
-### Prerequisites
-
-- Cloud Foundry v7 client
-- GOV.UK PaaS account
-
-### Getting a rails console
-
-```sh
-cf ssh npq-registration-dev
-export PATH="/usr/local/bundle/bin:/usr/local/bundle/gems/bin:/usr/local/bin:$PATH"
-cd /app
-bundle exec rails c
-```
-
-## Runbook
-
-### Manual validation lifecycle
-
-This is for users that have entered their details but we could not automatically validate with the TRA database via API call. Instead we export these users for a human to validate then re-import the data.
-
-- Export records as CSV for manual validation
-```ruby
-Services::Exporters::ManualValidation.new.call
-```
-- After manual validation is complete we need to import the data back into NPQ
-```ruby
-Services::Importers::ManualValidation.new(path_to_csv: "/PATH/TO.CSV").call
-```
-- The data will not be synced with ECF so must also be updated there too with the same CSV
-- So inside a rails console in ECF
-```ruby
-Importers::NPQManualValidation.new(path_to_csv: "/PATH/TO.CSV").call
-```
-- Import is now complete and we need to generate the next batch of manual validation records from NPQ
-```ruby
-Services::Exporters::ManualValidation.new.call
-```
+![](https://raw.githubusercontent.com/wiki/DFE-Digital/npq-registration/visualisations/registration_wizard_visualisation.png)
