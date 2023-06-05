@@ -183,7 +183,7 @@ module Services
             node.name,
             NODE_COLOR,
             gradient: NODE_COLOR_GRADIENT,
-            description: node_path(node.name)
+            description: node_path(node.name),
           ),
         )
       end
@@ -233,14 +233,13 @@ module Services
                   END_STATE_COLOR
                 end
 
-
         build_node_string(
           name: node.name,
           settings: node_settings(
             node.name,
             color,
             text_color: CONTRAST_TEXT_COLOR,
-            description: node_path(node.name)
+            description: node_path(node.name),
           ),
         )
       end
