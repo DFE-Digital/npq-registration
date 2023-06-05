@@ -313,7 +313,12 @@ module Services
     end
 
     def digraph_settings
-      build_settings_string(GRAPH_STYLES, joiner: "\n  ")
+      last_updated_at = Time.zone.now.to_s(:govuk_short)
+      title_with_version = "#{GRAPH_STYLES[:label]}\nLast Updated: #{last_updated_at}"
+
+      settings = GRAPH_STYLES.merge(label: title_with_version)
+
+      build_settings_string(settings, joiner: "\n  ")
     end
 
     def node_settings(node_name, color, text_color: NODE_TEXT_COLOR, gradient: nil, description: nil)
