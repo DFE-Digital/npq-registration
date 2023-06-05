@@ -44,6 +44,10 @@ module Forms
       def name_locale_key
         locale_name || name
       end
+
+      def question_text
+        I18n.t("helpers.#{title_locale_type}.registration_wizard.#{name_locale_key}")
+      end
     end
   end
 end
