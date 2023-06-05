@@ -6,7 +6,9 @@ on:
     - cron:  '10 * * * *'
 
 jobs:
-  deploy:
+  export:
+    name: Export dashboard report to BigQuery
+
     runs-on: ubuntu-20.04
     container: google/cloud-sdk:latest
     steps:

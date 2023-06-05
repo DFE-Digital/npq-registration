@@ -1,4 +1,4 @@
-name: Generate dashboard report
+name: Generate Dashboard Report
 
 on:
   workflow_dispatch:
@@ -6,7 +6,9 @@ on:
     - cron:  '0 * * * *'
 
 jobs:
-  deploy:
+  generate:
+    name: Generate Dashboard Report
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI

@@ -5,7 +5,9 @@ on:
     - cron:  '0 5 * * *'
 
 jobs:
-  deploy:
+  update:
+    name: Sync School Data (Changed Schools Only)
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI
