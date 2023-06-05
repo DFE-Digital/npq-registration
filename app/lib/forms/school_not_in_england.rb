@@ -3,5 +3,7 @@ module Forms
     def previous_step
       :choose_school
     end
+
+    def next_step; end
   end
 end
