@@ -3,7 +3,9 @@ name: Update Course Definitions
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  update:
+    name: Update Course Definitions
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI

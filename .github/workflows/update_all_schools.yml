@@ -3,7 +3,9 @@ name: Sync School Data (All Schools)
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  update:
+    name: Sync School Data (All Schools)
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI

@@ -1,11 +1,14 @@
 name: Destroy Review App
+
 on:
   pull_request:
     branches: [ main ]
     types: [ closed ]
 
 jobs:
-  deploy:
+  destroy:
+    name: Destroy Review App
+
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
     steps:

@@ -8,7 +8,9 @@ on:
         required: true
 
 jobs:
-  deploy:
+  sync:
+    name: Resync User data for specific GAI user
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI

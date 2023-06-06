@@ -3,7 +3,9 @@ name: Resync User data for all unsynced GAI users
 on: workflow_dispatch
 
 jobs:
-  deploy:
+  sync:
+    name: Resync User data for all unsynced GAI users
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI
