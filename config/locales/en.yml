@@ -260,6 +260,10 @@ en:
         dqt_mismatch: "We cannot find your details"
         teacher_reference_number: "You need a teacher reference number to register for an NPQ"
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
+        employment_role: "What is your role?"
+        employer_name: "What organisation are you employed by?"
+        find_childcare_provider: "Where is your workplace located?"
+
     legend:
       registration_wizard:
         aso_headteacher: "Are you a headteacher?"
@@ -299,6 +303,7 @@ en:
         choose_private_childcare_provider: "For example EY456789"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
+        institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
     label:
       registration_wizard:
         work_setting_options:
@@ -323,10 +328,6 @@ en:
           other: "Other"
 
         itt_provider: "Enter the name of the ITT provider you are working with"
-
-        employment_role: "What is your role?"
-
-        employer_name: "What organisation are you employed by?"
 
         can_share_choices_options:
           1: Yes, I agree my information can be shared
@@ -374,8 +375,6 @@ en:
         trn_knowledge_options:
           "yes": "Yes"
           "no-dont-have": "No, I need help getting one"
-
-        find_childcare_provider: "Where is your workplace located?"
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
