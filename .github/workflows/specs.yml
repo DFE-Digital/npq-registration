@@ -1,4 +1,4 @@
-name: Test
+name: Run Rspec, Rubocop, and Brakeman
 
 on: [push]
 
@@ -7,8 +7,8 @@ env:
   DATABASE_URL: postgres://postgres:@localhost:5432
 
 jobs:
-  tests:
-    name: Run rubocop, rspec and javascript tests
+  rspec:
+    name: Run Rspec
 
     runs-on: ubuntu-latest
 
@@ -70,11 +70,73 @@ jobs:
       - name: Set up test database
         run: bin/rails parallel:setup
 
-      - name: Run rubocop
-        run: bundle exec rubocop --format clang --parallel
-
       - name: Run tests
         run: bundle exec rake parallel:spec
+  linting:
+    name: Run Rubocop
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.20.0'
+
+      - name: Set up ruby gem cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Run rubocop
+        run: bundle exec rubocop --format clang --parallel
+  brakeman:
+    name: Run Brakeman
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.20.0'
+
+      - name: Set up ruby gem cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
       - name: Run brakeman
         run: bundle exec brakeman
