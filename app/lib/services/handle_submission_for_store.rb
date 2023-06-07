@@ -181,7 +181,6 @@ module Services
 
     def email_template
       Services::EmailTemplateLookup.call(store["email_template"])
-      store["email_template"]
     end
 
     def targeted_delivery_funding_eligibility

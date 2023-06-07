@@ -69,7 +69,7 @@ module Services
         case institution.class.name
         when "School"
           return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-          unless eligible_establishment_type_codes.include?(institution.establishment_type_code) || (institution.eyl_funding_eligible? && course.eyl?)
+          unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
             return INELIGIBLE_ESTABLISHMENT_TYPE
           end
           return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
@@ -128,10 +128,6 @@ module Services
 
     def lead_mentor_course?
       course.npqltd?
-    end
-
-    def eligible_establishment_type_codes
-      %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].freeze
     end
 
     def eligible_urns

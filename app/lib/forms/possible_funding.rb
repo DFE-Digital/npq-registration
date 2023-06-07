@@ -25,6 +25,7 @@ module Forms
     def message_template
       return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
       return "lead_mentor" if Course.npqltd.include?(course)
+      return "funding_eligibility_unclear" if works_in_other? && employment_type_other?
 
       if targeted_delivery_funding_eligibility?
         "eligible_for_scholarship_funding"
@@ -34,6 +35,14 @@ module Forms
     end
 
   private
+
+    def works_in_other?
+      wizard.query_store.works_in_other?
+    end
+
+    def employment_type_other?
+      wizard.query_store.employment_type_other?
+    end
 
     def targeted_delivery_funding_eligibility?
       wizard.query_store.targeted_delivery_funding_eligibility?

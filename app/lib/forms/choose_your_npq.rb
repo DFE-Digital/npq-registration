@@ -39,9 +39,6 @@ module Forms
       wizard.store["tsf_primary_plus_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_plus_eligibility]
       wizard.store["tsf_primary_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_eligibility]
       wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
-
-      return if lead_provider_valid?
-
       wizard.store["lead_provider_id"] = store_lead_provider_id
     end
 
@@ -72,6 +69,8 @@ module Forms
       elsif wizard.query_store.works_in_other?
         if lead_mentor?
           :ineligible_for_funding
+        elsif wizard.query_store.employment_type_other?
+          :possible_funding
         else
           :choose_your_provider
         end

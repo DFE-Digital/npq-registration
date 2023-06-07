@@ -2,9 +2,9 @@ module Forms
   class EhcoFundingNotAvailable < Base
     def previous_step
       if wizard.store["ehco_headteacher"] == "yes"
-        "ehco_new_headteacher"
+        :ehco_new_headteacher
       else
-        "ehco_headteacher"
+        :ehco_headteacher
       end
     end
 

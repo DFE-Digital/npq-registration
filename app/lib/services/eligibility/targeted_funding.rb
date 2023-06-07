@@ -14,7 +14,7 @@ module Services
       end
 
       def call
-        if institution.is_a?(School) && institution.tsf_eligible_establishment?
+        if institution.is_a?(School) && institution.eligible_establishment?
           if institution.primary_education_phase?
             primary_check
           else

@@ -54,13 +54,13 @@ class School < ApplicationRecord
     "School-#{urn}"
   end
 
-  def tsf_eligible_establishment?
-    tsf_eligible_establishment_type_codes.include?(establishment_type_code)
+  def eligible_establishment?
+    eligible_establishment_type_codes.include?(establishment_type_code)
   end
 
 private
 
-  def tsf_eligible_establishment_type_codes
+  def eligible_establishment_type_codes
     [
       1, # Community school
       2, # Voluntary aided school

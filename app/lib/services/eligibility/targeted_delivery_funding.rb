@@ -27,7 +27,7 @@ module Services
         return false if employment_role == "lead_mentor_for_accredited_itt_provider"
         return false unless course.supports_targeted_delivery_funding?
 
-        institution.tsf_eligible_establishment? &&
+        institution.eligible_establishment? &&
           institution.number_of_pupils <= pupil_count_threshold
       end
 

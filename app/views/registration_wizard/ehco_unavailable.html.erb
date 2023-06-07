@@ -5,15 +5,16 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-xl" >Funding eligibility</h1>
+
+  <% ehco_npq = Course.ehco.first %>
+
+  <h1 class="govuk-heading-xl" >You cannot register for <%= localise_sentence_embedded_course_name(ehco_npq) %></h1>
 
   <p class="govuk-body">
-    You’re not eligible for the scholarship funding for <%= localise_sentence_embedded_course_name(Course.ehco.first) %>.
+    To be eligible for <%= localise_sentence_embedded_course_name(ehco_npq) %>, you need to do the Headship NPQ.
   </p>
 
   <p class="govuk-body">
-    This means that you would need to pay for the EHCO another way.
+    Go back if you want to <a href="<%= registration_wizard_show_url('choose_your_npq'.dasherize) %>"> register for Headship NPQ</a>.
   </p>
 <% end %>
-
-
