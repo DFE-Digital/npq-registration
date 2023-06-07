@@ -186,7 +186,7 @@ RSpec.describe Services::Ecf::EcfUserUpdater do
             "error_messages" => [
               "JsonApiClient::Errors::NotFound - Resource not found: https://ecf-app.gov.uk/api/v1/npq/users/#{ecf_id}",
             ],
-            "response_body" => nil,
+            "response_body" => {},
             "sync_type" => "user_update",
           )
         end
