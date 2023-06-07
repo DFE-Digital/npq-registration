@@ -102,13 +102,14 @@ module Forms
       wizard.query_store
     end
 
-    def build_option_struct(value:, link_errors: false, divider: false, revealed_question: nil, label: {})
+    def build_option_struct(value:, label: nil, hint: nil, link_errors: false, divider: false, revealed_question: nil)
       Forms::QuestionTypes::RadioOption.new(
         value:,
+        label:,
+        hint:,
         link_errors:,
         divider:,
         revealed_question:,
-        label:,
       )
     end
   end

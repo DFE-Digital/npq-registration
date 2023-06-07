@@ -1,14 +1,22 @@
 module Forms
   module QuestionTypes
-    class RadioOption
-      attr_reader :value, :link_errors, :divider, :revealed_question, :label
+    RadioOption = Struct.new(:value, :link_errors, :divider, :revealed_question, :label, :hint, keyword_init: true)
 
-      def initialize(value:, link_errors: false, divider: false, revealed_question: nil, label: {})
-        @value = value
-        @link_errors = link_errors
-        @divider = divider
-        @revealed_question = revealed_question
-        @label = label
+    class RadioOption
+      def to_options
+        {
+          link_errors:,
+          label: normalize_text_for(label),
+          hint: normalize_text_for(hint),
+        }.compact
+      end
+
+    private
+
+      def normalize_text_for(value)
+        return value.presence if value.blank? || value.is_a?(Hash)
+
+        { text: value }
       end
     end
   end

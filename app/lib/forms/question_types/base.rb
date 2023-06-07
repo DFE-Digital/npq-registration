@@ -14,6 +14,7 @@ module Forms
       attribute :form
       attribute :style_options, default: -> { {} }
       attribute :locale_name
+      attribute :body, default: -> { [] }
 
       def initialize(**attrs)
         super
@@ -47,6 +48,10 @@ module Forms
 
       def question_text
         I18n.t("helpers.#{title_locale_type}.registration_wizard.#{name_locale_key}")
+      end
+
+      def body=(value)
+        super Array.wrap(value)
       end
     end
   end

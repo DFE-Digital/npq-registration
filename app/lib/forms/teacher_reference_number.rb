@@ -37,7 +37,7 @@ module Forms
       Forms::QuestionTypes::RadioButtonGroup.new(
         name: :trn_knowledge,
         options:,
-        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+        style_options: { legend: { size: "m", tag: "h1" } },
       )
     end
 

@@ -2,7 +2,7 @@
   <%= form.govuk_radio_divider %>
 <% end  %>
 
-<%= form.govuk_radio_button(question.name, radio_option.value, label: radio_option.label || {}, link_errors: radio_option.link_errors) do %>
+<%= form.govuk_radio_button(question.name, radio_option.value, **radio_option.to_options) do %>
   <% if radio_option.revealed_question.present? %>
     <%=
       render(
