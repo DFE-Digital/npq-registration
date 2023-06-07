@@ -5,7 +5,9 @@ on:
     - cron:  '30 3 * * *'
 
 jobs:
-  deploy:
+  sweep:
+    name: Sweep stale sessions
+
     runs-on: ubuntu-20.04
     steps:
       - name: Install CloudFoundry CLI

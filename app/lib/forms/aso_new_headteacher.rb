@@ -16,9 +16,9 @@ module Forms
 
     def next_step
       case funding_eligiblity_status_code
-      when :funded
+      when Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :aso_possible_funding
-      when :previously_funded
+      when Services::FundingEligibility::PREVIOUSLY_FUNDED
         :aso_previously_funded
       else
         :aso_funding_not_available

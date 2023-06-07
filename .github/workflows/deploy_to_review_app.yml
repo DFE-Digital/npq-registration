@@ -1,4 +1,4 @@
-name: Push PR to Review App
+name: Create Review App
 
 on:
   pull_request:
@@ -9,6 +9,8 @@ on:
 
 jobs:
   deploy:
+    name: Deploy to Review App
+
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-20.04
     steps:
