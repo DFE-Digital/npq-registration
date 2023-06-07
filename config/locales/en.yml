@@ -274,6 +274,8 @@ en:
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
         trn_knowledge: "Do you have a TRN?"
+        lead_provider_id: "Select your provider"
+        chosen_provider: "Have you already chosen an NPQ and provider?"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -298,6 +300,7 @@ en:
         choose_private_childcare_provider: "For example EY456789"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
+        lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
     label:
       registration_wizard:
         work_setting_options:

@@ -1,13 +1,14 @@
 module Forms
   module QuestionTypes
     class Base
-      attr_reader :name, :options, :locale_name
+      attr_reader :name, :options, :locale_name, :body
 
-      def initialize(name:, options: [], style_options: {}, locale_name: nil)
+      def initialize(name:, options: [], style_options: {}, locale_name: nil, body: [])
         @name = name
         @options = options
         @style_options = style_options # Freeform optional parameters that can differ for each subclass
         @locale_name = locale_name
+        @body = Array.wrap(body)
       end
 
       # For determining which partial to use

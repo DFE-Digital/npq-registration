@@ -2,13 +2,28 @@ module Forms
   class ProviderCheck < Base
     VALID_CHOSEN_PROVIDER_OPTIONS = %w[yes no].freeze
 
-    attr_accessor :chosen_provider
+    QUESTION_NAME = :chosen_provider
 
-    validates :chosen_provider, presence: true, inclusion: { in: VALID_CHOSEN_PROVIDER_OPTIONS }
+    attr_accessor QUESTION_NAME
+
+    validates QUESTION_NAME, presence: true, inclusion: { in: VALID_CHOSEN_PROVIDER_OPTIONS }
 
     def self.permitted_params
-      %i[
-        chosen_provider
+      [QUESTION_NAME]
+    end
+
+    def question
+      Forms::QuestionTypes::RadioButtonGroup.new(
+        name: :chosen_provider,
+        options:,
+        style_options: { legend: { size: "m", tag: "h1" } },
+      )
+    end
+
+    def options
+      [
+        build_option_struct(value: "yes", label: "Yes", link_errors: true),
+        build_option_struct(value: "no", label: "No"),
       ]
     end
 

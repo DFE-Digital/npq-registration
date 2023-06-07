@@ -17,7 +17,7 @@ module Forms
       Forms::QuestionTypes::RadioButtonGroup.new(
         name: :course_identifier,
         options:,
-        style_options: { fieldset: { legend: { size: "m", tag: "h1" } } },
+        style_options: { legend: { size: "m", tag: "h1" } },
       )
     end
 
@@ -29,7 +29,7 @@ module Forms
           value: course.identifier,
           link_errors: index.zero?,
           divider: divider_index == index,
-          label: { text: I18n.t("course.name.#{course.identifier}", default: course.name) },
+          label: I18n.t("course.name.#{course.identifier}", default: course.name),
         )
       end
     end
