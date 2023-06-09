@@ -10,7 +10,6 @@ module Forms
 
     # Already funded
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
-    ALREADY_FUNDED_NOT_ELGIBLE_EHCO_FUNDING = "already_funded/not_eligible_ehco_funding".freeze
     ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
 
     attr_accessor :version
@@ -65,12 +64,17 @@ module Forms
     end
 
     def tsf_elgible?
-      wizard.query_store.targeted_delivery_funding_eligibility? ||
-        wizard.query_store.tsf_primary_eligibility? ||
-        wizard.query_store.tsf_primary_plus_eligibility?
+      targeted_delivery_funding_eligibility? || tsf_primary_eligibility? || tsf_primary_plus_eligibility?
+    end
+
+    def funding_amount
+      @funding_amount ||= targeted_delivery_funding_eligibility? && tsf_primary_plus_eligibility? ? 800 : 200
     end
 
     delegate :course,
+             :targeted_delivery_funding_eligibility?,
+             :tsf_primary_plus_eligibility?,
+             :tsf_primary_eligibility?,
              :lead_provider,
              :new_headteacher?,
              :inside_catchment?,

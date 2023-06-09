@@ -80,7 +80,7 @@ RSpec.feature "Happy journeys", type: :feature do
       end
 
       expect(page).to have_text("you are eligible for scholarship funding for")
-      expect(page).to have_text("go back and select the the Early years leadership NPQ")
+      expect(page).to have_text("You can go back and select the Early years leadership")
       page.click_link("Back")
     end
 

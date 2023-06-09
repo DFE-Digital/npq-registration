@@ -66,7 +66,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
-      expect(page).to have_selector "p", text: "not eligible for the scholarship funding"
+      expect(page).to have_selector "p", text: "you need to do the Headship NPQ"
 
       page.click_link("Back")
     end

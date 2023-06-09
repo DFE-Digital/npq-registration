@@ -6,12 +6,12 @@
     ) do
 %>
 
-  <% ehco_npq = Course.ehco.first %>
+  <% ehco = Course.ehco.first %>
 
-  <h1 class="govuk-heading-xl" >You cannot register for <%= localise_sentence_embedded_course_name(ehco_npq) %></h1>
+  <h1 class="govuk-heading-xl" >You cannot register for <%= localise_sentence_embedded_course_name(ehco) %></h1>
 
   <p class="govuk-body">
-    To be eligible for <%= localise_sentence_embedded_course_name(ehco_npq) %>, you need to do the Headship NPQ.
+    To be eligible for <%= localise_sentence_embedded_course_name(ehco) %>, you need to do the Headship NPQ.
   </p>
 
   <p class="govuk-body">
