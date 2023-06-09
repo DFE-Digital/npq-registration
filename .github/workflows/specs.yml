@@ -67,11 +67,35 @@ jobs:
       - name: Install node.js dependencies
         run: yarn install
 
+      - name: Create screenshots directory
+        run: mkdir -p tmp/capybara
+
       - name: Set up test database
         run: bin/rails parallel:setup
 
       - name: Run tests
         run: bundle exec rake parallel:spec
+
+      - name: Checkout wiki code
+        uses: actions/checkout@v3
+        if: failure()
+        with:
+          repository: ${{github.repository}}.wiki
+          path: markdown
+
+      - name: Push screenshots to repo Wiki
+        if: failure()
+        run: |
+          rm -rf "markdown/capybara-screenshots/$GITHUB_REF_NAME"
+          mkdir -p "markdown/capybara-screenshots/$GITHUB_REF_NAME"
+          cp tmp/capybara/*.png "markdown/capybara-screenshots/$GITHUB_REF_NAME/"
+          cd markdown
+          ruby generate-screenshots-list.rb
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add "capybara-screenshots/$GITHUB_REF_NAME/*"
+          git diff-index --quiet HEAD || git commit -m "Update screenshots for pr ${{ github.event.number }}" && git push
+
   linting:
     name: Run Rubocop
 
