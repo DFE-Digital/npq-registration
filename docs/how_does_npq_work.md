@@ -48,4 +48,27 @@ Funding Eligibility occurs once the user has finished questions related to their
 
 ## Targeted Support Funding
 
-< To be filled in>
+Targeted support funding is extra funding that some schools will receive if they meet a certain criteria. 
+
+There is 2 levels of targeted support;
+
+1. `Services::Eligibility::TargetedDeliveryFunding` 
+2. `Services::Eligibility::TsfPrimaryEligibility`
+
+The `TargetedDeliveryFunding` checks on various criteria examples below:
+
+1. institution exisiting 
+2. Elgibile `fe_ukprn`
+3. Whether they are a Local Authroity or Private Childcare Provider school
+4. Number of pupils
+5. Employment role
+6. Course
+7. Eligible establishment
+
+The `TsfPrimaryEligibility` service check on:
+
+1. Phase of education 
+2. Number of pupils
+
+If a school passes the TargetedDeliveryFunding rules then that school will receive £200 and if the pass the TsfPrimaryEligibility checks then the school will receiive an additional £600 (£800 in total).
+NB. "TargetedDeliveryFunding" refers to the payments made to both schools (called Targeted Support Funding) and Lead Providers (called Targeted Delivery Funding).
