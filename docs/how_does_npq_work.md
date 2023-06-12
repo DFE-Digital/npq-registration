@@ -71,3 +71,4 @@ The `TsfPrimaryEligibility` service check on:
 2. Number of pupils
 
 If a school passes the TargetedDeliveryFunding rules then that school will receive £200 and if the pass the TsfPrimaryEligibility checks then the school will receiive an additional £600 (£800 in total).
+NB. "TargetedDeliveryFunding" refers to the payments made to both schools (called Targeted Support Funding) and Lead Providers (called Targeted Delivery Funding).
