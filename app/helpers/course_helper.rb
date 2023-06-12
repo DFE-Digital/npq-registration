@@ -6,7 +6,7 @@ module CourseHelper
   # Returns either "the #{course_name}" (for EHCO) or "the #{course_name} NPQ" in all other cases
   # Saves having this logic in a bunch of different templates
   def localise_sentence_embedded_course_name(course)
-    embed_mode = if course.ehco? || course.aso?
+    embed_mode = if course.ehco?
                    :ehco
                  else
                    :default

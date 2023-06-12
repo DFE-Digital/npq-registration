@@ -71,8 +71,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "None of the above"
     end
 
-    expect_page_to_have(path: "/registration/aso-unavailable", submit_form: false) do
-      expect(page).to have_selector "h1", text: "You cannot register for the Early headship coaching offer"
+    expect_page_to_have(path: "/registration/ehco-unavailable", submit_form: false) do
+      expect(page).to have_selector "p", text: "Go back if you want to register for Headship NPQ"
 
       page.click_link("Back")
     end
@@ -82,16 +82,16 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose "I’ve completed it"
     end
 
-    expect_page_to_have(path: "/registration/aso-headteacher", submit_form: true) do
+    expect_page_to_have(path: "/registration/ehco-headteacher", submit_form: true) do
       expect(page).to have_text("Are you a headteacher?")
       page.choose("No", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/aso-funding-not-available", click_continue: true) do
-      expect(page).to have_selector "h1", text: "DfE scholarship funding is not available"
+    expect_page_to_have(path: "/registration/ehco-funding-not-available", click_continue: true) do
+      expect(page).to have_selector "p", text: "not eligible for the scholarship funding"
     end
 
-    expect_page_to_have(path: "/registration/funding-your-aso", submit_form: true) do
+    expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
       expect(page).to have_text("How is the Early headship coaching offer being paid for?")
       page.choose "I am paying", visible: :all
     end
@@ -190,21 +190,27 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
-        "aso_funding_choice" => "self",
-        "aso_headteacher" => "no",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
+        "ehco_funding_choice" => "self",
+        "ehco_headteacher" => "no",
+        "email_template" => "not_eligible_ehco_funding",
+        "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "lead_provider_id" => "9",
+        "funding_amount" => nil,
         "npqh_status" => "completed_npqh",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
-        "works_in_childcare" => "no",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
+        "works_in_childcare" => "no",
       },
     )
   end

@@ -8,7 +8,6 @@ module Services
     PREVIOUSLY_FUNDED = :previously_funded
 
     # EHCO
-    NOT_NEW_HEADTEACHER_REQUESTING_ASO = :not_new_headteacher_requesting_aso
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
     # School
@@ -21,6 +20,8 @@ module Services
 
     # Lead Mentor
     NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
+
+    NOT_IN_ENGLAND = :not_in_england
 
     attr_reader :institution,
                 :course,
@@ -60,6 +61,7 @@ module Services
           return lead_mentor_eligibility_status
         end
 
+        return NOT_IN_ENGLAND unless inside_catchment?
         return NO_INSTITUTION if institution.nil?
         return PREVIOUSLY_FUNDED if previously_funded?
         return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
@@ -67,10 +69,9 @@ module Services
         case institution.class.name
         when "School"
           return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-          unless eligible_establishment_type_codes.include?(institution.establishment_type_code) || (institution.eyl_funding_eligible? && course.eyl?)
+          unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
             return INELIGIBLE_ESTABLISHMENT_TYPE
           end
-          return NOT_NEW_HEADTEACHER_REQUESTING_ASO if course.aso? && !new_headteacher?
           return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
           FUNDED_ELIGIBILITY_RESULT
@@ -127,10 +128,6 @@ module Services
 
     def lead_mentor_course?
       course.npqltd?
-    end
-
-    def eligible_establishment_type_codes
-      %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].freeze
     end
 
     def eligible_urns

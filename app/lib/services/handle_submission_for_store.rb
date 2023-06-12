@@ -17,7 +17,7 @@ module Services
           school_urn:,
           ukprn:,
           headteacher_status:,
-          eligible_for_funding: funding_eligibility,
+          eligible_for_funding: eligible_for_funding?,
           funding_eligiblity_status_code:,
           funding_choice:,
           teacher_catchment: store["teacher_catchment"],
@@ -126,10 +126,10 @@ module Services
       # It is possible that the applicant had chosen a non-funded path and selected a funding choice
       # before going back a few steps and choosing a funded route. We should clear the funding choice
       # to nil here to reduce confusion
-      if funding_eligibility
+      if eligible_for_funding?
         nil
       elsif course.ehco?
-        store["aso_funding_choice"]
+        store["ehco_funding_choice"]
       else
         store["funding"]
       end
@@ -137,9 +137,9 @@ module Services
 
     def headteacher_status
       if course.ehco?
-        case store["aso_headteacher"]
+        case store["ehco_headteacher"]
         when "yes"
-          case store["aso_new_headteacher"]
+          case store["ehco_new_headteacher"]
           when "yes"
             "yes_in_first_five_years"
           when "no"
@@ -154,7 +154,7 @@ module Services
     end
 
     def enqueue_job
-      ApplicationSubmissionJob.perform_later(user:)
+      ApplicationSubmissionJob.perform_later(user:, email_template:)
     end
 
     def funding_eligibility_service
@@ -179,8 +179,8 @@ module Services
       funding_eligibility_service.funded?
     end
 
-    def funding_eligibility
-      eligible_for_funding?
+    def email_template
+      Services::EmailTemplateLookup.call(store["email_template"])
     end
 
     def targeted_delivery_funding_eligibility

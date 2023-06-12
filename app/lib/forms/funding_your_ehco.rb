@@ -1,14 +1,14 @@
 module Forms
-  class FundingYourAso < Base
+  class FundingYourEhco < Base
     VALID_FUNDING_OPTIONS = %w[school trust self another].freeze
 
-    attr_accessor :aso_funding_choice
+    attr_accessor :ehco_funding_choice
 
-    validates :aso_funding_choice, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
+    validates :ehco_funding_choice, presence: true, inclusion: { in: VALID_FUNDING_OPTIONS }
 
     def self.permitted_params
       %i[
-        aso_funding_choice
+        ehco_funding_choice
       ]
     end
 
@@ -17,12 +17,12 @@ module Forms
     end
 
     def previous_step
-      :aso_funding_not_available
+      "ehco_funding_not_available"
     end
 
     def question
       Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :aso_funding_choice,
+        name: :ehco_funding_choice,
         options:,
       )
     end

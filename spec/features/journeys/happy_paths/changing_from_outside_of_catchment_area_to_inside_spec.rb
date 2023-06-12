@@ -49,15 +49,9 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("you do not work in England")
+      expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
     end
@@ -108,14 +102,9 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("such as state funded schools")
+      expect(page).to have_text("You’re not eligible for scholarship funding")
 
       page.click_link("Continue")
     end
@@ -209,15 +198,21 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-senior-leadership",
+        "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
+        "funding_amount" => nil,
+        "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => "9",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
       },
     )

@@ -7,7 +7,7 @@ class Admin::ApplicationSubmissionsController < AdminController
     else
       existing_ecf_sync_jobs = user.ecf_sync_jobs.to_a
 
-      if ApplicationSubmissionJob.perform_later(user:)
+      if ApplicationSubmissionJob.perform_later(user:, email_template: nil)
         existing_ecf_sync_jobs.each(&:delete)
         flash[:success] = "Sync to ECF scheduled"
       else

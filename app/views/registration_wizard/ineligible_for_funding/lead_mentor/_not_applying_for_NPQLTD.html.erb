@@ -1,20 +1,21 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
+  <%= @form.errors.present? ? "Error: " : nil %> Funding eligibility
 <% end %>
-
-<h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
-
-<p class="govuk-body">To be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %> you must work in one of these settings in England:</p>
-
-<ul class="govuk-list govuk-list--bullet">
-  <li>state-funded schools</li>
-  <li>state-funded 16 to 19 organisations</li>
-  <li>independent special schools</li>
-  <li>virtual schools</li>
-  <li>hospital schools</li>
-  <li>young offender institutions</li>
-</ul>
 
 <% npqltd = Course.npqltd.first %>
 
-<p class="govuk-body">From the answers you have given us you should be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqltd) %> (<%= course_short_code(npqltd) %>) you can go back and select the <%= course_short_code(npqltd) %> or continue with your registration for <%= localise_sentence_embedded_course_name(course) %>.</p>
+<h1 class="govuk-heading-xl">Funding eligibility</h1>
+
+<p class="govuk-body">
+You’re not eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %>
+because you do not work in one of the eligible settings, such as state-funded schools.
+<p class="govuk-body">This means that you would need to pay for the course another way.
+</p>
+
+<p class="govuk-body">
+However, as a lead mentor for an accredited ITT provider, you’re eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqltd) %>.
+</p>
+
+<p class="govuk-body">You can <a href="<%= registration_wizard_show_url(@wizard.previous_step_path) %>"> go back and select <%= localise_sentence_embedded_course_name(npqltd) %></a> instead.</p>
+
+

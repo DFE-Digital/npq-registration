@@ -6,7 +6,7 @@
     ) do
 %>
 
-  <%= render "registration_wizard/possible_funding/#{@form.message_template}", course: @form.course %>
+  <%= render "registration_wizard/possible_funding/#{@form.message_template}", course: @form.course, funding_amount: @form.funding_amount %>
 
   <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
     <%= f.govuk_submit %>

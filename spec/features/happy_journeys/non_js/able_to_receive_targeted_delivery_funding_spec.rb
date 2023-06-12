@@ -87,7 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+      expect(page).to have_text("Funding eligibility")
 
       page.click_button("Continue")
     end
@@ -177,12 +177,18 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-senior-leadership",
+        "email_template" => "eligible_scholarship_funding",
+        "funding_amount" => 200,
+        "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
         "works_in_childcare" => "no",
         "works_in_school" => "yes",

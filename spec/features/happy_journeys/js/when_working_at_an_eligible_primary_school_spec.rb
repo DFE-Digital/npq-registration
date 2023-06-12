@@ -71,7 +71,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
+      expect(page).to have_text("Funding eligibility")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -185,14 +185,20 @@ RSpec.feature "Happy journeys", type: :feature do
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-headship",
+        "email_template" => "eligible_scholarship_funding",
+        "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => "",
         "lead_provider_id" => "9",
+        "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
+        "funding_amount" => 800,
+        "tsf_primary_eligibility" => true,
+        "tsf_primary_plus_eligibility" => true,
         "work_setting" => "a_school",
       },
     )

@@ -45,14 +45,9 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("DfE scholarship funding is not available")
-      expect(page).to have_text("To be eligible for scholarship funding for")
-      expect(page).to have_text("state-funded schools")
-      expect(page).to have_text("state-funded 16 to 19 organisations")
-      expect(page).to have_text("independent special schools")
-      expect(page).to have_text("virtual schools")
-      expect(page).to have_text("hospital schools")
-      expect(page).to have_text("young offenders institutions")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("you do not work in England")
+      expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
     end
@@ -132,7 +127,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => "school",
       "itt_provider" => nil,
       "lead_mentor" => false,
-      "funding_eligiblity_status_code" => "no_institution",
+      "funding_eligiblity_status_code" => "not_in_england",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
@@ -152,16 +147,22 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
+        "email_template" => "not_england_wrong_catchment",
+        "lead_provider_id" => "9",
+        "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "work_setting" => "a_school",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-headship",
         "funding" => "school",
-        "lead_provider_id" => "9",
+        "funding_amount" => nil,
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => "China",
-        "works_in_school" => "yes",
-        "works_in_childcare" => "no",
-        "work_setting" => "a_school",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "funding_eligiblity_status_code" => "not_in_england",
       },
     )
   end

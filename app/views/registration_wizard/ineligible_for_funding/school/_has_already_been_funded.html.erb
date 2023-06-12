@@ -1,21 +1,16 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> DfE scholarship funding is not available
+  <%= @form.errors.present? ? "Error: " : nil %> Funding eligibility
 <% end %>
 
-<h1 class="govuk-heading-xl">DfE scholarship funding is not available</h1>
-
-<p class="govuk-body">Our records show that you are already registered to study <%= localise_sentence_embedded_course_name(course) %>.</p>
-
-<ul class="govuk-list govuk-list--bullet">
-  <li>
-    You can only receive scholarship funding to study this NPQ with one provider. If you do not wish to proceed with your current provider you will need to contact them.
-  </li>
-
-  <li>
-    If you have previously failed or withdrawn from this course, then you're not eligible for scholarship funding for the same NPQ again. If you do not believe you've failed or withdrawn from this course please email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>
-  </li>
-</ul>
+<h1 class="govuk-heading-xl">Funding eligibility</h1>
 
 <p class="govuk-body">
-  You can <%= link_to('go back and select a different NPQ', registration_wizard_show_path(@wizard.previous_step_path)) %> or continue with your registration for <%= localise_sentence_embedded_course_name(course) %>. You'll need to pay for it another way. Contact your course provider to discuss your funding options.
-</p>
+  You’ve already been allocated scholarship funding for <%= localise_sentence_embedded_course_name(course) %> with <%= provider_name %>.
+  <br>
+  If you need to change something about your NPQ or provider, email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>.
+
+  <strong>If you’re taking the course again</strong>
+
+  Contine to register.
+
+  You would need to pay for <%= localise_sentence_embedded_course_name(course) %> if you were previously funded but you failed or withdrew from the course.

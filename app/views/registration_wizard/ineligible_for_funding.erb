@@ -6,7 +6,7 @@
     ) do
 %>
 
-  <%= render "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}", course: @form.course %>
+  <%= render "registration_wizard/ineligible_for_funding/#{@form.ineligible_template}", course: @form.course, lead_provider: @form.lead_provider.try(:name), funding_amount: @form.funding_amount %>
 
   <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
 

@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
   unsupported_course_codes = %w[
-    npq-additional-support-offer
     npq-early-headship-coaching-offer
   ].freeze
   supported_course_codes = Course.pluck(:identifier) - unsupported_course_codes

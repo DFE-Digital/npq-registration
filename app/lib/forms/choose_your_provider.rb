@@ -33,9 +33,9 @@ module Forms
         :possible_funding
       elsif course.ehco?
         if eligible_for_funding?
-          :aso_possible_funding
+          :ehco_possible_funding
         else
-          :funding_your_aso
+          :funding_your_ehco
         end
       else
         :choose_your_npq
@@ -53,14 +53,19 @@ module Forms
       end
     end
 
-    def lead_provider
-      providers.find_by(id: lead_provider_id)
+    def after_save
+      # Not keen on this as adds a potential calculation and only really want to do this if the user has gone back a step
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
     end
 
   private
 
     def eligible_for_funding?
-      @eligible_for_funding ||= Services::FundingEligibility.new(
+      @eligible_for_funding ||= funding_eligibility_calculator.funded?
+    end
+
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= Services::FundingEligibility.new(
         course:,
         institution: institution(source: institution_identifier),
         approved_itt_provider: approved_itt_provider?,
@@ -68,11 +73,15 @@ module Forms
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
-      ).funded?
+      )
     end
 
     def providers
       LeadProvider.for(course:).alphabetical
+    end
+
+    def lead_provider
+      providers.find_by(id: lead_provider_id)
     end
 
     def institution_identifier

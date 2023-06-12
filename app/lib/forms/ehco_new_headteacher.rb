@@ -1,36 +1,36 @@
 module Forms
-  class AsoNewHeadteacher < Base
-    VALID_ASO_NEW_HEADTEACHER_OPTIONS = %w[yes no].freeze
+  class EhcoNewHeadteacher < Base
+    VALID_EHCO_NEW_HEADTEACHER_OPTIONS = %w[yes no].freeze
 
     include Helpers::Institution
 
-    attr_accessor :aso_new_headteacher
+    attr_accessor :ehco_new_headteacher
 
-    validates :aso_new_headteacher, presence: true, inclusion: { in: VALID_ASO_NEW_HEADTEACHER_OPTIONS }
+    validates :ehco_new_headteacher, presence: true, inclusion: { in: VALID_EHCO_NEW_HEADTEACHER_OPTIONS }
 
     def self.permitted_params
       %i[
-        aso_new_headteacher
+        ehco_new_headteacher
       ]
     end
 
     def next_step
       case funding_eligiblity_status_code
       when Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT
-        :aso_possible_funding
+        :ehco_possible_funding
       when Services::FundingEligibility::PREVIOUSLY_FUNDED
-        :aso_previously_funded
+        :ehco_previously_funded
       else
-        :aso_funding_not_available
+        :ehco_funding_not_available
       end
     end
 
     def previous_step
-      :aso_headteacher
+      :ehco_headteacher
     end
 
     def question
-      Forms::QuestionTypes::RadioButtonGroup.new(name: :aso_new_headteacher, options:)
+      Forms::QuestionTypes::RadioButtonGroup.new(name: :ehco_new_headteacher, options:)
     end
 
     def options
@@ -62,7 +62,7 @@ module Forms
              to: :query_store
 
     def new_headteacher?
-      aso_new_headteacher == "yes"
+      ehco_new_headteacher == "yes"
     end
   end
 end

@@ -29,8 +29,28 @@ class Services::QueryStore
     current_user.trn
   end
 
+  def funding_amount
+    store["funding_amount"]
+  end
+
   def inside_catchment?
     store["teacher_catchment"] == "england"
+  end
+
+  def tsf_primary_eligibility?
+    store["tsf_primary_eligibility"]
+  end
+
+  def tsf_primary_plus_eligibility?
+    store["tsf_primary_plus_eligibility"]
+  end
+
+  def funding_eligiblity_status_code
+    store["funding_eligiblity_status_code"]
+  end
+
+  def targeted_delivery_funding_eligibility?
+    store["targeted_delivery_funding_eligibility"]
   end
 
   def teacher_catchment_humanized
@@ -43,6 +63,10 @@ class Services::QueryStore
 
   def lead_mentor_for_accredited_itt_provider?
     store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
+  end
+
+  def employment_type_other?
+    store["employment_type"] == "other"
   end
 
   def works_in_school?
@@ -78,7 +102,7 @@ class Services::QueryStore
   end
 
   def new_headteacher?
-    store["aso_headteacher"] == "yes" && store["aso_new_headteacher"] == "yes"
+    store["ehco_headteacher"] == "yes" && store["ehco_new_headteacher"] == "yes"
   end
 
   def date_of_birth

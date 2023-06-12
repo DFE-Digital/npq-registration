@@ -35,9 +35,11 @@ module Forms
     end
 
     def after_save
-      return if lead_provider_valid?
-
-      wizard.store["lead_provider_id"] = nil
+      wizard.store["targeted_delivery_funding_eligibility"] = funding_eligibility_calculator.targeted_funding[:targeted_delivery_funding]
+      wizard.store["tsf_primary_plus_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_plus_eligibility]
+      wizard.store["tsf_primary_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_eligibility]
+      wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
+      wizard.store["lead_provider_id"] = store_lead_provider_id
     end
 
     def next_step
@@ -67,6 +69,8 @@ module Forms
       elsif wizard.query_store.works_in_other?
         if lead_mentor?
           :ineligible_for_funding
+        elsif wizard.query_store.employment_type_other?
+          :possible_funding
         else
           :choose_your_provider
         end
@@ -97,6 +101,12 @@ module Forms
 
   private
 
+    def store_lead_provider_id
+      return wizard.query_store.lead_provider.id if lead_provider_valid?
+
+      nil
+    end
+
     def lead_provider_valid?
       valid_providers.include?(wizard.query_store.lead_provider)
     end
@@ -122,6 +132,7 @@ module Forms
         course: previous_course,
         institution:,
         approved_itt_provider: approved_itt_provider?,
+        lead_mentor: lead_mentor?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,

@@ -1,5 +1,5 @@
 module Forms
-  class AsoUnavailable < Base
+  class EhcoUnavailable < Base
     def previous_step
       :npqh_status
     end

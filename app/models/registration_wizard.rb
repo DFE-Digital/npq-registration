@@ -20,13 +20,13 @@ class RegistrationWizard
     qualified_teacher_check
     dqt_mismatch
     npqh_status
-    aso_unavailable
-    aso_headteacher
-    aso_new_headteacher
-    aso_funding_not_available
-    aso_previously_funded
-    aso_possible_funding
-    funding_your_aso
+    ehco_unavailable
+    ehco_headteacher
+    ehco_new_headteacher
+    ehco_funding_not_available
+    ehco_previously_funded
+    ehco_possible_funding
+    funding_your_ehco
     itt_provider
     choose_your_npq
     choose_your_provider
@@ -191,14 +191,10 @@ class RegistrationWizard
                             change_step: :choose_your_npq)
 
     unless eligible_for_funding?
-      if course.aso?
-        array << OpenStruct.new(key: "How is the Additional Support Offer being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "helpers.label.registration_wizard.aso_funding_choice_options"),
-                                change_step: :funding_your_aso)
-      elsif course.ehco?
+      if course.ehco?
         array << OpenStruct.new(key: "How is your EHCO being paid for?",
-                                value: I18n.t(store["aso_funding_choice"], scope: "helpers.label.registration_wizard.aso_funding_choice_options"),
-                                change_step: :funding_your_aso)
+                                value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
+                                change_step: :funding_your_ehco)
       elsif query_store.works_in_school? || query_store.works_in_childcare?
         array << OpenStruct.new(key: "How is your NPQ being paid for?",
                                 value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
@@ -212,13 +208,13 @@ class RegistrationWizard
                               change_step: :npqh_status)
 
       array << OpenStruct.new(key: "Are you a headteacher?",
-                              value: I18n.t(store["aso_headteacher"], scope: "helpers.label.registration_wizard.aso_headteacher_options"),
-                              change_step: :aso_headteacher)
+                              value: I18n.t(store["ehco_headteacher"], scope: "helpers.label.registration_wizard.ehco_headteacher_options"),
+                              change_step: :ehco_headteacher)
 
-      if store["aso_headteacher"] == "yes"
+      if store["ehco_headteacher"] == "yes"
         array << OpenStruct.new(key: "Are you in your first 5 years of a headship?",
-                                value: I18n.t(store["aso_new_headteacher"], scope: "helpers.label.registration_wizard.aso_new_headteacher_options"),
-                                change_step: :aso_new_headteacher)
+                                value: I18n.t(store["ehco_new_headteacher"], scope: "helpers.label.registration_wizard.ehco_new_headteacher_options"),
+                                change_step: :ehco_new_headteacher)
       end
     end
 

@@ -8,7 +8,7 @@ RSpec.describe Services::HandleSubmissionForStore do
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
-  let(:courses) { Course.all - Course.ehco - Course.aso }
+  let(:courses) { Course.all - Course.ehco }
 
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }
@@ -274,7 +274,7 @@ RSpec.describe Services::HandleSubmissionForStore do
           let(:store) do
             super().merge(
               "funding" => "school",
-              "aso_funding_choice" => "trust",
+              "ehco_funding_choice" => "trust",
             )
           end
 
@@ -294,8 +294,8 @@ RSpec.describe Services::HandleSubmissionForStore do
             "course_identifier" => ehco_course.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
-            "aso_headteacher" => "yes",
-            "aso_new_headteacher" => "no",
+            "ehco_headteacher" => "yes",
+            "ehco_new_headteacher" => "no",
           }
         end
 
@@ -314,8 +314,8 @@ RSpec.describe Services::HandleSubmissionForStore do
             "course_identifier" => Course.ehco.first.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
-            "aso_headteacher" => "yes",
-            "aso_new_headteacher" => "no",
+            "ehco_headteacher" => "yes",
+            "ehco_new_headteacher" => "no",
           }
         end
 

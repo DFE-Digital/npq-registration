@@ -3,7 +3,7 @@ class ApplicationSubmissionJob < ApplicationJob
 
   queue_as :default
 
-  def perform(user:)
+  def perform(user:, email_template:)
     if user.synced_to_ecf?
       update_ecf_user_details(user:)
     else
@@ -12,12 +12,13 @@ class ApplicationSubmissionJob < ApplicationJob
 
     user.applications.includes(:lead_provider, :course).where(ecf_id: nil).each do |application|
       Services::Ecf::NpqProfileCreator.new(application:).call
-
       ApplicationSubmissionMailer.application_submitted_mail(
+        email_template,
         to: user.email,
         full_name: user.full_name,
         provider_name: application.lead_provider.name,
         course_name: localise_course_name(application.course),
+        amount: application.raw_application_data["funding_amount"],
       ).deliver_now
     end
   end

@@ -57,8 +57,8 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("If your provider accepts your application, you’ll qualify for DfE funding")
-      expect(page).to have_text("From the information you have provided, DfE scholarship funding should be available for the Leading teacher development NPQ.")
+      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("You’re eligible for scholarship funding for the")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -174,6 +174,12 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => true,
       "itt_provider" => approved_itt_provider_legal_name,
       "raw_application_data" => {
+        "targeted_delivery_funding_eligibility" => false,
+        "email_template" => "eligible_scholarship_funding_not_tsf",
+        "funding_eligiblity_status_code" => "funded",
+        "funding_amount" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_identifier" => "npq-leading-teaching-development",
