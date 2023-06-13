@@ -9,136 +9,138 @@
   <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-xl"><%= @school.name %></h1>
 
-    <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
-      <%= summary_list.row do |row|
-        row.with_key { 'URN' }
-        row.with_value { @school.urn || "-" }
-      end %>
+    <%=
+      render GovukComponent::SummaryListComponent.new do |summary_list|
+        summary_list.with_row do |row|
+          row.with_key { 'URN' }
+          row.with_value { @school.urn || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'UKPRN' }
-        row.with_value { @school.ukprn || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'UKPRN' }
+          row.with_value { @school.ukprn || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Address 1' }
-        row.with_value { @school.address_1 || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Address 1' }
+          row.with_value { @school.address_1 || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Address 2' }
-        row.with_value { @school.address_2 || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Address 2' }
+          row.with_value { @school.address_2 || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Address 3' }
-        row.with_value { @school.address_3 || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Address 3' }
+          row.with_value { @school.address_3 || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Town' }
-        row.with_value { @school.town || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Town' }
+          row.with_value { @school.town || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'County' }
-        row.with_value { @school.county || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'County' }
+          row.with_value { @school.county || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Postcode' }
-        row.with_value { @school.postcode || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Postcode' }
+          row.with_value { @school.postcode || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Postcode without spaces' }
-        row.with_value { @school.postcode_without_spaces || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Postcode without spaces' }
+          row.with_value { @school.postcode_without_spaces || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Easting' }
-        row.with_value { @school.easting || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Easting' }
+          row.with_value { @school.easting || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Northing' }
-        row.with_value { @school.northing || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Northing' }
+          row.with_value { @school.northing || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Region' }
-        row.with_value { @school.region || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Region' }
+          row.with_value { @school.region || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Country' }
-        row.with_value { @school.country || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Country' }
+          row.with_value { @school.country || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'LA Code' }
-        row.with_value { @school.la_code || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'LA Code' }
+          row.with_value { @school.la_code || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'LA Name' }
-        row.with_value { @school.la_name || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'LA Name' }
+          row.with_value { @school.la_name || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Establishment number' }
-        row.with_value { @school.establishment_number || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Establishment number' }
+          row.with_value { @school.establishment_number || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Establishment status code' }
-        row.with_value { @school.establishment_status_code || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Establishment status code' }
+          row.with_value { @school.establishment_status_code || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Establishment status name' }
-        row.with_value { @school.establishment_status_name || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Establishment status name' }
+          row.with_value { @school.establishment_status_name || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Close date' }
-        row.with_value { @school.close_date || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Close date' }
+          row.with_value { @school.close_date || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Last changed date' }
-        row.with_value { @school.last_changed_date || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Last changed date' }
+          row.with_value { @school.last_changed_date || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Establishment type code' }
-        row.with_value { @school.establishment_type_code || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Establishment type code' }
+          row.with_value { @school.establishment_type_code || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Establishment type name' }
-        row.with_value { @school.establishment_type_name || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Establishment type name' }
+          row.with_value { @school.establishment_type_name || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'School phase' }
-        row.with_value { @school.phase_name || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'School phase' }
+          row.with_value { @school.phase_name || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'High pupil premium' }
-        row.with_value { @school.high_pupil_premium || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'High pupil premium' }
+          row.with_value { @school.high_pupil_premium || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Number of pupils' }
-        row.with_value { @school.number_of_pupils || "-" }
-      end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Number of pupils' }
+          row.with_value { @school.number_of_pupils || "-" }
+        end
 
-      <%= summary_list.row do |row|
-        row.with_key { 'Created at' }
-        row.with_value { l @school.created_at, format: :admin }
-      end %>
-    <% end %>
+        summary_list.with_row do |row|
+          row.with_key { 'Created at' }
+          row.with_value { l @school.created_at, format: :admin }
+        end
+      end
+    %>
   </div>
 </div>
