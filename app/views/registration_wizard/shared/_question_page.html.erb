@@ -14,15 +14,60 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: form, url: registration_wizard_form_url(form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
-
+      
+      <% if form.wizard.current_step == :qualified_teacher_check %>
       <%=
-        render(
-          "registration_wizard/shared/questions/#{form.question.type}",
-          form: f,
-          question: form.question,
+        concat(
+          capture do
+            render(
+              "registration_wizard/shared/questions/#{form.question.type}",
+              form: f,
+              question: form.question,
+            )
+          end
         )
-      %>
+        concat(
+          capture do
+            render(
+              "registration_wizard/shared/questions/#{form.question2.type}",
+              form: f,
+              question: form.question2,
+            )
+          end
+        )
 
+        concat(
+          capture do
+            render("registration_wizard/shared/additional_info")
+          end
+        )
+        concat(
+          capture do
+            render(
+              "registration_wizard/shared/questions/#{form.question3.type}",
+              form: f,
+              question: form.question3,
+            )
+          end
+        )
+
+        capture do
+          render(
+            "registration_wizard/shared/questions/#{form.question4.type}",
+            form: f,
+            question: form.question4,
+          )
+        end
+      %>
+      <% else %>
+        <%=
+          render(
+            "registration_wizard/shared/questions/#{form.question.type}",
+            form: f,
+            question: form.question,
+          )
+        %>
+      <% end %>
       <%= f.govuk_submit %>
     <% end %>
   </div>
