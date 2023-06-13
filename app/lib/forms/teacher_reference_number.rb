@@ -33,12 +33,14 @@ module Forms
       :start
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :trn_knowledge,
-        options:,
-        style_options: { legend: { size: "m", tag: "h1" } },
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :trn_knowledge,
+          options:,
+          style_options: { legend: { size: "m", tag: "h1" } },
+        ),
+      ]
     end
 
     def options

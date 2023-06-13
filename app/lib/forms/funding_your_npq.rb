@@ -24,11 +24,13 @@ module Forms
       @course ||= wizard.query_store.course
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :funding,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :funding,
+          options:,
+        ),
+      ]
     end
 
     def options

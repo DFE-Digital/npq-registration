@@ -20,11 +20,13 @@ module Forms
       "ehco_funding_not_available"
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :ehco_funding_choice,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :ehco_funding_choice,
+          options:,
+        ),
+      ]
     end
 
     def options

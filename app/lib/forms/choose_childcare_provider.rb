@@ -18,19 +18,21 @@ module Forms
       ]
     end
 
-    def question
-      @question ||= Forms::QuestionTypes::AutoCompleteInstitution.new(
-        name: :institution_identifier,
-        locale_name: :choose_childcare_provider,
-        picker: :nursery,
-        options: possible_institutions,
-        data_attributes: { institution_location: },
-        display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
-        search_question: Forms::QuestionTypes::TextField.new(
-          name: :institution_name,
-          locale_name: :choose_childcare_provider_search,
+    def questions
+      [
+        Forms::QuestionTypes::AutoCompleteInstitution.new(
+          name: :institution_identifier,
+          locale_name: :choose_childcare_provider,
+          picker: :nursery,
+          options: possible_institutions,
+          data_attributes: { institution_location: },
+          display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
+          search_question: Forms::QuestionTypes::TextField.new(
+            name: :institution_name,
+            locale_name: :choose_childcare_provider_search,
+          ),
         ),
-      )
+      ]
     end
 
     def next_step

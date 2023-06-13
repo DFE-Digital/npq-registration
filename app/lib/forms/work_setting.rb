@@ -72,11 +72,13 @@ module Forms
       :teacher_catchment
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :work_setting,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :work_setting,
+          options:,
+        ),
+      ]
     end
 
     def options

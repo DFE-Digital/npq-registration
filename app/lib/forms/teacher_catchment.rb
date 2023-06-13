@@ -40,11 +40,13 @@ module Forms
       :provider_check
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :teacher_catchment,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :teacher_catchment,
+          options:,
+        ),
+      ]
     end
 
     def options

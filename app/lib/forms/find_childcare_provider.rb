@@ -10,11 +10,13 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      @question ||= Forms::QuestionTypes::TextField.new(
-        name: QUESTION_NAME,
-        locale_name: :find_childcare_provider,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::TextField.new(
+          name: QUESTION_NAME,
+          locale_name: :find_childcare_provider,
+        ),
+      ]
     end
 
     def next_step

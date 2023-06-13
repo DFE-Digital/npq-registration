@@ -10,8 +10,10 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      Forms::QuestionTypes::TextField.new(name: QUESTION_NAME)
+    def questions
+      [
+        Forms::QuestionTypes::TextField.new(name: QUESTION_NAME),
+      ]
     end
 
     def next_step
