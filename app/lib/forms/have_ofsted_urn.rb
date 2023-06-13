@@ -39,7 +39,7 @@ module Forms
       @question ||= Forms::QuestionTypes::RadioButtonGroup.new(
         name: QUESTION_NAME,
         locale_name: QUESTION_NAME,
-        options: options,
+        options:,
         style_options: { legend: { size: "xl", tag: "h1" } },
       )
     end
