@@ -11,8 +11,10 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      Forms::QuestionTypes::AutoCompleteIttProvider.new(name: QUESTION_NAME)
+    def questions
+      [
+        Forms::QuestionTypes::AutoCompleteIttProvider.new(name: QUESTION_NAME),
+      ]
     end
 
     def next_step

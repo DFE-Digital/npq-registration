@@ -40,29 +40,24 @@ module Forms
       ]
     end
 
-    def question
-      @question ||= QuestionTypes::TextField.new(
-        name: :teacher_reference_number,
-      )
-    end
+    def questions
+      [
+        QuestionTypes::TextField.new(
+          name: :teacher_reference_number,
+        ),
 
-    def question2
-      @question2 ||= QuestionTypes::TextField.new(
-        name: :full_name,
-        locale_name: :full_name,
-      )
-    end
+        QuestionTypes::TextField.new(
+          name: :full_name,
+        ),
 
-    def question3
-      @question3 ||= QuestionTypes::DateField.new(
-        name: :date_of_birth,
-      )
-    end
+        QuestionTypes::DateField.new(
+          name: :date_of_birth,
+        ),
 
-    def question4
-      @question4 ||= QuestionTypes::TextField.new(
-        name: :national_insurance_number,
-      )
+        QuestionTypes::TextField.new(
+          name: :national_insurance_number,
+        ),
+      ]
     end
 
     def requirements_met?

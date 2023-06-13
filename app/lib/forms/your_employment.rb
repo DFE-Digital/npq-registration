@@ -10,11 +10,13 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: QUESTION_NAME,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: QUESTION_NAME,
+          options:,
+        ),
+      ]
     end
 
     def options
