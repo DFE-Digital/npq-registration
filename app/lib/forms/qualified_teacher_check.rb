@@ -43,7 +43,7 @@ module Forms
     def questions
       [
         QuestionTypes::TextField.new(
-          name: :teacher_reference_number,
+          name: :trn,
         ),
 
         QuestionTypes::TextField.new(
