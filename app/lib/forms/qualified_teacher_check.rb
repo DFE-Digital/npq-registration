@@ -48,6 +48,7 @@ module Forms
 
         QuestionTypes::TextField.new(
           name: :full_name,
+          additional_info: true,
         ),
 
         QuestionTypes::DateField.new(

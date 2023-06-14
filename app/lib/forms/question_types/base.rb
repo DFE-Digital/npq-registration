@@ -15,6 +15,7 @@ module Forms
       attribute :style_options, default: -> { {} }
       attribute :locale_name
       attribute :body, default: -> { [] }
+      attribute :additional_info
 
       def initialize(**attrs)
         super
