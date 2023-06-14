@@ -31,6 +31,12 @@ end
 Capybara.default_driver = :headless_chrome
 Capybara.javascript_driver = :headless_chrome
 
+require "capybara-screenshot/rspec"
+
+Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
+  driver.browser.save_screenshot path
+end
+
 AxeCapybara.configure(:headless_chrome) do
   # see below for a full list of configuration
   # c.jslib_path = "next-version/axe.js"

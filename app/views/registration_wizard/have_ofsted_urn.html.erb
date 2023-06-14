@@ -1,44 +1,16 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Do you or your employer have an Ofsted unique reference number (URN)?
+<% content_for :additional_info do %>
+  <%= render GovukComponent::DetailsComponent.new(summary_text: "I need help with this") do %>
+    <p>You can <%= govuk_link_to "search the public Ofsted register (opens in a new tab)", 'https://reports.ofsted.gov.uk/childcare', target: :_blank, rel: "noopener noreferrer" %> to find a URN.</p>
+    <p>If your employer is registered with Ofsted or you're registered with a childminder agency (CMA), you can use their URN.</p>
+    <p>If you are a nanny or a childminder you may not be listed on the public Ofsted register. You will need to check your email or registration certificate to find your URN.</p>
+    <p>If you or your employer have not registered with Ofsted then you will not have a URN.</p>
+  <% end %>
 <% end %>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <%= f.govuk_radio_buttons_fieldset(:has_ofsted_urn,
-            legend: {
-              text: "Do you or your employer have an Ofsted unique reference number (URN)?",
-              size: "xl",
-              tag: "h1"
-            }
-          ) do %>
-
-        <%= render GovukComponent::DetailsComponent.new(summary_text: "I need help with this") do %>
-          <p>You can <%= govuk_link_to "search the public Ofsted register (opens in a new tab)", 'https://reports.ofsted.gov.uk/childcare', target: :_blank, rel: "noopener noreferrer" %> to find a URN.</p>
-          <p>If your employer is registered with Ofsted or you're registered with a childminder agency (CMA), you can use their URN.</p>
-          <p>If you are a nanny or a childminder you may not be listed on the public Ofsted register. You will need to check your email or registration certificate to find your URN.</p>
-          <p>If you or your employer have not registered with Ofsted then you will not have a URN.</p>
-        <% end %>
-
-        <% @form.options.each do |struct| %>
-          <%=
-            f.govuk_radio_button :has_ofsted_urn,
-                                 struct.value,
-                                 link_errors: struct.link_errors
-          %>
-        <% end %>
-      <% end %>
-
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+<%=
+  render(
+    'registration_wizard/shared/question_page',
+     form: @form,
+     wizard: @wizard,
+  )
+%>

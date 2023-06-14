@@ -1,8 +1,5 @@
 <%= form.govuk_radio_buttons_fieldset(question.name, **question.fieldset_styles) do %>
-  <% question.body.each do |paragraph| %>
-    <p class="govuk-body"><%= paragraph %></p>
-  <% end %>
-
+  <%= yield :additional_info %>
   <%=
     render(
       partial: "registration_wizard/shared/questions/radio_option",
@@ -10,4 +7,4 @@
       collection: question.options
     )
   %>
-<% end  %>
+<% end %>
