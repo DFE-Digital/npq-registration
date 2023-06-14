@@ -15,7 +15,7 @@ module Forms
     def questions
       [
         Forms::QuestionTypes::RadioButtonGroup.new(
-          name: :course_identifier,
+          name: :chosen_provider,
           options:,
           style_options: { legend: { size: "m", tag: "h1" } },
         ),
