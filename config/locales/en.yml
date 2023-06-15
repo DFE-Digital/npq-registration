@@ -266,6 +266,9 @@ en:
         find_childcare_provider: "Where is your workplace located?"
         teacher_reference_number: "Teacher reference number (TRN)"
         trn: "Teacher reference number (TRN)"
+        full_name: "Full name"
+        national_insurance_number: "National Insurance number (optional)"
+
     legend:
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
