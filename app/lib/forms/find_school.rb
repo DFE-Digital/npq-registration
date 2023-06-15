@@ -10,16 +10,18 @@ module Forms
       ]
     end
 
-    def question
-      @question ||= QuestionTypes::TextField.new(
-        name: :institution_location,
-        form: self,
-        style_options: {
-          label: { text: I18n.t("helpers.title.registration_wizard.institution_location") },
-          hint: { text: I18n.t("helpers.hint.registration_wizard.institution_location") },
-          width: "three-quarters",
-        },
-      )
+    def questions
+      [
+        QuestionTypes::TextField.new(
+          name: :institution_location,
+          form: self,
+          style_options: {
+            label: { text: I18n.t("helpers.title.registration_wizard.institution_location") },
+            hint: { text: I18n.t("helpers.hint.registration_wizard.institution_location") },
+            width: "three-quarters",
+          },
+        ),
+      ]
     end
 
     def next_step
