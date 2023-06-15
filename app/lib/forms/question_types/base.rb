@@ -1,14 +1,24 @@
 module Forms
   module QuestionTypes
-    class Base
-      attr_reader :name, :options, :locale_name, :body
+    class Base < ViewComponent::Base
+      include ActiveModel::Attributes
+      include ActiveModel::AttributeAssignment
 
-      def initialize(name:, options: [], style_options: {}, locale_name: nil, body: [])
-        @name = name
-        @options = options
-        @style_options = style_options # Freeform optional parameters that can differ for each subclass
-        @locale_name = locale_name
-        @body = Array.wrap(body)
+      self.default_form_builder = GOVUKDesignSystemFormBuilder::FormBuilder
+
+      renders_one :after_question
+
+      attribute :name
+      attribute :header
+      attribute :options, default: -> { {} } # TODO: options should be moved to appropriate subclass!
+      attribute :form
+      attribute :style_options, default: -> { {} }
+      attribute :locale_name
+      attribute :body, default: -> { [] }
+
+      def initialize(**attrs)
+        super
+        assign_attributes(**attrs)
       end
 
       # For determining which partial to use
@@ -24,6 +34,14 @@ module Forms
         :label
       end
 
+      def style_options
+        default_styles.deep_merge(super)
+      end
+
+      def default_styles
+        {}
+      end
+
       def name_locale_key
         locale_name || name
       end
@@ -32,9 +50,9 @@ module Forms
         I18n.t("helpers.#{title_locale_type}.registration_wizard.#{name_locale_key}")
       end
 
-    private
-
-      attr_reader :style_options
+      def body=(value)
+        super Array.wrap(value)
+      end
     end
   end
 end

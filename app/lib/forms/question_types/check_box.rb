@@ -1,30 +1,22 @@
 module Forms
   module QuestionTypes
     class CheckBox < Base
-      DEFAULT_STYLES = {
-        legend: {
-          size: "xl",
-          tag: "h1",
-        }.freeze,
-        hint: nil,
-      }.freeze
-
-      attr_reader :checked_value, :unchecked_value, :required, :body
-
-      def initialize(*args, checked_value: "1", unchecked_value: "0", required: false, **opts)
-        @checked_value = checked_value
-        @unchecked_value = unchecked_value
-        @required = required
-
-        super(*args, **opts)
-      end
+      attribute :checked_value, default: "1".freeze
+      attribute :unchecked_value, default: "0".freeze
+      attribute :required, default: false
 
       def title_locale_type
         :legend
       end
 
-      def style_options
-        DEFAULT_STYLES.deep_merge(@style_options)
+      def default_styles
+        {
+          legend: {
+            size: "xl",
+            tag: "h1",
+          },
+          hint: nil,
+        }
       end
     end
   end

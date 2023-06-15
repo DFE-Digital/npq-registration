@@ -13,7 +13,7 @@ module Forms
       end
 
       def fieldset_styles
-        DEFAULT_STYLES.deep_merge(@style_options)
+        DEFAULT_STYLES.deep_merge(style_options)
       end
     end
   end

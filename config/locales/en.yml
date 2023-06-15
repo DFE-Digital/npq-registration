@@ -254,12 +254,17 @@ en:
         npqh_status: "Eligibility for the Early headship coaching offer"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         check_answers: "Check your answers and confirm"
+        institution_location: Where is your workplace located?
         possible_funding: "You may qualify for DfE scholarship funding"
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
         dqt_mismatch: "We cannot find your details"
         teacher_reference_number: "You need a teacher reference number to register for an NPQ"
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
+        employment_role: "What is your role?"
+        employer_name: "What organisation are you employed by?"
+        find_childcare_provider: "Where is your workplace located?"
+
     legend:
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
@@ -302,6 +307,7 @@ en:
         choose_private_childcare_provider: "For example EY456789"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
+        institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
     label:
       registration_wizard:
@@ -327,10 +333,6 @@ en:
           other: "Other"
 
         itt_provider: "Enter the name of the ITT provider you are working with"
-
-        employment_role: "What is your role?"
-
-        employer_name: "What organisation are you employed by?"
 
         can_share_choices_options:
           1: Yes, I agree my information can be shared
@@ -377,8 +379,6 @@ en:
         trn_knowledge_options:
           "yes": "Yes"
           "no-dont-have": "No, I need help getting one"
-
-        find_childcare_provider: "Where is your workplace located?"
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
