@@ -35,13 +35,15 @@ module Forms
       :kind_of_nursery
     end
 
-    def question
-      @question ||= Forms::QuestionTypes::RadioButtonGroup.new(
-        name: QUESTION_NAME,
-        locale_name: QUESTION_NAME,
-        options:,
-        style_options: { legend: { size: "xl", tag: "h1" } },
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: QUESTION_NAME,
+          locale_name: QUESTION_NAME,
+          options:,
+          style_options: { legend: { size: "xl", tag: "h1" } },
+        ),
+      ]
     end
 
     def options
