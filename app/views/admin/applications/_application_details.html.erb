@@ -48,16 +48,16 @@
       row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'TRN validated')
-      row.value { boolean_red_green_tag(application.user.trn_verified) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'TRN validated')
+      row.with_value { boolean_red_green_tag(application.user.trn_verified) }
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'TRN auto validated')
-      row.value { boolean_red_green_tag(application.user.trn_auto_verified) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'TRN auto validated')
+      row.with_value { boolean_red_green_tag(application.user.trn_auto_verified) }
+      row.with_action
     end
 
     sl.with_row do |row|
@@ -112,35 +112,28 @@
       row.with_action
     end
 
-<<<<<<< HEAD
-    sl.row do |row|
-      row.key(text: 'Primary establishment')
-      row.value{ boolean_red_green_tag(application.primary_establishment) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Primary establishment')
+      row.with_value{ boolean_red_green_tag(application.primary_establishment) }
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Number of pupils')
-      row.value(text: application.number_of_pupils.to_i)
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Number of pupils')
+      row.with_value(text: application.number_of_pupils.to_i)
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: 'Targeted support funding primary plus eligibility')
-      row.value{ boolean_red_green_tag(application.tsf_primary_plus_eligibility) }
-      row.action
+    sl.with_row do |row|
+      row.with_key(text: 'Targeted support funding primary plus eligibility')
+      row.with_value{ boolean_red_green_tag(application.tsf_primary_plus_eligibility) }
+      row.with_action
     end
 
-    sl.row do |row|
-      row.key(text: "Targeted delivery funding eligibility")
-      row.value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
-      row.action
-=======
     sl.with_row do |row|
       row.with_key(text: "Targeted delivery funding eligibility")
       row.with_value { boolean_red_green_tag(application.targeted_delivery_funding_eligibility) }
       row.with_action
->>>>>>> Create view page for user account information
     end
 
     sl.with_row do |row|
