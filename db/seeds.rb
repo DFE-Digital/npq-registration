@@ -20,7 +20,6 @@ seed_itt_providers!
 
 otp_testing_code = "00000"
 
-
 # Create admin user
 User.create!(
   email: "admin@example.com",
