@@ -13,6 +13,7 @@ class Application < ApplicationRecord
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
+
   scope :unsynced, -> { where(ecf_id: nil) }
 
   enum kind_of_nursery: {
