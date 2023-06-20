@@ -1,0 +1,8 @@
+<%=
+  form.govuk_date_field(
+    question.name,
+    date_of_birth: true,
+    width: "full",
+    label: { text: question.question_text, size: "xl", tag: "h1" }
+  )
+%>

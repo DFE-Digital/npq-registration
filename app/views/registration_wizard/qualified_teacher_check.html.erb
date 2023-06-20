@@ -1,61 +1,13 @@
-<% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %>Confirm your details
-<% end %>
+<h1 class="govuk-heading-xl">Check your details</h1>
 
-<% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
-    text: "Back",
-    href: registration_wizard_show_path(@wizard.previous_step_path)
-  ) %>
-<% end %>
+<p class="govuk-body govuk-!-margin-bottom-7">
+  We need to check your details on the Teaching Regulation Agency records to ensure you qualify to study for a national professional qualification (NPQ).
+</p>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
-      <%= f.govuk_error_summary %>
-
-      <h1 class="govuk-heading-xl">Check your details</h1>
-
-      <p class="govuk-body govuk-!-margin-bottom-7">
-        We need to check your details on the Teaching Regulation Agency records to ensure you qualify to study for a national professional qualification (NPQ).
-      </p>
-
-      <%= f.govuk_text_field :trn,
-        width: 10,
-        label: { text: "Teacher reference number (TRN)", size: "m" },
-        hint: { text: "Your TRN is between 6 and 7 characters long. It may begin with 'RP'" } %>
-
-      <%= f.govuk_text_field :full_name,
-        width: "three-quarters",
-        label: { text: "Full name", size: "m" },
-        hint: { text: "Your full name exactly as it appears on the Teaching Regulation Agency records" },
-        form_group: { class: "govuk-!-margin-bottom-2" } %>
-
-      <%= render GovukComponent::DetailsComponent.new(summary_text: "Help if you have changed your name") do %>
-        <p>If your name has changed and you have not updated your Teaching Regulation Agency record, you can:</p>
-
-        <ul class="govuk-list govuk-list--bullet">
-          <li>use your previous name to register with the service</li>
-          <li>use your previous name to register, and then change it on the Teaching Regulation Agency records at a later date</li>
-          <li><%= govuk_link_to "change your name on the Teaching Regulation Agency records", registration_wizard_show_path(step: "change-dqt") %> first and then return to register for an NPQ</li>
-        </ul>
-
-        <p>It will take a minimum of 5 days to update your Teaching Regulation Agency records.</p>
-
-        <p>If you are unsure whether you have updated your name, you can <%= govuk_link_to "request a reminder", registration_wizard_show_path(step: "not-sure-updated-name") %>.</p>
-      <% end %>
-
-      <%= f.govuk_date_field :date_of_birth,
-        date_of_birth: true,
-        legend: { text: "Date of birth", size: "m" },
-        hint: { text: "For example, 31 3 1980" } %>
-
-      <%= f.govuk_text_field :national_insurance_number,
-        width: 10,
-        label: { text: @form.ni_number_required? ? "National Insurance number" : "National Insurance number (optional)", size: "m" },
-        hint: { text: "This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’." } %>
-
-      <%= f.govuk_submit %>
-    <% end %>
-  </div>
-</div>
+<%=
+render(
+    'registration_wizard/shared/questions_page',
+    form: @form,
+    wizard: @wizard,
+    )
+%>

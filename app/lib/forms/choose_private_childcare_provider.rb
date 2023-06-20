@@ -28,18 +28,20 @@ module Forms
       :have_ofsted_urn
     end
 
-    def question
-      @question ||= Forms::QuestionTypes::AutoCompleteInstitution.new(
-        name: :institution_identifier,
-        locale_name: :choose_private_childcare_provider,
-        picker: :"private-childcare-provider",
-        options: possible_institutions,
-        display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
-        search_question: Forms::QuestionTypes::TextField.new(
-          name: :institution_name,
-          locale_name: :choose_private_childcare_provider_search,
+    def questions
+      [
+        Forms::QuestionTypes::AutoCompleteInstitution.new(
+          name: :institution_identifier,
+          locale_name: :choose_private_childcare_provider,
+          picker: :"private-childcare-provider",
+          options: possible_institutions,
+          display_no_javascript_fallback_form: search_term_entered_in_no_js_fallback_form?,
+          search_question: Forms::QuestionTypes::TextField.new(
+            name: :institution_name,
+            locale_name: :choose_private_childcare_provider_search,
+          ),
         ),
-      )
+      ]
     end
 
     def possible_institutions

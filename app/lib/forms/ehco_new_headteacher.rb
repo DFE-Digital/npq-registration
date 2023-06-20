@@ -29,8 +29,10 @@ module Forms
       :ehco_headteacher
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(name: :ehco_new_headteacher, options:)
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(name: :ehco_new_headteacher, options:),
+      ]
     end
 
     def options

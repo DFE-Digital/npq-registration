@@ -13,12 +13,14 @@ module Forms
       [QUESTION_NAME]
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :course_identifier,
-        options:,
-        style_options: { legend: { size: "m", tag: "h1" } },
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :course_identifier,
+          options:,
+          style_options: { legend: { size: "m", tag: "h1" } },
+        ),
+      ]
     end
 
     def options
