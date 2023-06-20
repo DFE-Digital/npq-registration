@@ -13,6 +13,7 @@ class Application < ApplicationRecord
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
+
   scope :unsynced, -> { where(ecf_id: nil) }
 
   enum kind_of_nursery: {
@@ -36,5 +37,27 @@ class Application < ApplicationRecord
 
   def school
     School.find_by(urn: school_urn)
+  end
+
+  def receive_lead_provider_approval_status_from_ecf
+    uri = URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v3/npq-applications/send_lead_provider_approval_status_to_npq")
+    request = Net::HTTP::Get.new(uri)
+    request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(request)
+    end
+
+    if response.is_a?(Net::HTTPSuccess)
+      response_data = JSON.parse(response.body)
+      filtered_applications = Application.where.not(ecf_id: nil)
+
+      response_data["data"].map do |status_data| 
+        retrieved_id = status_data["attributes"]["id"]
+        retrieved_status = status_data["attributes"]["lead_provider_approval_status"]
+        application = filtered_applications.find_by(ecf_id: retrieved_id)
+        application.update!(lead_provider_approval_status: retrieved_status) if application.present?
+      end
+    end
   end
 end
