@@ -1,10 +1,10 @@
 <div data-module="app-itt-provider-autocomplete">
   <%=
-    form.govuk_collection_select(
+    form.govuk_select(
       question.name,
-      Services::AutocompleteIttProviders.as_open_structs,
-      :name,
-      :name,
+      options_for_select(
+        Services::AutocompleteIttProviders.as_autocomplete_options
+      ),
       options: { include_blank: true },
       label: { size: "xl", tag: "h1" },
     )
