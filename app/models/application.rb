@@ -37,8 +37,11 @@ class Application < ApplicationRecord
   def school
     School.find_by(urn: school_urn)
   end
+<<<<<<< HEAD
 
   def employer_name_to_display
     employer_name || private_childcare_provider_urn || school_urn || ""
   end
+=======
+>>>>>>> 35f455f8 (Created scheduled background job)
 end
