@@ -172,6 +172,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "other",
       "lead_mentor" => true,
+      "lead_provider_approval_status" => "pending",
+      "state" => nil,
       "itt_provider" => approved_itt_provider_legal_name,
       "raw_application_data" => {
         "targeted_delivery_funding_eligibility" => false,
