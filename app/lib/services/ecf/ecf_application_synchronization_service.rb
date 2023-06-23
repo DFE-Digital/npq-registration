@@ -1,8 +1,8 @@
 module Services
   module Ecf
-    class EcfLeadProviderApprovalStatusReceiver
+    class EcfApplicationSynchronizationService
       def call
-        uri = URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq_synchronisation/send_lead_provider_approval_status_to_npq")
+        uri = URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations#index")
         request = Net::HTTP::Get.new(uri)
         request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
 
@@ -12,7 +12,7 @@ module Services
 
         handle_response(response)
       rescue StandardError => e
-        Rails.logger.error "An error occurred during lead provider approval status retrieval: #{e.message}"
+        Rails.logger.error "An error occurred during application synchronization: #{e.message}"
       end
 
     private
@@ -21,7 +21,7 @@ module Services
         if response.is_a?(Net::HTTPSuccess)
           update_applications(JSON.parse(response.body)["data"])
         else
-          raise "Failed to retrieve lead provider approval status: #{response.message}"
+          raise "Failed to synchronize application: #{response.message}"
         end
       end
 
