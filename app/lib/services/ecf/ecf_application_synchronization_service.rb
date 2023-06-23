@@ -19,24 +19,24 @@ module Services
 
       def handle_response(response)
         if response.is_a?(Net::HTTPSuccess)
-          update_applications(JSON.parse(response.body)["data"])
+          update_statuses_in_npq_applications(JSON.parse(response.body)["data"])
         else
           raise "Failed to synchronize application: #{response.message}"
         end
       end
 
-      def update_applications(status_data)
+      def update_statuses_in_npq_applications(response_data)
         filtered_applications = Application.where.not(ecf_id: nil)
 
-        status_data.each do |data|
-          retrieved_id = data["attributes"]["id"]
-          retrieved_status = data["attributes"]["lead_provider_approval_status"]
-          retrieved_state = data["attributes"]["participant_outcome_state"]
+        response_data.each do |data|
+          id = data["attributes"]["id"]
+          lead_provider_approval_status = data["attributes"]["lead_provider_approval_status"]
+          participant_outcome_state = data["attributes"]["participant_outcome_state"]
 
-          application = filtered_applications.find_by(ecf_id: retrieved_id)
-          application&.update!(
-            lead_provider_approval_status: retrieved_status,
-            participant_outcome_state: retrieved_state,
+          filtered_applications.update( # rubocop:disable Rails/SaveBang
+            lead_provider_approval_status:,
+            participant_outcome_state:,
+            where: { ecf_id: id },
           )
         end
       end
