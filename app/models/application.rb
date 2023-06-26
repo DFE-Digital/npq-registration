@@ -37,4 +37,8 @@ class Application < ApplicationRecord
   def school
     School.find_by(urn: school_urn)
   end
+
+  def employer_name_to_display
+    employer_name || private_childcare_provider_urn || school_urn || ""
+  end
 end

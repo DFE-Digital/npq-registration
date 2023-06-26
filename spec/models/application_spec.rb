@@ -8,4 +8,42 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "#employer_name" do
+    shared_examples "employer_name" do
+      it "displays proper employer_name" do
+        expect(application.employer_name_to_display).to eq(name)
+      end
+    end
+
+    context "when the application has school attached" do
+      let(:name) { "SchoolURN" }
+      let(:application) { build(:application, school: nil, school_urn: name) }
+
+      include_examples "employer_name"
+    end
+
+    context "when the application has private school urn" do
+      let(:name) { "Private Childcare Provider URN" }
+      let(:application) { build(:application, school: nil, school_urn: nil, private_childcare_provider_urn: name) }
+
+      include_examples "employer_name"
+    end
+
+    context "when application has employer_name" do
+      let(:name) { "Employer Foo Bar" }
+      let(:application) { build(:application, school: nil, school_urn: nil, employer_name: name) }
+
+      include_examples "employer_name"
+    end
+
+    context "when no information about employer_name is available" do
+      let(:application) do
+        let(:name) { "" }
+        let(:application) { build(:application, school: nil, school_urn: nil, employer_name: nil) }
+
+        include_examples "employer_name"
+      end
+    end
+  end
 end
