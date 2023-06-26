@@ -31,11 +31,13 @@ module Forms
       :work_setting
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :kind_of_nursery,
-        options:,
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :kind_of_nursery,
+          options:,
+        ),
+      ]
     end
 
     def options

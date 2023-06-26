@@ -40,6 +40,27 @@ module Forms
       ]
     end
 
+    def questions
+      [
+        QuestionTypes::TextField.new(
+          name: :trn,
+        ),
+
+        QuestionTypes::TextField.new(
+          name: :full_name,
+          additional_info: true,
+        ),
+
+        QuestionTypes::DateField.new(
+          name: :date_of_birth,
+        ),
+
+        QuestionTypes::TextField.new(
+          name: :national_insurance_number,
+        ),
+      ]
+    end
+
     def requirements_met?
       # The user has to have logged in via GAI to reach this question
       wizard.store.present? && query_store.current_user.present?

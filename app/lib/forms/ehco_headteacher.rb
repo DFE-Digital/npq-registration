@@ -26,8 +26,10 @@ module Forms
       :npqh_status
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(name: :ehco_headteacher, options:)
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(name: :ehco_headteacher, options:),
+      ]
     end
 
     def options

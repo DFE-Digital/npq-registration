@@ -264,6 +264,10 @@ en:
         employment_role: "What is your role?"
         employer_name: "What organisation are you employed by?"
         find_childcare_provider: "Where is your workplace located?"
+        teacher_reference_number: "Teacher reference number (TRN)"
+        trn: "Teacher reference number (TRN)"
+        full_name: "Full name"
+        national_insurance_number: "National Insurance number (optional)"
 
     legend:
       registration_wizard:
@@ -283,6 +287,8 @@ en:
         lead_provider_id: "Select your provider"
         chosen_provider: "Have you already chosen an NPQ and provider?"
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
+        qualified_teacher_check: "Check your details"
+        date_of_birth: "Date of birth"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -309,6 +315,10 @@ en:
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
+        trn: Your TRN is between 6 and 7 characters long. It may begin with 'RP'
+        full_name: Your full name exactly as it appears on the Teaching Regulation Agency records
+        date_of_birth: For example, 31 3 1980
+        national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
     label:
       registration_wizard:
         work_setting_options:
@@ -391,3 +401,6 @@ en:
         choose_private_childcare_provider: "Enter your or your employer’s URN"
         choose_private_childcare_provider_search: "My employer is not shown above"
         choose_private_childcare_provider_fallback: "Select yourself or your employer"
+        trn: "Teacher reference number (TRN)"
+        full_name: "Full name"
+        national_insurance_number: "National Insurance number (optional)"

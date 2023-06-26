@@ -26,12 +26,14 @@ module Forms
       :choose_your_npq
     end
 
-    def question
-      Forms::QuestionTypes::RadioButtonGroup.new(
-        name: :npqh_status,
-        options:,
-        style_options: { legend: { size: "m", tag: "h1" } },
-      )
+    def questions
+      [
+        Forms::QuestionTypes::RadioButtonGroup.new(
+          name: :npqh_status,
+          options:,
+          style_options: { legend: { size: "m", tag: "h1" } },
+        ),
+      ]
     end
 
     def options

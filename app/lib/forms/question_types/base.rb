@@ -15,6 +15,7 @@ module Forms
       attribute :style_options, default: -> { {} }
       attribute :locale_name
       attribute :body, default: -> { [] }
+      attribute :additional_info
 
       def initialize(**attrs)
         super
@@ -29,7 +30,7 @@ module Forms
       # Most questions will have their question locale string in the format `helpers.label.registration_wizard.#{question_name}`.
       # ome however, radio button groups specifically, store them under legend instead of label,
       # this method allows you to override where it looks for specific question types.
-      # This is only used for the title population in _question_page.html.erb.
+      # This is only used for the title population in _questions_page.html.erb.
       def title_locale_type
         :label
       end

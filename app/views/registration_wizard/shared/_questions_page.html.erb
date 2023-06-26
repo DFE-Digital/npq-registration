@@ -1,8 +1,3 @@
-<% content_for :title do %>
-  <%= form.errors.present? ? "Error: " : nil %>
-  <%= form.question.question_text %>
-<% end %>
-
 <% content_for :before_content do %>
   <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
@@ -14,14 +9,22 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_with model: form, url: registration_wizard_form_url(form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
+      
+      <% form.questions.each do |question| %>
 
-      <%=
-        render(
-          "registration_wizard/shared/questions/#{form.question.type}",
-          form: f,
-          question: form.question,
-        )
-      %>
+        <% content_for :title do %>
+          <%= form.errors.present? ? "Error: " : nil %>
+          <%= question.question_text %>
+        <% end %>
+
+        <%=
+          render(
+            "registration_wizard/shared/questions/#{question.type}",
+            form: f,
+            question: question,
+          )
+        %>
+      <% end %>
 
       <%= f.govuk_submit %>
     <% end %>
