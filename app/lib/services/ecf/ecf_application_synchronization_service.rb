@@ -33,11 +33,8 @@ module Services
           lead_provider_approval_status = data["attributes"]["lead_provider_approval_status"]
           participant_outcome_state = data["attributes"]["participant_outcome_state"]
 
-          filtered_applications.update( # rubocop:disable Rails/SaveBang
-            lead_provider_approval_status:,
-            participant_outcome_state:,
-            where: { ecf_id: id },
-          )
+          application = filtered_applications.find_by(ecf_id: id)
+          application.update!(lead_provider_approval_status:, participant_outcome_state:) if application.present?
         end
       end
     end
