@@ -8,6 +8,10 @@ module ApplicationHelper
     content_tag(:strong, text, class: "govuk-tag govuk-tag--#{colour}")
   end
 
+  def boolean_tag(bool)
+    bool ? "Yes" : "No"
+  end
+
   def pagy_govuk_nav(pagy)
     render "pagy/paginator", pagy:
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SubnavComponent < BaseComponent
-  include ViewComponent::SlotableV2
+  include ViewComponent::Slotable
 
   renders_many :nav_items, "NavItemComponent"
 

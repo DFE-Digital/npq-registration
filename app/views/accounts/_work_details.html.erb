@@ -1,0 +1,17 @@
+<%= govuk_summary_card(title: "Work details") do |card|
+
+card.with_summary_list(rows: [
+    {
+      key: { text: "Do you work in England?" },
+      value: { text: boolean_tag(application.teacher_catchment?) }
+    },
+    {
+      key: { text: "Work setting" },
+      value: { text: I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") },
+    },
+    {
+      key: { text: "Employer name or unique reference number" },
+      value: { text: application.employer_name_to_display },
+    },
+  ])
+end %>

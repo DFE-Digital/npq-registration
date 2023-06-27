@@ -68,7 +68,7 @@
           <% if current_user.admin? %>
             <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide navigation menu">Menu</button>
             <nav>
-              <ul id="navigation" class="govuk-header__navigation " aria-label="Navigation menu">
+              <ul>
                 <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
                   <%= link_to "Admin", admin_path, class: "govuk-header__link" %>
                 </li>
@@ -94,7 +94,7 @@
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <% if flash[:error].present? %>
           <%= govuk_notification_banner(title_text: "Error") do |banner| %>
-            <% banner.heading(text: flash[:error]) %>
+            <% banner.with_heading(text: flash[:error]) %>
           <% end %>
         <% end %>
 
@@ -104,7 +104,7 @@
               title_text: flash[:success_title] || "Success",
               success: true,
             ) do |banner|
-              banner.heading(text: flash[:success])
+              banner.with_heading(text: flash[:success])
             end
           %>
         <% end %>

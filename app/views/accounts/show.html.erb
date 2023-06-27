@@ -1,19 +1,28 @@
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">NPQ applications</h1>
+<% application_count = current_user.applications.count %>
 
-    <%= render GovukComponent::SummaryListComponent.new do |component| %>
-      <% current_user.applications.each do |application| %>
-        <% component.row do |row|
-             row.key { 'Course' }
-             row.value { localise_course_name(application.course) }
-          end %>
+<% if application_count == 1 %>
+  <h2 class="govuk-heading-xl"><%= title ||= t(".title") %></h2>
+<% else %>
+  <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
+<% end %>
 
-        <% component.row do |row|
-             row.key { 'Lead provider' }
-             row.value { application.lead_provider.name }
-          end %>
-      <% end %>
-    <% end %>
-  </div>
-</div>
+<% if application_count == 1 %>
+  <% application = current_user.applications.last %>
+
+  <%= render "work_details", application: application %>
+  <%= render "course_details", application: application %>
+
+<% else %>
+  <% courses = current_user.applications.map { |app| app.course }.uniq %>
+
+  <% courses.each do |course| %>
+    <%= render "application_table", course: course %>
+  <% end %>
+<% end %>
+
+<h1 class="govuk-heading-l">Register for an NPQ</h1>
+
+<p class="govuk-body">Use this service to submit a new registration.</p>
+
+
+<%= govuk_start_button(text: "Register for an NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>

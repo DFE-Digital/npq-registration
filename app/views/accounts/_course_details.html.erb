@@ -1,0 +1,13 @@
+<%= govuk_summary_card(title: "Course details") do |card|
+
+card.with_summary_list(rows: [
+    {
+      key: { text: "Course" },
+      value: { text: title_embedded_course_name(application.course) }
+    },
+    {
+      key: { text: "Provider" },
+      value: { text: application.lead_provider.name }
+    },
+  ])
+end %>

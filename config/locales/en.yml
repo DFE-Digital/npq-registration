@@ -145,6 +145,11 @@ en:
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 
+  accounts:
+    show:
+      title: "Your registration"
+      pural_title: "Your registrations"
+
   admin:
     layout:
       title: "Admin"
@@ -218,6 +223,8 @@ en:
     embedded_sentence:
       default: "the %{course_name} NPQ"
       ehco: "the %{course_name}"
+      title: "%{course_name} NPQ"
+      title_ehco: "%{course_name}"
     short_code:
       "npq-leading-teaching": "NPQLT"
       "npq-leading-behaviour-culture": "NPQLBC"

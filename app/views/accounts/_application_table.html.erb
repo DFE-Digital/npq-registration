@@ -1,0 +1,18 @@
+<% current_user.applications.where(course: course).each do |application| %>
+
+<%= govuk_summary_card(title: "#{title_embedded_course_name(course)}") do |card|
+
+   card.with_action { govuk_link_to("More details", accounts_user_registration_path(application)) }
+
+  card.with_summary_list(rows: [
+      {
+        key: { text: "Registration submitted" },
+        value: { text: application.created_at.to_date.to_s(:govuk_short)  }
+      },
+      {
+        key: { text: "Provider" },
+        value: { text: application.lead_provider.name },
+      }
+    ])
+  end %>
+<% end %>
