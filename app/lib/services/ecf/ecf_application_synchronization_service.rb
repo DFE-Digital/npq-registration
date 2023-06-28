@@ -2,10 +2,9 @@ module Services
   module Ecf
     class EcfApplicationSynchronizationService
       def call
-        token = "opxJDVJTsAfAWxKEUEB5"
-        uri = URI.parse("https://ecf-review-pr-3561.london.cloudapps.digital/api/v1/npq/application_synchronizations#index")
+        uri = URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations#index")
         request = Net::HTTP::Get.new(uri)
-        request["Authorization"] = "Bearer #{token}"
+        request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
 
         response = Net::HTTP.start(uri.hostname, uri.port) do |http|
           http.request(request)
