@@ -3,11 +3,13 @@ module Services
     class EcfApplicationSynchronizationService
       def call
         uri = URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations#index")
+        required_application_ids = Application.where(lead_provider_approval_status: nil).limit(1000).pluck(:ecf_id)
+        params = { ids: required_application_ids }
         request = Net::HTTP::Get.new(uri)
         request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
 
         response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-          http.request(request)
+          http.request(request, params.to_json)
         end
 
         handle_response(response)
