@@ -176,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "itt_provider" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
+      "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,

@@ -176,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "school_urn" => "100000",
       "itt_provider" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
+      "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",

@@ -169,7 +169,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "tsf_primary_plus_eligibility" => false,
       "itt_provider" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => "pending",
+      "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "works_in_childcare" => true,
       "works_in_nursery" => nil,
