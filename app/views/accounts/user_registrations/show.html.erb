@@ -1,7 +1,18 @@
+<% if params[:success] == "true" %>
+  <%= render GovukComponent::NotificationBannerComponent.new(
+    success: true,
+    title_text: "Success"
+  ) do %>
+    <h3 class="govuk-notification-banner__heading">
+      Registration successfully submitted
+    </h3>
+    <p class="govuk-body">Check the details of your registration and see next steps below.</p>
+  <% end %>
+<% end %>
 <% content_for :before_content do %>
   <%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
-    href: url_for(:back)
+    href: account_path
   ) %>
 <% end %>
 
