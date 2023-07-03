@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_04_14_121939) do
+ActiveRecord::Schema.define(version: 2023_06_19_162920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -51,6 +51,8 @@ ActiveRecord::Schema.define(version: 2023_04_14_121939) do
     t.integer "number_of_pupils", default: 0
     t.boolean "tsf_primary_eligibility", default: false
     t.boolean "tsf_primary_plus_eligibility", default: false
+    t.text "lead_provider_approval_status"
+    t.text "participant_outcome_state"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
