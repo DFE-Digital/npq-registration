@@ -16,6 +16,10 @@
 
     <p class="govuk-body">They’ll contact you to outline the next steps, including how to apply.</p>
 
+    <a href="<%= accounts_user_registration_path(current_user.applications.last, success: true) %>" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+      Continue
+    </a>
+
     <% if @form.display_npqh_information?  %>
       <% ehco_course = Course.ehco.first %>
 

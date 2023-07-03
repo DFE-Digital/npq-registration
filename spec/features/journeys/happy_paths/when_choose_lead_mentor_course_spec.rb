@@ -91,6 +91,13 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("You’ve registered for the Leading teacher development NPQ with Church of England")
     end
 
+    page.click_link("Continue")
+
+    expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
+      expect(page).to have_text("Registration successfully submitted")
+      expect(page).to have_text("Leading teacher development NPQ registration details")
+    end
+
     expect(User.count).to be(1)
 
     User.last.tap do |user|
