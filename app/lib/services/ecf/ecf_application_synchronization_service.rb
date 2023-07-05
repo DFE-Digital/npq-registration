@@ -30,10 +30,17 @@ module Services
 
       def handle_response(response)
         if response.is_a?(Net::HTTPSuccess)
-          NpqApplicationUpdaterJob.perform_now(response.body)
+          data = response_data(response)
+          data["data"].each do |record|
+            NpqApplicationUpdaterJob.perform_later(record)
+          end
         else
           raise "Failed to synchronize application: #{response.message}"
         end
+      end
+
+      def response_data(response)
+        JSON.parse(response.body)
       end
     end
   end
