@@ -32,7 +32,7 @@ module Services
         if response.is_a?(Net::HTTPSuccess)
           data = response_data(response)
           data["data"].each do |record|
-            NpqApplicationUpdaterJob.perform_later(record)
+            SyncApplicationStatusJob.perform_now(record)
           end
         else
           raise "Failed to synchronize application: #{response.message}"

@@ -1,6 +1,6 @@
 module Services
   module Ecf
-    class NpqApplicationUpdater
+    class ApplicationUpdater
       def initialize(data)
         @data = data
       end
