@@ -13,7 +13,7 @@ module Services
     private
 
       def build_uri
-        URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations#index")
+        URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations")
       end
 
       def build_http_get_request(uri)
@@ -23,7 +23,7 @@ module Services
       end
 
       def send_http_request(uri, request)
-        Net::HTTP.start(uri.hostname, uri.port) do |http|
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl?, read_timeout: 30) do |http|
           http.request(request)
         end
       end
@@ -41,6 +41,10 @@ module Services
 
       def response_data(response)
         JSON.parse(response.body)
+      end
+
+      def use_ssl?
+        build_uri.scheme == "https"
       end
     end
   end
