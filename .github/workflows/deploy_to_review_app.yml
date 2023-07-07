@@ -114,6 +114,11 @@ jobs:
             --command "cd /app && /usr/local/bundle/bin/bundle exec rails runner 'ImportGiasSchoolsJob.perform_later'" \
             --process worker \
             --name schedule_school_import
+            
+          cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails runner 'ApplicationSynchronizationJob.perform_later'" \
+            --process worker \
+            --name application_synchronization_job
 
           cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2021-08-31/childcare_providers.csv, childcare_providers]\"" \
