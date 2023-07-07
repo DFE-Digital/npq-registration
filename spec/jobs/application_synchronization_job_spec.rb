@@ -10,10 +10,10 @@ RSpec.describe ApplicationSynchronizationJob, type: :job do
   end
 
   describe "#perform" do
-    it "calls the EcfApplicationSynchronizationService" do
-      mock = instance_double("Services::Ecf::EcfApplicationSynchronizationService", call: nil)
+    it "calls the EcfApplicationSynchronization" do
+      mock = instance_double("Services::Ecf::EcfApplicationSynchronization", call: nil)
 
-      allow(Services::Ecf::EcfApplicationSynchronizationService).to receive(:new).and_return(mock)
+      allow(Services::Ecf::EcfApplicationSynchronization).to receive(:new).and_return(mock)
       described_class.perform_now
       expect(mock).to have_received(:call)
     end

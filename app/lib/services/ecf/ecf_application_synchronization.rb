@@ -1,6 +1,6 @@
 module Services
   module Ecf
-    class EcfApplicationSynchronizationService
+    class EcfApplicationSynchronization
       def call
         uri = build_uri
         request = build_http_get_request(uri)
@@ -31,16 +31,35 @@ module Services
       def handle_response(response)
         if response.is_a?(Net::HTTPSuccess)
           data = response_data(response)
-          data["data"].each do |record|
-            SyncApplicationStatusJob.perform_now(record)
+          data.each do |record|
+            id = record.id
+            lead_provider_approval_status = record.lead_provider_approval_status
+            participant_outcome_state = record.participant_outcome_state
+
+            application = Application.find_by(ecf_id: id)
+            if application.present?
+              application.update!(lead_provider_approval_status:, participant_outcome_state:)
+            else
+              raise "Application not found for ecf_id: #{id}"
+            end
           end
         else
-          raise "Failed to synchronize application: #{response.message}"
+          raise "Failed to update application: #{response.message}"
         end
       end
 
       def response_data(response)
-        JSON.parse(response.body)
+        data = JSON.parse(response.body)["data"]
+        array = []
+        data.each do |record|
+          array << OpenStruct.new(
+            id: record["attributes"]["id"],
+            lead_provider_approval_status: record["attributes"]["lead_provider_approval_status"],
+            participant_outcome_state: record["attributes"]["participant_outcome_state"],
+          )
+        end
+
+        array
       end
 
       def use_ssl?

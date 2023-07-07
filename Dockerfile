@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Add the timezone as it's not configured by default in Alpine
 RUN apk add --update --no-cache tzdata && \
+  apk add --update --no-cache busybox-initscripts && \
   cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
   echo "Europe/London" > /etc/timezone
 
@@ -53,7 +54,7 @@ WORKDIR /app
 # Add postgres driver library
 # Add the timezone as it's not configured by default in Alpine
 RUN apk add --update --no-cache libpq tzdata && \
-  apk add --update --no-cache busybox-openrc && \
+  apk add --update --no-cache busybox-initscripts && \
   cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
   echo "Europe/London" > /etc/timezone
 
