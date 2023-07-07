@@ -8,7 +8,7 @@ RSpec.describe Services::Ecf::EcfApplicationSynchronizationService do
     let(:success_response) { instance_double("response", is_a?: Net::HTTPSuccess, body: { "data" => response_data }.to_json) }
 
     before do
-      stub_request(:get, "http://ecf-app.gov.uk:443/api/v1/npq/application_synchronizations")
+      stub_request(:get, "https://ecf-app.gov.uk:443/api/v1/npq/application_synchronizations")
       .with(
         headers: {
           "Accept" => "*/*",
@@ -23,11 +23,11 @@ RSpec.describe Services::Ecf::EcfApplicationSynchronizationService do
 
     context "when successful" do
       it "sends a GET request to the correct endpoint with the authorization header" do
-        uri = URI.parse("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations#index")
+        uri = URI.parse("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations")
         request = instance_double("Net::HTTP::Get")
         http = instance_double("Net::HTTP")
 
-        allow(URI).to receive(:parse).with("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations#index").and_return(uri)
+        allow(URI).to receive(:parse).with("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations").and_return(uri)
         allow(http).to receive(:request).with(request).and_return(success_response)
 
         service.call
