@@ -126,26 +126,25 @@ RSpec.describe Services::FundingEligibility do
           #     end
           #   end
 
-          #   context "when school offering funding for the NPQEYL course" do
-          #     let(:eyl_funding_eligible) { true }
+          context "when school offering funding for the NPQEYL course" do
+            let(:eyl_funding_eligible) { true }
 
-          #     context "when user has selected the NPQEYL course" do
-          #       let(:course) { Course.all.find(&:eyl?) }
+            context "when user has selected the NPQEYL course" do
+              let(:course) { Course.all.find(&:eyl?) }
 
-          #       it "returns true" do
-          #         expect(subject).to be_funded
-          #       end
-          #     end
+              it "returns true" do
+                expect(subject).to be_funded
+              end
+            end
 
-          #     context "when user has not selected the NPQEYL course" do
-          #       let(:course) { Course.all.find(&:npqsl?) }
+            context "when user has not selected the NPQEYL course" do
+              let(:course) { Course.all.find(&:npqsl?) }
 
-          #       it "returns false" do
-          #         expect(subject).not_to be_funded
-          #       end
-          #     end
-          #   end
-          # end
+              it "returns false" do
+                expect(subject).not_to be_funded
+              end
+            end
+          end
         end
       end
     end
