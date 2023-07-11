@@ -26,7 +26,7 @@ If you need to update all schools you can do this by running the (Sync School Da
 
 ## Importing Private Childcare Provider data
 
-See [Acquiring New Private Childcare Provider data](docs/acquiring_new_private_childcare_provider_data.md) for how to acquire new data.
+See [Acquiring New Private Childcare Provider data](acquiring_new_private_childcare_provider_data.md) for how to acquire new data.
 
 ### Locally
 - Open a rails console and run the following
