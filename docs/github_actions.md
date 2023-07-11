@@ -34,6 +34,10 @@ Runs once a day to delete stale sessions from the database.
 
 Runs on demand to update course definitions in the database. Syncing them to match `Courses::DEFINITIONS`.
 
+### Update Application Statuses ([update_application_statuses.yml](../.github/workflows/update_application_statuses.yml))
+
+Runs once a day to update applications lead_provider_approval_status and participant_outcome_state retrieved from the ecf.
+
 ### Updating Schools
 
 See [Importing schools](importing_data.md#importing-schools) for more information.

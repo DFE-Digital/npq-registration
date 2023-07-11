@@ -174,6 +174,8 @@ RSpec.feature "Sad journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "other",
       "lead_mentor" => true,
+      "lead_provider_approval_status" => nil,
+      "participant_outcome_state" => nil,
       "itt_provider" => approved_itt_provider_legal_name,
       "raw_application_data" => {
         "can_share_choices" => "1",

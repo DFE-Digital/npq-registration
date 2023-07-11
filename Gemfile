@@ -6,6 +6,7 @@ ruby File.read(".ruby-version").chomp
 gem "activerecord-session_store"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
+gem "daemons"
 gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
 gem "devise", "~> 4.9"
@@ -37,6 +38,7 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "stimulus-rails"
 gem "webpacker"
+gem "whenever"
 
 gem "net-imap", require: false
 gem "net-pop", require: false
