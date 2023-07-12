@@ -36,8 +36,12 @@ module Services
             lead_provider_approval_status = record.lead_provider_approval_status
             participant_outcome_state = record.participant_outcome_state
 
-            application = Application.find_by!(ecf_id: id)
-            application.update!(lead_provider_approval_status:, participant_outcome_state:)
+            application = Application.find_by(ecf_id: id)
+            if application.present?
+              application.update!(lead_provider_approval_status:, participant_outcome_state:)
+            else
+              Rails.logger.info("Application where ecf_id=#{id} is not synced yet")
+            end
           end
         else
           raise "Failed to update application: #{response.message}"
