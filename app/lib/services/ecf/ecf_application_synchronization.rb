@@ -40,7 +40,7 @@ module Services
             if application.present?
               application.update!(lead_provider_approval_status:, participant_outcome_state:)
             else
-              Rails.logger.info("Application #{id} is not synced yet")
+              Rails.logger.info("Application where ecf_id=#{id} is not synced yet")
             end
           end
         else
