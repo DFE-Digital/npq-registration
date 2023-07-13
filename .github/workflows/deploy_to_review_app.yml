@@ -116,12 +116,12 @@ jobs:
             --name schedule_school_import
 
           cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
-            --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2021-08-31/childcare_providers.csv, childcare_providers]\"" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2023-03-31/childcare_providers.csv, childcare_providers]\"" \
             --process worker \
             --name import_childcare_providers
 
           cf run-task "${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
-            --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2021-08-31/childminder_agencies.csv, childminder_agencies]\"" \
+            --command "cd /app && /usr/local/bundle/bin/bundle exec rails \"private_childcare_providers:import[lib/private_childcare_providers/2023-03-31/childminder_agencies.csv, childminder_agencies]\"" \
             --process worker \
             --name import_childminder_agencies
 
