@@ -73,6 +73,10 @@ class Services::QueryStore
     store["teacher_catchment"] == "england"
   end
 
+  def valid_employent_type_for_england?
+    teacher_catchment_england? && !employment_type_other?
+  end
+
   def works_in_school?
     store["works_in_school"] == "yes"
   end

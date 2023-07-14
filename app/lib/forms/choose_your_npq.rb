@@ -71,7 +71,7 @@ module Forms
       elsif wizard.query_store.works_in_other?
         if lead_mentor?
           :ineligible_for_funding
-        elsif wizard.query_store.employment_type_other? || (wizard.query_store.teacher_catchment_england? && !wizard.query_store.employment_type_other?)
+        elsif wizard.query_store.employment_type_other? || wizard.query_store.valid_employent_type_for_england?
           :possible_funding
         else
           :choose_your_provider
