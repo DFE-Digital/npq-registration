@@ -51,6 +51,11 @@ RSpec.feature "Happy journeys",
       page.choose("Senior leadership", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+      expect(page).to have_text("Funding eligibility")
+      page.click_button("Continue")
+    end
+
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
       page.choose("Teach First", visible: :all)

@@ -69,10 +69,6 @@ class Services::QueryStore
     store["employment_type"] == "other"
   end
 
-  def employment_type_not_other?
-    %w[lead_mentor_for_accredited_itt_provider local_authority_supply_teacher hospital_school local_authority_virtual_school young_offender_institution].include? store["employment_type"]
-  end
-
   def teacher_catchment_england?
     store["teacher_catchment"] == "england"
   end
