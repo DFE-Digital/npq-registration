@@ -2,7 +2,13 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl">Register for a national professional qualification (NPQ)</h1>
 
-    <p class="govuk-body">Use this service to register for an NPQ or <%= localise_sentence_embedded_course_name(Course.ehco.first) %>.</p>
+    <p class="govuk-body">Use this service to:</p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>register for an NPQ or <%= localise_sentence_embedded_course_name(Course.ehco.first) %></li>
+        <li>view a previous registration</li>
+        <li>check or change your personal details</li>
+      </ul>
 
     <p class="govuk-body">You also need to apply separately with your training provider. They’ll contact you once you’ve registered.</p>
 
@@ -27,5 +33,7 @@
         button_text: "Start now"
       )
     %>
+
+ 
   </div>
 </div>
