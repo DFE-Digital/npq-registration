@@ -74,7 +74,7 @@ class Services::QueryStore
   end
 
   def valid_employent_type_for_england?
-    teacher_catchment_england? && !employment_type_other?
+    teacher_catchment_england? && (!employment_type_other? && !lead_mentor_for_accredited_itt_provider?)
   end
 
   def works_in_school?
