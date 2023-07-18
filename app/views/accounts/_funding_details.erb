@@ -1,0 +1,69 @@
+<%# 
+<%= govuk_summary_card(title: "Funding details") do |card|
+
+    if application.targeted_delivery_funding_eligibility
+        card.with_summary_list(rows: [
+            {
+            key: { text: "Scholarship funding" },
+            value: { text: scholarship_funding_eligibility(application) }
+            },
+            {
+            key: { text: "Targeted support funding" },
+            value: { text: targeted_support_funding(application) }
+            },
+        ])
+    else
+        card.with_summary_list(rows: [
+            {
+            key: { text: "Scholarship funding" },
+            value: { text: scholarship_funding_eligibility(application) }
+            }
+        ])
+    end
+end %> 
+
+
+<% def scholarship_funding_row(application) %>
+  <tr>
+    <td>Scholarship funding</td>
+    <td>
+      <% unless scholarship_eligibility_in_review(application) %>
+        <div class="status <%= application.eligible_for_funding ? 'eligible' : 'not-eligible' %>">
+          <%= application.eligible_for_funding ? 'ELIGIBLE' : 'NOT ELIGIBLE' %>
+        </div>
+      <% end %>
+      <div class="<%= scholarship_eligibility_in_review(application) ? 'in-review' : 'description' %>">
+        <%= scholarship_funding_eligibility(application) %>
+      </div>
+    </td>
+  </tr>
+<% end %>
+
+
+<table class="funding-details">
+  <col style="width:31%">
+  <col style="width:69%">
+  <thead>
+    <tr>
+      <th>Funding details</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if application.targeted_delivery_funding_eligibility %>
+      <% scholarship_funding_row(application) %>
+      <tr>
+        <td>Targeted support funding</td>
+        <td>
+          <div class="status eligible">Eligible</div>
+          <div class="description">
+            <%= targeted_support_funding(application) %>
+          </div>
+        </td>
+      </tr>
+    <% else %>
+      <% scholarship_funding_row(application) %>
+    <% end %>
+  </tbody>
+</table>
+
