@@ -1,28 +1,3 @@
-<%# 
-<%= govuk_summary_card(title: "Funding details") do |card|
-
-    if application.targeted_delivery_funding_eligibility
-        card.with_summary_list(rows: [
-            {
-            key: { text: "Scholarship funding" },
-            value: { text: scholarship_funding_eligibility(application) }
-            },
-            {
-            key: { text: "Targeted support funding" },
-            value: { text: targeted_support_funding(application) }
-            },
-        ])
-    else
-        card.with_summary_list(rows: [
-            {
-            key: { text: "Scholarship funding" },
-            value: { text: scholarship_funding_eligibility(application) }
-            }
-        ])
-    end
-end %> 
-
-
 <% def scholarship_funding_row(application) %>
   <tr>
     <td>Scholarship funding</td>
@@ -45,8 +20,7 @@ end %>
   <col style="width:69%">
   <thead>
     <tr>
-      <th>Funding details</th>
-      <th></th>
+      <th colspan="2">Funding details</th>
     </tr>
   </thead>
   <tbody>

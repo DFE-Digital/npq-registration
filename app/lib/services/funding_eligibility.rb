@@ -23,6 +23,16 @@ module Services
 
     NOT_IN_ENGLAND = :not_in_england
 
+    FUNDING_STATUS_CODE_DESCRIPTIONS = {
+      FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
+      PREVIOUSLY_FUNDED => "funding_details.previously_funded",
+      NOT_IN_ENGLAND => "funding_details.inside_catchment",
+      EARLY_YEARS_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
+      SCHOOL_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
+      INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
+      INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_establishment",
+    }.freeze
+
     attr_reader :institution,
                 :course,
                 :trn,
@@ -104,6 +114,10 @@ module Services
 
     def ineligible_institution_type?
       [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
+    end
+
+    def get_description_for_funding_status
+      FUNDING_STATUS_CODE_DESCRIPTIONS[funding_eligiblity_status_code]
     end
 
   private
