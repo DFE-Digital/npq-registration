@@ -24,7 +24,13 @@ namespace :update_eyl_funding_eligible_schools_list do
       school = School.find_by(urn: gias_urn)
 
       if school.nil?
-        # need to put logic to create new school
+        postcode = row["EstablishmentPostcode"]
+        existing_school = School.find_by(postcode:)
+        if existing_school.present?
+          school = existing_school.dup
+          school_name = row["EstablishmentName"]
+          school.update!(name: school_name, urn: gias_urn, eyl_funding_eligible: true, establishment_status_code: 1, establishment_status_name: "Open", postcode:)
+        end
       else
         school&.update!(eyl_funding_eligible: true, establishment_status_code: 1, establishment_status_name: "Open")
         updated_current_records << school.urn
