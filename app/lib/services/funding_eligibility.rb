@@ -1,5 +1,6 @@
 module Services
   class FundingEligibility
+    include CourseHelper
     FUNDED_ELIGIBILITY_RESULT = :funded
 
     NO_INSTITUTION = :no_institution
@@ -25,12 +26,13 @@ module Services
 
     FUNDING_STATUS_CODE_DESCRIPTIONS = {
       FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
-      PREVIOUSLY_FUNDED => "funding_details.previously_funded",
       NOT_IN_ENGLAND => "funding_details.inside_catchment",
       EARLY_YEARS_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
       SCHOOL_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
       INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
-      INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_establishment",
+      EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
+      NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
+      INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.no_Ofsted",
     }.freeze
 
     attr_reader :institution,
@@ -117,7 +119,11 @@ module Services
     end
 
     def get_description_for_funding_status
-      FUNDING_STATUS_CODE_DESCRIPTIONS[funding_eligiblity_status_code]
+      status_code = funding_eligiblity_status_code
+      return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
+      return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
+
+      I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code])
     end
 
   private
@@ -193,6 +199,14 @@ module Services
 
     def previously_funded?
       ecf_api_funding_lookup["previously_funded"] == true
+    end
+
+    def not_england_ehco?
+      funding_eligiblity_status_code == NOT_IN_ENGLAND && course.ehco?
+    end
+
+    def not_eligible_england_ehco?
+      inside_catchment? && course.ehco? unless funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
     end
   end
 end
