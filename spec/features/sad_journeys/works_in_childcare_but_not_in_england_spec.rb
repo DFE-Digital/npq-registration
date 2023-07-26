@@ -28,7 +28,7 @@ RSpec.feature "Happy journeys", type: :feature do
     # expect(page).to be_axe_clean
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Scotland", visible: :all)
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -74,7 +74,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "Scotland",
+          "Do you work in England?" => "",
         },
       )
     end
@@ -123,7 +123,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "targeted_delivery_funding_eligibility" => false,
-      "teacher_catchment" => "scotland",
+      "teacher_catchment" => "another",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
@@ -145,7 +145,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => "9",
         "targeted_delivery_funding_eligibility" => false,
-        "teacher_catchment" => "scotland",
+        "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,

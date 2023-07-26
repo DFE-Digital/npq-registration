@@ -30,8 +30,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Another country")
-      page.select("China")
+      page.choose("No")
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -72,7 +71,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Where do you work?" => "China",
+          "Do you work in England?" => "",
           "What setting do you work in?" => "A school",
           "Course" => "Headship",
           "Lead provider" => "Teach First",
@@ -137,7 +136,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "another",
-      "teacher_catchment_country" => "China",
+      "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
@@ -161,7 +160,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_amount" => nil,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
-        "teacher_catchment_country" => "China",
+        "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
         "funding_eligiblity_status_code" => "not_in_england",

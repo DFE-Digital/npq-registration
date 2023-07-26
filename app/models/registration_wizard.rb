@@ -113,7 +113,7 @@ class RegistrationWizard
   def answers
     array = []
 
-    array << OpenStruct.new(key: "Where do you work?",
+    array << OpenStruct.new(key: "Do you work in England?",
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 

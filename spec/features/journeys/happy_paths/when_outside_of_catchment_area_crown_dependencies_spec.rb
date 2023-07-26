@@ -33,7 +33,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Jersey, Guernsey or the Isle of Man", visible: :all)
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -79,7 +79,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "Jersey, Guernsey or the Isle of Man",
+          "Do you work in England?" => "",
         },
       )
     end
@@ -128,7 +128,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "targeted_delivery_funding_eligibility" => false,
-      "teacher_catchment" => "jersey_guernsey_isle_of_man",
+      "teacher_catchment" => "another",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
@@ -150,7 +150,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => "9",
         "targeted_delivery_funding_eligibility" => false,
-        "teacher_catchment" => "jersey_guernsey_isle_of_man",
+        "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,

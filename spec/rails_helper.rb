@@ -28,6 +28,9 @@ Capybara.register_driver :headless_chrome do |app|
   Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
 end
 
+# This is required as per https://github.com/titusfortner/webdrivers/issues/247
+# and can be removed when selenium 4.11 is released
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 Capybara.default_driver = :headless_chrome
 Capybara.javascript_driver = :headless_chrome
 
