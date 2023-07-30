@@ -3,7 +3,7 @@
 card.with_summary_list(rows: [
     {
       key: { text: "Do you work in England?" },
-      value: { text: boolean_tag(application.teacher_catchment?) }
+      value: { text: boolean_tag(application.teacher_catchment == 'england') }
     },
     {
       key: { text: "Work setting" },
