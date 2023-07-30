@@ -117,7 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Workplace" => "open manchester school",
           "How is your NPQ being paid for?" => "My trust is paying",
           "What setting do you work in?" => "A school",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

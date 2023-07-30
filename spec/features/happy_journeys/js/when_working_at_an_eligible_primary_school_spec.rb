@@ -93,7 +93,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Lead provider" => "Teach First",
           "Workplace" => "open manchester school",
           "What setting do you work in?" => "A school",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

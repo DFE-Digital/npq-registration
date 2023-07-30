@@ -84,7 +84,7 @@ RSpec.feature "Sad journeys", type: :feature do
           "ITT Provider" => approved_itt_provider_legal_name,
           "Lead provider" => "Church of England",
           "What setting do you work in?" => "Other",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

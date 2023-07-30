@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys",
           "Employer" => "Big company",
           "Lead provider" => "Teach First",
           "Role" => "Trainer",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

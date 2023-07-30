@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Role" => "Trainer",
           "What setting do you work in?" => "Other",
           "Lead provider" => "Teach First",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

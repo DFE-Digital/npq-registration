@@ -113,7 +113,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
           "Ofsted registration details" => private_childcare_provider.registration_details,
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
           "Which early years setting do you work in?" => "Private nursery",
         },
       )

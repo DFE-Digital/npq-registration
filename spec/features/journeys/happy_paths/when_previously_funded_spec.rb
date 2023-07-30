@@ -133,7 +133,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Lead provider" => "Teach First",
           "Ofsted registration details" => "EY123456 - searchable childcare provider",
           "Which early years setting do you work in?" => "Private nursery",
-          "Do you work in England?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

@@ -74,7 +74,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "Early years or childcare",
           "Lead provider" => "Teach First",
-          "Do you work in England?" => "",
+          "Do you work in England?" => "No",
         },
       )
     end
