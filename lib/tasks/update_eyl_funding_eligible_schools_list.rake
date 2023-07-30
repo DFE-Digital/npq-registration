@@ -46,7 +46,7 @@ namespace :update_eyl_funding_eligible_schools_list do
     School.transaction do
       School.where(urn: closed_school_urns).update_all(establishment_status_code: 2, establishment_status_name: "Closed")
     end
-    private_childcare_provider = PrivateChildcareProvider.find_by(postcode: 'SW6 3AA')
-    PrivateChildcareProvider.create!(provider_urn: '100547',provider_name: "ECOLE MARIE D'ORLIAC", postcode: 'SW6 3AA') unless private_childcare_provider.present?
+    private_childcare_provider = PrivateChildcareProvider.find_by(postcode: "SW6 3AA")
+    PrivateChildcareProvider.create!(provider_urn: "100547", provider_name: "ECOLE MARIE D'ORLIAC", postcode: "SW6 3AA") if private_childcare_provider.blank?
   end
 end
