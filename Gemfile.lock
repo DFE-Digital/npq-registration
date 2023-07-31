@@ -293,6 +293,9 @@ GEM
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
     pagy (6.0.4)
+    paper_trail (14.0.0)
+      activerecord (>= 6.0)
+      request_store (~> 1.4)
     parallel (1.23.0)
     parallel_tests (4.2.1)
       parallel
@@ -554,6 +557,7 @@ DEPENDENCIES
   omniauth-oauth2 (~> 1.8)
   omniauth-rails_csrf_protection
   pagy
+  paper_trail (~> 14.0)
   parallel_tests
   pg (>= 0.18, < 2.0)
   pg_search

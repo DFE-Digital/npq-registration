@@ -5,6 +5,8 @@ class Application < ApplicationRecord
   # within the rails model
   self.ignored_columns = %w[DEPRECATED_cohort]
 
+  has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
+
   belongs_to :user
   belongs_to :course
   belongs_to :lead_provider
