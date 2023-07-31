@@ -28,7 +28,7 @@ RSpec.feature "Happy journeys", type: :feature do
     # expect(page).to be_axe_clean
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("England", visible: :all)
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do

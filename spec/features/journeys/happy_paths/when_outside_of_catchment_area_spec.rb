@@ -31,7 +31,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    choose_teacher_catchment(js:, region: "Another country", country_name: "Falkland Islands")
+    choose_teacher_catchment(js:, region: "No")
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
@@ -76,7 +76,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "Falkland Islands",
+          "Do you work in England?" => "No",
         },
       )
     end
@@ -122,7 +122,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "school_urn" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "another",
-      "teacher_catchment_country" => "Falkland Islands",
+      "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
@@ -144,7 +144,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "lead_provider_id" => "9",
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
-        "teacher_catchment_country" => "Falkland Islands",
+        "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",

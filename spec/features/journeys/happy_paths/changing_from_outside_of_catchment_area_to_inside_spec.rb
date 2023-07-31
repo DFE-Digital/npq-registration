@@ -34,7 +34,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    choose_teacher_catchment(js:, region: "Another country", country_name: "Falkland Islands")
+    choose_teacher_catchment(js:, region: "No")
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/work-setting", axe_check: false, submit_form: true) do
@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "I am paying",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "Falkland Islands",
+          "Do you work in England?" => "No",
         },
       )
 
@@ -87,7 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment/change", axe_check: false, submit_form: true) do
-      page.choose("England", visible: :all)
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -134,7 +134,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "How is your NPQ being paid for?" => "My workplace is covering the cost",
           "What setting do you work in?" => "A school",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

@@ -24,7 +24,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("England", visible: :all)
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Role" => "Trainer",
           "What setting do you work in?" => "Other",
           "Lead provider" => "Teach First",
-          "Where do you work?" => "England",
+          "Do you work in England?" => "Yes",
         },
       )
     end

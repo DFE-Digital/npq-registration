@@ -31,7 +31,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("England", visible: :all)
+      page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -102,7 +102,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Where do you work?" => "England",
+          "Do you work in England?" => "Yes",
           "What setting do you work in?" => "A school",
           "Course" => "Senior leadership",
           "Workplace" => "open manchester school",

@@ -54,10 +54,11 @@ class Services::QueryStore
   end
 
   def teacher_catchment_humanized
-    if store["teacher_catchment"] == "another"
-      store["teacher_catchment_country"]
-    else
-      I18n.t(store["teacher_catchment"], scope: %i[helpers label registration_wizard teacher_catchment_options])
+    case store["teacher_catchment"]
+    when "another"
+      "No"
+    when "england"
+      "Yes"
     end
   end
 
