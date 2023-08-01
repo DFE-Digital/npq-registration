@@ -1,0 +1,45 @@
+<% def scholarship_funding_row(application) %>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Scholarship funding
+    </dt>
+    <dd class="govuk-summary-list__value">
+      <% unless scholarship_eligibility_in_review?(application) %>
+        <strong class="govuk-tag <%= application.eligible_for_funding ? 'govuk-tag--green' : 'govuk-tag--red' %>">
+          <%= application.eligible_for_funding ? 'ELIGIBLE' : 'NOT ELIGIBLE' %>
+        </strong>
+      <% end %>
+        <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= scholarship_funding_eligibility(application) %></p>
+        <% unless application.eligible_for_funding || scholarship_eligibility_in_review?(application) %>
+          <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("funding_details.ineligible_message") %></p>
+        <% end %>
+    </dd>
+  </div>
+<% end %>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">Funding details</h2>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+
+        <% if application.targeted_delivery_funding_eligibility %>
+          
+          <% scholarship_funding_row(application) %>
+
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Targeted support funding
+            </dt>
+            <dd class="govuk-summary-list__value">
+              <strong class="govuk-tag govuk-tag--green">ELIGIBLE</strong>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding(application) %></p>
+            </dd>
+          </div>
+        <% else %>
+          <% scholarship_funding_row(application) %>
+        <% end %>
+      </dl>
+    </div>
+  </div>

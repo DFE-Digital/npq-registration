@@ -248,6 +248,17 @@ en:
       "npq-early-years-leadership": "Early years leadership"
       "npq-leading-literacy": "Leading literacy"
 
+  funding_details:
+    in_review: "Contact your provider to check if you’re eligible for scholarship funding, if you have not done so already."
+    ineligible_setting: "You’re not eligible for scholarship funding because you do not work in one of the eligible settings, such as state-funded schools."
+    inside_catchment: "You’re not eligible for scholarship funding because you do not work in England."
+    no_Ofsted: "You’re not eligible for schools funding because you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
+    previously_funded: "You have already been allocated scholarship funding for %{course_name}."
+    scholarship_eligibility: "This means that you will not have to pay for the course fees."
+    targeted_funding_eligibility: "Your workplace will receive £%{funding_amount} to support you to do this NPQ."
+    ineligible_message: "This means that you would need to pay for the course another way."
+    not_eligible_ehco: "You’re not eligible for scholarship funding for %{course_name}."
+  
   helpers:
     title:
       registration_wizard:
