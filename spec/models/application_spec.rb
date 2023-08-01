@@ -46,4 +46,23 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "versioning" do
+    context "when changing versioned fields" do
+      let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
+
+      before do
+        application.update!(lead_provider_approval_status: "accepted", participant_outcome_state: "passed")
+      end
+
+      it "has history of changes" do
+        previous_application = application.versions.last.reify
+        expect(application.lead_provider_approval_status).to eq("accepted")
+        expect(application.participant_outcome_state).to eq("passed")
+
+        expect(previous_application.lead_provider_approval_status).to eq("pending")
+        expect(previous_application.participant_outcome_state).to eq(nil)
+      end
+    end
+  end
 end
