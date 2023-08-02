@@ -3,6 +3,7 @@ class Course < ApplicationRecord
   scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
   scope :npqltd, -> { where(identifier: "npq-leading-teaching-development") }
   scope :npqh, -> { where(identifier: "npq-headship") }
+  scope :npqlpm, -> { where(identifier: "npq-leading-primary-mathematics") }
 
   def supports_targeted_delivery_funding?
     !ehco?

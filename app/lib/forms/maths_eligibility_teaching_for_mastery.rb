@@ -30,7 +30,11 @@ module Forms
     end
 
     def next_step
-      :choose_your_npq
+      if maths_eligibility_teaching_for_mastery == "yes"
+        :possible_funding
+      else
+        :choose_your_npq
+      end
     end
 
     def previous_step
