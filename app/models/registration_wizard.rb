@@ -31,6 +31,7 @@ class RegistrationWizard
     choose_your_npq
     maths_eligibility_teaching_for_mastery
     maths_understanding_of_approach
+    maths_cannot_register
     choose_your_provider
     find_school
     choose_school

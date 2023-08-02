@@ -283,6 +283,7 @@ en:
         maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
         npqh_status: "Eligibility for the Early headship coaching offer"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
+        maths_cannot_register: "You cannot register for the leading primary mathematics NPQ"
         check_answers: "Check your answers and confirm"
         institution_location: Where is your workplace located?
         possible_funding: "You may qualify for DfE scholarship funding"
@@ -311,7 +312,7 @@ en:
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
         maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
-        maths_understanding_of_approach: "Yo"
+        maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
         ehco_funding_choice: "How is the Early headship coaching offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
@@ -325,7 +326,7 @@ en:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "Before you can take this NPQ, your training provider needs to check your understanding of the mastery approaches to teaching maths."
-        maths_eligibility_teaching_for_mastery_html_two: "The simplest way to show your understanding is by taking at least one year of the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>?"
+        maths_eligibility_teaching_for_mastery_html_two: "The simplest way to show your understanding is by taking at least one year of the primary maths Teaching for Mastery programme?"
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"

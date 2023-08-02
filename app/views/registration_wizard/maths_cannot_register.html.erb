@@ -1,0 +1,13 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">You cannot register for the leading primary mathematics NPQ</h1>
+
+  <p class="govuk-body">This is because you said that you cannot show an understanding of mastery approaches to teaching maths.</p>
+
+  <p class="govuk-body">Join the primary maths Teaching for Mastery programme or go back if you want to register for a different NPQ.</p>
+<% end %>
