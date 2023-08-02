@@ -33,7 +33,7 @@ module Forms
       if maths_eligibility_teaching_for_mastery == "yes"
         :possible_funding
       else
-        :choose_your_npq
+        :maths_understanding_of_approach
       end
     end
 

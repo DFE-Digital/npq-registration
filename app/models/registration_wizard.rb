@@ -30,6 +30,7 @@ class RegistrationWizard
     itt_provider
     choose_your_npq
     maths_eligibility_teaching_for_mastery
+    maths_understanding_of_approach
     choose_your_provider
     find_school
     choose_school
