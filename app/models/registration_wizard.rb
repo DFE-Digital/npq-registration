@@ -29,6 +29,7 @@ class RegistrationWizard
     funding_your_ehco
     itt_provider
     choose_your_npq
+    maths_eligibility_teaching_for_mastery
     choose_your_provider
     find_school
     choose_school

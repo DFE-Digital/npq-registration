@@ -66,6 +66,8 @@ module Forms
         end
       elsif course.ehco?
         :npqh_status
+      elsif course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?

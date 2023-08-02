@@ -59,6 +59,10 @@ en:
             course_identifier:
               blank: Choose a national professional qualification
               invalid: Choose a valid national professional qualification
+        forms/maths_eligibility_teaching_for_mastery:
+          attributes:
+            maths_eligibility_teaching_for_mastery:
+              blank: Choose whether or not you took one year of the primary maths Teaching for Mastery programme
         forms/choose_your_provider:
           attributes:
             lead_provider_id:
@@ -236,6 +240,7 @@ en:
       "npq-early-headship-coaching-offer": "EHCO"
       "npq-early-years-leadership": "NPQEYL"
       "npq-leading-literacy": "NPQLL"
+      "npq-leading-primary-mathematics": "NPQLPM"
     name:
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"
@@ -247,6 +252,7 @@ en:
       "npq-early-headship-coaching-offer": "Early headship coaching offer"
       "npq-early-years-leadership": "Early years leadership"
       "npq-leading-literacy": "Leading literacy"
+      "npq-leading-primary-mathematics": "Leading primary mathematics"
 
   funding_details:
     in_review: "Contact your provider to check if you’re eligible for scholarship funding, if you have not done so already."
@@ -269,6 +275,7 @@ en:
         ehco_previously_funded: "DfE scholarship funding not available"
         ehco_unavailable: "You cannot register for the Early Headship Coaching Offer"
         choose_your_npq: "Choose an NPQ"
+        maths_eligibility_teaching_for_mastery: "Eligibility for the leading primary mathematics NPQ"
         npqh_status: "Eligibility for the Early headship coaching offer"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         check_answers: "Check your answers and confirm"
@@ -298,6 +305,7 @@ en:
         teacher_catchment: "Do you work in England?"
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
+        maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
         ehco_funding_choice: "How is the Early headship coaching offer being paid for?"
         itt_provider: "Enter the name of the ITT provider you are working with"
         npqh_status: "What stage are you at with the Headship NPQ?"
@@ -310,6 +318,8 @@ en:
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
+        maths_eligibility_teaching_for_mastery_html_one: "Before you can take this NPQ, your training provider needs to check your understanding of the mastery approaches to teaching maths."
+        maths_eligibility_teaching_for_mastery_html_two: "The simplest way to show your understanding is by taking at least one year of the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>?"
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
         employment_role: "For example: Administrator, business manager"
@@ -332,6 +342,7 @@ en:
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
+        maths_eligibility_teaching_for_mastery_hint: "You may be able to show your understanding of mastery approaches to teaching maths another way."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
         trn: Your TRN is between 6 and 7 characters long. It may begin with 'RP'
         full_name: Your full name exactly as it appears on the Teaching Regulation Agency records
@@ -345,6 +356,10 @@ en:
           an_academy_trust: "An academy trust"
           a_16_to_19_educational_setting: "A 16 to 19 educational setting"
           other: "Other"
+
+        maths_eligibility_teaching_for_mastery_options:
+          "yes": "Yes"
+          "no": "No"
 
         kind_of_nursery_options:
           local_authority_maintained_nursery: "Local authority-maintained nursery"

@@ -1,0 +1,29 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.maths_eligibility_teaching_for_mastery") %></h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-7">
+      <%= t("helpers.hint.registration_wizard.maths_eligibility_teaching_for_mastery_html_one") %>
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-7">
+      <%= t("helpers.hint.registration_wizard.maths_eligibility_teaching_for_mastery_html_two") %>
+    </p>
+  </div>
+</div>
+
+<%=
+  render(
+    'registration_wizard/shared/questions_page',
+    form: @form,
+    wizard: @wizard,
+  )
+%>

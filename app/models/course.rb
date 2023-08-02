@@ -27,4 +27,8 @@ class Course < ApplicationRecord
   def npqltd?
     identifier == "npq-leading-teaching-development"
   end
+
+  def npqlpm?
+    identifier == "npq-leading-primary-mathematics"
+  end
 end
