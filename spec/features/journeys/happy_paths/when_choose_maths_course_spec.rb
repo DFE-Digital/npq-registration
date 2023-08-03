@@ -82,9 +82,9 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+    expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
       expect(page).to have_text("Funding eligibility")
-      expect(page).to have_text("you will not have to pay for the course fees")
+      expect(page).to have_text("If your provider accepts your application, you'll be eligible for scholarship funding for the the Leading primary mathematics NPQ.")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -107,6 +107,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "What setting do you work in?" => "A school",
           "Lead provider" => "Church of England",
           "Do you work in England?" => "Yes",
+          "Have you taken at least one year of the primary maths Teaching for Mastery programme?" => "Yes",
         },
       )
     end

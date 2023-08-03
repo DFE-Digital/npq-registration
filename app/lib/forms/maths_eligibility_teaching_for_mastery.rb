@@ -31,7 +31,7 @@ module Forms
 
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
-        :possible_funding
+        :funding_eligibility_maths
       else
         :maths_understanding_of_approach
       end

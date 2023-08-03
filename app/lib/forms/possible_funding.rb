@@ -24,7 +24,6 @@ module Forms
 
     def message_template
       return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
-      return "funding_eligible_math" if Course.npqlpm.include?(course)
       return "lead_mentor" if Course.npqltd.include?(course) && !is_funding_eligibility_unclear?
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 

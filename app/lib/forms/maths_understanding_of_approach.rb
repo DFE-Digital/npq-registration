@@ -32,7 +32,7 @@ module Forms
 
     def next_step
       if %w[taken_a_similar_course another_way].include?(maths_understanding_of_approach)
-        :possible_funding
+        :funding_eligibility_maths
       else
         :maths_cannot_register
       end

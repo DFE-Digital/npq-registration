@@ -32,6 +32,7 @@ class RegistrationWizard
     maths_eligibility_teaching_for_mastery
     maths_understanding_of_approach
     maths_cannot_register
+    funding_eligibility_maths
     choose_your_provider
     find_school
     choose_school
@@ -193,6 +194,17 @@ class RegistrationWizard
                             value: I18n.t(query_store.course.identifier, scope: "course.name"),
                             change_step: :choose_your_npq)
 
+    if query_store.course.identifier == "npq-leading-primary-mathematics"
+      array << OpenStruct.new(key: "Have you taken at least one year of the primary maths Teaching for Mastery programme?",
+                              value: store["maths_eligibility_teaching_for_mastery"].capitalize,
+                              change_step: :maths_eligibility_teaching_for_mastery)
+
+      if store["maths_eligibility_teaching_for_mastery"] == "no"
+        array << OpenStruct.new(key: "How can you show your understanding of mastery approaches to teaching maths?",
+                                value: I18n.t("helpers.label.registration_wizard.maths_understanding_of_approach_options.#{store['maths_understanding_of_approach']}"),
+                                change_step: :maths_understanding_of_approach)
+      end
+    end
     unless eligible_for_funding?
       if course.ehco?
         array << OpenStruct.new(key: "How is your EHCO being paid for?",
