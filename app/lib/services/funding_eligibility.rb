@@ -69,7 +69,7 @@ module Services
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
-        if approved_itt_provider
+        if approved_itt_provider && !course.npqlpm?
           return lead_mentor_eligibility_status
         end
 

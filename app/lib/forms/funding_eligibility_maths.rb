@@ -1,7 +1,11 @@
 module Forms
   class FundingEligibilityMaths < Base
     def previous_step
-      :choose_your_npq
+      if wizard.query_store.maths_understanding?
+        :maths_eligibility_teaching_for_mastery
+      else
+        :maths_understanding_of_approach
+      end
     end
 
     def next_step

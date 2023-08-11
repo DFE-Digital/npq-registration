@@ -31,8 +31,10 @@ module Forms
 
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
+        wizard.store["maths_understanding"] = true
         :funding_eligibility_maths
       else
+        wizard.store["maths_understanding"] = false
         :maths_understanding_of_approach
       end
     end

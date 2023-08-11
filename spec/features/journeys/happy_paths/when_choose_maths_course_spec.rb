@@ -214,6 +214,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_name" => "",
         "lead_provider_id" => "3",
         "maths_eligibility_teaching_for_mastery" => "yes",
+        "maths_understanding" => true,
         "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
