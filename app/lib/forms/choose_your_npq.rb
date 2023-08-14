@@ -66,7 +66,9 @@ module Forms
         end
       elsif course.ehco?
         :npqh_status
-      elsif eligible_for_funding? && !course.npqlpm?
+      elsif course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
+      elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?
         if lead_mentor?
@@ -75,12 +77,6 @@ module Forms
           :possible_funding
         else
           :choose_your_provider
-        end
-      elsif course.npqlpm?
-        if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private?
-          :ineligible_for_funding
-        else
-          :maths_eligibility_teaching_for_mastery
         end
       else
         :ineligible_for_funding

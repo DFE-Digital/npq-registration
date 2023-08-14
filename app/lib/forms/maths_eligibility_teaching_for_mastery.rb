@@ -32,7 +32,13 @@ module Forms
     def next_step
       if maths_eligibility_teaching_for_mastery == "yes"
         wizard.store["maths_understanding"] = true
-        :funding_eligibility_maths
+        if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private?
+          :ineligible_for_funding
+        elsif wizard.query_store.works_in_other?
+          :possible_funding
+        else
+          :funding_eligibility_maths
+        end
       else
         wizard.store["maths_understanding"] = false
         :maths_understanding_of_approach

@@ -19,7 +19,15 @@ module Forms
     end
 
     def previous_step
-      :choose_your_npq
+      if course.npqlpm?
+        if wizard.query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
+      else
+        :choose_your_npq
+      end
     end
 
     def ineligible_template

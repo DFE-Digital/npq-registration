@@ -7,12 +7,6 @@ RSpec.describe Forms::PossibleFunding do
     end
   end
 
-  describe "#previous_step" do
-    it "returns choose_your_npq" do
-      expect(subject.previous_step).to be(:choose_your_npq)
-    end
-  end
-
   describe "#course" do
     let(:course) { Course.all.sample }
     let(:store) { { "course_identifier" => course.identifier } }
