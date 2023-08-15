@@ -41,13 +41,15 @@ module Services
                 :approved_itt_provider,
                 :lead_mentor,
                 :employment_role,
-                :get_an_identity_id
+                :get_an_identity_id,
+                :lead_mentor_for_accredited_itt_provider
 
     def initialize(institution:,
                    course:,
                    inside_catchment:,
                    trn:,
                    get_an_identity_id:,
+                   lead_mentor_for_accredited_itt_provider: false,
                    approved_itt_provider: false,
                    lead_mentor: false,
                    new_headteacher: false,
@@ -61,6 +63,7 @@ module Services
       @get_an_identity_id = get_an_identity_id
       @trn = trn
       @employment_role = employment_role
+      @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     end
 
     def funded?
@@ -69,7 +72,7 @@ module Services
 
     def funding_eligiblity_status_code
       @funding_eligiblity_status_code ||= begin
-        if approved_itt_provider && !course.npqlpm?
+        if approved_itt_provider && (!course.npqlpm? || (course.npqlpm? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
           return lead_mentor_eligibility_status
         end
 

@@ -35,6 +35,8 @@ module Forms
         :ineligible_for_funding
       elsif wizard.query_store.works_in_other? && maths_understanding_of_approach != "cannot_show"
         :possible_funding
+      elsif wizard.query_store.works_in_school? && !state_funded_school?
+        :ineligible_for_funding
       elsif %w[taken_a_similar_course another_way].include?(maths_understanding_of_approach)
         :funding_eligibility_maths
       else
@@ -44,6 +46,20 @@ module Forms
 
     def previous_step
       :maths_eligibility_teaching_for_mastery
+    end
+
+  private
+
+    def state_funded_school?
+      school.eligible_establishment?
+    end
+
+    def institution_identifier
+      wizard.store["institution_identifier"]
+    end
+
+    def school
+      institution(source: institution_identifier)
     end
   end
 end

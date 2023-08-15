@@ -34,8 +34,14 @@ module Forms
         wizard.store["maths_understanding"] = true
         if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private?
           :ineligible_for_funding
+        elsif wizard.query_store.works_in_school? && !state_funded_school?
+          :ineligible_for_funding
         elsif wizard.query_store.works_in_other?
-          :possible_funding
+          if wizard.query_store.lead_mentor_for_accredited_itt_provider?
+            :ineligible_for_funding
+          else
+            :possible_funding
+          end
         else
           :funding_eligibility_maths
         end
@@ -47,6 +53,20 @@ module Forms
 
     def previous_step
       :choose_your_npq
+    end
+
+  private
+
+    def state_funded_school?
+      school.eligible_establishment?
+    end
+
+    def institution_identifier
+      wizard.store["institution_identifier"]
+    end
+
+    def school
+      institution(source: institution_identifier)
     end
   end
 end
