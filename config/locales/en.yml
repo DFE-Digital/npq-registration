@@ -258,7 +258,10 @@ en:
     targeted_funding_eligibility: "Your workplace will receive £%{funding_amount} to support you to do this NPQ."
     ineligible_message: "This means that you would need to pay for the course another way."
     not_eligible_ehco: "You’re not eligible for scholarship funding for %{course_name}."
-  
+
+  provider_details:
+    pending_status: "You need to apply separately with your training provider, if you have not done so already."
+
   helpers:
     title:
       registration_wizard:

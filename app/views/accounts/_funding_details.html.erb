@@ -18,28 +18,28 @@
 <% end %>
 
 <div class="govuk-summary-card">
-    <div class="govuk-summary-card__title-wrapper">
-      <h2 class="govuk-summary-card__title">Funding details</h2>
-    </div>
-    <div class="govuk-summary-card__content">
-      <dl class="govuk-summary-list">
-
-        <% if application.targeted_delivery_funding_eligibility %>
-          
-          <% scholarship_funding_row(application) %>
-
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Targeted support funding
-            </dt>
-            <dd class="govuk-summary-list__value">
-              <strong class="govuk-tag govuk-tag--green">ELIGIBLE</strong>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding(application) %></p>
-            </dd>
-          </div>
-        <% else %>
-          <% scholarship_funding_row(application) %>
-        <% end %>
-      </dl>
-    </div>
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Funding details</h2>
   </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+
+      <% if application.targeted_delivery_funding_eligibility %>
+        
+        <% scholarship_funding_row(application) %>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Targeted support funding
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <strong class="govuk-tag govuk-tag--green">ELIGIBLE</strong>
+            <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding(application) %></p>
+          </dd>
+        </div>
+      <% else %>
+        <% scholarship_funding_row(application) %>
+      <% end %>
+    </dl>
+  </div>
+</div>

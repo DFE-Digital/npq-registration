@@ -1,13 +1,59 @@
-<%= govuk_summary_card(title: "Course details") do |card|
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Course details</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Course
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= title_embedded_course_name(application.course) %>
+        </dd>
+      </div>
 
-card.with_summary_list(rows: [
-    {
-      key: { text: "Course" },
-      value: { text: title_embedded_course_name(application.course) }
-    },
-    {
-      key: { text: "Provider" },
-      value: { text: application.lead_provider.name }
-    },
-  ])
-end %>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Provider
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= application.lead_provider.name %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Provider Application
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <% if application.lead_provider_approval_status %>
+            <% if application.lead_provider_approval_status.capitalize == "Pending" %>
+              <strong class="govuk-tag govuk-tag--yellow">APPLY WITH PROVIDER</strong>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.pending_status")  %></p>
+            <% elsif application.lead_provider_approval_status.capitalize == "Accepted" %>
+              <strong class="govuk-tag govuk-tag--green">SUCCESSFUL</strong>
+            <% elsif application.lead_provider_approval_status.capitalize == "Rejected" %>
+              <strong class="govuk-tag govuk-tag--red">UNSUCCESSFUL</strong>
+            <% end %>
+          <% end %>
+        </dd>
+      </div>
+
+      <% if application.participant_outcome_state && application.lead_provider_approval_status.capitalize != "Rejected" %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Course Status
+          </dt>
+          <dd class="govuk-summary-list__value">
+              <% if application.participant_outcome_state.capitalize == "Passed" %>
+                <strong class="govuk-tag govuk-tag--green">PASSED</strong>
+              <% elsif application.participant_outcome_state.capitalize == "Failed" %>
+                <strong class="govuk-tag govuk-tag--red">NOT PASSED</strong>
+              <% end %>
+          </dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>
