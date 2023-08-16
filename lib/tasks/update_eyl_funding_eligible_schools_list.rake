@@ -12,6 +12,7 @@ namespace :update_eyl_funding_eligible_schools_list do
     Rails.logger.info("Fetching previous schools from CSV file: #{previous_file}")
 
     previous_school_urns = CSV.parse(File.read(previous_file), headers: true).map { |row| row["gias_urn"] }
+    new_school_urns = CSV.parse(File.read(file_name), headers: true).map { |row| row["URN"] }
 
     Rails.logger.info("Fetched Records: #{previous_school_urns.count}")
 
@@ -20,7 +21,7 @@ namespace :update_eyl_funding_eligible_schools_list do
     updated_current_records = []
 
     CSV.foreach(file_name, headers: true) do |row|
-      gias_urn = row["gias_urn"]
+      gias_urn = row["URN"]
       school = School.find_by(urn: gias_urn)
 
       if school.nil?
@@ -41,12 +42,10 @@ namespace :update_eyl_funding_eligible_schools_list do
 
     Rails.logger.info("Updated Records: #{updated_current_records.count}")
 
-    closed_school_urns = previous_school_urns - updated_current_records
+    closed_school_urns = previous_school_urns - new_school_urns
 
     School.transaction do
       School.where(urn: closed_school_urns).update_all(establishment_status_code: 2, establishment_status_name: "Closed")
     end
-    private_childcare_provider = PrivateChildcareProvider.find_by(postcode: "SW6 3AA")
-    PrivateChildcareProvider.create!(provider_urn: "100547", provider_name: "ECOLE MARIE D'ORLIAC", postcode: "SW6 3AA") if private_childcare_provider.blank?
   end
 end
