@@ -13,6 +13,9 @@ module Services
         FEATURE_FLAG_KEYS.each do |feature_flag_key|
           Flipper.add(feature_flag_key)
         end
+        # rubocop:disable Rails/UnknownEnv
+        Rails.env.sandbox? ? Flipper.enable(:maths_npq) : Flipper.disable(:maths_npq)
+        # rubocop:enable Rails/UnknownEnv
       end
 
       # This is always true but is checked so that it is explicit

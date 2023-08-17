@@ -328,7 +328,7 @@ en:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths."
-        maths_eligibility_teaching_for_mastery_two_html: "The simplest way to show your understanding is by taking at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme.</a>"
+        maths_eligibility_teaching_for_mastery_two_html: "The simplest way to show your understanding is by taking at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"

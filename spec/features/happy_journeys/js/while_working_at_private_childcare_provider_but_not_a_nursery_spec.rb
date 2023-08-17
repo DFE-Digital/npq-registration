@@ -80,9 +80,14 @@ RSpec.feature "Happy journeys", type: :feature do
         page.choose(course, visible: :all)
       end
 
-      expect(page).to have_text("you are eligible for scholarship funding for") unless course == "Leading primary mathematics"
-      expect(page).to have_text("You can go back and select the Early years leadership") unless course == "Leading primary mathematics"
-      expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
+      if Flipper.enabled?(:maths_npq)
+        expect(page).to have_text("you are eligible for scholarship funding for") unless course == "Leading primary mathematics"
+        expect(page).to have_text("You can go back and select the Early years leadership") unless course == "Leading primary mathematics"
+        expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
+      else
+        expect(page).to have_text("you are eligible for scholarship funding for")
+        expect(page).to have_text("You can go back and select the Early years leadership")
+      end
       page.click_link("Back")
     end
 
