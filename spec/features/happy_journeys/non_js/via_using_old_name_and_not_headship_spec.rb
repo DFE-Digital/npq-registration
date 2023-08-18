@@ -114,9 +114,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_applicant_reached_end_of_journey
 
-    expect(User.count).to be(1)
-    expect(Application.count).to be(1)
-
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,

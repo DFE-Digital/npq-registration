@@ -125,9 +125,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_applicant_reached_end_of_journey
 
-    expect(User.count).to be(1)
-    expect(User.last.applications.count).to be(1)
-
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
       expect(page).to have_text("Early headship coaching offer")

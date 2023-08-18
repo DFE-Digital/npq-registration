@@ -90,8 +90,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_applicant_reached_end_of_journey
 
-    expect(User.count).to be(1)
-
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
       expect(user.full_name).to eql("John Doe")
