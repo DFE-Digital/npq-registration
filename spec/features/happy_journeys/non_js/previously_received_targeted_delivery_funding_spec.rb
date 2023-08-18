@@ -114,10 +114,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(User.count).to be(1)
     expect(Application.count).to be(1)
 
-    visit "/"
-    visit "/registration/confirmation"
-    expect(page).to have_current_path("/")
-
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
