@@ -14,6 +14,10 @@ module Forms
       false
     end
 
+    def last_step?
+      false
+    end
+
     # Previous steps should lead to `closed` when registration is closed.
     def previous_step
       return :closed if Services::Feature.registration_closed?

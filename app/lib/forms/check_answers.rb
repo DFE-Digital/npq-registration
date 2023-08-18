@@ -6,13 +6,18 @@ module Forms
       :share_provider
     end
 
-    def next_step
-      :confirmation
+    def next_step; end
+
+    def last_step?
+      true
     end
 
     def after_save
       wizard.store["email_template"] = email_template
       wizard.store["funding_amount"] = funding_amount
+
+      wizard.store["submitted"] = true
+      wizard.session["clear_tra_login"] = true
 
       Services::HandleSubmissionForStore.new(store: wizard.store).call
     end

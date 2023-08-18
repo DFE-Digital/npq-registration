@@ -23,6 +23,11 @@ class RegistrationWizardController < ApplicationController
     respond_to do |format|
       format.html do
         if @form.valid?
+          if @form.last_step?
+            @wizard.save!
+            return redirect_to accounts_user_registration_path(current_user.applications.last, success: true)
+          end
+
           if @form.redirect_to_change_path?
             redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
           else

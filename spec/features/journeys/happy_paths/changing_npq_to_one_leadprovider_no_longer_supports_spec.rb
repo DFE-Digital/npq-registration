@@ -149,8 +149,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Early years leadership NPQ with Teacher Development Trust")
+    expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
+      expect(page).to have_text("Registration successfully submitted")
     end
 
     expect(retrieve_latest_application_user_data).to match(
@@ -218,6 +218,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_name" => js ? "" : "open",
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

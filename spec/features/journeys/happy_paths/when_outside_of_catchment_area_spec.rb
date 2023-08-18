@@ -142,6 +142,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_in_england",
         "lead_provider_id" => "9",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,

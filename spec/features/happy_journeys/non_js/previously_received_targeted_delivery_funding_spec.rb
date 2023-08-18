@@ -180,6 +180,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "submitted" => true,
         "funding_amount" => 200,
         "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",

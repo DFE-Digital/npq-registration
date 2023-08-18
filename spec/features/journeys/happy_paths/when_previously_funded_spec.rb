@@ -138,8 +138,8 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Early headship coaching offer with Teach First")
+    expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
+      expect(page).to have_text("Registration successfully submitted")
     end
 
     expect(retrieve_latest_application_user_data).to match(
@@ -210,6 +210,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
