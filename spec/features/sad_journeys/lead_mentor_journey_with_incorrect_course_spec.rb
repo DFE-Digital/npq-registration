@@ -89,9 +89,7 @@ RSpec.feature "Sad journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
-      expect(page).to have_text("Registration successfully submitted")
-    end
+    expect_applicant_reached_end_of_journey
 
     expect(User.count).to be(1)
 

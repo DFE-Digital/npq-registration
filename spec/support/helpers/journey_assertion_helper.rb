@@ -30,5 +30,12 @@ module Helpers
 
       expect(summary_data).to eql(values)
     end
+
+    def expect_applicant_reached_end_of_journey
+      expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
+        expect(page).to have_text("Registration successfully submitted")
+        expect(page).to have_link('Register for an NPQ', href: /\/registration\/teacher_reference_number/ )
+      end
+    end
   end
 end
