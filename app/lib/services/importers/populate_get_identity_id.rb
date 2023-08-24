@@ -5,6 +5,7 @@ module Services
         rows.each do |row|
           user = User.find(row.fetch(:user_id))
           user.update!(uid: row.fetch(:id))
+          Rails.logger.info("User #{user.id} has been updated with get_identity_id #{row.fetch(:id)}")
         end
       end
     end

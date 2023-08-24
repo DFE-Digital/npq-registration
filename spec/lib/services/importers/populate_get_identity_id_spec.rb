@@ -25,4 +25,14 @@ RSpec.describe Services::Importers::PopulateGetIdentityId do
       described_class.new.import([{ id: "123", user_id: 999 }])
     }.to raise_error(ActiveRecord::RecordNotFound)
   end
+
+  it "Logs the uid to the Rails logger" do
+    user = create(:user)
+    logger = instance_spy(Logger)
+    allow(Rails).to receive(:logger).and_return(logger)
+
+    described_class.new.import([{ id: "123", user_id: user.id }])
+
+    expect(logger).to have_received(:info).with("User #{user.id} has been updated with get_identity_id 123")
+  end
 end
