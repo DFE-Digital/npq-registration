@@ -279,7 +279,7 @@ en:
         ehco_previously_funded: "DfE scholarship funding not available"
         ehco_unavailable: "You cannot register for the Early Headship Coaching Offer"
         choose_your_npq: "Choose an NPQ"
-        maths_eligibility_teaching_for_mastery: "Eligibility for the leading primary mathematics NPQ"
+        before_you_can_register_for_this_NPQ: "Before you can register for this NPQ"
         maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
         funding_eligibility_maths: "Funding Eligibility"
         npqh_status: "Eligibility for the Early headship coaching offer"
@@ -327,8 +327,8 @@ en:
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
-        maths_eligibility_teaching_for_mastery_html_one: "Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths."
-        maths_eligibility_teaching_for_mastery_two_html: "The simplest way to show your understanding is by taking at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
+        maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
+        maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
@@ -352,7 +352,7 @@ en:
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
-        maths_eligibility_teaching_for_mastery_hint: "You may be able to show your understanding of mastery approaches to teaching maths another way."
+        maths_eligibility_teaching_for_mastery_hint: "You may be able to demonstrate your understanding of mastery approaches to teaching maths another way"
         maths_understanding_of_approach_hint: "For example, a reference from a professional who has supported your mastery professional development."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
         trn: Your TRN is between 6 and 7 characters long. It may begin with 'RP'
