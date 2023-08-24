@@ -19,4 +19,10 @@ RSpec.describe Services::Importers::PopulateGetIdentityId do
     expect(user1.reload.uid).to eq("123")
     expect(user2.reload.uid).to eq("456")
   end
+
+  it "Raises an error if the user does not exist" do
+    expect {
+      described_class.new.import([{ id: "123", user_id: 999 }])
+    }.to raise_error(ActiveRecord::RecordNotFound)
+  end
 end
