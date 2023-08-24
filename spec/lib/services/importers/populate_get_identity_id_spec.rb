@@ -9,4 +9,14 @@ RSpec.describe Services::Importers::PopulateGetIdentityId do
 
     expect(user.reload.uid).to eq("123")
   end
+
+  it "Updates multiple users" do
+    user1 = create(:user)
+    user2 = create(:user)
+
+    described_class.new.import([{ id: "123", user_id: user1.id }, { id: "456", user_id: user2.id }])
+
+    expect(user1.reload.uid).to eq("123")
+    expect(user2.reload.uid).to eq("456")
+  end
 end
