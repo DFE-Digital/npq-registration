@@ -12,7 +12,7 @@
 <% content_for :before_content do %>
   <% if current_user.applications.count > 1 %>
     <%= render GovukComponent::BackLinkComponent.new(
-      text: "Back",
+      text: "Back to your registrations",
       href: account_path
     ) %>
   <% end %>
