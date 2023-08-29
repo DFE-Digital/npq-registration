@@ -1,0 +1,29 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.before_you_can_register_for_this_NPQ") %></h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-4">
+      <%= t("helpers.hint.registration_wizard.maths_eligibility_teaching_for_mastery_html_one") %>
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-4">
+      <%= t("helpers.hint.registration_wizard.maths_eligibility_teaching_for_mastery_two_html") %>
+    </p>
+  </div>
+</div>
+
+<%=
+  render(
+    'registration_wizard/shared/questions_page',
+    form: @form,
+    wizard: @wizard,
+  )
+%>

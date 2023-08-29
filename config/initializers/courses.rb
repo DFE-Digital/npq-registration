@@ -44,6 +44,13 @@ module Courses
       display: true,
     },
     {
+      position: 5,
+      name: "Leading primary mathematics (NPQLPM)",
+      ecf_id: nil,
+      identifier: "npq-leading-primary-mathematics",
+      display: true,
+    },
+    {
       position: 6,
       name: "NPQ for Headship (NPQH)",
       ecf_id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768",

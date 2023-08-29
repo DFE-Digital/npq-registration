@@ -66,12 +66,13 @@ RSpec.feature "Happy journeys", type: :feature do
 
     eyl_course = ["Early years leadership"]
     ehco_course = ["Early headship coaching offer"]
+    npqlpm_course = ["Leading primary mathematics"]
 
     ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
 
     ineligible_courses = ineligible_courses_list.map { |name|
       I18n.t("course.name.#{name}")
-    } - eyl_course - ehco_course
+    } - eyl_course - ehco_course - npqlpm_course
 
     ineligible_courses.each do |course|
       expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
@@ -79,8 +80,14 @@ RSpec.feature "Happy journeys", type: :feature do
         page.choose(course, visible: :all)
       end
 
-      expect(page).to have_text("you are eligible for scholarship funding for")
-      expect(page).to have_text("You can go back and select the Early years leadership")
+      if Flipper.enabled?(:maths_npq)
+        expect(page).to have_text("you are eligible for scholarship funding for") unless course == "Leading primary mathematics"
+        expect(page).to have_text("You can go back and select the Early years leadership") unless course == "Leading primary mathematics"
+        expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
+      else
+        expect(page).to have_text("you are eligible for scholarship funding for")
+        expect(page).to have_text("You can go back and select the Early years leadership")
+      end
       page.click_link("Back")
     end
 

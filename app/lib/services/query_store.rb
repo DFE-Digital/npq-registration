@@ -121,4 +121,8 @@ class Services::QueryStore
   def formatted_date_of_birth
     date_of_birth&.to_s(:govuk)
   end
+
+  def maths_understanding?
+    store["maths_understanding"]
+  end
 end

@@ -19,7 +19,15 @@ module Forms
     end
 
     def previous_step
-      :choose_your_npq
+      if course.npqlpm?
+        if wizard.query_store.maths_understanding?
+          :maths_eligibility_teaching_for_mastery
+        else
+          :maths_understanding_of_approach
+        end
+      else
+        :choose_your_npq
+      end
     end
 
     def ineligible_template
@@ -60,6 +68,7 @@ module Forms
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
+        lead_mentor_for_accredited_itt_provider: wizard.query_store.lead_mentor_for_accredited_itt_provider?,
       ).funding_eligiblity_status_code
     end
 
