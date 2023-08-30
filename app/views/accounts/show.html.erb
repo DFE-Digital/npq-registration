@@ -20,9 +20,4 @@
   <% end %>
 <% end %>
 
-<h1 class="govuk-heading-l">Register for an NPQ</h1>
-
-<p class="govuk-body">Use this service to submit a new registration.</p>
-
-
-<%= govuk_start_button(text: "Register for an NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>
+<%= render partial: 'registration_wizard/shared/register_for_an_npq' %>

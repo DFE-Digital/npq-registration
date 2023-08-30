@@ -109,13 +109,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Headship NPQ with Teach First")
-      expect(page).to have_text("The Early headship coaching offer is a package of structured face-to-face support for new headteachers.")
-    end
-
-    expect(User.count).to be(1)
-    expect(User.last.applications.count).to be(1)
+    expect_applicant_reached_end_of_journey
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
@@ -189,6 +183,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

@@ -112,16 +112,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Senior leadership NPQ with Teach First")
-    end
-
-    expect(User.count).to be(1)
-    expect(Application.count).to be(1)
-
-    visit "/"
-    visit "/registration/confirmation"
-    expect(page).to have_current_path("/")
+    expect_applicant_reached_end_of_journey
 
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
@@ -186,6 +177,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

@@ -87,18 +87,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Leading teacher development NPQ with Church of England")
-    end
-
-    page.click_link("Continue")
-
-    expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
-      expect(page).to have_text("Registration successfully submitted")
-      expect(page).to have_text("Leading teacher development NPQ registration details")
-    end
-
-    expect(User.count).to be(1)
+    expect_applicant_reached_end_of_journey
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -195,6 +184,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
+        "submitted" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "work_setting" => "other",

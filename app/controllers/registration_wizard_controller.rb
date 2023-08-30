@@ -1,8 +1,9 @@
 class RegistrationWizardController < ApplicationController
-  def show
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, request:, current_user:)
+  before_action :set_wizard
+  before_action :set_form
+  before_action :check_end_of_journey, only: %i[update]
 
-    @form = @wizard.form
+  def show
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     @wizard.before_render
@@ -16,8 +17,6 @@ class RegistrationWizardController < ApplicationController
   end
 
   def update
-    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:, current_user:)
-    @form = @wizard.form
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
     respond_to do |format|
@@ -52,6 +51,21 @@ class RegistrationWizardController < ApplicationController
   end
 
 private
+
+  def set_wizard
+    @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:, current_user:)
+  end
+
+  def set_form
+    @form = @wizard.form
+  end
+
+  def check_end_of_journey
+    if @form.valid? && @form.last_step?
+      @wizard.save!
+      redirect_to accounts_user_registration_path(current_user.applications.last, success: true)
+    end
+  end
 
   def store
     session["registration_store"] ||= {}

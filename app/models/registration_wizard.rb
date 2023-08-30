@@ -51,7 +51,6 @@ class RegistrationWizard
     funding_your_npq
     share_provider
     check_answers
-    confirmation
   ].freeze
 
   attr_reader :current_step, :params, :store, :request, :current_user

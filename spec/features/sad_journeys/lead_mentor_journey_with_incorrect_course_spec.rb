@@ -89,11 +89,7 @@ RSpec.feature "Sad journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Senior leadership NPQ with Church of England")
-    end
-
-    expect(User.count).to be(1)
+    expect_applicant_reached_end_of_journey
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
@@ -188,6 +184,7 @@ RSpec.feature "Sad journeys", type: :feature do
         "funding_eligiblity_status_code" => "not_lead_mentor_course",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

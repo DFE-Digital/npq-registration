@@ -119,10 +119,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(User.count).to be(1)
     expect(Application.count).to be(1)
 
-    visit "/"
-    visit "/registration/confirmation"
-    expect(page).to have_current_path("/")
-
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
       "admin" => false,
@@ -186,6 +182,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => "open",
         "lead_provider_id" => "9",
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

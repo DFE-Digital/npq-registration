@@ -126,9 +126,7 @@ RSpec.feature "Happy journeys", type: :feature do
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Early years leadership NPQ with Teach First")
-    end
+    expect_applicant_reached_end_of_journey
 
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
@@ -183,7 +181,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
       "raw_application_data" => {
-        "targeted_delivery_funding_eligibility" => false,
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "tsf_primary_eligibility" => false,
@@ -195,8 +192,10 @@ RSpec.feature "Happy journeys", type: :feature do
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
         "institution_name" => "",
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "kind_of_nursery" => "private_nursery",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "submitted" => true,
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_childcare" => "yes",
