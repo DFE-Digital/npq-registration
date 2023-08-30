@@ -27,14 +27,19 @@ namespace :get_identity_id do
       rows << row
       attrs = row.to_h
 
-      user_id = attrs.fetch(:user_id)
-      user = User.find_by(id: user_id)
+      application_id = attrs.fetch(:user_id)
+      application = Application.find_by(id: application_id)
+      Rails.logger.error("Application #{application_id} not found") if application.nil?
 
-      Rails.logger.error("User #{user_id} not found") if user.nil?
-      Rails.logger.error("User #{user_id} has no ECF ID") if user.ecf_id.nil?
-      Rails.logger.error("User #{user_id} with existing GIA? -> (#{user.uid != attrs.fetch(:id)})") if user.uid.present?
+      if application
+        user = application.user
 
-      Rails.logger.info(".")
+        Rails.logger.error("User not found") if user.nil?
+        Rails.logger.error("User #{user.id} has no ECF ID") if user && user.ecf_id.nil?
+        Rails.logger.error("User #{user.id} with existing GIA? same -> (#{user.uid != attrs.fetch(:user_id)})") if user && user.uid.present?
+
+        Rails.logger.info(".")
+      end
     end
     Rails.logger.info("Check finished: #{rows.count} rows checked")
   end

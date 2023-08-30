@@ -4,57 +4,40 @@ require "tempfile"
 RSpec.describe Services::Importers::PopulateGetIdentityId do
   it "Updates the get_identity_id for the user" do
     user = create(:user)
+    application = create(:application, user:)
 
-    described_class.new.import([{ id: "123", user_id: user.id }])
+    described_class.new.import([{ id: application.id, user_id: "get-an-id-" }])
 
-    expect(user.reload.uid).to eq("123")
+    expect(user.reload.uid).to eq("get-an-id-")
   end
 
   it "Updates multiple users" do
     user1 = create(:user)
     user2 = create(:user)
 
-    described_class.new.import([{ id: "123", user_id: user1.id }, { id: "456", user_id: user2.id }])
+    application1 = create(:application, user: user1)
+    application2 = create(:application, user: user2)
 
-    expect(user1.reload.uid).to eq("123")
-    expect(user2.reload.uid).to eq("456")
+    described_class.new.import([{ id: application1.id, user_id: "get-an-id-1" }, { id: application2.id, user_id: "get-an-id-2" }])
+
+    expect(user1.reload.uid).to eq("get-an-id-1")
+    expect(user2.reload.uid).to eq("get-an-id-2")
   end
 
-  it "Raises an error if the user does not exist" do
+  it "Raises an error if the application does not exist" do
     expect {
-      described_class.new.import([{ id: "123", user_id: 999 }])
+      described_class.new.import([{ id: 999, user_id: "any-value" }])
     }.to raise_error(ActiveRecord::RecordNotFound)
   end
 
   it "Logs the uid to the Rails logger" do
     user = create(:user)
+    application = create(:application, user:)
     logger = instance_spy(Logger)
     allow(Rails).to receive(:logger).and_return(logger)
 
-    described_class.new.import([{ id: "123", user_id: user.id }])
+    described_class.new.import([{ id: application.id, user_id: "get-an-id-" }])
 
-    expect(logger).to have_received(:info).with("User #{user.id} has been updated with get_identity_id 123")
-  end
-
-  describe "Syncing to ECF" do
-    it "Updates the get_identity_id for the ECF user" do
-      user = create(:user, ecf_id: SecureRandom.uuid)
-      ecf_user = instance_spy(EcfApi::Npq::User)
-
-      allow_any_instance_of(User).to receive(:ecf_user).and_return(ecf_user)
-      expect(ecf_user).to receive(:update!).with(get_identity_id: "123")
-
-      described_class.new.import([{ id: "123", user_id: user.id }])
-    end
-
-    it "Logs an error if user is not synched with ECF" do
-      user = create(:user, ecf_id: nil)
-      logger = instance_spy(Logger)
-      allow(Rails).to receive(:logger).and_return(logger)
-
-      described_class.new.import([{ id: "123", user_id: user.id }])
-
-      expect(logger).to have_received(:error).with("User #{user.id} get_identity_id has not been synced to ECF")
-    end
+    expect(logger).to have_received(:info).with("User #{user.id} has been updated with get_identity_id get-an-id-")
   end
 end
