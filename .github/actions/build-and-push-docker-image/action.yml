@@ -54,5 +54,5 @@ runs:
         push: true
         tags: |
           ${{ inputs.account }}:${{ inputs.tag }}
-          ghcr.io/dfe-digital/npq-registration:${{ github.event.pull_request.head.sha }}
+          ghcr.io/dfe-digital/npq-registration:${{ github.event.pull_request.head.sha || github.sha }}
         provenance: false
