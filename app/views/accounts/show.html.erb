@@ -5,19 +5,13 @@
 <% else %>
   <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
 <% end %>
+<div class="govuk-inset-text">
+  <%= govuk_link_to("Visit your DfE Identity account", "#{ENV.fetch('TRA_OIDC_DOMAIN')}account?client_id=#{ENV.fetch('TRA_OIDC_CLIENT_ID')}&redirect_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}&sign_out_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}") %> to check or change your personal details.
+</div>
+<% courses = current_user.applications.map { |app| app.course }.uniq %>
 
-<% if application_count == 1 %>
-  <% application = current_user.applications.last %>
-
-  <%= render "work_details", application: application %>
-  <%= render "course_details", application: application %>
-
-<% else %>
-  <% courses = current_user.applications.map { |app| app.course }.uniq %>
-
-  <% courses.each do |course| %>
-    <%= render "application_table", course: course %>
-  <% end %>
+<% courses.each do |course| %>
+  <%= render "application_table", course: course %>
 <% end %>
 
 <%= render partial: 'registration_wizard/shared/register_for_an_npq' %>

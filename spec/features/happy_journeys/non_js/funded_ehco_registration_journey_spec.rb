@@ -127,7 +127,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
       expect(page).to have_text("Teach First")
-      expect(page).to have_text("Early headship coaching offer")
+      expect(page).to have_text("Your NPQ registration")
     end
 
     visit "/registration/check-answers"
