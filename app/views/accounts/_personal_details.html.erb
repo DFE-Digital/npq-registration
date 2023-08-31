@@ -1,0 +1,14 @@
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Personal details</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          <%= govuk_link_to("Visit your DfE Identity account", "#{ENV.fetch('TRA_OIDC_DOMAIN')}account?client_id=#{ENV.fetch('TRA_OIDC_CLIENT_ID')}&redirect_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}&sign_out_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}") %> to check or change your personal details.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -1,15 +1,26 @@
 <% current_user.applications.where(course: course).each do |application| %>
-  <%= govuk_summary_card(title: "#{title_embedded_course_name(course)}") do |card| %>
-    <% card.with_action { govuk_link_to("More details", accounts_user_registration_path(application)) } %>
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Registration submitted
-        </dt>
-        <dd class="govuk-summary-list__value">
-          <%= application.created_at.to_date.to_s(:govuk_short) %>
-        </dd>
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+     <div>
+        <h2 class="govuk-summary-card__title"><%= application.course.name %></h2>
+        <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+          <%= application.lead_provider.name %>
+        </p>
       </div>
+        <div class="govuk-summary-card__action">
+          <%= govuk_link_to("View details", accounts_user_registration_path(application)) %>
+        </div>
+    </div>
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Registration submitted
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <%= application.created_at.to_date.to_s(:govuk_short) %>
+          </dd>
+        </div>
 
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
