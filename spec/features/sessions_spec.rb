@@ -1,9 +1,17 @@
 require "rails_helper"
 
 RSpec.feature "Sessions", type: :feature do
+  let(:stubbed_url) { "https://example.com" }
+  let(:stubbed_client_id) { "register-for-npq" }
+  let(:stubbed_redirect_uri) { "https://example.com/" }
+
   include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "signing in when user does not exist" do
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
+
     visit "/sign-in"
     expect(page).to be_axe_clean
     expect(page).to have_content("Sign in")
@@ -16,6 +24,9 @@ RSpec.feature "Sessions", type: :feature do
   end
 
   scenario "signing in when user exists" do
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     User.create!(email: "user@example.com")
 
     visit "/sign-in"

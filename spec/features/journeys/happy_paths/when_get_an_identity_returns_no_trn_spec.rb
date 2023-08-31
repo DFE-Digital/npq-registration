@@ -4,6 +4,12 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
+  let(:stubbed_url) { "https://example.com" }
+  # This controls what is returned from the Get An Identity API
+  let(:user_trn) { "" }
+  let(:manually_entered_trn) { "3651763" }
+  let(:stubbed_client_id) { "register-for-npq" }
+  let(:stubbed_redirect_uri) { "https://example.com/" }
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -11,10 +17,6 @@ RSpec.feature "Happy journeys", type: :feature do
     let(:api_call_trn) { manually_entered_trn }
   end
   include_context "Stub Get An Identity Omniauth Responses"
-
-  # This controls what is returned from the Get An Identity API
-  let(:user_trn) { "" }
-  let(:manually_entered_trn) { "3651763" }
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey when get an identity returns no TRN (with JS)") { run_scenario(js: true) }
@@ -26,6 +28,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
   def run_scenario(js:)
     stub_participant_validation_request(trn: manually_entered_trn, response: { trn: manually_entered_trn })
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

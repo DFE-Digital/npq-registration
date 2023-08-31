@@ -3,6 +3,9 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
+  let(:stubbed_url) { "https://example.com" }
+  let(:stubbed_client_id) { "register-for-npq" }
+  let(:stubbed_redirect_uri) { "https://example.com/" }
 
   include_context "Stub previously funding check for all courses" do
     let(:api_call_trn) { user_trn }
@@ -19,6 +22,9 @@ RSpec.feature "Happy journeys", type: :feature do
 
   scenario "other funded EHCO registration journey" do
     stub_participant_validation_request
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
+    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
