@@ -1,12 +1,14 @@
 require "rails_helper"
 
 RSpec.feature "admin", type: :feature do
+  include Helpers::JourneyHelper
   include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin, :with_ecf_id) }
-  let(:stubbed_url) { "https://example.com" }
-  let(:stubbed_client_id) { "register-for-npq" }
-  let(:stubbed_redirect_uri) { "https://example.com/" }
+
+  before do
+    stub_env_variables
+  end
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -31,9 +33,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when not logged in, admin interface is inaccessible" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     [
       admin_path,
       admin_applications_path,
@@ -48,9 +47,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the admin homepage" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     visit "/admin"
 
     sign_in_as_admin
@@ -78,9 +74,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a super admin, it allows access to the admin homepage with super admin permissions" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     visit "/admin"
 
     admin.update!(super_admin: true)
@@ -95,9 +88,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a super admin, it allows management of admins" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     visit "/admin"
 
     admin.update!(super_admin: true)
@@ -120,9 +110,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     create_list :application, 4
 
     visit "/admin"
@@ -140,9 +127,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the applications interfaces" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     create_list(:application, 4)
 
     visit "/admin"
@@ -226,9 +210,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the users interface" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     users = create_list(:user, 4)
 
     visit "/admin"
@@ -312,9 +293,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced applications interface" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     visit "/admin"
 
     sign_in_as_admin
@@ -372,9 +350,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced users interface" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     visit "/admin"
 
     sign_in_as_admin
@@ -443,9 +418,6 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the schools interface" do
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
-    stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
     create_list :application, 4
 
     visit "/admin"

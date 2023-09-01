@@ -29,8 +29,8 @@ private
       lead_mentor: application.lead_mentor.present?,
       inside_catchment: application.teacher_catchment == "england",
       new_headteacher: new_headteacher?(application),
-      trn: current_user.trn,
-      get_an_identity_id: current_user.get_an_identity_id,
+      trn: application&.user&.trn,
+      get_an_identity_id: application&.user&.get_an_identity_id,
     )
   end
 
