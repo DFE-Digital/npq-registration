@@ -6,7 +6,7 @@
   <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
 <% end %>
 <div class="govuk-inset-text">
-  <%= govuk_link_to("Visit your DfE Identity account", "#{ENV.fetch('TRA_OIDC_DOMAIN')}account?client_id=#{ENV.fetch('TRA_OIDC_CLIENT_ID')}&redirect_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}&sign_out_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}") %> to check or change your personal details.
+  <%= govuk_link_to("Visit your DfE Identity account", "#{tra_oidc_domain}account?client_id=#{tra_oidc_client_id}&redirect_uri=#{tra_oidc_redirect_uri}&sign_out_uri=#{tra_oidc_redirect_uri}") %> to check or change your personal details.
 </div>
 <% courses = current_user.applications.map { |app| app.course }.uniq %>
 

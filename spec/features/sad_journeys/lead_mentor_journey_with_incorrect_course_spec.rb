@@ -12,7 +12,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
   scenario "registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course" do
     stub_participant_validation_request
-    stub_env_variables
+    stub_env_variables_for_gai_link
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

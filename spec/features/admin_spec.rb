@@ -7,7 +7,7 @@ RSpec.feature "admin", type: :feature do
   let(:admin) { create(:admin, :with_ecf_id) }
 
   before do
-    stub_env_variables
+    stub_env_variables_for_gai_link
   end
 
   around do |example|

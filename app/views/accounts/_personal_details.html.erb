@@ -6,7 +6,7 @@
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dd class="govuk-summary-list__value">
-          <%= govuk_link_to("Visit your DfE Identity account", "#{ENV.fetch('TRA_OIDC_DOMAIN')}account?client_id=#{ENV.fetch('TRA_OIDC_CLIENT_ID')}&redirect_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}&sign_out_uri=#{ENV.fetch('TRA_OIDC_REDIRECT_URI')}") %> to check or change your personal details.
+          <%= govuk_link_to("Visit your DfE Identity account", "#{tra_oidc_domain}account?client_id=#{tra_oidc_client_id}&redirect_uri=#{tra_oidc_redirect_uri}&sign_out_uri=#{tra_oidc_redirect_uri}") %> to check or change your personal details.
         </dd>
       </div>
     </dl>
