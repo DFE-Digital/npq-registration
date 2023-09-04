@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   scenario "registration journey that is blocked from targeted delivery funding because they were previously funded" do
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
-    stub_env_variables
+    stub_env_variables_for_gai_link
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

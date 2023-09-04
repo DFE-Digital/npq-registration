@@ -26,7 +26,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   def run_scenario(js:)
     stub_participant_validation_request(trn: manually_entered_trn, response: { trn: manually_entered_trn })
-    stub_env_variables
+    stub_env_variables_for_gai_link
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
