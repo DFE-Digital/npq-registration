@@ -1,6 +1,6 @@
 TERRAFILE_VERSION=0.8
 ARM_TEMPLATE_TAG=1.1.6
-RG_TAGS={"Product" : "Teacher services cloud"}
+RG_TAGS={"Product" : "Register for National Professional Qualifications (NPQ)"}
 REGION=UK South
 SERVICE_NAME=npq-registration
 SERVICE_SHORT=cpdnpq
