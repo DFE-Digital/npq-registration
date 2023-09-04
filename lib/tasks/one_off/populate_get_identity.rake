@@ -35,9 +35,7 @@ namespace :get_identity_id do
         user = application.user
 
         Rails.logger.error("User not found") if user.nil?
-        Rails.logger.error("User #{user.id} with existing GIA? same -> (#{user.uid != attrs.fetch(:user_id)})") if user && user.uid.present?
-
-        Rails.logger.info(".")
+        Rails.logger.error("User #{user.id} with existing GIA? different -> (#{user.uid != attrs.fetch(:user_id)})") if user && user.uid.present?
       end
     end
     Rails.logger.info("Check finished: #{rows.count} rows checked")

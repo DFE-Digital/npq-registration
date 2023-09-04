@@ -9,6 +9,7 @@ RSpec.describe Services::Importers::PopulateGetIdentityId do
     described_class.new.import([{ id: "the-id-in-ecf", user_id: "get-an-id-" }])
 
     expect(user.reload.uid).to eq("get-an-id-")
+    expect(user.reload.provider).to eq("tra_openid_connect")
   end
 
   it "Updates multiple users" do
