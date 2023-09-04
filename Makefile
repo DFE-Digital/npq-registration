@@ -52,11 +52,11 @@ arm-deployment: set-azure-account
 			"enableKVPurgeProtection=${KV_PURGE_PROTECTION}" \
 			${WHAT_IF}
 
-deploy-domain-arm-resources: domains-composed-variables arm-deployment
+deploy-domain-arm-resources: domains domains-composed-variables arm-deployment
 
-validate-domain-arm-resources: set-what-if domain-composed-variables arm-deployment
+validate-domain-arm-resources: set-what-if domains domains-composed-variables arm-deployment
 
-domains-infra-init: bin/terrafile domains-composed-variables domains set-azure-account
+domains-infra-init: bin/terrafile domains domains-composed-variables domains set-azure-account
 	./bin/terrafile -p terraform/domains/infrastructure/vendor/modules -f terraform/domains/infrastructure/config/zones_Terrafile
 
 	terraform -chdir=terraform/domains/infrastructure init -reconfigure -upgrade \
