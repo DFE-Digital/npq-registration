@@ -25,7 +25,7 @@
           Provider application
         </dt>
         <dd class="govuk-summary-list__value">
-            <% if application.lead_provider_approval_status.blank? || application.lead_provider_approval_status.capitalize == "Pending" %>
+            <% if application.lead_provider_approval_status.blank? || application.lead_provider_approval_status&.capitalize == "Pending" %>
               <strong class="govuk-tag govuk-tag--yellow">APPLY WITH PROVIDER</strong>
               <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.pending_status")  %></p>
             <% elsif application.lead_provider_approval_status.capitalize == "Accepted" %>
@@ -36,7 +36,7 @@
         </dd>
       </div>
 
-      <% if application.participant_outcome_state.present? && application.lead_provider_approval_status.capitalize == "Accepted" %>
+      <% if application.participant_outcome_state.present? && application.lead_provider_approval_status&.capitalize == "Accepted" %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Course status
