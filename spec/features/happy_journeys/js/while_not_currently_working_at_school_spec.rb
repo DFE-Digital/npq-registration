@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys",
   include_context "Stub Get An Identity Omniauth Responses"
   scenario "registration journey while not currently working at school" do
     stub_participant_validation_request
-    stub_env_variables_for_gai_link
+    stub_env_variables_for_gai
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

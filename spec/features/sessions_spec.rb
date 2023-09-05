@@ -6,7 +6,7 @@ RSpec.feature "Sessions", type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "signing in when user does not exist" do
-    stub_env_variables_for_gai_link
+    stub_env_variables_for_gai
 
     visit "/sign-in"
     expect(page).to be_axe_clean
@@ -20,7 +20,7 @@ RSpec.feature "Sessions", type: :feature do
   end
 
   scenario "signing in when user exists" do
-    stub_env_variables_for_gai_link
+    stub_env_variables_for_gai
     User.create!(email: "user@example.com")
 
     visit "/sign-in"
