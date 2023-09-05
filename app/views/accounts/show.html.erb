@@ -8,10 +8,10 @@
 <div class="govuk-inset-text">
   <%= govuk_link_to("Visit your DfE Identity account", "#{tra_oidc_domain}account?client_id=#{tra_oidc_client_id}&redirect_uri=#{tra_oidc_redirect_uri}&sign_out_uri=#{tra_oidc_redirect_uri}") %> to check or change your personal details.
 </div>
-<% courses = current_user.applications.map { |app| app.course }.uniq %>
+<% applications = current_user.applications.order(created_at: :desc) %>
 
-<% courses.each do |course| %>
-  <%= render "application_table", course: course %>
+<% applications.each do |application| %>
+  <%= render "application_table", application: application %>
 <% end %>
 
 <%= render partial: 'registration_wizard/shared/register_for_an_npq' %>
