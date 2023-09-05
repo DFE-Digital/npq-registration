@@ -35,7 +35,7 @@ module Helpers
         .to_return(status: 200, body: participant_validator_response(**response), headers: {})
     end
 
-    def stub_env_variables_for_gai_link(stubbed_url: "https://example.com", stubbed_client_id: "register-for-npq", stubbed_redirect_uri: "https://example.com/")
+    def stub_env_variables_for_gai(stubbed_url: "https://example.com", stubbed_client_id: "register-for-npq", stubbed_redirect_uri: "https://example.com/")
       stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_DOMAIN" => stubbed_url))
       stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_CLIENT_ID" => stubbed_client_id))
       stub_const("ENV", ENV.to_hash.merge("TRA_OIDC_REDIRECT_URI" => stubbed_redirect_uri))
