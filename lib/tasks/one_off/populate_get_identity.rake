@@ -35,7 +35,14 @@ namespace :get_identity_id do
         user = application.user
 
         Rails.logger.error("User not found") if user.nil?
-        Rails.logger.error("User #{user.id} with existing GIA? different -> (#{user.uid != attrs.fetch(:user_id)})") if user && user.uid.present?
+
+        get_identity_id = attrs.fetch(:user_id)
+        if user && user.uid.present? && user.uid != get_identity_id
+          Rails.logger.error("User #{user.id} #{user.email} with existing GIA? different -> (#{user.uid != get_identity_id})")
+        end
+        if user && user.uid.blank? && User.find_by(uid: get_identity_id).present?
+          Rails.logger.error("User UID #{get_identity_id} linked to a different user")
+        end
       end
     end
     Rails.logger.info("Check finished: #{rows.count} rows checked")
