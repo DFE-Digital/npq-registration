@@ -38,10 +38,10 @@ namespace :get_identity_id do
 
         get_identity_id = attrs.fetch(:user_id)
         if user && user.uid.present? && user.uid != get_identity_id
-          Rails.logger.error("User #{user.id} #{user.email} with existing GIA? different -> (#{user.uid != get_identity_id})")
+          Rails.logger.error("[UID mismatch] User #{user.id} with existing GIA? different -> (#{user.uid != get_identity_id})")
         end
         if user && user.uid.blank? && User.find_by(uid: get_identity_id).present?
-          Rails.logger.error("User UID #{get_identity_id} linked to a different user")
+          Rails.logger.error("[Duplicated] User UID #{get_identity_id} linked to a different user")
         end
       end
     end
