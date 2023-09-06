@@ -19,4 +19,16 @@ module ApplicationHelper
   def show_tracking_pixels?
     cookies["consented-to-cookies"] == "accept"
   end
+
+  def accepted?(application)
+    application.lead_provider_approval_status&.capitalize == "Accepted"
+  end
+
+  def pending?(application)
+    application.lead_provider_approval_status&.capitalize == "Pending"
+  end
+
+  def rejected?(application)
+    application.lead_provider_approval_status&.capitalize == "Rejected"
+  end
 end
