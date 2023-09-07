@@ -27,7 +27,7 @@ applications:
     GOVUK_NOTIFY_API_KEY: ((GOVUK_NOTIFY_API_KEY))
     GOOGLE_TAG_MANAGER_ID: "GTM-N58Z5PG"
     GOOGLE_ANALYTICS_ID: "G-G3823VRN6N"
-    ECF_APP_BASE_URL: "https://ecf-sandbox.london.cloudapps.digital"
+    ECF_APP_BASE_URL: "https://cpd-ecf-sandbox-web.teacherservices.cloud"
     ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
     SENTRY_DSN: ((SENTRY_DSN))
     TRA_OIDC_DOMAIN: ((TRA_OIDC_DOMAIN))
