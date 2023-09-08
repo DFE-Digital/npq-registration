@@ -7,7 +7,7 @@
     <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
   <% end %>
   <div class="govuk-inset-text">
-    <%= govuk_link_to("Visit your DfE Identity account", link_to_identity_account) %> to check or change your personal details.
+    <%= govuk_link_to("Visit your DfE Identity account", link_to_identity_account(request.original_url)) %> to check or change your personal details.
   </div>
 <% end %>
 <% applications = current_user.applications.order(created_at: :desc) %>
