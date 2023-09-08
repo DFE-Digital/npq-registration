@@ -45,6 +45,15 @@ class LeadProvider < ApplicationRecord
     "UCL Institute of Education",
   ].freeze
 
+  LPM_PROVIDERS = [
+    "Ambition Institute",
+    "Church of England",
+    "Education Development Trust",
+    "LLSE",
+    "Teach First",
+    "UCL Institute of Education",
+  ].freeze
+
   # TODO: Move all of this mapping into the database
   #       Hardcoding this has been done for expediency but
   #       longterm having this handled in the DB so none of
@@ -62,6 +71,8 @@ class LeadProvider < ApplicationRecord
     "npq-leading-literacy" => EYL_LL_PROVIDERS,
 
     "npq-executive-leadership" => EL_PROVIDERS,
+
+    "npq-leading-primary-mathematics" => LPM_PROVIDERS,
   }.freeze
 
   scope :alphabetical, -> { order(name: :asc) }

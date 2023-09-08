@@ -56,7 +56,10 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       npq-early-headship-coaching-offer
       npq-additional-support-offer
     ].freeze
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
+    npqlpm_codes = %w[
+      npq-leading-primary-mathematics
+    ]
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do
@@ -296,7 +299,10 @@ RSpec.describe Forms::ChooseYourProvider, type: :model do
       npq-early-headship-coaching-offer
       npq-additional-support-offer
     ].freeze
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes
+    npqlpm_codes = %w[
+      npq-leading-primary-mathematics
+    ]
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do
