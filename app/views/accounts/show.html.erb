@@ -1,13 +1,15 @@
 <% application_count = current_user.applications.count %>
 
-<% if application_count == 1 %>
-  <h2 class="govuk-heading-xl"><%= title ||= t(".title") %></h2>
-<% else %>
-  <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
+<% if application_count > 0%>
+  <% if application_count == 1 %>
+    <h2 class="govuk-heading-xl"><%= title ||= t(".title") %></h2>
+  <% else %>
+    <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
+  <% end %>
+  <div class="govuk-inset-text">
+    <%= govuk_link_to("Visit your DfE Identity account", link_to_identity_account) %> to check or change your personal details.
+  </div>
 <% end %>
-<div class="govuk-inset-text">
-  <%= govuk_link_to("Visit your DfE Identity account", "#{tra_oidc_domain}account?client_id=#{tra_oidc_client_id}&redirect_uri=#{tra_oidc_redirect_uri}&sign_out_uri=#{tra_oidc_redirect_uri}") %> to check or change your personal details.
-</div>
 <% applications = current_user.applications.order(created_at: :desc) %>
 
 <% applications.each do |application| %>
