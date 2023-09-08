@@ -6,7 +6,7 @@
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dd class="govuk-summary-list__value">
-          <%= govuk_link_to("Visit your DfE Identity account", link_to_identity_account) %> to check or change your personal details.
+          <%= govuk_link_to("Visit your DfE Identity account", link_to_identity_account(request.original_url)) %> to check or change your personal details.
         </dd>
       </div>
     </dl>
