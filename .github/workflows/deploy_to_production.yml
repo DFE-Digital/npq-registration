@@ -20,8 +20,8 @@ jobs:
         run: |
           wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
           echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
-          sudo apt-get update
-          sudo apt-get install cf7-cli
+          sudo apt-get --allow-insecure-repositories update
+          sudo apt-get --allow-unauthenticated install cf7-cli
 
       - name: Build and push Docker image
         id: docker_build
