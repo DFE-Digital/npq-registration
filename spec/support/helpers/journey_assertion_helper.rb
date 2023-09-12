@@ -34,7 +34,7 @@ module Helpers
     def expect_applicant_reached_end_of_journey
       expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
         expect(page).to have_text("Registration successfully submitted")
-        expect(page).to have_link("Register for an NPQ", href: /\/registration\/teacher_reference_number/)
+        expect(page).to have_link("Register for an NPQ", href: /\/registration\/provider_check/)
       end
 
       expect(User.count).to be(1)
