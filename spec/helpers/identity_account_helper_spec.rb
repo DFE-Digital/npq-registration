@@ -13,5 +13,9 @@ RSpec.describe IdentityAccountHelper, type: :helper do
     it "is built with the TRA domain" do
       expect(link).to match(ENV["TRA_OIDC_DOMAIN"])
     end
+
+    it "includes the client_id query parameter" do
+      expect(link).to match("client_id=#{ENV["TRA_OIDC_CLIENT_ID"]}")
+    end
   end
 end
