@@ -6,16 +6,16 @@ RSpec.describe IdentityAccountHelper, type: :helper do
   before { stub_env_variables_for_gai }
 
   describe "#link_to_identity_account" do
-    let(:redirect_uri) { "https://redirect.uri?param=value" }
-
     subject(:link) { link_to_identity_account(redirect_uri) }
 
+    let(:redirect_uri) { "https://redirect.uri?param=value" }
+
     it "is built with the TRA domain" do
-      expect(link).to match(ENV["TRA_OIDC_DOMAIN"])
+      expect(link).to match("https://tra-domain.com")
     end
 
     it "includes the client_id query parameter" do
-      expect(link).to match("client_id=#{ENV["TRA_OIDC_CLIENT_ID"]}")
+      expect(link).to match("client_id=register-for-npq")
     end
 
     it "includes the URL encoded redirect_id query parameter" do
