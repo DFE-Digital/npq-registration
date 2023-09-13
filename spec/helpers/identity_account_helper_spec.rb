@@ -6,7 +6,7 @@ RSpec.describe IdentityAccountHelper, type: :helper do
   before { stub_env_variables_for_gai }
 
   describe "#link_to_identity_account" do
-    let(:redirect_uri) { "https://redirect.uri" }
+    let(:redirect_uri) { "https://redirect.uri?param=value" }
 
     subject(:link) { link_to_identity_account(redirect_uri) }
 
@@ -16,6 +16,13 @@ RSpec.describe IdentityAccountHelper, type: :helper do
 
     it "includes the client_id query parameter" do
       expect(link).to match("client_id=#{ENV["TRA_OIDC_CLIENT_ID"]}")
+    end
+
+    it "includes the URL encoded redirect_id query parameter" do
+      # CGI::escape('https://redirect.uri?param=value')
+      url_encoded = "https%3A%2F%2Fredirect.uri%3Fparam%3Dvalue"
+
+      expect(link).to match("redirect_uri=#{url_encoded}")
     end
   end
 end
