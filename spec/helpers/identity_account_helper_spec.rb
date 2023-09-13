@@ -24,5 +24,7 @@ RSpec.describe IdentityAccountHelper, type: :helper do
 
       expect(link).to match("redirect_uri=#{url_encoded}")
     end
+
+    xit "includes the URL encoded for the sign_out parameter"
   end
 end
