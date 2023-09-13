@@ -8,6 +8,7 @@ module IdentityAccountHelper
   end
 
   def link_to_identity_account(redirect_uri)
-    "#{tra_oidc_domain}account?client_id=#{tra_oidc_client_id}&redirect_uri=#{redirect_uri}&sign_out_uri=#{redirect_uri}"
+    encoded_redirect_uri = CGI.escape(redirect_uri)
+    "#{tra_oidc_domain}/account?client_id=#{tra_oidc_client_id}&redirect_uri=#{encoded_redirect_uri}&sign_out_uri=#{redirect_uri}"
   end
 end
