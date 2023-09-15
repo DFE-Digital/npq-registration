@@ -6,7 +6,7 @@ RSpec.describe IdentityAccountHelper, type: :helper do
   before { stub_env_variables_for_gai }
 
   describe "#link_to_identity_account" do
-    subject(:link) { link_to_identity_account(redirect_uri) }
+    subject(:link) { helper.link_to_identity_account(redirect_uri) }
 
     let(:redirect_uri) { "https://redirect.uri?param=value" }
 
