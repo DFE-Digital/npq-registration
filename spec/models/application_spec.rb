@@ -17,15 +17,17 @@ RSpec.describe Application do
     end
 
     context "when the application has school attached" do
-      let(:name) { "SchoolURN" }
-      let(:application) { build(:application, school: nil, school_urn: name) }
+      let(:school) { create(:school) }
+      let(:name) { school.name }
+      let(:application) { build(:application, school:) }
 
       include_examples "employer_name"
     end
 
     context "when the application has private school urn" do
-      let(:name) { "Private Childcare Provider URN" }
-      let(:application) { build(:application, school: nil, school_urn: nil, private_childcare_provider_urn: name) }
+      let(:private_childcare_provider) { create(:private_childcare_provider) }
+      let(:name) { private_childcare_provider.provider_name }
+      let(:application) { build(:application, private_childcare_provider:) }
 
       include_examples "employer_name"
     end
