@@ -41,6 +41,10 @@ class Application < ApplicationRecord
   end
 
   def employer_name_to_display
-    employer_name || private_childcare_provider_urn || school_urn || ""
+    employer_name || private_childcare_provider&.provider_name || school&.name || ""
+  end
+
+  def employer_urn
+    private_childcare_provider_urn || school_urn || ""
   end
 end
