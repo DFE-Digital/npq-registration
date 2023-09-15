@@ -1,6 +1,7 @@
 module IdentityAccountHelper
-  def link_to_identity_account(redirect_uri)
-    IdentityAccountLink.new(redirect_uri).build
+  def link_to_identity_account(redirect_uri, text: "DfE Identity Account", classes: "")
+    govuk_link_to text,
+                  IdentityAccountLink.new(redirect_uri).build, class: classes
   end
 
   # rubocop:disable Rails/HelperInstanceVariable
