@@ -8,11 +8,23 @@ module IdentityAccountHelper
   end
 
   def link_to_identity_account(redirect_uri)
-    encoded_redirect_uri = CGI.escape(redirect_uri)
 
-    sign_out_uri = "http://localhost:3000/sign-out"
-    encoded_sign_out_uri = CGI.escape(sign_out_uri)
+    parsed_redirect_uri = URI.parse(redirect_uri)
+    base_url = if parsed_redirect_uri.scheme == 'https'
+                 URI::HTTPS.build(host: parsed_redirect_uri.host, port: parsed_redirect_uri.port).to_s
+               else
+                 URI::HTTP.build(host: parsed_redirect_uri.host, port: parsed_redirect_uri.port).to_s
+               end
 
-    "#{tra_oidc_domain}/account?client_id=#{tra_oidc_client_id}&redirect_uri=#{encoded_redirect_uri}&sign_out_uri=#{encoded_sign_out_uri}"
+    sign_out_uri = "#{base_url}/sign-out"
+
+    uri = URI.join(tra_oidc_domain, "/account")
+    uri.query = URI.encode_www_form({
+      'client_id' => tra_oidc_client_id,
+      'redirect_uri' => redirect_uri,
+      'sign_out_uri' => sign_out_uri
+    })
+
+    uri.to_s
   end
 end
