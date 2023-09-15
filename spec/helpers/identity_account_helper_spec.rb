@@ -26,8 +26,8 @@ RSpec.describe IdentityAccountHelper, type: :helper do
     end
 
     it "includes the URL encoded for the sign_out parameter" do
-      # CGI::escape('http://localhost:3000/sign-out')
-      url_encoded = "http%3A%2F%2Flocalhost%3A3000%2Fsign-out"
+      # CGI::escape('https://redirect.uri/sign-out')
+      url_encoded = "https%3A%2F%2Fredirect.uri%2Fsign-out"
 
       expect(link).to match("sign_out_uri=#{url_encoded}")
     end
