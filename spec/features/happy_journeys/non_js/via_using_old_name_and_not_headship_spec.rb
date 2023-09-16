@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
   include_context "Stub previously funding check for all courses" do
@@ -19,7 +18,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
   scenario "registration journey via using old name and not headship" do
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
-    stub_env_variables_for_gai
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

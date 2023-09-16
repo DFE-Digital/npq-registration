@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
@@ -21,7 +20,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
   def run_scenario(js:)
     stub_participant_validation_request
-    stub_env_variables_for_gai
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")

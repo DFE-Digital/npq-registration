@@ -1,13 +1,9 @@
 require "rails_helper"
 
 RSpec.feature "Sessions", type: :feature do
-  include Helpers::JourneyHelper
-
   include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "signing in when user does not exist" do
-    stub_env_variables_for_gai
-
     visit "/sign-in"
     expect(page).to be_axe_clean
     expect(page).to have_content("Sign in")
@@ -20,7 +16,6 @@ RSpec.feature "Sessions", type: :feature do
   end
 
   scenario "signing in when user exists" do
-    stub_env_variables_for_gai
     User.create!(email: "user@example.com")
 
     visit "/sign-in"

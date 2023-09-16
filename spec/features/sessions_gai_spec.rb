@@ -6,7 +6,6 @@ RSpec.feature "Sessions: integration with GAI", type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "GAI header links are only visible for logged-in users" do
-    stub_env_variables_for_gai
     User.create!(email: "user@example.com")
 
     visit "/sign-in"

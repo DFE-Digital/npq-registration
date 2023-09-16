@@ -98,6 +98,11 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.include Helpers::JourneyHelper, type: :feature
+  config.before(:each, type: :feature) do
+    stub_env_variables_for_gai
+  end
 end
 
 Shoulda::Matchers.configure do |config|

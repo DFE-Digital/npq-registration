@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Back links", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
   include_context "Stub Get An Identity Omniauth Responses"
