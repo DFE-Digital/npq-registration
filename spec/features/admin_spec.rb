@@ -1,14 +1,9 @@
 require "rails_helper"
 
 RSpec.feature "admin", type: :feature do
-  include Helpers::JourneyHelper
   include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin, :with_ecf_id) }
-
-  before do
-    stub_env_variables_for_gai
-  end
 
   around do |example|
     Capybara.current_driver = :rack_test
