@@ -1,8 +1,14 @@
+locals {
+  environment  = "${var.environment}${var.pull_request_number}"
+  service_name = "cpd-npq"
+  # domain       = var.environment == "review" ? "cpd-npq-${local.environment}-web.test.teacherservices.cloud" : var.domain
+}
+
 module "application_configuration" {
   source = "./vendor/modules/aks//aks/application_configuration"
 
   namespace              = var.namespace
-  environment            = var.environment
+  environment            = local.environment
   azure_resource_prefix  = var.azure_resource_prefix
   service_short          = var.service_short
   config_short           = var.config_short
@@ -26,7 +32,7 @@ module "web_application" {
   is_web = true
 
   namespace    = var.namespace
-  environment  = var.environment
+  environment  = local.environment
   service_name = var.service_name
 
   cluster_configuration_map  = module.cluster_data.configuration_map

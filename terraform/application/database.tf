@@ -2,7 +2,7 @@ module "postgres" {
   source = "./vendor/modules/aks//aks/postgres"
 
   namespace                   = var.namespace
-  environment                 = var.environment
+  environment                 = local.environment
   azure_resource_prefix       = var.azure_resource_prefix
   service_name                = var.service_name
   service_short               = var.service_short
