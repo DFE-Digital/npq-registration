@@ -45,3 +45,4 @@ terraform/domains/infrastructure/vendor
 terraform/domains/environment_domains/vendor
 terraform.tfstate*
 bin/terrafile
+*.hcl
