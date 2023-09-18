@@ -23,8 +23,11 @@ docker-compose-build:
 	docker-compose build --build-arg BUNDLE_FLAGS='--jobs=4 --no-binstubs --no-cache' --parallel
 
 .PHONY: review
-review: test-cluster
+review: test-cluster ## Specify review AKS environment
+	# PULL_REQUEST_NUMBER is set by the GitHub action
+	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review.sh)
+	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
 
 .PHONY: staging
 staging: test-cluster
@@ -65,12 +68,13 @@ set-azure-account:
 
 terraform-init: composed-variables bin/terrafile set-azure-account
 	$(if ${DOCKER_IMAGE_TAG}, , $(eval DOCKER_IMAGE_TAG=main))
+	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	./bin/terrafile -p terraform/application/vendor/modules -f terraform/application/config/$(CONFIG)_Terrafile
 	terraform -chdir=terraform/application init -upgrade -reconfigure \
 		-backend-config=resource_group_name=${RESOURCE_GROUP_NAME} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
-		-backend-config=key=${ENVIRONMENT}_kubernetes.tfstate
+		-backend-config=key=${KEY_PREFIX}.tfstate
 
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
