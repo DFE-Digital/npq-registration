@@ -8,7 +8,7 @@ RSpec.describe SessionsController do
 
     expect(controller).to receive(:sign_out_all_scopes)
 
-    root_path = "http://test.host/"
+    root_path = "https://test.host/"
     expected_redirect_url = "https://tra-domain.com:443/connect/signout?client_id=register-for-npq&post_logout_redirect_uri=#{CGI.escape(root_path)}"
 
     get :destroy

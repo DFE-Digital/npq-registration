@@ -23,11 +23,8 @@ private
   end
 
   def root_uri
-    URI::HTTP.build({
-      scheme: request.protocol.chomp("://"),
-      host: request.host,
-      port: request.port,
-      path: "/",
-    })
+    return "http://localhost:#{request.port}/" if request.host == "localhost"
+
+    URI::HTTPS.build(host: request.host, path: "/")
   end
 end
