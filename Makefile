@@ -22,9 +22,16 @@ build-local-image:
 docker-compose-build:
 	docker-compose build --build-arg BUNDLE_FLAGS='--jobs=4 --no-binstubs --no-cache' --parallel
 
-.PHONY: development
-development: test-cluster
-	$(eval include global_config/development.sh)
+.PHONY: review
+review: test-cluster
+	$(eval include global_config/review.sh)
+
+.PHONY: staging
+staging: test-cluster
+	$(eval include global_config/staging.sh)
+
+sandbox: production-cluster
+	$(eval include global_config/sandbox.sh)
 
 production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
