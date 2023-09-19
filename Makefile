@@ -27,7 +27,7 @@ review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review.sh)
-	$(eval export TF_VAR_app_suffix=-$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
 
 .PHONY: staging
 staging: test-cluster
