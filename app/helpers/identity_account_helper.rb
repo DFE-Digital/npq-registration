@@ -1,5 +1,5 @@
 module IdentityAccountHelper
-  def link_to_identity_account(redirect_uri, text: "DfE Identity Account", classes: "")
+  def link_to_identity_account(redirect_uri, text: "DfE Identity account", classes: "")
     govuk_link_to text, IdentityAccountLink.new(redirect_uri).build, class: classes
   end
 

@@ -139,9 +139,16 @@ RSpec.feature "Happy journeys", type: :feature do
       end
     end
 
-    navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
-      expect(page).to have_text("Teach First")
-      expect(page).to have_text("Headship")
+    if User.last.applications.count == 1
+      navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Headship")
+      end
+    else
+      navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Headship")
+      end
     end
 
     visit "/registration/share-provider"
