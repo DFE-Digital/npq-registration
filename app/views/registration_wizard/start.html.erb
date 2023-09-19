@@ -24,7 +24,8 @@
 
     <p class="govuk-body">If you work in early years or childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %> and get their Ofsted unique reference number (URN) if they have one.</p>
 
-    <p class="govuk-body"><%= govuk_link_to("Check if you have a teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %>. If you’re not a teacher you can still register, but you’ll need to request a TRN. We’ll show you how to do this.</p>
+    <p class="govuk-body"><%= govuk_link_to("Check if you have a teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %>. If you're not a teacher you can still register, but you'll need to request a TRN. Email <%= govuk_link_to('qts.enquiries@education.gov.uk', 'mailto:qts.enquiries@education.gov.uk') %> to request a TRN.
+    </p>
 
     <%=
       render(
