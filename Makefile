@@ -67,7 +67,7 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables bin/terrafile set-azure-account
-	$(if ${DOCKER_IMAGE_TAG}, , $(eval DOCKER_IMAGE_TAG=main))
+	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
 	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	./bin/terrafile -p terraform/application/vendor/modules -f terraform/application/config/$(CONFIG)_Terrafile
@@ -80,7 +80,7 @@ terraform-init: composed-variables bin/terrafile set-azure-account
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
 	$(eval export TF_VAR_service_name=${SERVICE_NAME})
 	$(eval export TF_VAR_service_short=${SERVICE_SHORT})
-	$(eval export TF_VAR_docker_image=${DOCKER_REPOSITORY}:${DOCKER_IMAGE_TAG})
+	$(eval export TF_VAR_docker_image=$(DOCKER_IMAGE))
 
 terraform-plan: terraform-init
 	terraform -chdir=terraform/application plan -var-file "config/${CONFIG}.tfvars.json"

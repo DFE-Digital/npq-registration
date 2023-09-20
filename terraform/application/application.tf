@@ -31,6 +31,7 @@ module "web_application" {
 
   is_web = true
 
+  # name = web
   namespace    = var.namespace
   environment  = local.environment
   service_name = var.service_name
@@ -40,4 +41,5 @@ module "web_application" {
   kubernetes_secret_name     = module.application_configuration.kubernetes_secret_name
 
   docker_image = var.docker_image
+  command = var.command
 }

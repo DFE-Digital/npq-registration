@@ -1,3 +1,7 @@
+variable "command" {
+  type = list(string)
+  default = []
+}
 variable "pull_request_number" {
   type    = string
   default = ""
