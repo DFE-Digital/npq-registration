@@ -67,7 +67,6 @@ end
 
 group :test do
   gem "factory_bot_rails"
-  gem "faker"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov", require: false
   gem "site_prism"
@@ -78,6 +77,10 @@ group :test do
   gem "axe-core-rspec"
 
   gem "with_model"
+end
+
+group :development, :test, :review do
+  gem "faker"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
