@@ -32,6 +32,7 @@ module "web_application" {
   is_web = true
 
   name = "web"
+  web_port = 8080
   namespace    = var.namespace
   environment  = local.environment
   service_name = var.service_name
