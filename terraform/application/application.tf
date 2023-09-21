@@ -31,7 +31,7 @@ module "web_application" {
 
   is_web = true
 
-  # name = web
+  name = "web"
   namespace    = var.namespace
   environment  = local.environment
   service_name = var.service_name
