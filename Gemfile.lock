@@ -47,12 +47,13 @@ GEM
     activerecord (6.1.7.3)
       activemodel (= 6.1.7.3)
       activesupport (= 6.1.7.3)
-    activerecord-session_store (2.0.0)
-      actionpack (>= 5.2.4.1)
-      activerecord (>= 5.2.4.1)
+    activerecord-session_store (2.1.0)
+      actionpack (>= 6.1)
+      activerecord (>= 6.1)
+      cgi (>= 0.3.6)
       multi_json (~> 1.11, >= 1.11.2)
-      rack (>= 2.0.8, < 3)
-      railties (>= 5.2.4.1)
+      rack (>= 2.0.8, < 4)
+      railties (>= 6.1)
     activestorage (6.1.7.3)
       actionpack (= 6.1.7.3)
       activejob (= 6.1.7.3)
@@ -87,7 +88,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
-    brakeman (6.0.0)
+    brakeman (6.0.1)
     builder (3.2.4)
     byebug (11.1.3)
     canonical-rails (0.2.14)
@@ -104,6 +105,7 @@ GEM
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
+    cgi (0.3.6)
     chronic (0.10.2)
     coderay (1.1.3)
     coercible (1.0.0)
@@ -114,7 +116,6 @@ GEM
     crass (1.0.6)
     daemons (1.4.1)
     date (3.3.3)
-    deep_merge (1.2.1)
     delayed_job (4.1.11)
       activesupport (>= 3.0, < 8.0)
     delayed_job_active_record (4.1.7)
@@ -143,7 +144,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
-    faker (3.2.0)
+    faker (3.2.1)
       i18n (>= 1.8.11, < 2)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
@@ -171,31 +172,31 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     ffi (1.15.5)
-    flipper (0.28.0)
+    flipper (0.28.3)
       concurrent-ruby (< 2)
-    flipper-active_record (0.28.0)
+    flipper-active_record (0.28.3)
       activerecord (>= 4.2, < 8)
-      flipper (~> 0.28.0)
-    flipper-ui (0.28.0)
+      flipper (~> 0.28.3)
+    flipper-ui (0.28.3)
       erubi (>= 1.0.0, < 2.0.0)
-      flipper (~> 0.28.0)
+      flipper (~> 0.28.3)
       rack (>= 1.4, < 3)
       rack-protection (>= 1.5.3, <= 4.0.0)
       sanitize (< 7)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    govuk-components (4.0.0)
+    govuk-components (4.1.1)
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (~> 6.0)
-      view_component (~> 3.0.0)
-    govuk_design_system_formbuilder (2.7.5)
-      actionview (>= 6.0)
-      activemodel (>= 6.0)
-      activesupport (>= 6.0)
-      deep_merge (~> 1.2.1)
+      view_component (>= 3.3, < 3.6)
+    govuk_design_system_formbuilder (4.1.1)
+      actionview (>= 6.1)
+      activemodel (>= 6.1)
+      activesupport (>= 6.1)
+      html-attributes-utils (~> 1)
     hashdiff (1.0.1)
     hashie (5.0.0)
-    html-attributes-utils (1.0.0)
+    html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     httparty (0.21.0)
       mini_mime (>= 1.0.0)
@@ -223,7 +224,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    lograge (0.12.0)
+    lograge (0.13.0)
       actionpack (>= 4)
       activesupport (>= 4)
       railties (>= 4)
@@ -250,18 +251,18 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.4)
     minitest (5.18.0)
-    msgpack (1.6.0)
+    msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.3.0)
-    net-imap (0.3.4)
+    net-imap (0.3.7)
       date
       net-protocol
     net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.1)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.4.0)
       net-protocol
     nio4r (2.5.9)
     nokogiri (1.15.4)
@@ -292,15 +293,16 @@ GEM
       omniauth (~> 2.0)
     orm_adapter (0.5.0)
     pagy (6.0.4)
-    paper_trail (14.0.0)
-      activerecord (>= 6.0)
+    paper_trail (15.0.0)
+      activerecord (>= 6.1)
       request_store (~> 1.4)
     parallel (1.23.0)
-    parallel_tests (4.2.1)
+    parallel_tests (4.2.2)
       parallel
-    parser (3.2.0.0)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
-    pg (1.5.3)
+      racc
+    pg (1.5.4)
     pg_search (2.3.6)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
@@ -313,12 +315,12 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.1)
-    puma (6.3.0)
+    puma (6.3.1)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.7)
-    rack-attack (6.6.1)
-      rack (>= 1.0, < 3)
+    rack-attack (6.7.0)
+      rack (>= 1.0, < 4)
     rack-protection (3.0.5)
       rack
     rack-proxy (0.7.6)
@@ -413,7 +415,7 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sanitize (6.0.2)
+    sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     sass (3.7.4)
@@ -447,11 +449,11 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
-    site_prism (4.0.2)
+    site_prism (4.0.3)
       addressable (~> 2.8)
       capybara (~> 3.27)
       site_prism-all_there (~> 2.0)
-    site_prism-all_there (2.0)
+    site_prism-all_there (2.0.2)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -462,7 +464,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stimulus-rails (1.2.1)
+    stimulus-rails (1.2.2)
       railties (>= 6.0.0)
     thor (1.2.2)
     thread_safe (0.3.6)
@@ -471,7 +473,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
     version_gem (1.1.1)
-    view_component (3.0.0)
+    view_component (3.5.0)
       activesupport (>= 5.2.0, < 8.0)
       concurrent-ruby (~> 1.0)
       method_source (~> 1.0)
@@ -481,7 +483,7 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
     warden (1.2.9)
       rack (>= 2.0.9)
-    web-console (4.2.0)
+    web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
@@ -490,7 +492,7 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (>= 1.3.0)
       selenium-webdriver (~> 4.0, < 4.11)
-    webmock (3.18.1)
+    webmock (3.19.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -505,8 +507,8 @@ GEM
     websocket-extensions (0.1.5)
     whenever (1.0.0)
       chronic (>= 0.6.3)
-    with_model (2.1.6)
-      activerecord (>= 5.2)
+    with_model (2.1.7)
+      activerecord (>= 6.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.6.8)
@@ -518,8 +520,8 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-session_store
-  axe-core-capybara
-  axe-core-rspec
+  axe-core-capybara (~> 4.6)
+  axe-core-rspec (~> 4.7)
   bootsnap (>= 1.1.0)
   brakeman
   byebug
@@ -533,12 +535,12 @@ DEPENDENCIES
   dotenv-rails
   email_validator
   factory_bot_rails
-  faker
-  flipper (~> 0.28.0)
-  flipper-active_record (~> 0.28.0)
-  flipper-ui (~> 0.28.0)
-  govuk-components (~> 4.0.0)
-  govuk_design_system_formbuilder
+  faker (~> 3.2, >= 3.2.1)
+  flipper (~> 0.28.3)
+  flipper-active_record (~> 0.28.3)
+  flipper-ui (~> 0.28.3)
+  govuk-components (~> 4.1.1)
+  govuk_design_system_formbuilder (~> 4.1.1)
   httparty (~> 0.21)
   i18n-debug
   iconv
@@ -548,20 +550,20 @@ DEPENDENCIES
   lograge (>= 0.11.2)
   logstash-event
   mail-notify
-  net-imap
+  net-imap (~> 0.3.7)
   net-pop
-  net-smtp
+  net-smtp (~> 0.4.0)
   omniauth (~> 2.1)
   omniauth-oauth2 (~> 1.8)
   omniauth-rails_csrf_protection
   pagy
-  paper_trail (~> 14.0)
+  paper_trail (~> 15.0)
   parallel_tests
   pg (>= 0.18, < 2.0)
   pg_search
   pry-byebug
   pry-rails
-  puma (~> 6.3)
+  puma (~> 6.3.1)
   rack-attack
   rails (~> 6.1.7)
   rspec-rails (~> 6.0.3)
@@ -573,15 +575,15 @@ DEPENDENCIES
   sentry-ruby
   shoulda-matchers (~> 5.3)
   simplecov
-  site_prism
+  site_prism (~> 4.0, >= 4.0.3)
   stimulus-rails
   tzinfo-data
   web-console (>= 3.3.0)
   webdrivers
-  webmock
+  webmock (~> 3.19, >= 3.19.1)
   webpacker
   whenever
-  with_model
+  with_model (~> 2.1, >= 2.1.7)
 
 RUBY VERSION
    ruby 3.1.2p20
