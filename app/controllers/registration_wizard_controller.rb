@@ -19,34 +19,16 @@ class RegistrationWizardController < ApplicationController
   def update
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
-    respond_to do |format|
-      format.html do
-        if @form.valid?
-          if @form.redirect_to_change_path?
-            redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
-          else
-            redirect_to registration_wizard_show_path(@wizard.next_step_path)
-          end
-
-          @wizard.save!
-        else
-          render @wizard.current_step
-        end
+    if @form.valid?
+      if @form.redirect_to_change_path?
+        redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
+      else
+        redirect_to registration_wizard_show_path(@wizard.next_step_path)
       end
 
-      format.js do
-        if @form.valid?
-          @wizard.save!
-
-          if lookup_context.template_exists?(@wizard.current_step, "registration_wizard", false, formats: %i[js])
-            render @wizard.current_step
-          else
-            render "navigate_to_next_step"
-          end
-        else
-          render "failed_validation"
-        end
-      end
+      @wizard.save!
+    else
+      render @wizard.current_step
     end
   end
 
