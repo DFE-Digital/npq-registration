@@ -2,10 +2,10 @@
 
 # Environments
 
-There are three permanent environments for NPQ and a fourth set of transient environments, the three permanent are sandbox, dev , and production. The fourth transient set are review apps
+There are three permanent environments for NPQ and a fourth set of transient environments, the three permanent are sandbox, dev (Staging in Azure) , and production. The fourth transient set are review apps
 
 1. [Sandbox](#sandbox)
-1. [Dev](#dev)
+1. [Dev (Staging in Azure)](#dev-staging-in-aAure)
 1. [Production](#production)
 1. [Review Apps](#review-apps)
 
@@ -17,15 +17,18 @@ This environment is here for lead providers and other external users to be able 
 You can view the sandbox environment at https://npq-registration-sandbox.london.cloudapps.digital
 You can view which commit is deployed to the sandbox environment by going to https://npq-registration-sandbox.london.cloudapps.digital/healthcheck.json
 
-## Dev
+## Dev (Staging in Azure)
 
-The dev environment is also automatically deployed in the same way as production, any time anything is merged it will be deployed to the sandbox environment.
+The dev environment is also automatically deployed in the same way as production, any time anything is merged it will be deployed to the Dev environment.
 This environment is here for internal members of the team to be able to explore the environment as it is in production without putting data into real production systems.
 
 You can view the dev environment at https://npq-registration-dev.london.cloudapps.digital
 You can view which commit is deployed to the dev environment by going to https://npq-registration-dev.london.cloudapps.digital/healthcheck.json
 
+The URLs for this environment might change after the migration to Azure
+
 ## Production
+
 The production environment is the live system, users that are applying for NPQs fill in the forms in this system. Once submitted applications are pushed to the production ECF environment and then out to lead providers.
 
 You can view the production environment at https://register-national-professional-qualifications.education.gov.uk
