@@ -6,14 +6,7 @@
     render GovukComponent::ContinueButtonComponent.new(
       text: button_text,
       href: user_tra_openid_connect_omniauth_authorize_path,
-      as_button: true,
-      html_attributes: {
-        id: :get_an_identity_form_button,
-        method: :post,
-        data: {
-         action: "get-an-identity-redirect-button#onGetAnIdentityRedirectButtonClick",
-        }
-      }
+      as_button: true
     )
   %>
 </span>
