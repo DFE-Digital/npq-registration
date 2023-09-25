@@ -3,6 +3,3 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
-
-import GetAnIdentityRedirectButtonController from "./get_an_identity_redirect_button_controller"
-application.register("get-an-identity-redirect-button", GetAnIdentityRedirectButtonController)
