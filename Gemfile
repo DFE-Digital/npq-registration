@@ -66,19 +66,19 @@ group :development do
 end
 
 group :test do
+  gem "axe-core-capybara", "~> 4.6"
+  gem "axe-core-rspec", "~> 4.7"
   gem "factory_bot_rails"
   gem "shoulda-matchers", "~> 5.3"
   gem "simplecov", require: false
-  gem 'site_prism', '~> 4.0', '>= 4.0.3'
+  gem "site_prism", "~> 4.0", ">= 4.0.3"
   gem "webdrivers"
-  gem 'webmock', '~> 3.19', '>= 3.19.1'
-  gem "axe-core-capybara", '~> 4.6'
-  gem 'axe-core-rspec', '~> 4.7'
-  gem 'with_model', '~> 2.1', '>= 2.1.7'
+  gem "webmock", "~> 3.19", ">= 3.19.1"
+  gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
 group :development, :test, :review do
-  gem 'faker', '~> 3.2', '>= 3.2.1'
+  gem "faker", "~> 3.2", ">= 3.2.1"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
