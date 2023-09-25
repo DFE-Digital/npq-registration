@@ -44,3 +44,23 @@ module "web_application" {
   docker_image = var.docker_image
   command = var.command
 }
+
+module "worker_application" {
+  source = "./vendor/modules/aks//aks/application"
+
+  is_web = false
+
+  name = "worker"
+  namespace    = var.namespace
+  environment  = local.environment
+  service_name = var.service_name
+
+  cluster_configuration_map  = module.cluster_data.configuration_map
+  kubernetes_config_map_name = module.application_configuration.kubernetes_config_map_name
+  kubernetes_secret_name     = module.application_configuration.kubernetes_secret_name
+
+  docker_image = var.docker_image
+
+  command       = ["bundle", "exec", "rake", "jobs:work"]
+  probe_command = ["pgrep", "-f", "rake"]
+}
