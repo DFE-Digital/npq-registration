@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
@@ -108,9 +107,16 @@ RSpec.feature "Happy journeys", type: :feature do
       end
     end
 
-    navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
-      expect(page).to have_text("Church of England")
-      expect(page).to have_text("Leading teacher development NPQ")
+    if User.last.applications.count == 1
+      navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Church of England")
+        expect(page).to have_text("Your NPQ registration")
+      end
+    else
+      navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Church of England")
+        expect(page).to have_text("Your NPQ registration")
+      end
     end
 
     visit "/registration/share-provider"

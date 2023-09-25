@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
 
   include_context "Stub previously funding check for all courses" do
@@ -125,9 +124,16 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_applicant_reached_end_of_journey
 
-    navigate_to_page(path: "/account", submit_form: false, axe_check: false) do
-      expect(page).to have_text("Teach First")
-      expect(page).to have_text("Early headship coaching offer")
+    if User.last.applications.count == 1
+      navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Your NPQ registration")
+      end
+    else
+      navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Your NPQ registration")
+      end
     end
 
     visit "/registration/check-answers"

@@ -155,8 +155,8 @@ en:
 
   accounts:
     show:
-      title: "Your registration"
-      pural_title: "Your registrations"
+      title: "Your NPQ registration"
+      pural_title: "Your NPQ registrations"
 
   admin:
     layout:

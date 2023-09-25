@@ -1,17 +1,29 @@
-<%= govuk_summary_card(title: "Work details") do |card|
-
-card.with_summary_list(rows: [
-    {
-      key: { text: "Do you work in England?" },
-      value: { text: boolean_tag(application.teacher_catchment == 'england') }
-    },
-    {
-      key: { text: "Work setting" },
-      value: { text: I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") },
-    },
-    {
-      key: { text: "Employer name or unique reference number" },
-      value: { text: application.employer_name_to_display },
-    },
-  ])
-end %>
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Work details</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Do you work in England?</dt>
+        <dd class="govuk-summary-list__value"><%= boolean_tag(application.teacher_catchment == 'england') %></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Work setting</dt>
+        <dd class="govuk-summary-list__value"><%= I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") %></dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Employer name</dt>
+        <dd class="govuk-summary-list__value"><%= application.employer_name_to_display %></dd>
+      </div>
+      
+      <% if application.employer_urn.present? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Employer unique reference number</dt>
+          <dd class="govuk-summary-list__value"><%= application.employer_urn %></dd>
+        </div>
+      <% end %>
+      
+    </dl>
+  </div>
+</div>

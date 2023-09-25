@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
-  include Helpers::JourneyHelper
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
