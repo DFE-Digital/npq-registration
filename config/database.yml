@@ -14,6 +14,9 @@ review:
 staging:
   <<: *default
 
+sandbox:
+  <<: *default
+
 test:
   <<: *default
   database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
