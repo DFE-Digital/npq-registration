@@ -13,7 +13,7 @@ module Services
         FEATURE_FLAG_KEYS.each do |feature_flag_key|
           Flipper.add(feature_flag_key)
         end
-        ENV["SERVICE_ENV"] == "sandbox" ? Flipper.enable(:maths_npq) : Flipper.disable(:maths_npq)
+        Flipper.enable(:maths_npq)
       end
 
       # This is always true but is checked so that it is explicit
