@@ -96,14 +96,15 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "Update screenshots for pr ${{ github.event.number }}" && git push
 
       - name: Remove screenshots from wiki repo
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd markdown
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git rm -r --ignore-unmatch "capybara-screenshots/$GITHUB_REF_NAME"
           git diff-index --quiet HEAD || git commit -m "Remove screenshots for pr ${{ github.event.number }}" && git push
-        env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+
   linting:
     name: Run Rubocop
 
