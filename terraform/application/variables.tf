@@ -59,6 +59,36 @@ variable "enable_monitoring" {
   description = "Enable monitoring and alerting"
 }
 
+variable "webapp_memory_max" {
+  type    = string
+  default = "1Gi"
+}
+
+variable "webapp_replicas" {
+  type = number
+  default = 1
+}
+
+variable "worker_memory_max" {
+  type    = string
+  default = "1Gi"
+}
+
+variable "worker_replicas" {
+  type = number
+  default = 1
+}
+
+variable "postgres_flexible_server_sku" {
+  type = string
+  default = "B_Standard_B1ms"
+}
+
+variable "postgres_enable_high_availability" {
+  type = bool
+  default = false
+}
+
 locals {
   azure_credentials = try(jsondecode(var.azure_credentials_json), null)
 

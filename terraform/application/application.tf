@@ -43,6 +43,9 @@ module "web_application" {
 
   docker_image = var.docker_image
   command = var.command
+
+  replicas   = var.webapp_replicas
+  max_memory = var.webapp_memory_max
 }
 
 module "worker_application" {
@@ -63,4 +66,7 @@ module "worker_application" {
 
   command       = ["bundle", "exec", "rake", "jobs:work"]
   probe_command = ["pgrep", "-f", "rake"]
+
+  replicas   = var.worker_replicas
+  max_memory = var.worker_memory_max
 }
