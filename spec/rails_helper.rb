@@ -14,6 +14,9 @@ Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f
 require "axe-rspec"
 require "axe-capybara"
 
+require "active_support/core_ext/date/conversions"
+require "active_support/core_ext/time/conversions"
+
 Capybara.register_driver :headless_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium
   options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options

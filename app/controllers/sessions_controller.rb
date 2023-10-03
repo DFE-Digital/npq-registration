@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   def destroy
     sign_out_all_scopes
 
-    redirect_to build_sign_out_uri
+    redirect_to build_sign_out_uri, allow_other_host: true
   end
 
 private

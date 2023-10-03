@@ -119,7 +119,7 @@ class Services::QueryStore
   end
 
   def formatted_date_of_birth
-    date_of_birth&.to_s(:govuk)
+    date_of_birth&.to_fs(:govuk)
   end
 
   def maths_understanding?

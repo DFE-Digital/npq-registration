@@ -21,7 +21,7 @@
                 row.with_cell(text: webhook_message.message_type)
                 row.with_cell(text: webhook_message.message_id)
                 row.with_cell(text: webhook_message_status_tag(webhook_message))
-                row.with_cell(text: webhook_message.sent_at.to_s(:govuk_short))
+                row.with_cell(text: webhook_message.sent_at.to_fs(:govuk_short))
                 row.with_cell(text: govuk_link_to("View", admin_webhook_message_path(webhook_message)))
               end
             end
