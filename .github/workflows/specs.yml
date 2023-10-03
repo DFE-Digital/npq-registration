@@ -6,6 +6,12 @@ env:
   RAILS_ENV: test
   DATABASE_URL: postgres://postgres:@localhost:5432
 
+permissions:
+  pull-requests: write
+  issues: write
+  actions: write
+  contents: write
+
 jobs:
   rspec:
     name: Run Rspec
@@ -96,8 +102,6 @@ jobs:
           git diff-index --quiet HEAD || git commit -m "Update screenshots for pr ${{ github.event.number }}" && git push
 
       - name: Remove screenshots from wiki repo
-        env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd markdown
           git config --local user.email "action@github.com"
