@@ -6,17 +6,17 @@ env:
   RAILS_ENV: test
   DATABASE_URL: postgres://postgres:@localhost:5432
 
+permissions:
+  pull-requests: write
+  issues: write
+  actions: write
+  contents: write
+
 jobs:
   rspec:
     name: Run Rspec
 
     runs-on: ubuntu-latest
-
-    permissions:
-      actions: write
-      contents: write
-      issues: write
-      pull-requests: write
 
     services:
       postgres:
@@ -83,7 +83,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ${{github.repository}}.wiki
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           path: markdown
 
       - name: Run tests
