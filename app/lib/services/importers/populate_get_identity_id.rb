@@ -13,7 +13,7 @@ module Services
           else
             Rails.logger.info("User #{user.id} already has an uid.")
             if user.uid != row.fetch(:user_id)
-              Rails.logger.error(("User #{user.id} already has a different uid? #{user.uid} vs #{row.fetch(:user_id)}"))
+              Rails.logger.error("User #{user.id} already has a different uid? #{user.uid} vs #{row.fetch(:user_id)}")
             end
           end
         end
