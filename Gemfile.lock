@@ -111,6 +111,9 @@ GEM
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.2.2)
+    connection_pool (2.4.1)
+    coverband (5.2.5)
+      redis (>= 3.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -359,6 +362,10 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (5.0.7)
+      redis-client (>= 0.9.0)
+    redis-client (0.17.0)
+      connection_pool
     regexp_parser (2.8.0)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -528,6 +535,7 @@ DEPENDENCIES
   canonical-rails
   capybara
   capybara-screenshot
+  coverband
   daemons
   delayed_job (~> 4.1)
   delayed_job_active_record
