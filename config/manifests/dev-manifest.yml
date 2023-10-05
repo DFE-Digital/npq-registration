@@ -16,6 +16,7 @@ applications:
     command: bundle exec rake jobs:work
   services:
     - npq-registration-dev-db
+    - npq-registration-dev-redis
   env:
     DOCKER_IMAGE_ID: ((DOCKER_IMAGE_ID))
     ENV: $HOME/.profile
