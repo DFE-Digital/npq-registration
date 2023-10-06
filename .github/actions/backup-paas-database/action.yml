@@ -13,6 +13,14 @@ inputs:
     description: PAAS staging password
     required: false
     default: ""
+  sandbox-username:
+    description: PAAS sandbox username
+    required: false
+    default: ""
+  sandbox-password:
+    description: PAAS sandbox password
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -28,6 +36,15 @@ runs:
         CF_USERNAME: ${{ inputs.staging-username }}
         CF_PASSWORD: ${{ inputs.staging-password }}
         CF_SPACE_NAME: early-careers-framework-staging
+        INSTALL_CONDUIT: true
+
+    - name: Setup cf cli (sandbox)
+      if: inputs.environment == 'sandbox'
+      uses: DFE-Digital/github-actions/setup-cf-cli@master
+      with:
+        CF_USERNAME: ${{ inputs.sandbox-username }}
+        CF_PASSWORD: ${{ inputs.sandbox-password }}
+        CF_SPACE_NAME: early-careers-framework-sandbox
         INSTALL_CONDUIT: true
 
     - name: Setup postgres client
