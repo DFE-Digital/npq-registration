@@ -21,6 +21,14 @@ inputs:
     description: PAAS sandbox password
     required: false
     default: ""
+  production-username:
+    description: PAAS production username
+    required: false
+    default: ""
+  production-password:
+    description: PAAS production password
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -45,6 +53,15 @@ runs:
         CF_USERNAME: ${{ inputs.sandbox-username }}
         CF_PASSWORD: ${{ inputs.sandbox-password }}
         CF_SPACE_NAME: early-careers-framework-sandbox
+        INSTALL_CONDUIT: true
+
+    - name: Setup cf cli (production)
+      if: inputs.environment == 'production'
+      uses: DFE-Digital/github-actions/setup-cf-cli@master
+      with:
+        CF_USERNAME: ${{ inputs.production-username }}
+        CF_PASSWORD: ${{ inputs.production-password }}
+        CF_SPACE_NAME: early-careers-framework-production
         INSTALL_CONDUIT: true
 
     - name: Setup postgres client

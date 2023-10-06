@@ -31,9 +31,9 @@ runs:
       if: inputs.environment == 'staging'
       run: az aks get-credentials -g s189t01-tsc-ts-rg -n s189t01-tsc-test-aks
 
-    - name: Set AKS credentials (sandbox)
+    - name: Set AKS credentials (sandbox, production)
       shell: bash
-      if: inputs.environment == 'sandbox'
+      if: inputs.environment == 'sandbox' || inputs.environment == 'production'
       run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
 
     - name: Install kubectl
