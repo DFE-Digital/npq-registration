@@ -323,7 +323,7 @@ en:
         npqh_status: "What stage are you at with the Headship NPQ?"
         trn_knowledge: "Do you have a TRN?"
         lead_provider_id: "Select your provider"
-        chosen_provider: "Have you already chosen an NPQ and provider?"
+        chosen_provider: "Have you chosen an NPQ and provider?"
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
         qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"

@@ -30,7 +30,7 @@ RSpec.feature "Sessions", type: :feature do
     page.click_button "Sign in"
 
     expect(page).to be_axe_clean
-    expect(page).to have_content("Register for an NPQ")
+    expect(page).to have_content("Register for a national professional qualification")
     expect(page).not_to have_content("Admin")
 
     visit "/admin"

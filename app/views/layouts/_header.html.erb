@@ -15,15 +15,19 @@
     </div>
 
     <div class="govuk-header__content">
-      <%= link_to "Register for a national professional qualification", "/", class: "govuk-header__link govuk-header__link--service-name" %>
-
+      <%= link_to "Register for a national professional qualification", npq_registration_link, class: "govuk-header__link govuk-header__link--service-name" %>
+      
       <% unless current_user.null_user? %>
         <nav aria-label="Menu" class="govuk-header__navigation ">
           <ul id="navigation" class="govuk-header__navigation-list">
             <li class="govuk-header__navigation-item ">
               <%= link_to_identity_account(request.original_url, classes: 'govuk-header__link') %>
             </li>
-
+            <% unless current_user.applications.empty? %>
+              <li class="govuk-header__navigation-item ">
+                <%= link_to "NPQ account", application_count_based_account_url, class: 'govuk-header__link' %>
+              </li>
+            <% end %>
             <li class="govuk-header__navigation-item">
               <%= link_to "Sign out", sign_out_user_path, class: 'govuk-header__link' %>
             </li>
