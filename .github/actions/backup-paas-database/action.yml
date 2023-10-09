@@ -61,16 +61,23 @@ runs:
       with:
         CF_USERNAME: ${{ inputs.production-username }}
         CF_PASSWORD: ${{ inputs.production-password }}
-        CF_SPACE_NAME: early-careers-framework-production
+        CF_SPACE_NAME: early-careers-framework-prod
         INSTALL_CONDUIT: true
 
     - name: Setup postgres client
       uses: DFE-Digital/github-actions/install-postgres-client@master
 
-    - name: Backup database
+    - name: Backup database (staging, sandbox)
+      if: inputs.environment == 'staging' || inputs.environment == 'sandbox'
       shell: bash
       run: |
         cf conduit npq-registration-${{ inputs.environment }}-db -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup-${{ inputs.environment }}.sql.gz
+
+    - name: Backup abase (production)
+      if: inputs.environment == 'production'
+      shell: bash
+      run: |
+        cf conduit npq-registration-prod-db -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup-${{ inputs.environment }}.sql.gz
 
     - name: Upload backup
       uses: actions/upload-artifact@v3
