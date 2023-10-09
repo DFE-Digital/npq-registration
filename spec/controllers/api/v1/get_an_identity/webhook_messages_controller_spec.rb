@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
   describe "POST create" do
     Dir.glob("spec/fixtures/requests/get_an_identity/webhooks/**/*.json").each do |file|
-      context "for #{file}" do
+      context "when working with #{file}" do
         let(:raw_message) { File.read(file).strip }
         let(:message) { JSON.parse(raw_message) }
 
