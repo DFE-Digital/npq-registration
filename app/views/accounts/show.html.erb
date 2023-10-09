@@ -1,5 +1,6 @@
 <% application_count = current_user.applications.count %>
 
+<% content_for :title, "Your NPQ registrations" %>
 <% if application_count > 0%>
   <% if application_count == 1 %>
     <h2 class="govuk-heading-xl"><%= title ||= t(".title") %></h2>

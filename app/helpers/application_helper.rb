@@ -1,6 +1,22 @@
 module ApplicationHelper
   include Pagy::Frontend
 
+  def application_count_based_account_url
+    current_user.applications.size == 1 ? accounts_user_registration_path(current_user.applications.first) : account_path
+  end
+
+  def npq_registration_link
+    if signed_in?
+      if Services::Feature.trn_required? && current_user.trn.blank?
+        registration_wizard_show_path(:teacher_reference_number)
+      else
+        registration_wizard_show_path(:provider_check)
+      end
+    else
+      "/"
+    end
+  end
+
   def boolean_red_green_tag(bool, text = nil)
     text ||= bool ? "YES" : "NO"
     colour = bool ? "green" : "red"

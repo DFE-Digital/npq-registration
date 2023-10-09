@@ -1,3 +1,4 @@
+<% content_for :title, "Your registration details" %>
 <% if params[:success] == "true" %>
   <%= render GovukComponent::NotificationBannerComponent.new(
     success: true,

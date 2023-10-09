@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you already chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen an NPQ and provider?")
       page.choose("No", visible: :all)
     end
 
