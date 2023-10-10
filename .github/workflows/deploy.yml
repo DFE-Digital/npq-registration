@@ -22,3 +22,7 @@ jobs:
   lint:
     name: Lint
     uses: ./.github/workflows/lint.yml
+
+  rspec:
+    name: RSpec
+    uses: ./.github/workflows/rspec.yml

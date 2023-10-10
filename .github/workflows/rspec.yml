@@ -1,0 +1,65 @@
+name: "RSpec"
+
+on:
+  workflow_call:
+    inputs:
+      ruby-version:
+        description: Ruby version
+        type: string
+        required: false
+        default: "3.1.2"
+      node-version:
+        description: Node version
+        type: string
+        required: false
+        default: "16.20.1"
+
+jobs:
+  rspec:
+    name: Run Rspec
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:11.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Install yarn
+        run: npm install yarn -g
+
+      - name: Install node.js dependencies
+        run: yarn install
+
+      - name: Create screenshots directory
+        run: mkdir -p tmp/capybara
+
+      - name: Set up test database
+        run: bin/rails parallel:setup
+
+      - name: Run tests
+        run: bundle exec rake parallel:spec
