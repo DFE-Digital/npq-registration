@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -37,7 +37,7 @@ jobs:
           bundle exec rails "registration_wizard:visualise[png]"
 
       - name: Checkout wiki code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{github.repository}}.wiki
           path: markdown
