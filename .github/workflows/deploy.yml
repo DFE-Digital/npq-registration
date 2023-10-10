@@ -1,0 +1,24 @@
+name: "Deploy"
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+    types:
+      - labeled
+      - synchronize
+      - reopened
+      - opened
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
