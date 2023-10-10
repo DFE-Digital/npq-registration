@@ -312,7 +312,7 @@ module Services
     end
 
     def digraph_settings
-      last_updated_at = Time.zone.now.to_s(:govuk_short)
+      last_updated_at = Time.zone.now.to_fs(:govuk_short)
       title_with_version = "#{GRAPH_STYLES[:label]}\nLast Updated: #{last_updated_at}"
 
       settings = GRAPH_STYLES.merge(label: title_with_version)
