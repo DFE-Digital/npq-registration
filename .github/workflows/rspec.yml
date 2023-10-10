@@ -20,6 +20,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+
     services:
       postgres:
         image: postgres:11.6-alpine
