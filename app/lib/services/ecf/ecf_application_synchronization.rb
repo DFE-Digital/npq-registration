@@ -2,11 +2,22 @@ module Services
   module Ecf
     class EcfApplicationSynchronization
       def call
+        page = 1
+        per_page = 50
         ecf_ids = applications_to_sync
-        uri = build_uri
-        request = build_http_get_request(uri, ecf_ids)
-        response = send_http_request(uri, request)
-        handle_response(response)
+        loop do
+          batch = ecf_ids.slice((page - 1) * per_page, per_page)
+          break if batch.empty?
+
+          uri = build_uri
+
+          request = build_http_get_request(uri, batch)
+          response = send_http_request(uri, request)
+
+          handle_response(response)
+
+          page += 1
+        end
       rescue StandardError => e
         Rails.logger.error "An error occurred during application synchronization: #{e.message}"
       end
