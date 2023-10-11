@@ -2,8 +2,9 @@ module Services
   module Ecf
     class EcfApplicationSynchronization
       def call
+        ecf_ids = applications_to_sync
         uri = build_uri
-        request = build_http_get_request(uri)
+        request = build_http_get_request(uri, ecf_ids)
         response = send_http_request(uri, request)
         handle_response(response)
       rescue StandardError => e
@@ -16,10 +17,16 @@ module Services
         URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations")
       end
 
-      def build_http_get_request(uri)
+      def build_http_get_request(uri, ecf_ids)
+        uri.query = "ecf_ids=#{ecf_ids.join(',')}"
         request = Net::HTTP::Get.new(uri)
         request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
         request
+      end
+
+      def applications_to_sync
+        applications = Application.where(lead_provider_approval_status: nil).limit(1000)
+        applications.pluck(:ecf_id)
       end
 
       def send_http_request(uri, request)
