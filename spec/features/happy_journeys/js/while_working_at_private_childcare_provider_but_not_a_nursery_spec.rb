@@ -60,6 +60,11 @@ RSpec.feature "Happy journeys", type: :feature do
       end
 
       expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
+      within ".npq-js-reveal" do
+        page.fill_in "private-childcare-provider-picker", with: "123"
+      end
+
+      expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
       page.find("#private-childcare-provider-picker__option--0").click
     end
 
