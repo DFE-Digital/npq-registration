@@ -1,28 +1,41 @@
 module Services
   module Ecf
     class EcfApplicationSynchronization
+      PER_PAGE = 50
+      DEFAULT_LIMIT = 1000
+
+      def initialize(limit = DEFAULT_LIMIT)
+        @limit = limit
+      end
+
       def call
-        page = 1
-        per_page = 50
-        ecf_ids = applications_to_sync
-        loop do
-          batch = ecf_ids.slice((page - 1) * per_page, per_page)
-          break if batch.empty?
-
-          uri = build_uri
-
-          request = build_http_get_request(uri, batch)
-          response = send_http_request(uri, request)
-
-          handle_response(response)
-
-          page += 1
-        end
+        process_batch_applications
       rescue StandardError => e
         Rails.logger.error "An error occurred during application synchronization: #{e.message}"
       end
 
     private
+
+      # Remove this code once all application statuses have been migrated.
+      def process_batch_applications
+        page = 1
+        ecf_ids = applications_to_sync
+        loop do
+          batch = ecf_ids.slice((page - 1) * PER_PAGE, PER_PAGE)
+          break if batch.empty?
+
+          batch_runner(batch)
+
+          page += 1
+        end
+      end
+
+      def batch_runner(batch)
+        uri = build_uri
+        request = build_http_get_request(uri, batch)
+        response = send_http_request(uri, request)
+        handle_response(response)
+      end
 
       def build_uri
         URI.parse("#{ENV['ECF_APP_BASE_URL']}/api/v1/npq/application_synchronizations")
@@ -36,7 +49,7 @@ module Services
       end
 
       def applications_to_sync
-        applications = Application.where(lead_provider_approval_status: nil).limit(1000)
+        applications = Application.where(lead_provider_approval_status: nil).limit(@limit)
         applications.pluck(:ecf_id)
       end
 
