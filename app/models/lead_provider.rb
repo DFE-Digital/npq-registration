@@ -52,6 +52,7 @@ class LeadProvider < ApplicationRecord
     "LLSE",
     "Teach First",
     "UCL Institute of Education",
+    "National Institute of Teaching",
   ].freeze
 
   # TODO: Move all of this mapping into the database
