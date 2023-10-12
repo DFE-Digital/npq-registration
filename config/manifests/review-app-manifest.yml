@@ -27,8 +27,8 @@ applications:
     GOVUK_NOTIFY_API_KEY: ((GOVUK_NOTIFY_API_KEY))
     GOOGLE_TAG_MANAGER_ID: "GTM-N58Z5PG"
     GOOGLE_ANALYTICS_ID: "G-4QYNT5ZME8"
-    ECF_APP_BASE_URL: "https://st.manage-training-for-early-career-teachers.education.gov.uk/"
-    ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
+    ECF_APP_BASE_URL: "https://cpd-ecf-review-4139-web.test.teacherservices.cloud/"
+    ECF_APP_BEARER_TOKEN: "7JHeMFYL3gEDNuhCU3uX"
     SENTRY_DSN: ((SENTRY_DSN))
     TRA_OIDC_DOMAIN: ((TRA_OIDC_DOMAIN))
     TRA_OIDC_CLIENT_ID: ((TRA_OIDC_CLIENT_ID))

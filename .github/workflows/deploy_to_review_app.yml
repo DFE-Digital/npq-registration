@@ -65,7 +65,8 @@ jobs:
             --var APP_NAME="${{ env.APP_NAME }}" \
             --var ENV_STUB="${{ env.ENV_STUB }}" \
             --var ENV_STUB_DB="${{ env.ENV_STUB_DB }}" \
-            --var ECF_APP_BEARER_TOKEN="${{ secrets.ECF_APP_BEARER_TOKEN_DEV }}" \
+            --var ECF_APP_BEARER_TOKEN="7JHeMFYL3gEDNuhCU3uX" \
+            --var ECF_APP_BASE_URL="https://cpd-ecf-review-4139-web.test.teacherservices.cloud/" \
             --var SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
             --var GET_AN_IDENTITY_WEBHOOK_SECRET="${{ secrets.GET_AN_IDENTITY_WEBHOOK_SECRET_REVIEW_APP }}" \
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
