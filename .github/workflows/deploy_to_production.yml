@@ -61,6 +61,7 @@ jobs:
             --var TRA_OIDC_REDIRECT_URI="${{ secrets.TRA_OIDC_REDIRECT_URI_PROD }}" \
             --var ECF_APP_BEARER_TOKEN="${{ secrets.ECF_APP_BEARER_TOKEN_PROD }}" \
             --var SENTRY_DSN="${{ secrets.SENTRY_DSN }}" \
+            --var RAILS_ENV="production" \
             --var GET_AN_IDENTITY_WEBHOOK_SECRET="${{ secrets.GET_AN_IDENTITY_WEBHOOK_SECRET_PROD }}" \
             --docker-image "${{ env.REMOTE_DOCKER_IMAGE_NAME }}":"${{ env.APP_NAME }}"-"${{ env.ENV_STUB }}" \
             --docker-username "${{ secrets.DOCKER_USERNAME }}" \
