@@ -15,9 +15,9 @@ class PrivateChildcareProvider < ApplicationRecord
   pg_search_scope :search_by_urn,
                   against: [:provider_urn],
                   using: {
-                    tsearch: {
-                      prefix: true,
-                      dictionary: "english",
+                    trigram: {
+                      word_similarity: true,
+                      threshold: 0.2,
                     },
                   }
 

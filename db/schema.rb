@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_08_02_120824) do
+ActiveRecord::Schema.define(version: 2023_10_10_123015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "applications", force: :cascade do |t|
