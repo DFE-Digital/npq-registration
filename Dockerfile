@@ -65,8 +65,7 @@ ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
 RUN echo ${GIT_COMMIT_SHA} > ./GIT_COMMIT_SHA
 
 ENV PORT=8080
-ENV RAILS_ENV=production
 
 EXPOSE ${PORT}
 
-CMD RAILS_ENV=${RAILS_ENV} bundle exec rake db:migrate && bundle exec whenever --update-crontab && bundle exec rails s -e ${RAILS_ENV} -p ${PORT} --binding=0.0.0.0
+CMD bundle exec rake db:migrate && bundle exec whenever --update-crontab && bundle exec rails s -p ${PORT} --binding=0.0.0.0
