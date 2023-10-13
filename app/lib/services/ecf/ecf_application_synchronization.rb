@@ -18,15 +18,8 @@ module Services
 
       # Remove this code once all application statuses have been migrated.
       def process_batch_applications
-        page = 1
-        ecf_ids = applications_to_sync
-        loop do
-          batch = ecf_ids.slice((page - 1) * PER_PAGE, PER_PAGE)
-          break if batch.empty?
-
-          batch_runner(batch)
-
-          page += 1
+        applications_to_sync.find_in_batches(batch_size: PER_PAGE) do |group|
+          batch_runner(group.pluck(:ecf_id))
         end
       end
 
@@ -49,8 +42,7 @@ module Services
       end
 
       def applications_to_sync
-        applications = Application.where(lead_provider_approval_status: nil).limit(@limit)
-        applications.pluck(:ecf_id)
+        Application.where(lead_provider_approval_status: nil).limit(@limit)
       end
 
       def send_http_request(uri, request)
