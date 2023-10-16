@@ -78,7 +78,7 @@ jobs:
 
   deploy_staging:
     name: Deploy staging
-    needs: [ docker ]
+    needs: [docker]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
@@ -97,5 +97,44 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  # deploy sandbox
-  # deploy production
+  deploy_sandbox:
+    name: Deploy sandbox
+    needs: [deploy_staging]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: sandbox
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: sandbox
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
+  deploy_production:
+    name: Deploy production
+    needs: [deploy_sandbox]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: production
+    outputs:
+      docker-image: ${{ needs.docker.outputs.docker-image }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        id: deploy
+        with:
+          environment: production
+          docker-image: ${{ needs.docker.outputs.docker-image }}
+          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          current-commit-sha: ${{ github.sha }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
