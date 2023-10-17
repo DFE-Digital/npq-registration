@@ -12,12 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # copying from dev to staging
       - name: Backup
         uses: ./.github/actions/backup-paas-database
         with:
           environment: staging
-          staging-username: ${{ secrets.GOVPAAS_STAG_USERNAME }}
-          staging-password: ${{ secrets.GOVPAAS_STAG_PASSWORD }}
+          staging-username: ${{ secrets.GOVPAAS_DEV_USERNAME }}
+          staging-password: ${{ secrets.GOVPAAS_DEV_PASSWORD }}
 
       - name: Restore
         uses: ./.github/actions/restore-paas-database
