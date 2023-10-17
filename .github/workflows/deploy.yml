@@ -27,8 +27,8 @@ jobs:
     name: RSpec
     uses: ./.github/workflows/rspec.yml
 
-  permit-merge:
-    name: Permit merge
+  all-checks-passed:
+    name: All checks passed
     needs: [lint, rspec]
     runs-on: ubuntu-latest
     steps:
@@ -78,7 +78,7 @@ jobs:
 
   deploy_staging:
     name: Deploy staging
-    needs: [docker]
+    needs: [docker, all-checks-passed]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
@@ -120,7 +120,7 @@ jobs:
 
   deploy_production:
     name: Deploy production
-    needs: [deploy_sandbox]
+    needs: [deploy_staging]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment:
