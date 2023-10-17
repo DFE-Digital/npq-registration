@@ -76,11 +76,11 @@ jobs:
           message: |
             Review app deployed to ${{ steps.deploy.outputs.url }}
 
-  deploy_staging:
+  deploy-staging:
     name: Deploy staging
     needs: [docker, all-checks-passed]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     environment:
       name: staging
     outputs:
@@ -97,15 +97,15 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  deploy_sandbox:
+  deploy-sandbox:
     name: Deploy sandbox
-    needs: [deploy_staging]
+    needs: [deploy-staging]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     environment:
       name: sandbox
     outputs:
-      docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+      docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -118,15 +118,15 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
-  deploy_production:
+  deploy-production:
     name: Deploy production
-    needs: [deploy_staging]
+    needs: [deploy-staging]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     environment:
       name: production
     outputs:
-      docker-image: ${{ needs.deploy_staging.outputs.docker-image }}
+      docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
