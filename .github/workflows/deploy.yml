@@ -104,8 +104,6 @@ jobs:
     # if: github.ref == 'refs/heads/main'
     environment:
       name: sandbox
-    outputs:
-      docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -113,7 +111,7 @@ jobs:
         id: deploy
         with:
           environment: sandbox
-          docker-image: ${{ needs.docker.outputs.docker-image }}
+          docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
@@ -125,8 +123,6 @@ jobs:
     # if: github.ref == 'refs/heads/main'
     environment:
       name: production
-    outputs:
-      docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
     steps:
       - uses: actions/checkout@v3
 
@@ -134,7 +130,7 @@ jobs:
         id: deploy
         with:
           environment: production
-          docker-image: ${{ needs.docker.outputs.docker-image }}
+          docker-image: ${{ needs.deploy-staging.outputs.docker-image }}
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
