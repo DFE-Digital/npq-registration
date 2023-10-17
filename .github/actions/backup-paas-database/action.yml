@@ -43,7 +43,7 @@ runs:
       with:
         CF_USERNAME: ${{ inputs.staging-username }}
         CF_PASSWORD: ${{ inputs.staging-password }}
-        CF_SPACE_NAME: early-careers-framework-staging
+        CF_SPACE_NAME: earlycareers-framework-dev
         INSTALL_CONDUIT: true
 
     - name: Setup cf cli (sandbox)
@@ -67,8 +67,14 @@ runs:
     - name: Setup postgres client
       uses: DFE-Digital/github-actions/install-postgres-client@master
 
-    - name: Backup database (staging, sandbox)
-      if: inputs.environment == 'staging' || inputs.environment == 'sandbox'
+    - name: Backup database (staging)
+      if: inputs.environment == 'staging'
+      shell: bash
+      run: |
+        cf conduit npq-registration-dev-db -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup-${{ inputs.environment }}.sql.gz
+
+    - name: Backup database (sandbox)
+      if: inputs.environment == 'sandbox'
       shell: bash
       run: |
         cf conduit npq-registration-${{ inputs.environment }}-db -- pg_dump -E utf8 --clean --compress=1 --if-exists --no-owner --no-privileges --verbose -f backup-${{ inputs.environment }}.sql.gz
