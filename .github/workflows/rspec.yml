@@ -27,6 +27,7 @@ jobs:
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
       DATABASE_URL: postgres://postgres:@localhost:5432
+      SECRET_KEY_BASE: abc123
 
     services:
       postgres:
