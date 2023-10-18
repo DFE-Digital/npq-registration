@@ -263,8 +263,8 @@ module Services
     def step_options
       Forms.constants
            .sort
-           .map { |f| "Forms::#{f}".constantize }
-           .select { |f| f < Forms::Base }
+           .map { |f| "Questionnaires::#{f}".constantize }
+           .select { |f| f < Questionnaires::Base }
     end
 
     def flow_helper_methods

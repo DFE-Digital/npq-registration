@@ -12,10 +12,10 @@
 RSpec/ContextWording:
   Exclude:
     - 'spec/jobs/get_an_identity_id_sync_job_spec.rb'
-    - 'spec/lib/forms/choose_your_npq_spec.rb'
-    - 'spec/lib/forms/choose_your_provider_spec.rb'
-    - 'spec/lib/forms/qualified_teacher_check_spec.rb'
-    - 'spec/lib/forms/registration_interest_notification_spec.rb'
+    - 'spec/lib/questionnaires/choose_your_npq_spec.rb'
+    - 'spec/lib/questionnaires/choose_your_provider_spec.rb'
+    - 'spec/lib/questionnaires/qualified_teacher_check_spec.rb'
+    - 'spec/lib/questionnaires/registration_interest_notification_spec.rb'
     - 'spec/lib/services/admin/dashboard_stats_spec.rb'
     - 'spec/lib/services/funding_eligibility_spec.rb'
     - 'spec/lib/services/handle_submission_for_store_spec.rb'
@@ -51,7 +51,7 @@ RSpec/StubbedMock:
 # Offense count: 1
 RSpec/SubjectStub:
   Exclude:
-    - 'spec/lib/forms/choose_private_childcare_provider_spec.rb'
+    - 'spec/lib/questionnaires/choose_private_childcare_provider_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.

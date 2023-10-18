@@ -28,7 +28,7 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      kind_of_nursery { Forms::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
+      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
     end
 
     trait :application_for_public_childcare_provider do
@@ -37,7 +37,7 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      kind_of_nursery { Forms::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
     end
   end
 end

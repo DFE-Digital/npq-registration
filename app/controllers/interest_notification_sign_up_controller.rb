@@ -4,7 +4,7 @@ class InterestNotificationSignUpController < ApplicationController
   def new; end
 
   def create
-    @notification_form = Forms::RegistrationInterestNotification.new(notification_params)
+    @notification_form = Questionnaires::RegistrationInterestNotification.new(notification_params)
 
     if @notification_form.valid?
       @notification_form.save!
@@ -21,10 +21,10 @@ class InterestNotificationSignUpController < ApplicationController
 private
 
   def notification_params
-    params.require(:forms_registration_interest_notification).permit(:email)
+    params.require(:questionnaires_registration_interest_notification).permit(:email)
   end
 
   def set_notification_form
-    @notification_form = Forms::RegistrationInterestNotification.new
+    @notification_form = Questionnaires::RegistrationInterestNotification.new
   end
 end
