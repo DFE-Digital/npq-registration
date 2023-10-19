@@ -14,6 +14,7 @@ module Services
           Flipper.add(feature_flag_key)
         end
         Flipper.enable(:maths_npq)
+        Flipper.enable(:disable_new_registrations)
       end
 
       # This is always true but is checked so that it is explicit
