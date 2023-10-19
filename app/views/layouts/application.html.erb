@@ -68,7 +68,6 @@
         <% end %>
 
         <% if Flipper.enabled?(:disable_new_registrations) %>
-          foo bar
           <%= govuk_notification_banner(title_text: "Maintenance notice") do |banner| %>
             <% banner.with_heading(
               text: "Due to scheduled mainenance taking place soon, the new registrations are currently disabled. If you already started your registration, you can continue.")
