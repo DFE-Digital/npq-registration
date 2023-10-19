@@ -2,7 +2,8 @@ module Services
   class Feature
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
-    REGISTRATION_CLOSED_KEY = "Registration closed".freeze
+    REGISTRATION_CLOSED_KEY   = "Registration closed".freeze
+    REGISTRATION_DISABLED = "Registration disabled".freeze
 
     FEATURE_FLAG_KEYS = [
       REGISTRATION_CLOSED_KEY,
@@ -14,7 +15,6 @@ module Services
           Flipper.add(feature_flag_key)
         end
         Flipper.enable(:maths_npq)
-        Flipper.enable(:disable_new_registrations)
       end
 
       # This is always true but is checked so that it is explicit
@@ -30,6 +30,22 @@ module Services
 
       def registration_closed?
         Flipper.enabled?(REGISTRATION_CLOSED_KEY)
+      end
+
+      def registration_disabled?
+        Flipper.enabled?(REGISTRATION_DISABLED)
+      end
+
+      def registration_enabled?
+        !Flipper.enabled?(REGISTRATION_DISABLED)
+      end
+
+      def disable_registration!
+        Flipper.enable(REGISTRATION_DISABLED)
+      end
+
+      def enable_registration!
+        Flipper.disable(REGISTRATION_DISABLED)
       end
     end
   end
