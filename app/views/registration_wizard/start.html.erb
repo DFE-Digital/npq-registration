@@ -26,7 +26,7 @@
 
     <p class="govuk-body"><%= govuk_link_to("Check if you have a teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %>. If you’re not a teacher you can still register, but you’ll need to request a TRN. We’ll show you how to do this.</p>
 
-    <% if Flipper.enabled?(:disable_new_registrations) %>
+    <% unless Flipper.enabled?(:disable_new_registrations) %>
       <%=
         render(
           'shared/get_an_identity/redirect_button',
