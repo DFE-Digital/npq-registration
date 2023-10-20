@@ -2,7 +2,7 @@ module Services
   class Feature
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
-    REGISTRATION_CLOSED_KEY   = "Registration closed".freeze
+    REGISTRATION_CLOSED_KEY = "Registration closed".freeze
     REGISTRATION_DISABLED = "Registration disabled".freeze
 
     FEATURE_FLAG_KEYS = [
