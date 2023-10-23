@@ -39,7 +39,7 @@ RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
     let(:new_trn_status) { "found" }
 
     it "updates user data and sends it to ECF" do
-      expect(Services::Ecf::EcfUserUpdater).to receive(:call).with(user:)
+      expect(ECF::EcfUserUpdater).to receive(:call).with(user:)
 
       expect {
         described_class.call(webhook_message:)
@@ -85,7 +85,7 @@ RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
       let(:new_trn_status) { "not_found" }
 
       it "stores the data without the TRN" do
-        expect(Services::Ecf::EcfUserUpdater).to receive(:call).with(user:)
+        expect(ECF::EcfUserUpdater).to receive(:call).with(user:)
 
         expect {
           described_class.call(webhook_message:)
@@ -111,7 +111,7 @@ RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
       let(:message) { SecureRandom.uuid }
 
       it "stores the data without the TRN" do
-        expect(Services::Ecf::EcfUserUpdater).not_to receive(:call).with(user:)
+        expect(ECF::EcfUserUpdater).not_to receive(:call).with(user:)
 
         expect {
           described_class.call(webhook_message:)

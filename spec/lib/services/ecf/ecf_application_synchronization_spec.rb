@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Ecf::EcfApplicationSynchronization do
+RSpec.describe ECF::EcfApplicationSynchronization do
   describe "#call" do
     let(:service) { described_class.new }
     let(:get_an_identity_id) { SecureRandom.uuid }

@@ -83,7 +83,7 @@ module GetAnIdentity
       end
 
       def sync_user_changes_to_ecf
-        Services::Ecf::EcfUserUpdater.call(user:)
+        ECF::EcfUserUpdater.call(user:)
       end
     end
   end

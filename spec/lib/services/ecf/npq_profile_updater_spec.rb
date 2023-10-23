@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Ecf::NpqProfileUpdater do
+RSpec.describe ECF::NpqProfileUpdater do
   subject { described_class.new(application:) }
 
   let(:user) do

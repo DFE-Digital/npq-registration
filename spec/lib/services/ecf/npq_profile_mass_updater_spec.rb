@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Ecf::NpqProfileMassUpdater do
+RSpec.describe ECF::NpqProfileMassUpdater do
   subject do
     described_class.new(applications: Application.all, &provided_proc)
   end
@@ -16,7 +16,7 @@ RSpec.describe Services::Ecf::NpqProfileMassUpdater do
     stubbed_updater = double(:stubbed_updater)
     allow(stubbed_updater).to receive(:call)
     applications.each do |application|
-      expect(Services::Ecf::NpqProfileUpdater).to receive(:new).with(application:).and_return(stubbed_updater)
+      expect(ECF::NpqProfileUpdater).to receive(:new).with(application:).and_return(stubbed_updater)
       expect(provided_proc).to receive(:call).with(application)
     end
 
