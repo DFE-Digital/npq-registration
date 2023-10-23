@@ -3,6 +3,7 @@ module Services
     REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
     REGISTRATION_CLOSED_KEY = "Registration closed".freeze
+    REGISTRATION_DISABLED = "Registration disabled".freeze
 
     FEATURE_FLAG_KEYS = [
       REGISTRATION_CLOSED_KEY,
@@ -29,6 +30,22 @@ module Services
 
       def registration_closed?
         Flipper.enabled?(REGISTRATION_CLOSED_KEY)
+      end
+
+      def registration_disabled?
+        Flipper.enabled?(REGISTRATION_DISABLED)
+      end
+
+      def registration_enabled?
+        !Flipper.enabled?(REGISTRATION_DISABLED)
+      end
+
+      def disable_registration!
+        Flipper.enable(REGISTRATION_DISABLED)
+      end
+
+      def enable_registration!
+        Flipper.disable(REGISTRATION_DISABLED)
       end
     end
   end

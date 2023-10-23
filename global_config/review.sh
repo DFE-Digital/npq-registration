@@ -5,4 +5,4 @@ AZURE_SUBSCRIPTION=s189-teacher-services-cloud-test
 AZURE_RESOURCE_PREFIX=s189t01
 KV_PURGE_PROTECTION=false
 CONFIG_LONG=review
-NAMESPACE=cpd-review
+NAMESPACE=cpd-development
