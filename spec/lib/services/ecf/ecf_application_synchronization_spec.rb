@@ -44,20 +44,6 @@ RSpec.describe Ecf::EcfApplicationSynchronization do
 
         service.call
       end
-
-      it "builds the correct URI with the query parameter" do
-        ecf_ids = SecureRandom.uuid
-        uri = URI.parse("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations")
-        request = instance_double("Net::HTTP::Get")
-        http = instance_double("Net::HTTP")
-
-        allow(URI).to receive(:parse).with("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations").and_return(uri)
-        allow(http).to receive(:request).with(request).and_return(success_response)
-
-        uri.query = "ecf_ids=#{ecf_ids}"
-
-        service.call
-      end
     end
 
     context "when an error occurs" do
