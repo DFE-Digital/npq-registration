@@ -30,7 +30,7 @@ RSpec.describe GetAnIdentity::ProcessWebhookMessageJob do
       let(:message) { {} }
 
       it "sends webhook message to the UserUpdatedProcessor" do
-        expect(GetAnIdentity::Webhooks::UserUpdatedProcessor).to receive(:call).with(webhook_message:)
+        expect(GetAnIdentityService::Webhooks::UserUpdatedProcessor).to receive(:call).with(webhook_message:)
         described_class.perform_now(webhook_message:)
       end
     end

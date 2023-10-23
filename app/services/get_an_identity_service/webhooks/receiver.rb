@@ -1,4 +1,4 @@
-module GetAnIdentity
+module GetAnIdentityService
   module Webhooks
     class Receiver
       class << self

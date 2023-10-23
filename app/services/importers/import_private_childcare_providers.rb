@@ -1,6 +1,6 @@
 require "csv"
 
-module Importer
+module Importers
   class ImportPrivateChildcareProviders
     attr_reader :file_name, :import_errors, :imported_records, :updated_records, :csv_row_parser
 

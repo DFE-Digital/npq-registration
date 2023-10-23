@@ -10,7 +10,7 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
   def processor_klass
     case message_type
     when "UserUpdated"
-      GetAnIdentity::Webhooks::UserUpdatedProcessor
+      GetAnIdentityService::Webhooks::UserUpdatedProcessor
     end
   end
 

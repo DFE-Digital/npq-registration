@@ -16,7 +16,7 @@ namespace :private_childcare_providers do
     parser = args.parser
     Rails.logger.info("Importing Childcare providers from CSV file: #{file_name}")
 
-    importer = PrivateChildcareProviders::Importer
+    importer = Importers::ImportPrivateChildcareProviders
     csv_row_parser = case parser
                      when "childminder_agencies"
                        importer::ChildminderAgencyWrappedCSVRow

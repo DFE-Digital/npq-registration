@@ -1,4 +1,4 @@
-module GetAnIdentity
+module GetAnIdentityService
   class UserUpdater
     def self.call(user:)
       new(user:).call
