@@ -41,7 +41,7 @@ module Ecf
       # JsonApiClient::Resource uses errors for flow control, so failed saves
       # will divert to the rescue block below
       # I'd prefer to use the return value of save, but that's not possible
-      profile.save!
+      profile.save
 
       application.update!(
         ecf_id: profile.id,

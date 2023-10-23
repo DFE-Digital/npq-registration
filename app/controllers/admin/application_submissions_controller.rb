@@ -1,4 +1,4 @@
-class AdminService::ApplicationSubmissionsController < AdminController
+class Admin::ApplicationSubmissionsController < AdminController
   def create
     user = User.find(params[:user_id])
 

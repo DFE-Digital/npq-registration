@@ -12,7 +12,7 @@ module Ecf
       profile.funding_eligiblity_status_code = application.funding_eligiblity_status_code
       profile.teacher_catchment = application.teacher_catchment
       profile.teacher_catchment_country = application.teacher_catchment_country
-      profile.save!
+      profile.save
     end
   end
 end

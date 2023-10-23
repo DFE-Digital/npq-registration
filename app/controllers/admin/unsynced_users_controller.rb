@@ -1,4 +1,4 @@
-class AdminService::UnsyncedUsersController < AdminController
+class Admin::UnsyncedUsersController < AdminController
   include Pagy::Backend
 
   def index

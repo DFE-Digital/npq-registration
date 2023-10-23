@@ -16,7 +16,7 @@ module Ecf
       # JsonApiClient::Resource uses errors for flow control, so failed saves
       # will divert to the rescue block below
       # I'd prefer to use the return value of save, but that's not possible
-      remote.save!
+      remote.save
       user.update!(
         ecf_id: remote.id,
         get_an_identity_id_synced_to_ecf: true,

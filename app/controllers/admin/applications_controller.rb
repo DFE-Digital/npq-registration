@@ -1,4 +1,4 @@
-class AdminService::ApplicationsController < AdminController
+class Admin::ApplicationsController < AdminController
   include Pagy::Backend
 
   def index

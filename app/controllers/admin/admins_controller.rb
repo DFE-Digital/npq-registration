@@ -1,4 +1,4 @@
-class AdminService::AdminsController < SuperAdminController
+class Admin::AdminsController < SuperAdminController
   include Pagy::Backend
 
   def index
