@@ -10,12 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_10_10_123015) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_10_23_083939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
-  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "applications", force: :cascade do |t|
@@ -23,8 +21,8 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
     t.text "school_urn"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "ecf_id"
     t.text "headteacher_status"
     t.boolean "eligible_for_funding", default: false, null: false
@@ -61,8 +59,8 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
 
   create_table "courses", force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "ecf_id"
     t.text "description"
     t.integer "position", default: 0
@@ -75,13 +73,14 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "cron"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -92,15 +91,15 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.string "sync_type", null: false
     t.jsonb "error_messages", default: []
     t.jsonb "response_body"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
   end
 
   create_table "flipper_features", force: :cascade do |t|
     t.string "key", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["key"], name: "index_flipper_features_on_key", unique: true
   end
 
@@ -108,8 +107,8 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.string "feature_key", null: false
     t.string "key", null: false
     t.string "value"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
@@ -120,26 +119,26 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.string "message_type"
     t.string "status", default: "pending"
     t.string "status_comment"
-    t.datetime "sent_at"
-    t.datetime "processed_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "sent_at", precision: nil
+    t.datetime "processed_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "itt_providers", force: :cascade do |t|
     t.text "legal_name"
     t.text "operating_name"
-    t.datetime "removed_at"
+    t.datetime "removed_at", precision: nil
     t.boolean "approved"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
   end
 
   create_table "lead_providers", force: :cascade do |t|
     t.text "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "ecf_id"
     t.string "hint"
   end
@@ -155,8 +154,8 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.text "postcode"
     t.text "postcode_without_spaces"
     t.boolean "high_pupil_premium", default: false, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
@@ -180,24 +179,24 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.boolean "provider_early_years_register_flag"
     t.boolean "provider_compulsory_childcare_register_flag"
     t.integer "places"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["provider_urn"], name: "index_private_childcare_providers_on_provider_urn"
   end
 
   create_table "registration_interests", force: :cascade do |t|
     t.citext "email", null: false
     t.boolean "notified", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_registration_interests_on_email", unique: true
   end
 
   create_table "reports", force: :cascade do |t|
     t.text "identifier", null: false
     t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "schools", force: :cascade do |t|
@@ -221,8 +220,8 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.integer "northing"
     t.text "region"
     t.text "country"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "establishment_type_code"
     t.text "establishment_type_name"
     t.boolean "high_pupil_premium", default: false, null: false
@@ -238,21 +237,21 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
     t.text "data"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "ecf_id"
     t.text "trn"
     t.text "full_name"
     t.text "otp_hash"
-    t.datetime "otp_expires_at"
+    t.datetime "otp_expires_at", precision: nil
     t.date "date_of_birth"
     t.boolean "trn_verified", default: false, null: false
     t.boolean "active_alert", default: false
@@ -265,7 +264,7 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.jsonb "raw_tra_provider_data"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
     t.boolean "super_admin", default: false, null: false
-    t.datetime "updated_from_tra_at"
+    t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -279,7 +278,7 @@ ActiveRecord::Schema.define(version: 2023_10_10_123015) do
     t.string "event", null: false
     t.string "whodunnit"
     t.text "object"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
