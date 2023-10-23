@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Admin::ApplicationsSearch do
+RSpec.describe AdminService::ApplicationsSearch do
   subject { described_class.new(q:) }
 
   let!(:application) { create(:application) }

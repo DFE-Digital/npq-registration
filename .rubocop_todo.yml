@@ -16,7 +16,7 @@ RSpec/ContextWording:
     - 'spec/lib/questionnaires/choose_your_provider_spec.rb'
     - 'spec/lib/questionnaires/qualified_teacher_check_spec.rb'
     - 'spec/lib/questionnaires/registration_interest_notification_spec.rb'
-    - 'spec/lib/services/admin/dashboard_stats_spec.rb'
+    - 'spec/lib/services/admin_service/dashboard_stats_spec.rb'
     - 'spec/lib/services/funding_eligibility_spec.rb'
     - 'spec/lib/services/handle_submission_for_store_spec.rb'
     - 'spec/lib/services/private_childcare_providers/importer_spec.rb'

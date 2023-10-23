@@ -1,4 +1,4 @@
-class Admin::UsersController < AdminController
+class AdminService::UsersController < AdminController
   include Pagy::Backend
 
   def index
@@ -12,6 +12,6 @@ class Admin::UsersController < AdminController
 private
 
   def scope
-    Services::Admin::UsersSearch.new(q: params[:q]).call
+    AdminService::UsersSearch.new(q: params[:q]).call
   end
 end

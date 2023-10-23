@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Admin::SchoolsSearch do
+RSpec.describe AdminService::SchoolsSearch do
   subject { described_class.new(q:) }
 
   let!(:school) { create(:school) }

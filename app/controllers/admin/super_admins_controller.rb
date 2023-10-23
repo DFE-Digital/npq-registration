@@ -1,4 +1,4 @@
-class Admin::SuperAdminsController < SuperAdminController
+class AdminService::SuperAdminsController < SuperAdminController
   def update
     @user = User.find(params[:id])
 

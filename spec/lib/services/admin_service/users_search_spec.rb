@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Admin::UsersSearch do
+RSpec.describe AdminService::UsersSearch do
   subject { described_class.new(q:) }
 
   let!(:user) { create(:user) }

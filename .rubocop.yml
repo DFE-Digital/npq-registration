@@ -38,14 +38,14 @@ Style/DoubleNegation:
 Rails/SaveBang:
   Exclude:
     - "app/lib/ecf_api/base.rb"
-    - "app/lib/services/ecf/ecf_user_creator.rb"
-    - "app/lib/services/ecf/npq_profile_creator.rb"
-    - "app/lib/services/ecf/npq_profile_updater.rb"
+    - "app/services/ecf/ecf_user_creator.rb"
+    - "app/services/ecf/npq_profile_creator.rb"
+    - "app/services/ecf/npq_profile_updater.rb"
 
 Rails/Output:
   Exclude:
-    - "app/lib/services/importers/*"
-    - "app/lib/services/exporters/*"
+    - "app/services/importers/*"
+    - "app/services/exporters/*"
 
 Naming/MethodParameterName:
   Enabled: false

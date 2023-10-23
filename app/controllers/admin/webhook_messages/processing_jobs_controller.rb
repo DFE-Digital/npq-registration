@@ -1,4 +1,4 @@
-class Admin::WebhookMessages::ProcessingJobsController < AdminController
+class AdminService::WebhookMessages::ProcessingJobsController < AdminController
   def create
     @webhook_message = GetAnIdentity::WebhookMessage.find(params[:webhook_message_id])
     @webhook_message.update!(status: :pending)

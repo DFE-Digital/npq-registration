@@ -1,4 +1,4 @@
-class Admin::WebhookMessagesController < AdminController
+class AdminService::WebhookMessagesController < AdminController
   include Pagy::Backend
 
   def index

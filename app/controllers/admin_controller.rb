@@ -2,8 +2,8 @@ class AdminController < ApplicationController
   before_action :require_admin
 
   def show
-    @last_seven_days = Services::Admin::DashboardStats.new(start_time: 7.days.ago)
-    @all_time = Services::Admin::DashboardStats.new
+    @last_seven_days = AdminService::DashboardStats.new(start_time: 7.days.ago)
+    @all_time = AdminService::DashboardStats.new
   end
 
 private
