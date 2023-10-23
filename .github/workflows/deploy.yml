@@ -80,7 +80,7 @@ jobs:
     name: Deploy staging
     needs: [docker, all-checks-passed]
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: staging
     outputs:
@@ -101,7 +101,7 @@ jobs:
     name: Deploy sandbox
     needs: [deploy-staging]
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: sandbox
     steps:
@@ -120,7 +120,7 @@ jobs:
     name: Deploy production
     needs: [deploy-staging]
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: production
     steps:
