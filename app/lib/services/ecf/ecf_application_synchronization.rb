@@ -35,7 +35,7 @@ module Services
       end
 
       def build_http_get_request(uri, ecf_ids)
-        uri.query = "ecf_ids=#{ecf_ids.join(',')}"
+        uri.query = "ecf_ids=#{ecf_ids.join(',')}" if ecf_ids.present?
         request = Net::HTTP::Get.new(uri)
         request["Authorization"] = "Bearer #{ENV['ECF_APP_BEARER_TOKEN']}"
         request
