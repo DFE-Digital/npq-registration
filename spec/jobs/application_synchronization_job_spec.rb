@@ -11,9 +11,9 @@ RSpec.describe ApplicationSynchronizationJob, type: :job do
 
   describe "#perform" do
     it "calls the EcfApplicationSynchronization" do
-      mock = instance_double("ECF::EcfApplicationSynchronization", call: nil)
+      mock = instance_double("Ecf::EcfApplicationSynchronization", call: nil)
 
-      allow(ECF::EcfApplicationSynchronization).to receive(:new).and_return(mock)
+      allow(Ecf::EcfApplicationSynchronization).to receive(:new).and_return(mock)
       described_class.perform_now
       expect(mock).to have_received(:call)
     end

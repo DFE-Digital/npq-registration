@@ -16,6 +16,6 @@ private
   end
 
   def sync_user_update_to_ecf(user)
-    ECF::EcfUserUpdater.call(user:)
+    Ecf::EcfUserUpdater.call(user:)
   end
 end

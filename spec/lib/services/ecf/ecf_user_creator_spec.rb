@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ECF::EcfUserCreator do
+RSpec.describe Ecf::EcfUserCreator do
   subject { described_class.new(user:) }
 
   let(:get_an_identity_id) { SecureRandom.uuid }

@@ -11,7 +11,7 @@ class ApplicationSubmissionJob < ApplicationJob
     end
 
     user.applications.includes(:lead_provider, :course).where(ecf_id: nil).each do |application|
-      ECF::NpqProfileCreator.new(application:).call
+      Ecf::NpqProfileCreator.new(application:).call
       ApplicationSubmissionMailer.application_submitted_mail(
         email_template,
         to: user.email,
@@ -33,7 +33,7 @@ private
       # Now make sure the user we found is fully up to date
       update_ecf_user_details(user:)
     else
-      ECF::EcfUserCreator.new(user:).call
+      Ecf::EcfUserCreator.new(user:).call
     end
   end
 
@@ -60,7 +60,7 @@ private
   end
 
   def find_ecf_user_by_email(user:)
-    ECF::EcfUserFinder.new(user:).call
+    Ecf::EcfUserFinder.new(user:).call
   rescue StandardError => e
     env = e.try(:env) || {}
     response_body = env["response_body"]

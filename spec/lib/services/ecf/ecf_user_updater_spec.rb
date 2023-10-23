@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ECF::EcfUserUpdater do
+RSpec.describe Ecf::EcfUserUpdater do
   subject { described_class.new(user:) }
 
   let(:old_get_an_identity_id) { SecureRandom.uuid }

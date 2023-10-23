@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ECF::NpqProfileCreator do
+RSpec.describe Ecf::NpqProfileCreator do
   subject { described_class.new(application:) }
 
   let(:user) do

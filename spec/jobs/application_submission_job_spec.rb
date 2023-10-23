@@ -9,13 +9,13 @@ RSpec.describe ApplicationSubmissionJob do
     let(:school) { create(:school) }
 
     it "calls correct services" do
-      user_finder_double = instance_double(ECF::EcfUserFinder, call: nil)
-      user_creator_double = instance_double(ECF::EcfUserCreator, call: nil)
-      profile_creator_double = instance_double(ECF::NpqProfileCreator, call: nil)
+      user_finder_double = instance_double(Ecf::EcfUserFinder, call: nil)
+      user_creator_double = instance_double(Ecf::EcfUserCreator, call: nil)
+      profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
 
-      expect(ECF::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
-      expect(ECF::EcfUserCreator).to receive(:new).with(user:).and_return(user_creator_double)
-      expect(ECF::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
+      expect(Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
+      expect(Ecf::EcfUserCreator).to receive(:new).with(user:).and_return(user_creator_double)
+      expect(Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
 
       subject.perform_now
 
@@ -24,13 +24,13 @@ RSpec.describe ApplicationSubmissionJob do
     end
 
     it "sends submission email" do
-      user_finder_double = instance_double(ECF::EcfUserFinder, call: nil)
-      user_creator_double = instance_double(ECF::EcfUserCreator, call: nil)
-      profile_creator_double = instance_double(ECF::NpqProfileCreator, call: nil)
+      user_finder_double = instance_double(Ecf::EcfUserFinder, call: nil)
+      user_creator_double = instance_double(Ecf::EcfUserCreator, call: nil)
+      profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
 
-      expect(ECF::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
-      expect(ECF::EcfUserCreator).to receive(:new).and_return(user_creator_double)
-      expect(ECF::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
+      expect(Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
+      expect(Ecf::EcfUserCreator).to receive(:new).and_return(user_creator_double)
+      expect(Ecf::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
 
       localised_course_name = I18n.t(application.course.identifier, scope: "course.name")
 
@@ -51,12 +51,12 @@ RSpec.describe ApplicationSubmissionJob do
       let(:user) { create(:user, ecf_id: "123") }
 
       it "calls correct servivces" do
-        instance_double(ECF::EcfUserCreator)
-        profile_creator_double = instance_double(ECF::NpqProfileCreator, call: nil)
+        instance_double(Ecf::EcfUserCreator)
+        profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
         ecf_user = instance_double(EcfApi::Npq::User)
 
-        expect(ECF::EcfUserCreator).not_to receive(:new)
-        expect(ECF::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
+        expect(Ecf::EcfUserCreator).not_to receive(:new)
+        expect(Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
         expect(EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,
@@ -75,13 +75,13 @@ RSpec.describe ApplicationSubmissionJob do
       let(:ecf_user) { EcfApi::User.new(email: user.email, id: "123") }
 
       it "calls correct services" do
-        user_finder_double = instance_double(ECF::EcfUserFinder, call: ecf_user)
-        profile_creator_double = instance_double(ECF::NpqProfileCreator, call: nil)
+        user_finder_double = instance_double(Ecf::EcfUserFinder, call: ecf_user)
+        profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
         ecf_user = instance_double(EcfApi::Npq::User)
 
-        expect(ECF::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
-        expect(ECF::EcfUserCreator).not_to receive(:new)
-        expect(ECF::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
+        expect(Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
+        expect(Ecf::EcfUserCreator).not_to receive(:new)
+        expect(Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
         expect(EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,
@@ -103,12 +103,12 @@ RSpec.describe ApplicationSubmissionJob do
       let(:application) { create(:application, user:, ecf_id: "456", school:) }
 
       it "calls correct servivces" do
-        instance_double(ECF::EcfUserCreator)
-        instance_double(ECF::NpqProfileCreator, call: nil)
+        instance_double(Ecf::EcfUserCreator)
+        instance_double(Ecf::NpqProfileCreator, call: nil)
         ecf_user = instance_double(EcfApi::Npq::User)
 
-        expect(ECF::EcfUserCreator).not_to receive(:new)
-        expect(ECF::NpqProfileCreator).not_to receive(:new)
+        expect(Ecf::EcfUserCreator).not_to receive(:new)
+        expect(Ecf::NpqProfileCreator).not_to receive(:new)
         expect(EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,

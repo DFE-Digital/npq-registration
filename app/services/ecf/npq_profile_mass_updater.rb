@@ -11,7 +11,7 @@ module Ecf
 
         Rails.logger.info "syncing application #{application.id}, (#{i + 1}/#{count})"
 
-        ECF::NpqProfileUpdater.new(application:).call
+        Ecf::NpqProfileUpdater.new(application:).call
 
         after_save.call(application) if after_save.present?
       rescue StandardError => e

@@ -6,7 +6,7 @@ namespace :sync do
     applications = Application.where.not(ecf_id: nil)
                               .order(created_at: :asc)
 
-    ECF::NpqProfileMassUpdater.new(applications:).call
+    Ecf::NpqProfileMassUpdater.new(applications:).call
   end
 
   desc "Sync applications attributes with ecf service"
@@ -17,7 +17,7 @@ namespace :sync do
                               .where.not(ecf_id: nil)
                               .order(created_at: :asc)
 
-    mass_updater = ECF::NpqProfileMassUpdater.new(applications:) do |application|
+    mass_updater = Ecf::NpqProfileMassUpdater.new(applications:) do |application|
       application.update_column(:teacher_catchment_synced_to_ecf, true)
     end
 

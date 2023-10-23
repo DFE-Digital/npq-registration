@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ECF::EcfUserFinder do
+RSpec.describe Ecf::EcfUserFinder do
   subject { described_class.new(user:) }
 
   let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe") }
