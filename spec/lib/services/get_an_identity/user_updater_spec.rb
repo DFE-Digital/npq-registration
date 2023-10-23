@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::GetAnIdentity::UserUpdater do
+RSpec.describe GetAnIdentity::UserUpdater do
   let(:access_token) { SecureRandom.uuid }
   let(:stubbed_url) { "https://example.com" }
 

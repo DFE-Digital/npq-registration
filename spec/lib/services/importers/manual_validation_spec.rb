@@ -1,7 +1,7 @@
 require "rails_helper"
 require "tempfile"
 
-RSpec.describe Services::Importers::ManualValidation do
+RSpec.describe Importers::ManualValidation do
   let(:school) { create(:school) }
   let(:user) { create(:user) }
   let(:application) { create(:application, :with_ecf_id, user:, school:) }

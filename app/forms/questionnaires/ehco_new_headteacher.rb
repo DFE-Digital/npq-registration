@@ -16,9 +16,9 @@ module Questionnaires
 
     def next_step
       case funding_eligiblity_status_code
-      when Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT
+      when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :ehco_possible_funding
-      when Services::FundingEligibility::PREVIOUSLY_FUNDED
+      when FundingEligibility::PREVIOUSLY_FUNDED
         :ehco_previously_funded
       else
         :ehco_funding_not_available
@@ -45,7 +45,7 @@ module Questionnaires
   private
 
     def funding_eligiblity_status_code
-      Services::FundingEligibility.new(
+      FundingEligibility.new(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,

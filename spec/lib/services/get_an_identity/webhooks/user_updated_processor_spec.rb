@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::GetAnIdentity::Webhooks::UserUpdatedProcessor do
+RSpec.describe GetAnIdentity::Webhooks::UserUpdatedProcessor do
   let(:webhook_message) do
     ::GetAnIdentity::WebhookMessage.create!(
       message:,

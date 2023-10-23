@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::FundingEligibility do
+RSpec.describe FundingEligibility do
   subject do
     described_class.new(institution:,
                         course:,

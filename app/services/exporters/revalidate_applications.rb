@@ -5,7 +5,7 @@ class Exporters::RevalidateApplications
 
   def call
     applications.each do |application|
-      record = Services::ParticipantValidator.new(
+      record = ParticipantValidator.new(
         trn: application.user.trn,
         full_name: application.user.full_name,
         date_of_birth: application.user.date_of_birth,

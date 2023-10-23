@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::ImportGiasSchools do
+RSpec.describe ImportGiasSchools do
   let(:date_string) { Time.zone.today.strftime("%Y%m%d") }
 
   describe "#call" do

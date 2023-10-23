@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::ParticipantValidator do
+RSpec.describe ParticipantValidator do
   subject do
     described_class.new(
       trn:,

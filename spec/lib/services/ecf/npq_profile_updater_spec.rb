@@ -51,7 +51,7 @@ RSpec.describe ECF::NpqProfileUpdater do
       ukprn: school.ukprn,
       headteacher_status: "no",
       eligible_for_funding: true,
-      funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       funding_choice: "trust",
       ecf_id: "1234",
       teacher_catchment: new_teacher_catchment,

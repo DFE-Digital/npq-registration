@@ -3,7 +3,7 @@
     form.govuk_select(
       question.name,
       options_for_select(
-        Services::AutocompleteIttProviders.as_autocomplete_options
+        AutocompleteIttProviders.as_autocomplete_options
       ),
       options: { include_blank: true },
       label: { size: "xl", tag: "h1" },

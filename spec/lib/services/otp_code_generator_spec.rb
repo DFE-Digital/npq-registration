@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::OtpCodeGenerator do
+RSpec.describe OtpCodeGenerator do
   describe "#call" do
     it "generates a 6 digit code" do
       expect(subject.call).to match(/\d{6}/)

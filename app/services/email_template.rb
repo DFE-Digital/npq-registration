@@ -56,19 +56,19 @@ private
   end
 
   def previously_funded?
-    funding_eligiblity_status_code == Services::FundingEligibility::PREVIOUSLY_FUNDED
+    funding_eligiblity_status_code == FundingEligibility::PREVIOUSLY_FUNDED
   end
 
   def not_in_england?
-    funding_eligiblity_status_code == Services::FundingEligibility::NOT_IN_ENGLAND
+    funding_eligiblity_status_code == FundingEligibility::NOT_IN_ENGLAND
   end
 
   def eligible_for_funding?
-    funding_eligiblity_status_code == Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT
+    funding_eligiblity_status_code == FundingEligibility::FUNDED_ELIGIBILITY_RESULT
   end
 
   def not_lead_mentor_course?
-    funding_eligiblity_status_code == Services::FundingEligibility::NOT_LEAD_MENTOR_COURSE
+    funding_eligiblity_status_code == FundingEligibility::NOT_LEAD_MENTOR_COURSE
   end
 
   def course

@@ -52,7 +52,7 @@ private
   end
 
   def query_store
-    @query_store ||= Services::QueryStore.new(store:)
+    @query_store ||= QueryStore.new(store:)
   end
 
   delegate :inside_catchment?, to: :query_store
@@ -157,7 +157,7 @@ private
   end
 
   def funding_eligibility_service
-    @funding_eligibility_service ||= Services::FundingEligibility.new(
+    @funding_eligibility_service ||= FundingEligibility.new(
       course:,
       institution: institution_from_store,
       approved_itt_provider:,
@@ -179,7 +179,7 @@ private
   end
 
   def email_template
-    Services::EmailTemplateLookup.call(store["email_template"])
+    EmailTemplateLookup.call(store["email_template"])
   end
 
   def targeted_delivery_funding_eligibility

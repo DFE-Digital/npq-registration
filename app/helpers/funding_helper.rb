@@ -22,7 +22,7 @@ module FundingHelper
 private
 
   def funding_eligibility_calculator(application)
-    Services::FundingEligibility.new(
+    FundingEligibility.new(
       course: application.course,
       institution: institution(source: application.raw_application_data["institution_identifier"], application:),
       approved_itt_provider: application.itt_provider.present?,

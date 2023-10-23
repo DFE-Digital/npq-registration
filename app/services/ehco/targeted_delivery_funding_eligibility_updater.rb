@@ -15,7 +15,7 @@ module Ehco
       arel_table = Application.arel_table
       npq_applications = Application.where(course: ehco_course)
                                     .where(targeted_delivery_funding_eligibility: true)
-                                    .where(arel_table[:created_at].gteq(Services::Feature::REGISTRATION_OPEN_DATE))
+                                    .where(arel_table[:created_at].gteq(Feature::REGISTRATION_OPEN_DATE))
 
       updated_count = 0
 

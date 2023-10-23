@@ -232,8 +232,8 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
 
     context "exception is raised" do
       before do
-        mock_validator = instance_double(Services::ParticipantValidator)
-        allow(Services::ParticipantValidator).to receive(:new).and_return(mock_validator)
+        mock_validator = instance_double(ParticipantValidator)
+        allow(ParticipantValidator).to receive(:new).and_return(mock_validator)
         allow(mock_validator).to receive(:call).and_raise(StandardError)
       end
 

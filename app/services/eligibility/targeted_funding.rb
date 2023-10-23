@@ -43,13 +43,13 @@ module Eligibility
     end
 
     def tsf_primary_eligibility
-      @tsf_primary_eligibility ||= Services::Eligibility::TsfPrimaryEligibility.call(
+      @tsf_primary_eligibility ||= Eligibility::TsfPrimaryEligibility.call(
         institution:,
       )
     end
 
     def targeted_delivery_funding_check?
-      @targeted_delivery_funding_check ||= Services::Eligibility::TargetedDeliveryFunding.call(
+      @targeted_delivery_funding_check ||= Eligibility::TargetedDeliveryFunding.call(
         institution:,
         course:,
         employment_role:,

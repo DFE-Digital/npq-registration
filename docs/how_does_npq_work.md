@@ -30,7 +30,7 @@ It defines the question name, it's validations, and the next_step and previous_s
 
 The store is a session based store of the user's current application state. It is a hash that is stored in the user's session and is updated as the user progresses through the wizard. It is accessed by calling `wizard.store` on or within a form. The Query Store (detailed below) provides a way to access the store in a stuctured way.
 
-### Services::QueryStore
+### QueryStore
 
 The QueryStore service is a wrapper around the store hash to provide a way to provide helper methods to access store information. 
 
@@ -44,7 +44,7 @@ The LeadProvider model represents the different Lead Providers that are able to 
 
 ## Funding Eligibility
 
-Funding Eligibility occurs once the user has finished questions related to their application, selected their NPQ and their provider. This information is then fed into `Services::FundingEligibility`. This service then determines the user's eligibility for government funding and will provide a boolean funded status along with a `funding_eligiblity_status_code` which encodes the reason why a user may not have been funded.
+Funding Eligibility occurs once the user has finished questions related to their application, selected their NPQ and their provider. This information is then fed into `FundingEligibility`. This service then determines the user's eligibility for government funding and will provide a boolean funded status along with a `funding_eligiblity_status_code` which encodes the reason why a user may not have been funded.
 
 ## Targeted Support Funding
 
@@ -52,8 +52,8 @@ Targeted support funding is extra funding that some schools will receive if they
 
 There is 2 levels of targeted support;
 
-1. `Services::Eligibility::TargetedDeliveryFunding` 
-2. `Services::Eligibility::TsfPrimaryEligibility`
+1. `Eligibility::TargetedDeliveryFunding` 
+2. `Eligibility::TsfPrimaryEligibility`
 
 The `TargetedDeliveryFunding` checks on various criteria examples below:
 

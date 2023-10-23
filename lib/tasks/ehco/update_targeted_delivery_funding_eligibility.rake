@@ -7,7 +7,7 @@ namespace :ehco do
     desc "DRY RUN: Marks targeted_delivery_funding_eligibility on all EHCO NPQ applications as false"
     task dry_run: :environment do
       Application.transaction do
-        Services::Ehco::TargetedDeliveryFundingEligibilityUpdater.run
+        Ehco::TargetedDeliveryFundingEligibilityUpdater.run
 
         raise ActiveRecord::Rollback
       end
@@ -15,7 +15,7 @@ namespace :ehco do
 
     desc "Marks targeted_delivery_funding_eligibility on all EHCO NPQ applications as false"
     task run: :environment do
-      Services::Ehco::TargetedDeliveryFundingEligibilityUpdater.run
+      Ehco::TargetedDeliveryFundingEligibilityUpdater.run
     end
   end
 end

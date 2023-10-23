@@ -32,23 +32,23 @@ module Questionnaires
 
     def ineligible_template
       @ineligible_template ||= case funding_eligiblity_status_code
-                               when Services::FundingEligibility::NOT_IN_ENGLAND
+                               when FundingEligibility::NOT_IN_ENGLAND
                                  return NOT_IN_ENGLAND
-                               when Services::FundingEligibility::NOT_LEAD_MENTOR_COURSE
+                               when FundingEligibility::NOT_LEAD_MENTOR_COURSE
                                  return LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD
-                               when Services::FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, Services::FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
+                               when FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
-                               when Services::FundingEligibility::PREVIOUSLY_FUNDED
+                               when FundingEligibility::PREVIOUSLY_FUNDED
                                  if tsf_elgible?
                                    return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                  else
                                    return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
                                  end
-                               when Services::FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, Services::FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
+                               when FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
                                  return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-                               when Services::FundingEligibility::EARLY_YEARS_INVALID_NPQ
+                               when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
-                               when Services::FundingEligibility::NO_INSTITUTION
+                               when FundingEligibility::NO_INSTITUTION
                                  if query_store.works_in_school?
                                    return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                  else
@@ -60,7 +60,7 @@ module Questionnaires
     end
 
     def funding_eligiblity_status_code
-      @funding_eligiblity_status_code ||= Services::FundingEligibility.new(
+      @funding_eligiblity_status_code ||= FundingEligibility.new(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,

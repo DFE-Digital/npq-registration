@@ -104,7 +104,7 @@ class FundingEligibility
   end
 
   def targeted_funding
-    @targeted_funding ||= Services::Eligibility::TargetedFunding.new(
+    @targeted_funding ||= Eligibility::TargetedFunding.new(
       institution:,
       course:,
       employment_role:,

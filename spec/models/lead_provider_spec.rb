@@ -7,7 +7,7 @@ RSpec.describe LeadProvider do
     let(:course) { Course.find_by!(identifier: course_identifier) }
 
     before do
-      Services::LeadProviders::Updater.call
+      LeadProviders::Updater.call
     end
 
     context "with course npq-headship" do

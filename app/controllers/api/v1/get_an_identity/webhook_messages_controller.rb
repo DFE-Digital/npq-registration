@@ -8,7 +8,7 @@ module Api
         before_action :verify_signature!, only: :create
 
         def create
-          if Services::GetAnIdentity::Webhooks::Receiver.call(webhook_params:)
+          if GetAnIdentity::Webhooks::Receiver.call(webhook_params:)
             head :ok
           else
             head :bad_request
@@ -38,7 +38,7 @@ module Api
             return false
           end
 
-          Services::GetAnIdentity::Webhooks::SignatureVerifier.call(
+          GetAnIdentity::Webhooks::SignatureVerifier.call(
             request_body: request.raw_post,
             signature:,
           )

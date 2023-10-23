@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Services::Ehco::TargetedDeliveryFundingEligibilityUpdater do
+RSpec.describe Ehco::TargetedDeliveryFundingEligibilityUpdater do
   subject { described_class.run }
 
   let(:ehco_course) { Course.ehco.first }
@@ -16,7 +16,7 @@ RSpec.describe Services::Ehco::TargetedDeliveryFundingEligibilityUpdater do
 
   let!(:application_with_targeted_funding_set)     { create(:application, applicable_application_hash) }
   let!(:application_with_targeted_funding_set_two) { create(:application, applicable_application_hash) }
-  let!(:application_before_cutoff)                 { create(:application, applicable_application_hash.merge(created_at: Services::Feature::REGISTRATION_OPEN_DATE - 1.day)) }
+  let!(:application_before_cutoff)                 { create(:application, applicable_application_hash.merge(created_at: Feature::REGISTRATION_OPEN_DATE - 1.day)) }
   let!(:application_wrong_course)                  { create(:application, applicable_application_hash.merge(course: Course.npqeyl.first)) }
   let!(:application_not_marked_for_funding)        { create(:application, applicable_application_hash.merge(targeted_delivery_funding_eligibility: false)) }
 

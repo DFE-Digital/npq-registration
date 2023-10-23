@@ -10,10 +10,10 @@ RSpec.describe ImportGiasSchoolsJob, type: :job do
   end
 
   describe "#perform_now" do
-    it "calls Services::ImportGiasSchools#call" do
-      mock = instance_double("Services::ImportGiasSchools", call: nil)
+    it "calls ImportGiasSchools#call" do
+      mock = instance_double("ImportGiasSchools", call: nil)
 
-      allow(Services::ImportGiasSchools).to receive(:new).and_return(mock)
+      allow(ImportGiasSchools).to receive(:new).and_return(mock)
       described_class.perform_now
       expect(mock).to have_received(:call)
     end

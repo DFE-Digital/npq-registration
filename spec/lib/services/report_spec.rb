@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Report do
+RSpec.describe Report do
   let(:number_of_rows) { 3 }
 
   before { create_list(:application, number_of_rows, school: nil) }

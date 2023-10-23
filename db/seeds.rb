@@ -5,7 +5,7 @@ def seed_courses!
 end
 
 def seed_lead_providers!
-  Services::LeadProviders::Updater.call
+  LeadProviders::Updater.call
 end
 
 def seed_itt_providers!

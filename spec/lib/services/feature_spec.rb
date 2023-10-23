@@ -1,10 +1,10 @@
 require "rails_helper"
 
-RSpec.describe Services::Feature do
+RSpec.describe Feature do
   describe "#registration_closed?" do
     context 'with Flipper flag "Registration closed" turned on' do
       before do
-        Flipper.enable(Services::Feature::REGISTRATION_CLOSED_KEY)
+        Flipper.enable(Feature::REGISTRATION_CLOSED_KEY)
       end
 
       it "returns true" do
@@ -14,7 +14,7 @@ RSpec.describe Services::Feature do
 
     context 'with Flipper flag "Registration closed" turned off' do
       before do
-        Flipper.disable(Services::Feature::REGISTRATION_CLOSED_KEY)
+        Flipper.disable(Feature::REGISTRATION_CLOSED_KEY)
       end
 
       it "returns false" do

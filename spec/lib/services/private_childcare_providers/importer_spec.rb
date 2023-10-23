@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::PrivateChildcareProviders::Importer do
+RSpec.describe PrivateChildcareProviders::Importer do
   subject do
     described_class.new(
       file_name:,
@@ -18,7 +18,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
     end
 
     context "private childcare providers" do
-      let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
+      let(:csv_row_parser) { PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
 
       context "with all rows valid" do
         # File contains sample of real data
@@ -193,7 +193,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         end
 
         context "with incorrect parser" do
-          let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildminderAgencyWrappedCSVRow }
+          let(:csv_row_parser) { PrivateChildcareProviders::Importer::ChildminderAgencyWrappedCSVRow }
 
           it "returns errors for invalid rows" do
             run_import
@@ -370,7 +370,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
     end
 
     context "private childminder agencies" do
-      let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildminderAgencyWrappedCSVRow }
+      let(:csv_row_parser) { PrivateChildcareProviders::Importer::ChildminderAgencyWrappedCSVRow }
 
       context "with all rows valid" do
         # File contains sample of real data
@@ -434,7 +434,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
         end
 
         context "with incorrect parser" do
-          let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
+          let(:csv_row_parser) { PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
 
           it "returns errors for invalid rows" do
             run_import
@@ -571,7 +571,7 @@ RSpec.describe Services::PrivateChildcareProviders::Importer do
     context "with file that doesn't exist" do
       # File contains sample of real data
       let(:file_name) { "spec/fixtures/files/fake_file.csv" }
-      let(:csv_row_parser) { Services::PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
+      let(:csv_row_parser) { PrivateChildcareProviders::Importer::ChildcareProviderWrappedCSVRow }
 
       it "returns an error and creates no records" do
         expect {
