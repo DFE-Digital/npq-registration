@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_23_083939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "applications", force: :cascade do |t|
