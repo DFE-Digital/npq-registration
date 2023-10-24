@@ -10,7 +10,7 @@ jobs:
     name: Export dashboard report to BigQuery
 
     runs-on: ubuntu-20.04
-    container: google/cloud-sdk:latest
+    container: google/cloud-sdk:448.0.0
     steps:
       - name: Auth with gcloud
         uses: google-github-actions/setup-gcloud@v1
@@ -49,4 +49,5 @@ jobs:
       - name: Upload csv to BigQuery
         shell: bash
         run: |
+          gcloud auth login
           bq load --autodetect --replace npq_registration.applications ~/data.csv
