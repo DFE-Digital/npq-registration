@@ -15,6 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
+        with:
+          azure-credentials: ${{ inputs.azure-credentials }}
+
+      - uses: Azure/login@v1
+        with:
+          creds: ${{ inputs.azure-credentials }}
+
       - name: Auth with gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
