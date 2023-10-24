@@ -32,7 +32,7 @@ Feature flags can then be fully enabled, disabled, or enabled for a percentage o
 
 ## What feature flags are available and how do I create new ones?
 
-Feature flags supported by the app are defined in [Feature](../app/lib/services/feature.rb), upon deployment any new feature flags will be created in the database and will be available to be managed. By default they will be turned off.
+Feature flags supported by the app are defined in [Feature](../app/services/feature.rb), upon deployment any new feature flags will be created in the database and will be available to be managed. By default they will be turned off.
 
 This is handled by the `feature_flags:initialize` rake task that is run as part of the deployment process.
 

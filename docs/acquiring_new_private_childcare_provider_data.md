@@ -34,5 +34,5 @@ Downloading the file named `Childcare provider level data as at 31 March 2022` a
 We care about two of these sheets, `D1-_Childcare_providers` and `D2-_Childminder_Agency`. Extracting these two files to CSV files and stripping out the non-data rows gives us two CSV files that can be imported into the database.
 
 As the exact structure of these files can differ year to year it is worth running these files through the import process locally to ensure the data is being imported correctly before committing the files to the repository. Any changes would mean that the [import rake task](../lib/tasks/private_childcare_providers.rake) would need to be updated to reflect the new structure, these changes would be made in the CSV row wrapper classes:
-- [Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow](../app/lib/services/importers/import_private_childcare_providers)
-- [Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow](../app/lib/services/importers/import_private_childcare_providers)
+- [Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow](../app/services/importers/import_private_childcare_providers)
+- [Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow](../app/services/importers/import_private_childcare_providers)

@@ -22,7 +22,7 @@ When the user submits the form, the corresponding Form object is loaded with the
 
 ### The Forms
 
-Form objects are found within [app/lib/forms](app/lib/forms). Each Form Object is responsible for validating the user's input and updating the user's store with the form's attributes.
+Form objects are found within [app/forms](app/forms). Each Form Object is responsible for validating the user's input and updating the user's store with the form's attributes.
 
 It defines the question name, it's validations, and the next_step and previous_step.
 
