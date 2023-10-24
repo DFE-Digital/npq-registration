@@ -12,7 +12,7 @@ class GetAnIdentityDataSyncJob < ApplicationJob
 private
 
   def update_user_from_get_an_identity(user)
-    GetAnIdentity::UserUpdater.call(user:)
+    GetAnIdentityService::UserUpdater.call(user:)
   end
 
   def sync_user_update_to_ecf(user)

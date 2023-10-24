@@ -67,7 +67,7 @@
           <% end %>
         <% end %>
 
-        <% if Services::Feature.registration_disabled? %>
+        <% if Feature.registration_disabled? %>
           <%= govuk_notification_banner(title_text: "Maintenance notice") do |banner| %>
             <% banner.with_heading(
               text: "Due to scheduled mainenance taking place soon, new registrations are currently disabled. If you already started your registration, you can continue.")

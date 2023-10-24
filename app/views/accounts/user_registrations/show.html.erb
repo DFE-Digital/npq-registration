@@ -36,6 +36,6 @@
 <%= render "accounts/work_details", application: @application %>
 
 
-<% if Services::Feature.registration_enabled? %>
+<% if Feature.registration_enabled? %>
   <%= render partial: 'registration_wizard/shared/register_for_an_npq' %>
 <% end %>
