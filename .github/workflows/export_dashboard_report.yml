@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-20.04
     container: google/cloud-sdk:latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Auth with gcloud
         uses: google-github-actions/setup-gcloud@v1
         with:
