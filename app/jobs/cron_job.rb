@@ -33,7 +33,6 @@ class CronJob < ApplicationJob
         end
       end
 
-      Rails.logger.debug "paso por aqui"
       set(cron: cron_expression).perform_later
     end
 
