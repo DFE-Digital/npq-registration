@@ -1,4 +1,4 @@
-class Crons::GenerateDashboardReport < CronJob
+class Crons::GenerateDashboardReportJob < CronJob
   self.cron_expression = "0 * * * *"
 
   def perform

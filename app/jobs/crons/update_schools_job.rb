@@ -1,4 +1,4 @@
-class Crons::UpdateSchools < CronJob
+class Crons::UpdateSchoolsJob < CronJob
   self.cron_expression = "*/10 * * * *"
 
   def perform

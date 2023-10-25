@@ -1,4 +1,4 @@
-class Crons::UpdateApplicationsStatuses < CronJob
+class Crons::UpdateApplicationsStatusesJob < CronJob
   self.cron_expression = "0 */2 * * *"
 
   def perform

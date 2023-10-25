@@ -1,4 +1,4 @@
-class Crons::SweepStaleSessions < CronJob
+class Crons::SweepStaleSessionsJob < CronJob
   self.cron_expression = "30 3 * * *"
 
   def perform

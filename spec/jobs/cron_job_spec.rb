@@ -21,4 +21,3 @@ RSpec.describe CronJob, type: :job do
     end
   end
 end
-
