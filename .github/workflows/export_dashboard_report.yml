@@ -11,20 +11,41 @@ jobs:
 
     runs-on: ubuntu-20.04
     container: google/cloud-sdk:latest
+    environment:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - uses: DFE-Digital/github-actions/set-arm-environment-variables@master
-        with:
-          azure-credentials: ${{ inputs.azure-credentials }}
+      - name: Install Power Shell
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y wget
+          wget https://github.com/PowerShell/PowerShell/releases/download/v7.3.8/powershell_7.3.8-1.deb_amd64.deb
+          dpkg -i powershell_7.3.8-1.deb_amd64.deb
+
+      - name: Install Postgres
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y postgresql
+
+      - name: Install az (Azure CLI)
+        shell: bash
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
       - uses: Azure/login@v1
         with:
-          creds: ${{ inputs.azure-credentials }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS credentials (sandbox, production)
+        shell: bash
+        run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
 
       - name: Auth with gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_BASE64 }}
 
@@ -33,12 +54,15 @@ jobs:
         run: |
           make install-konduit
 
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+
       - name: Download csv
         shell: bash
         run: |
-          bin/konduit.sh npq-registration-production-web -- psql -c "copy(select data from reports where identifier='dashboard') to STDOUT" | sed 's/\\n/\n/g' | sed '${/^$/d;}' > ~/data.csv
+          bin/konduit.sh npq-registration-production-web -- psql -c "copy(select data from reports where identifier='dashboard') to STDOUT" | sed 's/\\n/\n/g' | sed 's/Running cleanup...//g' | sed '/^$/d' > /tmp/data.csv
 
       - name: Upload csv to BigQuery
         shell: bash
         run: |
-          bq load --autodetect --replace npq_registration.applications ~/data.csv
+          bq load --autodetect --replace npq_registration.applications /tmp/data.csv
