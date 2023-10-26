@@ -13,7 +13,7 @@ jobs:
     container: google/cloud-sdk:448.0.0
     steps:
       - name: Auth with gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_BASE64 }}
 
@@ -49,5 +49,4 @@ jobs:
       - name: Upload csv to BigQuery
         shell: bash
         run: |
-          gcloud auth login
           bq load --autodetect --replace npq_registration.applications ~/data.csv
