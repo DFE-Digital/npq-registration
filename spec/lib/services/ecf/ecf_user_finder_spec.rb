@@ -40,7 +40,7 @@ RSpec.describe Ecf::EcfUserFinder do
       it "returns the user" do
         object = subject.call
 
-        expect(object).to be_a(EcfApi::User)
+        expect(object).to be_a(External::EcfApi::User)
         expect(object.id).to be_present
         expect(object.email).to eql(user.email)
       end
