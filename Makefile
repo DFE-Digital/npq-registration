@@ -88,6 +88,12 @@ terraform-plan: terraform-init
 terraform-apply: terraform-init
 	terraform -chdir=terraform/application apply -var-file "config/${CONFIG}.tfvars.json" ${AUTO_APPROVE}
 
+## DOCKER_IMAGE=fake-image make review terraform-unlock PULL_REQUEST_NUMBER=4169 LOCK_ID=123456
+## DOCKER_IMAGE=fake-image make staging terraform-unlock LOCK_ID=123456
+.PHONY: terraform-unlock
+terraform-unlock: terraform-init
+	terraform -chdir=terraform/application force-unlock ${LOCK_ID}
+
 set-what-if:
 	$(eval WHAT_IF=--what-if)
 
