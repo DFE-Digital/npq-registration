@@ -6,25 +6,36 @@
 
       <ul class="govuk-list govuk-list--bullet">
         <li>register for an NPQ or <%= localise_sentence_embedded_course_name(Course.ehco.first) %></li>
-        <li>view a previous registration</li>
+        <li>check your registration details, if you already registered</li>
       </ul>
 
-    <p class="govuk-body">You also need to apply separately with your training provider. They’ll contact you once you’ve registered.</p>
+    <p class="govuk-body">You also need to apply separately with your training provider. They’ll send you an application form by email once you’ve registered.</p>
 
     <h2 class="govuk-heading-m">Before you start</h2>
 
     <p class="govuk-body">You need to know:</p>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>which NPQ you want to do</li>
-      <li>who your provider is</li>
-    </ul>
+    <p class="govuk-body">
+      You need to know which NPQ you want to do and who your provider is. If you have not chosen
+      yet, <%= govuk_link_to("find out about NPQ courses", "https://www.gov.uk/guidance/national-professional-qualification-npq-courses") %>
+      .
+    </p>
 
-    <p class="govuk-body">If you have not chosen an NPQ or provider yet, <%= govuk_link_to("learn about NPQs", "https://www.gov.uk/government/publications/national-professional-qualifications-npqs") %>.</p>
+    <p class="govuk-body">
+      You also need a teacher reference number (TRN) to register for an NPQ, even if you’re not a
+      teacher. <%= govuk_link_to("Learn about TRNs", "https://www.gov.uk/guidance/teacher-reference-number-trn") %>
+      including how to request one if you do not have one.
+    </p>
 
-    <p class="govuk-body">If you work in early years or childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %> and get their Ofsted unique reference number (URN) if they have one.</p>
+    <p class="govuk-body">
+      If you work in early years or
+      childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %>
+      and get their Ofsted unique reference number (URN) if they have one.
+    </p>
 
-    <p class="govuk-body"><%= govuk_link_to("Check if you have a teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %>. If you’re not a teacher you can still register, but you’ll need to request a TRN. We’ll show you how to do this.</p>
+    <p class="govuk-body">
+      Before registering for an NPQ you’ll be asked to create a DfE Identity account or sign in to your account.
+    </p>
 
     <% if Services::Feature.registration_enabled? %>
       <%=
