@@ -34,7 +34,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/teacher-reference-number", submit_form: true) do
-      page.choose("No, I need help getting one", visible: :all)
+      page.choose("No, I need to request one", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/dont-have-teacher-reference-number", submit_form: false) do

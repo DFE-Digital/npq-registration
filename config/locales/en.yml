@@ -440,7 +440,7 @@ en:
 
         trn_knowledge_options:
           "yes": "Yes"
-          "no-dont-have": "No, I need help getting one"
+          "no-dont-have": "No, I need to request one"
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
