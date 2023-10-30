@@ -38,7 +38,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/dont-have-teacher-reference-number", submit_form: false) do
-      expect(page).to have_text("Get a Teacher Reference Number (TRN)")
+      expect(page).to have_text("Request a teacher reference number before registering for an NPQ")
 
       page.click_link("Back")
     end
