@@ -41,7 +41,7 @@ jobs:
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: DFE-Digital/github-actions/build-docker-image@master
         id: build-docker-image
@@ -58,7 +58,7 @@ jobs:
     environment:
       name: review
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -86,7 +86,7 @@ jobs:
     outputs:
       docker-image: ${{ needs.docker.outputs.docker-image }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -105,7 +105,7 @@ jobs:
     environment:
       name: sandbox
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
@@ -124,7 +124,7 @@ jobs:
     environment:
       name: production
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-environment-to-aks
         id: deploy
