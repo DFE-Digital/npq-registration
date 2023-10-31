@@ -294,7 +294,6 @@ en:
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
         dqt_mismatch: "We cannot find your details"
-        teacher_reference_number: "You need a teacher reference number to register for an NPQ"
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
         employment_role: "What is your role?"
         employer_name: "What organisation are you employed by?"
@@ -440,7 +439,7 @@ en:
 
         trn_knowledge_options:
           "yes": "Yes"
-          "no-dont-have": "No, I need help getting one"
+          "no-dont-have": "No, I need to request one"
 
         choose_childcare_provider: "What’s the name of your workplace?"
         choose_childcare_provider_search: "Workplace not shown above"
