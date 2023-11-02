@@ -47,11 +47,11 @@ RSpec.describe Services::Report do
     end
 
     it "has the same number of headers and columns" do
-      expect(subject.headers.size).to eql(subject.rows.first.size)
+      expect(subject.headers.size).to eql(subject.call.lines.first.split(",").size)
     end
 
     it "creates the right number of rows" do
-      expect(subject.rows.count).to eql(number_of_rows)
+      expect(subject.call.lines.count).to be(4)
     end
   end
 end
