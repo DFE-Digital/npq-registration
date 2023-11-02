@@ -45,7 +45,7 @@ jobs:
         run: az aks get-credentials -g s189p01-tsc-pd-rg -n s189p01-tsc-production-aks
 
       - name: Auth with gcloud
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v0
         with:
           service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_BASE64 }}
 
