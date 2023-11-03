@@ -2,7 +2,7 @@ require "active_support/time"
 
 class RegistrationWizard
   include ActiveModel::Model
-  include Forms::Helpers::Institution
+  include Helpers::Institution
   include ActionView::Helpers::TranslationHelper
 
   class InvalidStep < StandardError; end
@@ -68,7 +68,7 @@ class RegistrationWizard
   end
 
   def self.permitted_params_for_step(step)
-    "Forms::#{step.to_s.camelcase}".constantize.permitted_params
+    "Questionnaires::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
   def before_render
@@ -246,7 +246,7 @@ class RegistrationWizard
   end
 
   def form_for_step(step)
-    form_class = "Forms::#{step.to_s.camelcase}".constantize
+    form_class = "Questionnaires::#{step.to_s.camelcase}".constantize
     hash = store.slice(*form_class.permitted_params.map(&:to_s))
     hash.merge!(wizard: self)
     form_class.new(hash)
@@ -301,7 +301,7 @@ private
   end
 
   def form_class
-    @form_class ||= "Forms::#{current_step.to_s.camelcase}".constantize
+    @form_class ||= "Questionnaires::#{current_step.to_s.camelcase}".constantize
   end
 
   def set_current_step(step)

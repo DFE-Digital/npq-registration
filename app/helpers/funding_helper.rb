@@ -1,5 +1,5 @@
 module FundingHelper
-  include Forms::Helpers::Institution
+  include Helpers::Institution
   def scholarship_funding_eligibility(application)
     funding_eligibility = funding_eligibility_calculator(application)
 

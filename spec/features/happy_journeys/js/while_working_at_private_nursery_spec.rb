@@ -65,7 +65,7 @@ RSpec.feature "Happy journeys", type: :feature do
     ehco_course = ["Early headship coaching offer"]
     npqlpm_course = ["Leading primary mathematics"]
 
-    ineligible_courses_list = Forms::ChooseYourNpq.new.options.map(&:value)
+    ineligible_courses_list = Questionnaires::ChooseYourNpq.new.options.map(&:value)
 
     ineligible_courses = ineligible_courses_list.map { |name|
       I18n.t("course.name.#{name}")

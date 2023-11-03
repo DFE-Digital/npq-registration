@@ -4,42 +4,42 @@ en:
       admin: "%R on %d/%m/%Y"
   activemodel:
     attributes:
-      forms/funding_your_npq:
+      questionnaires/funding_your_npq:
         funding_options:
           school: My workplace is covering the cost
           trust: My trust is paying
           self: I am paying
           another: My NPQ is being paid in another way
-      forms/teacher_catchment:
+      questionnaires/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
     errors:
       models:
-        forms/chosen_start_date:
+        questionnaires/chosen_start_date:
           attributes:
             chosen_start_date:
               blank: Select whether you have agreed a start date
-        forms/provider_check:
+        questionnaires/provider_check:
           attributes:
             chosen_provider:
               blank: Select whether or not you have chosen an NPQ and provider
-        forms/share_provider:
+        questionnaires/share_provider:
           attributes:
             can_share_choices:
               accepted: You must agree to share data with providers to continue
-        forms/your_employment:
+        questionnaires/your_employment:
           attributes:
             employment_type:
               blank: Select an employment type
-        forms/your_role:
+        questionnaires/your_role:
           attributes:
             employment_role:
               blank: Enter your employment role
-        forms/your_employer:
+        questionnaires/your_employer:
           attributes:
             employer_name:
               blank: Enter the name of your employer
-        forms/qualified_teacher_check:
+        questionnaires/qualified_teacher_check:
           attributes:
             trn:
               blank: Teacher reference number can’t be blank
@@ -54,94 +54,94 @@ en:
               invalid: Date of birth must be a valid date
             national_insurance_number:
               too_long: National Insurance number is too long (maximum is %{count} characters)
-        forms/choose_your_npq:
+        questionnaires/choose_your_npq:
           attributes:
             course_identifier:
               blank: Choose a national professional qualification
               invalid: Choose a valid national professional qualification
-        forms/maths_eligibility_teaching_for_mastery:
+        questionnaires/maths_eligibility_teaching_for_mastery:
           attributes:
             maths_eligibility_teaching_for_mastery:
               blank: Choose whether or not you took one year of the primary maths Teaching for Mastery programme
-        forms/maths_understanding_of_approach:
+        questionnaires/maths_understanding_of_approach:
           attributes:
             maths_understanding_of_approach:
               blank: Choose your understanding of mastery approaches to teaching maths.
-        forms/choose_your_provider:
+        questionnaires/choose_your_provider:
           attributes:
             lead_provider_id:
               blank: Choose a provider
               invalid: Choose a valid provider
-        forms/sign_in:
+        questionnaires/sign_in:
           attributes:
             email:
               blank: Email can’t be blank
-        forms/sign_in_code:
+        questionnaires/sign_in_code:
           attributes:
             code:
               blank: Code can’t be blank
               incorrect: Code is not correct. Please try again
-        forms/choose_childcare_provider:
+        questionnaires/choose_childcare_provider:
           attributes:
             institution_name:
               no_results: No nurseries in %{location} with the name %{name} were found, please try again
-        forms/choose_private_childcare_provider:
+        questionnaires/choose_private_childcare_provider:
           attributes:
             institution_identifier:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
               invalid: No matching private childcare provider found
             institution_name:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
-        forms/choose_school:
+        questionnaires/choose_school:
           attributes:
             institution_name:
               no_results: No schools in %{location} with the name %{name} were found, please try again
-        forms/find_school:
+        questionnaires/find_school:
           attributes:
             institution_location:
               blank: School location can’t be blank
-        forms/find_childcare_provider:
+        questionnaires/find_childcare_provider:
           attributes:
             institution_location:
               blank: Nursery location can’t be blank
-        forms/funding_your_npq:
+        questionnaires/funding_your_npq:
           attributes:
             funding:
               blank: Choose how your NPQ will be funded
               invalid: Choose a valid funding option
-        forms/npqh_status:
+        questionnaires/npqh_status:
           attributes:
             npqh_status:
               blank: Information about NPQH can’t be blank
-        forms/ehco_headteacher:
+        questionnaires/ehco_headteacher:
           attributes:
             ehco_headteacher:
               blank: Choose whether or not you are a headteacher
-        forms/ehco_funding_not_available:
+        questionnaires/ehco_funding_not_available:
           attributes:
             ehco_funding:
               blank: Choose whether or not you want to pay for the Early Headship Coaching Offer in another way?
-        forms/funding_your_ehco:
+        questionnaires/funding_your_ehco:
           attributes:
             ehco_funding_choice:
               inclusion: Choose one of the following funding options
               blank: Choose one of the following funding options
-        forms/ehco_new_headteacher:
+        questionnaires/ehco_new_headteacher:
           attributes:
             ehco_new_headteacher:
               blank: Choose whether or not you are in your first 2 years of headship
-        forms/kind_of_nursery:
+        questionnaires/kind_of_nursery:
           attributes:
             kind_of_nursery:
               blank: Select your early years setting
-        forms/teacher_catchment:
+        questionnaires/teacher_catchment:
           attributes:
             teacher_catchment:
               blank: Choose where you work
             teacher_catchment_country:
               blank: Select which country you work in
               inclusion: Select one of the listed countries
-        forms/registration_interest_notification:
+        questionnaires/registration_interest_notification:
           attributes:
             notification_option:
               inclusion: Select an option

@@ -1,6 +1,6 @@
 module Services
   class HandleSubmissionForStore
-    include Forms::Helpers::Institution
+    include Helpers::Institution
 
     attr_reader :store
 
