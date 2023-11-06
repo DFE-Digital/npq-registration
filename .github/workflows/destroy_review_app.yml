@@ -26,7 +26,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          state_file_name=terraform-${{ github.event.pull_request.number }}.tfstate
+          state_file_name=${{ github.event.pull_request.number }}.tfstate
 
           echo "TF_STATE_FILE=$state_file_name" >> $GITHUB_ENV
 
