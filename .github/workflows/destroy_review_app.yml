@@ -30,7 +30,7 @@ jobs:
 
           echo "TF_STATE_FILE=$state_file_name" >> $GITHUB_ENV
 
-          state_file_status=$(az storage blob list -c cpdnpq-tfstate \
+          state_file_status=$(az storage blob list -c terraform-state \
             --account-name "s189t01cpdnpqrvsa" \
             --prefix $state_file_name --query "[].name" -o tsv)
 
@@ -57,5 +57,5 @@ jobs:
       - name: Delete Terraform state file
         if: env.TF_STATE_EXISTS == 'true'
         run: |
-          az storage blob delete -c cpdnpq-tfstate --name ${{ env.TF_STATE_FILE }} \
+          az storage blob delete -c terraform-state --name ${{ env.TF_STATE_FILE }} \
             --account-name "s189t01cpdnpqrvsa"
