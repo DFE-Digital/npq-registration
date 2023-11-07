@@ -12,6 +12,6 @@ class Admin::ApplicationsController < AdminController
 private
 
   def scope
-    Services::Admin::ApplicationsSearch.new(q: params[:q]).call
+    AdminService::ApplicationsSearch.new(q: params[:q]).call
   end
 end

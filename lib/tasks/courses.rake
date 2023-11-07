@@ -1,6 +1,6 @@
 namespace :courses do
   desc "Update courses"
   task update: :environment do
-    Services::Courses::DefinitionLoader.call
+    CourseService::DefinitionLoader.call
   end
 end

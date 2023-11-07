@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Eligibility::TargetedFunding do
+RSpec.describe Eligibility::TargetedFunding do
   subject { described_class.call(institution:, course:, employment_role:) }
 
   let(:institution) do
@@ -35,7 +35,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
         end
 
         before do
-          allow(Services::Eligibility::TsfPrimaryEligibility)
+          allow(Eligibility::TsfPrimaryEligibility)
             .to receive(:call)
             .with(institution:)
             .and_return(tsf_primary_check_result)
@@ -43,7 +43,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
 
         it "returns result with all checks to be true" do
           expect(subject).to eq(result)
-          expect(Services::Eligibility::TsfPrimaryEligibility)
+          expect(Eligibility::TsfPrimaryEligibility)
             .to have_received(:call)
             .with(institution:)
         end
@@ -60,7 +60,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
         end
 
         before do
-          allow(Services::Eligibility::TargetedDeliveryFunding)
+          allow(Eligibility::TargetedDeliveryFunding)
             .to receive(:call)
             .with(institution:, course:, employment_role:)
             .and_return(true)
@@ -68,7 +68,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
 
         it "returns result with primary check to both be false", :aggregate_failures do
           expect(subject).to eq(result)
-          expect(Services::Eligibility::TargetedDeliveryFunding)
+          expect(Eligibility::TargetedDeliveryFunding)
             .to have_received(:call)
             .with(institution:, course:, employment_role:)
         end
@@ -87,7 +87,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
       let(:ineligible_establishment_type_code) { 0 }
 
       before do
-        allow(Services::Eligibility::TargetedDeliveryFunding)
+        allow(Eligibility::TargetedDeliveryFunding)
           .to receive(:call)
           .with(institution:, course:, employment_role:)
           .and_return(false)
@@ -95,7 +95,7 @@ RSpec.describe Services::Eligibility::TargetedFunding do
 
       it "returns result with all checks to be false", :aggregate_failures do
         expect(subject).to eq(result)
-        expect(Services::Eligibility::TargetedDeliveryFunding)
+        expect(Eligibility::TargetedDeliveryFunding)
           .to have_received(:call)
           .with(institution:, course:, employment_role:)
       end

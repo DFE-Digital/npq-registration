@@ -34,4 +34,4 @@ Documentation on the different messages can be found at https://github.com/DFE-D
 
 ### Currently supported Webhooks
 
-- UserUpdated via [Services::GetAnIdentity::Webhooks::UserUpdatedProcessor](../app/services/get_an_identity/webhooks/user_updated_processor.rb)
+- UserUpdated via [GetAnIdentityService::Webhooks::UserUpdatedProcessor](../app/services/get_an_identity/webhooks/user_updated_processor.rb)

@@ -10,7 +10,7 @@
 
 ### Locally
 - Open a rails console and run the following
-- `Services::ImportGiasSchools.new.call`
+- `ImportGiasSchools.new.call`
 
 ### Production
 
@@ -40,7 +40,7 @@ There is no Github Action for this, the above rake tasks need to be called.
 
 ### Locally
 - Open a rails console and run the following
-- `Services::SetHighPupilPremiums.new(path_to_csv: Rails.root.join("config/data/high_pupil_premiums_2021_2022.csv")).call`
+- `SetHighPupilPremiums.new(path_to_csv: Rails.root.join("config/data/high_pupil_premiums_2021_2022.csv")).call`
 
 ### Production
 There is no Github Action for this, the above rake tasks need to be called.

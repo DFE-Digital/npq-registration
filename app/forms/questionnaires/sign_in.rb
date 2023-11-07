@@ -27,7 +27,7 @@ module Questionnaires
 
       if user
         # TODO: extract out
-        code = Services::OtpCodeGenerator.new.call
+        code = OtpCodeGenerator.new.call
         user.update!(otp_hash: code, otp_expires_at: 15.minutes.from_now)
         ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
       end

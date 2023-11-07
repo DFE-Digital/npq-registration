@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Ecf::NpqProfileUpdater do
+RSpec.describe Ecf::NpqProfileUpdater do
   subject { described_class.new(application:) }
 
   let(:user) do
@@ -51,7 +51,7 @@ RSpec.describe Services::Ecf::NpqProfileUpdater do
       ukprn: school.ukprn,
       headteacher_status: "no",
       eligible_for_funding: true,
-      funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       funding_choice: "trust",
       ecf_id: "1234",
       teacher_catchment: new_teacher_catchment,

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Eligibility::TsfPrimaryEligibility do
+RSpec.describe Eligibility::TsfPrimaryEligibility do
   subject { described_class.call(institution:) }
 
   let(:institution) do

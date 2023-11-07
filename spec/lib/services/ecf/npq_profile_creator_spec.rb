@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Ecf::NpqProfileCreator do
+RSpec.describe Ecf::NpqProfileCreator do
   subject { described_class.new(application:) }
 
   let(:user) do
@@ -18,7 +18,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
   let(:school) { create(:school) }
-  let(:teacher_catchment_country) { Services::AutocompleteCountries.names.sample }
+  let(:teacher_catchment_country) { AutocompleteCountries.names.sample }
 
   let(:application) do
     Application.create!(
@@ -36,7 +36,7 @@ RSpec.describe Services::Ecf::NpqProfileCreator do
       itt_provider: nil,
       lead_mentor: false,
       private_childcare_provider_urn: nil,
-      funding_eligiblity_status_code: Services::FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
+      funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       teacher_catchment: "other",
       teacher_catchment_country:,
       employment_type: SecureRandom.uuid,

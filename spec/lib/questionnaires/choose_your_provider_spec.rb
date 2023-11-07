@@ -219,7 +219,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       )
     end
 
-    let(:mock_funding_service) { instance_double(Services::FundingEligibility, "funded?": true) }
+    let(:mock_funding_service) { instance_double(FundingEligibility, "funded?": true) }
 
     before do
       subject.wizard = wizard
@@ -227,7 +227,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
 
     context "when npqh and eligible for funding" do
       before do
-        allow(Services::FundingEligibility).to receive(:new).and_return(mock_funding_service)
+        allow(FundingEligibility).to receive(:new).and_return(mock_funding_service)
       end
 
       it "returns :possible_funding" do

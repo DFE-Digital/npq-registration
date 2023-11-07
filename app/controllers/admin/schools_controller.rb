@@ -12,6 +12,6 @@ class Admin::SchoolsController < AdminController
 private
 
   def scope
-    Services::Admin::SchoolsSearch.new(q: params[:q]).call
+    AdminService::SchoolsSearch.new(q: params[:q]).call
   end
 end

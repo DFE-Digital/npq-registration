@@ -3,7 +3,7 @@ namespace :lead_providers do
   task update: :environment do |t|
     Rails.logger.info("Running #{t.name}")
 
-    Services::LeadProviders::Updater.call
+    LeadProviders::Updater.call
 
     Rails.logger.info("#{t.name} finished")
   end

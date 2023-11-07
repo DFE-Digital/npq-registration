@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Eligibility::TargetedDeliveryFunding do
+RSpec.describe Eligibility::TargetedDeliveryFunding do
   unsupported_course_codes = %w[
     npq-early-headship-coaching-offer
   ].freeze

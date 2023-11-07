@@ -56,7 +56,7 @@ class RegistrationWizard
   attr_reader :current_step, :params, :store, :request, :current_user
 
   def initialize(current_step:, store:, request:, current_user:, params: {})
-    current_step = :closed if Services::Feature.registration_closed?
+    current_step = :closed if Feature.registration_closed?
     set_current_step(current_step)
 
     @current_user = current_user
@@ -253,7 +253,7 @@ class RegistrationWizard
   end
 
   def query_store
-    @query_store ||= Services::QueryStore.new(store:)
+    @query_store ||= QueryStore.new(store:)
   end
 
 private
@@ -271,7 +271,7 @@ private
   end
 
   def funding_eligibility_calculator
-    Services::FundingEligibility.new(
+    FundingEligibility.new(
       course:,
       institution: institution_from_store,
       approved_itt_provider: approved_itt_provider?,

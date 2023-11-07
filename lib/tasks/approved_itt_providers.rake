@@ -11,7 +11,7 @@ namespace :approved_itt_providers do
 
     Rails.logger.info("Importing Approved ITT providers from CSV file: #{file_name}")
 
-    Services::ApprovedIttProviders::Update.call(file_name:)
+    ApprovedIttProviders::Update.call(file_name:)
 
     Rails.logger.info("Import finished")
   end

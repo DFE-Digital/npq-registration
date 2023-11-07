@@ -26,7 +26,7 @@ RSpec.describe RegistrationWizard do
 
     context "when registration is closed" do
       before do
-        Flipper.enable(Services::Feature::REGISTRATION_CLOSED_KEY)
+        Flipper.enable(Feature::REGISTRATION_CLOSED_KEY)
       end
 
       it "always returns closed" do

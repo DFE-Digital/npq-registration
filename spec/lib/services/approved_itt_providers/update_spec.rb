@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::ApprovedIttProviders::Update do
+RSpec.describe ApprovedIttProviders::Update do
   subject { described_class.call(file_name:) }
 
   # Clean the DB first

@@ -36,7 +36,7 @@
       Before registering for an NPQ you’ll be asked to create a DfE Identity account or sign in to your account.
     </p>
 
-    <% if Services::Feature.registration_enabled? %>
+    <% if Feature.registration_enabled? %>
       <%=
         render(
           'shared/get_an_identity/redirect_button',

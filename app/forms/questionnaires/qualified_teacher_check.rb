@@ -81,7 +81,7 @@ module Questionnaires
     end
 
     def next_step
-      record = Services::ParticipantValidator.new(
+      record = ParticipantValidator.new(
         trn: trn_digits_only,
         full_name:,
         date_of_birth:,

@@ -19,11 +19,11 @@ module Questionnaires
       wizard.store["submitted"] = true
       wizard.session["clear_tra_login"] = true
 
-      Services::HandleSubmissionForStore.new(store: wizard.store).call
+      HandleSubmissionForStore.new(store: wizard.store).call
     end
 
     def email_template
-      @email_template ||= Services::EmailTemplate.call(data: wizard.store)
+      @email_template ||= EmailTemplate.call(data: wizard.store)
     end
 
     def funding_amount

@@ -7,7 +7,7 @@ module ApplicationHelper
 
   def npq_registration_link
     if signed_in?
-      if Services::Feature.trn_required? && current_user.trn.blank?
+      if Feature.trn_required? && current_user.trn.blank?
         registration_wizard_show_path(:teacher_reference_number)
       else
         registration_wizard_show_path(:provider_check)

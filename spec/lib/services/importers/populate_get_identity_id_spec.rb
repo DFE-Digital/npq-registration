@@ -1,7 +1,7 @@
 require "rails_helper"
 require "tempfile"
 
-RSpec.describe Services::Importers::PopulateGetIdentityId do
+RSpec.describe Importers::PopulateGetIdentityId do
   it "Updates the get_identity_id for the user" do
     user = create(:user)
     create(:application, user:, ecf_id: "the-id-in-ecf")

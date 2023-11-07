@@ -11,7 +11,7 @@ namespace :get_identity_id do
       rows << row.to_h
     end
 
-    importer = Services::Importers::PopulateGetIdentityId.new
+    importer = Importers::PopulateGetIdentityId.new
     importer.import(rows)
 
     Rails.logger.info("Import finished")

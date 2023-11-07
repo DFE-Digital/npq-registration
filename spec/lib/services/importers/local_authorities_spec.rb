@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Services::Importers::LocalAuthorities do
+RSpec.describe Importers::LocalAuthorities do
   describe "#call" do
     subject { described_class.new(path_to_csv: Rails.root.join("config/data/local_authorities.csv")) }
 
