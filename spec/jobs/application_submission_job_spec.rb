@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe ApplicationSubmissionJob do
+  include CourseHelper
   subject { described_class.new(user:, email_template: "b8b53310-fa6f-4587-972a-f3f3c6e0892e") }
 
   describe "#perform" do
@@ -32,7 +33,7 @@ RSpec.describe ApplicationSubmissionJob do
       expect(Services::Ecf::EcfUserCreator).to receive(:new).and_return(user_creator_double)
       expect(Services::Ecf::NpqProfileCreator).to receive(:new).and_return(profile_creator_double)
 
-      localised_course_name = I18n.t(application.course.identifier, scope: "course.name")
+      localised_course_name = localise_sentence_embedded_course_name(application.course)
 
       allow(ApplicationSubmissionMailer).to receive(:application_submitted_mail).and_call_original
       expect(ApplicationSubmissionMailer).to receive(:application_submitted_mail).with(
