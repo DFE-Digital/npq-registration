@@ -37,7 +37,7 @@ Style/DoubleNegation:
 
 Rails/SaveBang:
   Exclude:
-    - "app/lib/ecf_api/base.rb"
+    - "app/models/external/ecf_api/base.rb"
     - "app/services/ecf/ecf_user_creator.rb"
     - "app/services/ecf/npq_profile_creator.rb"
     - "app/services/ecf/npq_profile_updater.rb"

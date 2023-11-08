@@ -192,7 +192,7 @@ private
   end
 
   def ecf_api_funding_lookup
-    @ecf_api_funding_lookup = EcfApi::Npq::PreviousFunding.find_for(
+    @ecf_api_funding_lookup = External::EcfApi::Npq::PreviousFunding.find_for(
       trn:,
       get_an_identity_id:,
       npq_course_identifier: course.identifier,

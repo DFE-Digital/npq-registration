@@ -7,7 +7,7 @@ module Ecf
     end
 
     def call
-      profile = EcfApi::NpqProfile.new(
+      profile = External::EcfApi::NpqProfile.new(
         teacher_reference_number: user.trn,
         teacher_reference_number_verified: user.trn_verified,
         active_alert: user.active_alert,
@@ -79,15 +79,15 @@ module Ecf
     end
 
     def ecf_user
-      @ecf_user ||= EcfApi::User.new(id: application.user.ecf_id)
+      @ecf_user ||= External::EcfApi::User.new(id: application.user.ecf_id)
     end
 
     def ecf_npq_course
-      @ecf_npq_course ||= EcfApi::NpqCourse.new(id: application.course.ecf_id)
+      @ecf_npq_course ||= External::EcfApi::NpqCourse.new(id: application.course.ecf_id)
     end
 
     def ecf_npq_lead_provider
-      @ecf_npq_lead_provider ||= EcfApi::NpqLeadProvider.new(id: application.lead_provider.ecf_id)
+      @ecf_npq_lead_provider ||= External::EcfApi::NpqLeadProvider.new(id: application.lead_provider.ecf_id)
     end
   end
 end

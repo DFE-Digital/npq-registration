@@ -7,7 +7,7 @@ module Ecf
     end
 
     def call
-      remote = EcfApi::Npq::User.new(
+      remote = External::EcfApi::Npq::User.new(
         email: user.email,
         get_an_identity_id: user.get_an_identity_id,
         full_name: user.full_name,
