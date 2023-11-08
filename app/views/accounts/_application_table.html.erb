@@ -45,8 +45,10 @@
           <dd class="govuk-summary-list__value">
               <% if application.participant_outcome_state.capitalize == "Passed" %>
                 <strong class="govuk-tag govuk-tag--green">PASSED</strong>
+                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
               <% elsif application.participant_outcome_state.capitalize == "Failed" %>
                 <strong class="govuk-tag govuk-tag--red">NOT PASSED</strong>
+                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
               <% end %>
           </dd>
         </div>
