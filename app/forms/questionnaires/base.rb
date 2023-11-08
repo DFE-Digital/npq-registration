@@ -2,7 +2,7 @@ module Questionnaires
   class Base
     include ActiveModel::Model
     include ActiveModel::Validations::Callbacks
-    include Forms::FlowHelper
+    include Questionnaires::FlowHelper
 
     attr_accessor :wizard
 
