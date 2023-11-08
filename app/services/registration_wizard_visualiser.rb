@@ -203,7 +203,7 @@ private
     flow_helper_method_node_structs.map do |node|
       build_node_string(
         name: node.name,
-        settings: node_settings(node.name, HELPER_COLOR, description: "Forms::FlowHelper"),
+        settings: node_settings(node.name, HELPER_COLOR, description: "Questionnaires::FlowHelper"),
       )
     end
   end
@@ -260,18 +260,18 @@ private
   ## Source helpers
 
   def step_options
-    Forms.constants
+    Questionnaires.constants
          .sort
          .map { |f| "Questionnaires::#{f}".constantize }
          .select { |f| f < Questionnaires::Base }
   end
 
   def flow_helper_methods
-    Forms::FlowHelper.instance_methods
+    Questionnaires::FlowHelper.instance_methods
   end
 
   def flow_helper_method_source(method_name)
-    Forms::FlowHelper.instance_method(method_name).source
+    Questionnaires::FlowHelper.instance_method(method_name).source
   end
 
   def extract_steps_from_source(method_source)
