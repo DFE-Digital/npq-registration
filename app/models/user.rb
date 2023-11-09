@@ -4,8 +4,6 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
-  validates :email, uniqueness: true
-
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :synced_to_ecf, -> { where.not(ecf_id: nil) }

@@ -60,26 +60,6 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
       })
     end
 
-    context "when the new email is already in use" do
-      before do
-        create(:user, email: new_email)
-      end
-
-      it "marks the webhook_message as failed" do
-        expect {
-          described_class.call(webhook_message:)
-        }.to change {
-          webhook_message.reload.slice(:status, :status_comment)
-        }.from(
-          "status" => "pending",
-          "status_comment" => nil,
-        ).to({
-          "status" => "failed",
-          "status_comment" => "Email has already been taken",
-        })
-      end
-    end
-
     context "when the trn is not present" do
       let(:new_trn) { nil }
       let(:new_trn_status) { "not_found" }
