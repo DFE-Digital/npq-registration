@@ -4,8 +4,6 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
-  validates :email, uniqueness: true
-
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
@@ -28,7 +26,7 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
-    user_from_provider_data = find_or_initialize_by(email: provider_data.info.email)
+    user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
 
     user_from_provider_data.feature_flag_id = feature_flag_id
 
@@ -43,8 +41,6 @@ class User < ApplicationRecord
       full_name: provider_data.info.preferred_name || provider_data.info.name,
       raw_tra_provider_data: provider_data,
       updated_from_tra_at: Time.zone.now,
-      uid: provider_data.uid,
-      provider: provider_data.provider,
     )
 
     user_from_provider_data.tap(&:save)
