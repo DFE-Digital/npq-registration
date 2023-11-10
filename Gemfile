@@ -79,7 +79,7 @@ group :test do
 end
 
 group :development, :test, :review do
-  gem "faker", "~> 3.2", ">= 3.2.1"
+  gem "faker", "~> 3.2"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
