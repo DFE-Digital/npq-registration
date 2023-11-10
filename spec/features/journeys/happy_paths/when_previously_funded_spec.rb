@@ -124,15 +124,15 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Early headship coaching offer",
-          "How is your EHCO being paid for?" => "I am paying",
-          "Have you completed an NPQH?" => "I’ve completed it",
-          "Are you a headteacher?" => "Yes",
-          "Are you in your first 5 years of a headship?" => "Yes",
-          "What setting do you work in?" => "Early years or childcare",
-          "Lead provider" => "Teach First",
-          "Ofsted registration details" => "EY123456 - searchable childcare provider",
-          "Which early years setting do you work in?" => "Private nursery",
-          "Do you work in England?" => "Yes",
+          "Course funding" => "I am paying",
+          "Headship NPQ stage" => "I’ve completed it",
+          "Headteacher" => "Yes",
+          "First 5 years of headship" => "Yes",
+          "Work setting" => "Early years or childcare",
+          "Provider" => "Teach First",
+          "Ofsted unique reference number (URN)" => "EY123456 - searchable childcare provider - street 1, manchester",
+          "Early years setting" => "Private nursery",
+          "Workplace in England" => "Yes",
         },
       )
     end

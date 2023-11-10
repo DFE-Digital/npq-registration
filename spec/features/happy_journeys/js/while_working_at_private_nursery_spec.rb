@@ -112,11 +112,11 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Early years leadership",
-          "What setting do you work in?" => "Early years or childcare",
-          "Lead provider" => "Teach First",
-          "Ofsted registration details" => private_childcare_provider.registration_details,
-          "Which early years setting do you work in?" => "Private nursery",
-          "Do you work in England?" => "Yes",
+          "Work setting" => "Early years or childcare",
+          "Provider" => "Teach First",
+          "Ofsted unique reference number (URN)" => private_childcare_provider.registration_details,
+          "Early years setting" => "Private nursery",
+          "Workplace in England" => "Yes",
         },
       )
     end

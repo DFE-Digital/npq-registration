@@ -74,9 +74,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Role" => "Trainer",
-          "What setting do you work in?" => "Other",
-          "Lead provider" => "Teach First",
-          "Do you work in England?" => "Yes",
+          "Work setting" => "Other",
+          "Provider" => "Teach First",
+          "Workplace in England" => "Yes",
         },
       )
     end

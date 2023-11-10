@@ -29,6 +29,10 @@ class LocalAuthority < ApplicationRecord
     address.join(", ")
   end
 
+  def name_with_address
+    [display_name, address_string].join(" - ")
+  end
+
   def identifier
     "LocalAuthority-#{id}"
   end

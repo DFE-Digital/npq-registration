@@ -106,11 +106,11 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Do you work in England?" => "Yes",
-          "What setting do you work in?" => "A school",
+          "Workplace in England" => "Yes",
+          "Work setting" => "A school",
           "Course" => "Senior leadership",
-          "Workplace" => "open manchester school",
-          "Lead provider" => "Teach First",
+          "Workplace" => "open manchester school - street 1, manchester",
+          "Provider" => "Teach First",
         },
       )
     end

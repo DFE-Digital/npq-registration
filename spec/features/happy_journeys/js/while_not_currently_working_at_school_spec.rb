@@ -71,12 +71,12 @@ RSpec.feature "Happy journeys",
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Senior leadership",
-          "What setting do you work in?" => "Other",
+          "Work setting" => "Other",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
-          "Lead provider" => "Teach First",
+          "Provider" => "Teach First",
           "Role" => "Trainer",
-          "Do you work in England?" => "Yes",
+          "Workplace in England" => "Yes",
         },
       )
     end

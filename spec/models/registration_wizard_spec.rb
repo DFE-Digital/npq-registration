@@ -64,8 +64,8 @@ RSpec.describe RegistrationWizard do
     #     }
     #   end
 
-    #   it "does not show How is your NPQ being paid for?" do
-    #     expect(subject.answers.map(&:key)).not_to include("How is your NPQ being paid for?")
+    #   it "does not show Course funding" do
+    #     expect(subject.answers.map(&:key)).not_to include("Course funding")
     #   end
 
     #   it "does not show ASO funding option" do
@@ -157,7 +157,7 @@ RSpec.describe RegistrationWizard do
         end
 
         it "shows Do you have a URN?" do
-          expect(subject.answers.map(&:key)).to include("Do you have a URN?")
+          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Nursery" do
@@ -170,7 +170,7 @@ RSpec.describe RegistrationWizard do
         let(:institution_identifier) { private_childcare_provider.identifier }
 
         it "shows Ofsted registration details" do
-          expect(subject.answers.map(&:key)).to include("Ofsted registration details")
+          expect(subject.answers.map(&:key)).to include("Ofsted unique reference number (URN)")
         end
 
         it "does not show Do you have a URN?" do

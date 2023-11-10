@@ -91,12 +91,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Senior leadership",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "What setting do you work in?" => "Early years or childcare",
-          "Lead provider" => "Teach First",
-          "Nursery" => "open manchester school",
-          "Do you work in England?" => "Yes",
-          "Which early years setting do you work in?" => public_kind_of_nursery,
+          "Course funding" => "My workplace is covering the cost",
+          "Work setting" => "Early years or childcare",
+          "Provider" => "Teach First",
+          "Workplace" => "open manchester school - street 1, manchester",
+          "Workplace in England" => "Yes",
+          "Early years setting" => public_kind_of_nursery,
         },
       )
 
@@ -149,9 +149,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Role" => "Trainer",
-          "What setting do you work in?" => "Other",
-          "Lead provider" => "Teach First",
-          "Do you work in England?" => "Yes",
+          "Work setting" => "Other",
+          "Provider" => "Teach First",
+          "Workplace in England" => "Yes",
         },
       )
     end

@@ -91,12 +91,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Senior leadership",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "Lead provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
-          "What setting do you work in?" => "Early years or childcare",
-          "Nursery" => "open manchester school",
-          "Which early years setting do you work in?" => public_kind_of_nursery,
-          "Do you work in England?" => "Yes",
+          "Course funding" => "My workplace is covering the cost",
+          "Provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Work setting" => "Early years or childcare",
+          "Workplace" => "open manchester school - street 1, manchester",
+          "Early years setting" => public_kind_of_nursery,
+          "Workplace in England" => "Yes",
         },
       )
 
@@ -138,12 +138,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Early years leadership",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "Lead provider" => "Teacher Development Trust",
-          "What setting do you work in?" => "Early years or childcare",
-          "Nursery" => "open manchester school",
-          "Which early years setting do you work in?" => public_kind_of_nursery,
-          "Do you work in England?" => "Yes",
+          "Course funding" => "My workplace is covering the cost",
+          "Provider" => "Teacher Development Trust",
+          "Work setting" => "Early years or childcare",
+          "Workplace" => "open manchester school - street 1, manchester",
+          "Early years setting" => public_kind_of_nursery,
+          "Workplace in England" => "Yes",
         },
       )
     end
