@@ -16,6 +16,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
     # @user.save checks that any changes made to an existing record have been persisted to that persisted record
     if @user.persisted? && @user.save
       session["user_id"] = @user.id
+      Ecf::EcfUserUpdater.new(user: @user).call if @user.ecf_id.present?
 
       sign_in_and_redirect @user
     else
