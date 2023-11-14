@@ -13,6 +13,11 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
+  # TODO: for investigation of the GAI error, we currently have very small number of duplicated emails
+  # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :email, uniqueness: true
+  # rubocop:enable Rails/UniqueValidationWithoutIndex
+
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end
@@ -22,12 +27,13 @@ class User < ApplicationRecord
 
     return user if user.persisted?
 
+    Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
+
     find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
   end
 
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
-
     user_from_provider_data.feature_flag_id = feature_flag_id
 
     trn = provider_data.info.trn
@@ -65,7 +71,11 @@ class User < ApplicationRecord
       updated_from_tra_at: Time.zone.now,
     )
 
-    user_from_provider_data.tap(&:save)
+    unless user_from_provider_data.save
+      Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
+    end
+
+    user_from_provider_data
   end
 
   def get_an_identity_user
