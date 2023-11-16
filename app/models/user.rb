@@ -25,7 +25,13 @@ class User < ApplicationRecord
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
     user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
 
-    return user if user.persisted?
+    if user.persisted?
+      unless user.valid?
+        Rails.logger.info("[GAI] User persisted BUT not valid, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
+      end
+
+      return user
+    end
 
     Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
 
