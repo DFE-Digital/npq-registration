@@ -82,7 +82,7 @@ if Rails.env.development?
     trn_auto_verified: false,
     admin: false,
     feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.find(6),
+    provider: LeadProvider.all[6],
     uid: SecureRandom.uuid,
     raw_tra_provider_data: nil,
     get_an_identity_id_synced_to_ecf: false,
@@ -102,7 +102,7 @@ if Rails.env.development?
     trn_auto_verified: false,
     admin: false,
     feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.find(4),
+    provider: LeadProvider.all[4],
     uid: SecureRandom.uuid,
     raw_tra_provider_data: nil,
     get_an_identity_id_synced_to_ecf: false,
@@ -128,3 +128,5 @@ if Rails.env.development?
     )
   end
 end
+
+ImportGiasSchools.new.call(max_schools: 1500) unless Rails.env.test?

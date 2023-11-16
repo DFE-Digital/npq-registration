@@ -5,7 +5,8 @@ class ImportGiasSchools
     @refresh_all = refresh_all
   end
 
-  def call
+  def call(max_schools: nil)
+    total_schools = 0
     CSV.foreach(csv_file, headers: true, converters: [gias_converter]) do |row|
       school = School.find_or_create_by!(urn: row["URN"]) do |s|
         s.assign_attributes(attributes_from_row(row))
@@ -16,6 +17,7 @@ class ImportGiasSchools
       elsif row["LastChangedDate"].present? && (school.last_changed_date < row["LastChangedDate"])
         school.update!(attributes_from_row(row))
       end
+      break if max_schools && total_schools >= max_schools
     end
   ensure
     csv_file.close
