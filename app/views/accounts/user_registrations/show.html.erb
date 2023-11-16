@@ -25,11 +25,6 @@
 <% else %>
   <h1 class="govuk-heading-xl"><%= I18n.t("accounts.show.title") %></h1>
 <% end %>
-<% if @application.participant_outcome_state.blank?%>
-  <div class="govuk-inset-text">
-    If you need to change something about your NPQ, email <a class="govuk-link" href="mailto:continuing-professional-development@digital.education.gov.uk">continuing-professional-development@digital.education.gov.uk</a>.
-  </div>
-<% end %>
 <%= render "accounts/course_details", application: @application %>
 <%= render "accounts/funding_details", application: @application %>
 <%= render "accounts/personal_details", application: @application %>
