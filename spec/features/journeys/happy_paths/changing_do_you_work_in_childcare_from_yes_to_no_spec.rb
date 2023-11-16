@@ -65,7 +65,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       expect(page).to have_text("such as state funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
@@ -73,7 +73,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How is your course being paid for?")
+      expect(page).to have_text("How are you funding your course?")
       page.choose "My workplace is covering the cost", visible: :all
     end
 
@@ -126,7 +126,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       page.click_button("Continue")
     end
 

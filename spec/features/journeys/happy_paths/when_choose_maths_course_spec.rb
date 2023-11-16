@@ -82,7 +82,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       expect(page).to have_text("If your provider accepts your application, you’ll be eligible for scholarship funding for the the Leading primary mathematics NPQ.")
     end
 

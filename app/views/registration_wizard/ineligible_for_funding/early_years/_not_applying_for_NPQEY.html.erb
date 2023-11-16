@@ -1,10 +1,10 @@
 <% content_for :title do %>
-  <%= @form.errors.present? ? "Error: " : nil %> Funding eligibility
+  <%= @form.errors.present? ? "Error: " : nil %> Funding
 <% end %>
 
 <% npqeyl = Course.npqeyl.first %>
 
-<h1 class="govuk-heading-xl">Funding eligibility</h1>
+<h1 class="govuk-heading-xl">Funding</h1>
 
 <p class="govuk-body">
 You’re not eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %>
