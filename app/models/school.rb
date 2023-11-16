@@ -40,7 +40,7 @@ class School < ApplicationRecord
   end
 
   def name_with_address
-    [display_name, address_string].join(" - ")
+    [display_name, address_string].join(" – ")
   end
 
   def in_england?

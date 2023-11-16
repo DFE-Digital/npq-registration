@@ -130,7 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "First 5 years of headship" => "Yes",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => "EY123456 - searchable childcare provider - street 1, manchester",
+          "Ofsted unique reference number (URN)" => "EY123456 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
           "Workplace in England" => "Yes",
         },

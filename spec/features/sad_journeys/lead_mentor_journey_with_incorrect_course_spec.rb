@@ -84,6 +84,7 @@ RSpec.feature "Sad journeys", type: :feature do
           "Provider" => "Church of England",
           "Work setting" => "Other",
           "Workplace in England" => "Yes",
+          "Course funding" => "I am paying",
         },
       )
     end

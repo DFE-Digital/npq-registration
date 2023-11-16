@@ -139,7 +139,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "A school",
-          "Workplace" => "open manchester school - street 1, manchester",
+          "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
           "Workplace in England" => "Yes",
         },

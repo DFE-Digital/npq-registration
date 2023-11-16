@@ -199,35 +199,6 @@ class RegistrationWizard
                             value: I18n.t(query_store.course.identifier, scope: "course.name"),
                             change_step: :choose_your_npq)
 
-    unless eligible_for_funding?
-      if course.ehco?
-        array << OpenStruct.new(key: "Course funding",
-                                value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
-                                change_step: :funding_your_ehco)
-      elsif query_store.works_in_school? || query_store.works_in_childcare?
-        array << OpenStruct.new(key: "Course funding",
-                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
-                                change_step: :funding_your_npq)
-      end
-    end
-
-    array << OpenStruct.new(key: "Provider",
-                            value: query_store.lead_provider.name,
-                            change_step: :choose_your_provider)
-
-    if query_store.course.identifier == "npq-leading-primary-mathematics"
-      if store["maths_eligibility_teaching_for_mastery"] == "yes"
-        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme?",
-                                value: store["maths_eligibility_teaching_for_mastery"].capitalize,
-                                change_step: :maths_eligibility_teaching_for_mastery)
-
-      elsif store["maths_eligibility_teaching_for_mastery"] == "no"
-        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme?",
-                                value: I18n.t("helpers.label.registration_wizard.maths_understanding_of_approach_options.#{store['maths_understanding_of_approach']}"),
-                                change_step: :maths_eligibility_teaching_for_mastery)
-      end
-    end
-
     if course.ehco?
       array << OpenStruct.new(key: "Headship NPQ stage",
                               value: I18n.t(store["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options"),
@@ -243,6 +214,39 @@ class RegistrationWizard
                                 change_step: :ehco_new_headteacher)
       end
     end
+
+    if query_store.course.identifier == "npq-leading-primary-mathematics"
+      if store["maths_eligibility_teaching_for_mastery"] == "yes"
+        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme",
+                                value: store["maths_eligibility_teaching_for_mastery"].capitalize,
+                                change_step: :maths_eligibility_teaching_for_mastery)
+
+      elsif store["maths_eligibility_teaching_for_mastery"] == "no"
+        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme",
+                                value: I18n.t("helpers.label.registration_wizard.maths_understanding_of_approach_options.#{store['maths_understanding_of_approach']}"),
+                                change_step: :maths_eligibility_teaching_for_mastery)
+      end
+    end
+
+    unless eligible_for_funding?
+      if course.ehco?
+        array << OpenStruct.new(key: "Course funding",
+                                value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
+                                change_step: :funding_your_ehco)
+      elsif query_store.works_in_school? || query_store.works_in_childcare?
+        array << OpenStruct.new(key: "Course funding",
+                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                                change_step: :funding_your_npq)
+      elsif !course.npqltd? && query_store.lead_mentor_for_accredited_itt_provider?
+        array << OpenStruct.new(key: "Course funding",
+                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                                change_step: :funding_your_npq)
+      end
+    end
+
+    array << OpenStruct.new(key: "Provider",
+                            value: query_store.lead_provider.name,
+                            change_step: :choose_your_provider)
 
     array
   end

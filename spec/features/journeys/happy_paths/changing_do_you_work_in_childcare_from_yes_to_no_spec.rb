@@ -94,7 +94,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Workplace" => "open manchester school - street 1, manchester",
+          "Workplace" => "open manchester school – street 1, manchester",
           "Workplace in England" => "Yes",
           "Early years setting" => public_kind_of_nursery,
         },

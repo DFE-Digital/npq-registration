@@ -114,7 +114,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "A school",
           "Course" => "Early headship coaching offer",
           "Provider" => "Teach First",
-          "Workplace" => "open manchester school - street 1, manchester",
+          "Workplace" => "open manchester school – street 1, manchester",
           "Headteacher" => "No",
           "Headship NPQ stage" => "I’ve completed it",
           "Course funding" => "I am paying",
