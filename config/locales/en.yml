@@ -257,6 +257,9 @@ en:
       "npq-early-years-leadership": "Early years leadership"
       "npq-leading-literacy": "Leading literacy"
       "npq-leading-primary-mathematics": "Leading primary mathematics"
+    outcome:
+      passed_html: "Get your NPQ certificate through the <a href=\"https://access-your-teaching-qualifications.education.gov.uk/qualifications/start\" class=\"govuk-link\">Access your teaching qualifications</a> service."
+      failed: "If you think this is mistake or need to appeal this outcome, contact your training provider."
 
   funding_details:
     in_review: "Contact your provider to check if you’re eligible for scholarship funding, if you have not done so already."
