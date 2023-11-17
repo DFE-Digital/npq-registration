@@ -1,5 +1,5 @@
 <% content_for :title do %>
-  <%= t("helpers.title.registration_wizard.#{@wizard.current_step}") %>
+  <%= t("helpers.title.registration_wizard.change_your_course_or_provider") %>
 <% end %>
 
 <% content_for :before_content do %>
@@ -18,9 +18,9 @@
     <p class="govuk-body">If you have already started your course, contact your provider to make any changes.</p>
 
     <% if Feature.trn_required? && current_user.trn.blank? %>
-        <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>
+      <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>
     <% else %>
-        <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:provider_check)) %>
+      <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:provider_check)) %>
     <% end %>
   </div>
 </div>
