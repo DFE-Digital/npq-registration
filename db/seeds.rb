@@ -129,4 +129,4 @@ if Rails.env.development?
   end
 end
 
-ImportGiasSchools.new.call(max_schools: 1500) unless Rails.env.test?
+ImportGiasSchools.new.call(max_schools: 200) unless Rails.env.test?
