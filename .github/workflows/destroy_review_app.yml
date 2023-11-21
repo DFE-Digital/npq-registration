@@ -56,7 +56,7 @@ jobs:
 
       - name: Set Connection String
         run: |
-          STORAGE_CONN_STR=$(az storage account show-connection-string -g  $STORAGE_ACCOUNT_RG -n $STORAGE_ACCOUNT_NAME --query 'connectionString')
+          STORAGE_CONN_STR=$(az storage account show-connection-string -g s189t01-cpdnpq-rv-rg -n s189t01cpdnpqrvtfsa --query 'connectionString')
           echo "::add-mask::$STORAGE_CONN_STR"
           echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
 
@@ -64,4 +64,4 @@ jobs:
         if: env.TF_STATE_EXISTS == 'true'
         run: |
           az storage blob delete -c terraform-state --name ${{ env.TF_STATE_FILE }} \
-            --account-name "s189t01cpdnpqrvtfsa"
+            --account-name "s189t01cpdnpqrvtfsa" --account-key --connection-string "${{ env.AZURE_STORAGE_CONNECTION_STRING }}"
