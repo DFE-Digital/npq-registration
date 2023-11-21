@@ -239,6 +239,11 @@ GEM
       html-attributes-utils (~> 1.0.0, >= 1.0.0)
       pagy (~> 6.0)
       view_component (>= 3.3, < 3.7)
+    govuk_design_system_formbuilder (4.1.1)
+      actionview (>= 6.1)
+      activemodel (>= 6.1)
+      activesupport (>= 6.1)
+      html-attributes-utils (~> 1)
     hashdiff (1.0.1)
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
@@ -611,6 +616,7 @@ DEPENDENCIES
   flipper-ui (~> 1.0.0)
   google-cloud-bigquery
   govuk-components (~> 4.1.2)
+  govuk_design_system_formbuilder (~> 4.1.1)
   httparty (~> 0.21)
   i18n-debug
   iconv
