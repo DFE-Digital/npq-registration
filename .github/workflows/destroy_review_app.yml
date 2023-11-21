@@ -64,4 +64,4 @@ jobs:
         if: env.TF_STATE_EXISTS == 'true'
         run: |
           az storage blob delete -c terraform-state --name ${{ env.TF_STATE_FILE }} \
-            --account-name "s189t01cpdnpqrvtfsa" --connection-string "${{ env.AZURE_STORAGE_CONNECTION_STRING }}"
+            --account-name "s189t01cpdnpqrvtfsa" --connection-string '${{ env.AZURE_STORAGE_CONNECTION_STRING }}'
