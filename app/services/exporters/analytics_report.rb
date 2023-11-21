@@ -1,7 +1,6 @@
 require "google/cloud/bigquery"
 
 class Exporters::AnalyticsReport
-
   PROJECT = "ecf-bq".freeze
   DATASET = "npq_registration".freeze
   TABLE = ENV.fetch("BIGQUERY_APPLICATION_TABLE", "cron_test_applications")
@@ -13,7 +12,7 @@ class Exporters::AnalyticsReport
     @tmp.unlink
   end
 
-  private
+private
 
   def save_temp_file
     @tmp = Tempfile.new("analytics_report")
