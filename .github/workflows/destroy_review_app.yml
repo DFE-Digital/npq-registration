@@ -26,12 +26,12 @@ jobs:
 
       - name: Set environment variables
         run: |
-          state_file_name=terraform-${{ github.event.pull_request.number }}.tfstate
+          state_file_name=${{ github.event.pull_request.number }}.tfstate
 
           echo "TF_STATE_FILE=$state_file_name" >> $GITHUB_ENV
 
-          state_file_status=$(az storage blob list -c cpdnpq-tfstate \
-            --account-name "s189t01cpdnpqtfstatervsa" \
+          state_file_status=$(az storage blob list -c terraform-state \
+            --account-name "s189t01cpdnpqrvtfsa" \
             --prefix $state_file_name --query "[].name" -o tsv)
 
           if [ -n "$state_file_status" ]; then
@@ -54,8 +54,14 @@ jobs:
           DOCKER_IMAGE: "ghcr.io/dfe-digital/npq-registration:no-tag"
           PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
 
+      - name: Set Connection String
+        run: |
+          STORAGE_CONN_STR=$(az storage account show-connection-string -g s189t01-cpdnpq-rv-rg -n s189t01cpdnpqrvtfsa --query 'connectionString')
+          echo "::add-mask::$STORAGE_CONN_STR"
+          echo "AZURE_STORAGE_CONNECTION_STRING=$STORAGE_CONN_STR" >> $GITHUB_ENV
+
       - name: Delete Terraform state file
         if: env.TF_STATE_EXISTS == 'true'
         run: |
-          az storage blob delete -c cpdnpq-tfstate --name ${{ env.TF_STATE_FILE }} \
-            --account-name "s189t01cpdnpqtfstatervsa"
+          az storage blob delete -c terraform-state --name ${{ env.TF_STATE_FILE }} \
+            --account-name "s189t01cpdnpqrvtfsa" --connection-string '${{ env.AZURE_STORAGE_CONNECTION_STRING }}'
