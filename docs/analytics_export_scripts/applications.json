@@ -1,0 +1,127 @@
+[
+  {
+    "mode": "NULLABLE",
+    "name": "user_id",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "ecf_user_id",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "user_created_at",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "trn_verified",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "trn_auto_verified",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "application_id",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "application_ecf_id",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "application_created_at",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "headteacher_status",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "eligible_for_funding",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "funding_choice",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "funding_eligiblity_status_code",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "targeted_delivery_funding_eligibility",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "works_in_childcare",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "kind_of_nursery",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "private_childcare_provider_urn",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "school_urn",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "school_name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "establishment_type_name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "high_pupil_premium",
+    "type": "BOOLEAN"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "la_name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "school_postcode",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "course_name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "provider_name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "employment_type",
+    "type": "STRING"
+  }
+]
