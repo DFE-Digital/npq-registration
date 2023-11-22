@@ -76,18 +76,6 @@ This workflow is triggered when a pull request is opened or updated. It deploys 
 
 This workflow is triggered when a pull request is closed or merged. It destroys the review app attached to the PR.
 
-### BigQuery Reports
-
-See [BigQuery Reports](bigquery_reports.md) for more information.
-
-#### Generate Dashboard Report ([generate_dashboard_report.yml](../.github/workflows/generate_dashboard_report.yml))
-
-Runs once an hour to generate a CSV of all applications and store it in the database.
-
-#### Export Dashboard Report ([export_dashboard_report.yml](../.github/workflows/export_dashboard_report.yml))
-
-Runs once an hour to export the CSV of all applications to BigQuery.
-
 ### Get an Identity Data Sync (all/unsynced/user)
 
 - [get_an_identity_data_sync_all.yml](../.github/workflows/get_an_identity_data_sync_all.yml),
