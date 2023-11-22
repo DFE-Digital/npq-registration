@@ -305,6 +305,7 @@ en:
         trn: "Teacher reference number (TRN)"
         full_name: "Full name"
         national_insurance_number: "National Insurance number (optional)"
+        change_your_course_or_provider: "Change your course or provider"
 
     legend:
       registration_wizard:

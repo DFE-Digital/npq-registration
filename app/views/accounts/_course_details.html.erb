@@ -11,6 +11,11 @@
         <dd class="govuk-summary-list__value">
           <%= title_embedded_course_name(application.course) %>
         </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
+            Change<span class="govuk-visually-hidden"> Course</span>
+          </a>
+        </dd>
       </div>
 
       <div class="govuk-summary-list__row">
@@ -19,6 +24,11 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <%= application.lead_provider.name %>
+        </dd>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
+            Change<span class="govuk-visually-hidden"> Provider</span>
+          </a>
         </dd>
       </div>
 

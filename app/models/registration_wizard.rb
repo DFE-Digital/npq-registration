@@ -13,6 +13,7 @@ class RegistrationWizard
     teacher_catchment
     work_setting
     provider_check
+    change_your_course_or_provider
     choose_an_npq_and_provider
     get_an_identity_callback
     teacher_reference_number
