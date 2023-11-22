@@ -14,6 +14,7 @@ class Feature
         Flipper.add(feature_flag_key)
       end
       Flipper.enable(:maths_npq)
+      Flipper.disable(:targeted_support_funding)
     end
 
     # This is always true but is checked so that it is explicit
