@@ -20,7 +20,7 @@ By following a code in above files, all parts can be easily understood.
 
 The environments are already set up, but in case of migration:
 
-* env variable `GOOGLE_APPLICATION_CREDENTIALS` pointing to credentials json file should be created on the environments
+* env variable `GOOGLE_CLOUD_CREDENTIALS` pointing to credentials json file should be created on the environments
 * for production, env variable `BIGQUERY_APPLICATION_TABLE` should be set to `applications`
  
 ## Testing
