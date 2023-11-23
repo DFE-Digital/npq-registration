@@ -26,6 +26,10 @@ class School < ApplicationRecord
     name
   end
 
+  def long_name
+    [display_name, address_string].join(" - ")
+  end
+
   def primary_education_phase?
     phase_name == MIDDLE_DEEMED_PRIMARY_PHASE ||
       phase_name == PRIMARY_PHASE

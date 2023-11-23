@@ -48,6 +48,10 @@ class PrivateChildcareProvider < ApplicationRecord
     [address_1, address_2, address_3, town, region, postcode].reject(&:blank?) - [REDACTED_DATA_STRING]
   end
 
+  def long_name
+    [name, address].join(" - ")
+  end
+
   def address_string
     address.join(", ")
   end
