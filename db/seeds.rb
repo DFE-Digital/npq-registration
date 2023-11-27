@@ -73,31 +73,6 @@ if Rails.env.development?
     get_an_identity_id_synced_to_ecf: false,
   )
 
-  # Create childcare providers
-  10.times do
-    PrivateChildcareProvider.create!(
-      provider_urn: "EY#{Faker::Number.number(digits: 5)}",
-      provider_name: Faker::Educator.secondary_school,
-      registered_person_urn: Faker::Number.number(digits: 7),
-      registered_person_name: Faker::Educator.university,
-      registration_date: "04/01/1995",
-      provider_status: "Active",
-      address_1: Faker::Address.secondary_address,
-      address_2: Faker::Address.street_address,
-      address_3: nil,
-      town: Faker::Address.city,
-      postcode: Faker::Address.postcode,
-      postcode_without_spaces: Faker::Address.postcode.delete(" "),
-      region: Faker::Address.state,
-      local_authority: Faker::Address.city,
-      ofsted_region: nil,
-      early_years_individual_registers: %w[CCR VCR EYR].sample,
-      provider_early_years_register_flag: false,
-      provider_compulsory_childcare_register_flag: false,
-      places: 30,
-    )
-  end
-
   single_app_user = User.create!(
     email: "user@example.com",
     ecf_id: SecureRandom.uuid,
