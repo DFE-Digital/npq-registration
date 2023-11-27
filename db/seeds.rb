@@ -1,6 +1,8 @@
 require "faker"
 require "zip"
 
+return if Rails.env.test?
+
 def seed_courses!
   CourseService::DefinitionLoader.call
 end
