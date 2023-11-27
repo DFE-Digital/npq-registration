@@ -21,9 +21,9 @@ inputs:
   current-commit-sha:
     description: The commit sha for the current commit
     required: true
-  # statuscake-api-token:
-  #   description: The Statuscake token
-  #   required: false
+  statuscake-api-token:
+    description: The Statuscake token
+    required: false
 
 outputs:
   url:
