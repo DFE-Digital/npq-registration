@@ -1,6 +1,9 @@
 require "faker"
 require "zip"
 
+# Parallel Tests is seeding the database, so I am skipping this in the test environment
+return if Rails.env.test?
+
 def seed_courses!
   CourseService::DefinitionLoader.call
 end
