@@ -39,6 +39,10 @@ class School < ApplicationRecord
     address.join(", ")
   end
 
+  def name_with_address
+    [display_name, address_string].join(" – ")
+  end
+
   def in_england?
     return if establishment_type_code == "30" # Welsh establishment
     return if la_code == "673" # "Vale of Glamorgan"

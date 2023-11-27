@@ -89,10 +89,10 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Headship",
-          "Lead provider" => "Teach First",
-          "Workplace" => "open manchester school",
-          "What setting do you work in?" => "A school",
-          "Do you work in England?" => "Yes",
+          "Provider" => "Teach First",
+          "Workplace" => "open manchester school – street 1, manchester",
+          "Work setting" => "A school",
+          "Workplace in England" => "Yes",
         },
       )
     end

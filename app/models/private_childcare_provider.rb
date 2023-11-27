@@ -52,6 +52,10 @@ class PrivateChildcareProvider < ApplicationRecord
     address.join(", ")
   end
 
+  def name_with_address
+    [name, address_string].join(" – ")
+  end
+
   def in_england?
     true # Needs filling in
   end
@@ -69,7 +73,7 @@ class PrivateChildcareProvider < ApplicationRecord
 
     details << urn
     details << (name.presence || address_string)
-
-    details.join(" - ")
+    details << address_string if name.presence
+    details.join(" – ")
   end
 end

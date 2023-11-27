@@ -5,7 +5,7 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-xl">Check your answers and confirm</h1>
+  <h1 class="govuk-heading-xl">Check your answers and submit</h1>
 
   <%= render GovukComponent::SummaryListComponent.new do |component|
         @wizard.answers.each do |answer|

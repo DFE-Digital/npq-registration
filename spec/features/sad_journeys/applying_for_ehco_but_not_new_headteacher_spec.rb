@@ -110,15 +110,15 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Do you work in England?" => "Yes",
-          "What setting do you work in?" => "A school",
+          "Workplace in England" => "Yes",
+          "Work setting" => "A school",
           "Course" => "Early headship coaching offer",
-          "Lead provider" => "Teach First",
-          "How is your EHCO being paid for?" => "I am paying",
-          "Workplace" => "open manchester school",
-          "Are you a headteacher?" => "Yes",
-          "Are you in your first 5 years of a headship?" => "No",
-          "Have you completed an NPQH?" => "I’ve completed it",
+          "Provider" => "Teach First",
+          "Course funding" => "I am paying",
+          "Workplace" => "open manchester school – street 1, manchester",
+          "Headteacher" => "Yes",
+          "First 5 years of headship" => "No",
+          "Headship NPQ stage" => "I’ve completed it",
         },
       )
     end

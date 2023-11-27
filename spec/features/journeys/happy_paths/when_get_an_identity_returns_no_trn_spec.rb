@@ -108,15 +108,15 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Full name" => "John Doe",
-          "TRN" => manually_entered_trn,
+          "Teacher reference number (TRN)" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
           "Course" => "Headship",
-          "Lead provider" => "Teach First",
-          "Workplace" => "open manchester school",
-          "How is your NPQ being paid for?" => "My trust is paying",
-          "What setting do you work in?" => "A school",
-          "Do you work in England?" => "Yes",
+          "Provider" => "Teach First",
+          "Workplace" => "open manchester school – street 1, manchester",
+          "Course funding" => "My trust is paying",
+          "Work setting" => "A school",
+          "Workplace in England" => "Yes",
         },
       )
     end

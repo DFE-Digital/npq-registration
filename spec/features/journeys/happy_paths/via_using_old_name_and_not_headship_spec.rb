@@ -78,11 +78,11 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Senior leadership",
-          "Workplace" => "open manchester school",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "What setting do you work in?" => "A school",
-          "Lead provider" => "Teach First",
-          "Do you work in England?" => "Yes",
+          "Workplace" => "open manchester school – street 1, manchester",
+          "Course funding" => "My workplace is covering the cost",
+          "Work setting" => "A school",
+          "Provider" => "Teach First",
+          "Workplace in England" => "Yes",
         },
       )
     end

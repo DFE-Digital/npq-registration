@@ -70,10 +70,10 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course" => "Senior leadership",
-          "How is your NPQ being paid for?" => "My workplace is covering the cost",
-          "What setting do you work in?" => "Early years or childcare",
-          "Lead provider" => "Teach First",
-          "Do you work in England?" => "No",
+          "Course funding" => "My workplace is covering the cost",
+          "Work setting" => "Early years or childcare",
+          "Provider" => "Teach First",
+          "Workplace in England" => "No",
         },
       )
     end
