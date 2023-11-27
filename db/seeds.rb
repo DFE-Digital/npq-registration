@@ -13,7 +13,21 @@ def seed_itt_providers!
   ApprovedIttProviders::Update.call(file_name:)
 end
 
+def seed_schools
+  require 'zip'
+  zip_file_path = Rails.root.join('db', 'seeds', 'schools.zip')
+  Zip::File.open(zip_file_path) do |zip_file|
+    zip_file.first.tap do |entry|
+      schools_data = JSON.parse(entry.get_input_stream.read)
+      puts 'Importing schools data...'
+      School.insert_all(schools_data)
+      puts 'Schools data imported successfully.'
+    end
+  end
+end
+
 # IDs have been hard coded to be the same across all envs
+seed_schools
 seed_courses!
 seed_lead_providers!
 seed_itt_providers!
@@ -82,7 +96,7 @@ if Rails.env.development?
     trn_auto_verified: false,
     admin: false,
     feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.find(6),
+    provider: LeadProvider.all[6],
     uid: SecureRandom.uuid,
     raw_tra_provider_data: nil,
     get_an_identity_id_synced_to_ecf: false,
@@ -102,7 +116,7 @@ if Rails.env.development?
     trn_auto_verified: false,
     admin: false,
     feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.find(4),
+    provider: LeadProvider.all[4],
     uid: SecureRandom.uuid,
     raw_tra_provider_data: nil,
     get_an_identity_id_synced_to_ecf: false,
