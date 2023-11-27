@@ -1,4 +1,5 @@
 require "faker"
+require "zip"
 
 def seed_courses!
   CourseService::DefinitionLoader.call
@@ -14,19 +15,31 @@ def seed_itt_providers!
 end
 
 def seed_schools
-  require 'zip'
-  zip_file_path = Rails.root.join('db', 'seeds', 'schools.zip')
+  zip_file_path = Rails.root.join("db/seeds/schools.zip")
   Zip::File.open(zip_file_path) do |zip_file|
     zip_file.first.tap do |entry|
       schools_data = JSON.parse(entry.get_input_stream.read)
-      puts 'Importing schools data...'
+      Rails.logger.debug "Importing schools data..."
       School.insert_all(schools_data)
-      puts 'Schools data imported successfully.'
+      Rails.logger.debug "Schools data imported successfully."
+    end
+  end
+end
+
+def seed_childcare_providers!
+  zip_file_path = Rails.root.join("db/seeds/private_childcare_providers.zip")
+  Zip::File.open(zip_file_path) do |zip_file|
+    zip_file.first.tap do |entry|
+      childcare_providers = JSON.parse(entry.get_input_stream.read)
+      Rails.logger.debug "Importing childcare providers data..."
+      PrivateChildcareProvider.insert_all(childcare_providers)
+      Rails.logger.debug "Childcare providers data imported successfully."
     end
   end
 end
 
 # IDs have been hard coded to be the same across all envs
+seed_childcare_providers!
 seed_schools
 seed_courses!
 seed_lead_providers!
