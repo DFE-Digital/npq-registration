@@ -644,6 +644,7 @@ DEPENDENCIES
   rails (~> 7.0.8)
   rspec-rails (~> 6.1.0)
   rubocop-govuk
+  rubyzip
   scss_lint-govuk
   secure_headers
   sentry-delayed_job
