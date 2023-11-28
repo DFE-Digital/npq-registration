@@ -8,9 +8,11 @@
 
 <p class="govuk-body">If you need to change something about your NPQ or provider, email continuing-professional-development@digital.education.gov.uk.</p>
 
-<p class="govuk-body">Your workplace is eligible for targeted support funding.</p>
+<% if Flipper.enabled?(:targeted_support_funding) %>
+  <p class="govuk-body">Your workplace is eligible for targeted support funding.</p>
 
-<p class="govuk-body">They’ll receive £<%= funding_amount %> to support you to do this NPQ.</p>
+  <p class="govuk-body">They’ll receive £<%= funding_amount %> to support you to do this NPQ.</p>
+<% end %>
 
 <h2 class="govuk-heading-m">You would need to pay for the course if you’re taking it again</h2>
 
