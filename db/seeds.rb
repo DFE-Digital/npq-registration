@@ -23,8 +23,9 @@ def seed_schools
     zip_file.first.tap do |entry|
       schools_data = JSON.parse(entry.get_input_stream.read)
       Rails.logger.error "Importing schools data..."
-      Rails.logger.error schools_data.first
-      School.insert_all(schools_data.first(100))
+      schools_data.each_slice(5000) do |batch|
+        School.insert_all(batch)
+      end
       Rails.logger.error "Schools data imported successfully."
     end
   end
@@ -36,8 +37,9 @@ def seed_childcare_providers!
     zip_file.first.tap do |entry|
       childcare_providers = JSON.parse(entry.get_input_stream.read)
       Rails.logger.error "Importing childcare providers data..."
-      Rails.logger.error childcare_providers.first
-      PrivateChildcareProvider.insert_all(childcare_providers.first(100))
+      childcare_providers.each_slice(5000) do |batch|
+        PrivateChildcareProvider.insert_all(batch)
+      end
       Rails.logger.error "Childcare providers data imported successfully."
     end
   end
