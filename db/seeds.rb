@@ -22,9 +22,10 @@ def seed_schools
   Zip::File.open(zip_file_path) do |zip_file|
     zip_file.first.tap do |entry|
       schools_data = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.debug "Importing schools data..."
+      Rails.logger.error "Importing schools data..."
+      Rails.logger.error schools_data.first
       School.insert_all(schools_data.first(100))
-      Rails.logger.debug "Schools data imported successfully."
+      Rails.logger.error "Schools data imported successfully."
     end
   end
 end
@@ -34,9 +35,10 @@ def seed_childcare_providers!
   Zip::File.open(zip_file_path) do |zip_file|
     zip_file.first.tap do |entry|
       childcare_providers = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.debug "Importing childcare providers data..."
+      Rails.logger.error "Importing childcare providers data..."
+      Rails.logger.error childcare_providers.first
       PrivateChildcareProvider.insert_all(childcare_providers.first(100))
-      Rails.logger.debug "Childcare providers data imported successfully."
+      Rails.logger.error "Childcare providers data imported successfully."
     end
   end
 end
