@@ -23,7 +23,7 @@ def seed_schools
     zip_file.first.tap do |entry|
       schools_data = JSON.parse(entry.get_input_stream.read)
       Rails.logger.debug "Importing schools data..."
-      School.insert_all(schools_data)
+      School.insert_all(schools_data.first(100))
       Rails.logger.debug "Schools data imported successfully."
     end
   end
@@ -35,7 +35,7 @@ def seed_childcare_providers!
     zip_file.first.tap do |entry|
       childcare_providers = JSON.parse(entry.get_input_stream.read)
       Rails.logger.debug "Importing childcare providers data..."
-      PrivateChildcareProvider.insert_all(childcare_providers)
+      PrivateChildcareProvider.insert_all(childcare_providers.first(100))
       Rails.logger.debug "Childcare providers data imported successfully."
     end
   end
