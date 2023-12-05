@@ -10,16 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
-=======
-ActiveRecord::Schema[7.0].define(version: 2023_12_05_221615) do
->>>>>>> 2669207c (Add reference from Application to School)
-=======
-ActiveRecord::Schema[7.0].define(version: 2023_12_05_221901) do
->>>>>>> 68effe7b (Populate FK from application to schools)
-  # These are extensions that must be enabled in order to support this database
+  # The:wqse are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
@@ -29,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_221901) do
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.text "school_urn"
+    t.text "school_urn_old"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "ecf_id"
