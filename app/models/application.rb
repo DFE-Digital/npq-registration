@@ -10,7 +10,7 @@ class Application < ApplicationRecord
   belongs_to :user
   belongs_to :course
   belongs_to :lead_provider
-  belongs_to :school, foreign_key: "school_urn", primary_key: "urn", optional: true
+  belongs_to :school
   belongs_to :private_childcare_provider, foreign_key: "private_childcare_provider_urn", primary_key: "provider_urn", optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
@@ -34,10 +34,6 @@ class Application < ApplicationRecord
 
   def new_headteacher?
     %w[yes_when_course_starts yes_in_first_five_years yes_in_first_two_years].include?(headteacher_status)
-  end
-
-  def school
-    School.find_by(urn: school_urn)
   end
 
   def employer_name_to_display

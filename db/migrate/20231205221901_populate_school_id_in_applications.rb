@@ -9,6 +9,5 @@ class PopulateSchoolIdInApplications < ActiveRecord::Migration[7.0]
     SQL
   end
 
-  def down
-  end
+  def down; end
 end
