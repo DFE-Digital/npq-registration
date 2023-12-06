@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/maths-eligibility-teaching-for-mastery", submit_form: true) do
-      expect(page).to have_text("Eligibility for the leading primary mathematics")
+      expect(page).to have_text("Have you taken at least one year of the primary maths Teaching for Mastery programme?")
       page.choose("Yes", visible: :all)
     end
 
@@ -101,25 +101,19 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Workplace in England" => "Yes",
+          "Work setting" => "A school",
+          "Workplace" => "open manchester school – street 1, manchester",
           "Course" => "Leading primary mathematics",
-          "Workplace" => "open manchester school",
-          "What setting do you work in?" => "A school",
-          "Lead provider" => "Church of England",
-          "Do you work in England?" => "Yes",
-          "Have you taken at least one year of the primary maths Teaching for Mastery programme?" => "Yes",
+          "Completed one year of the primary maths Teaching for Mastery programme" => "Yes",
+          "Provider" => "Church of England",
         },
       )
     end
 
-    expect_page_to_have(path: "/registration/confirmation", submit_form: false) do
-      expect(page).to have_text("You’ve registered for the Leading primary mathematics NPQ with Church of England")
-    end
-
-    page.click_link("Continue")
-
     expect_page_to_have(path: "/accounts/user_registrations/#{Application.last.id}?success=true", submit_form: false) do
       expect(page).to have_text("Registration successfully submitted")
-      expect(page).to have_text("Leading primary mathematics NPQ registration details")
+      expect(page).to have_text("Leading primary mathematics NPQ")
     end
 
     expect(User.count).to be(1)
@@ -139,10 +133,8 @@ RSpec.feature "Happy journeys", type: :feature do
       end
     end
 
-    navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
-      expect(page).to have_text("Church of England")
-      expect(page).to have_text("Leading primary mathematics NPQ")
-    end
+    expect(page).to have_text("Church of England")
+    expect(page).to have_text("Leading primary mathematics NPQ")
 
     visit "/registration/share-provider"
 
@@ -214,6 +206,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "lead_provider_id" => "3",
         "maths_eligibility_teaching_for_mastery" => "yes",
         "maths_understanding" => true,
+        "submitted" => true,
         "targeted_delivery_funding_eligibility" => true,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
