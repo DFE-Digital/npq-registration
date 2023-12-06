@@ -13,7 +13,6 @@ class Feature
       FEATURE_FLAG_KEYS.each do |feature_flag_key|
         Flipper.add(feature_flag_key)
       end
-      Flipper.enable(:maths_npq)
       Flipper.disable(:targeted_support_funding)
     end
 
