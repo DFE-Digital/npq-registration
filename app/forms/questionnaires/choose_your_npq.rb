@@ -25,7 +25,7 @@ module Questionnaires
 
     def options
       divider_index = courses.length - 1 # Place the "Or" divider before the last course
-      courses.reject { |course| course.identifier == "npq-leading-primary-mathematics" && !Flipper.enabled?(:maths_npq) }
+      courses
         .each_with_index.map do |course, index|
           build_option_struct(
             value: course.identifier,
