@@ -15,7 +15,8 @@ FactoryBot.define do
 
     trait :application_for_school do
       school { build(:school) }
-      private_childcare_provider_urn { nil }
+      private_childcare_provider_id { nil }
+      private_childcare_provider_urn_old { nil }
 
       works_in_school { true }
       works_in_childcare { false }
@@ -33,7 +34,8 @@ FactoryBot.define do
 
     trait :application_for_public_childcare_provider do
       school { build(:school) }
-      private_childcare_provider_urn { nil }
+      private_childcare_provider_id { nil }
+      private_childcare_provider_urn_old { nil }
 
       works_in_school { false }
       works_in_childcare { true }
