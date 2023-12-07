@@ -10,7 +10,7 @@ class Application < ApplicationRecord
   belongs_to :user
   belongs_to :course
   belongs_to :lead_provider
-  belongs_to :school
+  belongs_to :school, optional: true
   belongs_to :private_childcare_provider, foreign_key: "private_childcare_provider_urn", primary_key: "provider_urn", optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
@@ -42,5 +42,9 @@ class Application < ApplicationRecord
 
   def employer_urn
     private_childcare_provider_urn || school_urn || ""
+  end
+
+  def school_urn
+    school&.urn
   end
 end

@@ -34,7 +34,7 @@ RSpec.describe Application do
 
     context "when application has employer_name" do
       let(:name) { "Employer Foo Bar" }
-      let(:application) { build(:application, school: nil, school_urn: nil, employer_name: name) }
+      let(:application) { build(:application, school: nil, school_id: nil, employer_name: name) }
 
       include_examples "employer_name"
     end
@@ -42,7 +42,7 @@ RSpec.describe Application do
     context "when no information about employer_name is available" do
       let(:application) do
         let(:name) { "" }
-        let(:application) { build(:application, school: nil, school_urn: nil, employer_name: nil) }
+        let(:application) { build(:application, school: nil, school_id: nil, employer_name: nil) }
 
         include_examples "employer_name"
       end

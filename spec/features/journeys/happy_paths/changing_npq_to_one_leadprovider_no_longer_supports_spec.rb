@@ -188,7 +188,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "kind_of_nursery" => public_kind_of_nursery_key,
       "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
       "private_childcare_provider_urn" => nil,
-      "school_urn" => "100000",
+      "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,

@@ -163,7 +163,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "participant_outcome_state" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_urn" => nil,
-      "school_urn" => "100000",
+      "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
