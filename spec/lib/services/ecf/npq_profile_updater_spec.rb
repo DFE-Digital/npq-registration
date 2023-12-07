@@ -47,7 +47,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
       user:,
       course:,
       lead_provider:,
-      school_urn: school.urn,
+      school:,
       ukprn: school.ukprn,
       headteacher_status: "no",
       eligible_for_funding: true,

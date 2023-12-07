@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
-  # These are extensions that must be enabled in order to support this database
+  # The:wqse are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.text "school_urn"
+    t.text "school_urn_old"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "ecf_id"
@@ -53,8 +53,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.text "lead_provider_approval_status"
     t.text "participant_outcome_state"
+    t.bigint "school_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
+    t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
@@ -286,4 +288,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "users"
   add_foreign_key "applications", "lead_providers"
+  add_foreign_key "applications", "schools"
 end

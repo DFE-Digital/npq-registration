@@ -36,7 +36,7 @@ RSpec.describe HandleSubmissionForStore do
 
   describe "#call" do
     def stable_as_json(record)
-      record.as_json(except: %i[id created_at updated_at updated_from_tra_at])
+      record.as_json(except: %i[id created_at updated_at updated_from_tra_at school_urn_old])
     end
 
     context "when store includes information from the school path" do
@@ -118,7 +118,7 @@ RSpec.describe HandleSubmissionForStore do
           "participant_outcome_state" => nil,
           "lead_provider_id" => lead_provider.id,
           "private_childcare_provider_urn" => nil,
-          "school_urn" => school.urn,
+          "school_id" => school.id,
           "targeted_delivery_funding_eligibility" => false,
           "teacher_catchment" => "england",
           "teacher_catchment_country" => nil,
@@ -220,7 +220,7 @@ RSpec.describe HandleSubmissionForStore do
           "lead_provider_id" => lead_provider.id,
           "kind_of_nursery" => "private_nursery",
           "private_childcare_provider_urn" => private_childcare_provider.provider_urn,
-          "school_urn" => nil,
+          "school_id" => nil,
           "targeted_delivery_funding_eligibility" => false,
           "teacher_catchment" => "england",
           "teacher_catchment_country" => nil,

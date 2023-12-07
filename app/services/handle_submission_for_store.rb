@@ -13,7 +13,7 @@ class HandleSubmissionForStore
         course_id: course.id,
         lead_provider_id: store["lead_provider_id"],
         private_childcare_provider_urn:,
-        school_urn:,
+        school: school_urn.present? && School.find_by(urn: school_urn),
         ukprn:,
         headteacher_status:,
         eligible_for_funding: eligible_for_funding?,
