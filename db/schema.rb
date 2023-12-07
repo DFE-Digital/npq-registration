@@ -285,4 +285,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
 
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "users"
+  add_foreign_key "applications", "lead_providers"
 end
