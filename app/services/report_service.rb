@@ -58,7 +58,7 @@ private
       a.targeted_delivery_funding_eligibility,
       a.works_in_childcare,
       a.kind_of_nursery,
-      a.private_childcare_provider_urn,
+      a.private_childcare_provider_urn_old,
       a.school_urn,
       a.school&.name,
       a.school&.establishment_type_name,

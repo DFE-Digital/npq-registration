@@ -25,7 +25,7 @@ module Ecf
         targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
         works_in_childcare: application.works_in_childcare,
         kind_of_nursery: application.kind_of_nursery,
-        private_childcare_provider_urn: application.private_childcare_provider_urn,
+        private_childcare_provider_urn: application.private_childcare_provider_urn_old,
         funding_eligiblity_status_code: application.funding_eligiblity_status_code,
         teacher_catchment: application.teacher_catchment,
         teacher_catchment_country: application.teacher_catchment_country,
