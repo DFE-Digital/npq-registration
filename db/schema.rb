@@ -14,7 +14,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_083903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
-  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "applications", force: :cascade do |t|
@@ -34,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_083903) do
     t.boolean "works_in_school"
     t.string "employer_name"
     t.string "employment_role"
-    t.text "private_childcare_provider_urn"
+    t.text "private_childcare_provider_urn_old"
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
     t.text "kind_of_nursery"
@@ -54,9 +53,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_083903) do
     t.text "lead_provider_approval_status"
     t.text "participant_outcome_state"
     t.bigint "school_id"
+    t.bigint "private_childcare_provider_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
+    t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
@@ -286,6 +287,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_083903) do
   end
 
   add_foreign_key "applications", "courses"
+  add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "users"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
