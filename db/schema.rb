@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
-  # The:wqse are extensions that must be enabled in order to support this database
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_083903) do
+  # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
-    t.text "school_urn_old"
+    t.text "DEPRECATED_school_urn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "ecf_id"
@@ -286,7 +286,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_05_225024) do
   end
 
   add_foreign_key "applications", "courses"
-  add_foreign_key "applications", "users"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "schools"
+  add_foreign_key "applications", "users"
 end

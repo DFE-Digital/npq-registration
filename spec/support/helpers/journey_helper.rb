@@ -13,7 +13,7 @@ module Helpers
     end
 
     def retrieve_latest_application_data
-      latest_application&.as_json(except: %i[id created_at updated_at user_id school_urn_old])
+      latest_application&.as_json(except: %i[id created_at updated_at user_id DEPRECATED_school_urn])
     end
 
     def deep_compare_application_data(expected_data)
