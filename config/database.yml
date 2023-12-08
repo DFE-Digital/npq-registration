@@ -7,6 +7,8 @@ default: &default
 development:
   <<: *default
   database: npq_registration_development
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
 
 review:
   <<: *default
@@ -20,6 +22,8 @@ sandbox:
 test:
   <<: *default
   database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
 
 production:
   <<: *default

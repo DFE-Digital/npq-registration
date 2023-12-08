@@ -35,7 +35,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       kind_of_nursery: nil,
       itt_provider: nil,
       lead_mentor: false,
-      private_childcare_provider_urn_old: nil,
+      DEPRECATED_private_childcare_provider_urn: nil,
       private_childcare_provider_id: nil,
       funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       teacher_catchment: "other",

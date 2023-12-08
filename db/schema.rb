@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_08_112007) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_133609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -34,7 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_112007) do
     t.boolean "works_in_school"
     t.string "employer_name"
     t.string "employment_role"
-    t.text "private_childcare_provider_urn_old"
+    t.text "DEPRECATED_private_childcare_provider_urn"
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
     t.text "kind_of_nursery"
