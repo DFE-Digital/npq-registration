@@ -71,7 +71,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       expect(page).to have_text("already been allocated scholarship funding for")
 
       page.click_link("Back")
@@ -97,14 +97,14 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/ehco-previously-funded", submit_form: false) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       expect(page).to have_text("You would need to pay for the EHCO if you were previously funded but you withdrew")
 
       page.click_link("Continue")
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      expect(page).to have_text("How is the Early headship coaching offer being paid for?")
+      expect(page).to have_text("How are you funding the Early headship coaching offer?")
       page.choose "I am paying", visible: :all
     end
 

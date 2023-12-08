@@ -91,7 +91,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/funding-your-ehco", submit_form: true) do
-      expect(page).to have_text("How is the Early headship coaching offer being paid for?")
+      expect(page).to have_text("How are you funding the Early headship coaching offer?")
       page.choose "I am paying", visible: :all
     end
 

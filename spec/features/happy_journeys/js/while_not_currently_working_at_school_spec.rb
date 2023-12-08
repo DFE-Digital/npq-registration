@@ -51,7 +51,7 @@ RSpec.feature "Happy journeys",
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
       page.click_button("Continue")
     end
 

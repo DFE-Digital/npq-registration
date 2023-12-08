@@ -84,7 +84,7 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
-      expect(page).to have_text("Funding eligibility")
+      expect(page).to have_text("Funding")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
