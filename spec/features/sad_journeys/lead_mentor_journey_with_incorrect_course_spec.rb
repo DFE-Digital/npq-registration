@@ -180,7 +180,6 @@ RSpec.feature "Sad journeys", type: :feature do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "itt_provider_id" => approved_itt_provider_legal_name.present? && IttProvider.find_by(legal_name: approved_itt_provider_legal_name).id,
-      "itt_provider_old" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",

@@ -175,7 +175,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "private_childcare_provider_id" => nil,
       "school_id" => School.find_by(urn: "100000").id,
       "itt_provider_id" => nil,
-      "itt_provider_old" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,

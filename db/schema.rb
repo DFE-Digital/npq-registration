@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_08_133609) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -45,7 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_133609) do
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
     t.string "employment_type"
-    t.string "itt_provider_old"
+    t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
     t.integer "number_of_pupils", default: 0
@@ -53,9 +53,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_133609) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.text "lead_provider_approval_status"
     t.text "participant_outcome_state"
-    t.bigint "school_id"
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
+    t.bigint "school_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
