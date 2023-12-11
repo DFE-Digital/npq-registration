@@ -46,6 +46,7 @@ Rails/Output:
   Exclude:
     - "app/services/importers/*"
     - "app/services/exporters/*"
+    - "db/*"
 
 Naming/MethodParameterName:
   Enabled: false

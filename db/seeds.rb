@@ -5,14 +5,20 @@ require "zip"
 return if Rails.env.test?
 
 def seed_courses!
+  puts "  Importing courses"
+
   CourseService::DefinitionLoader.call
 end
 
 def seed_lead_providers!
+  puts "  Importing lead providers"
+
   LeadProviders::Updater.call
 end
 
 def seed_itt_providers!
+  puts "  Importing ITT providers"
+
   file_name = "lib/approved_itt_providers/24-11-2022/approved_itt_providers.csv"
   ApprovedIttProviders::Update.call(file_name:)
 end
@@ -22,11 +28,11 @@ def seed_schools
   Zip::File.open(zip_file_path) do |zip_file|
     zip_file.first.tap do |entry|
       schools_data = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.error "Importing schools data..."
+      puts "  Importing schools data"
       schools_data.each_slice(5000) do |batch|
         School.insert_all(batch)
       end
-      Rails.logger.error "Schools data imported successfully."
+      puts "    Schools data imported successfully"
     end
   end
 end
@@ -36,16 +42,17 @@ def seed_childcare_providers!
   Zip::File.open(zip_file_path) do |zip_file|
     zip_file.first.tap do |entry|
       childcare_providers = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.error "Importing childcare providers data..."
+      puts "  Importing childcare providers data"
       childcare_providers.each_slice(5000) do |batch|
         PrivateChildcareProvider.insert_all(batch)
       end
-      Rails.logger.error "Childcare providers data imported successfully."
+      puts "    Childcare providers data imported successfully"
     end
   end
 end
 
 # IDs have been hard coded to be the same across all envs
+puts "Seeding database..."
 seed_childcare_providers!
 seed_schools
 seed_courses!
