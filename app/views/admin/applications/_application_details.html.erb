@@ -90,7 +90,7 @@
 
     sl.with_row do |row|
       row.with_key(text: 'Private Childcare Provider URN')
-      row.with_value(text: application.private_childcare_provider_urn || "-")
+      row.with_value(text: application.DEPRECATED_private_childcare_provider_urn || "-")
       row.with_action
     end
 

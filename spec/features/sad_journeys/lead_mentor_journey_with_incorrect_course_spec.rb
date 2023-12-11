@@ -161,7 +161,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "kind_of_nursery" => nil,
       "headteacher_status" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id,
-      "private_childcare_provider_urn" => nil,
+      "private_childcare_provider_id" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",

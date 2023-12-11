@@ -176,7 +176,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "headteacher_status" => "yes_in_first_five_years",
       "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
-      "private_childcare_provider_urn" => "EY123456",
+      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY123456").id,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",

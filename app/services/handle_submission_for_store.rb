@@ -12,7 +12,7 @@ class HandleSubmissionForStore
       user.applications.create!(
         course_id: course.id,
         lead_provider_id: store["lead_provider_id"],
-        private_childcare_provider_urn:,
+        private_childcare_provider: private_childcare_provider_urn.present? && PrivateChildcareProvider.find_by(provider_urn: private_childcare_provider_urn),
         school: school_urn.present? && School.find_by(urn: school_urn),
         ukprn:,
         headteacher_status:,
