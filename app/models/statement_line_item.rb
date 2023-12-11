@@ -1,4 +1,11 @@
 class StatementLineItem < ApplicationRecord
-  belongs_to :statement_id
+  STATES = %w[eligible payable paid voided ineligible awaiting_clawback clawed_back].freeze
+
+  belongs_to :statement
   belongs_to :declaration
+
+  validates :statement_id, presence: true
+  validates :declaration_id, presence: true
+
+  validates :state, inclusion: { in: STATES }
 end

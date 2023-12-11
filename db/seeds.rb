@@ -51,6 +51,12 @@ def seed_childcare_providers!
   end
 end
 
+def seed_cohorts!(lower: 2021, upper: 2023)
+  puts "  Importing cohorts"
+  lower.upto(upper).each { |start_year| Cohort.create(start_year:) }
+  puts "    Cohorts #{lower}..#{upper} imported successfully"
+end
+
 # IDs have been hard coded to be the same across all envs
 puts "Seeding database..."
 seed_childcare_providers!
@@ -58,6 +64,7 @@ seed_schools
 seed_courses!
 seed_lead_providers!
 seed_itt_providers!
+seed_cohorts!
 
 if Rails.env.development?
   otp_testing_code = "00000"

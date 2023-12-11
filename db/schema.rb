@@ -74,12 +74,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_114339) do
     t.boolean "special_course"
     t.bigint "statement_id", null: false
     t.bigint "course_id", null: false
-    t.decimal "recruitment_target"
+    t.integer "recruitment_target"
     t.decimal "per_participant"
-    t.decimal "output_payment_percentage"
-    t.decimal "number_of_payment_periods"
-    t.decimal "service_fee_percentage"
-    t.decimal "service_fee_installments"
+    t.integer "output_payment_percentage"
+    t.integer "number_of_payment_periods"
+    t.integer "service_fee_percentage"
+    t.integer "service_fee_installments"
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
     t.datetime "created_at", null: false
