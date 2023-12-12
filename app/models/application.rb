@@ -12,6 +12,7 @@ class Application < ApplicationRecord
   belongs_to :lead_provider
   belongs_to :school, optional: true
   belongs_to :private_childcare_provider, optional: true
+  belongs_to :itt_provider, optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
