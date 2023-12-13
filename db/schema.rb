@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_08_114339) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -266,12 +266,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_114339) do
   end
 
   create_table "schedules", force: :cascade do |t|
-    t.bigint "course_id", null: false
     t.bigint "cohort_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
-    t.index ["course_id"], name: "index_schedules_on_course_id"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -318,14 +316,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_114339) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "statement_line_items", force: :cascade do |t|
+  create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.bigint "declaration_id", null: false
     t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["declaration_id"], name: "index_statement_line_items_on_declaration_id"
-    t.index ["statement_id"], name: "index_statement_line_items_on_statement_id"
+    t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
+    t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
 
   create_table "statements", force: :cascade do |t|
@@ -398,9 +396,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_114339) do
   add_foreign_key "milestones", "schedules"
   add_foreign_key "outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"
-  add_foreign_key "schedules", "courses"
-  add_foreign_key "statement_line_items", "declarations"
-  add_foreign_key "statement_line_items", "statements"
+  add_foreign_key "statement_items", "declarations"
+  add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"
 end
