@@ -1,6 +1,6 @@
-class CreateStatementLineItems < ActiveRecord::Migration[7.0]
+class CreateStatementItems < ActiveRecord::Migration[7.0]
   def change
-    create_table :statement_line_items do |t|
+    create_table :statement_items do |t|
       t.references :statement, null: false, foreign_key: true
       t.references :declaration, null: false, foreign_key: true
       t.string :state

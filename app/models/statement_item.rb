@@ -1,4 +1,4 @@
-class StatementLineItem < ApplicationRecord
+class StatementItem < ApplicationRecord
   STATES = %w[eligible payable paid voided ineligible awaiting_clawback clawed_back].freeze
 
   belongs_to :statement
