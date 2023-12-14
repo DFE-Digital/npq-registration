@@ -12,4 +12,12 @@ class Declaration < ApplicationRecord
   validates :user_id, presence: true
 
   validates :state, inclusion: { in: STATES }
+
+  # validates :declaration_date - this depends on the schedule
+  # theoretically the supplier can make multiple declarations at once, that *is* valid
+  # must exist within the current schedule's bounds
+  #
+  # must be between the start_date and the milestone_date
+  # TODO: clarify what the relationship between the declaration_date and
+  #       milestone payment date is
 end
