@@ -177,7 +177,7 @@ module Questionnaires
     attr_reader :verified_trn
 
     def trn_to_store
-      if trn_verified?
+      if trn_verified? && verified_trn.present?
         verified_trn.rjust(7, "0")
       else
         trn.rjust(7, "0")
