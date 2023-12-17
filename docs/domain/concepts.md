@@ -1,0 +1,47 @@
+---
+title: Definitions and states
+weight: 1
+---
+
+# Definitions and states
+
+## Key concepts
+
+| Concept       | Definition                                                                                                                                                                                                                                                                                                                                                                                    |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `cohort`      | The grouping of participants who begin their induction or training in a given academic year under a given funding contract. For example, a participant starting their training in the academic year 2021-22 will have a cohort of 2021, as funding comes from the 2021-22 call-off contract. In most cases providers cannot change a participant’s cohort once they have begun their training |
+| `schedule`    | The expected timeframe in which a participant will complete their ECF-based training. Schedules include [defined milestone dates](/api-reference/ecf/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers                                                                                                                                       |
+| `declaration` | The notification submitted by providers via the API as the sole means for triggering output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period                                                                                                                                                      |
+| `partnership` | The relationship created between schools, delivery partners and providers who work together to deliver ECF-based training to participants                                                                                                                                                                                                                                                     |
+| `statement`   | A record of output payments (based on declarations), service fees and any adjustments the DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes                                                                                                              |
+| `contract`    |                                                                                                                                                                                                                                                                                                                                                                                               |
+| `milestone`   |                                                                                                                                                                                                                                                                                                                                                                                               |
+| `outcomes`    |                                                                                                                                                                                                                                                                                                                                                                                               |
+| `schedule`    |                                                                                                                                                                                                                                                                                                                                                                                               |
+
+## Data states
+
+The API service uses a ‘state’ model to reflect the ECF participant journey,
+meet contractual requirements for how providers should report participants’
+training and how the DfE will pay for this training.
+
+### Declaration states
+
+Declaration states are defined by the `state` attribute.
+
+Providers
+must [submit declarations](/api-reference/ecf/guidance/#submit-view-and-void-declarations)
+to confirm a participant has engaged in training within a given milestone
+period. A declaration’s `state` value will reflect if and when the DfE will pay
+providers for the training delivered.
+
+| state               | Definition                                                                                                                       | Action                                                       |
+|---------------------|----------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------|
+| `submitted`         | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding                         | Providers can view and void `submitted` declarations         |
+| `eligible`          | A declaration associated with a participant who has been confirmed to be eligible for funding                                    | Providers can view and void `eligible` declarations          |
+| `ineligible`        | A declaration associated with 1) a participant who is not eligible for funding 2) a duplicate submission for a given participant | Providers can view and void `ineligible` declarations        |
+| `payable`           | A declaration that has been approved and is ready for payment by DfE                                                             | Providers can view and void `payable` declarations           |
+| `voided`            | A declaration that has been retracted by a provider                                                                              | Providers can **only** view `voided` declarations            |
+| `paid`              | A declaration that has been paid for by DfE                                                                                      | Providers can view and void `paid` declarations              |
+| `awaiting_clawback` | A `paid` declaration that has since been voided by a provider                                                                    | Providers can **only** view `awaiting_clawback` declarations |
+| `clawed_back`       | An `awaiting_clawback` declaration that has since had its value deducted from payment by DfE to a provider                       | Providers can **only** view `clawed_back` declarations       |
