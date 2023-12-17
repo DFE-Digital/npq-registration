@@ -307,7 +307,7 @@ RSpec.describe HandleSubmissionForStore do
           }
         end
 
-        let(:ehco_course) { Course.ehco.first }
+        let(:ehco_course) { Course.ehco }
 
         it "applies the correct course" do
           subject.call
@@ -319,7 +319,7 @@ RSpec.describe HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "course_identifier" => Course.ehco.first.identifier,
+            "course_identifier" => Course.ehco.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
             "ehco_headteacher" => "yes",

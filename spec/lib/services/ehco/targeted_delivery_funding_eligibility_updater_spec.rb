@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Ehco::TargetedDeliveryFundingEligibilityUpdater do
   subject { described_class.run }
 
-  let(:ehco_course) { Course.ehco.first }
+  let(:ehco_course) { Course.ehco }
 
   let(:applicable_application_hash) do
     {
