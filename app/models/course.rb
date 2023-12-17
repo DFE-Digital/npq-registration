@@ -1,5 +1,8 @@
 class Course < ApplicationRecord
-  scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
+  def self.npqeyl
+    find_by(identifier: "npq-early-years-leadership")
+  end
+
   def self.ehco
     find_by(identifier: "npq-early-headship-coaching-offer")
   end
