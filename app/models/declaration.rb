@@ -20,4 +20,7 @@ class Declaration < ApplicationRecord
   # must be between the start_date and the milestone_date
   # TODO: clarify what the relationship between the declaration_date and
   #       milestone payment date is
+
+  STATES = %w[ submitted eligible ineligible payable voided paid awaiting_clawback clawed_back ].freeze
+  validates :state, inclusion: { in: STATES }
 end
