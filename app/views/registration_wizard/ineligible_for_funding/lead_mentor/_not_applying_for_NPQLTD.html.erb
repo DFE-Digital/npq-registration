@@ -2,7 +2,7 @@
   <%= @form.errors.present? ? "Error: " : nil %> Funding
 <% end %>
 
-<% npqltd = Course.find_by(identifier: "npq-leading-teaching-development") %>
+<% npqltd = Course.npqltd %>
 
 <h1 class="govuk-heading-xl">Funding</h1>
 

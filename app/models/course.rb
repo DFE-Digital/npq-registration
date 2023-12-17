@@ -3,6 +3,10 @@ class Course < ApplicationRecord
     find_by(identifier: "npq-early-years-leadership")
   end
 
+  def self.npqltd
+    find_by(identifier: "npq-leading-teaching-development")
+  end
+
   def self.ehco
     find_by(identifier: "npq-early-headship-coaching-offer")
   end
