@@ -2,7 +2,7 @@ class Course < ApplicationRecord
   scope :ehco, -> { where(identifier: "npq-early-headship-coaching-offer") }
   scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
   scope :npqltd, -> { where(identifier: "npq-leading-teaching-development") }
-  scope :npqh, -> { where(identifier: "npq-headship") }
+  scope :npqh, -> { where(identifier: NPQ_HEADSHIP) }
   scope :npqlpm, -> { where(identifier: "npq-leading-primary-mathematics") }
 
   def supports_targeted_delivery_funding?
@@ -10,7 +10,7 @@ class Course < ApplicationRecord
   end
 
   def npqh?
-    identifier == "npq-headship"
+    identifier == NPQ_HEADSHIP
   end
 
   def npqsl?
@@ -32,4 +32,7 @@ class Course < ApplicationRecord
   def npqlpm?
     identifier == "npq-leading-primary-mathematics"
   end
+
+  NPQ_HEADSHIP = "npq-headship"
+  private_constant :NPQ_HEADSHIP
 end
