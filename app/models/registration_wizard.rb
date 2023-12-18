@@ -246,7 +246,7 @@ class RegistrationWizard
     end
 
     array << OpenStruct.new(key: "Provider",
-                            value: query_store.lead_provider.name,
+                            value: query_store.lead_provider&.name,
                             change_step: :choose_your_provider)
 
     array
