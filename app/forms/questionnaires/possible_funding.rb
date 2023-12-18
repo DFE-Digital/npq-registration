@@ -32,7 +32,7 @@ module Questionnaires
 
     def message_template
       return "private_childcare_provider" if institution.is_a?(PrivateChildcareProvider)
-      return "lead_mentor" if Course.npqltd.include?(course) && !is_funding_eligibility_unclear?
+      return "lead_mentor" if course.npqltd? && !is_funding_eligibility_unclear?
       return "funding_eligibility_unclear" if is_funding_eligibility_unclear?
 
       if targeted_delivery_funding_eligibility?

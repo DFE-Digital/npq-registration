@@ -10,7 +10,7 @@ module Ehco
       logger = Logger.new($stdout)
       logger.info "Updating EHCO NPQ Applications, this may take a couple of minutes..."
 
-      ehco_course = Course.ehco.first
+      ehco_course = Course.ehco
 
       arel_table = Application.arel_table
       npq_applications = Application.where(course: ehco_course)

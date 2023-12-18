@@ -8,7 +8,7 @@ RSpec.describe HandleSubmissionForStore do
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
-  let(:courses) { Course.all - Course.ehco }
+  let(:courses) { Course.where.not(identifier: Course.ehco.identifier) }
 
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }
@@ -141,7 +141,7 @@ RSpec.describe HandleSubmissionForStore do
     end
 
     context "when store includes information from the early years path" do
-      let(:courses) { Course.ehco }
+      let(:courses) { [Course.ehco] }
       let(:store) do
         {
           "current_user" => user,
@@ -277,7 +277,7 @@ RSpec.describe HandleSubmissionForStore do
             allow_any_instance_of(FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE)
           end
 
-          let(:courses) { Course.ehco }
+          let(:courses) { [Course.ehco] }
 
           let(:store) do
             super().merge(
@@ -307,7 +307,7 @@ RSpec.describe HandleSubmissionForStore do
           }
         end
 
-        let(:ehco_course) { Course.ehco.first }
+        let(:ehco_course) { Course.ehco }
 
         it "applies the correct course" do
           subject.call
@@ -319,7 +319,7 @@ RSpec.describe HandleSubmissionForStore do
         let(:store) do
           {
             "current_user" => user,
-            "course_identifier" => Course.ehco.first.identifier,
+            "course_identifier" => Course.ehco.identifier,
             "institution_identifier" => "School-#{school.urn}",
             "lead_provider_id" => LeadProvider.all.sample.id,
             "ehco_headteacher" => "yes",

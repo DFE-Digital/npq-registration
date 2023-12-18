@@ -7,7 +7,7 @@
 %>
   <h1 class="govuk-heading-xl">Funding</h1>
 
-  <p class="govuk-body">You’ve already been allocated scholarship funding for <%= localise_sentence_embedded_course_name(Course.ehco.first) %> (EHCO), with <%= @form.lead_provider.try(:name) %>.</p>
+  <p class="govuk-body">You’ve already been allocated scholarship funding for <%= localise_sentence_embedded_course_name(Course.ehco) %> (EHCO), with <%= @form.lead_provider.try(:name) %>.</p>
 
   <p class="govuk-body">If you need to change something about your registration for the EHCO, email continuning-professional-development@digital.education.gov.uk. </p>
 

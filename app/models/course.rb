@@ -1,35 +1,50 @@
 class Course < ApplicationRecord
-  scope :ehco, -> { where(identifier: "npq-early-headship-coaching-offer") }
-  scope :npqeyl, -> { where(identifier: "npq-early-years-leadership") }
-  scope :npqltd, -> { where(identifier: "npq-leading-teaching-development") }
-  scope :npqh, -> { where(identifier: "npq-headship") }
-  scope :npqlpm, -> { where(identifier: "npq-leading-primary-mathematics") }
+  class << self
+    def npqeyl
+      find_by(identifier: NPQ_EARLY_YEARS_LEADERSHIP)
+    end
+
+    def npqltd
+      find_by(identifier: NPQ_LEADING_TEACHING_DEVELOPMENT)
+    end
+
+    def ehco
+      find_by(identifier: NPQ_EARLY_HEADSHIP_COACHING_OFFER)
+    end
+  end
 
   def supports_targeted_delivery_funding?
     !ehco?
   end
 
   def npqh?
-    identifier == "npq-headship"
+    identifier == NPQ_HEADSHIP
   end
 
   def npqsl?
-    identifier == "npq-senior-leadership"
+    identifier == NPQ_SENIOR_LEADERSHIP
   end
 
   def ehco?
-    identifier == "npq-early-headship-coaching-offer"
+    identifier == NPQ_EARLY_HEADSHIP_COACHING_OFFER
   end
 
   def eyl?
-    identifier == "npq-early-years-leadership"
+    identifier == NPQ_EARLY_YEARS_LEADERSHIP
   end
 
   def npqltd?
-    identifier == "npq-leading-teaching-development"
+    identifier == NPQ_LEADING_TEACHING_DEVELOPMENT
   end
 
   def npqlpm?
-    identifier == "npq-leading-primary-mathematics"
+    identifier == NPQ_LEADING_PRIMARY_MATHEMATICS
   end
+
+  NPQ_HEADSHIP = "npq-headship".freeze
+  NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
+  NPQ_EARLY_HEADSHIP_COACHING_OFFER = "npq-early-headship-coaching-offer".freeze
+  NPQ_EARLY_YEARS_LEADERSHIP = "npq-early-years-leadership".freeze
+  NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze
+  NPQ_LEADING_PRIMARY_MATHEMATICS = "npq-leading-primary-mathematics".freeze
 end
