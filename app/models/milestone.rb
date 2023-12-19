@@ -1,3 +1,7 @@
+# Milestone
+#
+# * represents the date from which the declaration type is valid and if/when
+#   the declaration_date must be set between
 class Milestone < ApplicationRecord
   belongs_to :schedule
 
