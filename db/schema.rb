@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_17_212458) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_20_142354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -107,15 +107,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_17_212458) do
     t.string "state"
     t.string "declaration_type"
     t.date "declaration_date"
-    t.bigint "course_id", null: false
-    t.bigint "lead_provider_id", null: false
-    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["application_id"], name: "index_declarations_on_application_id"
-    t.index ["course_id"], name: "index_declarations_on_course_id"
-    t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
-    t.index ["user_id"], name: "index_declarations_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -391,9 +385,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_17_212458) do
   add_foreign_key "contracts", "lead_providers"
   add_foreign_key "contracts", "statements"
   add_foreign_key "declarations", "applications"
-  add_foreign_key "declarations", "courses"
-  add_foreign_key "declarations", "lead_providers"
-  add_foreign_key "declarations", "users"
   add_foreign_key "milestones", "schedules"
   add_foreign_key "outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"
