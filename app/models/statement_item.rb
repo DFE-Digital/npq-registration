@@ -9,6 +9,7 @@ class StatementItem < ApplicationRecord
 
   belongs_to :statement
   belongs_to :declaration
+  belongs_to :clawed_back_by, class_name: 'StatementItem', optional: true
 
   validates :statement_id, presence: true
   validates :declaration_id, presence: true

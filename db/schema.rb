@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_21_133819) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_21_134525) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -299,9 +299,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_21_133819) do
   create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.bigint "declaration_id", null: false
-    t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "clawed_back_by_id"
+    t.string "state"
+    t.index ["clawed_back_by_id"], name: "index_statement_items_on_clawed_back_by_id"
     t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
     t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
@@ -372,6 +374,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_21_133819) do
   add_foreign_key "declarations", "applications"
   add_foreign_key "outcomes", "declarations"
   add_foreign_key "statement_items", "declarations"
+  add_foreign_key "statement_items", "statement_items", column: "clawed_back_by_id"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"
