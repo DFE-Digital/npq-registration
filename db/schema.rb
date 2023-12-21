@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_21_134525) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_21_141640) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -318,6 +318,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_21_134525) do
     t.decimal "reconcile_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "frozen_at"
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
   end
