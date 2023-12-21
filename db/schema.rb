@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_20_142354) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_21_133819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -203,14 +203,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_20_142354) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
-  create_table "milestones", force: :cascade do |t|
-    t.bigint "schedule_id", null: false
-    t.string "declaration_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["schedule_id"], name: "index_milestones_on_schedule_id"
-  end
-
   create_table "outcomes", force: :cascade do |t|
     t.string "state"
     t.date "completion_date"
@@ -258,13 +250,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_20_142354) do
     t.text "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "schedules", force: :cascade do |t|
-    t.bigint "cohort_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -385,9 +370,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_20_142354) do
   add_foreign_key "contracts", "lead_providers"
   add_foreign_key "contracts", "statements"
   add_foreign_key "declarations", "applications"
-  add_foreign_key "milestones", "schedules"
   add_foreign_key "outcomes", "declarations"
-  add_foreign_key "schedules", "cohorts"
   add_foreign_key "statement_items", "declarations"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
