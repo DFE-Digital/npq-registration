@@ -13,6 +13,14 @@ RSpec.describe Cohort, type: :model do
               .is_less_than(2030),
           )
       }
+
+      it 'validates uniqueness of start_year' do
+        existing_cohort = Cohort.create!(start_year: 2025)
+        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
+
+        new_cohort.valid?
+        expect(new_cohort.errors[:start_year]).to include("has already been taken")
+      end
     end
   end
 end
