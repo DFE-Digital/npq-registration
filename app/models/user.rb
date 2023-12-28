@@ -13,11 +13,6 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
-  # TODO: for investigation of the GAI error, we currently have very small number of duplicated emails
-  # rubocop:disable Rails/UniqueValidationWithoutIndex
-  validates :email, uniqueness: true
-  # rubocop:enable Rails/UniqueValidationWithoutIndex
-
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end
