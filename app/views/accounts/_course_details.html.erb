@@ -46,6 +46,11 @@
               <strong class="govuk-tag govuk-tag--red">UNSUCCESSFUL</strong>
             <% end %>
         </dd>
+        <%= form_with(model: application, url: update_approval_status_admin_application_path(application), method: :patch, local: true) do |form| %>
+          <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
+            Update Status
+          <% end %>
+        <% end %>
       </div>
 
       <% if application.participant_outcome_state.present? && accepted?(application) %>
@@ -62,6 +67,11 @@
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
               <% end %>
           </dd>
+          <%= form_with(model: application, url: update_participant_outcome_admin_application_path(application), method: :patch, local: true) do |form| %>
+            <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
+              Update Outcome
+            <% end %>
+          <% end %>
         </div>
       <% end %>
     </dl>

@@ -44,6 +44,10 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :applications, only: %i[index show]
+    resources :applications do
+      patch "update_approval_status", on: :member
+      patch "update_participant_outcome", on: :member
+    end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
 
     resources :users, only: %i[index show] do
