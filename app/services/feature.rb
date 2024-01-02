@@ -3,9 +3,11 @@ class Feature
 
   REGISTRATION_CLOSED_KEY = "Registration closed".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
+  ALLOW_STATUS_UPDATE = "Update allowed".freeze
 
   FEATURE_FLAG_KEYS = [
     REGISTRATION_CLOSED_KEY,
+    ALLOW_STATUS_UPDATE,
   ].freeze
 
   class << self
@@ -45,6 +47,10 @@ class Feature
 
     def enable_registration!
       Flipper.disable(REGISTRATION_DISABLED)
+    end
+
+    def status_update_allowed?
+      Flipper.enabled?(ALLOW_STATUS_UPDATE)
     end
   end
 end

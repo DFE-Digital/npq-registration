@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :applications, only: %i[index show]
+    # This routes are only written for review apps in order to update the external statuses
+    # It will only be accessible if ALLOW_STATUS_UPDATE feature flag would be enabled
     resources :applications do
       patch "update_approval_status", on: :member
       patch "update_participant_outcome", on: :member

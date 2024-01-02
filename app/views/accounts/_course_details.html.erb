@@ -46,9 +46,13 @@
               <strong class="govuk-tag govuk-tag--red">UNSUCCESSFUL</strong>
             <% end %>
         </dd>
-        <%= form_with(model: application, url: update_approval_status_admin_application_path(application), method: :patch, local: true) do |form| %>
-          <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
-            Update Status
+        <!-- This code is only written for review apps in order to update the external statuses -->
+        <!-- It will only be accessible if ALLOW_STATUS_UPDATE feature flag would be enabled -->
+        <% if Feature.status_update_allowed? %>
+          <%= form_with(model: application, url: update_approval_status_admin_application_path(application), method: :patch, local: true) do |form| %>
+            <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
+              Update Status
+            <% end %>
           <% end %>
         <% end %>
       </div>
@@ -67,9 +71,13 @@
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
               <% end %>
           </dd>
-          <%= form_with(model: application, url: update_participant_outcome_admin_application_path(application), method: :patch, local: true) do |form| %>
-            <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
-              Update Outcome
+          <!-- This code is only written for review apps in order to update the external statuses -->
+          <!-- It will only be accessible if ALLOW_STATUS_UPDATE feature flag would be enabled -->
+          <% if Feature.status_update_allowed? %>
+            <%= form_with(model: application, url: update_participant_outcome_admin_application_path(application), method: :patch, local: true) do |form| %>
+              <%= form.button type: 'submit', class: 'govuk-button', name: 'status', value: 'update' do %>
+                Update Outcome
+              <% end %>
             <% end %>
           <% end %>
         </div>
