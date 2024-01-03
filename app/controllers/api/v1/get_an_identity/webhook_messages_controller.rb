@@ -1,7 +1,7 @@
 module Api
   module V1
     module GetAnIdentity
-      class WebhookMessagesController < V1::BaseController
+      class WebhookMessagesController < BaseController
         skip_before_action :verify_authenticity_token
 
         before_action :log_incoming_message
