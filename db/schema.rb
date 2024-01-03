@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_21_141640) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_03_080141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_21_141640) do
     t.integer "start_year", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
   create_table "contracts", force: :cascade do |t|
