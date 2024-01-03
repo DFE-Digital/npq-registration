@@ -18,8 +18,6 @@
 class Declaration < ApplicationRecord
   belongs_to :application
 
-  validates :application_id, presence: true
-
   # validates :declaration_date - this depends on the schedule
   # theoretically the supplier can make multiple declarations at once, that *is* valid
   # must exist within the current schedule's bounds
