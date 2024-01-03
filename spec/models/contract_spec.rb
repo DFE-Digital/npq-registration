@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe Contract, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:statement_id) }
-    it { is_expected.to validate_presence_of(:course_id) }
-    it { is_expected.to validate_presence_of(:cohort_id) }
-    it { is_expected.to validate_presence_of(:lead_provider_id) }
+    it { is_expected.to belong_to(:statement).required }
+    it { is_expected.to belong_to(:course).required }
+    it { is_expected.to belong_to(:cohort).required }
+    it { is_expected.to belong_to(:lead_provider).required }
 
     it { is_expected.to validate_numericality_of(:per_participant).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:recruitment_target).is_greater_than(0).only_integer }
