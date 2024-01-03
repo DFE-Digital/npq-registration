@@ -17,6 +17,7 @@
 # * A declaration can change into many ‘states’ refer to here https://docs.google.com/presentation/d/1UMFxAZTs8r0_K7VlEZSxx2MYzB_9yG36gQrPgLy5R_Q/edit?usp=sharing
 class Declaration < ApplicationRecord
   belongs_to :application
+  has_many :outcomes
 
   # validates :declaration_date - this depends on the schedule
   # theoretically the supplier can make multiple declarations at once, that *is* valid
