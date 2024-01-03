@@ -34,6 +34,11 @@ class OmniauthController < Devise::OmniauthCallbacksController
       flash[:error] = failure_message
       redirect_to failed_sign_in_path
     end
+  rescue StandardError => e
+    id = @user.try(:id)
+    Rails.logger.info("[GAI] #{e} raised, user_id=#{id}")
+
+    raise e
   end
 
   def failure
