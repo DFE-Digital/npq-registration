@@ -79,6 +79,80 @@ Rails.application.routes.draw do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
       end
+
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      namespace :participants do
+        resources :npq, only: %i[index show] do
+          put :change_schedule, path: "change-schedule"
+          put :defer, path: "defer"
+          put :resume, path: "resume"
+          put :withdraw, path: "withdraw"
+
+          get :outcomes, path: "outcomes"
+        end
+
+        resources :outcomes, only: %i[index]
+      end
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+    end
+
+    namespace :v2 do
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      resources :enrolments, path: "npq-enrolments", only: %i[index]
+
+      namespace :participants do
+        resources :npq, only: %i[index show] do
+          put :change_schedule, path: "change-schedule"
+          put :defer, path: "defer"
+          put :resume, path: "resume"
+          put :withdraw, path: "withdraw"
+
+          get :outcomes, path: "outcomes"
+        end
+
+        resources :outcomes, only: %i[index]
+      end
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+    end
+
+    namespace :v3 do
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      namespace :participants do
+        resources :npq, only: %i[index show] do
+          put :change_schedule, path: "change-schedule"
+          put :defer, path: "defer"
+          put :resume, path: "resume"
+          put :withdraw, path: "withdraw"
+
+          resources :outcomes, path: "outcomes", only: %i[index create]
+        end
+
+        resources :outcomes, only: %i[index]
+      end
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+
+      resources :statements, only: %i[index show]
     end
   end
 
