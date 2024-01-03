@@ -18,6 +18,7 @@
 class Declaration < ApplicationRecord
   belongs_to :application
   has_many :outcomes
+  has_many :statement_items
 
   # validates :declaration_date - this depends on the schedule
   # theoretically the supplier can make multiple declarations at once, that *is* valid
