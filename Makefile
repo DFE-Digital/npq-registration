@@ -36,6 +36,9 @@ staging: test-cluster
 sandbox: production-cluster
 	$(eval include global_config/sandbox.sh)
 
+migration: production-cluster
+	$(eval include global_config/migration.sh)
+
 production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
 	$(eval include global_config/production.sh)

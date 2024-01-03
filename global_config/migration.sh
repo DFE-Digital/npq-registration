@@ -1,0 +1,7 @@
+CONFIG=migration
+ENVIRONMENT=migration
+CONFIG_SHORT=mg
+AZURE_SUBSCRIPTION=s189-teacher-services-cloud-production
+AZURE_RESOURCE_PREFIX=s189p01
+CONFIG_LONG=migration
+NAMESPACE=cpd-production
