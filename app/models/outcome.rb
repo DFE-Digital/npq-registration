@@ -10,6 +10,9 @@ class Outcome < ApplicationRecord
   MIGRATION_COMPLETED = false
   validates :completion_date, presence: true, future_date: true, if: -> { MIGRATION_COMPLETED }
 
+  STATES = %i[passed failed voided].freeze
+  validates :state, inclusion: { in: STATES }
+
   # "completion_date" normally the same date as the final
   # declaration but can be subsequently updated via the API (via POST to
   # npq/{id}/outcomes)
