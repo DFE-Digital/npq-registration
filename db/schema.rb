@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_03_100944) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_04_083905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -318,7 +318,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_100944) do
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
     t.datetime "marked_as_paid_at"
-    t.decimal "reconcile_amount"
+    t.decimal "reconcile_amount", precision: 8, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "frozen_at"
