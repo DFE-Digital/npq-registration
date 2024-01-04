@@ -7,6 +7,9 @@
 class Outcome < ApplicationRecord
   belongs_to :declaration
 
+  MIGRATION_COMPLETED = false
+  validates :completion_date, presence: true, future_date: true, if: -> { MIGRATION_COMPLETED }
+
   # "completion_date" normally the same date as the final
   # declaration but can be subsequently updated via the API (via POST to
   # npq/{id}/outcomes)
