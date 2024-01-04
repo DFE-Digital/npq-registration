@@ -1,8 +1,8 @@
-[< Back to Navigation](../README.md)
+[Back to Navigation](../README.md)
 
 # What is NPQ?
 
-NPQ Registration is a Rails application that allows users to apply for National Professional Qualifications (NPQs) in England. Applications submitted are then sent via an API to the ECF (Early Careers Framework) application where they are picked up by Lead Providers and processed.
+NPQ Registration is a Rails application that allows users to apply for National Professional Qualifications (NPQs) in England. Applications are made by teachers then made available via the API where they are picked up by Lead Providers and processed.
 
 1. [The Registration Wizard](#the-registration-wizard)
 1. [Courses](#courses)
