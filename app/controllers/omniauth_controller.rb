@@ -36,12 +36,13 @@ class OmniauthController < Devise::OmniauthCallbacksController
     end
   rescue StandardError => e
     id = @user.try(:id)
-    Rails.logger.info("[GAI] #{e} raised, user_id=#{id}")
+    Rails.logger.info("[GAI] #{e} raised, user_id=#{id} uid=#{try_to_extract_user_uid}")
 
     raise e
   end
 
   def failure
+    Rails.logger.info("[GAI][omniauth_failure] uid=#{try_to_extract_user_uid} error=#{try_to_extract_error_type}")
     send_error_to_sentry(
       "Omniauth login failure",
       contexts: {
@@ -92,4 +93,16 @@ private
 
     registration_wizard_show_path(wizard.next_step_path)
   end
+
+  def try_to_extract_user_uid
+    request.env["omniauth.auth"].uid
+  rescue StandardError
+    "unknown-provider-uid"
+  end
+end
+
+def try_to_extract_error_type
+  request.env["omniauth.error.type"]
+rescue StandardError
+  "unknown-error-type"
 end
