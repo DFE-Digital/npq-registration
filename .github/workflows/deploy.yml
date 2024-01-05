@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - main
+      - npq-separation
     types:
       - labeled
       - synchronize
