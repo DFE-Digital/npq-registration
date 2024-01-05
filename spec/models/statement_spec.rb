@@ -2,8 +2,9 @@ require "rails_helper"
 
 RSpec.describe Statement, type: :model do
   describe "validations" do
-    it { is_expected.to validate_presence_of(:cohort) }
-    it { is_expected.to validate_presence_of(:lead_provider) }
+    it { is_expected.to belong_to(:cohort).required }
+    it { is_expected.to belong_to(:lead_provider).required }
+
     it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer }
     it { is_expected.to validate_numericality_of(:year).is_in(2020..2030).only_integer }
   end
