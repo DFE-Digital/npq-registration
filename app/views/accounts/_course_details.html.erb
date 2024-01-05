@@ -47,8 +47,7 @@
             <% end %>
         </dd>
         <!-- This code is only written for review apps in order to update the external statuses -->
-        <!-- It will only be accessible if ALLOW_STATUS_UPDATE feature flag would be enabled -->
-        <% if Feature.status_update_allowed? %>
+        <% if Rails.env.review? %>
           <dd class="govuk-summary-list__actions">
             <%= link_to 'Update Status', update_approval_status_admin_application_path(application), method: :patch %>
           </dd>
@@ -70,14 +69,13 @@
               <% end %>
           </dd>
           <!-- This code is only written for review apps in order to update the external statuses -->
-          <!-- It will only be accessible if ALLOW_STATUS_UPDATE feature flag would be enabled -->
-          <% if Feature.status_update_allowed? %>
+          <% if Rails.env.review? %>
             <dd class="govuk-summary-list__actions">
               <%= link_to 'Update Outcome', update_participant_outcome_admin_application_path(application), method: :patch %>
             </dd>
           <% end %>
         </div>
-      <% elsif Feature.status_update_allowed? %>
+      <% elsif Rails.env.review? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">
             Course outcome
