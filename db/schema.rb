@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_05_072050) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_072457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -108,6 +108,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_072050) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.bigint "course_group_id"
+    t.index ["course_group_id"], name: "index_courses_on_course_group_id"
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
@@ -382,6 +384,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_072050) do
   add_foreign_key "contracts", "courses"
   add_foreign_key "contracts", "lead_providers"
   add_foreign_key "contracts", "statements"
+  add_foreign_key "courses", "course_groups"
   add_foreign_key "declarations", "applications"
   add_foreign_key "outcomes", "declarations"
   add_foreign_key "statement_items", "declarations"
