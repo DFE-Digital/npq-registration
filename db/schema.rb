@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_05_072457) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_073303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -263,6 +263,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_072457) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "schedules", force: :cascade do |t|
+    t.string "name", null: false
+    t.date "declaration_start_date", null: false
+    t.date "starts_on", null: false
+    t.date "ends_on", null: false
+    t.bigint "course_group_id", null: false
+    t.bigint "cohort_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+    t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
+  end
+
   create_table "schools", force: :cascade do |t|
     t.text "urn", null: false
     t.text "la_code"
@@ -387,6 +400,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_072457) do
   add_foreign_key "courses", "course_groups"
   add_foreign_key "declarations", "applications"
   add_foreign_key "outcomes", "declarations"
+  add_foreign_key "schedules", "cohorts"
+  add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "declarations"
   add_foreign_key "statement_items", "statement_items", column: "clawed_back_by_id"
   add_foreign_key "statement_items", "statements"

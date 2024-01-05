@@ -3,6 +3,7 @@
 # * represents an academic year marker by the start_year
 # * also holds the NPQ registration start date which can vary by year
 class Cohort < ApplicationRecord
+  has_many :schedules
   validates :start_year,
             presence: true,
             numericality: {
