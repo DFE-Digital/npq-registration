@@ -10,12 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_05_073303) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "retained-3", "retained-4", "completed"]
 
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -56,12 +60,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_073303) do
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
     t.bigint "school_id"
-    t.bigint "cohort_id"
-    t.index ["cohort_id"], name: "index_applications_on_cohort_id"
+    t.bigint "schedule_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
+    t.index ["schedule_id"], name: "index_applications_on_schedule_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
@@ -265,13 +269,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_073303) do
 
   create_table "schedules", force: :cascade do |t|
     t.string "name", null: false
-    t.date "declaration_start_date", null: false
-    t.date "starts_on", null: false
-    t.date "ends_on", null: false
+    t.date "declaration_starts_on", null: false
+    t.date "schedule_applies_from", null: false
+    t.date "schedule_applies_to", null: false
     t.bigint "course_group_id", null: false
     t.bigint "cohort_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.enum "declaration_types", default: ["started", "retained-1", "retained-2", "completed"], null: false, array: true, enum_type: "schedule_declaration_types"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
     t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
   end
@@ -386,11 +391,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_05_073303) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
-  add_foreign_key "applications", "cohorts"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "schedules"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
   add_foreign_key "contracts", "cohorts"

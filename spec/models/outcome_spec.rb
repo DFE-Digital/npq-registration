@@ -32,7 +32,6 @@ RSpec.describe Outcome, type: :model do
 
     it "is valid with a state included in STATES" do
       valid_states.each do |state|
-        puts state
         outcome = build(:outcome, state:)
 
         expect(outcome).to be_valid
