@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_04_083905) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_05_072050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -91,6 +91,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_083905) do
     t.index ["course_id"], name: "index_contracts_on_course_id"
     t.index ["lead_provider_id"], name: "index_contracts_on_lead_provider_id"
     t.index ["statement_id"], name: "index_contracts_on_statement_id"
+  end
+
+  create_table "course_groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "courses", force: :cascade do |t|
