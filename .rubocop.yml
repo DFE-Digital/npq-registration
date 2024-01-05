@@ -60,3 +60,13 @@ RSpec/FilePath:
 
 RSpec/AnyInstance:
   Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - review
+    - sandbox
+    - staging
+    - migration
