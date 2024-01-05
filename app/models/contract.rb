@@ -9,10 +9,10 @@ class Contract < ApplicationRecord
 
   validates :per_participant, numericality: { greater_than: 0 }
   validates :recruitment_target, numericality: { only_integer: true, greater_than: 0 }
-  validates :output_payment_percentage, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
+  validates :output_payment_percentage, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 100 }
 
   # these three fields should be null after [a certain date]
-  validates :number_of_payment_periods, numericality: { only_integer: true, greater_than: 0 }
-  validates :service_fee_percentage, numericality: { only_integer: true, greater_than: 0 }
-  validates :service_fee_installments, numericality: { only_integer: true, greater_than: 0 }
+  validates :number_of_payment_periods, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :service_fee_percentage, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :service_fee_installments, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 end
