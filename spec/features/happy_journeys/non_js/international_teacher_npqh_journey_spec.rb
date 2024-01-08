@@ -117,6 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "uid" => user_uid,
     )
     deep_compare_application_data(
+      "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
