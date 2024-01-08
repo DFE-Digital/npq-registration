@@ -79,18 +79,15 @@ Rails.application.routes.draw do
         post :accept, path: "accept"
       end
 
-      namespace :participants do
-        resources :npq, only: %i[index show] do
-          put :change_schedule, path: "change-schedule"
-          put :defer, path: "defer"
-          put :resume, path: "resume"
-          put :withdraw, path: "withdraw"
-
-          get :outcomes, path: "outcomes"
-        end
-
-        resources :outcomes, only: %i[index]
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
+        get :outcomes
       end
+
+      resources :outcomes, only: %i[index]
 
       resources :declarations, only: %i[create show index] do
         put :void, path: "void"
@@ -105,18 +102,18 @@ Rails.application.routes.draw do
 
       resources :enrolments, path: "npq-enrolments", only: %i[index]
 
-      namespace :participants do
-        resources :npq, only: %i[index show] do
-          put :change_schedule, path: "change-schedule"
-          put :defer, path: "defer"
-          put :resume, path: "resume"
-          put :withdraw, path: "withdraw"
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
 
-          get :outcomes, path: "outcomes"
+        scope module: :participants do
+          resources :outcomes, only: %i[create index]
         end
-
-        resources :outcomes, only: %i[index]
       end
+
+      resources :outcomes, only: %i[index]
 
       resources :declarations, only: %i[create show index] do
         put :void, path: "void"
@@ -129,18 +126,18 @@ Rails.application.routes.draw do
         post :accept, path: "accept"
       end
 
-      namespace :participants do
-        resources :npq, only: %i[index show] do
-          put :change_schedule, path: "change-schedule"
-          put :defer, path: "defer"
-          put :resume, path: "resume"
-          put :withdraw, path: "withdraw"
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
 
-          resources :outcomes, path: "outcomes", only: %i[index create]
+        scope module: :participants do
+          resources :outcomes, only: %i[create index]
         end
-
-        resources :outcomes, only: %i[index]
       end
+
+      resources :outcomes, only: %i[index]
 
       resources :declarations, only: %i[create show index] do
         put :void, path: "void"
