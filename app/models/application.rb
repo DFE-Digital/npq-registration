@@ -48,4 +48,19 @@ class Application < ApplicationRecord
   def school_urn
     school&.urn
   end
+
+  def get_approval_status
+    case lead_provider_approval_status
+    when "accepted" then "rejected"
+    when "rejected" then "pending"
+    else "accepted"
+    end
+  end
+
+  def get_participant_outcome_state
+    case participant_outcome_state
+    when "passed" then "failed"
+    else "passed"
+    end
+  end
 end

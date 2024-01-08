@@ -43,7 +43,13 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :applications, only: %i[index show]
+    resources :applications, only: %i[index show] do
+      # This routes are only written for review apps in order to update the external statuses
+      member do
+        patch "update_approval_status"
+        patch "update_participant_outcome"
+      end
+    end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
 
     resources :users, only: %i[index show] do
