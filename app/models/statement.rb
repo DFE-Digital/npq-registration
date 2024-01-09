@@ -21,6 +21,15 @@ class Statement < ApplicationRecord
   validates :month, numericality: { in: 1..12, only_integer: true }
   validates :year, numericality: { in: 2020..2030, only_integer: true }
 
+  validate :validate_max_statement_items_count
+
+private
+
+  def validate_max_statement_items_count
+    if statement_items.count > 2
+      errors.add(:statement_items, "cannot have more than two items")
+    end
+  end
   # "deadline_date" the deadline for the final declaration, if this is missed
   # the declaration will be added to the next statement output instead
 
