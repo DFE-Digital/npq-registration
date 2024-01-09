@@ -123,6 +123,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "",
           "Course" => "Early headship coaching offer",
           "Course funding" => "I am paying",
           "Headship NPQ stage" => "I’ve completed it",

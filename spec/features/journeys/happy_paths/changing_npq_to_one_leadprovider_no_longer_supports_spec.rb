@@ -90,6 +90,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "",
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
@@ -137,6 +138,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "",
           "Course" => "Early years leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "Teacher Development Trust",

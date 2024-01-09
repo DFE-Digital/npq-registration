@@ -73,6 +73,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "",
           "Course" => "Senior leadership",
           "Course funding" => "I am paying",
           "Work setting" => "A school",
@@ -128,6 +129,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "",
           "Course" => "Senior leadership",
           "Workplace" => "open manchester school – street 1, manchester",
           "Course funding" => "My workplace is covering the cost",
