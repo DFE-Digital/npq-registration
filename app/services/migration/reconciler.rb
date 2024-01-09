@@ -4,6 +4,14 @@ module Migration
       @orphaned ||= matches.select(&:orphaned?)
     end
 
+    def orphaned_ecf
+      @orphaned_ecf ||= orphaned.select { |m| NamespaceCheck.ecf?(m.orphan) }
+    end
+
+    def orphaned_npq
+      @orphaned_npq ||= orphaned.select { |m| NamespaceCheck.npq?(m.orphan) }
+    end
+
     def duplicated
       @duplicated ||= matches.select(&:duplicated?)
     end

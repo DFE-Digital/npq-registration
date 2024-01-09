@@ -13,14 +13,6 @@ module Migration
       ].freeze
     end
 
-    def orphaned_ecf
-      @orphaned_ecf ||= orphaned.select { |m| m.orphan.is_a?(Migration::Ecf::NpqApplication) }
-    end
-
-    def orphaned_npq
-      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(Application) }
-    end
-
   protected
 
     def all_objects

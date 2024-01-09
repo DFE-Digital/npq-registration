@@ -10,14 +10,6 @@ module Migration
       end
     end
 
-    def orphaned_ecf
-      @orphaned_ecf ||= orphaned.select { |m| m.orphan.is_a?(Migration::Ecf::User) }
-    end
-
-    def orphaned_npq
-      @orphaned_npq ||= orphaned.select { |m| m.orphan.is_a?(User) }
-    end
-
     def indexes
       %i[
         id
