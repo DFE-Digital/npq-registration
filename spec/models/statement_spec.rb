@@ -7,5 +7,24 @@ RSpec.describe Statement, type: :model do
 
     it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer }
     it { is_expected.to validate_numericality_of(:year).is_in(2020..2030).only_integer }
+
+    describe "Validation for statement items count" do
+      let(:statement) { create(:statement) } # Adjust this line to match your factory name and attributes
+
+      context "when the statement has two or fewer statement items" do
+        it "is valid" do
+          create_list(:statement_item, 2, statement:) # Adjust to match your factory name and attributes
+          expect(statement.valid?).to be true
+        end
+      end
+
+      context "when the statement has more than two statement items" do
+        it "is not valid" do
+          create_list(:statement_item, 3, statement:) # Adjust to match your factory name and attributes
+          expect(statement.valid?).to be false
+          expect(statement.errors[:statement_items]).to include("cannot have more than two items")
+        end
+      end
+    end
   end
 end
