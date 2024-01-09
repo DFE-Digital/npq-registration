@@ -218,6 +218,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "migration_results", force: :cascade do |t|
+    t.integer "users_count"
+    t.integer "orphaned_ecf_users_count"
+    t.integer "orphaned_npq_users_count"
+    t.integer "duplicate_users_count"
+    t.integer "matched_users_count"
+    t.integer "applications_count"
+    t.integer "orphaned_ecf_applications_count"
+    t.integer "orphaned_npq_applications_count"
+    t.integer "duplicate_applications_count"
+    t.integer "matched_applications_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "outcomes", force: :cascade do |t|
     t.string "state", null: false
     t.date "completion_date", null: false
