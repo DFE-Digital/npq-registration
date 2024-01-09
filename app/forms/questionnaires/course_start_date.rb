@@ -31,7 +31,7 @@ module Questionnaires
 
     def next_step
       if course_start_date == "yes"
-        wizard.store["course_start"] = "February 2024"
+        wizard.store["course_start"] = I18n.t("helpers.title.registration_wizard.course_start")
         :provider_check
       else
         :cannot_register_yet
