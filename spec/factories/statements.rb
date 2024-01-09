@@ -3,7 +3,7 @@ FactoryBot.define do
     month { Faker::Number.between(from: 1, to: 12) }
     year { Faker::Number.between(from: 2022, to: 2024) }
     deadline_date { Faker::Date.forward(days: 30) }
-    cohort { build :cohort}
+    cohort { build :cohort }
     lead_provider { build :lead_provider }
     marked_as_paid_at { nil } # You can customize this attribute as needed
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }

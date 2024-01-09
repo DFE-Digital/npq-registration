@@ -9,4 +9,3 @@ class RemoveCohortAndAddScheduleToApplications < ActiveRecord::Migration[7.1]
     add_reference :applications, :cohort, null: true, foreign_key: true
   end
 end
-
