@@ -7,6 +7,12 @@ class Contract < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
 
+  validates \
+    :special_course,
+    :recruitment_target,
+    :output_payment_percentage,
+    :service_fee_percentage, presence: true
+
   validates :per_participant, numericality: { greater_than: 0 }
   validates :recruitment_target, numericality: { only_integer: true, greater_than: 0 }
   validates :output_payment_percentage, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 100 }
