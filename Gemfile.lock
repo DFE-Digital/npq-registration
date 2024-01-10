@@ -105,7 +105,8 @@ GEM
     bindex (0.8.1)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
-    brakeman (6.1.0)
+    brakeman (6.1.1)
+      racc
     brow (0.4.1)
     builder (3.2.4)
     byebug (11.1.3)
