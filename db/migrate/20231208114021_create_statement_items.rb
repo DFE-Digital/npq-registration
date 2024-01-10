@@ -3,7 +3,7 @@ class CreateStatementItems < ActiveRecord::Migration[7.0]
     create_table :statement_items do |t|
       t.references :statement, null: false, foreign_key: true
       t.references :declaration, null: false, foreign_key: true
-      t.string :state
+      t.string :state, null: false
 
       t.timestamps
     end
