@@ -10,12 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "retained-3", "retained-4", "completed"]
 
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -56,12 +60,47 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
     t.bigint "school_id"
+    t.bigint "schedule_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
+    t.index ["schedule_id"], name: "index_applications_on_schedule_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
+  end
+
+  create_table "cohorts", force: :cascade do |t|
+    t.integer "start_year", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
+  end
+
+  create_table "contracts", force: :cascade do |t|
+    t.boolean "special_course", default: false, null: false
+    t.bigint "statement_id", null: false
+    t.bigint "course_id", null: false
+    t.integer "recruitment_target", null: false
+    t.decimal "per_participant", null: false
+    t.integer "output_payment_percentage", default: 60, null: false
+    t.integer "number_of_payment_periods", null: false
+    t.integer "service_fee_percentage", default: 40, null: false
+    t.integer "service_fee_installments", null: false
+    t.bigint "cohort_id", null: false
+    t.bigint "lead_provider_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_contracts_on_cohort_id"
+    t.index ["course_id"], name: "index_contracts_on_course_id"
+    t.index ["lead_provider_id"], name: "index_contracts_on_lead_provider_id"
+    t.index ["statement_id"], name: "index_contracts_on_statement_id"
+  end
+
+  create_table "course_groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "courses", force: :cascade do |t|
@@ -73,6 +112,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.bigint "course_group_id"
+    t.index ["course_group_id"], name: "index_courses_on_course_group_id"
+    t.index ["identifier"], name: "index_courses_on_identifier", unique: true
+  end
+
+  create_table "declarations", force: :cascade do |t|
+    t.bigint "application_id", null: false
+    t.string "state"
+    t.string "declaration_type"
+    t.date "declaration_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_declarations_on_application_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -166,6 +218,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "outcomes", force: :cascade do |t|
+    t.string "state", null: false
+    t.date "completion_date", null: false
+    t.bigint "declaration_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["declaration_id"], name: "index_outcomes_on_declaration_id"
+  end
+
   create_table "private_childcare_providers", force: :cascade do |t|
     t.text "provider_urn", null: false
     t.text "provider_name"
@@ -204,6 +265,20 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
     t.text "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.string "name", null: false
+    t.date "declaration_starts_on", null: false
+    t.date "schedule_applies_from", null: false
+    t.date "schedule_applies_to", null: false
+    t.bigint "course_group_id", null: false
+    t.bigint "cohort_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.enum "declaration_types", default: ["started", "retained-1", "retained-2", "completed"], null: false, array: true, enum_type: "schedule_declaration_types"
+    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+    t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -250,6 +325,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "statement_items", force: :cascade do |t|
+    t.bigint "statement_id", null: false
+    t.bigint "declaration_id", null: false
+    t.string "state", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "clawed_back_by_id"
+    t.index ["clawed_back_by_id"], name: "index_statement_items_on_clawed_back_by_id"
+    t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
+    t.index ["statement_id"], name: "index_statement_items_on_statement_id"
+  end
+
+  create_table "statements", force: :cascade do |t|
+    t.integer "month", null: false
+    t.integer "year", null: false
+    t.date "deadline_date"
+    t.date "payment_date"
+    t.boolean "output_fee", default: true, null: false
+    t.bigint "cohort_id", null: false
+    t.bigint "lead_provider_id", null: false
+    t.datetime "marked_as_paid_at"
+    t.decimal "reconcile_amount", precision: 8, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "frozen_at"
+    t.index ["cohort_id"], name: "index_statements_on_cohort_id"
+    t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
@@ -293,6 +397,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_141230) do
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "schedules"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "contracts", "cohorts"
+  add_foreign_key "contracts", "courses"
+  add_foreign_key "contracts", "lead_providers"
+  add_foreign_key "contracts", "statements"
+  add_foreign_key "courses", "course_groups"
+  add_foreign_key "declarations", "applications"
+  add_foreign_key "outcomes", "declarations"
+  add_foreign_key "schedules", "cohorts"
+  add_foreign_key "schedules", "course_groups"
+  add_foreign_key "statement_items", "declarations"
+  add_foreign_key "statement_items", "statement_items", column: "clawed_back_by_id"
+  add_foreign_key "statement_items", "statements"
+  add_foreign_key "statements", "cohorts"
+  add_foreign_key "statements", "lead_providers"
 end

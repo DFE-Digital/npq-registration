@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Application do
+  it { is_expected.to belong_to(:schedule).optional }
+
   describe "scopes" do
     describe ".unsynced" do
       it "returns records where ecf_id is null" do

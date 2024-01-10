@@ -13,7 +13,9 @@ class Application < ApplicationRecord
   belongs_to :school, optional: true
   belongs_to :private_childcare_provider, optional: true
   belongs_to :itt_provider, optional: true
+  belongs_to :schedule, optional: true
 
+  has_many :declarations
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
   scope :unsynced, -> { where(ecf_id: nil) }
