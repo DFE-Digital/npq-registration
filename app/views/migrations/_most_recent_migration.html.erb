@@ -1,0 +1,25 @@
+
+<h2 class="govuk-heading-l">Latest migration</h2>
+
+<p class="govuk-body">
+  The latest migration was completed <strong><%= time_ago_in_words(@most_recent_migration.completed_at) %></strong> ago.
+</p>
+
+<div class="govuk-grid-row">
+  <% %w[users applications].each do |key| %>
+    <div class="govuk-grid-column-one-half">
+      <%= tag.div(class: "govuk-summary-card #{key}") do %>
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title"><%= key.pluralize.titleize %> Reconciliation</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <dl class="govuk-summary-list">
+            <% migration_result_attributes(@most_recent_migration, key).each do |attribute| %>
+              <%= migration_result_summary_row(@most_recent_migration, key, attribute) %>
+            <% end %>
+          </dl>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

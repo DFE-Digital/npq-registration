@@ -1,6 +1,8 @@
 class CreateMigrationResults < ActiveRecord::Migration[7.0]
   def change
     create_table :migration_results do |t|
+      t.datetime :completed_at
+
       t.integer :users_count
       t.integer :orphaned_ecf_users_count
       t.integer :orphaned_npq_users_count

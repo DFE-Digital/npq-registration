@@ -219,6 +219,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
   end
 
   create_table "migration_results", force: :cascade do |t|
+    t.datetime "completed_at"
     t.integer "users_count"
     t.integer "orphaned_ecf_users_count"
     t.integer "orphaned_npq_users_count"

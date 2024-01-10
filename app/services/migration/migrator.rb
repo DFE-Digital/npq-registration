@@ -1,13 +1,34 @@
 module Migration
   class Migrator
+    class MigrationInProgressError < RuntimeError; end
+    class NoMigrationInProgressError < RuntimeError; end
+
+    attr_reader :result
+
     def migrate!
-      write_migration_result!
+      retrieve_prepared_result
+      write_reconciliation_metrics!
+      finalise_result!
+    end
+
+    class << self
+      def prepare_for_migration!
+        raise MigrationInProgressError if Migration::Result.in_progress.present?
+
+        Migration::Result.create!
+      end
     end
 
   private
 
-    def write_migration_result!
-      Migration::Result.create!(
+    def retrieve_prepared_result
+      @result = Migration::Result.in_progress
+
+      raise NoMigrationInProgressError if result.blank?
+    end
+
+    def write_reconciliation_metrics!
+      result.update!(
         users_count: users_reconciler.matches.size,
         orphaned_ecf_users_count: users_reconciler.orphaned_ecf.size,
         orphaned_npq_users_count: users_reconciler.orphaned_npq.size,
@@ -19,6 +40,10 @@ module Migration
         duplicate_applications_count: applications_reconciler.duplicated.size,
         matched_applications_count: applications_reconciler.matched.size,
       )
+    end
+
+    def finalise_result!
+      result.update!(completed_at: Time.zone.now)
     end
 
     def applications_reconciler
