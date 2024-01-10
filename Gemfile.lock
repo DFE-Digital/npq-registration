@@ -88,7 +88,7 @@ GEM
     axe-core-api (4.8.0)
       dumb_delegator
       virtus
-    axe-core-capybara (4.6.1)
+    axe-core-capybara (4.8.0)
       axe-core-api
       dumb_delegator
     axe-core-rspec (4.8.0)
@@ -625,7 +625,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-session_store
-  axe-core-capybara (~> 4.6)
+  axe-core-capybara (~> 4.8)
   axe-core-rspec (~> 4.8)
   bootsnap (>= 1.1.0)
   brakeman

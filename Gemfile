@@ -70,7 +70,7 @@ group :development do
 end
 
 group :test do
-  gem "axe-core-capybara", "~> 4.6"
+  gem "axe-core-capybara", "~> 4.8"
   gem "axe-core-rspec", "~> 4.8"
   gem "factory_bot_rails"
   gem "shoulda-matchers", "~> 5.3"
