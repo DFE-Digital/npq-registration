@@ -18,6 +18,7 @@ class Statement < ApplicationRecord
   has_many :statement_items
   has_many :contracts
 
+  validates :output_fee, presence: true
   validates :month, numericality: { in: 1..12, only_integer: true }
   validates :year, numericality: { greater_than_or_equal_to: 2020, only_integer: true }
 
