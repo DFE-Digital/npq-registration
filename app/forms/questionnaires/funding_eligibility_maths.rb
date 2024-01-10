@@ -17,7 +17,7 @@ module Questionnaires
     end
 
     def funding_eligible_math
-      return "funding_eligible_maths" if course.npqlpm?
+      "funding_eligible_maths" if course.npqlpm?
     end
   end
 end

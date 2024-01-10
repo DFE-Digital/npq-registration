@@ -34,7 +34,7 @@ RSpec.describe FundingEligibility do
     context "in the special URN list" do
       let(:institution) { build(:school, urn: "146816", eyl_funding_eligible:) }
 
-      Course.all.each do |course|
+      Course.all.find_each do |course|
         context "studying #{course.identifier}" do
           let(:course) { course }
 

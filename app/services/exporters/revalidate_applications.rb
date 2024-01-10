@@ -28,7 +28,7 @@ class Exporters::RevalidateApplications
       .includes(:user)
       .where(ecf_id: application_ecf_ids)
       .where(user: { trn_verified: true })
-      .each { |a| Rails.logger.debug "#{a.ecf_id},#{a.user.trn},#{a.user.active_alert}" }
+      .find_each { |a| Rails.logger.debug "#{a.ecf_id},#{a.user.trn},#{a.user.active_alert}" }
   end
 
 private
