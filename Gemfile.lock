@@ -328,7 +328,7 @@ GEM
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.2.0)
-    net-imap (0.3.7)
+    net-imap (0.4.9.1)
       date
       net-protocol
     net-pop (0.1.2)
@@ -658,7 +658,7 @@ DEPENDENCIES
   lograge (>= 0.11.2)
   logstash-event
   mail-notify
-  net-imap (~> 0.3.7)
+  net-imap (~> 0.4.9)
   net-pop
   net-smtp (~> 0.4.0)
   omniauth
