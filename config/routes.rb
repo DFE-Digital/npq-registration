@@ -79,6 +79,77 @@ Rails.application.routes.draw do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
       end
+
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
+        get :outcomes
+      end
+
+      resources :outcomes, only: %i[index]
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+    end
+
+    namespace :v2 do
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      resources :enrolments, path: "npq-enrolments", only: %i[index]
+
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
+
+        scope module: :participants do
+          resources :outcomes, only: %i[create index]
+        end
+      end
+
+      resources :outcomes, only: %i[index]
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+    end
+
+    namespace :v3 do
+      resources :applications, path: "npq-applications", only: %i[index show] do
+        post :reject, path: "reject"
+        post :accept, path: "accept"
+      end
+
+      resources :participants, only: %i[index show], path: "participants/npq" do
+        put :change_schedule, path: "change-schedule"
+        put :defer
+        put :resume
+        put :withdraw
+
+        scope module: :participants do
+          resources :outcomes, only: %i[create index]
+        end
+      end
+
+      resources :outcomes, only: %i[index]
+
+      resources :declarations, only: %i[create show index] do
+        put :void, path: "void"
+      end
+
+      resources :statements, only: %i[index show]
     end
   end
 
