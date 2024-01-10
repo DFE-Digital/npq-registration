@@ -20,7 +20,7 @@ class Statement < ApplicationRecord
 
   validates :output_fee, presence: true
   validates :month, numericality: { in: 1..12, only_integer: true }
-  validates :year, numericality: { greater_than_or_equal_to: 2020, only_integer: true }
+  validates :year, numericality: { in: 2020..2050, only_integer: true }
 
   validate :validate_max_statement_items_count
 
