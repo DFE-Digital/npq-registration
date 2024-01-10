@@ -19,6 +19,11 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).not_to have_content("Before you start")
 
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      expect(page).to have_text("NPQ start dates vary by provider, but they usually start every February and October.")
+      page.choose("Yes", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)

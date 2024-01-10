@@ -28,6 +28,11 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(page).not_to have_content("Before you start")
 
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      expect(page).to have_text("NPQ start dates vary by provider, but they usually start every February and October.")
+      page.choose("Yes", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
@@ -123,7 +128,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "",
+          "Course start" => "February 2024",
           "Course" => "Early headship coaching offer",
           "Course funding" => "I am paying",
           "Headship NPQ stage" => "I’ve completed it",
@@ -150,6 +155,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
@@ -195,6 +201,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "course_start" => "February 2024",
+        "course_start_date" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
         "email_template" => "already_funded_not_elgible_ehco_funding",
         "ehco_funding_choice" => "self",

@@ -16,6 +16,11 @@ RSpec.feature "Happy journeys",
 
     expect(page).not_to have_content("Before you start")
 
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      expect(page).to have_text("NPQ start dates vary by provider, but they usually start every February and October.")
+      page.choose("Yes", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
       page.choose("Yes", visible: :all)
@@ -70,7 +75,7 @@ RSpec.feature "Happy journeys",
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "",
+          "Course start" => "February 2024",
           "Course" => "Senior leadership",
           "Work setting" => "Other",
           "Employment type" => "In a hospital school",
@@ -94,6 +99,7 @@ RSpec.feature "Happy journeys",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
       "provider" => "tra_openid_connect",
@@ -139,6 +145,8 @@ RSpec.feature "Happy journeys",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "course_start" => "February 2024",
+        "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",

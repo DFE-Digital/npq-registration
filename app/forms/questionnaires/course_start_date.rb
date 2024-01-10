@@ -29,11 +29,17 @@ module Questionnaires
       ]
     end
 
+    def requirements_met?
+      query_store.current_user.present?
+    end
+
     def next_step
       if course_start_date == "yes"
         wizard.store["course_start"] = I18n.t("helpers.title.registration_wizard.course_start")
+        wizard.current_user.update!(notify_user_for_future_reg: false)
         :provider_check
       else
+        wizard.current_user.update!(notify_user_for_future_reg: true)
         :cannot_register_yet
       end
     end

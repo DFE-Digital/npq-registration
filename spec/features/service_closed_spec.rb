@@ -22,7 +22,7 @@ RSpec.feature "Service is hard closed", type: :feature do
     expect(page).to have_text("Before you start")
     page.click_button("Start now")
 
-    expect(page).to have_text("Have you chosen an NPQ and provider?")
+    expect(page).to have_text("Course start")
     page.choose("Yes", visible: :all)
 
     # Registration is now closed

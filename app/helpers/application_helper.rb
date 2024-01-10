@@ -10,7 +10,7 @@ module ApplicationHelper
       if Feature.trn_required? && current_user.trn.blank?
         registration_wizard_show_path(:teacher_reference_number)
       else
-        registration_wizard_show_path(:provider_check)
+        registration_wizard_show_path(:course_start_date)
       end
     else
       "/"
