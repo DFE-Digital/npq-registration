@@ -9,8 +9,11 @@ class Contract < ApplicationRecord
 
   validates \
     :special_course,
+    :per_participant,
     :recruitment_target,
     :output_payment_percentage,
+    :service_fee_installments,
+    :number_of_payment_periods,
     :service_fee_percentage, presence: true
 
   validates :per_participant, numericality: { greater_than: 0 }
