@@ -78,14 +78,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   end
 
   create_table "contracts", force: :cascade do |t|
-    t.boolean "special_course"
+    t.boolean "special_course", default: false, null: false
     t.bigint "statement_id", null: false
     t.bigint "course_id", null: false
-    t.integer "recruitment_target"
+    t.integer "recruitment_target", null: false
     t.decimal "per_participant"
-    t.integer "output_payment_percentage"
+    t.integer "output_payment_percentage", default: 60, null: false
     t.integer "number_of_payment_periods"
-    t.integer "service_fee_percentage"
+    t.integer "service_fee_percentage", default: 40, null: false
     t.integer "service_fee_installments"
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
@@ -219,8 +219,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   end
 
   create_table "outcomes", force: :cascade do |t|
-    t.string "state"
-    t.date "completion_date"
+    t.string "state", null: false
+    t.date "completion_date", null: false
     t.bigint "declaration_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -328,19 +328,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.bigint "declaration_id", null: false
+    t.string "state", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "clawed_back_by_id"
-    t.string "state"
     t.index ["clawed_back_by_id"], name: "index_statement_items_on_clawed_back_by_id"
     t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
     t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
 
   create_table "statements", force: :cascade do |t|
-    t.integer "month"
-    t.integer "year"
+    t.integer "month", null: false
+    t.integer "year", null: false
     t.date "deadline_date"
+    t.date "payment_date"
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
     t.datetime "marked_as_paid_at"
