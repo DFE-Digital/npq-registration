@@ -82,11 +82,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
     t.bigint "statement_id", null: false
     t.bigint "course_id", null: false
     t.integer "recruitment_target", null: false
-    t.decimal "per_participant"
+    t.decimal "per_participant", null: false
     t.integer "output_payment_percentage", default: 60, null: false
-    t.integer "number_of_payment_periods"
+    t.integer "number_of_payment_periods", null: false
     t.integer "service_fee_percentage", default: 40, null: false
-    t.integer "service_fee_installments"
+    t.integer "service_fee_installments", null: false
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
     t.datetime "created_at", null: false
@@ -342,6 +342,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
     t.integer "year", null: false
     t.date "deadline_date"
     t.date "payment_date"
+    t.boolean "output_fee", default: true, null: false
     t.bigint "cohort_id", null: false
     t.bigint "lead_provider_id", null: false
     t.datetime "marked_as_paid_at"
