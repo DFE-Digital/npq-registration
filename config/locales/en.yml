@@ -275,8 +275,8 @@ en:
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
   course_start_details:
-    eligible_for_funding: "If you do not apply to join the February course, your registration will expire. You can register again later, but your funding may change."
-    not_eligible_for_funding: "If you do not apply to join the February course, your registration will expire. You can register again later."
+    eligible_for_funding: "If you do not join the February course, your registration will expire. You can register again later, but your funding may change."
+    not_eligible_for_funding: "If you do not join the February course, your registration will expire. You can register again later."
 
   helpers:
     title:
