@@ -113,6 +113,12 @@ RSpec.configure do |config|
     example.run
     Rails.cache.clear
   end
+
+  config.around(:each, rack_test_driver: true) do |example|
+    Capybara.current_driver = :rack_test
+    example.run
+    Capybara.current_driver = Capybara.default_driver
+  end
 end
 
 Shoulda::Matchers.configure do |config|

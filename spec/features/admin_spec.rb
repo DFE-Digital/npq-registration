@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "admin", type: :feature do
+RSpec.feature "admin", type: :feature, rack_test_driver: true do
   include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin, :with_ecf_id) }

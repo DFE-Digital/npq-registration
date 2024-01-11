@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
   include Helpers::JourneyAssertionHelper
 
   include_context "retrieve latest application data"
