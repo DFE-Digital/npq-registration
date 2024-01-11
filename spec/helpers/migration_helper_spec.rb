@@ -75,4 +75,14 @@ RSpec.describe MigrationHelper, type: :helper do
       it { is_expected.to be_nil }
     end
   end
+
+  describe "#migration_result_duration_in_words" do
+    subject { helper.migration_result_duration_in_words(result) }
+
+    let(:result) { freeze_time { create(:migration_result, completed_at: (3.hours + 10.minutes + 5.seconds).from_now) } }
+
+    it "returns the duration of the migration" do
+      expect(subject).to eq("3 hours, 10 minutes, and 5 seconds")
+    end
+  end
 end

@@ -107,6 +107,12 @@ RSpec.configure do |config|
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
   end
+
+  config.around(:each, in_memory_rails_cache: true) do |example|
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    example.run
+    Rails.cache.clear
+  end
 end
 
 Shoulda::Matchers.configure do |config|

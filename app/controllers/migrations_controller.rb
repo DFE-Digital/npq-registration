@@ -11,4 +11,11 @@ class MigrationsController < ApplicationController
 
     redirect_to migrations_path
   end
+
+  def download_orphan_report
+    result = Migration::Result.find(params[:id])
+    yaml = result.cached_orphan_report(params[:key])
+
+    render plain: yaml, content_type: "text/yaml"
+  end
 end

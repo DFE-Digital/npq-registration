@@ -2,7 +2,8 @@
 <h2 class="govuk-heading-l">Latest migration</h2>
 
 <p class="govuk-body">
-  The latest migration was completed <strong><%= time_ago_in_words(@most_recent_migration.completed_at) %></strong> ago.
+  The latest migration was completed <strong><%= time_ago_in_words(@most_recent_migration.completed_at) %></strong> ago.<br>
+  The migration took <strong><%= migration_result_duration_in_words(@most_recent_migration) %></strong> to complete.
 </p>
 
 <div class="govuk-grid-row">
@@ -11,6 +12,11 @@
       <%= tag.div(class: "govuk-summary-card #{key}") do %>
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title"><%= key.pluralize.titleize %> Reconciliation</h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <%= link_to("Orphan report", download_orphan_report_migrations_path(@most_recent_migration.id, key)) %>
+            </li>
+          </ul>
         </div>
         <div class="govuk-summary-card__content">
           <dl class="govuk-summary-list">

@@ -24,4 +24,9 @@ module MigrationHelper
 
     :red if attribute != "#{key}_count"
   end
+
+  def migration_result_duration_in_words(result)
+    duration_in_seconds = (result.completed_at - result.created_at).to_i
+    ActiveSupport::Duration.build(duration_in_seconds).inspect
+  end
 end

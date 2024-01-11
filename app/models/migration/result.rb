@@ -15,5 +15,13 @@ module Migration
         complete.ordered_by_most_recent.first
       end
     end
+
+    def cache_orphan_report(report, key)
+      Rails.cache.write("orphaned_#{key}_#{id}", report.to_yaml, expires_in: 1.month)
+    end
+
+    def cached_orphan_report(key)
+      Rails.cache.read("orphaned_#{key}_#{id}")
+    end
   end
 end

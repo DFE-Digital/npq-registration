@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Migration::Result, type: :model do
+RSpec.describe Migration::Result, type: :model, in_memory_rails_cache: true do
   it { expect(described_class.table_name).to eq("migration_results") }
 
   describe "scopes" do
@@ -48,6 +48,27 @@ RSpec.describe Migration::Result, type: :model do
       travel_to(3.days.ago) { create(:migration_result, :incomplete) }
 
       expect(described_class.in_progress).to eq(in_progress)
+    end
+  end
+
+  describe "orphan report caching" do
+    let(:result) { create(:migration_result) }
+
+    before do
+      report = instance_double(Migration::OrphanReport, to_yaml: "--- foo\n")
+      result.cache_orphan_report(report, "users")
+    end
+
+    describe "#cache_orphan_report" do
+      it "caches the report in YAML format" do
+        expect(Rails.cache.read("orphaned_users_#{result.id}")).to eq("--- foo\n")
+      end
+    end
+
+    describe "#cached_orphan_report" do
+      it "returns the cached report" do
+        expect(result.cached_orphan_report("users")).to eq("--- foo\n")
+      end
     end
   end
 end

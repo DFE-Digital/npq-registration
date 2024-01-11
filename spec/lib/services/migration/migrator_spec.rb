@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Migration::Migrator do
+RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
   let(:instance) { described_class.new }
 
   describe ".prepare_for_migration!" do
@@ -92,6 +92,34 @@ RSpec.describe Migration::Migrator do
         duplicate_applications_count: 1,
         matched_applications_count: 2,
       })
+    end
+
+    it "caches the orphaned users report" do
+      # Orphaned (1 ECF, 2 NPQ)
+      ecf_orphan = create(:ecf_user, :teacher, :with_application)
+      npq_orphan1 = create(:user, trn: "1213443")
+      npq_orphan2 = create(:user, trn: "3435675")
+
+      migrate
+      result = Migration::Result.most_recent_complete
+      yaml = YAML.load(Rails.cache.read("orphaned_users_#{result.id}"))
+      ids = yaml.map { |y| y.dig(:orphan, :id) }
+
+      expect(ids).to contain_exactly(npq_orphan1.id.to_s, npq_orphan2.id.to_s, ecf_orphan.id)
+    end
+
+    it "caches the orphaned applications report" do
+      # Orphaned (1 ECF, 1 NPQ)
+      ecf_orphan = create(:ecf_npq_application)
+      npq_orphan = create(:application)
+
+      migrate
+
+      result = Migration::Result.most_recent_complete
+      yaml = YAML.load(Rails.cache.read("orphaned_applications_#{result.id}"))
+      ids = yaml.map { |y| y.dig(:orphan, :id) }
+
+      expect(ids).to contain_exactly(npq_orphan.id.to_s, ecf_orphan.id)
     end
   end
 end

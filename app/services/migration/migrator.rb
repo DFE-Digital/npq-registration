@@ -7,6 +7,7 @@ module Migration
 
     def migrate!
       retrieve_prepared_result
+      cache_orphan_details
       write_reconciliation_metrics!
       finalise_result!
     end
@@ -25,6 +26,11 @@ module Migration
       @result = Migration::Result.in_progress
 
       raise NoMigrationInProgressError if result.blank?
+    end
+
+    def cache_orphan_details
+      result.cache_orphan_report(Migration::OrphanReport.new(users_reconciler), "users")
+      result.cache_orphan_report(Migration::OrphanReport.new(applications_reconciler), "applications")
     end
 
     def write_reconciliation_metrics!
