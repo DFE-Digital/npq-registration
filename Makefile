@@ -198,7 +198,7 @@ define KONDUIT_CONNECT
 		(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
 		postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
 		echo "$$postgres_url"; \
-		sed -i '' -e "s|npq_registration_development|&\\n  url: \"$$postgres_url\"|g" config/database.yml; \
+		sed -i '' -e "s|npq_registration_development|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
 	} & \
 	bin/konduit.sh -d
 endef
