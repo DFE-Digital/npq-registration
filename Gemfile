@@ -33,7 +33,7 @@ gem "pagy"
 gem "paper_trail", "~> 15.1"
 gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
-gem "puma", "~> 6.4.0"
+gem "puma", "~> 6.4.2"
 gem "rack-attack"
 gem "rails", "~> 7"
 gem "rubyzip"
@@ -45,7 +45,7 @@ gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
 
-gem "net-imap", "~> 0.3.7", require: false
+gem "net-imap", "~> 0.4.9", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.4.0", require: false
 

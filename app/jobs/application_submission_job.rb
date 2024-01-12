@@ -10,7 +10,7 @@ class ApplicationSubmissionJob < ApplicationJob
       create_link_to_ecf_user(user:)
     end
 
-    user.applications.includes(:lead_provider, :course).where(ecf_id: nil).each do |application|
+    user.applications.includes(:lead_provider, :course).where(ecf_id: nil).find_each do |application|
       Ecf::NpqProfileCreator.new(application:).call
       ApplicationSubmissionMailer.application_submitted_mail(
         email_template,
