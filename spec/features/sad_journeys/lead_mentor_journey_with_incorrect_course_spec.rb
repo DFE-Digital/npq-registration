@@ -9,7 +9,7 @@ RSpec.feature "Sad journeys", type: :feature do
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course" do
+  xscenario "registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course" do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

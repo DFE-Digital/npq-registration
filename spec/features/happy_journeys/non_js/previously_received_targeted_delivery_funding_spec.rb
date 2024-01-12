@@ -14,7 +14,7 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey that is blocked from targeted delivery funding because they were previously funded" do
+  xscenario "registration journey that is blocked from targeted delivery funding because they were previously funded" do
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

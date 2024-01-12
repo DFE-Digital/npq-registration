@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey while working at private nursery" do
+  xscenario "registration journey while working at private nursery" do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

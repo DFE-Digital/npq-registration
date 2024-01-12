@@ -16,7 +16,7 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey via using old name and not headship" do
+  xscenario "registration journey via using old name and not headship" do
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

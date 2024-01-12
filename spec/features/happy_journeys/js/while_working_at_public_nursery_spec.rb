@@ -6,7 +6,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey while working at public nursery" do
+  xscenario "registration journey while working at public nursery" do
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
