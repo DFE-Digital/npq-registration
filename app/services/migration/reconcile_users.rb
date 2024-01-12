@@ -70,14 +70,24 @@ module Migration
     def ecf_users
       @ecf_users ||= begin
         applications_query = Migration::Ecf::NpqApplication.joins(:participant_identity).where("participant_identities.user_id = users.id").select("ARRAY_AGG(npq_applications.id)")
-        Migration::Ecf::User.includes(:teacher_profile, participant_identities: { npq_applications: :school }).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        users = Migration::Ecf::User.includes(:teacher_profile, participant_identities: { npq_applications: :school }).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+
+        # Touch to preload/memoize applications
+        users.each(&:applications)
+
+        users
       end
     end
 
     def npq_users
       @npq_users ||= begin
         applications_query = Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
-        User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        users = User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+
+        # Touch to preload/memoize applications
+        users.each(&:applications)
+
+        users
       end
     end
   end

@@ -7,8 +7,8 @@ module Migration
 
     def migrate!
       retrieve_prepared_result
-      cache_orphan_details
       write_reconciliation_metrics!
+      cache_orphan_details
       finalise_result!
     end
 
