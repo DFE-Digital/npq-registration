@@ -66,4 +66,34 @@ RSpec.describe Migration::Match do
       it { expect(instance).to be_duplicated }
     end
   end
+
+  describe "namespace matching" do
+    let(:ecf_match) { create(:ecf_user) }
+    let(:npq_match) { create(:user) }
+    let(:matches) { Set[ecf_match, npq_match] }
+
+    describe "ecf_match" do
+      subject { instance.ecf_match }
+
+      it { is_expected.to eq(ecf_match) }
+
+      context "when there is no ecf match" do
+        let(:ecf_match) { nil }
+
+        it { is_expected.to be_nil }
+      end
+    end
+
+    describe "#npq_match" do
+      subject { instance.npq_match }
+
+      it { is_expected.to eq(npq_match) }
+
+      context "when there is no npq match" do
+        let(:npq_match) { nil }
+
+        it { is_expected.to be_nil }
+      end
+    end
+  end
 end

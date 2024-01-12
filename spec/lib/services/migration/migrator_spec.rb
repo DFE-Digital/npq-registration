@@ -121,5 +121,12 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
 
       expect(ids).to contain_exactly(npq_orphan.id.to_s, ecf_orphan.id)
     end
+
+    it "updates the lead provider approval status of the matched applications" do
+      ecf_application = create(:ecf_npq_application, lead_provider_approval_status: "accepted")
+      npq_application = create(:application, ecf_id: ecf_application.id, lead_provider_approval_status: "pending")
+
+      expect { migrate }.to change { npq_application.reload.lead_provider_approval_status }.to(ecf_application.lead_provider_approval_status)
+    end
   end
 end

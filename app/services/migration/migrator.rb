@@ -7,6 +7,7 @@ module Migration
 
     def migrate!
       retrieve_prepared_result
+      migrate_applications!
       write_reconciliation_metrics!
       cache_orphan_details
       finalise_result!
@@ -21,6 +22,14 @@ module Migration
     end
 
   private
+
+    def migrate_applications!
+      applications_reconciler.matched.each do |match|
+        # This is just a proof of concept, we'll need to do something more sophisticated
+        # when we actually migrate the data.
+        match.npq_match.update!(lead_provider_approval_status: match.ecf_match.lead_provider_approval_status)
+      end
+    end
 
     def retrieve_prepared_result
       @result = Migration::Result.in_progress
