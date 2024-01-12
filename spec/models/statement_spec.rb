@@ -6,7 +6,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to belong_to(:lead_provider).required }
 
     it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer }
-    it { is_expected.to validate_numericality_of(:year).only_integer.is_greater_than_or_equal_to(2020) }
+    it { is_expected.to validate_numericality_of(:year).only_integer.is_in(2020..2050) }
 
     describe "Validation for statement items count" do
       let(:statement) { create(:statement) }

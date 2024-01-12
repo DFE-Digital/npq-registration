@@ -136,6 +136,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => true,
           "work_setting" => "a_school",
           "raw_application_data" => store.except("current_user"),
+          "schedule_id" => nil,
         })
       end
     end
@@ -240,6 +241,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
           "raw_application_data" => store.except("current_user"),
+          "schedule_id" => nil,
         })
       end
     end
