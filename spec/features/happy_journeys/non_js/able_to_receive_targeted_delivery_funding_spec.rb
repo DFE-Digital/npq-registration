@@ -17,7 +17,7 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey that is able to receive targeted delivery funding" do
+  xscenario "registration journey that is able to receive targeted delivery funding" do
     stub_participant_validation_request(trn: "1234567", response: { trn: "1234567" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do

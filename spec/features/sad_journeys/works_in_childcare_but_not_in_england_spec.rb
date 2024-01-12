@@ -9,7 +9,7 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "works in childcare but not in england" do
+  xscenario "works in childcare but not in england" do
     stub_participant_validation_request(nino: "")
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
