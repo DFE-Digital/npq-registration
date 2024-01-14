@@ -82,7 +82,7 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    addressable (2.8.5)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     axe-core-api (4.8.0)
@@ -557,11 +557,11 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.1.0)
       tilt (~> 2.0)
-    site_prism (4.0.3)
-      addressable (~> 2.8)
-      capybara (~> 3.27)
-      site_prism-all_there (~> 2.0)
-    site_prism-all_there (2.0.2)
+    site_prism (5.0)
+      addressable (~> 2.8, >= 2.8.1)
+      capybara (~> 3.31)
+      site_prism-all_there (> 2, < 5)
+    site_prism-all_there (3.0.3)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -685,7 +685,7 @@ DEPENDENCIES
   sentry-ruby
   shoulda-matchers (~> 6.0)
   simplecov
-  site_prism (~> 4.0, >= 4.0.3)
+  site_prism (~> 5.0)
   stimulus-rails
   tzinfo-data
   web-console (>= 3.3.0)
