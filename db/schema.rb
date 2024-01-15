@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "retained-3", "retained-4", "completed"]
 
   create_table "api_tokens", force: :cascade do |t|
@@ -245,7 +246,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
   end
 
   create_table "outcomes", force: :cascade do |t|
-    t.string "state", null: false
+    t.enum "state", null: false, enum_type: "outcome_states"
     t.date "completion_date", null: false
     t.bigint "declaration_id", null: false
     t.datetime "created_at", null: false
