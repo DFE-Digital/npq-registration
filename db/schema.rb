@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -227,6 +227,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
     t.index ["declaration_id"], name: "index_outcomes_on_declaration_id"
   end
 
+  create_table "participant_id_changes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.uuid "from_participant_id", null: false
+    t.uuid "to_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
+    t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
+    t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
   create_table "private_childcare_providers", force: :cascade do |t|
     t.text "provider_urn", null: false
     t.text "provider_name"
@@ -407,6 +418,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_141948) do
   add_foreign_key "courses", "course_groups"
   add_foreign_key "declarations", "applications"
   add_foreign_key "outcomes", "declarations"
+  add_foreign_key "participant_id_changes", "users"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "declarations"
