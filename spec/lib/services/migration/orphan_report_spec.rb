@@ -1,12 +1,14 @@
 require "rails_helper"
 
 RSpec.describe Migration::OrphanReport do
+  before { allow(Rails.logger).to receive(:info) }
+
   let(:indexes) { %i[foo bar] }
   let(:reconciler) { instance_double(Migration::Reconciler, indexes:, orphaned_matches:) }
   let(:instance) { described_class.new(reconciler) }
 
   describe "#to_yaml" do
-    subject { instance.to_yaml }
+    subject(:to_yaml) { instance.to_yaml }
 
     context "when there are no orphans" do
       let(:orphaned_matches) { [] }
@@ -47,6 +49,12 @@ RSpec.describe Migration::OrphanReport do
                 :foo: quux
           YAML
         )
+      end
+
+      it "logs the progress" do
+        to_yaml
+        expect(Rails.logger).to have_received(:info).with("Processing orphan 1 of 2 for #{reconciler.class}")
+        expect(Rails.logger).to have_received(:info).with("Processing orphan 2 of 2 for #{reconciler.class}")
       end
     end
   end

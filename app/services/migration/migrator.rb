@@ -24,10 +24,14 @@ module Migration
   private
 
     def migrate_applications!
+      Rails.logger.info("Migrating #{applications_reconciler.matched.size} applications")
+
       applications_reconciler.matched.each do |match|
         # This is just a proof of concept, we'll need to do something more sophisticated
-        # when we actually migrate the data.
-        match.npq_match.update!(lead_provider_approval_status: match.ecf_match.lead_provider_approval_status)
+        # when we actually migrate the data. PaperTrail is disabled for performance.
+        PaperTrail.request(enabled: false) do
+          match.npq_match.update!(lead_provider_approval_status: match.ecf_match.lead_provider_approval_status)
+        end
       end
     end
 
@@ -38,11 +42,16 @@ module Migration
     end
 
     def cache_orphan_details
+      Rails.logger.info("Caching orphan report for #{users_reconciler.orphaned.size} users")
       result.cache_orphan_report(Migration::OrphanReport.new(users_reconciler), "users")
+
+      Rails.logger.info("Caching orphan report for #{applications_reconciler.orphaned.size} applications")
       result.cache_orphan_report(Migration::OrphanReport.new(applications_reconciler), "applications")
     end
 
     def write_reconciliation_metrics!
+      Rails.logger.info("Writing reconciliation metrics")
+
       result.update!(
         users_count: users_reconciler.matches.size,
         orphaned_ecf_users_count: users_reconciler.orphaned_ecf.size,
@@ -58,6 +67,8 @@ module Migration
     end
 
     def finalise_result!
+      Rails.logger.info("Finalising migration result")
+
       result.update!(completed_at: Time.zone.now)
     end
 

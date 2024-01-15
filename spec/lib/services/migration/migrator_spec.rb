@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
+  before { allow(Rails.logger).to receive(:info) }
+
   let(:instance) { described_class.new }
 
   describe ".prepare_for_migration!" do
@@ -32,6 +34,7 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
       migrate
       result = Migration::Result.most_recent_complete
       expect(result.completed_at).to be_present
+      expect(Rails.logger).to have_received(:info).with("Finalising migration result")
     end
 
     it "writes details of the users reconciliation to the result" do
@@ -62,6 +65,8 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
         duplicate_users_count: 1,
         matched_users_count: 2,
       })
+
+      expect(Rails.logger).to have_received(:info).with("Writing reconciliation metrics")
     end
 
     it "writes details of the applications reconciliation to the result" do
@@ -92,6 +97,8 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
         duplicate_applications_count: 1,
         matched_applications_count: 2,
       })
+
+      expect(Rails.logger).to have_received(:info).with("Writing reconciliation metrics")
     end
 
     it "caches the orphaned users report" do
@@ -106,6 +113,7 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
       ids = yaml.map { |y| y.dig(:orphan, :id) }
 
       expect(ids).to contain_exactly(npq_orphan1.id.to_s, npq_orphan2.id.to_s, ecf_orphan.id)
+      expect(Rails.logger).to have_received(:info).with("Caching orphan report for 3 users")
     end
 
     it "caches the orphaned applications report" do
@@ -120,13 +128,19 @@ RSpec.describe Migration::Migrator, in_memory_rails_cache: true do
       ids = yaml.map { |y| y.dig(:orphan, :id) }
 
       expect(ids).to contain_exactly(npq_orphan.id.to_s, ecf_orphan.id)
+      expect(Rails.logger).to have_received(:info).with("Caching orphan report for 2 applications")
     end
 
     it "updates the lead provider approval status of the matched applications" do
+      PaperTrail.request.enabled = false
       ecf_application = create(:ecf_npq_application, lead_provider_approval_status: "accepted")
       npq_application = create(:application, ecf_id: ecf_application.id, lead_provider_approval_status: "pending")
+      PaperTrail.request.enabled = true
 
       expect { migrate }.to change { npq_application.reload.lead_provider_approval_status }.to(ecf_application.lead_provider_approval_status)
+
+      expect(Rails.logger).to have_received(:info).with("Migrating 1 applications")
+      expect(PaperTrail::Version.count).to be_zero
     end
   end
 end

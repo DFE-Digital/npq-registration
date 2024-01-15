@@ -1,10 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Migration::ReconcileUsers do
+  before { allow(Rails.logger).to receive(:info) }
+
   let(:instance) { described_class.new }
 
   describe "#matches" do
-    subject { instance.matches }
+    subject(:matches) { instance.matches }
 
     context "when there are no users" do
       it { is_expected.to be_empty }
@@ -70,7 +72,11 @@ RSpec.describe Migration::ReconcileUsers do
         let!(:npq_user) { npq_application.user }
         let(:npq_application) { create(:application, ecf_id: ecf_application.id) }
 
-        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+        it "sets the correct matches and preloads the ECF user applications" do
+          expect(matches).to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user)))
+          expect(Rails.logger).to have_received(:info).with("Preloading applications for ECF user 1 of 1")
+          expect(matches.first.ecf_match.applications).to eq([ecf_application])
+        end
       end
 
       context "when there are multiple, shared NPQ applications" do
@@ -86,7 +92,11 @@ RSpec.describe Migration::ReconcileUsers do
           create(:application, ecf_id: other_ecf_application.id, user: npq_user)
         end
 
-        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+        it "sets the correct matches and preloads the ECF user applications" do
+          expect(matches).to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user)))
+          expect(Rails.logger).to have_received(:info).with("Preloading applications for ECF user 1 of 1")
+          expect(matches.first.ecf_match.applications).to contain_exactly(ecf_application, other_ecf_application)
+        end
       end
 
       context "when there are multiple NPQ applications and only a subset are shared" do
@@ -101,7 +111,11 @@ RSpec.describe Migration::ReconcileUsers do
           create(:application, ecf_id: SecureRandom.uuid, user: npq_user)
         end
 
-        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+        it "sets the correct matches and preloads the ECF user applications" do
+          expect(matches).to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user)))
+          expect(Rails.logger).to have_received(:info).with("Preloading applications for ECF user 1 of 1")
+          expect(matches.first.ecf_match.applications).to eq([ecf_application])
+        end
       end
     end
   end
