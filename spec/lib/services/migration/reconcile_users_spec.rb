@@ -1,0 +1,236 @@
+require "rails_helper"
+
+RSpec.describe Migration::ReconcileUsers do
+  let(:instance) { described_class.new }
+
+  describe "#matches" do
+    subject { instance.matches }
+
+    context "when there are no users" do
+      it { is_expected.to be_empty }
+    end
+
+    context "when there are ECF users without an application that do not match an NPQ user" do
+      let!(:ecf_user) { create(:ecf_user) }
+      let!(:npq_user) { create(:user) }
+
+      it { is_expected.not_to include(an_object_having_attributes(matches: [ecf_user])) }
+      it { is_expected.to include(an_object_having_attributes(matches: [npq_user])) }
+    end
+
+    context "when there are ECF users without an application that match an NPQ user" do
+      let!(:ecf_user) { create(:ecf_user) }
+      let!(:npq_user) { create(:user, ecf_id: ecf_user.id) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+    end
+
+    context "when there are ECF users with an application and NPQ users that do not match" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: [ecf_user])) }
+      it { is_expected.to include(an_object_having_attributes(matches: [npq_user])) }
+    end
+
+    context "when there are ECF and NPQ users that match on ecf_id" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user, ecf_id: ecf_user.id) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+    end
+
+    context "when there are ECF and NPQ users that match on get_an_identity_id" do
+      let(:get_an_identity_id) { SecureRandom.uuid }
+      let!(:ecf_user) do
+        create(:ecf_npq_application).user.tap do |user|
+          user.update!(get_an_identity_id:)
+        end
+      end
+      let!(:npq_user) { create(:user, get_an_identity_id:) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+    end
+
+    context "when there are ECF and NPQ users that match on trn" do
+      let!(:ecf_participant_identity) { create(:ecf_participant_identity, user: ecf_user) }
+      let(:ecf_user) { create(:ecf_user, :teacher) }
+      let!(:npq_user) { create(:user, trn: ecf_user.teacher_profile.trn) }
+
+      before { create(:ecf_npq_application, participant_identity: ecf_participant_identity) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+    end
+
+    context "when there are ECF and NPQ users sharing NPQ applications" do
+      context "when there is only one, shared NPQ application" do
+        let!(:ecf_user) { ecf_application.user }
+        let(:ecf_application) { create(:ecf_npq_application) }
+
+        let!(:npq_user) { npq_application.user }
+        let(:npq_application) { create(:application, ecf_id: ecf_application.id) }
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
+
+      context "when there are multiple, shared NPQ applications" do
+        let(:ecf_user) { create(:ecf_user) }
+        let!(:ecf_participant_identity) { create(:ecf_participant_identity, user: ecf_user) }
+        let!(:ecf_application) { create(:ecf_npq_application, participant_identity: ecf_participant_identity) }
+        let!(:other_ecf_application) { create(:ecf_npq_application, participant_identity: ecf_participant_identity) }
+
+        let(:npq_user) { create(:user) }
+
+        before do
+          create(:application, ecf_id: ecf_application.id, user: npq_user)
+          create(:application, ecf_id: other_ecf_application.id, user: npq_user)
+        end
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
+
+      context "when there are multiple NPQ applications and only a subset are shared" do
+        let(:ecf_user) { create(:ecf_user) }
+        let!(:ecf_participant_identity) { create(:ecf_participant_identity, user: ecf_user) }
+        let!(:ecf_application) { create(:ecf_npq_application, participant_identity: ecf_participant_identity) }
+
+        let(:npq_user) { create(:user) }
+
+        before do
+          create(:application, ecf_id: ecf_application.id, user: npq_user)
+          create(:application, ecf_id: SecureRandom.uuid, user: npq_user)
+        end
+
+        it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user, ecf_user))) }
+      end
+    end
+  end
+
+  describe "#orphaned" do
+    subject { instance.orphaned }
+
+    context "when there are no orphaned matches" do
+      before do
+        ecf_user = create(:ecf_user)
+        create(:user, ecf_id: ecf_user.id)
+      end
+
+      it { is_expected.to be_empty }
+    end
+
+    context "when there are orphaned matches" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+
+      it { is_expected.to include(an_object_having_attributes(matches: [ecf_user])) }
+    end
+  end
+
+  describe "#duplicated" do
+    subject { instance.duplicated }
+
+    context "when there are no duplicated matches" do
+      before do
+        ecf_user = create(:ecf_npq_application).user
+        create(:user, ecf_id: ecf_user.id)
+      end
+
+      it { is_expected.to be_empty }
+    end
+
+    context "when there are duplicated matches" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user, ecf_id: ecf_user.id) }
+      let!(:duplicate_npq_user) { create(:user, ecf_id: ecf_user.id) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user, npq_user, duplicate_npq_user))) }
+    end
+  end
+
+  describe "#matched" do
+    subject { instance.matched }
+
+    context "when there are matches" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user, ecf_id: ecf_user.id) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user, npq_user))) }
+    end
+
+    context "when there are duplicates" do
+      before do
+        ecf_user = create(:ecf_npq_application).user
+        create(:user, ecf_id: ecf_user.id)
+        create(:user, ecf_id: ecf_user.id)
+      end
+
+      it { is_expected.to be_empty }
+    end
+
+    context "when there are orphans" do
+      before { create(:ecf_npq_application).user }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
+  describe "#orphaned_ecf" do
+    subject { instance.orphaned_ecf }
+
+    context "when there are orphaned ECF and NPQ users" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user) }
+
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(ecf_user))) }
+      it { is_expected.not_to include(an_object_having_attributes(matches: array_including(npq_user))) }
+    end
+  end
+
+  describe "#orphaned_npq" do
+    subject { instance.orphaned_npq }
+
+    context "when there are orphaned ECF and NPQ users" do
+      let!(:ecf_user) { create(:ecf_npq_application).user }
+      let!(:npq_user) { create(:user) }
+
+      it { is_expected.not_to include(an_object_having_attributes(matches: array_including(ecf_user))) }
+      it { is_expected.to include(an_object_having_attributes(matches: array_including(npq_user))) }
+    end
+  end
+
+  describe "#orphaned_matches" do
+    subject { instance.orphaned_matches }
+
+    context "when an NPQ/ECF user share a first name and application at the same school" do
+      let!(:ecf_participant_identity) { create(:ecf_participant_identity, user: ecf_user) }
+      let!(:ecf_user) { create(:ecf_user, full_name: "Sam Smith") }
+      let!(:ecf_school) { create(:ecf_school, name: "ABC School") }
+
+      let!(:npq_user) { create(:user, full_name: "Sam Jones") }
+      let!(:npq_school) { create(:school, name: "abc school") }
+
+      before do
+        create(:ecf_npq_application, participant_identity: ecf_participant_identity, school: ecf_school)
+        create(:application, user: npq_user, school: npq_school)
+      end
+
+      it { is_expected.to include(an_object_having_attributes(orphan: ecf_user, potential_matches: array_including(npq_user))) }
+      it { is_expected.to include(an_object_having_attributes(orphan: npq_user, potential_matches: array_including(ecf_user))) }
+
+      context "when the NPQ user full_name is nil" do
+        let!(:ecf_user) { create(:ecf_user, full_name: "Sam Smith") }
+        let!(:ecf_school) { create(:ecf_school, name: "ABC School") }
+
+        let!(:npq_user) { create(:user, full_name: "Sam Jones") }
+        let!(:npq_school) { create(:school, name: nil) }
+
+        before do
+          create(:ecf_npq_application, participant_identity: ecf_participant_identity, school: ecf_school)
+          create(:application, user: npq_user, school: npq_school)
+        end
+
+        it { is_expected.to include(an_object_having_attributes(orphan: ecf_user, potential_matches: [])) }
+        it { is_expected.to include(an_object_having_attributes(orphan: npq_user, potential_matches: [])) }
+      end
+    end
+  end
+end

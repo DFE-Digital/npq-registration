@@ -10,6 +10,7 @@ AllCops:
   Exclude:
     - 'bin/*'
     - 'db/schema.rb'
+    - 'db/ecf_schema.rb'
     - 'node_modules/**/*'
     - 'config/application.rb'
     - 'config/puma.rb'
@@ -59,3 +60,13 @@ RSpec/FilePath:
 
 RSpec/AnyInstance:
   Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - test
+    - review
+    - sandbox
+    - staging
+    - migration
