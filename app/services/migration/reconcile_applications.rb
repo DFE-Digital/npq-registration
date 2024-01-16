@@ -34,11 +34,19 @@ module Migration
     end
 
     def ecf_applications
-      @ecf_applications ||= Migration::Ecf::NpqApplication.includes(:npq_course, participant_identity: :user).all.to_a
+      @ecf_applications ||= Migration::Ecf::NpqApplication
+        .select(indexes.excluding(:ecf_id) + %i[npq_course_id participant_identity_id lead_provider_approval_status])
+        .includes(:npq_course, participant_identity: :user)
+        .all
+        .to_a
     end
 
     def npq_applications
-      @npq_applications ||= Application.includes(:course, :user).all.to_a
+      @npq_applications ||= Application
+        .select(indexes + %i[course_id user_id lead_provider_approval_status lead_provider_id])
+        .includes(:course, :user, :lead_provider)
+        .all
+        .to_a
     end
   end
 end

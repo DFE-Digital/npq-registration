@@ -70,11 +70,19 @@ module Migration
     def ecf_users
       @ecf_users ||= begin
         applications_query = Migration::Ecf::NpqApplication.joins(:participant_identity).where("participant_identities.user_id = users.id").select("ARRAY_AGG(npq_applications.id)")
-        users = Migration::Ecf::User.includes(:teacher_profile, participant_identities: { npq_applications: :school }).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        users = Migration::Ecf::User
+          .includes(:teacher_profile, participant_identities: { npq_applications: :school })
+          .all
+          .select(indexes.excluding(:ecf_id, :trn, :npq_application_ecf_ids) + [:full_name], "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+          .to_a
 
         # Touch to preload/memoize applications
         application_ids = users.map(&:npq_application_ecf_ids).flatten.compact
-        applications_by_id = Migration::Ecf::NpqApplication.where(id: application_ids).includes(:school).index_by(&:id)
+        applications_by_id = Migration::Ecf::NpqApplication
+          .select(:id, :school_urn)
+          .where(id: application_ids)
+          .includes(:school)
+          .index_by(&:id)
 
         users.each_with_index do |user, index|
           Rails.logger.info("Preloading applications for ECF user #{index + 1} of #{users.size}")
@@ -88,7 +96,12 @@ module Migration
     def npq_users
       @npq_users ||= begin
         applications_query = Application.where("user_id = users.id AND ecf_id IS NOT NULL").select("ARRAY_AGG(ecf_id)")
-        User.includes(applications: :school).all.select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids").to_a
+        User
+          .select(indexes.excluding(:get_an_identity_id, :npq_application_ecf_ids))
+          .includes(applications: :school)
+          .all
+          .select("users.*", "(#{applications_query.to_sql}) AS npq_application_ecf_ids")
+          .to_a
       end
     end
   end
