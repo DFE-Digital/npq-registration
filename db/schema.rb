@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_10_193259) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_16_161148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -56,6 +56,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_193259) do
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
     t.bigint "school_id"
+    t.string "course_start_date"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"

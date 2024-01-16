@@ -29,7 +29,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates vary by provider, but they usually start every February and October.")
+      expect(page).to have_text("NPQ start dates vary by provider and course, but they usually start every February and October.")
       page.choose("Yes", visible: :all)
     end
 
@@ -95,7 +95,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "February 2024",
+          "Course start" => "before April 2024",
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
@@ -143,7 +143,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "February 2024",
+          "Course start" => "before April 2024",
           "Course" => "Early years leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "Teacher Development Trust",
@@ -210,10 +210,11 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
+      "course_start_date" => "before April 2024",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "February 2024",
+        "course_start" => "before April 2024",
         "course_start_date" => "yes",
         "course_identifier" => "npq-early-years-leadership",
         "email_template" => "not_on_ofsted_register",

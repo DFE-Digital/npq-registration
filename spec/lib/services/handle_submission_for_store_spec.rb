@@ -137,6 +137,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => false,
           "works_in_school" => true,
           "work_setting" => "a_school",
+          "course_start_date" => nil,
           "raw_application_data" => store.except("current_user"),
         })
       end
@@ -243,6 +244,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_childcare" => true,
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
+          "course_start_date" => nil,
           "raw_application_data" => store.except("current_user"),
         })
       end
