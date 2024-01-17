@@ -79,7 +79,7 @@ module Api
 
       attribute(:status, &:lead_provider_approval_status)
 
-      attribute :cohort do |object|
+      attribute :cohort do |_object|
         # object.cohort.start_year.to_s # TODO can't find a link at the moment
         nil
       end
