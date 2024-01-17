@@ -279,8 +279,8 @@ en:
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
   course_start_details:
-    eligible_for_funding: "If your provider doesn't confirm you've started the course before April 2024, your registration will expire. You can register again later, but your funding may change."
-    not_eligible_for_funding: "If your provider doesn't confirm you've started the course before April 2024, your registration will expire. You can register again later."
+    eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later, but your funding may change."
+    not_eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later."
 
   helpers:
     title:
@@ -315,7 +315,6 @@ en:
         full_name: "Full name"
         national_insurance_number: "National Insurance number (optional)"
         change_your_course_or_provider: "Change your course or provider"
-        course_start: "April 2024"
 
     legend:
       registration_wizard:
@@ -346,8 +345,9 @@ en:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
         maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
-        course_start_date_one: "NPQ start dates vary by provider and course, but they usually start every February and October."
-        course_start_date_two: "Registrations are currently open for courses starting before April 2024."
+        course_start_date_one: "NPQ start dates are usually every February and October."
+        course_start_date_two: "Early headship coaching offer start dates vary by provider and are throughout the year."
+        course_start_date_three: "Registrations are currently open for courses starting before %{date}."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"

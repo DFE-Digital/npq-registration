@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include ApplicationHelper
 
   include_context "Stub previously funding check for all courses" do
     let(:api_call_trn) { user_trn }
@@ -27,7 +28,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates vary by provider and course, but they usually start every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every February and October.")
       page.choose("Yes", visible: :all)
     end
 
@@ -115,7 +116,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "before April 2024",
+          "Course start" => "Before #{application_course_start_date}",
           "Workplace in England" => "Yes",
           "Work setting" => "A school",
           "Course" => "Early headship coaching offer",
@@ -198,11 +199,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_nursery" => nil,
       "works_in_school" => true,
       "work_setting" => "a_school",
-      "course_start_date" => "before April 2024",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "before April 2024",
+        "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
         "ehco_funding_choice" => "self",

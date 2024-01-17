@@ -1,6 +1,7 @@
 module Questionnaires
   class CourseStartDate < Base
     include Helpers::Institution
+    include ApplicationHelper
 
     QUESTION_NAME = :course_start_date
 
@@ -35,7 +36,7 @@ module Questionnaires
 
     def next_step
       if course_start_date == "yes"
-        wizard.store["course_start"] = "before #{I18n.t("helpers.title.registration_wizard.course_start")}"
+        wizard.store["course_start"] = "Before #{application_course_start_date}"
         wizard.current_user.update!(notify_user_for_future_reg: false)
         :provider_check
       else

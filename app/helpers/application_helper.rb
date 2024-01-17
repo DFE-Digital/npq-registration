@@ -47,4 +47,21 @@ module ApplicationHelper
   def rejected?(application)
     application.lead_provider_approval_status&.capitalize == "Rejected"
   end
+
+  def application_course_start_date(created_at = nil)
+    date = created_at || Time.zone.today
+    year = date.year
+
+    month = if registration_lies_in_oct_tenure?(date)
+              "October"
+            else
+              "April"
+            end
+
+    "#{month} #{year}"
+  end
+
+  def registration_lies_in_oct_tenure?(date)
+    date.month >= 7 && date.month <= 12
+  end
 end

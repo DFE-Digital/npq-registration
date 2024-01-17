@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
+  include ApplicationHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -29,7 +30,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates vary by provider and course, but they usually start every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every February and October.")
       page.choose("Yes", visible: :all)
     end
 
@@ -81,7 +82,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
 
-          "Course start" => "before April 2024",
+          "Course start" => "Before #{application_course_start_date}",
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
@@ -184,7 +185,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "itt_provider_id" => approved_itt_provider_legal_name.present? && IttProvider.find_by(legal_name: approved_itt_provider_legal_name).id,
-      "course_start_date" => "before April 2024",
       "raw_application_data" => {
         "targeted_delivery_funding_eligibility" => false,
         "email_template" => "eligible_scholarship_funding_not_tsf",
@@ -194,7 +194,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "before April 2024",
+        "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-leading-teaching-development",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",

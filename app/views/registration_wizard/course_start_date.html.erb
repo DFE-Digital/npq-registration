@@ -1,6 +1,6 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.course_start_date") %></h1>
+    <h1 class="govuk-heading-xl"><%= t("helpers.title.registration_wizard.course_start_date", date: application_course_start_date) %></h1>
   </div>
 </div>
 
@@ -16,6 +16,14 @@
   <div class="govuk-grid-column-two-thirds">
     <p class="govuk-body govuk-!-margin-bottom-4">
       <%= t("helpers.hint.registration_wizard.course_start_date_two") %>
+    </p>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body govuk-!-margin-bottom-4">
+      <%= t("helpers.hint.registration_wizard.course_start_date_three", date: application_course_start_date) %>
     </p>
   </div>
 </div>

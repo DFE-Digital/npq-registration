@@ -35,7 +35,6 @@ class HandleSubmissionForStore
         work_setting: store["work_setting"],
         lead_mentor: lead_mentor?,
         itt_provider: itt_provider.present? && IttProvider.find_by(legal_name: itt_provider),
-        course_start_date: store["course_start"],
         raw_application_data: raw_application_data.except("current_user"),
       )
 
