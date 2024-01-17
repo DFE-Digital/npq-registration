@@ -180,7 +180,7 @@ class RegistrationWizard
                               change_step: :your_employment)
 
       if query_store.lead_mentor_for_accredited_itt_provider?
-        array << OpenStruct.new(key: "ITT Provider",
+        array << OpenStruct.new(key: "ITT provider",
                                 value: query_store.itt_provider,
                                 change_step: :itt_provider)
       end

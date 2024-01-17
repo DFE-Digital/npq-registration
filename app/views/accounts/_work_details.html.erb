@@ -51,8 +51,8 @@
 
         <% if application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
           <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">ITT Provider</dt>
-            <dd class="govuk-summary-list__value"><%= application.itt_provider %></dd>
+            <dt class="govuk-summary-list__key">ITT provider</dt>
+            <dd class="govuk-summary-list__value"><%= application.itt_provider.legal_name %></dd>
           </div>
         <% end %>
 
@@ -90,12 +90,13 @@
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Completed one year of the primary maths Teaching for Mastery programme?
           </dt>
-          <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["maths_understanding_of_approach"], scope: "helpers.label.registration_wizard.maths_understanding_of_approach_options") %></dd>
+          <% if application.raw_application_data["maths_eligibility_teaching_for_mastery"] == "yes" %>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["maths_eligibility_teaching_for_mastery"], scope: "helpers.label.registration_wizard.maths_eligibility_teaching_for_mastery_options") %></dd>
+          <% elsif application.raw_application_data["maths_eligibility_teaching_for_mastery"] == "no" %>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["maths_understanding_of_approach"], scope: "helpers.label.registration_wizard.maths_understanding_of_approach_options") %></dd>
+          <% end%>
         </div>
       <% end %>
     </dl>
-    <%=
-      debug application.attributes
-    %>
   </div>
 </div>
