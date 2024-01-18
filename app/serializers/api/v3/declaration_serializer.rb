@@ -29,9 +29,7 @@ module Api
         # object.course.identifier
       end
 
-      attribute :state do |declaration|
-        declaration.state
-      end
+      attribute :state, &:state
 
       attribute :updated_at do |declaration|
         declaration.updated_at.rfc3339
@@ -56,7 +54,7 @@ module Api
       end
 
       attribute :ineligible_for_funding_reason do |declaration|
-        # TODO missing
+        # TODO: missing
         # if declaration.ineligible?
         #   reason = declaration.declaration_states.detect(&:ineligible?)&.state_reason
 
