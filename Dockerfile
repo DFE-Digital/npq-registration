@@ -60,9 +60,9 @@ RUN apk add --update --no-cache libpq tzdata && \
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
-ARG GIT_COMMIT_SHA="UNKNOWN"
-ENV GIT_COMMIT_SHA=${GIT_COMMIT_SHA}
-RUN echo ${GIT_COMMIT_SHA} > ./GIT_COMMIT_SHA
+ARG COMMIT_SHA
+ENV AUTHORISED_HOSTS=127.0.0.1 \
+    COMMIT_SHA=${COMMIT_SHA}
 
 ENV PORT=8080
 
