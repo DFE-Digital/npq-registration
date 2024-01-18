@@ -9,7 +9,7 @@ module Api
         end
 
         query_scope = Declaration
-          .includes(:outcomes, application: :course)
+          .includes(:outcomes, :statement_items, application: :course)
           .where(application: { lead_provider_id: current_lead_provider.id })
           .first(per_page) # current max limit for api is 3000
 
