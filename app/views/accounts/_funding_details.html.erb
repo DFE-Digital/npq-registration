@@ -9,10 +9,10 @@
           <%= application.eligible_for_funding ? 'ELIGIBLE' : 'NOT ELIGIBLE' %>
         </strong>
       <% end %>
-        <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= scholarship_funding_eligibility(application) %></p>
-        <% unless application.eligible_for_funding || scholarship_eligibility_in_review?(application) %>
-          <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("funding_details.ineligible_message") %></p>
-        <% end %>
+      <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= scholarship_funding_eligibility(application) %></p>
+      <% unless application.eligible_for_funding || scholarship_eligibility_in_review?(application) %>
+        <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("funding_details.ineligible_message") %></p>
+      <% end %>
     </dd>
   </div>
 <% end %>
@@ -25,7 +25,7 @@
     <dl class="govuk-summary-list">
 
       <% if application.targeted_delivery_funding_eligibility %>
-        
+
         <% scholarship_funding_row(application) %>
 
         <% if Flipper.enabled?(:targeted_support_funding) %>
@@ -41,6 +41,22 @@
         <% end %>
       <% else %>
         <% scholarship_funding_row(application) %>
+      <% end %>
+
+      <% unless application.eligible_for_funding? %>
+        <% if application.raw_application_data["ehco_funding_choice"].present? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Course funding</dt>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options") %></dd>
+          </div>
+        <% end %>
+
+        <% if application.raw_application_data["funding"].present? %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Course funding</dt>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["funding"], scope: "helpers.label.registration_wizard.funding_options") %></dd>
+          </div>
+        <% end %>
       <% end %>
     </dl>
   </div>

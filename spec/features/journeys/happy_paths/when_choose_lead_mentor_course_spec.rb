@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
           "Course" => "Leading teacher development",
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
-          "ITT Provider" => approved_itt_provider_legal_name,
+          "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
           "Work setting" => "Other",
           "Workplace in England" => "Yes",

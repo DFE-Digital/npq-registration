@@ -47,9 +47,7 @@ module Questionnaires
     def possible_institutions
       return @possible_institutions if @possible_institutions
 
-      @possible_institutions = PrivateChildcareProvider
-                                .search_by_urn(institution_name)
-                                .limit(10)
+      @possible_institutions = PrivateChildcareProvider.limit(10)
     end
 
   private
