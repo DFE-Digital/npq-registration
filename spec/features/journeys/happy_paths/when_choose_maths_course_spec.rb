@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
+  include ApplicationHelper
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
@@ -23,6 +24,11 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect(page).not_to have_content("Before you start")
+
+    expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      page.choose("Yes", visible: :all)
+    end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
       expect(page).to have_text("Have you chosen an NPQ and provider?")
@@ -83,7 +89,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("If your provider accepts your application, you’ll be eligible for scholarship funding for the the Leading primary mathematics NPQ.")
+      expect(page).to have_text("If your provider accepts your application, you’ll be eligible for scholarship funding for the the Leading primary mathematics NPQ starting before #{application_course_start_date}.")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -101,6 +107,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
+          "Course start" => "Before #{application_course_start_date}",
           "Workplace in England" => "Yes",
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
@@ -151,6 +158,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
+      "notify_user_for_future_reg" => false,
       "otp_expires_at" => nil,
       "otp_hash" => nil,
       "provider" => "tra_openid_connect",
@@ -197,6 +205,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
+        "course_start" => "Before #{application_course_start_date}",
+        "course_start_date" => "yes",
         "course_identifier" => "npq-leading-primary-mathematics",
         "email_template" => "eligible_scholarship_funding",
         "funding_eligiblity_status_code" => "funded",

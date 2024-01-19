@@ -204,8 +204,8 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         expect(subject).to be_trn_verified
       end
 
-      it "returns :provider_check" do
-        expect(subject.next_step).to be(:provider_check)
+      it "returns :course_start_date" do
+        expect(subject.next_step).to be(:course_start_date)
       end
     end
 

@@ -1,0 +1,15 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+  <h1 class="govuk-heading-xl">You cannot register yet</h1>
+
+  <p class="govuk-body">Registrations are currently only open for courses starting before <%= application_course_start_date %>.</p>
+
+  <p class="govuk-body">Registrations for courses starting later in the year usually open in the summer.</p>
+
+  <p class="govuk-body">You'll receive an email when registrations open.</p>
+<% end %>

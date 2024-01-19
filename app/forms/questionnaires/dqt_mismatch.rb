@@ -7,7 +7,7 @@ module Questionnaires
     def next_step
       return :check_answers if changing_answer?
 
-      :provider_check
+      :course_start_date
     end
   end
 end

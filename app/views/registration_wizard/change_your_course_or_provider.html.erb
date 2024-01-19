@@ -20,7 +20,7 @@
     <% if Feature.trn_required? && current_user.trn.blank? %>
       <%= govuk_start_button(text: "Submit a new registration", href: registration_wizard_show_path(:teacher_reference_number)) %>
     <% else %>
-      <%= govuk_start_button(text: "Submit a new registration", href: registration_wizard_show_path(:provider_check)) %>
+      <%= govuk_start_button(text: "Submit a new registration", href: registration_wizard_show_path(:course_start_date)) %>
     <% end %>
   </div>
 </div>

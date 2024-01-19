@@ -96,7 +96,7 @@ module Questionnaires
 
         return :check_answers if changing_answer?
 
-        :provider_check
+        :course_start_date
       else
         mark_trn_as_unverified
 

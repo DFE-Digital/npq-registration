@@ -12,6 +12,6 @@ RSpec.describe Questionnaires::DqtMismatch do
   describe "#next_step" do
     subject(:next_step) { step.next_step }
 
-    it { is_expected.to be :provider_check }
+    it { is_expected.to be :course_start_date }
   end
 end

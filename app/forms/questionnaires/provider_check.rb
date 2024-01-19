@@ -43,7 +43,7 @@ module Questionnaires
     end
 
     def previous_step
-      :start
+      :course_start_date
     end
   end
 end

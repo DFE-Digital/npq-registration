@@ -10,7 +10,7 @@ module ApplicationHelper
       if Feature.trn_required? && current_user.trn.blank?
         registration_wizard_show_path(:teacher_reference_number)
       else
-        registration_wizard_show_path(:provider_check)
+        registration_wizard_show_path(:course_start_date)
       end
     else
       "/"
@@ -46,5 +46,22 @@ module ApplicationHelper
 
   def rejected?(application)
     application.lead_provider_approval_status&.capitalize == "Rejected"
+  end
+
+  def application_course_start_date(created_at = nil)
+    date = created_at || Time.zone.today
+    year = date.year
+
+    month = if registration_lies_in_oct_tenure?(date)
+              "October"
+            else
+              "April"
+            end
+
+    "#{month} #{year}"
+  end
+
+  def registration_lies_in_oct_tenure?(date)
+    date.month >= 7 && date.month <= 12
   end
 end
