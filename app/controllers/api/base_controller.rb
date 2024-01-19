@@ -1,5 +1,6 @@
 module Api
-  class BaseController < ApplicationController
+  class BaseController < ActionController::API
+  # class BaseController < ApplicationController
   private
 
     def current_lead_provider
