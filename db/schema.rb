@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -20,6 +20,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "retained-3", "retained-4", "completed"]
+
+  create_table "api_tokens", force: :cascade do |t|
+    t.bigint "lead_provider_id", null: false
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
+    t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
 
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -404,6 +414,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_15_204129) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "api_tokens", "lead_providers"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
