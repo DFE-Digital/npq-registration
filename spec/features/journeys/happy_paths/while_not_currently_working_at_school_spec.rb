@@ -1,13 +1,18 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys",
+              type: :feature do
   include Helpers::JourneyAssertionHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey while working in neither a school nor childcare" do
+  context "when JavaScript is enabled or disabled" do
+    scenario("registration journey while not currently working at school", :js, :no_js) { run_scenario(js: true) }
+  end
+
+  def run_scenario(*)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -53,7 +58,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all)
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
@@ -77,12 +82,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "Before #{application_course_start_date}",
-          "Course" => "Early years leadership",
+          "Course" => "Senior leadership",
+          "Work setting" => "Other",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
-          "Role" => "Trainer",
-          "Work setting" => "Other",
           "Provider" => "Teach First",
+          "Role" => "Trainer",
           "Workplace in England" => "Yes",
         },
       )
@@ -113,7 +118,7 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     deep_compare_application_data(
-      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
@@ -121,13 +126,13 @@ RSpec.feature "Happy journeys", type: :feature do
       "employment_type" => "hospital_school",
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
+      "headteacher_status" => nil,
+      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "headteacher_status" => nil,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_id" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
@@ -148,15 +153,15 @@ RSpec.feature "Happy journeys", type: :feature do
         "chosen_provider" => "yes",
         "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
-        "course_identifier" => "npq-early-years-leadership",
-        "email_template" => "not_on_ofsted_register",
+        "course_identifier" => "npq-senior-leadership",
+        "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
         "employment_role" => "Trainer",
+        "funding_amount" => nil,
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "no_institution",
         "lead_provider_id" => "9",
         "submitted" => true,
-        "funding_amount" => nil,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

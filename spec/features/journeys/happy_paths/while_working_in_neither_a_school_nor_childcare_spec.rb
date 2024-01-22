@@ -7,7 +7,11 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey while working at public nursery" do
+  context "when JavaScript is enabled or disabled" do
+    scenario("registration journey while working in neither a school nor childcare", :js, :no_js) { run_scenario(js: true) }
+  end
+
+  def run_scenario(*)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -33,60 +37,32 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
+      page.choose("Other", visible: :all)
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
 
-    public_kind_of_nursery_key = Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample
-    public_kind_of_nursery = I18n.t(public_kind_of_nursery_key, scope: "helpers.label.registration_wizard.kind_of_nursery_options")
-
-    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("Which early years setting do you work in?")
-      page.choose(public_kind_of_nursery, visible: :all)
+    expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
+      expect(page).to have_text("How are you employed?")
+      page.choose("In a hospital school", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Where is your workplace located?")
-      page.fill_in "Where is your workplace located?", with: "manchester"
+    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
+      page.fill_in "What is your role?", with: "Trainer"
     end
 
-    expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-      expect(page).to have_text("What’s the name of your workplace?")
-      expect(page).to have_text("Search for your workplace in manchester")
-      within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      expect(page).to have_content("open manchester school")
-      page.find("#nursery-picker__option--0").click
+    expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
+      page.fill_in "What organisation are you employed by?", with: "Big company"
     end
-
-    mock_previous_funding_api_request(
-      course_identifier: "npq-senior-leadership",
-      get_an_identity_id: user_uid,
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership", visible: :all) # Needs changing to an early years course once added
+      page.choose("Early years leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("You’re not eligible for scholarship funding")
-      expect(page).to have_text("such as state funded schools")
-      expect(page).to have_text("This means that you would need to pay for the course another way")
-      expect(page).to have_text("continuing-professional-development@digital.education.gov.uk")
-
-      page.click_link("Continue")
-    end
-
-    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
-      expect(page).to have_text("How are you funding your course?")
-      page.choose "My workplace is covering the cost", visible: :all
+      page.click_button("Continue")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -105,12 +81,12 @@ RSpec.feature "Happy journeys", type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "Before #{application_course_start_date}",
-          "Course" => "Senior leadership",
-          "Course funding" => "My workplace is covering the cost",
-          "Work setting" => "Early years or childcare",
+          "Course" => "Early years leadership",
+          "Employment type" => "In a hospital school",
+          "Employer" => "Big company",
+          "Role" => "Trainer",
+          "Work setting" => "Other",
           "Provider" => "Teach First",
-          "Workplace" => "open manchester school – street 1, manchester",
-          "Early years setting" => public_kind_of_nursery,
           "Workplace in England" => "Yes",
         },
       )
@@ -141,61 +117,58 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     deep_compare_application_data(
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
-      "employer_name" => nil,
-      "employment_type" => nil,
-      "employment_role" => nil,
-      "funding_choice" => "school",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
-      "headteacher_status" => nil,
+      "employer_name" => "Big company",
+      "employment_role" => "Trainer",
+      "employment_type" => "hospital_school",
+      "funding_choice" => nil,
+      "funding_eligiblity_status_code" => "no_institution",
+      "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "kind_of_nursery" => public_kind_of_nursery_key,
+      "headteacher_status" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_id" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
+      "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
-      "number_of_pupils" => nil,
+      "number_of_pupils" => 0,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => true,
+      "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => false,
-      "work_setting" => "early_years_or_childcare",
+      "work_setting" => "other",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
-        "course_identifier" => "npq-senior-leadership",
-        "email_template" => "not_eligible_scholarship_funding_not_tsf",
-        "funding" => "school",
-        "funding_eligiblity_status_code" => "ineligible_establishment_type",
-        "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
-        "institution_name" => "",
-        "funding_amount" => nil,
-        "kind_of_nursery" => public_kind_of_nursery_key,
-        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "course_identifier" => "npq-early-years-leadership",
+        "email_template" => "not_on_ofsted_register",
+        "employer_name" => "Big company",
+        "employment_role" => "Trainer",
+        "employment_type" => "hospital_school",
+        "funding_eligiblity_status_code" => "no_institution",
+        "lead_provider_id" => "9",
         "submitted" => true,
+        "funding_amount" => nil,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
-        "work_setting" => "early_years_or_childcare",
-        "works_in_childcare" => "yes",
+        "work_setting" => "other",
+        "works_in_childcare" => "no",
         "works_in_school" => "no",
-
       },
     )
   end
