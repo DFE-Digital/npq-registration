@@ -17,7 +17,7 @@ module Api
       end
 
       def create
-        attributes = (permitted_params["attributes"] || {})
+        attributes = permitted_params["attributes"] || {}
 
         application = Application
           .includes(:user, :lead_provider)
@@ -46,7 +46,7 @@ module Api
         render json: DeclarationSerializer.new(dec).serializable_hash
       end
 
-      private
+    private
 
       def query_scope
         Declaration
@@ -65,7 +65,6 @@ module Api
           raise
         end
       end
-
     end
   end
 end
