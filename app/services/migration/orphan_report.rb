@@ -7,7 +7,9 @@ module Migration
     end
 
     def to_yaml
-      orphaned_matches.map { |orphan_match|
+      orphaned_matches.each_with_index.map { |orphan_match, index|
+        Rails.logger.info("Processing orphan #{index + 1} of #{orphaned_matches.size} for #{reconciler.class}")
+
         {
           orphan: extract_attributes(orphan_match.orphan),
           potential_matches: orphan_match.potential_matches.map(&method(:extract_attributes)),

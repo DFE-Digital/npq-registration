@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   devise_for :users,
              controllers: { omniauth_callbacks: "omniauth" }
 
+  resources :migrations, only: %i[index create] do
+    get "download_orphan_report/:id/:key", on: :collection, action: :download_orphan_report, as: :download_orphan_report
+  end
+
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
 
   resources :schools, only: [:index]

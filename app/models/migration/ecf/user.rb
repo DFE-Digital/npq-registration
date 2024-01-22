@@ -5,6 +5,7 @@ module Migration::Ecf
 
     delegate :trn, to: :teacher_profile, allow_nil: true
     alias_method :ecf_id, :id
+    attr_writer :migration_npq_applications
 
     def participant_identity
       participant_identities.first
@@ -12,9 +13,9 @@ module Migration::Ecf
 
     def migration_npq_applications
       @migration_npq_applications ||= NpqApplication.joins(:participant_identity)
-      .includes(:school)
-      .where(participant_identity: { user_id: id })
-      .to_a
+                                          .includes(:school)
+                                          .where(participant_identity: { user_id: id })
+                                          .to_a
     end
     alias_method :applications, :migration_npq_applications
   end

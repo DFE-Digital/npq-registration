@@ -6,5 +6,12 @@ FactoryBot.define do
     trait :teacher do
       teacher_profile { create(:ecf_teacher_profile) }
     end
+
+    trait :with_application do
+      after(:create) do |user|
+        participant_identity = create(:ecf_participant_identity, user:)
+        create(:ecf_npq_application, participant_identity:)
+      end
+    end
   end
 end

@@ -10,6 +10,14 @@ module Migration
       @matches = matches
     end
 
+    def ecf_match
+      matches.find { |m| NamespaceCheck.ecf?(m) }
+    end
+
+    def npq_match
+      matches.find { |m| NamespaceCheck.npq?(m) }
+    end
+
     def orphan
       raise NotOrphanedError unless orphaned?
 
