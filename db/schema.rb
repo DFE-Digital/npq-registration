@@ -19,8 +19,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_095919) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "declaration_status_enum", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
+  create_enum "declaration_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "retained-3", "retained-4", "completed"]
 
   create_table "api_tokens", force: :cascade do |t|
@@ -131,7 +131,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_095919) do
 
   create_table "declarations", force: :cascade do |t|
     t.bigint "application_id", null: false
-    t.enum "state", enum_type: "declaration_status_enum"
+    t.enum "state", enum_type: "declaration_states"
     t.string "declaration_type"
     t.date "declaration_date"
     t.datetime "created_at", null: false
@@ -392,7 +392,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_095919) do
   create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.bigint "declaration_id", null: false
-    t.enum "state", null: false, enum_type: "declaration_status_enum"
+    t.enum "state", null: false, enum_type: "declaration_states"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "clawed_back_by_id"
