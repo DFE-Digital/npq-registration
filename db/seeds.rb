@@ -1,5 +1,5 @@
 require "faker"
-require "zip"
+require "csv"
 
 # Parallel Tests is seeding the database, so I am skipping this in the test environment
 return if Rails.env.test?
@@ -18,30 +18,16 @@ def seed_itt_providers!
 end
 
 def seed_schools
-  zip_file_path = Rails.root.join("db/seeds/schools.zip")
-  Zip::File.open(zip_file_path) do |zip_file|
-    zip_file.first.tap do |entry|
-      schools_data = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.error "Importing schools data..."
-      schools_data.each_slice(5000) do |batch|
-        School.insert_all(batch)
-      end
-      Rails.logger.error "Schools data imported successfully."
-    end
+  CSV.read(Rails.root.join("db/seeds/schools.csv"), headers: true).tap do |data|
+    Rails.logger.info("Importing #{data.length} schools")
+    School.insert_all(data.map(&:to_h))
   end
 end
 
 def seed_childcare_providers!
-  zip_file_path = Rails.root.join("db/seeds/private_childcare_providers.zip")
-  Zip::File.open(zip_file_path) do |zip_file|
-    zip_file.first.tap do |entry|
-      childcare_providers = JSON.parse(entry.get_input_stream.read)
-      Rails.logger.error "Importing childcare providers data..."
-      childcare_providers.each_slice(5000) do |batch|
-        PrivateChildcareProvider.insert_all(batch)
-      end
-      Rails.logger.error "Childcare providers data imported successfully."
-    end
+  CSV.read(Rails.root.join("db/seeds/private_childcare_providers.csv"), headers: true).tap do |data|
+    Rails.logger.info("Importing #{data.length} private childcare providers")
+    PrivateChildcareProvider.insert_all(data.map(&:to_h))
   end
 end
 
