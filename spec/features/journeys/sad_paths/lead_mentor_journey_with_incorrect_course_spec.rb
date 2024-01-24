@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Sad journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
@@ -10,7 +11,19 @@ RSpec.feature "Sad journeys", type: :feature do
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course (with JS)") do
+      run_scenario(js: true)
+    end
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey when choosing lead mentor journey and approved ITT provider but picking the wrong course (without JS)") do
+      run_scenario(js: false)
+    end
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -45,11 +58,7 @@ RSpec.feature "Sad journeys", type: :feature do
 
     approved_itt_provider_legal_name = ::IttProvider.currently_approved.sample.legal_name
 
-    expect_page_to_have(path: "/registration/itt-provider", submit_form: true) do
-      expect(page).to have_text("Enter the name of the ITT provider you are working with")
-      page.fill_in("Enter the name of the ITT provider you are working with", with: approved_itt_provider_legal_name)
-      page.click_button("Continue")
-    end
+    choose_an_itt_provider(js:, name: approved_itt_provider_legal_name)
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")

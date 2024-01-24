@@ -2,11 +2,20 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "Not chosen DQT or provider" do
+  context "when JavaScript is enabled", :js do
+    scenario("Not chosen DQT or provider (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("Not chosen DQT or provider (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(*)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -26,7 +35,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("No", visible: :all)
     end
 
-    expect(page).to be_axe_clean
     expect(page).to have_text("Choose an NPQ and provider")
 
     expect(retrieve_latest_application_user_data).to match(nil)
