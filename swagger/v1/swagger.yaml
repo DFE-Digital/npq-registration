@@ -1,0 +1,81 @@
+---
+openapi: 3.0.1
+info:
+  title: 'Swagger: NPQs data management API for lead providers'
+  version: v1
+  contact:
+    name: Contact the developer
+    url: http://test.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io/
+paths:
+  "/applications/{id}":
+    get:
+      summary: Retrieves an application
+      tags:
+      - Applications
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: application found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  lead_provider_id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  lead_provider_approval_status:
+                    type: string
+                  participant_outcome_state:
+                    type: string
+                required:
+                - id
+                - user_id
+                - lead_provider_approval_status
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  lead_provider_id:
+                    type: integer
+                  user_id:
+                    type: integer
+                  lead_provider_approval_status:
+                    type: string
+                  participant_outcome_state:
+                    type: string
+                required:
+                - id
+                - user_id
+                - lead_provider_approval_status
+        '404':
+          description: application not found
+        '406':
+          description: unsupported accept header
+servers:
+- url: https://register-national-professional-qualifications.sandbox.education.gov.uk/
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
+    api_key:
+      type: apiKey
+      name: api_key
+      in: query

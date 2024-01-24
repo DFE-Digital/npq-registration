@@ -280,6 +280,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.7.1)
+    json-schema (4.1.1)
+      addressable (>= 2.8)
     json_api_client (1.22.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -476,6 +478,17 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
+    rswag-api (2.13.0)
+      activesupport (>= 3.1, < 7.2)
+      railties (>= 3.1, < 7.2)
+    rswag-specs (2.13.0)
+      activesupport (>= 3.1, < 7.2)
+      json-schema (>= 2.2, < 5.0)
+      railties (>= 3.1, < 7.2)
+      rspec-core (>= 2.14)
+    rswag-ui (2.13.0)
+      actionpack (>= 3.1, < 7.2)
+      railties (>= 3.1, < 7.2)
     rubocop (1.59.0)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -676,6 +689,9 @@ DEPENDENCIES
   rack-attack
   rails (~> 7)
   rspec-rails (~> 6.1.0)
+  rswag-api
+  rswag-specs
+  rswag-ui
   rubocop-govuk
   rubyzip
   scss_lint-govuk

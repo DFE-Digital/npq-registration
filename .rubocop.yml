@@ -58,3 +58,11 @@ RSpec/FilePath:
 
 RSpec/AnyInstance:
   Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - "spec/requests/api/*"
+
+RSpec/VariableName:
+  Exclude:
+    - "spec/requests/api/*"

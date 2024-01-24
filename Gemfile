@@ -44,6 +44,8 @@ gem "sentry-ruby"
 gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
+gem "rswag-api"
+gem "rswag-ui"
 
 gem "net-imap", "~> 0.4.9", require: false
 gem "net-pop", require: false
@@ -60,6 +62,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.1.0"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
+  gem "rswag-specs"
 end
 
 group :development do

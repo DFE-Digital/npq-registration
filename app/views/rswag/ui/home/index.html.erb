@@ -1,0 +1,139 @@
+﻿<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" >
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <style>
+      html
+      {
+        box-sizing: border-box;
+        overflow: -moz-scrollbars-vertical;
+        overflow-y: scroll;
+      }
+      *,
+      *:before,
+      *:after
+      {
+        box-sizing: inherit;
+      }
+
+      body {
+        margin:0;
+        background: #fafafa;
+      }
+
+      .topbar,
+      .info .main a {
+        display: none;
+      }
+    </style>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.js"></script>
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+
+    <!-- Workaround for https://github.com/swagger-api/swagger-editor/issues/1371 -->
+    <script>
+      if (window.navigator.userAgent.indexOf("Edge") > -1) {
+        console.log("Removing native Edge fetch in favor of swagger-ui's polyfill")
+        window.fetch = undefined;
+      }
+    </script>
+
+    <script src="./swagger-ui-bundle.js"> </script>
+    <script src="./swagger-ui-standalone-preset.js"> </script>
+    <script type="text/babel">
+      window.onload = function () {
+        var configObject = JSON.parse('<%= config_object.to_json %>');
+        var oauthConfigObject = JSON.parse('<%= oauth_config_object.to_json %>');
+
+        // Apply mandatory parameters
+        configObject.dom_id = "#swagger-ui";
+        configObject.presets = [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset];
+
+        class LayoutWrapper extends React.Component {
+          render() {
+            const { getComponent } = this.props
+
+            const StandaloneLayout = getComponent("StandaloneLayout", true)
+
+            return (
+              <StandaloneLayout />
+            )
+          }
+        }
+
+        class CustomContact extends React.Component {
+          render() {
+            const { data, getComponent, selectedServer, url: specUrl } = this.props
+            const name = data.get("name")
+            const url = data.get("url")
+
+            const Link = getComponent("Link")
+
+            return (
+              <div className="info__contact">
+                {url && (
+                  <div>
+                    <Link href={url} target="_blank">
+                      {name}
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )
+          }
+        }
+
+        const CustomComponentsPlugin = () => {
+          return {
+            components: {
+              LayoutWrapper: LayoutWrapper,
+              Contact: CustomContact,
+              Logo: () => null,
+              onlineValidatorBadge: () => null,
+            }
+          }
+        }
+
+        // Example of overriding React state (though most of it comes
+        // from the swagger.yaml so best to change there if possible).
+        //
+        // const CustomInfoPlugin = function(system) {
+        //   return {
+        //     statePlugins: {
+        //       spec: {
+        //         wrapSelectors: {
+        //           info: (oriSelector, system) => (state, ...args) => {
+        //             const result = oriSelector(state, ...args);
+        //             return result.set("title", "Swagger: NPQs data management API for lead providers")
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
+
+        configObject.plugins = [CustomComponentsPlugin];
+        configObject.layout = "LayoutWrapper";
+
+        // If oauth2RedirectUrl isn't specified, use the built-in default
+        if (!configObject.hasOwnProperty("oauth2RedirectUrl"))
+          configObject.oauth2RedirectUrl = window.location.href.replace("index.html", "oauth2-redirect.html");
+
+        // Build a system
+        const ui = SwaggerUIBundle(configObject);
+
+        // Apply OAuth config
+        ui.initOAuth(oauthConfigObject);
+      }
+    </script>
+  </body>
+</html>

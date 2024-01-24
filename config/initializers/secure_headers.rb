@@ -12,7 +12,11 @@ SecureHeaders::Configuration.default do |config|
   google_analytics = %w[www.google-analytics.com ssl.google-analytics.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
 
-  config.csp = SecureHeaders::OPT_OUT
+  config.csp = {
+    default_src: SecureHeaders::OPT_OUT,
+    img_src: %w['self' data: validator.swagger.io],
+    script_src: %w['self' 'unsafe-inline' 'unsafe-eval' unpkg.com],
+  }
 
   config.csp_report_only = {
     default_src: %w['none'],
@@ -24,10 +28,10 @@ SecureHeaders::Configuration.default do |config|
     form_action: %w['self'],
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
-    img_src: %W['self' data: *.gov.uk] + google_analytics + tracking_pixels,
+    img_src: %W['self' data: *.gov.uk validator.swagger.io] + google_analytics + tracking_pixels,
     manifest_src: %w['self'],
     media_src: %w['self'],
-    script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk] + google_analytics,
+    script_src: %W['self' 'unsafe-inline' 'unsafe-eval' *.gov.uk unpkg.com] + google_analytics,
     style_src: %w['self' 'unsafe-inline' *.gov.uk fonts.googleapis.com] + google_analytics,
     worker_src: %w['self'],
     # upgrade_insecure_requests: !Rails.env.development?, # see https://www.w3.org/TR/upgrade-insecure-requests/
