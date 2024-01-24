@@ -2,13 +2,11 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
-  include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
-  end
+  include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
-
   around do |example|
     Capybara.current_driver = :rack_test
 
@@ -17,8 +15,12 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey via using old name and not headship" do
-    stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
+  context "when JavaScript is enabled or disabled" do
+    scenario("international teacher NPQH journey", :js, :no_js) { run_scenario(js: false) }
+  end
+
+  def run_scenario(*)
+    stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -38,59 +40,30 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      page.choose("Yes", visible: :all)
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
 
-    School.create!(
-      urn: 100_000,
-      name: "open manchester school",
-      address_1: "street 1",
-      town: "manchester",
-      establishment_status_code: "1",
-      establishment_type_code: "1",
-      high_pupil_premium: true,
-      number_of_pupils: 100,
-    )
-
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
-
-      within ".npq-js-hidden" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      page.click_button("Continue")
-
-      page.choose "open manchester school"
-    end
-
-    mock_previous_funding_api_request(
-      course_identifier: "npq-senior-leadership",
-      trn: "RP12%2F345",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership")
+      expect(page).not_to have_text("Additional Support Offer for new headteachers")
+      page.choose("Headship", visible: :all)
     end
 
-    mock_previous_funding_api_request(
-      course_identifier: "npq-headship",
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
+      expect(page).to have_text("you do not work in England")
+      expect(page).to have_text("This means that you would need to pay for the course another way")
+
+      page.click_link("Continue")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      expect(page).to have_text("How are you funding your course?")
+      page.choose("My workplace is covering the cost", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -105,20 +78,35 @@ RSpec.feature "Happy journeys", type: :feature do
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "Before #{application_course_start_date}",
-          "Workplace in England" => "Yes",
+          "Workplace in England" => "No",
           "Work setting" => "A school",
-          "Course" => "Senior leadership",
-          "Workplace" => "open manchester school – street 1, manchester",
+          "Course" => "Headship",
           "Provider" => "Teach First",
+          "Course funding" => "My workplace is covering the cost",
         },
       )
     end
 
     expect_applicant_reached_end_of_journey
+
+    if User.last.applications.count == 1
+      navigate_to_page(path: "/accounts/user_registrations/#{User.last.applications.last.id}", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Headship")
+      end
+    else
+      navigate_to_page(path: "/account", axe_check: false, submit_form: false) do
+        expect(page).to have_text("Teach First")
+        expect(page).to have_text("Headship")
+      end
+    end
+
+    visit "/registration/share-provider"
+    expect(page).to have_current_path("/")
 
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
@@ -141,32 +129,31 @@ RSpec.feature "Happy journeys", type: :feature do
       "trn_verified" => true,
       "uid" => user_uid,
     )
-
     deep_compare_application_data(
-      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-headship").id,
       "ecf_id" => nil,
-      "eligible_for_funding" => true,
+      "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
-      "funding_choice" => nil,
-      "funding_eligiblity_status_code" => "funded",
-      "headteacher_status" => nil,
-      "kind_of_nursery" => nil,
+      "funding_choice" => "school",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
+      "funding_eligiblity_status_code" => "not_in_england",
+      "headteacher_status" => nil,
+      "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "private_childcare_provider_id" => nil,
-      "school_id" => School.find_by(urn: "100000").id,
-      "targeted_delivery_funding_eligibility" => true,
-      "teacher_catchment" => "england",
+      "school_id" => nil,
+      "targeted_delivery_funding_eligibility" => false,
+      "teacher_catchment" => "another",
       "teacher_catchment_country" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
-      "number_of_pupils" => 100,
+      "number_of_pupils" => 0,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
@@ -174,27 +161,25 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "work_setting" => "a_school",
       "raw_application_data" => {
+        "email_template" => "not_england_wrong_catchment",
+        "lead_provider_id" => "9",
+        "submitted" => true,
+        "works_in_school" => "yes",
+        "works_in_childcare" => "no",
+        "work_setting" => "a_school",
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
-        "course_identifier" => "npq-senior-leadership",
-        "email_template" => "eligible_scholarship_funding",
-        "funding_amount" => 200,
-        "funding_eligiblity_status_code" => "funded",
-        "institution_identifier" => "School-100000",
-        "institution_location" => "manchester",
-        "institution_name" => "open",
-        "lead_provider_id" => "9",
-        "submitted" => true,
-        "targeted_delivery_funding_eligibility" => true,
-        "teacher_catchment" => "england",
+        "course_identifier" => "npq-headship",
+        "funding" => "school",
+        "funding_amount" => nil,
+        "targeted_delivery_funding_eligibility" => false,
+        "teacher_catchment" => "another",
         "teacher_catchment_country" => nil,
-        "works_in_school" => "yes",
-        "works_in_childcare" => "no",
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
-        "work_setting" => "a_school",
+        "funding_eligiblity_status_code" => "not_in_england",
       },
     )
   end

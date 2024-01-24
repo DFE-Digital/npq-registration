@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
@@ -54,33 +55,7 @@ RSpec.feature "Happy journeys", type: :feature do
     School.create!(urn: 100_001, name: "closed manchester school", address_1: "street 2", town: "manchester", establishment_status_code: "2")
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
-
-      if js
-        within ".npq-js-reveal" do
-          page.fill_in "What’s the name of your workplace?", with: "open"
-        end
-
-        expect(page).to have_content("open manchester school")
-
-        page.find("#school-picker__option--0").click
-      else
-        within ".npq-js-hidden" do
-          page.fill_in "What’s the name of your workplace?", with: "open"
-        end
-
-        page.click_button("Continue")
-
-        expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
-        page.choose "open manchester school"
-      end
-      page.click_button("Continue")
-    end
+    choose_a_school(js:, location: "manchester", name: "open")
 
     mock_previous_funding_api_request(
       course_identifier: "npq-headship",
