@@ -35,6 +35,6 @@ private
   end
 
   def check_review_env
-    redirect_to accounts_user_registration_path(@application), notice: "Access denied. This action is only allowed in review apps." unless Rails.env.review? # rubocop:disable Rails/UnknownEnv
+    redirect_to accounts_user_registration_path(@application), notice: "Access denied. This action is only allowed in review apps." unless Rails.env.review?
   end
 end
