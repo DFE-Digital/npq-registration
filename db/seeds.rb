@@ -19,15 +19,29 @@ end
 
 def seed_schools
   CSV.read(Rails.root.join("db/seeds/schools.csv"), headers: true).tap do |data|
-    Rails.logger.info("Importing #{data.length} schools")
-    School.insert_all(data.map(&:to_h))
+    if Rails.env.review?
+      Rails.logger.info("Importing 1000 schools")
+
+      School.insert_all(data.first(1000).map(&:to_h))
+    else
+      Rails.logger.info("Importing #{data.length} schools")
+
+      School.insert_all(data.map(&:to_h))
+    end
   end
 end
 
 def seed_childcare_providers!
   CSV.read(Rails.root.join("db/seeds/private_childcare_providers.csv"), headers: true).tap do |data|
-    Rails.logger.info("Importing #{data.length} private childcare providers")
-    PrivateChildcareProvider.insert_all(data.map(&:to_h))
+    if Rails.env.review?
+      Rails.logger.info("Importing 1000 private childcare providers")
+
+      PrivateChildcareProvider.insert_all(data.first(1000).map(&:to_h))
+    else
+      Rails.logger.info("Importing #{data.length} private childcare providers")
+
+      PrivateChildcareProvider.insert_all(data.map(&:to_h))
+    end
   end
 end
 
