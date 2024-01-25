@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_25_104224) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_25_115234) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -99,6 +99,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_25_104224) do
     t.integer "service_fee_installments", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["course_id", "statement_id"], name: "index_contracts_on_course_id_and_statement_id", unique: true
     t.index ["course_id"], name: "index_contracts_on_course_id"
     t.index ["statement_id"], name: "index_contracts_on_statement_id"
   end
