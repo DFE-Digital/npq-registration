@@ -5,6 +5,8 @@ class Contract < ApplicationRecord
   belongs_to :statement
   belongs_to :course
 
+  validates :course, uniqueness: { scope: :statement_id }
+
   validates \
     :special_course,
     :per_participant,
