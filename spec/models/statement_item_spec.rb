@@ -4,6 +4,8 @@ RSpec.describe StatementItem, type: :model do
   describe "relationships" do
     it { is_expected.to belong_to(:statement).required }
     it { is_expected.to belong_to(:declaration).required }
+
+    it { is_expected.to have_many(:events) }
   end
 
   describe "validations" do

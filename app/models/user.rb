@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes
+  has_many :events
 
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }

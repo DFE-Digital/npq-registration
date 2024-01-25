@@ -12,6 +12,7 @@ RSpec.describe Application do
     it { is_expected.to belong_to(:itt_provider).optional }
     it { is_expected.to belong_to(:schedule).optional }
 
+    it { is_expected.to have_many(:events) }
     it { is_expected.to have_many(:declarations) }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
   end

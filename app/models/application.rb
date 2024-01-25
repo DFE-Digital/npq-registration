@@ -16,6 +16,7 @@ class Application < ApplicationRecord
   belongs_to :schedule, optional: true
 
   has_many :declarations
+  has_many :events
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
   scope :unsynced, -> { where(ecf_id: nil) }
