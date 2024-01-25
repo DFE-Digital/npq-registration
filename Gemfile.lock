@@ -101,7 +101,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     base64 (0.2.0)
     bcrypt (3.1.19)
-    bigdecimal (3.1.5)
+    bigdecimal (3.1.6)
     bindex (0.8.1)
     bootsnap (1.17.0)
       msgpack (~> 1.2)
@@ -320,7 +320,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
-    minitest (5.21.1)
+    minitest (5.21.2)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -539,7 +539,7 @@ GEM
       sentry-ruby (~> 5.16.1)
     sentry-ruby (5.16.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-    shoulda-matchers (6.0.0)
+    shoulda-matchers (6.1.0)
       activesupport (>= 5.2.0)
     signet (0.18.0)
       addressable (~> 2.8)
@@ -683,7 +683,7 @@ DEPENDENCIES
   sentry-delayed_job
   sentry-rails
   sentry-ruby
-  shoulda-matchers (~> 6.0)
+  shoulda-matchers (~> 6.1)
   simplecov
   site_prism (~> 5.0)
   stimulus-rails
