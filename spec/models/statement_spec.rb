@@ -1,10 +1,14 @@
 require "rails_helper"
 
 RSpec.describe Statement, type: :model do
-  describe "validations" do
+  describe "relationships" do
     it { is_expected.to belong_to(:cohort).required }
     it { is_expected.to belong_to(:lead_provider).required }
+    it { is_expected.to have_many(:statement_items) }
+    it { is_expected.to have_many(:contracts) }
+  end
 
+  describe "validations" do
     it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer }
     it { is_expected.to validate_numericality_of(:year).only_integer.is_in(2020..2050) }
 

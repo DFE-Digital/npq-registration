@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Course do
-  it { is_expected.to belong_to(:course_group).optional }
+  describe "relationships" do
+    it { is_expected.to belong_to(:course_group).optional }
+  end
 
   describe "#eyl?" do
     context "when the course identifier is npq-early-years-leadership" do

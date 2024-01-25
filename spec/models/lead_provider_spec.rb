@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe LeadProvider do
+  describe "relationships" do
+    it { is_expected.to have_many(:applications) }
+  end
+
   describe "#for" do
     subject { described_class.for(course:).map(&:name) }
 

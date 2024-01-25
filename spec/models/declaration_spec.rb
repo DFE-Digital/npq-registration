@@ -1,8 +1,13 @@
 require "rails_helper"
 
 RSpec.describe Declaration, type: :model do
-  describe "validations" do
+  describe "relationships" do
     it { is_expected.to belong_to(:application).required }
+    it { is_expected.to have_many(:outcomes) }
+    it { is_expected.to have_many(:statement_items) }
+  end
+
+  describe "validations" do
 
     describe "state validations" do
       let(:valid_states) { %w[submitted eligible ineligible payable voided paid awaiting_clawback clawed_back] }

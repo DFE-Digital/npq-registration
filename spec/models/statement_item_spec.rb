@@ -1,9 +1,12 @@
 require "rails_helper"
 
 RSpec.describe StatementItem, type: :model do
-  describe "validations" do
+  describe "relationships" do
     it { is_expected.to belong_to(:statement).required }
     it { is_expected.to belong_to(:declaration).required }
+  end
+
+  describe "validations" do
     it { is_expected.to validate_inclusion_of(:state).in_array(StatementItem::STATES) }
 
     describe "clawed_back_by validation" do
