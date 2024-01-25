@@ -4,8 +4,6 @@
 class Contract < ApplicationRecord
   belongs_to :statement
   belongs_to :course
-  belongs_to :cohort
-  belongs_to :lead_provider
 
   validates \
     :special_course,
@@ -24,4 +22,8 @@ class Contract < ApplicationRecord
   validates :number_of_payment_periods, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :service_fee_percentage, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :service_fee_installments, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  delegate :cohort, :lead_provider,
+    to: :statement
+
 end
