@@ -7,4 +7,15 @@ class Event < ApplicationRecord
   belongs_to :statement, optional: true
   belongs_to :statement_item, optional: true
   belongs_to :declaration, optional: true
+
+  validates :importance,
+            presence: true,
+            numericality: {
+              only_integer: true,
+              in: 1..10,
+            }
+
+  validates :subject,
+            presence: true,
+            length: { maximum: 128 }
 end
