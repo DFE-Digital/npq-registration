@@ -26,6 +26,5 @@ class Contract < ApplicationRecord
   validates :service_fee_installments, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   delegate :cohort, :lead_provider,
-    to: :statement
-
+           to: :statement
 end
