@@ -9,5 +9,5 @@ class RenameDeclarationStatusEnum < ActiveRecord::Migration[7.1]
     execute <<-SQL
       ALTER TYPE declaration_states RENAME TO declaration_status_enum;
     SQL
-    end
+  end
 end
