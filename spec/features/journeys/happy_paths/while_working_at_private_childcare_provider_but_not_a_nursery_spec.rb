@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
@@ -10,7 +11,15 @@ RSpec.feature "Happy journeys", type: :feature do
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "registration journey while working at private childcare provider but not a nursery" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey while working at private childcare provider but not a nursery (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey while working at private childcare provider but not a nursery (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -51,27 +60,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    private_childcare_provider = PrivateChildcareProvider.create!(
-      provider_urn: "EY123456",
-      provider_name: "searchable childcare provider",
-      address_1: "street 1",
-      town: "manchester",
-      early_years_individual_registers: %w[CCR VCR EYR],
-    )
-
-    expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Enter your or your employer’s URN")
-      within ".npq-js-reveal" do
-        page.fill_in "private-childcare-provider-picker", with: "EY123"
-      end
-      expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
-      within ".npq-js-reveal" do
-        page.fill_in "private-childcare-provider-picker", with: "123"
-      end
-
-      expect(page).to have_content("EY123456 - searchable childcare provider - street 1, manchester")
-      page.find("#private-childcare-provider-picker__option--0").click
-    end
+    choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
     eyl_course = ["Early years leadership"]
     ehco_course = ["Early headship coaching offer"]
@@ -125,7 +114,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "Early years leadership",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => private_childcare_provider.registration_details,
+          "Ofsted unique reference number (URN)" => "EY123456 – searchable childcare provider – street 1, manchester",
           "Workplace in England" => "Yes",
           "Early years setting" => "Private nursery",
         },
@@ -200,7 +189,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
         "institution_identifier" => "PrivateChildcareProvider-EY123456",
-        "institution_name" => "",
+        "institution_name" => js ? "" : "EY123456",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,

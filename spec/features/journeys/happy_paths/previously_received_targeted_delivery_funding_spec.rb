@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
+  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
@@ -15,7 +16,15 @@ RSpec.feature "Happy journeys", type: :feature do
     Capybara.current_driver = Capybara.default_driver
   end
 
-  scenario "registration journey that is blocked from targeted delivery funding because they were previously funded" do
+  context "when JavaScript is enabled", :js do
+    scenario("registration journey that is blocked from targeted delivery funding because they were previously funded (with JS)") { run_scenario(js: true) }
+  end
+
+  context "when JavaScript is disabled", :no_js do
+    scenario("registration journey that is blocked from targeted delivery funding because they were previously funded (without JS)") { run_scenario(js: false) }
+  end
+
+  def run_scenario(js:)
     stub_participant_validation_request(trn: "12345", response: { trn: "12345" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -54,22 +63,7 @@ RSpec.feature "Happy journeys", type: :feature do
       number_of_pupils: 100,
     )
 
-    expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
-    end
-
-    expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
-
-      within ".npq-js-hidden" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
-      end
-
-      page.click_button("Continue")
-
-      expect(page).to have_text("Search for your school or 16 to 19 educational setting in manchester. If you work for a trust, enter one of their schools.")
-      page.choose "open manchester school"
-    end
+    choose_a_school(js:, location: "manchester", name: "open")
 
     mock_previous_funding_api_request(
       course_identifier: "npq-senior-leadership",
@@ -83,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Senior leadership")
+      page.choose("Senior leadership", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
@@ -183,7 +177,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
-        "institution_name" => "open",
+        "institution_name" => js ? "" : "open",
         "lead_provider_id" => "9",
         "submitted" => true,
         "funding_amount" => 200,
