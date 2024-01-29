@@ -17,6 +17,8 @@ class Application < ApplicationRecord
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
   scope :unsynced, -> { where(ecf_id: nil) }
+  scope :expired_applications, -> { where(lead_provider_approval_status: "rejected").where("created_at < ?", cut_off_date_for_expired_applications) }
+  scope :active_applications, -> { where.not(id: expired_applications) }
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
@@ -77,5 +79,9 @@ class Application < ApplicationRecord
     when "passed" then "failed"
     else "passed"
     end
+  end
+
+  def self.cut_off_date_for_expired_applications
+    Time.zone.local(2024, 6, 30)
   end
 end

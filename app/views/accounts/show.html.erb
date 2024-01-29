@@ -11,10 +11,28 @@
     <%= link_to_identity_account(request.original_url, text: "Visit your DfE Identity account") %> to check or change your personal details.
   </div>
 <% end %>
-<% applications = current_user.applications.order(created_at: :desc) %>
 
-<% applications.each do |application| %>
-  <%= render "application_table", application: application %>
+<% if Time.zone.now > Time.zone.local(2024, 4, 2) %>
+  <% active_applications = current_user.applications.active_applications.order(created_at: :desc) %>
+  <% expired_applications = current_user.applications.expired_applications.order(created_at: :desc) %>
+
+  <% active_applications.each do |application| %>
+    <%= render "active_application_table", application: application %>
+  <% end %>
+
+  <% if expired_applications.count > 0 %>
+    <h3 class="govuk-heading-l">Expired registrations</h3>
+
+    <% expired_applications.each do |application| %>
+      <%= render "expired_application_table", application: application %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% active_applications = current_user.applications.order(created_at: :desc) %>
+
+  <% active_applications.each do |application| %>
+    <%= render "active_application_table", application: application %>
+  <% end %>
 <% end %>
 
 <%= render partial: 'registration_wizard/shared/register_for_an_npq' %>
