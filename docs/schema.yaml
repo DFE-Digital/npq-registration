@@ -1,0 +1,35 @@
+---
+openapi: 3.0.3
+info:
+  title: npq
+  version: 1.0.0
+servers: []
+paths:
+  "/api/v1/npq-applications":
+    get:
+      summary: List all applications
+      tags:
+      - v1
+      - applications
+      security:
+      - SomeToken: xyz
+      responses:
+        '200':
+          description: |
+            Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit
+            enim labore culpa sint ad nisi Lorem pariatur mollit ex esse
+            exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit
+            nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor
+            minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure
+            duis.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hello:
+                    type: string
+                required:
+                - hello
+              example:
+                hello: world

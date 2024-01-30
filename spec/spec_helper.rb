@@ -11,6 +11,7 @@ require "with_model"
 require "support/helpers/journey_helper"
 require "support/helpers/journey_assertion_helper"
 require "support/helpers/journey_step_helper"
+require "support/rspec_openapi_setup"
 
 WebMock.disable_net_connect!(allow_localhost: true,
                              allow: ["chromedriver.storage.googleapis.com", "googlechromelabs.github.io", "edgedl.me.gvt1.com"])
