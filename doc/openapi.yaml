@@ -1,0 +1,26 @@
+---
+openapi: 3.0.3
+info:
+  title: npq
+  version: 1.0.0
+servers: []
+paths:
+  "/api/v1/npq-applications":
+    get:
+      summary: index
+      tags:
+      - Api::V1::Application
+      responses:
+        '200':
+          description: is expected to be ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hello:
+                    type: string
+                required:
+                - hello
+              example:
+                hello: world
