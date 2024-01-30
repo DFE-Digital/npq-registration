@@ -79,6 +79,8 @@ Rails.application.routes.draw do
   get "/admin", to: "admin#show"
 
   namespace :api do
+    resources :documentation, only: %i[index show], path: "docs", controller: "documentation"
+
     namespace :v1 do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
