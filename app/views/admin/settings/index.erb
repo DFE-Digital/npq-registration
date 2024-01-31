@@ -1,0 +1,10 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Settings" %>
+
+    <%= form_for [:admin, @setting] do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_date_field :course_start_date,  legend: { text: 'Provide course start date' } %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+</div>

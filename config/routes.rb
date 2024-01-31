@@ -49,6 +49,7 @@ Rails.application.routes.draw do
         patch "update_approval_status"
         patch "update_participant_outcome"
       end
+
     end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
 
@@ -70,6 +71,8 @@ Rails.application.routes.draw do
     constraints HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
+
+    resources 'settings'
   end
 
   get "/admin", to: "admin#show"

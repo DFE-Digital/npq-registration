@@ -79,6 +79,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_114716) do
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
+  create_table "closed_registration_users", force: :cascade do |t|
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cohorts", force: :cascade do |t|
     t.integer "start_year", null: false
     t.datetime "registration_start_date", null: false
@@ -273,6 +279,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_114716) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "settings", force: :cascade do |t|
+    t.date "course_start_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.enum "state", default: "eligible", null: false, enum_type: "statement_item_states"
@@ -318,6 +330,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_114716) do
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"
     t.boolean "notify_user_for_future_reg", default: false
+    t.boolean "allow_closed_registration"
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["provider"], name: "index_users_on_provider"
