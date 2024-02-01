@@ -41,11 +41,15 @@ class PrivateChildcareProvider < ApplicationRecord
   end
 
   def display_name
-    [urn, provider_name].compact.join(" - ")
+    [urn, name_with_address].compact.join(" - ")
   end
 
   def address
     [address_1, address_2, address_3, town, region, postcode].reject(&:blank?) - [REDACTED_DATA_STRING]
+  end
+
+  def long_name
+    [name, address].join(" - ")
   end
 
   def address_string

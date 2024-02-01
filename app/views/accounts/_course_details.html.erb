@@ -60,11 +60,11 @@
             Course start
           </dt>
           <dd class="govuk-summary-list__value">
-            February 2024
+            Before <%= application_course_start_date %>
             <% if application.eligible_for_funding %>  
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.eligible_for_funding")  %></p>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.eligible_for_funding", date: application_course_start_date) %></p>
             <% else %>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.not_eligible_for_funding")  %></p>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.not_eligible_for_funding", date: application_course_start_date) %></p>
             <% end %>
           </dd>
         </div>

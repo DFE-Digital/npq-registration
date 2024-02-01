@@ -414,6 +414,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
     t.boolean "super_admin", default: false, null: false
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"
+    t.boolean "notify_user_for_future_reg", default: false
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["provider"], name: "index_users_on_provider"

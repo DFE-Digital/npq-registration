@@ -74,9 +74,9 @@ group :test do
   gem "axe-core-capybara", "~> 4.6"
   gem "axe-core-rspec", "~> 4.8"
   gem "factory_bot_rails"
-  gem "shoulda-matchers", "~> 5.3"
+  gem "shoulda-matchers", "~> 6.1"
   gem "simplecov", require: false
-  gem "site_prism", "~> 4.0", ">= 4.0.3"
+  gem "site_prism", "~> 5.0"
   gem "webdrivers"
   gem "webmock", "~> 3.19", ">= 3.19.1"
   gem "with_model", "~> 2.1", ">= 2.1.7"

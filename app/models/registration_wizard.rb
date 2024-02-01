@@ -52,6 +52,8 @@ class RegistrationWizard
     funding_your_npq
     share_provider
     check_answers
+    course_start_date
+    cannot_register_yet
   ].freeze
 
   attr_reader :current_step, :params, :store, :request, :current_user
@@ -137,6 +139,10 @@ class RegistrationWizard
       end
     end
 
+    array << OpenStruct.new(key: "Course start",
+                            value: store["course_start"],
+                            change_step: :course_start_date)
+
     array << OpenStruct.new(key: "Workplace in England",
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
@@ -180,7 +186,7 @@ class RegistrationWizard
                               change_step: :your_employment)
 
       if query_store.lead_mentor_for_accredited_itt_provider?
-        array << OpenStruct.new(key: "ITT Provider",
+        array << OpenStruct.new(key: "ITT provider",
                                 value: query_store.itt_provider,
                                 change_step: :itt_provider)
       end

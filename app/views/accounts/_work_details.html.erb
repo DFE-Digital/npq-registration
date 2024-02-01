@@ -5,25 +5,98 @@
   <div class="govuk-summary-card__content">
     <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Do you work in England?</dt>
+        <dt class="govuk-summary-list__key">Workplace in England</dt>
         <dd class="govuk-summary-list__value"><%= boolean_tag(application.teacher_catchment == 'england') %></dd>
       </div>
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">Work setting</dt>
         <dd class="govuk-summary-list__value"><%= I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") %></dd>
       </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Employer name</dt>
-        <dd class="govuk-summary-list__value"><%= application.employer_name_to_display %></dd>
-      </div>
-      
-      <% if application.employer_urn.present? %>
+
+      <% if application.inside_catchment? && application.works_in_childcare %>
         <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Employer unique reference number</dt>
-          <dd class="govuk-summary-list__value"><%= application.employer_urn %></dd>
+          <dt class="govuk-summary-list__key">Early years setting</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.kind_of_nursery, scope: "helpers.label.registration_wizard.kind_of_nursery_options") %></dd>
+        </div>
+        <% if application.private_nursery? %>
+          <% if application.private_childcare_provider.present? %>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Ofsted unique reference number (URN)</dt>
+              <dd class="govuk-summary-list__value"><%= application.private_childcare_provider.display_name %></dd>
+            </div>
+          <% else %>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Ofsted unique reference number (URN)</dt>
+              <dd class="govuk-summary-list__value">Not applicable</dd>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if application.inside_catchment? %>
+        <% if application.school.present? || (application.works_in_childcare && application.public_nursery?) %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Workplace</dt>
+            <dd class="govuk-summary-list__value"><%= application.long_employer_name_to_display %></dd>
+          </div>
+        <% end %>
+      <% end %>
+
+
+      <% if application.employer_name.present? || application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Employment type</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.employment_type, scope: "helpers.label.registration_wizard.employment_type_options") %></dd>
+        </div>
+
+        <% if application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">ITT provider</dt>
+            <dd class="govuk-summary-list__value"><%= application.itt_provider.legal_name %></dd>
+          </div>
+        <% end %>
+
+        <% unless application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Role</dt>
+            <dd class="govuk-summary-list__value"><%= application.employment_role %></dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Employer</dt>
+            <dd class="govuk-summary-list__value"><%= application.employer_name %></dd>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if application.course.ehco? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Headship NPQ stage</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options") %></dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Headteacher</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["ehco_headteacher"], scope: "helpers.label.registration_wizard.ehco_headteacher_options") %></dd>
+        </div>
+
+        <% if application.raw_application_data["ehco_headteacher"] == "yes" %>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">First 5 years of headship</dt>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["ehco_new_headteacher"], scope: "helpers.label.registration_wizard.ehco_new_headteacher_options") %></dd>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if application.course.npqlpm? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Completed one year of the primary maths Teaching for Mastery programme?
+          </dt>
+          <% if application.raw_application_data["maths_eligibility_teaching_for_mastery"] == "yes" %>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["maths_eligibility_teaching_for_mastery"], scope: "helpers.label.registration_wizard.maths_eligibility_teaching_for_mastery_options") %></dd>
+          <% elsif application.raw_application_data["maths_eligibility_teaching_for_mastery"] == "no" %>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["maths_understanding_of_approach"], scope: "helpers.label.registration_wizard.maths_understanding_of_approach_options") %></dd>
+          <% end%>
         </div>
       <% end %>
-      
     </dl>
   </div>
 </div>

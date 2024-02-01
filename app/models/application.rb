@@ -27,6 +27,14 @@ class Application < ApplicationRecord
     another_early_years_setting: "another_early_years_setting",
   }
 
+  def private_nursery?
+    Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(kind_of_nursery)
+  end
+
+  def public_nursery?
+    Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(kind_of_nursery)
+  end
+
   def synced_to_ecf?
     ecf_id.present?
   end
@@ -41,6 +49,13 @@ class Application < ApplicationRecord
 
   def employer_name_to_display
     employer_name || private_childcare_provider&.provider_name || school&.name || ""
+  end
+
+  def long_employer_name_to_display
+    employer_name ||
+      private_childcare_provider&.long_name ||
+      school&.long_name ||
+      ""
   end
 
   def employer_urn

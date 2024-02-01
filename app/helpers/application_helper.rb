@@ -10,7 +10,7 @@ module ApplicationHelper
       if Feature.trn_required? && current_user.trn.blank?
         registration_wizard_show_path(:teacher_reference_number)
       else
-        registration_wizard_show_path(:provider_check)
+        registration_wizard_show_path(:course_start_date)
       end
     else
       "/"
@@ -46,5 +46,9 @@ module ApplicationHelper
 
   def rejected?(application)
     application.lead_provider_approval_status&.capitalize == "Rejected"
+  end
+
+  def application_course_start_date
+    "April 2024" # Currently we are showing hard coded value for Course start date, will automate this process once we have our exact tenures.
   end
 end

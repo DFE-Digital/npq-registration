@@ -67,6 +67,10 @@ en:
           attributes:
             maths_understanding_of_approach:
               blank: Choose your understanding of mastery approaches to teaching maths.
+        questionnaires/course_start_date:
+          attributes:
+            course_start_date:
+              blank: Choose your course start date.
         questionnaires/choose_your_provider:
           attributes:
             lead_provider_id:
@@ -275,8 +279,8 @@ en:
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
   course_start_details:
-    eligible_for_funding: "If you do not apply to join the February course, your registration will expire. You can register again later, but your funding may change."
-    not_eligible_for_funding: "If you do not apply to join the February course, your registration will expire. You can register again later."
+    eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later, but your funding may change."
+    not_eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later."
 
   helpers:
     title:
@@ -290,10 +294,12 @@ en:
         choose_your_npq: "Choose an NPQ"
         before_you_can_register_for_this_NPQ: "Before you can register for this NPQ"
         maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
+        course_start_date: "Course start"
         funding_eligibility_maths: "Funding Eligibility"
         npqh_status: "Eligibility for the Early headship coaching offer"
         childcare_provider_not_in_england: "Nursery must be in England, Guernsey, Jersey or the Isle of Man"
         maths_cannot_register: "You cannot register for the leading primary mathematics NPQ"
+        cannot_register_yet: "You cannot register yet"
         check_answers: "Check your answers and confirm"
         institution_location: Where is your workplace located?
         possible_funding: "You may qualify for DfE scholarship funding"
@@ -323,6 +329,7 @@ en:
         course_identifier: "Which NPQ do you want to do?"
         maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
         maths_understanding_of_approach: "How can you show your understanding of mastery approaches to teaching maths?"
+        course_start_date: "Do you want to start a course before April 2024?"
         funding_eligibility_maths: "Funding Eligibility"
         ehco_funding_choice: "How are you funding the Early headship coaching offer?"
         itt_provider: "Enter the name of the ITT provider you are working with"
@@ -338,6 +345,9 @@ en:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
         maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
+        course_start_date_one: "NPQ start dates are usually every February and October."
+        course_start_date_two: "Early headship coaching offer start dates vary by provider and are throughout the year."
+        course_start_date_three: "Registrations are currently open for courses starting before %{date}."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
@@ -362,6 +372,7 @@ en:
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         maths_eligibility_teaching_for_mastery_hint: "You may be able to demonstrate your understanding of mastery approaches to teaching maths another way"
+        course_start_date_hint: "You can also select this option if you have already started"
         maths_understanding_of_approach_hint: "For example, a reference from a professional who has supported your mastery professional development."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
         trn: Your TRN is between 6 and 7 characters long. It may begin with 'RP'
@@ -380,6 +391,10 @@ en:
         maths_eligibility_teaching_for_mastery_options:
           "yes": "Yes"
           "no": "No"
+
+        course_start_date_options:
+          "yes": "Yes"
+          "no": "No, I want to start later"
 
         maths_understanding_of_approach_options:
           "taken_a_similar_course": "No – but taken a similar course"

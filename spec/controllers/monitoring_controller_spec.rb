@@ -5,9 +5,7 @@ RSpec.describe MonitoringController do
     it "returns OK response" do
       get :healthcheck, format: :json
       expect(response).to be_successful
-
-      hash = JSON.parse(response.body)
-      expect(hash["status"]).to eql("OK")
+      expect(JSON.parse(response.body)).to include("git_commit_sha", "database")
     end
   end
 end
