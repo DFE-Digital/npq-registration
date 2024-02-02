@@ -45,7 +45,14 @@ module ApplicationHelper
   end
 
   def application_course_start_date
-    "April 2024" # Currently we are showing hard coded value for Course start date, will automate this process once we have our exact tenures.
+    date = Setting.course_start_date
+    if date > Date.today
+      date.strftime("%B %Y")
+    else
+      "(please contact support for newest date)"
+    end
+  rescue
+    "(please contact support for newest date)"
   end
 
   def show_otp_code_in_ui(current_env, admin)

@@ -1,4 +1,4 @@
-<%= form.govuk_radio_buttons_fieldset(question.name, **question.fieldset_styles) do %>
+<%= form.govuk_radio_buttons_fieldset(question.name, **question.fieldset_styles, legend: { text: question.question_text }) do %>
   <%= yield :additional_info %>
   <%=
     render(

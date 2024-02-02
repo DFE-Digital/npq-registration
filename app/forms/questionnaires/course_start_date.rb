@@ -1,5 +1,16 @@
 module Questionnaires
   class CourseStartDate < Base
+    class Form < QuestionTypes::RadioButtonGroup
+      include ApplicationHelper
+      def type
+        "radio_button_group"
+      end
+
+      def question_text
+        "Do you want to start a course before #{application_course_start_date}?"
+      end
+    end
+
     include Helpers::Institution
     include ApplicationHelper
 
@@ -15,7 +26,7 @@ module Questionnaires
 
     def questions
       [
-        QuestionTypes::RadioButtonGroup.new(
+        Form.new(
           name: :course_start_date,
           options:,
           style_options: { legend: { size: "m", tag: "h1" } },
