@@ -4,5 +4,4 @@ class Setting < ApplicationRecord
   def self.course_start_date
     Setting.first.course_start_date
   end
-
 end

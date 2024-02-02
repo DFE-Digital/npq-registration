@@ -135,4 +135,4 @@ if Rails.env.in?(%w[development review])
   end
 end
 
-Setting.create(course_start_date: 3.months.from_now)
+Setting.create!(course_start_date: 3.months.from_now)

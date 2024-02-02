@@ -46,12 +46,12 @@ module ApplicationHelper
 
   def application_course_start_date
     date = Setting.course_start_date
-    if date > Date.today
+    if date > Time.zone.today
       date.strftime("%B %Y")
     else
       "(please contact support for newest date)"
     end
-  rescue
+  rescue StandardError
     "(please contact support for newest date)"
   end
 
