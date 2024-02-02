@@ -29,7 +29,7 @@ module Ecf
         funding_eligiblity_status_code: application.funding_eligiblity_status_code,
         teacher_catchment: application.teacher_catchment,
         teacher_catchment_country: application.teacher_catchment_country,
-        itt_provider: application.itt_provider,
+        itt_provider: application.itt_provider&.legal_name,
         lead_mentor: application.lead_mentor,
         relationships: {
           user: ecf_user,
