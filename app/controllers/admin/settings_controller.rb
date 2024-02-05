@@ -1,4 +1,4 @@
-class Admin::SettingsController < ApplicationController
+class Admin::SettingsController < SuperAdminController
   def index
     @setting = Setting.first
   end
