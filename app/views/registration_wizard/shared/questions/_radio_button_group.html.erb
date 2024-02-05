@@ -1,4 +1,4 @@
-<%= form.govuk_radio_buttons_fieldset(question.name, **question.fieldset_styles, legend: { text: question.question_text }) do %>
+<%= form.govuk_radio_buttons_fieldset(question.name, **question.fieldset_styles, legend: { text: question.question_text, tag: "h1", size: "xl" }) do %>
   <%= yield :additional_info %>
   <%=
     render(
