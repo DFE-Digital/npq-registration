@@ -17,6 +17,7 @@ RSpec.describe Ecf::NpqProfileCreator do
   end
   let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
+  let(:itt_provider) { create :itt_provider }
   let(:school) { create(:school) }
   let(:teacher_catchment_country) { AutocompleteCountries.names.sample }
 
@@ -33,7 +34,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       targeted_delivery_funding_eligibility: true,
       works_in_childcare: false,
       kind_of_nursery: nil,
-      itt_provider: nil,
+      itt_provider:,
       lead_mentor: false,
       DEPRECATED_private_childcare_provider_urn: nil,
       private_childcare_provider_id: nil,
@@ -93,7 +94,7 @@ RSpec.describe Ecf::NpqProfileCreator do
             funding_eligiblity_status_code: "funded",
             teacher_catchment: "other",
             teacher_catchment_country:,
-            itt_provider: nil,
+            itt_provider: itt_provider.legal_name,
             lead_mentor: false,
           },
         },
