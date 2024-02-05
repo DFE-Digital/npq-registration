@@ -1,0 +1,38 @@
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <div>
+      <h2 class="govuk-summary-card__title"><%= title_embedded_course_name(application.course) %></h2>
+      <p class="govuk-body">
+        <%= application.lead_provider.name %>
+      </p>
+    </div>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Registration submitted
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= application.created_at.to_date.to_fs(:govuk_short) %>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Provider application
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <strong class="govuk-tag govuk-tag--grey">EXPIRED</strong>
+          <% if Feature.registration_closed? %>
+            <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.expired_status_when_service_is_closed")  %></p>
+          <% elsif Feature.trn_required? && current_user.trn.blank? %>
+            <p> <%= link_to "Submit a new registration", registration_wizard_show_path(:teacher_reference_number) %> if you still want to take this course. </p>
+          <% else %>
+            <p> <%= link_to "Submit a new registration", registration_wizard_show_path(:provider_check) %> if you still want to take this course. </p>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

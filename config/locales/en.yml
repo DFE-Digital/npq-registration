@@ -278,6 +278,7 @@ en:
 
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
+    expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."
   course_start_details:
     eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later, but your funding may change."
     not_eligible_for_funding: "If your provider doesn't confirm you've started the course before %{date}, your registration will expire. You can register again later."
