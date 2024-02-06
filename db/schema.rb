@@ -10,12 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_10_193259) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_06_111408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "trn_lookup_states", ["found", "failed"]
 
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -164,6 +168,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_10_193259) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
+  end
+
+  create_table "participants", force: :cascade do |t|
+    t.string "email", null: false
+    t.text "full_name"
+    t.date "date_of_birth"
+    t.text "ecf_id"
+    t.boolean "get_an_identity_id_synced_to_ecf", default: false
+    t.text "trn"
+    t.boolean "trn_verified", default: false, null: false
+    t.enum "trn_lookup_state", enum_type: "trn_lookup_states"
+    t.string "provider"
+    t.jsonb "raw_tra_provider_data"
+    t.boolean "notify_user_for_future_reg", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "private_childcare_providers", force: :cascade do |t|
