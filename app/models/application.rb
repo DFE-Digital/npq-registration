@@ -7,7 +7,7 @@ class Application < ApplicationRecord
 
   has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
 
-  belongs_to :user
+  belongs_to :participant
   belongs_to :course
   belongs_to :lead_provider
   belongs_to :school, optional: true

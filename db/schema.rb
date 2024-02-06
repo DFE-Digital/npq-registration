@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_06_111408) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_06_132508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -22,7 +22,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_06_111408) do
   create_enum "trn_lookup_states", ["found", "failed"]
 
   create_table "applications", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "participant_id", null: false
     t.bigint "course_id", null: false
     t.bigint "lead_provider_id", null: false
     t.text "DEPRECATED_school_urn"
@@ -63,9 +63,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_06_111408) do
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
+    t.index ["participant_id"], name: "index_applications_on_participant_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
-    t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -313,7 +313,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_06_111408) do
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
+  add_foreign_key "applications", "participants"
   add_foreign_key "applications", "private_childcare_providers"
   add_foreign_key "applications", "schools"
-  add_foreign_key "applications", "users"
 end
