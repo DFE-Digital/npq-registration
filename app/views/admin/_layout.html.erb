@@ -45,9 +45,7 @@
     <% component.with_nav_item(path: "/admin/feature_flags") do %>
       <%= t(".feature_flags") %>
     <% end %>
-  <% end %>
 
-  <% if current_user.super_admin? %>
     <% component.with_nav_item(path: admin_settings_path) do %>
       <%= t(".settings") %>
     <% end %>
