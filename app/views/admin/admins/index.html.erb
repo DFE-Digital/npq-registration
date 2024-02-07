@@ -19,7 +19,7 @@
         end
 
         table.with_body do |body|
-          @users.each do |user|
+          @admins.each do |user|
             body.with_row do |row|
               row.with_cell(text: user.full_name.presence || "-")
               row.with_cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))

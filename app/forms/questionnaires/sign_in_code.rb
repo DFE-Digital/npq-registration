@@ -15,9 +15,10 @@ module Questionnaires
       nil
     end
 
-    def user
-      @user ||= User.find_by(email: wizard.store["email"])
+    def admin
+      @admin ||= Admin.find_by(email: wizard.store["email"])
     end
+    alias_method :user, :admin
 
   private
 

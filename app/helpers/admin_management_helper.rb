@@ -1,10 +1,14 @@
 module AdminManagementHelper
-  def admin_type_cell_contents(user)
-    if user.super_admin?
+  def admin_type_cell_contents(admin)
+    if admin.super_admin?
       content_tag(:strong, t(".admin_type.super_admin"), class: "govuk-tag govuk-tag--blue")
     else
       content_tag(:strong, t(".admin_type.admin"), class: "govuk-tag govuk-tag--green")
     end
+  end
+
+  def super_admin?
+    current_admin.super_admin?
   end
 
   def remove_as_admin_cell_contents(user)

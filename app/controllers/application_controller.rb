@@ -36,4 +36,9 @@ private
   def logged_in_user
     User.find_by(id: session[:user_id])
   end
+
+  def current_admin
+    Admin.find_by(id: session[:admin_id])
+  end
+  helper_method :current_admin
 end

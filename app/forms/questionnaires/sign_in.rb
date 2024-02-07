@@ -23,12 +23,12 @@ module Questionnaires
     def after_save
       return if skip_sending_otp
 
-      user = User.find_by(email:)
+      admin = Admin.find_by(email:)
 
-      if user
+      if admin
         # TODO: extract out
         code = OtpCodeGenerator.new.call
-        user.update!(otp_hash: code, otp_expires_at: 15.minutes.from_now)
+        admin.update!(otp_hash: code, otp_expires_at: 15.minutes.from_now)
         ConfirmEmailMailer.confirmation_code_mail(to: email, code:).deliver_now
       end
     end

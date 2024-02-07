@@ -44,17 +44,5 @@
       row.with_key(text: 'TRN auto validated')
       row.with_value(text: boolean_red_green_tag(user.trn_auto_verified))
     end
-
-    if current_user.super_admin?
-      sl.with_row do |row|
-        row.with_key(text: 'Admin')
-        row.with_value(text: boolean_red_green_tag(user.admin?))
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: 'Super Admin')
-        row.with_value(text: boolean_red_green_tag(user.super_admin?))
-      end
-    end
   end
 %>

@@ -19,10 +19,10 @@ class SessionWizardController < ApplicationController
       @wizard.save!
 
       if @wizard.finished?
-        user_id = @form.user.id
+        admin_id = @form.admin.id
         reset_session
-        session["user_id"] = user_id
-        redirect_to account_path
+        session["admin_id"] = admin_id
+        redirect_to admin_path
       else
         redirect_to session_wizard_show_path(@wizard.next_step_path)
       end

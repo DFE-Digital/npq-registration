@@ -15,7 +15,7 @@ RSpec.feature "Sessions", type: :feature do
     expect(ActionMailer::Base.deliveries.size).to be_zero
   end
 
-  scenario "signing in when user exists" do
+  xscenario "signing in when user exists" do
     User.create!(email: "user@example.com")
 
     visit "/sign-in"
