@@ -10,6 +10,7 @@ class StatementItem < ApplicationRecord
   belongs_to :statement
   belongs_to :declaration
   belongs_to :clawed_back_by, class_name: "StatementItem", optional: true
+  has_many :events
 
   validates :state, inclusion: { in: STATES }
   validates :clawed_back_by, presence: true, if: -> { state == "clawed_back" }

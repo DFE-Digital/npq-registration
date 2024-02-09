@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_25_095919) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -163,6 +163,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "application_id"
+    t.bigint "course_id"
+    t.bigint "lead_provider_id"
+    t.bigint "school_id"
+    t.bigint "statement_id"
+    t.bigint "statement_item_id"
+    t.bigint "declaration_id"
+    t.string "category", null: false
+    t.string "subject", limit: 128, null: false
+    t.text "description"
+    t.integer "importance", default: 4, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_events_on_application_id"
+    t.index ["course_id"], name: "index_events_on_course_id"
+    t.index ["declaration_id"], name: "index_events_on_declaration_id"
+    t.index ["lead_provider_id"], name: "index_events_on_lead_provider_id"
+    t.index ["school_id"], name: "index_events_on_school_id"
+    t.index ["statement_id"], name: "index_events_on_statement_id"
+    t.index ["statement_item_id"], name: "index_events_on_statement_item_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -445,6 +470,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_19_150601) do
   add_foreign_key "contracts", "statements"
   add_foreign_key "courses", "course_groups"
   add_foreign_key "declarations", "applications"
+  add_foreign_key "events", "applications"
+  add_foreign_key "events", "courses"
+  add_foreign_key "events", "declarations"
+  add_foreign_key "events", "lead_providers"
+  add_foreign_key "events", "schools"
+  add_foreign_key "events", "statement_items"
+  add_foreign_key "events", "statements"
+  add_foreign_key "events", "users"
   add_foreign_key "outcomes", "declarations"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "schedules", "cohorts"

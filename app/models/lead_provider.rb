@@ -76,6 +76,9 @@ class LeadProvider < ApplicationRecord
     "npq-leading-primary-mathematics" => LPM_PROVIDERS,
   }.freeze
 
+  has_many :applications
+  has_many :events
+
   scope :alphabetical, -> { order(name: :asc) }
 
   def self.for(course:)
