@@ -71,6 +71,8 @@ private
       error_messages: ["#{e.class} - #{e.message}"],
       response_body:,
     )
+    return if e.is_a?(JsonApiClient::Errors::ConnectionError)
+
     Sentry.with_scope do |scope|
       scope.set_context("User", { id: user.id })
       Sentry.capture_exception(e)
