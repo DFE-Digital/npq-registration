@@ -48,3 +48,13 @@ provider "kubernetes" {
 provider "statuscake" {
   api_token = module.infrastructure_secrets.map.STATUSCAKE-API-TOKEN
 }
+
+module "statuscake" {
+  source = "./modules/statuscake"
+
+  environment                  = var.environment
+  service_name                 = local.service_name
+  statuscake_alerts            = var.statuscake_alerts
+  statuscake_ssl_contact_group = var.statuscake_ssl_contact_group
+  statuscake_domain            = var.statuscake_domain
+}
