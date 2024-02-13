@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_07_101439) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_13_164111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -267,20 +267,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_07_101439) do
     t.text "ecf_id"
     t.text "trn"
     t.text "full_name"
-    t.text "otp_hash"
-    t.datetime "otp_expires_at", precision: nil
     t.date "date_of_birth"
     t.boolean "trn_verified", default: false, null: false
     t.boolean "active_alert", default: false
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
-    t.boolean "admin", default: false
     t.string "feature_flag_id"
     t.string "provider"
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
-    t.boolean "super_admin", default: false, null: false
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"
     t.boolean "notify_user_for_future_reg", default: false

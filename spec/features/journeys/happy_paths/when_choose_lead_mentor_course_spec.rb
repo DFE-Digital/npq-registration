@@ -134,7 +134,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
-      "admin" => false,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",
@@ -142,11 +141,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
       "notify_user_for_future_reg" => false,
-      "otp_expires_at" => nil,
-      "otp_hash" => nil,
       "provider" => "tra_openid_connect",
       "raw_tra_provider_data" => stubbed_callback_response_as_json,
-      "super_admin" => false,
       "trn" => "1234567",
       "trn_auto_verified" => false,
       "trn_lookup_status" => "Found",
