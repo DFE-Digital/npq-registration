@@ -15,7 +15,9 @@ module Admins
     end
 
     def convert_all_admin_users_to_admins!
-      User.admins.each { |user| convert_admin_user_to_admin!(user) }
+      User.transaction do
+        User.admins.each { |user| convert_admin_user_to_admin!(user) }
+      end
     end
   end
 end
