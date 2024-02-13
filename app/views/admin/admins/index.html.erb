@@ -22,7 +22,7 @@
           @admins.each do |user|
             body.with_row do |row|
               row.with_cell(text: user.full_name.presence || "-")
-              row.with_cell(text: govuk_link_to(user.email.presence || "No Email Found", admin_user_path(user)))
+              row.with_cell(text: user.email.presence || "No Email Found")
               row.with_cell(text: admin_type_cell_contents(user))
               row.with_cell(text: remove_as_admin_cell_contents(user))
               row.with_cell(text: elevate_to_super_admin_cell_contents(user))

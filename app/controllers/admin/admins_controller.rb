@@ -10,9 +10,8 @@ class Admin::AdminsController < SuperAdminController
   end
 
   def create
-    @admin = Admin.find_or_initialize_by(email: user_params[:email])
-    @admin.assign_attributes(user_params)
-    @admin.admin = true
+    @admin = Admin.find_or_initialize_by(email: admin_params[:email])
+    @admin.assign_attributes(admin_params)
 
     if @admin.save
       flash[:success] = "Admin permissions granted to #{@admin.email}"
@@ -38,7 +37,7 @@ class Admin::AdminsController < SuperAdminController
 
 private
 
-  def user_params
+  def admin_params
     params.require(:admin).permit(:full_name, :email)
   end
 end
