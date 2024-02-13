@@ -12,4 +12,10 @@ RSpec.describe Admin, type: :model do
       it { is_expected.to validate_length_of(:email).is_at_most(64) }
     end
   end
+
+  describe "defaults" do
+    specify "super_admin defaults to false" do
+      expect(Admin.new.super_admin?).to be false
+    end
+  end
 end
