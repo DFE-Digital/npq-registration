@@ -388,4 +388,15 @@ RSpec.feature "admin", type: :feature do
     page.click_link("Schools")
     expect(page).to have_current_path(admin_schools_path)
   end
+
+  scenario "when logged in as a regular admin, admin can log out" do
+    sign_in_as_admin
+
+    expect(page).to have_link("Sign out", href: "/sign-out")
+
+    click_link "Sign out"
+
+    expect(page).to have_current_path(root_path)
+    expect(page).not_to have_link("Sign out")
+  end
 end

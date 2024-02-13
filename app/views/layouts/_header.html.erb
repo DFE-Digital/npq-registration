@@ -41,6 +41,9 @@
             <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
               <%= link_to "Admin", admin_path, class: "govuk-header__link" %>
             </li>
+            <li class="govuk-header__navigation-item">
+              <%= link_to "Sign out", sign_out_user_path, class: 'govuk-header__link' %>
+            </li>
           </ul>
         </nav>
       <% end %>
