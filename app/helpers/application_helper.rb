@@ -28,10 +28,6 @@ module ApplicationHelper
     bool ? "Yes" : "No"
   end
 
-  def pagy_govuk_nav(pagy)
-    render "pagy/paginator", pagy:
-  end
-
   def show_tracking_pixels?
     cookies["consented-to-cookies"] == "accept"
   end

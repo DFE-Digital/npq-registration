@@ -1,1 +1,1 @@
-Pagy::DEFAULT[:link_extra] = 'class="govuk-link"'
+Pagy::DEFAULT[:size] = [1, 1, 1, 1]
