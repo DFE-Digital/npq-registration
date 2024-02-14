@@ -27,8 +27,8 @@ class Admin::AdminsController < SuperAdminController
     if @admin == current_admin || @admin.super_admin?
       flash[:error] = "You cannot remove admin permissions from yourself or another super admin."
       redirect_back fallback_location: admin_admins_path
-    elsif @admin.update(admin: false) # we should just delete the record here instead
-      redirect_to admin_admins_path
+    elsif @admin.destroy!
+      redirect_to admin_admins_path, flash: { success: "#{@admin.full_name} deleted" }
     else
       flash[:error] = "Failed to remove admin permissions from #{@admin.email}, please contact technical support if this problem persists."
       redirect_back fallback_location: admin_admins_path

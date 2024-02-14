@@ -12,26 +12,12 @@ module AdminManagementHelper
   end
 
   def remove_as_admin_cell_contents(user)
-    govuk_link_to(
-      t(".buttons.remove"),
-      admin_admin_path(user),
-      method: :delete,
-      data: {
-        confirm: t(".confirm.remove"),
-      },
-    )
+    govuk_button_link_to(t(".buttons.delete"), admin_admin_path(user), method: :delete, warning: true)
   end
 
   def elevate_to_super_admin_cell_contents(user)
     return "" if user.super_admin?
 
-    govuk_link_to(
-      t(".buttons.elevate"),
-      admin_super_admin_path(user),
-      method: :patch,
-      data: {
-        confirm: t(".confirm.elevate"),
-      },
-    )
+    govuk_link_to(t(".buttons.elevate"), admin_super_admin_path(user), method: :patch)
   end
 end

@@ -31,9 +31,19 @@ RSpec.feature "admin management", type: :feature do
     then_the_admin_record_should_have_the_correct_details(full_name: "Joey Joseph", email: "joey-joseph@shabadoo.org")
   end
 
+  scenario "deleting an admin" do
+    given_the_following_admin_exists(full_name: "Person who shall be deleted")
+    and_i_am_on_the_admin_index
+
+    when_i_click_the_delete_link_for(full_name: "Person who shall be deleted")
+
+    then_the_admin_record_should_have_been_deleted_for(full_name: "Person who shall be deleted")
+  end
+
   def given_i_am_on_the_admin_index
     visit("/admin/admins")
   end
+  alias_method :and_i_am_on_the_admin_index, :given_i_am_on_the_admin_index
 
   def given_the_following_admin_exists(**kwargs)
     FactoryBot.create(:admin, **kwargs)
@@ -65,5 +75,16 @@ RSpec.feature "admin management", type: :feature do
 
   def when_i_change_their_email_to(email)
     fill_in("Email address", with: email)
+  end
+
+  def when_i_click_the_delete_link_for(full_name:)
+    row = page.find(:xpath, "//td[text()='#{full_name}']/..")
+
+    row.find("a", text: "Delete").click
+  end
+
+  def then_the_admin_record_should_have_been_deleted_for(full_name:)
+    expect(page).to have_current_path("/admin/admins")
+    expect(page).to have_content("#{full_name} deleted")
   end
 end
