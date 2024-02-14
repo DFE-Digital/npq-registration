@@ -144,7 +144,7 @@ RSpec.feature "admin", type: :feature do
       expect(page).to have_content(app.user.email)
     end
 
-    page.find("[aria-label=next]").click
+    page.find("[rel=next]").click
 
     applications[3..].each do |app|
       expect(page).to have_content(app.user.email)
@@ -227,7 +227,7 @@ RSpec.feature "admin", type: :feature do
       expect(page).to have_content(user.email)
     end
 
-    page.find("[aria-label=next]").click
+    page.find("[rel=next]").click
 
     display_users[3..].each do |user|
       expect(page).to have_content(user.email)
