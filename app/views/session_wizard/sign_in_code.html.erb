@@ -15,6 +15,8 @@
 
     <p class="govuk-body">If you have an account, we have sent you a link to sign in.</p>
 
+    <%= show_otp_code_in_ui(Rails.env, @form.admin) %>
+
     <%= form_with model: @form, url: session_wizard_update_path, scope: "session_wizard", method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
