@@ -49,5 +49,9 @@
     <% component.with_nav_item(path: admin_settings_path) do %>
       <%= t(".settings") %>
     <% end %>
+
+    <% component.with_nav_item(path: "/admin/closed_registration_users") do %>
+      <%= "Closed registration users" %>
+    <% end %>
   <% end %>
 <% end %>

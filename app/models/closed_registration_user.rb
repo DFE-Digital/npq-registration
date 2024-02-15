@@ -1,0 +1,2 @@
+class ClosedRegistrationUser < ApplicationRecord
+end
