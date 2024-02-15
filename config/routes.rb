@@ -153,6 +153,16 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :npq_separation do
+    namespace :admin do
+      resources :admins, only: %i[index]
+    end
+
+    namespace :migration do
+      resources :migrations, only: %i[index]
+    end
+  end
+
   resource :csp_reports, only: %i[create]
 
   get "/404", to: "errors#not_found", via: :all
