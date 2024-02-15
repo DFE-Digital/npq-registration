@@ -80,27 +80,29 @@ Rails.application.routes.draw do
         resource :webhook_messages, only: %i[create]
       end
 
-      resources :applications, path: "npq-applications", only: %i[index show] do
-        post :reject, path: "reject"
-        post :accept, path: "accept"
-      end
+      constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
+        resources :applications, path: "npq-applications", only: %i[index show] do
+          post :reject, path: "reject"
+          post :accept, path: "accept"
+        end
 
-      resources :participants, only: %i[index show], path: "participants/npq" do
-        put :change_schedule, path: "change-schedule"
-        put :defer
-        put :resume
-        put :withdraw
-        get :outcomes
-      end
+        resources :participants, only: %i[index show], path: "participants/npq" do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw
+          get :outcomes
+        end
 
-      resources :outcomes, only: %i[index]
+        resources :outcomes, only: %i[index]
 
-      resources :declarations, only: %i[create show index] do
-        put :void, path: "void"
+        resources :declarations, only: %i[create show index] do
+          put :void, path: "void"
+        end
       end
     end
 
-    namespace :v2 do
+    namespace :v2, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
       resources :applications, path: "npq-applications", only: %i[index show] do
         post :reject, path: "reject"
         post :accept, path: "accept"
@@ -126,7 +128,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :v3 do
+    namespace :v3, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
       resources :applications, path: "npq-applications", only: %i[index show] do
         post :reject, path: "reject"
         post :accept, path: "accept"
@@ -154,11 +156,11 @@ Rails.application.routes.draw do
   end
 
   namespace :npq_separation do
-    namespace :admin do
+    namespace :admin, constraints: ->(_request) { Rails.application.config.npq_separation[:admin_portal_enabled] } do
       resources :admins, only: %i[index]
     end
 
-    namespace :migration do
+    namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
       resources :migrations, only: %i[index]
     end
   end
