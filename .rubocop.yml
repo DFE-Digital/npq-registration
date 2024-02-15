@@ -59,6 +59,9 @@ RSpec/FilePath:
 RSpec/AnyInstance:
   Enabled: false
 
+RSpec/DescribedClass:
+  Enabled: false
+
 Rails/UnknownEnv:
   Environments:
     - development

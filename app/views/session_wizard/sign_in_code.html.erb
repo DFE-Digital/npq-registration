@@ -15,6 +15,8 @@
 
     <p class="govuk-body">If you have an account, we have sent you a link to sign in.</p>
 
+    <%= show_otp_code_in_ui(Rails.env, @form.admin) %>
+
     <%= form_with model: @form, url: session_wizard_update_path, scope: "session_wizard", method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
@@ -28,9 +30,8 @@
     <h2 class="govuk-heading-m">If you don’t get an email to sign in:</h2>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>make sure you have <%= govuk_link_to "created an account", root_path %></li>
       <li>check your spam or junk folder</li>
-      <li>contact us: <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %></li>
+      <li>ask a super admin to check your account exists</li>
     </ul>
   </div>
 </div>

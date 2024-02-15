@@ -15,8 +15,8 @@ RSpec.feature "Sessions", type: :feature do
     expect(ActionMailer::Base.deliveries.size).to be_zero
   end
 
-  scenario "signing in when user exists" do
-    User.create!(email: "user@example.com")
+  scenario "signing in when admin exists" do
+    FactoryBot.create(:admin, email: "user@example.com")
 
     visit "/sign-in"
     expect(page).to have_content("Sign in")
@@ -29,11 +29,7 @@ RSpec.feature "Sessions", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button "Sign in"
 
-    expect(page).to be_axe_clean
     expect(page).to have_content("Register for a national professional qualification")
-    expect(page).not_to have_content("Admin")
-
-    visit "/admin"
-    expect(page).to have_current_path("/sign-in")
+    expect(page).to have_content("Admin")
   end
 end

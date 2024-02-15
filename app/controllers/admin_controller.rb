@@ -9,7 +9,7 @@ class AdminController < ApplicationController
 private
 
   def require_admin
-    unless current_user.admin?
+    unless current_admin
       flash[:negative] = { title: "Unauthorized", text: "Sign in with your admininstrator account" }
       redirect_to sign_in_path
     end

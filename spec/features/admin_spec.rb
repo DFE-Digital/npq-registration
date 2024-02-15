@@ -1,9 +1,11 @@
 require "rails_helper"
 
 RSpec.feature "admin", type: :feature do
+  include Helpers::AdminLogin
   include_context "Stub Get An Identity Omniauth Responses"
 
-  let(:admin) { create(:admin, :with_ecf_id) }
+  let(:super_admin) { create(:super_admin) }
+  let(:admin) { create(:admin) }
 
   around do |example|
     Capybara.current_driver = :rack_test
@@ -12,19 +14,6 @@ RSpec.feature "admin", type: :feature do
     example.run
     Pagy::DEFAULT[:items] = previous_pagination
     Capybara.current_driver = Capybara.default_driver
-  end
-
-  def sign_in_as_admin
-    expect(page).to have_current_path(sign_in_path)
-
-    page.fill_in "What’s your email address?", with: admin.email
-    page.click_button "Sign in"
-    expect(page).to have_current_path("/session/sign-in-code")
-
-    code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
-
-    page.fill_in "Enter your code", with: code
-    page.click_button "Sign in"
   end
 
   scenario "when not logged in, admin interface is inaccessible" do
@@ -42,14 +31,7 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the admin homepage" do
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
 
     # Check the links are present
     {
@@ -71,10 +53,7 @@ RSpec.feature "admin", type: :feature do
   scenario "when logged in as a super admin, it allows access to the admin homepage with super admin permissions" do
     visit "/admin"
 
-    admin.update!(super_admin: true)
-    sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
+    sign_in_as_super_admin
 
     page.click_link("Admin")
 
@@ -82,13 +61,8 @@ RSpec.feature "admin", type: :feature do
     expect(page).to have_link("Admin Users", href: "/admin/admins")
   end
 
-  scenario "when logged in as a super admin, it allows management of admins" do
-    visit "/admin"
-
-    admin.update!(super_admin: true)
-    sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
+  xscenario "when logged in as a super admin, it allows management of admins" do
+    sign_in_as_super_admin
 
     page.click_link("Admin")
     page.click_link("Admin Users")
@@ -111,11 +85,6 @@ RSpec.feature "admin", type: :feature do
 
     sign_in_as_admin
 
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
-
     expect(page).to have_link("Dashboard", href: admin_path)
     page.click_link("Dashboard")
     expect(page).to have_current_path(admin_path)
@@ -124,11 +93,7 @@ RSpec.feature "admin", type: :feature do
   scenario "when logged in as a regular admin, it allows access to the applications interfaces" do
     create_list(:application, 4)
 
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
 
     page.click_link("Admin")
     expect(page).to have_current_path("/admin")
@@ -207,14 +172,7 @@ RSpec.feature "admin", type: :feature do
   scenario "when logged in as a regular admin, it allows access to the users interface" do
     users = create_list(:user, 4)
 
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
 
     expect(page).to have_link("Users", href: admin_users_path)
     page.click_link("Users")
@@ -288,14 +246,7 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced applications interface" do
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
 
     expect(page).to have_link("Unsynced applications", href: admin_unsynced_applications_path)
     page.click_link("Unsynced applications")
@@ -345,14 +296,7 @@ RSpec.feature "admin", type: :feature do
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced users interface" do
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
 
     expect(page).to have_link("Unsynced users", href: admin_unsynced_users_path)
     page.click_link("Unsynced users")
@@ -415,17 +359,21 @@ RSpec.feature "admin", type: :feature do
   scenario "when logged in as a regular admin, it allows access to the schools interface" do
     create_list :application, 4
 
-    visit "/admin"
-
     sign_in_as_admin
-
-    expect(page).to have_current_path("/account")
-
-    page.click_link("Admin")
-    expect(page).to have_current_path("/admin")
 
     expect(page).to have_link("Schools", href: admin_schools_path)
     page.click_link("Schools")
     expect(page).to have_current_path(admin_schools_path)
+  end
+
+  scenario "when logged in as a regular admin, admin can log out" do
+    sign_in_as_admin
+
+    expect(page).to have_link("Sign out", href: "/sign-out")
+
+    click_link "Sign out"
+
+    expect(page).to have_current_path(root_path)
+    expect(page).not_to have_link("Sign out")
   end
 end

@@ -18,14 +18,4 @@ FactoryBot.define do
       provider { "tra_openid_connect" }
     end
   end
-
-  factory :admin, class: "User" do
-    full_name { "John Doe" }
-    sequence(:email) { |n| "admin#{n}@example.com" }
-    admin { true }
-
-    trait :with_ecf_id do
-      ecf_id { SecureRandom.uuid }
-    end
-  end
 end

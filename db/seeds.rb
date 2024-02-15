@@ -56,25 +56,21 @@ if Rails.env.development?
   otp_testing_code = "00000"
 
   # Create admin user
-  User.create!(
+  Admin.create!(
     email: "admin@example.com",
-    ecf_id: nil,
-    trn: nil,
     full_name: "example admin",
     otp_hash: otp_testing_code,
     otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
-    date_of_birth: "1962-02-10",
-    trn_verified: false,
-    active_alert: false,
-    national_insurance_number: nil,
-    trn_auto_verified: false,
-    admin: true,
+    super_admin: false,
+  )
+
+  # Create admin user
+  Admin.create!(
+    email: "superadmin@example.com",
+    full_name: "example super admin",
+    otp_hash: otp_testing_code,
+    otp_expires_at: "3000-01-01 00:00:00.000000000 +0000",
     super_admin: true,
-    feature_flag_id: SecureRandom.uuid,
-    provider: nil,
-    uid: nil,
-    raw_tra_provider_data: nil,
-    get_an_identity_id_synced_to_ecf: false,
   )
 
   single_app_user = User.create!(

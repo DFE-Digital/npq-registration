@@ -16,7 +16,7 @@
 
     <div class="govuk-header__content">
       <%= link_to "Register for a national professional qualification", npq_registration_link, class: "govuk-header__link govuk-header__link--service-name" %>
-      
+
       <% unless current_user.null_user? %>
         <nav aria-label="Menu" class="govuk-header__navigation ">
           <ul id="navigation" class="govuk-header__navigation-list">
@@ -34,12 +34,15 @@
           </ul>
         </nav>
       <% end %>
-      <% if current_user.admin? %>
+      <% if current_admin %>
         <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide navigation menu">Menu</button>
         <nav>
           <ul>
             <li class="govuk-header__navigation-item govuk-header__navigation-item--active">
               <%= link_to "Admin", admin_path, class: "govuk-header__link" %>
+            </li>
+            <li class="govuk-header__navigation-item">
+              <%= link_to "Sign out", sign_out_user_path, class: 'govuk-header__link' %>
             </li>
           </ul>
         </nav>

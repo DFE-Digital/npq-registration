@@ -47,4 +47,10 @@ module ApplicationHelper
   def application_course_start_date
     "April 2024" # Currently we are showing hard coded value for Course start date, will automate this process once we have our exact tenures.
   end
+
+  def show_otp_code_in_ui(current_env, admin)
+    return unless current_env.in?(%w[development review staging])
+
+    tag.p("OTP code: #{admin.otp_hash}")
+  end
 end

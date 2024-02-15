@@ -194,11 +194,11 @@ en:
           super_admin: Super Admin
           admin: Admin
         buttons:
-          remove: "Remove as admin"
+          delete: "Delete"
           elevate: "Make Super Admin"
         confirm:
           elevate: "Are you sure you want to make this user a super admin? This will give them access to all admin features and the ability to make other users super admins. It cannot be reverted without developer intervention."
-          remove: "Are you sure you want to remove this user's admin permissions? This will not delete their user record."
+          delete: "This record will be permenantly deleted."
     applications:
       show:
         title: "Application"

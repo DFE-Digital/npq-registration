@@ -139,4 +139,8 @@ class User < ApplicationRecord
     save!(validate: false) if feature_flag_id_changed?
     self.feature_flag_id
   end
+
+  def super_admin?
+    raise StandardError, "deprecated"
+  end
 end
