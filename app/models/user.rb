@@ -129,11 +129,6 @@ class User < ApplicationRecord
                 .order(run_at: :asc)
   end
 
-  # Whether this user has admin access to the feature flagging interface
-  def flipper_access?
-    admin? && super_admin?
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end
