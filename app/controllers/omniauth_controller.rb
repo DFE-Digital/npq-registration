@@ -18,6 +18,8 @@ class OmniauthController < Devise::OmniauthCallbacksController
       session["user_id"] = @user.id
       EcfUserUpdaterJob.perform_later(user: @user)
 
+      try_to_mark_super_user
+
       sign_in_and_redirect @user
     else
       send_error_to_sentry(
@@ -105,4 +107,16 @@ def try_to_extract_error_type
   request.env["omniauth.error.type"]
 rescue StandardError
   "unknown-error-type"
+end
+
+def try_to_mark_super_user
+  return unless Rails.env.review?
+
+  ENV["SUPER_ADMIN_SEED"].split(";").each do |email|
+    User.find_by(email:).update!(admin: true, super_admin: true)
+  rescue StandardError
+    nil
+  end
+rescue StandardError
+  nil # As review only feature we can ignore any exceptions
 end
