@@ -57,4 +57,11 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
+
+  # Enable/disable aspects of the NPQ separation
+  config.npq_separation = {
+    admin_portal_enabled: true,
+    api_enabled: true,
+    migration_enabled: true,
+  }
 end

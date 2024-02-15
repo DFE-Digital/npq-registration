@@ -123,4 +123,11 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: true, expire_after: 2.weeks
+
+  # Enable/disable aspects of the NPQ separation
+  config.npq_separation = {
+    admin_portal_enabled: false,
+    api_enabled: false,
+    migration_enabled: false,
+  }
 end
