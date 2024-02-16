@@ -1,4 +1,4 @@
-module Api
+module API
   module V3
     class StatementsController < BaseController
       def show = head(:method_not_allowed)

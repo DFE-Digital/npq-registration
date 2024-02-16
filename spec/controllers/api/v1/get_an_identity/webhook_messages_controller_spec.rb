@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Api::V1::GetAnIdentity::WebhookMessagesController do
+RSpec.describe API::V1::GetAnIdentity::WebhookMessagesController do
   describe "POST create" do
     Dir.glob("spec/fixtures/requests/get_an_identity/webhooks/**/*.json").each do |file|
       context "when working with #{file}" do

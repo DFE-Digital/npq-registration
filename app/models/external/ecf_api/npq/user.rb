@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     module Npq
       class User < Base
         has_many :npq_profiles

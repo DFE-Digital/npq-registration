@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Api::V2::Participants::OutcomesController, type: "request" do
+RSpec.describe API::V2::Participants::OutcomesController, type: "request" do
   describe("index") do
     before { get(api_v2_participant_outcomes_path(123)) }
 

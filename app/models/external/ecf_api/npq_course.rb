@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     class NpqCourse < Base
       def self.type
         "npq_courses"

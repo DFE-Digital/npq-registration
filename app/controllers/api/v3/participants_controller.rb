@@ -1,4 +1,4 @@
-module Api
+module API
   module V3
     class ParticipantsController < BaseController
       def index = head(:method_not_allowed)
