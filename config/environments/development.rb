@@ -70,4 +70,11 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+  # Enable/disable aspects of the NPQ separation
+  config.npq_separation = {
+    admin_portal_enabled: true,
+    api_enabled: true,
+    migration_enabled: true,
+  }
 end
