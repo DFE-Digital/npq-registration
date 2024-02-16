@@ -12,11 +12,6 @@ on:
   pull_request:
     branches:
       - main
-    types:
-      - labeled
-      - synchronize
-      - reopened
-      - opened
 
 jobs:
   lint:
