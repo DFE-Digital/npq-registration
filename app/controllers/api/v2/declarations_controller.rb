@@ -1,4 +1,4 @@
-module Api
+module API
   module V2
     class DeclarationsController < BaseController
       def create = head(:method_not_allowed)

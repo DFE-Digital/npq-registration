@@ -7,7 +7,7 @@ module Ecf
     end
 
     def call
-      External::EcfApi::User.where(email: user.email).first
+      External::EcfAPI::User.where(email: user.email).first
     end
   end
 end

@@ -1,4 +1,4 @@
-module Api
+module API
   module V3
     module Participants
       class OutcomesController < BaseController

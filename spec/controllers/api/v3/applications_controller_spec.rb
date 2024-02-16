@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Api::V3::ApplicationsController, type: "request" do
+RSpec.describe API::V3::ApplicationsController, type: "request" do
   describe("index") do
     before { get(api_v3_applications_path) }
 

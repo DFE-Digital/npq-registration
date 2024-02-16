@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     class NpqLeadProvider < Base
       def self.type
         "npq_lead_providers"

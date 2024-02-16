@@ -1,4 +1,4 @@
-module Api
+module API
   module V2
     class ApplicationsController < BaseController
       def index = head(:method_not_allowed)
