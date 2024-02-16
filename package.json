@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5",
-    "webpack-dev-server": "~3"
+    "webpack-dev-server": "~5"
   },
   "license": "MIT"
 }
