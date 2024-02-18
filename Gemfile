@@ -77,7 +77,7 @@ group :test do
   gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
-  gem "webmock", "~> 3.19", ">= 3.19.1"
+  gem "webmock", "~> 3.20"
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
