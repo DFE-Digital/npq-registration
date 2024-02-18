@@ -31,7 +31,7 @@ RSpec.describe ApprovedIttProviders::Update do
         ]
       end
 
-      it "will update the whole table" do
+      it "updates the whole table" do
         travel_to(Time.zone.parse("2022-12-12 18:00:00"))
 
         subject
@@ -59,7 +59,7 @@ RSpec.describe ApprovedIttProviders::Update do
         create(:itt_provider, legal_name: unapproved_provider_name)
       end
 
-      it "will update the some of the table" do
+      it "updates some of the records" do
         travel_to(Time.zone.parse("2022-12-12 18:00:00"))
 
         expect(IttProvider.currently_approved.count).to eq(3)
@@ -75,7 +75,7 @@ RSpec.describe ApprovedIttProviders::Update do
   context "when given an invalid file_name" do
     let(:file_name) { "invalid.csv" }
 
-    it "will raise a file not found error" do
+    it "raises a 'file not found' error" do
       expect { subject }.to raise_error(RuntimeError)
     end
   end
