@@ -23,10 +23,10 @@ jobs:
     env:
       RAILS_ENV: test
       DB_USERNAME: postgres
-      DB_PASSWORD: ""
+      DB_PASSWORD: postgres
       DB_HOSTNAME: 127.0.0.1
       DB_PORT: 5432
-      DATABASE_URL: postgres://postgres:@localhost:5432
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432
       SECRET_KEY_BASE: abc123
 
     services:
@@ -34,7 +34,7 @@ jobs:
         image: postgres:14-alpine
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ''
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
