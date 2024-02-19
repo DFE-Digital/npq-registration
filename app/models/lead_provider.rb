@@ -78,6 +78,8 @@ class LeadProvider < ApplicationRecord
 
   has_many :applications
 
+  validates :name, presence: true
+
   scope :alphabetical, -> { order(name: :asc) }
 
   def self.for(course:)

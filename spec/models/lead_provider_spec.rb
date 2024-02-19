@@ -5,6 +5,19 @@ RSpec.describe LeadProvider do
     it { is_expected.to have_many(:applications) }
   end
 
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:name) }
+  end
+
+  describe "scopes" do
+    describe "#alphabetical" do
+      it "orders by name ascending" do
+        expect(described_class.count).to be > 1
+        expect(described_class.alphabetical.map(&:name)).to eq(described_class.pluck(:name).sort)
+      end
+    end
+  end
+
   describe "#for" do
     subject { described_class.for(course:).map(&:name) }
 
