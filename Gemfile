@@ -45,7 +45,7 @@ gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
 
-gem "net-imap", "~> 0.4.9", require: false
+gem "net-imap", "~> 0.4.10", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.4.0", require: false
 
