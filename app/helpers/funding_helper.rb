@@ -14,9 +14,8 @@ module FundingHelper
       application.teacher_catchment == "england" && application.course.identifier != "npq-early-headship-coaching-offer"
   end
 
-  def targeted_support_funding(application)
-    funding_amount = application.targeted_delivery_funding_eligibility && application.tsf_primary_plus_eligibility ? 800 : 200
-    I18n.t("funding_details.targeted_funding_eligibility", funding_amount:)
+  def targeted_support_funding
+    I18n.t("funding_details.targeted_funding_eligibility").html_safe
   end
 
 private
