@@ -65,5 +65,5 @@ Rails.application.configure do
     migration_enabled: true,
   }
 
-  config.dotenv.autorestore = false
+  config.dotenv.autorestore = false if config.respond_to?(:dotenv)
 end
