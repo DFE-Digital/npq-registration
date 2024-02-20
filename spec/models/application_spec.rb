@@ -1,6 +1,17 @@
 require "rails_helper"
 
 RSpec.describe Application do
+  describe "relationships" do
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:course) }
+    it { is_expected.to belong_to(:lead_provider) }
+    it { is_expected.to belong_to(:school).optional }
+    it { is_expected.to belong_to(:private_childcare_provider).optional }
+    it { is_expected.to belong_to(:itt_provider).optional }
+
+    it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
+  end
+
   describe "scopes" do
     describe ".unsynced" do
       it "returns records where ecf_id is null" do
