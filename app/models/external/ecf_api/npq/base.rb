@@ -1,7 +1,7 @@
 module External
-  module EcfApi
+  module EcfAPI
     module Npq
-      class Base < External::EcfApi::Base
+      class Base < External::EcfAPI::Base
         self.site = "#{ENV['ECF_APP_BASE_URL']}/api/v1/npq"
       end
     end

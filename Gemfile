@@ -13,9 +13,9 @@ gem "delayed_job_active_record"
 gem "delayed_job_web"
 gem "devise", "~> 4.9"
 gem "email_validator", require: "email_validator/strict"
-gem "flipper", "~> 1.0.0"
-gem "flipper-active_record", "~> 1.0.0"
-gem "flipper-ui", "~> 1.0.0"
+gem "flipper", "~> 1.2.2"
+gem "flipper-active_record", "~> 1.2.2"
+gem "flipper-ui", "~> 1.2.2"
 gem "google-cloud-bigquery"
 gem "govuk-components", "~> 4.1.2"
 gem "govuk_design_system_formbuilder", "~> 4.1.1"
@@ -45,7 +45,7 @@ gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
 
-gem "net-imap", "~> 0.4.9", require: false
+gem "net-imap", "~> 0.4.10", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.4.0", require: false
 
@@ -57,7 +57,7 @@ group :development, :test do
   gem "parallel_tests"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 6.1.0"
+  gem "rspec-rails", "~> 6.1.1"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
 end
@@ -77,7 +77,7 @@ group :test do
   gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
-  gem "webmock", "~> 3.19", ">= 3.19.1"
+  gem "webmock", "~> 3.20"
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 

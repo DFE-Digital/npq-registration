@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Api::V1::ParticipantsController, type: "request" do
+RSpec.describe API::V1::ParticipantsController, type: "request" do
   describe("index") do
     before { get(api_v1_participants_path) }
 

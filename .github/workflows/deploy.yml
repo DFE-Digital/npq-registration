@@ -12,11 +12,7 @@ on:
   pull_request:
     branches:
       - main
-    types:
-      - labeled
-      - synchronize
-      - reopened
-      - opened
+  merge_group:
 
 jobs:
   lint:

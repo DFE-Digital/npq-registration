@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     module Npq
       class PreviousFunding < Base
         self.parser = RawParser

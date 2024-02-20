@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     class NpqProfile < Base
       def self.table_name
         "npq-profiles"

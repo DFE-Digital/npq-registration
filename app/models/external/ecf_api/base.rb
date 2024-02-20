@@ -1,5 +1,5 @@
 module External
-  module EcfApi
+  module EcfAPI
     class ConnectionWithAuthHeader < JsonApiClient::Connection
       def run(request_method, path, params: nil, headers: {}, body: nil)
         super(

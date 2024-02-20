@@ -88,7 +88,7 @@ class User < ApplicationRecord
   def ecf_user
     return if ecf_id.blank?
 
-    External::EcfApi::Npq::User.find(ecf_id).first
+    External::EcfAPI::Npq::User.find(ecf_id).first
   end
 
   def get_an_identity_provider?

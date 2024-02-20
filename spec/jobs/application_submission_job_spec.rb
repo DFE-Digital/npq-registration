@@ -54,11 +54,11 @@ RSpec.describe ApplicationSubmissionJob do
       it "calls correct servivces" do
         instance_double(Ecf::EcfUserCreator)
         profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
-        ecf_user = instance_double(External::EcfApi::Npq::User)
+        ecf_user = instance_double(External::EcfAPI::Npq::User)
 
         expect(Ecf::EcfUserCreator).not_to receive(:new)
         expect(Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
-        expect(External::EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
+        expect(External::EcfAPI::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,
           full_name: user.full_name,
@@ -73,17 +73,17 @@ RSpec.describe ApplicationSubmissionJob do
 
     context "when user already exists in ecf but not npq" do
       let(:user) { create(:user) }
-      let(:ecf_user) { External::EcfApi::User.new(email: user.email, id: "123") }
+      let(:ecf_user) { External::EcfAPI::User.new(email: user.email, id: "123") }
 
       it "calls correct services" do
         user_finder_double = instance_double(Ecf::EcfUserFinder, call: ecf_user)
         profile_creator_double = instance_double(Ecf::NpqProfileCreator, call: nil)
-        ecf_user = instance_double(External::EcfApi::Npq::User)
+        ecf_user = instance_double(External::EcfAPI::Npq::User)
 
         expect(Ecf::EcfUserFinder).to receive(:new).with(user:).and_return(user_finder_double)
         expect(Ecf::EcfUserCreator).not_to receive(:new)
         expect(Ecf::NpqProfileCreator).to receive(:new).with(application:).and_return(profile_creator_double)
-        expect(External::EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
+        expect(External::EcfAPI::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,
           full_name: user.full_name,
@@ -106,11 +106,11 @@ RSpec.describe ApplicationSubmissionJob do
       it "calls correct servivces" do
         instance_double(Ecf::EcfUserCreator)
         instance_double(Ecf::NpqProfileCreator, call: nil)
-        ecf_user = instance_double(External::EcfApi::Npq::User)
+        ecf_user = instance_double(External::EcfAPI::Npq::User)
 
         expect(Ecf::EcfUserCreator).not_to receive(:new)
         expect(Ecf::NpqProfileCreator).not_to receive(:new)
-        expect(External::EcfApi::Npq::User).to receive(:find).and_return([ecf_user])
+        expect(External::EcfAPI::Npq::User).to receive(:find).and_return([ecf_user])
         expect(ecf_user).to receive(:update).with({
           email: user.email,
           full_name: user.full_name,
