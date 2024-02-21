@@ -43,24 +43,22 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe ".current" do
-    it "returns the closest cohort in the past" do
-      travel_to Date.new(2022, 4, 11) do
-        _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-        current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-        _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+    let(:timestamp) { Time.zone.today }
 
-        expect(Cohort.current).to eq(current_cohort)
-      end
+    it "returns the closest cohort in the past" do
+      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
+      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
+      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+
+      expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
     end
 
     it "includes the Cohort starting exactly on the current date" do
-      travel_to Date.new(2022, 4, 10) do
-        _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
-        current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
-        _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
+      current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
+      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
 
-        expect(Cohort.current).to eq(current_cohort)
-      end
+      expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
     end
 
     it "raises an error when there is no cohort for the current year" do

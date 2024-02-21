@@ -16,8 +16,8 @@ class Cohort < ApplicationRecord
     end
   end
 
-  def self.current
-    where(registration_start_date: ..Time.zone.today)
+  def self.current(timestamp = Time.zone.today)
+    where(registration_start_date: ..timestamp)
       .order(start_year: :desc)
       .first!
   end
