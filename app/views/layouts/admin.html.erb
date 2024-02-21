@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template ">
+  <%= render partial: "layouts/shared/head" %>
+
+  <body class="govuk-template__body ">
+    <%= render partial: "shared/analytics/google_noscript" %>
+
+    <script>
+      document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+
+    <%= render partial: "shared/cookies/banner" %>
+
+    <%= render partial: "layouts/shared/header" %>
+
+    <div class="govuk-width-container">
+      <main class="govuk-main-wrapper" id="main-content" role="main">
+        <%= render partial: "layouts/shared/messages" %>
+
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+
+  <%= render partial: "layouts/shared/footer" %>
+</html>

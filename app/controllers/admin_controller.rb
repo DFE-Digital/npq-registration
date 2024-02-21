@@ -1,4 +1,5 @@
 class AdminController < ApplicationController
+  layout "application"
   before_action :require_admin
 
   def show
