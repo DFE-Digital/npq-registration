@@ -1,0 +1,9 @@
+$admin-template-max-width: 1200px;
+
+.admin {
+  &--wide {
+    .govuk-width-container {
+      max-width: 1200px;
+    }
+  }
+}
