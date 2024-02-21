@@ -2,6 +2,24 @@ require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
   describe "validations" do
+    it { is_expected.to validate_presence_of(:registration_start_date) }
+
+    describe "#registration_start_date_matches_start_year" do
+      it "adds an error when the registration_start_date year does not match the start_year" do
+        cohort = Cohort.new(start_year: 2022, registration_start_date: Date.new(2023, 4, 10))
+
+        cohort.valid?
+        expect(cohort.errors[:registration_start_date]).to include("year must match the start year")
+      end
+
+      it "does not add an error when the registration_start_date year matches the start_year" do
+        cohort = Cohort.new(start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
+
+        cohort.valid?
+        expect(cohort.errors[:registration_start_date]).not_to include("year must match the start year")
+      end
+    end
+
     describe "#start_year" do
       it { is_expected.to validate_presence_of(:start_year) }
 
@@ -16,7 +34,7 @@ RSpec.describe Cohort, type: :model do
 
       it "validates uniqueness of start_year" do
         existing_cohort = create :cohort, start_year: 2025
-        new_cohort = described_class.new(start_year: existing_cohort.start_year)
+        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
 
         new_cohort.valid?
         expect(new_cohort.errors[:start_year]).to include("has already been taken")
