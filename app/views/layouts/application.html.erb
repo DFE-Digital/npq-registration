@@ -1,39 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
-  <head>
-    <meta charset="utf-8">
-    <% if content_for?(:title) %>
-      <title><%= content_for(:title) %> - Register for a national professional qualification</title>
-    <% else %>
-      <title>Register for a national professional qualification</title>
-    <% end %>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <%= canonical_tag %>
-    <%= tag :meta, name: 'viewport', content: 'width=device-width, initial-scale=1' %>
-    <%= tag :meta, property: 'og:image', content: asset_pack_path('media/images/govuk-opengraph-image.png') %>
-    <%= tag :meta, name: 'theme-color', content: '#0b0c0c' %>
-    <%= favicon_link_tag asset_pack_path('media/images/favicon.ico') %>
-    <%= favicon_link_tag asset_pack_path('media/images/govuk-mask-icon.svg'), rel: 'mask-icon', type: 'image/svg', color: "#0b0c0c" %>
-    <%= favicon_link_tag asset_pack_path('media/images/govuk-apple-touch-icon.png'), rel: 'apple-touch-icon', type: 'image/png' %>
-    <%= favicon_link_tag asset_pack_path('media/images/govuk-apple-touch-icon-152x152.png'), rel: 'apple-touch-icon', type: 'image/png', size: '152x152' %>
-    <%= favicon_link_tag asset_pack_path('media/images/govuk-apple-touch-icon-167x167.png'), rel: 'apple-touch-icon', type: 'image/png', size: '167x167' %>
-    <%= favicon_link_tag asset_pack_path('media/images/govuk-apple-touch-icon-180x180.png'), rel: 'apple-touch-icon', type: 'image/png', size: '180x180' %>
-    <%= stylesheet_pack_tag 'application', media: 'all' %>
-    <%= javascript_pack_tag 'application', defer: true %>
-
-    <%= render partial: "shared/analytics/google" %>
-
-    <% if show_tracking_pixels? && Rails.env.production? %>
-      <%= render partial: "shared/analytics/tracking_pixels" %>
-    <% end %>
-
-    <% if Rails.env.development? %>
-      <script>
-        console.log(<%= session.to_json.html_safe %>)
-      </script>
-    <% end %>
-  </head>
+  <%= render partial: "layouts/shared/head" %>
 
   <body class="govuk-template__body ">
     <%= render partial: "shared/analytics/google_noscript" %>
@@ -46,7 +13,7 @@
 
     <%= render partial: "shared/cookies/banner" %>
 
-    <%= render partial: "layouts/header" %>
+    <%= render partial: "layouts/shared/header" %>
 
     <aside class="govuk-width-container">
       <%= render GovukComponent::PhaseBannerComponent.new(
@@ -61,75 +28,12 @@
       </div>
 
       <main class="govuk-main-wrapper" id="main-content" role="main">
-        <% if flash[:error].present? %>
-          <%= govuk_notification_banner(title_text: "Error") do |banner| %>
-            <% banner.with_heading(text: flash[:error]) %>
-          <% end %>
-        <% end %>
-
-        <% if Feature.registration_disabled? %>
-          <%= govuk_notification_banner(title_text: "Maintenance notice") do |banner| %>
-            <% banner.with_heading(
-              text: "Due to scheduled mainenance taking place soon, new registrations are currently disabled. If you already started your registration, you can continue.")
-            %>
-          <% end %>
-        <% end %>
-
-        <% if flash[:success] %>
-          <%=
-            render GovukComponent::NotificationBannerComponent.new(
-              title_text: flash[:success_title] || "Success",
-              success: true,
-            ) do |banner|
-              banner.with_heading(text: flash[:success])
-            end
-          %>
-        <% end %>
+        <%= render partial: "layouts/shared/messages" %>
 
         <%= yield %>
       </main>
     </div>
-
-    <footer class="govuk-footer">
-      <div class="govuk-width-container ">
-        <div class="govuk-footer__meta">
-          <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-            <h2 class="govuk-visually-hidden">Support links</h2>
-
-            <div class="govuk-footer__meta-custom">
-              <h2 class="govuk-heading-m">Support and guidance</h2>
-
-              <p class="govuk-body-s">
-                If you have a question, or you’ve had a problem using this service, please contact us at <%= mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk", class: "govuk-footer__link" %>
-              </p>
-
-              <ul class="govuk-footer__inline-list">
-                <li class="govuk-footer__inline-list-item">
-                  <%= link_to "Cookies", cookies_path, class: "govuk-footer__link" %>
-                </li>
-                <li class="govuk-footer__inline-list-item">
-                  <%= link_to "Privacy", privacy_policy_path, class: "govuk-footer__link" %>
-                </li>
-                <li class="govuk-footer__inline-list-item">
-                  <%= link_to "Accessibility", accessibility_statement_path, class: "govuk-footer__link" %>
-                </li>
-              </ul>
-            </div>
-
-            <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
-              <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
-            </svg>
-
-            <span class="govuk-footer__licence-description">
-              All content is available under the
-              <a class="govuk-footer__link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
-            </span>
-          </div>
-          <div class="govuk-footer__meta-item">
-            <a class="govuk-footer__link govuk-footer__copyright-logo" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">© Crown copyright</a>
-          </div>
-        </div>
-      </div>
-    </footer>
   </body>
+
+  <%= render partial: "layouts/shared/footer" %>
 </html>
