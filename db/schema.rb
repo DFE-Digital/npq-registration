@@ -10,12 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_16_095511) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_21_114716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
+
+  # Custom types defined in this database.
+  # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
+  create_enum "statement_states", ["open", "payable", "paid"]
 
   create_table "admins", force: :cascade do |t|
     t.string "email", limit: 64, null: false
@@ -268,6 +273,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_16_095511) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "statement_items", force: :cascade do |t|
+    t.bigint "statement_id", null: false
+    t.enum "state", default: "eligible", null: false, enum_type: "statement_item_states"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["statement_id"], name: "index_statement_items_on_statement_id"
+  end
+
+  create_table "statements", force: :cascade do |t|
+    t.integer "month", null: false
+    t.integer "year", null: false
+    t.date "deadline_date"
+    t.date "payment_date"
+    t.boolean "output_fee", default: true, null: false
+    t.bigint "cohort_id", null: false
+    t.bigint "lead_provider_id", null: false
+    t.datetime "marked_as_paid_at"
+    t.decimal "reconcile_amount", precision: 8, scale: 2
+    t.enum "state", default: "open", null: false, enum_type: "statement_states"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_statements_on_cohort_id"
+    t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
@@ -310,4 +340,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_16_095511) do
   add_foreign_key "applications", "private_childcare_providers"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "statement_items", "statements"
+  add_foreign_key "statements", "cohorts"
+  add_foreign_key "statements", "lead_providers"
 end
