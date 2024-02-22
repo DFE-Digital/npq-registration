@@ -52,7 +52,7 @@ seed_courses!
 seed_lead_providers!
 seed_itt_providers!
 
-if Rails.env.development?
+if Rails.env.in?(%i[development review])
   otp_testing_code = "00000"
 
   # Create admin user
