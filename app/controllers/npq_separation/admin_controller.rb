@@ -1,11 +1,6 @@
-class AdminController < ApplicationController
-  layout "application"
+class NpqSeparation::AdminController < ApplicationController
+  layout "admin"
   before_action :require_admin
-
-  def show
-    @last_seven_days = AdminService::DashboardStats.new(start_time: 7.days.ago)
-    @all_time = AdminService::DashboardStats.new
-  end
 
 private
 

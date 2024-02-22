@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="en" class="govuk-template admin--wide">
   <%= render partial: "layouts/shared/head" %>
 
   <body class="govuk-template__body ">
@@ -15,22 +16,20 @@
 
     <%= render partial: "layouts/shared/header" %>
 
-    <aside class="govuk-width-container">
-      <%= render GovukComponent::PhaseBannerComponent.new(
-        tag: { text: 'Beta' },
-        text: "This is a new service – #{govuk_mail_to("continuing-professional-development@digital.education.gov.uk", "give feedback or report a problem", subject: "Feedback about Register for a national professional qualification (NPQ)")}".html_safe
-      ) %>
-    </aside>
-
     <div class="govuk-width-container">
-      <div role="navigation">
-        <%= content_for(:before_content) %>
-      </div>
-
+        <%= render partial: "layouts/admin/primary-navigation" %>
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <%= render partial: "layouts/shared/messages" %>
 
-        <%= yield %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <%= render partial: "layouts/admin/sub-navigation" %>
+          </div>
+
+          <div class="govuk-grid-column-three-quarters">
+            <%= yield %>
+          </div>
+        </div>
       </main>
     </div>
   </body>
