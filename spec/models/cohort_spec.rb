@@ -43,8 +43,6 @@ RSpec.describe Cohort, type: :model do
   end
 
   describe ".current" do
-    let(:timestamp) { Time.zone.today }
-
     it "returns the closest cohort in the past" do
       _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
       current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
