@@ -1,0 +1,20 @@
+<h1 class="govuk-heading-l">Summary</h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do|r|
+      r.with_key(text: "Applications this week")
+      r.with_value(text: @applications_this_week)
+    end
+
+    sl.with_row do|r|
+      r.with_key(text: "Applications this month")
+      r.with_value(text: @applications_this_month)
+    end
+
+    sl.with_row do|r|
+      r.with_key(text: "Applications this year")
+      r.with_value(text: @applications_this_year)
+    end
+  end
+%>

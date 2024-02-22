@@ -2,8 +2,6 @@ class NpqSeparation::AdminController < ApplicationController
   layout "admin"
   before_action :require_admin
 
-  def show; end
-
 private
 
   def require_admin

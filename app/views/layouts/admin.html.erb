@@ -17,10 +17,19 @@
     <%= render partial: "layouts/shared/header" %>
 
     <div class="govuk-width-container">
+        <%= render partial: "layouts/admin/primary-navigation" %>
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <%= render partial: "layouts/shared/messages" %>
 
-        <%= yield %>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <%= render partial: "layouts/admin/sub-navigation" %>
+          </div>
+
+          <div class="govuk-grid-column-three-quarters">
+            <%= yield %>
+          </div>
+        </div>
       </main>
     </div>
   </body>
