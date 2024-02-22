@@ -11,9 +11,9 @@ class Cohort < ApplicationRecord
   validate :registration_start_date_matches_start_year
 
   def registration_start_date_matches_start_year
-    unless registration_start_date && registration_start_date.year == start_year
-      errors.add(:registration_start_date, "year must match the start year")
-    end
+    return if registration_start_date.blank?
+
+    errors.add(:registration_start_date, "year must match the start year") if registration_start_date.year != start_year
   end
 
   def self.current(timestamp = Time.zone.today)
