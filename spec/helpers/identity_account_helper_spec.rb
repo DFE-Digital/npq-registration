@@ -32,4 +32,23 @@ RSpec.describe IdentityAccountHelper, type: :helper do
       expect(link).to match("sign_out_uri=#{url_encoded}")
     end
   end
+
+  describe "#identity_link_uri" do
+    let(:fake_acocunt_link) do
+      instance_double(IdentityAccountHelper::IdentityAccountLink, build: true)
+    end
+
+    before do
+      allow(IdentityAccountHelper::IdentityAccountLink).to(receive(:new).and_return(fake_acocunt_link))
+    end
+
+    it "passes the provided uri into IdentityAccountLink" do
+      uri = "https://example.com/123"
+
+      identity_link_uri(uri)
+
+      expect(IdentityAccountHelper::IdentityAccountLink).to(have_received(:new).with(uri))
+      expect(fake_acocunt_link).to have_received(:build)
+    end
+  end
 end

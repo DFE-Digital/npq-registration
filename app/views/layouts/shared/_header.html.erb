@@ -1,7 +1,7 @@
 <%=
   govuk_header(service_name: "Register for a national professional qualification") do |header|
     if current_user.actual_user?
-      header.with_navigation_item(href: IdentityAccountLink.new(request.original_url), text: "DfE Identity account")
+      header.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")
 
       if current_user.applications.any?
         header.with_navigation_item(href: application_count_based_account_url, text: "NPQ account")
