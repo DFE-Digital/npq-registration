@@ -1,9 +1,21 @@
-<%=
-  govuk_footer(
-    meta_items: [
-      { text: "Cookies", href: cookies_path },
-      { text: "Privacy", href: privacy_policy_path },
-      { text: "Accessibility", href: accessibility_statement_path }
-    ]
-  )
-%>
+<%= govuk_footer do |footer| %>
+
+  <% footer.with_meta_html do %>
+    <h2 class="govuk-heading-m">Support and guidance</h2>
+
+    <p class="govuk-body-s">
+      If you have a question, or you’ve had a problem using this service, please contact us at<br/>
+      <%= govuk_footer_link_to("continuing-professional-development@digital.education.gov.uk", "mailto:continuing-professional-development@digital.education.gov.uk") %>
+    <p>
+
+    <ul class="govuk-footer__inline-list">
+      <% [{ text: "Cookies", href: cookies_path },
+          { text: "Privacy", href: privacy_policy_path },
+          { text: "Accessibility", href: accessibility_statement_path }].each do |link| %>
+
+        <%= tag.li(govuk_footer_link_to(link[:text], link[:href]), class: "govuk-footer__inline-list-item") %>
+      <% end %>
+    </ul>
+  <% end %>
+
+<% end %>
