@@ -1,12 +1,40 @@
 module API
   module V1
     class ParticipantsController < BaseController
-      def index = head(:method_not_allowed)
-      def show = head(:method_not_allowed)
-      def change_schedule = head(:method_not_allowed)
-      def defer = head(:method_not_allowed)
-      def withdraw = head(:method_not_allowed)
-      def resume = head(:method_not_allowed)
+      def index
+        Participants::IndexService.find_all
+
+        render 'api/v1/participants/index', status: :ok
+      end
+
+      def show
+        Participants::ShowService.find
+
+        render 'api/v1/participants/show', status: :ok
+      end
+
+      def change_schedule
+        Participants::ChangeScheduleService.change(@participant)
+      end
+
+      def resume
+        Participants::ResumeService.resume(@participant)
+
+        render 'api/v1/participants/resume', status: :ok
+      end
+
+      def withdraw
+        Participants::WithdrawService.withdraw(@participant)
+
+        render 'api/v1/participants/withdraw', status: :ok
+      end
+
+      def resume
+        Participants::ResumeService.resume(@participant)
+
+        render 'api/v1/participants/resume', status: :ok
+      end
+
       def outcomes = head(:method_not_allowed)
     end
   end
