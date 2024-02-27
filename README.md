@@ -19,6 +19,7 @@
 1. [Get an Identity](docs/get_an_identity.md)
 1. [Manual validation lifecycle](docs/manual_validation_lifecycle.md)
 1. [BigQuery Reports](docs/bigquery_reports.md)
+1. [Migration Environment](docs/migration_environment.md)
 
 ## Flow Visualisation
 
