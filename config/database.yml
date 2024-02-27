@@ -1,36 +1,69 @@
-default: &default
+shared_db_settings: &shared_db_settings
   adapter: postgresql
-  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  encoding: unicode
+
+default_primary: &default_primary
+  <<: *shared_db_settings
+  database: "<%= ENV['DB_DATABASE'] %>"
+  username: "<%= ENV['DB_USERNAME'] %>"
+  password: "<%= ENV['DB_PASSWORD'] %>"
+  host: "<%= ENV['DB_HOST'] %>"
+  port: "<%= ENV['DB_PORT'] %>"
   url: <%= ENV.fetch("DATABASE_URL", "postgres://localhost:5432") %>
 
+default_ecf: &default_ecf
+  <<: *shared_db_settings
+  migrations_paths: db/ecf_migrate # Set to ensure its different but not used.
+  database: "<%= ENV['ECF_DB_DATABASE'] %>"
+  username: "<%= ENV['ECF_DB_USERNAME'] %>"
+  password: "<%= ENV['ECF_DB_PASSWORD'] %>"
+  host: "<%= ENV['ECF_DB_HOST'] %>"
+  port: "<%= ENV['ECF_DB_PORT'] %>"
+  url: <%= ENV.fetch("ECF_DATABASE_URL", "postgres://localhost:5432") %>
+
 development:
-  <<: *default
-  database: npq_registration_development
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
+  primary:
+    <<: *default_primary
+    database: npq_registration_development
+  ecf:
+    <<: *default_ecf
+    database: early_careers_framework_development
 
 review:
-  <<: *default
-
-staging:
-  <<: *default
-
-migration:
-  <<: *default
-
-sandbox:
-  <<: *default
+  primary:
+    <<: *default_primary
+  # The ECF database is not used in review
 
 test:
-  <<: *default
-  database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
+  primary:
+    <<: *default_primary
+    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
+  ecf:
+    <<: *default_ecf
+    <<: *default_primary # We share the database in the test environment
+    database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
+
+staging:
+  primary:
+    <<: *default_primary
+  ecf:
+    <<: *default_ecf
+
+sandbox:
+  primary:
+    <<: *default_primary
+  ecf:
+    <<: *default_ecf
+
+migration:
+  primary:
+    <<: *default_primary
+  ecf:
+    <<: *default_ecf
 
 production:
-  <<: *default
-  host: <%= ENV['DB_HOST'] %>
-  database: <%= ENV['DB_DATABASE'] %>
-  username: <%= ENV['DB_USERNAME'] %>
-  password: <%= ENV['DB_PASSWORD'] %>
+  primary:
+    <<: *default_primary
+  ecf:
+    <<: *default_ecf
