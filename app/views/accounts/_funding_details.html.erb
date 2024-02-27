@@ -28,14 +28,14 @@
 
         <% scholarship_funding_row(application) %>
 
-        <% if Flipper.enabled?(:targeted_support_funding) %>
+        <% if Flipper.enabled?(:targeted_support_funding) || application.created_at < APRIL_2024_CUTOFF_DATE %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
               Targeted support funding
             </dt>
             <dd class="govuk-summary-list__value">
               <strong class="govuk-tag govuk-tag--green">ELIGIBLE</strong>
-              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding(application) %></p>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding %></p>
             </dd>
           </div>
         <% end %>
