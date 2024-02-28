@@ -68,4 +68,4 @@ ENV PORT=8080
 
 EXPOSE ${PORT}
 
-CMD bundle exec rake db:migrate && bundle exec whenever --update-crontab && bundle exec rails s -p ${PORT} --binding=0.0.0.0
+CMD bundle exec rake db:migrate:primary && bundle exec whenever --update-crontab && bundle exec rails s -p ${PORT} --binding=0.0.0.0

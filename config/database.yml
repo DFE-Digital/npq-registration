@@ -1,3 +1,4 @@
+
 shared_db_settings: &shared_db_settings
   adapter: postgresql
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -14,7 +15,7 @@ default_primary: &default_primary
 
 default_ecf: &default_ecf
   <<: *shared_db_settings
-  migrations_paths: db/ecf_migrate # Set to ensure its different but not used.
+  migrations_paths: db/ecf_migrate # Set to ensure its different but not used.
   database: "<%= ENV['ECF_DB_DATABASE'] %>"
   username: "<%= ENV['ECF_DB_USERNAME'] %>"
   password: "<%= ENV['ECF_DB_PASSWORD'] %>"
