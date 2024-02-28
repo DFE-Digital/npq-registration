@@ -1,0 +1,38 @@
+# State Machines
+
+## Statement
+
+```mermaid
+---
+title: State
+---
+stateDiagram-v2
+    [*] --> open
+    open --> payable: mark_payable
+    payable --> paid: mark_paid
+```
+
+## StatementItem
+
+```mermaid
+---
+title: State
+---
+stateDiagram-v2
+    eligible
+    payable
+    paid
+    voided
+    ineligible
+    awaiting_clawback
+    clawed_back
+
+    [*] --> eligible
+    eligible --> payable: mark_payable
+    payable --> paid: mark_paid
+    eligible --> voided: mark_voided
+    payable --> voided: mark_voided
+    paid --> awaiting_clawback: mark_awaiting_clawback
+    awaiting_clawback --> clawed_back: mark_clawed_back
+    eligible --> ineligible: mark_ineligible
+```
