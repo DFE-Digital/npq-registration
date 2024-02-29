@@ -48,6 +48,7 @@ RSpec.feature "admin", type: :feature do
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
+    expect(page).not_to have_link("Settings", href: "/admin/settings")
   end
 
   scenario "when logged in as a super admin, it allows access to the admin homepage with super admin permissions" do
@@ -59,6 +60,7 @@ RSpec.feature "admin", type: :feature do
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
     expect(page).to have_link("Admin Users", href: "/admin/admins")
+    expect(page).to have_link("Settings", href: "/admin/settings")
   end
 
   xscenario "when logged in as a super admin, it allows management of admins" do

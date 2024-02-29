@@ -70,6 +70,8 @@ Rails.application.routes.draw do
     constraints HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
+
+    resources "settings"
   end
 
   get "/admin", to: "admin#show"

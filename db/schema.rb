@@ -273,6 +273,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_21_114716) do
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
+  create_table "settings", force: :cascade do |t|
+    t.date "course_start_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "statement_items", force: :cascade do |t|
     t.bigint "statement_id", null: false
     t.enum "state", default: "eligible", null: false, enum_type: "statement_item_states"
