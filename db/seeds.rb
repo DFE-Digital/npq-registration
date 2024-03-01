@@ -73,66 +73,33 @@ if Rails.env.in?(%w[development review])
     super_admin: true,
   )
 
-  single_app_user = User.create!(
-    email: "user@example.com",
-    ecf_id: SecureRandom.uuid,
-    trn: "1234567",
-    full_name: Faker::Name.name,
-    date_of_birth: "1988-07-10",
-    trn_verified: true,
-    active_alert: false,
-    national_insurance_number: nil,
-    trn_auto_verified: false,
-    feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.all[6],
-    uid: SecureRandom.uuid,
-    raw_tra_provider_data: nil,
-    get_an_identity_id_synced_to_ecf: false,
-  )
-
-  multiple_app_user = User.create!(
-    email: "user2@example.com",
-    ecf_id: SecureRandom.uuid,
-    trn: "1234567",
-    full_name: Faker::Name.name,
-    date_of_birth: "1993-07-14",
-    trn_verified: true,
-    active_alert: false,
-    national_insurance_number: nil,
-    trn_auto_verified: false,
-    feature_flag_id: SecureRandom.uuid,
-    provider: LeadProvider.all[4],
-    uid: SecureRandom.uuid,
-    raw_tra_provider_data: nil,
-    get_an_identity_id_synced_to_ecf: false,
-  )
-
-  school_settings = %w[a_school an_academy_trust a_16_to_19_educational_setting]
-
-  Application.create!(
-    user: single_app_user,
+  # users with one application each
+  FactoryBot.create_list(
+    :application,
+    20,
+    :with_random_user,
+    :with_random_work_setting,
     ecf_id: SecureRandom.uuid,
     lead_provider: LeadProvider.last,
     course: Course.all.sample,
-    work_setting: school_settings.sample,
     lead_provider_approval_status: "accepted",
     participant_outcome_state: "passed",
   )
 
-  outcome_states = %w[passed failed]
-  approval_statuses = %w[accepted rejected]
-
-  15.times do
-    Application.create!(
-      user: multiple_app_user,
-      ecf_id: SecureRandom.uuid,
-      lead_provider: LeadProvider.all.sample,
-      course: Course.all.sample,
-      work_setting: school_settings.sample,
-      lead_provider_approval_status: approval_statuses.sample,
-      participant_outcome_state: outcome_states.sample,
-    )
-  end
+  # a user with 4 applications
+  FactoryBot.create_list(
+    :application,
+    4,
+    :with_random_lead_provider_approval_status,
+    :with_random_participant_outcome_state,
+    :with_random_work_setting,
+    user: FactoryBot.create(:user, :with_random_name),
+    ecf_id: SecureRandom.uuid,
+    lead_provider: LeadProvider.all.sample,
+    course: Course.all.sample,
+  )
 end
 
 Setting.create!(course_start_date: 3.months.from_now)
+
+FactoryBot.create_list(:statement, 20)
