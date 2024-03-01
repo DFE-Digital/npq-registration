@@ -7,12 +7,15 @@ RSpec.describe Migration::DataMigration, type: :model do
     it { is_expected.to validate_presence_of(:model) }
     it { is_expected.to validate_presence_of(:processed_count) }
     it { is_expected.to validate_presence_of(:failure_count) }
+    it { is_expected.to validate_numericality_of(:total_count).is_greater_than(0).allow_nil }
     it { is_expected.not_to validate_presence_of(:completed_at) }
+    it { is_expected.not_to validate_presence_of(:total_count) }
 
     context "when started_at is present" do
       before { instance.started_at = 1.day.ago }
 
       it { is_expected.to validate_comparison_of(:completed_at).is_greater_than(instance.started_at).allow_nil }
+      it { is_expected.to validate_presence_of(:total_count) }
     end
   end
 

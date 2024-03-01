@@ -29,9 +29,9 @@ module Migration
     end
 
     def simulate_model_migration(model)
-      data_migrations[model].update!(started_at: Time.zone.now)
+      data_migrations[model].update!(started_at: Time.zone.now, total_count: rand(1...1000))
 
-      rand(1...1000).times do |processed_count|
+      data_migrations[model].total_count.times do |processed_count|
         # Up to 1 minute of processing time/model
         sleep(rand(0.001...0.06))
 
