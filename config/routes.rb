@@ -161,8 +161,17 @@ Rails.application.routes.draw do
     get "admin", to: "admin/dashboards/summary#show"
     namespace :admin, constraints: ->(_request) { Rails.application.config.npq_separation[:admin_portal_enabled] } do
       namespace :dashboards do
-        resource :summary, only: :show
+        resource :summary, only: :show, controller: "summary"
       end
+
+      namespace :applications do
+        resources :all, controller: "all"
+      end
+
+      namespace :finance do
+        resources :statements
+      end
+
       resources :admins, only: %i[index]
     end
 
