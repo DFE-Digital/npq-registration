@@ -17,7 +17,7 @@
     <%= render partial: "layouts/shared/header" %>
 
     <div class="govuk-width-container">
-        <%= render partial: "layouts/admin/primary-navigation" %>
+      <%= render NpqSeparation::Admin::PrimaryNavigationComponent.new(request.path) %>
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <%= render partial: "layouts/shared/messages" %>
 
