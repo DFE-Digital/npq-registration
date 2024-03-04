@@ -1,4 +1,7 @@
 en:
+  # Errors
+  unauthorized: "HTTP Token: Access denied"
+
   time:
     formats:
       admin: "%R on %d/%m/%Y"

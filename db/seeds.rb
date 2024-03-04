@@ -136,3 +136,18 @@ if Rails.env.in?(%w[development review])
 end
 
 Setting.create!(course_start_date: 3.months.from_now)
+
+# APIToken for testing
+if Rails.env.in?(%w[development review])
+  {
+    "Ambition Institute" => "ambition-token",
+    "Best Practice Network" => "best-practice-token", # Not the same as ECF:  "Best Practice Network"
+    # "Capita" => "capita-token",
+    "Education Development Trust" => "edt-token",
+    "Teach First" => "teach-first-token",
+    "UCL Institute of Education" => "ucl-token",
+  }.each do |name, token|
+    lead_provider = LeadProvider.where("name LIKE ?", "#{name}%").first!
+    APIToken.create_with_known_token!(token, lead_provider:)
+  end
+end

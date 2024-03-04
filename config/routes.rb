@@ -76,7 +76,7 @@ Rails.application.routes.draw do
 
   get "/admin", to: "admin#show"
 
-  namespace :api do
+  namespace :api, defaults: { format: "json" } do
     namespace :v1 do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]

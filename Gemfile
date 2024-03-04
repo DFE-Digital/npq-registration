@@ -59,6 +59,7 @@ group :development, :test do
   gem "parallel_tests"
   gem "pry-byebug"
   gem "pry-rails"
+  gem "rspec-default_http_header"
   gem "rspec-rails", "~> 6.1.1"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
