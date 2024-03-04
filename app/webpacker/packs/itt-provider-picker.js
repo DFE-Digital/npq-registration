@@ -1,12 +1,11 @@
-import { nodeListForEach } from 'govuk-frontend/govuk/common'
 import openregisterLocationPicker from 'govuk-country-and-territory-autocomplete'
 
 const $allIttProvidersAutoCompleteElements = document.querySelectorAll('[data-module="app-itt-provider-autocomplete"]')
 
-nodeListForEach($allIttProvidersAutoCompleteElements, (component) => {
+$allIttProvidersAutoCompleteElements.forEach((component) => {
   const options = component.querySelectorAll('select option');
   const optionsMap = []
-  nodeListForEach(options, (option) => {
+  options.forEach((option) => {
     optionsMap.push({ search: option.text.toLowerCase(), text: option.text, value: option.value })
 
     if (option.dataset.additionalSynonyms) {

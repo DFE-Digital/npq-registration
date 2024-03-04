@@ -3,6 +3,10 @@ module IdentityAccountHelper
     govuk_link_to text, IdentityAccountLink.new(redirect_uri).build, class: classes
   end
 
+  def identity_link_uri(redirect_uri)
+    IdentityAccountLink.new(redirect_uri).build
+  end
+
   # rubocop:disable Rails/HelperInstanceVariable
   class IdentityAccountLink
     def initialize(redirect_uri)

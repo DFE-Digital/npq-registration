@@ -3,6 +3,10 @@ class NullUser < User
     true
   end
 
+  def actual_user?
+    false
+  end
+
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
     false

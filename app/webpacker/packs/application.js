@@ -1,10 +1,11 @@
-require.context('govuk-frontend/govuk/assets');
+require.context('govuk-frontend/dist/govuk/assets');
 
 import '../styles/application.scss';
 import '../controllers';
 import Rails from 'rails-ujs';
 import { initAll } from 'govuk-frontend';
 import accessibleAutocomplete from 'accessible-autocomplete';
+
 import institutionPicker from "./institution-picker";
 import countryPicker from "./country-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
