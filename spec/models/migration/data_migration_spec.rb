@@ -23,4 +23,86 @@ RSpec.describe Migration::DataMigration, type: :model do
     it { expect(instance.processed_count).to eq(0) }
     it { expect(instance.failure_count).to eq(0) }
   end
+
+  describe "scopes" do
+    before do
+      travel_to(1.day.ago) { create(:data_migration, created_at: 1.day.ago) }
+      travel_to(3.days.ago) { create(:data_migration, created_at: 1.day.ago) }
+      create(:data_migration, created_at: 1.day.ago)
+    end
+
+    it { expect(described_class.all).to eq(described_class.all.order(created_at: :asc)) }
+  end
+
+  describe "#percentage_migrated_successfully" do
+    subject { instance.percentage_migrated_successfully }
+
+    it { is_expected.to be_nil }
+
+    context "when processed_count is present" do
+      before { instance.processed_count = 100 }
+
+      it { is_expected.to be(100) }
+
+      context "when failure_count is present" do
+        before { instance.failure_count = 27 }
+
+        it { is_expected.to be(73) }
+      end
+    end
+  end
+
+  describe "#percentage_migrated" do
+    subject { instance.percentage_migrated }
+
+    it { is_expected.to be_nil }
+
+    context "when total_count and processed_count are present" do
+      before { instance.assign_attributes(total_count: 96, processed_count: 27) }
+
+      it { is_expected.to be(28) }
+    end
+  end
+
+  describe "#duration_in_seconds" do
+    subject { instance.duration_in_seconds }
+
+    it { is_expected.to be_nil }
+
+    context "when started_at and completed_at are present" do
+      before { instance.assign_attributes(started_at: 25.minutes.ago, completed_at: Time.zone.now) }
+
+      it { is_expected.to eq(25.minutes.to_i) }
+    end
+  end
+
+  describe "#pending?" do
+    it { is_expected.to be_pending }
+
+    context "when started_at is present" do
+      before { instance.started_at = 1.day.ago }
+
+      it { is_expected.not_to be_pending }
+    end
+  end
+
+  describe "#in_progress?" do
+    it { is_expected.not_to be_in_progress }
+
+    context "when started_at is present" do
+      before { instance.started_at = 1.day.ago }
+
+      it { is_expected.to be_in_progress }
+    end
+  end
+
+  describe "#complete?" do
+    it { is_expected.not_to be_complete }
+
+    context "when completed_at is present" do
+      before { instance.completed_at = 1.day.ago }
+
+      it { is_expected.to be_complete }
+    end
+  end
 end
