@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "admin", type: :feature do
+RSpec.feature "admin", type: :feature, rack_test_driver: true do
   include Helpers::AdminLogin
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -8,12 +8,10 @@ RSpec.feature "admin", type: :feature do
   let(:admin) { create(:admin) }
 
   around do |example|
-    Capybara.current_driver = :rack_test
     previous_pagination = Pagy::DEFAULT[:items]
     Pagy::DEFAULT[:items] = 3
     example.run
     Pagy::DEFAULT[:items] = previous_pagination
-    Capybara.current_driver = Capybara.default_driver
   end
 
   scenario "when not logged in, admin interface is inaccessible" do

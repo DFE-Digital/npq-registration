@@ -1,20 +1,12 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
-
-  around do |example|
-    Capybara.current_driver = :rack_test
-
-    example.run
-
-    Capybara.current_driver = Capybara.default_driver
-  end
 
   context "when JavaScript is enabled", :js do
     scenario("registration journey that is blocked from targeted delivery funding because they were previously funded (with JS)") { run_scenario(js: true) }
