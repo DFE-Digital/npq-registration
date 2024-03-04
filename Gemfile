@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 gem "activerecord-session_store"
+gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
 gem "daemons"
