@@ -9,6 +9,9 @@ class Statement < ApplicationRecord
 
   validate :validate_max_statement_items_count
 
+  scope :unpaid, -> { where(state: %w[open payable]) }
+  scope :paid, -> { where(state: "paid") }
+
   state_machine :state, initial: :open do
     state :open
     state :payable
