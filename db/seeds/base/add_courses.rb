@@ -1,0 +1,1 @@
+CourseService::DefinitionLoader.call
