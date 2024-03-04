@@ -171,8 +171,8 @@ Rails.application.routes.draw do
       namespace :finance do
         resources :statements do
           collection do
-            resources :unpaid, controller: "statements/unpaid", path: "unpaid", only: "index"
-            resources :paid, controller: "statements/paid", path: "paid", only: "index"
+            resources :unpaid, controller: "statements/unpaid", only: "index"
+            resources :paid, controller: "statements/paid", only: "index"
           end
         end
       end
