@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe API::V3::StatementSerializer, type: :serializer do
   let(:subject) { described_class }
   let(:cohort) { create(:cohort) }
-  let(:statement) { create(:statement, cohort: cohort) }
+  let(:statement) { create(:statement, cohort:) }
 
   it "serializes the `id`" do
     response = subject.render_as_hash(statement)
