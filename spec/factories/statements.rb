@@ -8,5 +8,13 @@ FactoryBot.define do
     marked_as_paid_at { nil }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     state { "open" }
+
+    trait(:paid) do
+      state { "paid" }
+      marked_as_paid_at { 1.week.ago }
+    end
+
+    trait(:open) { state { "open" } }
+    trait(:payable) { state { "payable" } }
   end
 end
