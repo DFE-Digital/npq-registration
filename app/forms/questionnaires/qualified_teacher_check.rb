@@ -77,7 +77,7 @@ module Questionnaires
     end
 
     def processed_trn
-      @processed_trn ||= (trn || "").gsub("RP", "").gsub("/", "")
+      @processed_trn ||= (trn || "")
     end
 
     def next_step
