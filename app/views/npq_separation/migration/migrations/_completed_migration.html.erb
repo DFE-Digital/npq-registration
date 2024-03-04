@@ -1,0 +1,29 @@
+
+<h2 class="govuk-heading-l">Completed migration</h2>
+
+<p class="govuk-body">
+  The latest migration was completed <%= tag.strong(time_ago_in_words(migration_completed_at(@data_migrations))) %> ago.<br>
+  The migration took <%= tag.strong(migration_duration_in_words(@data_migrations)) %> to complete.
+</p>
+
+<%= govuk_table do |table|
+  table.with_head do |head|
+    head.with_row do |row|
+      row.with_cell(text: "Model")
+      row.with_cell(text: "Number of records")
+      row.with_cell(text: "Number of failures")
+      row.with_cell(text: "Success rate")
+    end 
+  end 
+  
+  table.with_body do |body|
+    @data_migrations.each do |data_migration|
+      body.with_row do |row|
+        row.with_cell(text: data_migration.model.humanize)
+        row.with_cell(text: data_migration_total_count_tag(data_migration))
+        row.with_cell(text: data_migration_failure_count_tag(data_migration))
+        row.with_cell(text: data_migration_percentage_migrated_successfully_tag(data_migration))
+      end
+    end
+  end
+end %>
