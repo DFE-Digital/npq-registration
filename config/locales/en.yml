@@ -376,7 +376,7 @@ en:
         course_start_date_hint: "You can also select this option if you have already started"
         maths_understanding_of_approach_hint: "For example, a reference from a professional who has supported your mastery professional development."
         lead_provider_id: These are the training providers who provide <b>%{course_name}</b>. Providers may have different entry requirements.
-        trn: Your TRN is between 6 and 7 characters long. It may begin with 'RP'
+        trn: Your TRN is between 6 and 7 characters long.
         full_name: Your full name exactly as it appears on the Teaching Regulation Agency records
         date_of_birth: For example, 31 3 1980
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
