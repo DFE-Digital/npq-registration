@@ -7,7 +7,6 @@ RSpec.describe Migration::DataMigration, type: :model do
     it { is_expected.to validate_presence_of(:model) }
     it { is_expected.to validate_presence_of(:processed_count) }
     it { is_expected.to validate_presence_of(:failure_count) }
-    it { is_expected.to validate_numericality_of(:total_count).is_greater_than(0).allow_nil }
     it { is_expected.not_to validate_presence_of(:completed_at) }
     it { is_expected.not_to validate_presence_of(:total_count) }
 
@@ -26,18 +25,26 @@ RSpec.describe Migration::DataMigration, type: :model do
 
   describe "scopes" do
     before do
-      travel_to(1.day.ago) { create(:data_migration, created_at: 1.day.ago) }
-      travel_to(3.days.ago) { create(:data_migration, created_at: 1.day.ago) }
-      create(:data_migration, created_at: 1.day.ago)
+      travel_to(1.day.ago) { create(:data_migration) }
+      travel_to(3.days.ago) { create(:data_migration, :completed) }
+      create(:data_migration)
     end
 
     it { expect(described_class.all).to eq(described_class.all.order(created_at: :asc)) }
+
+    describe ".pending" do
+      it { expect(described_class.pending).to eq(described_class.where(started_at: nil)) }
+    end
+
+    describe ".not_pending" do
+      it { expect(described_class.not_pending).to eq(described_class.where.not(started_at: nil)) }
+    end
   end
 
   describe "#percentage_migrated_successfully" do
     subject { instance.percentage_migrated_successfully }
 
-    it { is_expected.to be_nil }
+    it { is_expected.to be(0) }
 
     context "when processed_count is present" do
       before { instance.processed_count = 100 }
@@ -55,7 +62,7 @@ RSpec.describe Migration::DataMigration, type: :model do
   describe "#percentage_migrated" do
     subject { instance.percentage_migrated }
 
-    it { is_expected.to be_nil }
+    it { is_expected.to be(0) }
 
     context "when total_count and processed_count are present" do
       before { instance.assign_attributes(total_count: 96, processed_count: 27) }

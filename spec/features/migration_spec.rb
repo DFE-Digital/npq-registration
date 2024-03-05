@@ -3,8 +3,6 @@ require "rails_helper"
 RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_test_driver: true do
   include Helpers::AdminLogin
 
-  before { allow_any_instance_of(Migration::Migrator).to receive(:sleep) }
-
   context "when not authenticated" do
     scenario "viewing the migrations page" do
       visit npq_separation_migration_migrations_path
@@ -25,7 +23,7 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
       expect(page).not_to have_content("Completed migration")
     end
 
-    scenario "running the first migration" do
+    scenario "running a migration" do
       visit npq_separation_migration_migrations_path
 
       click_button "Run migration"
@@ -38,7 +36,7 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
       expect(page).not_to have_content("Completed migration")
     end
 
-    scenario "viewing the migration after running one" do
+    scenario "viewing the completed migration" do
       visit npq_separation_migration_migrations_path
 
       perform_enqueued_jobs do
@@ -52,6 +50,43 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
 
       expect(page).to have_content("The latest migration was completed less than a minute ago.")
       expect(page).to have_text(/The migration took (.*) to complete./)
+    end
+
+    context "when migrating lead providers" do
+      before do
+        ecf_npq_lead_provider1 = create(:ecf_migration_npq_lead_provider)
+        ecf_npq_lead_provider2 = create(:ecf_migration_npq_lead_provider)
+
+        create(:lead_provider, ecf_id: ecf_npq_lead_provider1.id)
+        create(:lead_provider, ecf_id: ecf_npq_lead_provider2.id)
+
+        create(:ecf_migration_npq_lead_provider)
+      end
+
+      scenario "running a migration" do
+        visit npq_separation_migration_migrations_path
+
+        click_button "Run migration"
+
+        within ".data-migration-lead_provider" do
+          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Lead provider")
+          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
+        end
+      end
+
+      scenario "viewing the completed migration" do
+        visit npq_separation_migration_migrations_path
+
+        perform_enqueued_jobs do
+          click_button "Run migration"
+        end
+
+        within ".data-migration-lead_provider" do
+          expect(page).to have_css(".total-count", text: 3)
+          expect(page).to have_css(".failure-count", text: 1)
+          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+        end
+      end
     end
   end
 end
