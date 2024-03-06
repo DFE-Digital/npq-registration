@@ -18,18 +18,20 @@ RSpec.describe Statements::StatementsQuery do
     describe "filtering" do
       describe "by updated since" do
         let(:updated_since) { 1.day.ago }
-        let!(:statement1) { create(:statement, lead_provider: lead_provider, updated_at: 2.days.ago) }
-        let!(:statement2) { create(:statement, lead_provider: lead_provider, updated_at: Time.now) }
 
         it "filters by updated since" do
+          statement1 = create(:statement, lead_provider:, updated_at: 2.days.ago) 
+          statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now) 
+
           query = Statements::StatementsQuery.new(
-            lead_provider: lead_provider,
-            params: { updated_since: updated_since },
+            lead_provider:,
+            params: { updated_since: },
           )
 
           expect(query.statements).to eq([statement2])
         end
       end
+
       describe "by cohort" do
         let(:cohort_2023) { create(:cohort, start_year: 2023) }
         let(:cohort_2024) { create(:cohort, start_year: 2024) }
