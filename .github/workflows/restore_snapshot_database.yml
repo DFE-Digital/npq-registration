@@ -16,7 +16,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Backup and restore snapshot
         uses: ./.github/actions/backup-and-restore-snapshot-database
