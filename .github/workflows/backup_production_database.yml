@@ -10,7 +10,7 @@ jobs:
     environment: production
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Backup and upload database
         uses: ./.github/actions/backup-and-upload-database
