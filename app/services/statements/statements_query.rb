@@ -7,7 +7,7 @@ module Statements
     end
 
     def statements
-      Statement.all
+      Statement.where(lead_provider:)
     end
 
     def statement; end
