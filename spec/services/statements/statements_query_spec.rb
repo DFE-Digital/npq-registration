@@ -1,9 +1,18 @@
 require "rails_helper"
 
 RSpec.describe Statements::StatementsQuery do
-  describe "#statements" do
-    let(:lead_provider) { create(:lead_provider) }
+  let(:lead_provider) { create(:lead_provider) }
 
+  describe "#statement" do
+    it "returns a statement by id" do
+      statement = create(:statement, lead_provider: lead_provider)
+      query = Statements::StatementsQuery.new(lead_provider:)
+
+      expect(query.statement(statement.id)).to eq(statement)
+    end
+  end
+
+  describe "#statements" do
     it "returns all statements for a provider" do
       _statement = create(:statement)
       statement = create(:statement, lead_provider:)

@@ -1,6 +1,6 @@
 module Statements
   class StatementsQuery
-    def initialize(lead_provider:, params:)
+    def initialize(lead_provider:, params: {})
       @lead_provider = lead_provider
       @cohorts = String(params[:cohort]).split(",")
       @updated_since = params[:updated_since]
@@ -14,7 +14,9 @@ module Statements
       statements
     end
 
-    def statement; end
+    def statement(id)
+      Statement.find_by!(id: id, lead_provider: lead_provider)
+    end
 
   private
 
