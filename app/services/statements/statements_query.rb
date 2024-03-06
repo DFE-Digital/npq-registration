@@ -15,7 +15,7 @@ module Statements
     end
 
     def statement(id)
-      Statement.find_by!(id: id, lead_provider: lead_provider)
+      Statement.find_by!(id:, lead_provider:)
     end
 
   private

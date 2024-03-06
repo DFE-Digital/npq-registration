@@ -5,10 +5,18 @@ RSpec.describe Statements::StatementsQuery do
 
   describe "#statement" do
     it "returns a statement by id" do
-      statement = create(:statement, lead_provider: lead_provider)
+      statement = create(:statement, lead_provider:)
       query = Statements::StatementsQuery.new(lead_provider:)
 
       expect(query.statement(statement.id)).to eq(statement)
+    end
+
+    it "raises an error if the statement is not found" do
+      query = Statements::StatementsQuery.new(lead_provider:)
+
+      expect {
+        query.statement(999)
+      }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
@@ -29,8 +37,8 @@ RSpec.describe Statements::StatementsQuery do
         let(:updated_since) { 1.day.ago }
 
         it "filters by updated since" do
-          statement1 = create(:statement, lead_provider:, updated_at: 2.days.ago) 
-          statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now) 
+          create(:statement, lead_provider:, updated_at: 2.days.ago)
+          statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now)
 
           query = Statements::StatementsQuery.new(
             lead_provider:,
