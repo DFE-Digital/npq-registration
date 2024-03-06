@@ -2,12 +2,15 @@ module Statements
   class StatementsQuery
     def initialize(lead_provider:, params:)
       @lead_provider = lead_provider
-      @cohort = params[:cohort]
+      @cohorts = String(params[:cohort]).split(",")
       @update_since = params[:updated_since]
     end
 
     def statements
-      Statement.where(lead_provider:)
+      statements = Statement.includes(:cohort).where(lead_provider:)
+      statements = statements.where(cohorts: { start_year: cohorts }) if cohorts.any?
+
+      statements
     end
 
     def statement; end
@@ -16,7 +19,7 @@ module Statements
 
     attr_reader \
       :lead_provider,
-      :cohort,
+      :cohorts,
       :update_since
   end
 end
