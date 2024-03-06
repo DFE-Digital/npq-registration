@@ -34,7 +34,7 @@ module NpqSeparation
           ),
           Node.new(
             name: "Applications",
-            path: npq_separation_admin_applications_all_index_path,
+            path: npq_separation_admin_applications_path,
             prefix: "/npq-separation/admin/applications",
           ),
           Node.new(

@@ -164,9 +164,7 @@ Rails.application.routes.draw do
         resource :summary, only: :show, controller: "summary"
       end
 
-      namespace :applications do
-        resources :all, controller: "all"
-      end
+      resources :applications, only: %i[index]
 
       namespace :finance do
         resources :statements do
