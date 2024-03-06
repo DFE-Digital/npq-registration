@@ -7,19 +7,17 @@ end
 RSpec.describe Migration::Ecf::BaseRecord, type: :model do
   subject(:instance) { TestEcfModel.new }
 
-  before do
-    allow(Rails).to receive(:env).and_return ActiveSupport::EnvironmentInquirer.new(environment.to_s)
-  end
+  before { allow(Rails).to receive(:env) { environment.inquiry } }
 
   describe "#readonly?" do
     context "when in test environment" do
-      let(:environment) { :test }
+      let(:environment) { "test" }
 
       it { is_expected.not_to be_readonly }
     end
 
     context "when in non-test environment" do
-      let(:environment) { :production }
+      let(:environment) { "production" }
 
       it { is_expected.to be_readonly }
     end

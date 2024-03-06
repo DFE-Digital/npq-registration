@@ -1,0 +1,15 @@
+<% content_for :title, "Migrations" %>
+
+<% if @starting_migration || @in_progress_migration %>
+  <%= render(partial: "in_progress_migration") %>
+<% end %>
+
+<h1 class="govuk-heading-xl">Migrations</h1>
+
+<p class="govuk-body">You can run the NPQ migration from ECF using this migration tool.</p>
+
+<%= button_to "Run migration", { action: :create }, class: "govuk-button govuk-button--warning", disabled: @data_migrations.present? %>
+
+<% if @completed_migration %>
+  <%= render(partial: "completed_migration") %>
+<% end %>

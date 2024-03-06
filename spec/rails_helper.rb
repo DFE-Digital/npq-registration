@@ -73,6 +73,7 @@ end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include ActiveJob::TestHelper, type: :feature
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -107,6 +108,18 @@ RSpec.configure do |config|
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
+  end
+
+  config.around(:each, in_memory_rails_cache: true) do |example|
+    Rails.cache = ActiveSupport::Cache::MemoryStore.new
+    example.run
+    Rails.cache.clear
+  end
+
+  config.around(:each, rack_test_driver: true) do |example|
+    Capybara.current_driver = :rack_test
+    example.run
+    Capybara.current_driver = Capybara.default_driver
   end
 end
 

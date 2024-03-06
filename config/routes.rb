@@ -167,7 +167,7 @@ Rails.application.routes.draw do
     end
 
     namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
-      resources :migrations, only: %i[index]
+      resources :migrations, only: %i[index create]
     end
   end
 
