@@ -13,10 +13,11 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
     expect(response[:id]).to eq(statement.id)
   end
 
-  it "serializes the `cohort_id`" do
+  it "serializes the `cohort start year`" do
+    cohort.start_year = 2025
     response = subject.render_as_hash(statement)
 
-    expect(response[:cohort]).to eq(cohort.id)
+    expect(response[:cohort]).to eq(2025)
   end
 
   it "serializes the `month`" do
