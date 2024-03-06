@@ -357,6 +357,8 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
+    oj (3.16.3)
+      bigdecimal (>= 3.0)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -676,6 +678,7 @@ DEPENDENCIES
   net-imap (~> 0.4.10)
   net-pop
   net-smtp (~> 0.4.0)
+  oj
   omniauth
   omniauth-oauth2
   omniauth-rails_csrf_protection
