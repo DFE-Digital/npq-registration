@@ -1,0 +1,22 @@
+<h1 class="govuk-heading-l">All applications</h1>
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "ID")
+        row.with_cell(text: "Applicant")
+        row.with_cell(text: "School")
+      end
+    end
+
+    table.with_body do |body|
+      @applications.each do |application|
+        body.with_row do |row|
+          row.with_cell(text: application.id)
+          row.with_cell(text: govuk_link_to(application.user.full_name, "#"))
+          row.with_cell(text: govuk_link_to(application.school&.name, "#"))
+        end
+      end
+    end
+  end
+%>

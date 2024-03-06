@@ -1,0 +1,20 @@
+<nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+  <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
+    <ul class="x-govuk-sub-navigation__section">
+      <% sections.each do |section| %>
+      <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
+        <%= secondary_navigation_link(section) %>
+
+        <% if section.nodes.present? %>
+          <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+            <% section.nodes.each do |node| %>
+              <li class="x-govuk-sub-navigation__section-item">
+                <%= secondary_navigation_item_link(node) %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

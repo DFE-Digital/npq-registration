@@ -41,5 +41,21 @@ FactoryBot.define do
       works_in_childcare { true }
       kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
     end
+
+    trait :with_random_work_setting do
+      work_setting { %w[a_school an_academy_trust a_16_to_19_educational_setting].sample }
+    end
+
+    trait :with_random_lead_provider_approval_status do
+      lead_provider_approval_status { %w[accepted rejected].sample }
+    end
+
+    trait :with_random_participant_outcome_state do
+      participant_outcome_state { %w[passed failed].sample }
+    end
+
+    trait :with_random_user do
+      user { FactoryBot.build(:user, :with_random_name) }
+    end
   end
 end

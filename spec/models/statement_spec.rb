@@ -43,6 +43,20 @@ RSpec.describe Statement, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe "paid" do
+      it "selects only paid statements" do
+        expect(Statement.paid.to_sql).to include(%(WHERE "statements"."state" = 'paid'))
+      end
+    end
+
+    describe "unpaid" do
+      it "selects only unpaid statements" do
+        expect(Statement.unpaid.to_sql).to include(%(WHERE "statements"."state" IN ('open', 'payable')))
+      end
+    end
+  end
+
   describe "State transition" do
     context "when from open to payable" do
       let(:statement) { create(:statement, state: "open") }

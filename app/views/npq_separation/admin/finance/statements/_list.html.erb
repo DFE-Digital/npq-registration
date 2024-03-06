@@ -1,0 +1,21 @@
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "ID")
+        row.with_cell(text: "Cohort")
+        row.with_cell(text: "State")
+      end
+    end
+
+    table.with_body do |body|
+      statements.each do |statement|
+        body.with_row do |row|
+          row.with_cell(text: statement.id)
+          row.with_cell(text: statement.cohort.start_year)
+          row.with_cell(text: govuk_tag(text: statement.state.capitalize))
+        end
+      end
+    end
+  end
+%>
