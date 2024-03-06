@@ -34,12 +34,6 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
     expect(response[:year]).to eq(2023)
   end
 
-  it "defaults `type` to `npq` for compatibility reasons" do
-    response = subject.render_as_hash(statement)
-
-    expect(response[:type]).to eq("npq")
-  end
-
   it "serializes the `deadline`" do
     statement.deadline_date = Date.new(2023, 7, 1)
     response = subject.render_as_hash(statement)

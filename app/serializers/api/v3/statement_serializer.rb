@@ -12,7 +12,6 @@ module API
       field :updated_at, datetime_format: ->(dt) { dt.rfc3339 }
 
       field(:paid) { |s, _| s.payment_date.present? }
-      field(:type) { "npq" }
     end
   end
 end
