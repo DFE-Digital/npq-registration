@@ -3,7 +3,7 @@ class Statement < ApplicationRecord
   belongs_to :lead_provider
   has_many :statement_items
 
-  validates :output_fee, presence: true
+  validates :output_fee, inclusion: [true, false]
   validates :month, numericality: { in: 1..12, only_integer: true }
   validates :year, numericality: { in: 2020..2050, only_integer: true }
 

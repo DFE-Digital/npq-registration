@@ -10,6 +10,8 @@ module Migration
         raise MigrationAlreadyPreparedError, "The migration has already been prepared" if DataMigration.exists?
 
         DataMigration.create!(model: :lead_provider)
+        DataMigration.create!(model: :cohort)
+        DataMigration.create!(model: :statement)
       end
     end
 
@@ -39,6 +41,8 @@ module Migration
 
     def run_migration
       migrate_lead_providers
+      migrate_cohorts
+      migrate_statements
     end
 
     def migrate_lead_providers
@@ -58,6 +62,62 @@ module Migration
 
     def ecf_npq_lead_providers
       @ecf_npq_lead_providers ||= Ecf::NpqLeadProvider.all
+    end
+
+    def ecf_cohorts
+      @ecf_cohorts ||= Ecf::Cohort.all
+    end
+
+    def migrate_cohorts
+      data_migration = DataMigration.find_by(model: :cohort)
+
+      data_migration.update!(started_at: Time.zone.now, total_count: ecf_cohorts.count)
+
+      ecf_cohorts.find_each do |ecf_cohort|
+        data_migration.increment!(:processed_count)
+
+        cohort = Cohort.find_or_initialize_by(start_year: ecf_cohort.start_year)
+        result = cohort.update(registration_start_date: ecf_cohort.registration_start_date)
+
+        data_migration.increment!(:failure_count) unless result
+      end
+
+      data_migration.update!(completed_at: Time.zone.now)
+    end
+
+    def ecf_statements
+      @ecf_statements ||= Ecf::Finance::Statement.all
+    end
+
+    def migrate_statements
+      data_migration = DataMigration.find_by(model: :statement)
+
+      data_migration.update!(started_at: Time.zone.now, total_count: ecf_statements.count)
+
+      ecf_statements.find_each do |ecf_statement|
+        data_migration.increment!(:processed_count)
+
+        statement = Statement.find_or_initialize_by(month: Date::MONTHNAMES.find_index(ecf_statement.name.split[0]), year: ecf_statement.name.split[1])
+
+        result = statement.update(
+          deadline_date: ecf_statement.deadline_date,
+          payment_date: ecf_statement.payment_date,
+          output_fee: ecf_statement.output_fee,
+          cohort: Cohort.find_by(start_year: ecf_cohorts.find_by(id: ecf_statement.cohort_id).start_year),
+          lead_provider: LeadProvider.find_by(ecf_id: ecf_npq_lead_providers.find_by(cpd_lead_provider_id: ecf_statement.cpd_lead_provider_id).id),
+          marked_as_paid_at: ecf_statement.marked_as_paid_at,
+          reconcile_amount: ecf_statement.reconcile_amount,
+          state: if ecf_statement.type == "Finance::Statement::NPQ::Payable"
+                   :payable
+                 else
+                   ecf_statement.type == "Finance::Statement::NPQ::Paid" ? :paid : :open
+                 end,
+        )
+
+        data_migration.increment!(:failure_count) unless result
+      end
+
+      data_migration.update!(completed_at: Time.zone.now)
     end
   end
 end

@@ -88,5 +88,82 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
         end
       end
     end
+
+    context "when migrating cohorts" do
+      before do
+        ecf_cohort1 = create(:ecf_migration_cohort, start_year: 2026)
+        ecf_cohort2 = create(:ecf_migration_cohort, start_year: 2029)
+
+        create(:cohort, start_year: ecf_cohort1.start_year)
+        create(:cohort, start_year: ecf_cohort2.start_year)
+
+        create(:ecf_migration_cohort, registration_start_date: nil)
+      end
+
+      scenario "running a migration" do
+        visit npq_separation_migration_migrations_path
+
+        click_button "Run migration"
+
+        within ".data-migration-cohort" do
+          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Cohort")
+          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
+        end
+      end
+
+      scenario "viewing the completed migration" do
+        visit npq_separation_migration_migrations_path
+
+        perform_enqueued_jobs do
+          click_button "Run migration"
+        end
+
+        within ".data-migration-cohort" do
+          expect(page).to have_css(".total-count", text: 3)
+          expect(page).to have_css(".failure-count", text: 1)
+          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+        end
+      end
+    end
+
+    context "when migrating statements" do
+      before do
+        ecf_statement1 = create(:ecf_migration_statement, name: "July 2026")
+        ecf_statement2 = create(:ecf_migration_statement, name: "January 2030")
+
+        lead_provider1 = create(:lead_provider, ecf_id: ecf_statement1.npq_lead_provider.id)
+        lead_provider2 = create(:lead_provider, ecf_id: ecf_statement2.npq_lead_provider.id)
+
+        create(:statement, month: 7, year: 2026, lead_provider: lead_provider1)
+        create(:statement, month: 1, year: 2030, lead_provider: lead_provider2)
+
+        create(:ecf_migration_statement, output_fee: nil)
+      end
+
+      scenario "running a migration" do
+        visit npq_separation_migration_migrations_path
+
+        click_button "Run migration"
+
+        within ".data-migration-statement" do
+          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Statement")
+          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
+        end
+      end
+
+      scenario "viewing the completed migration" do
+        visit npq_separation_migration_migrations_path
+
+        perform_enqueued_jobs do
+          click_button "Run migration"
+        end
+
+        within ".data-migration-statement" do
+          expect(page).to have_css(".total-count", text: 3)
+          expect(page).to have_css(".failure-count", text: 1)
+          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+        end
+      end
+    end
   end
 end
