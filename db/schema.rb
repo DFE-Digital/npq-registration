@@ -32,6 +32,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_01_152723) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "api_tokens", force: :cascade do |t|
+    t.bigint "lead_provider_id", null: false
+    t.string "hashed_token", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
+    t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
+
   create_table "applications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "course_id", null: false
@@ -351,6 +361,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_01_152723) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "api_tokens", "lead_providers"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
