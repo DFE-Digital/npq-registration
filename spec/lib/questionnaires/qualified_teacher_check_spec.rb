@@ -119,21 +119,21 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
 
     describe "#processed_trn" do
-      it "permits legacy style trns" do
+      it "doesn't permit legacy style TRNs" do
         subject.trn = "RP99/12345"
         subject.valid?
-        expect(subject.errors[:trn]).to be_blank
-        expect(subject.processed_trn).to eql("9912345")
+        expect(subject.errors[:trn]).to be_present
+        expect(subject.processed_trn).not_to eql("9912345")
       end
 
       it "denies trns over 7 characters" do
-        subject.trn = "RP99/123456"
+        subject.trn = "99123456"
         subject.valid?
         expect(subject.errors[:trn]).to be_present
       end
 
-      it "denies trns under 5 characters" do
-        subject.trn = "RP/1234"
+      it "denies trns under 7 characters" do
+        subject.trn = "1234"
         subject.valid?
         expect(subject.errors[:trn]).to be_present
       end

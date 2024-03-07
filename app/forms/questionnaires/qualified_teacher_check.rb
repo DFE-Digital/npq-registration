@@ -69,15 +69,15 @@ module Questionnaires
     def validate_processed_trn
       if processed_trn !~ /\A\d+\z/
         errors.add(:trn, :invalid)
-      elsif processed_trn.length < 5
-        errors.add(:trn, :too_short, count: 5)
+      elsif processed_trn.length < 7
+        errors.add(:trn, :too_short, count: 7)
       elsif processed_trn.length > 7
         errors.add(:trn, :too_long, count: 7)
       end
     end
 
     def processed_trn
-      @processed_trn ||= (trn || "").gsub("RP", "").gsub("/", "")
+      @processed_trn ||= trn || ""
     end
 
     def next_step
