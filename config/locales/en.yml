@@ -1,6 +1,8 @@
 en:
   # Errors
+  unpermitted_parameters: "Unpermitted parameters"
   unauthorized: "HTTP Token: Access denied"
+  bad_request: "Bad request"
 
   time:
     formats:
