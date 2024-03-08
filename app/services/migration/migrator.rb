@@ -3,35 +3,32 @@ module Migration
     class UnsupportedEnvironmentError < RuntimeError; end
     class MigrationAlreadyRanError < RuntimeError; end
     class MigrationNotPreparedError < RuntimeError; end
-
-    MODELS_TO_MIGRATE = %i[lead_provider cohort statement].freeze
+    class MigrationAlreadyPreparedError < RuntimeError; end
 
     class << self
       def prepare_for_migration
-        Migration::DataMigration.create!(MODELS_TO_MIGRATE.map { |model| { model: } })
+        raise MigrationAlreadyPreparedError, "The migration has already been prepared" if DataMigration.exists?
+
+        DataMigration.create!(model: :lead_provider)
       end
     end
 
     def migrate!
       check_environment!
-      check_migration_prepared!
       prevent_multiple_migrations!
+      check_migration_prepared!
 
-      run_dummy_migration
+      run_migration
     end
 
   private
 
-    def data_migrations
-      @data_migrations ||= Migration::DataMigration.all
-    end
-
     def prevent_multiple_migrations!
-      raise MigrationAlreadyRanError, "The migration has already been run" unless data_migrations.all?(&:pending?)
+      raise MigrationAlreadyRanError, "The migration has already been run" if DataMigration.not_pending.exists?
     end
 
     def check_migration_prepared!
-      raise MigrationNotPreparedError, "The migration has not been prepared" if data_migrations.blank?
+      raise MigrationNotPreparedError, "The migration has not been prepared" unless DataMigration.pending.exists?
     end
 
     def check_environment!
@@ -40,24 +37,27 @@ module Migration
       raise UnsupportedEnvironmentError, "The migration functionality is disabled for this environment" unless migration_enabled
     end
 
-    def run_dummy_migration
-      data_migrations.each { |data_migration| simulate_model_migration(data_migration) }
+    def run_migration
+      migrate_lead_providers
     end
 
-    def simulate_model_migration(data_migration)
-      data_migration.update!(started_at: Time.zone.now, total_count: rand(1...1000))
+    def migrate_lead_providers
+      data_migration = DataMigration.find_by(model: :lead_provider)
 
-      data_migration.total_count.times do |processed_count|
-        # Up to 1 minute of processing time/model
-        sleep(rand(0.001...0.06))
+      data_migration.update!(started_at: Time.zone.now, total_count: ecf_npq_lead_providers.count)
 
-        data_migration.update!(processed_count:)
+      ecf_npq_lead_providers.find_each do |ecf_npq_lead_provider|
+        data_migration.increment!(:processed_count)
+        npq_lead_provider = LeadProvider.find_by(ecf_id: ecf_npq_lead_provider.id)
 
-        record_failure = rand(1...25) == 1
-        data_migration.update!(failure_count: data_migration.failure_count + 1) if record_failure
+        data_migration.increment!(:failure_count) unless npq_lead_provider
       end
 
       data_migration.update!(completed_at: Time.zone.now)
+    end
+
+    def ecf_npq_lead_providers
+      @ecf_npq_lead_providers ||= Ecf::NpqLeadProvider.all
     end
   end
 end

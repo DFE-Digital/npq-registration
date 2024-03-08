@@ -13,7 +13,7 @@
     <%= 
       govuk_task_list do |task_list|
         @data_migrations.each do |data_migration|
-          task_list.with_item(title: data_migration.model.humanize, status: data_migration_status_tag(data_migration))
+          task_list.with_item(html_attributes: { class: "data-migration-#{data_migration.model.parameterize}" }, title: data_migration.model.humanize, status: data_migration_status_tag(data_migration))
         end
       end 
     %>

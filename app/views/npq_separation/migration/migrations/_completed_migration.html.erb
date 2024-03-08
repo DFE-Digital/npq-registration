@@ -18,11 +18,11 @@
   
   table.with_body do |body|
     @data_migrations.each do |data_migration|
-      body.with_row do |row|
+      body.with_row(html_attributes: { class: "data-migration-#{data_migration.model.parameterize}" }) do |row|
         row.with_cell(text: data_migration.model.humanize)
-        row.with_cell(text: data_migration_total_count_tag(data_migration))
-        row.with_cell(text: data_migration_failure_count_tag(data_migration))
-        row.with_cell(text: data_migration_percentage_migrated_successfully_tag(data_migration))
+        row.with_cell(html_attributes: { class: "total-count" }, text: data_migration_total_count_tag(data_migration))
+        row.with_cell(html_attributes: { class: "failure-count" }, text: data_migration_failure_count_tag(data_migration))
+        row.with_cell(html_attributes: { class: "percentage-successfully-migrated" }, text: data_migration_percentage_migrated_successfully_tag(data_migration))
       end
     end
   end
