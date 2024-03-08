@@ -160,24 +160,26 @@ Rails.application.routes.draw do
   end
 
   namespace :npq_separation, path: "npq-separation" do
-    get "admin", to: "admin/dashboards/summary#show"
-    namespace :admin, constraints: ->(_request) { Rails.application.config.npq_separation[:admin_portal_enabled] } do
-      namespace :dashboards do
-        resource :summary, only: :show, controller: "summary"
-      end
+    constraints(->(_request) { Rails.application.config.npq_separation[:admin_portal_enabled] }) do
+      get "admin", to: "admin/dashboards/summary#show"
+      namespace :admin do
+        namespace :dashboards do
+          resource :summary, only: :show, controller: "summary"
+        end
 
-      resources :applications, only: %i[index]
+        resources :applications, only: %i[index]
 
-      namespace :finance do
-        resources :statements do
-          collection do
-            resources :unpaid, controller: "statements/unpaid", only: "index"
-            resources :paid, controller: "statements/paid", only: "index"
+        namespace :finance do
+          resources :statements do
+            collection do
+              resources :unpaid, controller: "statements/unpaid", only: "index"
+              resources :paid, controller: "statements/paid", only: "index"
+            end
           end
         end
-      end
 
-      resources :admins, only: %i[index]
+        resources :admins, only: %i[index]
+      end
     end
 
     namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
