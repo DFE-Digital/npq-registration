@@ -1,9 +1,7 @@
 FactoryBot.define do
   factory :cohort do
-    start_year { Faker::Number.between(from: 2022, to: 2025) }
-    registration_start_date { Date.new(start_year, 4, 10) }
-    created_at { Faker::Time.between(from: 2.years.ago, to: Time.zone.now) }
-    updated_at { created_at }
+    start_year { Faker::Number.between(from: 2021, to: 2029) }
+    registration_start_date { Date.new(start_year, 4, 3) }
 
     initialize_with do
       Cohort.find_by(start_year:) || new(**attributes)
