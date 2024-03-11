@@ -3,13 +3,13 @@
     <ul class="x-govuk-sub-navigation__section">
       <% sections.each do |section| %>
       <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
-        <%= secondary_navigation_link(section) %>
+        <%= sub_navigation_link(section) %>
 
         <% if section.nodes.present? %>
           <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
             <% section.nodes.each do |node| %>
               <li class="x-govuk-sub-navigation__section-item">
-                <%= secondary_navigation_item_link(node) %>
+                <%= sub_navigation_item_link(node) %>
               </li>
             <% end %>
           </ul>
