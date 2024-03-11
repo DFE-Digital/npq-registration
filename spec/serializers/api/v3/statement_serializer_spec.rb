@@ -29,7 +29,7 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
     it "serializes the `cohort start year`" do
       cohort.start_year = 2025
 
-      expect(attributes["cohort"]).to eq(2025)
+      expect(attributes["cohort"]).to eq("2025")
     end
 
     it "serializes the `month`" do
@@ -41,7 +41,7 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
     it "serializes the `year`" do
       statement.year = 2023
 
-      expect(attributes["year"]).to eq(2023)
+      expect(attributes["year"]).to eq("2023")
     end
 
     it "serializes the `deadline`" do
