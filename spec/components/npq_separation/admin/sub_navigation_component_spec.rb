@@ -6,7 +6,7 @@ RSpec.describe NpqSeparation::Admin::SubNavigationComponent, type: :component do
 
   before do
     allow(Rails).to receive(:logger).and_return(fake_logger)
-    render_inline(NpqSeparation::Admin::SubNavigationComponent.new(path))
+    render_inline(NpqSeparation::Admin::SubNavigationComponent.new(path, lead_providers: []))
   end
 
   it "renders a visually hidden level 2 heading" do
