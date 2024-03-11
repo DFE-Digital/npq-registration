@@ -36,6 +36,7 @@ gem "pg_search"
 gem "puma", "~> 6.4.2"
 gem "rack-attack"
 gem "rails", "~> 7"
+gem "redcarpet", "3.3.2"
 gem "rubyzip"
 gem "scenic"
 gem "secure_headers"
@@ -46,6 +47,7 @@ gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
+gem "rouge"
 
 gem "net-imap", "~> 0.4.10", require: false
 gem "net-pop", require: false

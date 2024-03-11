@@ -1,0 +1,57 @@
+// We could also look at enabling $govuk-global-styles: true;
+// instead of having these explicit overrides.
+
+.api-guidance {
+  h1 { 
+    @extend .govuk-heading-l; 
+  }
+
+  h2 { 
+    @extend .govuk-heading-m; 
+  }
+
+  p {
+    @extend .govuk-body;
+  }
+
+  a {
+    @extend .govuk-link;
+  }
+
+  .masthead {
+    background-color: #1d70b8;
+    margin-top: -40px;
+
+    .hero {
+      padding: 15px 20px 0 20px;
+      max-width: 700px;
+
+      .hero__title, .hero__description {
+        color: white;
+      }
+
+      .govuk-button--white {
+        background: white;
+      }
+    }
+  }
+
+  .whats-new {
+    background-color: rgb(243, 242, 241);
+    padding: 30px 20px;
+    border-bottom: 3px solid rgb(177, 180, 182);
+    margin-bottom: 50px;
+
+    .whats-new__content {
+      max-width: 700px;
+    }
+  }
+}
+
+.highlight pre {
+  background: #f9f9f8;
+  padding: 15px;
+  overflow: auto;
+  position: relative;
+  border: 1px solid #bfc1c3;
+}

@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template admin--wide">
+  <%= render partial: "layouts/shared/head" %>
+
+  <body class="govuk-template__body ">
+    <%= render partial: "shared/analytics/google_noscript" %>
+
+    <script>
+      document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+
+    <%= render partial: "shared/cookies/banner" %>
+
+    <%= render partial: "layouts/shared/header" %>
+
+    <div class="govuk-width-container">
+      <nav class="x-govuk-primary-navigation" aria-labelledby="primary-navigation-heading">
+        <div class="govuk-width-container">
+          <h2 class="govuk-visually-hidden" id="primary-navigation-heading">Navigation</h2>
+          <ul class="x-govuk-primary-navigation__list">
+            <li class="x-govuk-primary-navigation__item"><%= link_to "Get started", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+            <li class="x-govuk-primary-navigation__item"><%= link_to "What can you do in the API", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+            <li class="x-govuk-primary-navigation__item"><%= link_to "Definitions", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+            <li class="x-govuk-primary-navigation__item"><%= link_to "API latest version", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+            <li class="x-govuk-primary-navigation__item"><%= link_to "Test environment", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+          </ul>
+        </div>
+      </nav>
+
+      <!--<div data-controller="searchbar">
+        <label for="searchbar-autocomplete">Search API</label>
+        <div id="searchbar-autocomplete-container"></div>
+      </div>-->
+
+      <main class="govuk-main-wrapper api-guidance" id="main-content" role="main">
+        <%= render partial: "layouts/shared/messages" %>
+
+        <div class="govuk-grid-row">
+          <% if @sub_heading_links.present? %>
+            <div class="govuk-grid-column-one-quarter">
+              <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+                <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
+                <ul class="x-govuk-sub-navigation__section">
+                  <% @sub_heading_links.each do |link| %>
+                    <li class="x-govuk-sub-navigation__section-item"><%= link_to(link[:text], link[:href], class: "x-govuk-sub-navigation__link") %></li>
+                  <% end %>
+                </ul>
+              </nav>
+            </div>
+
+            <div class="govuk-grid-column-three-quarters">
+              <%= yield %>
+            </div>
+          <% else %>
+            <div class="govuk-grid-column-full">
+              <%= yield %>
+            </div>
+          <% end %>
+        </div>
+        <% if @sub_heading_links.present? %>
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-quarter">
+              <%= link_to("↑ Back to top", "#top") %>
+            </div>
+          </div>
+        <% end %>
+      </main>
+    </div>
+  </body>
+
+  <%= render partial: "layouts/shared/footer" %>
+</html>

@@ -447,6 +447,7 @@ GEM
       ffi (~> 1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redcarpet (3.3.2)
     regexp_parser (2.9.0)
     reline (0.4.3)
       io-console (~> 0.5)
@@ -461,6 +462,7 @@ GEM
       railties (>= 5.2)
     retriable (3.1.2)
     rexml (3.2.6)
+    rouge (4.2.0)
     rspec-core (3.13.0)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.0)
@@ -687,6 +689,8 @@ DEPENDENCIES
   puma (~> 6.4.2)
   rack-attack
   rails (~> 7)
+  redcarpet (= 3.3.2)
+  rouge
   rspec-rails (~> 6.1.1)
   rubocop-govuk
   rubyzip
