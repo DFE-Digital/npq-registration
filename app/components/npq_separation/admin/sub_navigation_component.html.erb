@@ -2,7 +2,7 @@
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
     <ul class="x-govuk-sub-navigation__section">
       <% sections.each do |section| %>
-      <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
+      <%= tag.li(class: class_names("x-govuk-sub-navigation__section-item", "x-govuk-sub-navigation__section-item--current" => current?(section.prefix))) do %>
         <%= sub_navigation_link(section) %>
 
         <% if section.nodes.present? %>
@@ -14,7 +14,7 @@
             <% end %>
           </ul>
         <% end %>
-      </li>
+      <% end %>
     <% end %>
   </ul>
 </nav>
