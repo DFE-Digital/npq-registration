@@ -31,5 +31,3 @@ Rails.logger.info("Seeding database")
   Rails.logger.info("seeding #{seed_file}")
   load_base_file(seed_file)
 end
-
-PaperTrail.enabled = true

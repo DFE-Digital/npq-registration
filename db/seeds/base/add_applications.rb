@@ -1,3 +1,5 @@
+all_lead_providers = LeadProvider.all
+
 # users with one application each
 FactoryBot.create_list(
   :application,
@@ -5,7 +7,7 @@ FactoryBot.create_list(
   :with_random_user,
   :with_random_work_setting,
   ecf_id: SecureRandom.uuid,
-  lead_provider: LeadProvider.last,
+  lead_provider: all_lead_providers.last,
   course: Course.all.sample,
   lead_provider_approval_status: "accepted",
   participant_outcome_state: "passed",
@@ -20,6 +22,6 @@ FactoryBot.create_list(
   :with_random_work_setting,
   user: FactoryBot.create(:user, :with_random_name),
   ecf_id: SecureRandom.uuid,
-  lead_provider: LeadProvider.all.sample,
+  lead_provider: all_lead_providers.sample,
   course: Course.all.sample,
 )
