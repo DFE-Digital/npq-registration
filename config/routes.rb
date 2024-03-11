@@ -170,7 +170,7 @@ Rails.application.routes.draw do
         resources :applications, only: %i[index]
 
         namespace :finance do
-          resources :statements do
+          resources :statements, only: %i[index show] do
             collection do
               resources :unpaid, controller: "statements/unpaid", only: "index"
               resources :paid, controller: "statements/paid", only: "index"
