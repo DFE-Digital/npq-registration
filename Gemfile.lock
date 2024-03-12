@@ -103,6 +103,7 @@ GEM
     bcrypt (3.1.19)
     bigdecimal (3.1.6)
     bindex (0.8.1)
+    blueprinter (1.0.2)
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     brakeman (6.1.2)
@@ -356,6 +357,8 @@ GEM
       rack (>= 1.2, < 4)
       snaky_hash (~> 2.0)
       version_gem (~> 1.1)
+    oj (3.16.3)
+      bigdecimal (>= 3.0)
     omniauth (2.1.2)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -640,6 +643,7 @@ DEPENDENCIES
   activerecord-session_store
   axe-core-capybara (~> 4.6)
   axe-core-rspec (~> 4.8)
+  blueprinter
   bootsnap (>= 1.1.0)
   brakeman
   byebug
@@ -674,6 +678,7 @@ DEPENDENCIES
   net-imap (~> 0.4.10)
   net-pop
   net-smtp (~> 0.4.0)
+  oj
   omniauth
   omniauth-oauth2
   omniauth-rails_csrf_protection

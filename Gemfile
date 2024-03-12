@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 gem "activerecord-session_store"
+gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
 gem "daemons"
@@ -26,6 +27,7 @@ gem "json_api_client", ">= 1.21.1"
 gem "lograge", ">= 0.11.2"
 gem "logstash-event"
 gem "mail-notify"
+gem "oj"
 gem "omniauth"
 gem "omniauth-oauth2"
 gem "omniauth-rails_csrf_protection"
