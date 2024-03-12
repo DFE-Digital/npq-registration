@@ -1,4 +1,4 @@
-class NpqSeparation::Admin::Finance::LeadProvidersController < NpqSeparation::AdminController
+class NpqSeparation::Admin::LeadProvidersController < NpqSeparation::AdminController
   def index
     @lead_providers = LeadProviders::Find.new.all
   end

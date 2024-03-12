@@ -176,10 +176,9 @@ Rails.application.routes.draw do
               resources :paid, controller: "statements/paid", only: "index"
             end
           end
-
-          resources :lead_providers, only: %i[index show], path: "lead-providers"
         end
 
+        resources :lead_providers, only: %i[index show], path: "lead-providers"
         resources :admins, only: %i[index]
       end
     end

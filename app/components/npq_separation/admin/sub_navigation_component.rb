@@ -2,14 +2,12 @@ module NpqSeparation
   module Admin
     class SubNavigationComponent < ViewComponent::Base
       attr_accessor :current_path
-      attr_reader :lead_providers
 
       Section = Struct.new(:name, :path, :prefix, :nodes, keyword_init: true)
       Node = Struct.new(:name, :path, :prefix, keyword_init: true)
 
-      def initialize(current_path, lead_providers:)
+      def initialize(current_path)
         @current_path = current_path
-        @lead_providers = lead_providers
       end
 
       def sections
@@ -100,26 +98,12 @@ module NpqSeparation
               ),
               Section.new(name: "Declarations", path: "#", prefix: "/npq-separation/admin/finance/declarations"),
               Section.new(name: "Contracts", path: "#", prefix: "/npq-separation/admin/finance/contracts"),
-              Section.new(
-                name: "Lead providers",
-                path: npq_separation_admin_finance_lead_providers_path,
-                prefix: "/npq-separation/admin/finance/lead-providers",
-                nodes: lead_providers.map { |lp| build_lead_provider_node(lp) },
-              ),
             ]
           end,
           "Schools" => -> { [] },
           "Lead providers" => -> { [] },
           "Settings" => -> { [] },
         }
-      end
-
-      def build_lead_provider_node(lead_provider)
-        Node.new(
-          name: lead_provider.name,
-          prefix: npq_separation_admin_finance_lead_provider_path(lead_provider),
-          path: npq_separation_admin_finance_lead_provider_path(lead_provider),
-        )
       end
     end
   end

@@ -25,7 +25,7 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
 
   it "renders a link to each lead provider page" do
     statements.each do |statement|
-      expect(page).to have_link(statement.lead_provider.name, href: "/npq-separation/admin/finance/lead-providers/#{statement.lead_provider.id}")
+      expect(page).to have_link(statement.lead_provider.name, href: "/npq-separation/admin/lead-providers/#{statement.lead_provider.id}")
     end
   end
 

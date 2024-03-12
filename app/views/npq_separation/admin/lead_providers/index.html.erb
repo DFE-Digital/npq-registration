@@ -1,0 +1,12 @@
+<h1 class="govuk-heading-l">Lead providers</h1>
+
+<ul class="govuk-list govuk-list--bullet">
+  <% @lead_providers.each do |lead_provider| %>
+    <%= tag.li(
+      govuk_link_to(
+        lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider),
+        no_visited_state: true,
+      )
+    ) %>
+  <% end %>
+</ul>

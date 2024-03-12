@@ -49,8 +49,8 @@ module NpqSeparation
           ),
           Node.new(
             name: "Lead providers",
-            path: "#",
-            prefix: "/npq-separation/admin/lead_providers",
+            path: npq_separation_admin_lead_providers_path,
+            prefix: "/npq-separation/admin/lead-providers",
           ),
           Node.new(
             name: "Settings",
