@@ -9,7 +9,7 @@ RSpec.describe Migration::Migrator do
   describe ".prepare_for_migration" do
     subject(:prepare) { described_class.prepare_for_migration }
 
-    it { expect { prepare }.to change(Migration::DataMigration, :count).by(1) }
+    it { expect { prepare }.to change(Migration::DataMigration, :count).by(3) }
 
     context "when attempting to prepare multiple times" do
       before { described_class.prepare_for_migration }
@@ -59,6 +59,59 @@ RSpec.describe Migration::Migrator do
 
           expect(Migration::DataMigration.find_by(model: :lead_provider).processed_count).to eq(3)
           expect(Migration::DataMigration.find_by(model: :lead_provider).failure_count).to eq(1)
+        end
+      end
+
+      context "when migrating cohorts" do
+        before do
+          ecf_cohort1 = create(:ecf_migration_cohort, start_year: 2026)
+          ecf_cohort2 = create(:ecf_migration_cohort, start_year: 2029)
+
+          create(:cohort, start_year: ecf_cohort1.start_year)
+          create(:cohort, start_year: ecf_cohort2.start_year)
+        end
+
+        it "migrates the cohorts" do
+          migrate
+
+          expect(Migration::DataMigration.find_by(model: :cohort).processed_count).to eq(2)
+        end
+
+        it "increments the failure count when a cohort is not correctly created" do
+          create(:ecf_migration_cohort, registration_start_date: nil)
+
+          migrate
+
+          expect(Migration::DataMigration.find_by(model: :cohort).processed_count).to eq(3)
+          expect(Migration::DataMigration.find_by(model: :cohort).failure_count).to eq(1)
+        end
+      end
+
+      context "when migrating statements" do
+        before do
+          ecf_statement1 = create(:ecf_migration_statement, name: "July 2026")
+          ecf_statement2 = create(:ecf_migration_statement, name: "January 2030")
+
+          lead_provider1 = create(:lead_provider, ecf_id: ecf_statement1.npq_lead_provider.id)
+          lead_provider2 = create(:lead_provider, ecf_id: ecf_statement2.npq_lead_provider.id)
+
+          create(:statement, month: 7, year: 2026, lead_provider: lead_provider1)
+          create(:statement, month: 1, year: 2030, lead_provider: lead_provider2)
+        end
+
+        it "migrates the statements" do
+          migrate
+
+          expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(2)
+        end
+
+        it "increments the failure count when a statement is not correctly created" do
+          create(:ecf_migration_statement, output_fee: nil)
+
+          migrate
+
+          expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(3)
+          expect(Migration::DataMigration.find_by(model: :statement).failure_count).to eq(1)
         end
       end
     end
