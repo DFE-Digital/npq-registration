@@ -1,10 +1,8 @@
 require "webdrivers"
 Webdrivers.install_dir = [Webdrivers.install_dir, ENV["TEST_ENV_NUMBER"]].compact.join(File::SEPARATOR)
 
-if ENV["TEST_ENV_NUMBER"].nil?
-  require "simplecov"
-  SimpleCov.start "rails"
-end
+require "simplecov"
+SimpleCov.start "rails"
 
 require "webmock/rspec"
 require "with_model"
@@ -93,7 +91,7 @@ RSpec.configure do |config|
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an
   # individual spec file.
-  if config.files_to_run.one? && ENV["TEST_ENV_NUMBER"].nil?
+  if config.files_to_run.one?
     # Use the documentation formatter for detailed output,
     # unless a formatter has already been configured
     # (e.g. via a command-line flag).
