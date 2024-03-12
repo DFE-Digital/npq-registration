@@ -14,6 +14,6 @@ module Statements
 
   private
 
-    attr_reader :lead_provider, :params
+    attr_reader :lead_provider
   end
 end
