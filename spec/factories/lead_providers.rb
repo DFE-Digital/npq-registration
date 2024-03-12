@@ -1,9 +1,11 @@
 FactoryBot.define do
   factory :lead_provider do
-    name { Faker::Company.unique.name }
-    created_at { Faker::Time.between(from: 2.years.ago, to: Time.zone.now) }
-    updated_at { created_at }
-    ecf_id { Faker::Alphanumeric.alphanumeric(number: 10) }
+    name { LeadProvider::ALL_PROVIDERS.keys.sample }
+    ecf_id { LeadProvider::ALL_PROVIDERS.values.sample }
     hint { Faker::Lorem.sentence }
+
+    initialize_with do
+      LeadProvider.find_by(name:) || new(**attributes)
+    end
   end
 end
