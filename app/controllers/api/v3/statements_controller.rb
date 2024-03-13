@@ -2,11 +2,11 @@ module API
   module V3
     class StatementsController < BaseController
       def index
-        render json: StatementSerializer.render(statements_query.statements, root: "data")
+        render json: to_json(statements_query.statements)
       end
 
       def show
-        render json: StatementSerializer.render(statements_query.statement(id: statement_params[:id]), root: "data")
+        render json: to_json(statements_query.statement(id: statement_params[:id]))
       end
 
     private
@@ -19,6 +19,10 @@ module API
 
       def statement_params
         params.permit(:id)
+      end
+
+      def to_json(obj)
+        StatementSerializer.render(obj, root: "data")
       end
     end
   end
