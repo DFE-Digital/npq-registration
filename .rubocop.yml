@@ -30,6 +30,12 @@ Style/HashLikeCase:
 Style/StringLiteralsInInterpolation:
   Enabled: false
 
+Style/SignalException:
+  Enabled: false
+
+Rails/IndexWith:
+  Enabled: false
+
 Lint/MissingSuper:
   Enabled: false
 

@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::PrimaryNavigationComponent, type: :component do
+  let(:admin_structure) { NpqSeparation::Admin::PrimaryNavigationComponent::AdminNavigationStructure }
   let(:path) { "/some-path" }
 
   before { render_inline(NpqSeparation::Admin::PrimaryNavigationComponent.new(path)) }
