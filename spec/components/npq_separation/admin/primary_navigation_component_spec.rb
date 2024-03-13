@@ -19,7 +19,7 @@ RSpec.describe NpqSeparation::Admin::PrimaryNavigationComponent, type: :componen
       "Applications" => "/npq-separation/admin/applications",
       "Finance" => "/npq-separation/admin/finance/statements",
       "Schools" => "#",
-      "Lead providers" => "#",
+      "Lead providers" => "/npq-separation/admin/lead-providers",
       "Settings" => "#",
     }.each do |text, href|
       expect(rendered_content).to have_css(%(ul > li.x-govuk-primary-navigation__item a.x-govuk-primary-navigation__link[href="#{href}"]), text:)

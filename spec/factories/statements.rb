@@ -16,5 +16,9 @@ FactoryBot.define do
 
     trait(:open) { state { "open" } }
     trait(:payable) { state { "payable" } }
+
+    trait(:with_existing_lead_provider) do
+      lead_provider { LeadProvider.all.sample }
+    end
   end
 end

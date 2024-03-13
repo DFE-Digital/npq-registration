@@ -1,6 +1,6 @@
 module NpqSeparation
   module Admin
-    class SecondaryNavigationComponent < ViewComponent::Base
+    class SubNavigationComponent < ViewComponent::Base
       attr_accessor :current_path
 
       Section = Struct.new(:name, :path, :prefix, :nodes, keyword_init: true)
@@ -11,14 +11,14 @@ module NpqSeparation
       end
 
       def sections
-        structure.fetch(current_section)
+        structure.fetch(current_section).call
       end
 
       def render?
         current_section.present?
       end
 
-      def secondary_navigation_link(section)
+      def sub_navigation_link(section)
         link_to(
           section.name,
           section.path,
@@ -27,7 +27,7 @@ module NpqSeparation
         )
       end
 
-      def secondary_navigation_item_link(node)
+      def sub_navigation_item_link(node)
         link_to(
           node.name,
           node.path,
@@ -71,35 +71,38 @@ module NpqSeparation
 
       def structure
         {
-          "Dashboard" => [
-            Section.new(
-              name: "Summary",
-              path: npq_separation_admin_dashboards_summary_path,
-              prefix: "/npq-separation/admin/dashboard",
-              nodes: [
-                Node.new(name: "Dashboard 1", path: "#", prefix: "/npq-separation/admin/dashboards/one"),
-                Node.new(name: "Dashboard 2", path: "#", prefix: "/npq-separation/admin/dashboards/two"),
-              ],
-            ),
-          ],
-          "Applications" => [],
-          "Finance" => [
-            Section.new(
-              name: "Statements",
-              path: npq_separation_admin_finance_statements_path,
-              prefix: "/npq-separation/admin/finance/statements",
-              nodes: [
-                Node.new(name: "Unpaid statements", path: npq_separation_admin_finance_unpaid_index_path, prefix: "/npq-separation/admin/finance/statements/unpaid"),
-                Node.new(name: "Paid statements", path: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
-              ],
-            ),
-            Section.new(name: "Declarations", path: "#", prefix: "/npq-separation/admin/finance/declarations"),
-            Section.new(name: "Contracts", path: "#", prefix: "/npq-separation/admin/finance/contracts"),
-          ],
-          "Schools" => [],
-          "Lead providers" => [],
-          "Settings" => [],
-          "Dashboards" => [],
+          "Dashboard" => lambda do
+            [
+              Section.new(
+                name: "Summary",
+                path: npq_separation_admin_dashboards_summary_path,
+                prefix: "/npq-separation/admin/dashboard",
+                nodes: [
+                  Node.new(name: "Dashboard 1", path: "#", prefix: "/npq-separation/admin/dashboards/one"),
+                  Node.new(name: "Dashboard 2", path: "#", prefix: "/npq-separation/admin/dashboards/two"),
+                ],
+              ),
+            ]
+          end,
+          "Applications" => -> { [] },
+          "Finance" => lambda do
+            [
+              Section.new(
+                name: "Statements",
+                path: npq_separation_admin_finance_statements_path,
+                prefix: "/npq-separation/admin/finance/statements",
+                nodes: [
+                  Node.new(name: "Unpaid statements", path: npq_separation_admin_finance_unpaid_index_path, prefix: "/npq-separation/admin/finance/statements/unpaid"),
+                  Node.new(name: "Paid statements", path: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
+                ],
+              ),
+              Section.new(name: "Declarations", path: "#", prefix: "/npq-separation/admin/finance/declarations"),
+              Section.new(name: "Contracts", path: "#", prefix: "/npq-separation/admin/finance/contracts"),
+            ]
+          end,
+          "Schools" => -> { [] },
+          "Lead providers" => -> { [] },
+          "Settings" => -> { [] },
         }
       end
     end
