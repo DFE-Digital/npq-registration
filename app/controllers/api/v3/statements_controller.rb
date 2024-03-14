@@ -12,13 +12,23 @@ module API
     private
 
       def statements_query
-        ::Statements::Query.new(
+        Statements::Query.new(
           lead_provider: current_lead_provider,
+          cohorts_start_years: cohort_start_years,
+          updated_since:,
         )
       end
 
       def statement_params
-        params.permit(:id)
+        params.permit(:id, :cohort, filter: %i[cohort updated_since])
+      end
+
+      def cohort_start_years
+        statement_params.dig(:filter, :cohort)
+      end
+
+      def updated_since
+        statement_params.dig(:filter, :updated_since)
       end
 
       def to_json(obj)

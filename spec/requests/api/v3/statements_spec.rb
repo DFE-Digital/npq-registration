@@ -24,12 +24,40 @@ RSpec.describe "Statements endpoint", type: "request" do
         end
       end
 
-      context "when not statements exist" do
+      context "when no statements exist" do
         it "returns empty" do
           api_get("/api/v3/statements")
 
           expect(response.status).to eq 200
           expect(parsed_response["data"].size).to eq(0)
+        end
+      end
+
+      describe "filtering" do
+        describe "by cohort" do
+          let(:cohort_2023) { create(:cohort, start_year: 2023) }
+          let(:cohort_2024) { create(:cohort, start_year: 2024) }
+          let(:cohort_2025) { create(:cohort, start_year: 2025) }
+
+          it "returns statements for the specified cohort" do
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2023)
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2024)
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2025)
+
+            api_get("/api/v3/statements", params: { filter: { cohort: "2023,2024" } })
+
+            expect(parsed_response["data"].size).to eq(2)
+          end
+        end
+
+        describe "by updated_since" do
+          it "returns statements updated since the specified date" do
+            create(:statement, lead_provider: current_lead_provider, updated_at: 2.hours.ago)
+
+            api_get("/api/v3/statements", params: { filter: { updated_since: 1.hour.ago } })
+
+            expect(parsed_response["data"].size).to be_zero
+          end
         end
       end
     end
