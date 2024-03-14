@@ -24,7 +24,7 @@ RSpec.describe "Statements endpoint", type: "request" do
         end
       end
 
-      context "when not statements exist" do
+      context "when no statements exist" do
         it "returns empty" do
           api_get("/api/v3/statements")
 
