@@ -1,12 +1,13 @@
 module API
   module V3
     class StatementsController < BaseController
+      include Pagination
       include ::API::Concerns::FilterByUpdatedSince
 
       before_action :validate_updated_since, only: %i[index]
 
       def index
-        render json: to_json(statements_query.statements)
+        render json: to_json(paginate(statements_query.statements))
       end
 
       def show

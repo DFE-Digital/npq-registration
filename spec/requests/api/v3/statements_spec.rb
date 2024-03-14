@@ -71,6 +71,26 @@ RSpec.describe "Statements endpoint", type: "request" do
           end
         end
       end
+
+      context "with pagination" do
+        before do
+          create_list(:statement, 8, lead_provider: current_lead_provider)
+        end
+
+        it "returns 5 statements on page 1" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 1 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(5)
+        end
+
+        it "returns 3 statements on page 2" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 2 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(3)
+        end
+      end
     end
 
     context "when unauthorized" do
