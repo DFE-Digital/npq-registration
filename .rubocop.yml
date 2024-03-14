@@ -42,6 +42,10 @@ Rails/Delegate:
 Style/DoubleNegation:
   Enabled: false
 
+Rails/FindEach:
+  Exclude:
+    - 'spec/features/api/documentation_spec.rb'
+
 Rails/SaveBang:
   Exclude:
     - "app/models/external/ecf_api/base.rb"
