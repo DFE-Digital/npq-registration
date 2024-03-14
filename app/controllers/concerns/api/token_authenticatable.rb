@@ -26,7 +26,7 @@ module API
     end
 
     def current_lead_provider
-      @current_api_token&.owner
+      @current_api_token&.lead_provider
     end
   end
 end

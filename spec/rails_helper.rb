@@ -113,6 +113,19 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before(:each, exceptions_app: true) do
+    # Make the app behave how it does in non dev/test environments and use the
+    # ErrorsController via config.exceptions_app = routes in config/application.rb
+    method = Rails.application.method(:env_config)
+    expect(Rails.application).to receive(:env_config).with(no_args) do
+      method.call.merge(
+        "action_dispatch.show_exceptions" => :all,
+        "action_dispatch.show_detailed_exceptions" => false,
+        "consider_all_requests_local" => false,
+      )
+    end
+  end
+
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai

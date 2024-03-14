@@ -5,7 +5,9 @@ module Statements
     end
 
     def statements
-      Statement.where(lead_provider:)
+      Statement
+        .includes(:cohort)
+        .where(lead_provider:)
     end
 
     def statement(id:)

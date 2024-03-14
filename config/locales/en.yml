@@ -3,6 +3,7 @@ en:
   unpermitted_parameters: "Unpermitted parameters"
   unauthorized: "HTTP Token: Access denied"
   bad_request: "Bad request"
+  not_found: "Not found"
 
   time:
     formats:

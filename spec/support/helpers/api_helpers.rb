@@ -27,10 +27,13 @@ module Helpers
     end
 
     def parsed_response
-      JSON.parse(response.body)
+      Oj.load(response.body)
     end
 
-    def lead_provider_token(lead_provider: FactoryBot.create(:lead_provider))
+    def lead_provider_token
+      lead_provider = current_lead_provider if defined?(current_lead_provider)
+      lead_provider ||= FactoryBot.create(:lead_provider)
+
       APIToken.create_with_random_token!(lead_provider:)
     end
   end
