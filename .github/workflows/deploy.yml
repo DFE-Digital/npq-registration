@@ -23,6 +23,10 @@ jobs:
     name: RSpec
     uses: ./.github/workflows/rspec.yml
 
+  openapi:
+    name: Lead Provider OpenAPI Check
+    uses: ./.github/workflows/lead_provider_openapi_check.yml
+
   all-checks-passed:
     name: All checks passed
     needs: [lint, rspec]
