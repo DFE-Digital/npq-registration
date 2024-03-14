@@ -12,10 +12,10 @@ module API
     private
 
       def statements_query
-        ::Statements::Query.new
-                           .by_lead_provider(current_lead_provider)
-                           .by_cohorts(cohorts)
-                           .since(updated_since)
+        Statements::Query.new
+                         .by_lead_provider(current_lead_provider)
+                         .by_cohorts(cohorts)
+                         .since(updated_since)
       end
 
       def statement_params
