@@ -19,15 +19,15 @@ module API
       end
 
       def statement_params
-        params.permit(:id)
+        params.permit(:id, :cohort, filter: %i[cohort updated_since])
       end
 
       def cohorts
-        params.dig(:filter, :cohort)&.split(",")
+        statement_params.dig(:filter, :cohort)&.split(",")
       end
 
       def updated_since
-        params.dig(:filter, :updated_since)
+        statement_params.dig(:filter, :updated_since)
       end
 
       def to_json(obj)
