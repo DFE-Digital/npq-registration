@@ -11,7 +11,7 @@ module NpqSeparation
       end
 
       def sections
-        structure.fetch(current_section).call
+        structure.fetch(current_section)
       end
 
       def render?
@@ -71,38 +71,34 @@ module NpqSeparation
 
       def structure
         {
-          "Dashboard" => lambda do
-            [
-              Section.new(
-                name: "Summary",
-                path: npq_separation_admin_dashboards_summary_path,
-                prefix: "/npq-separation/admin/dashboard",
-                nodes: [
-                  Node.new(name: "Dashboard 1", path: "#", prefix: "/npq-separation/admin/dashboards/one"),
-                  Node.new(name: "Dashboard 2", path: "#", prefix: "/npq-separation/admin/dashboards/two"),
-                ],
-              ),
-            ]
-          end,
-          "Applications" => -> { [] },
-          "Finance" => lambda do
-            [
-              Section.new(
-                name: "Statements",
-                path: npq_separation_admin_finance_statements_path,
-                prefix: "/npq-separation/admin/finance/statements",
-                nodes: [
-                  Node.new(name: "Unpaid statements", path: npq_separation_admin_finance_unpaid_index_path, prefix: "/npq-separation/admin/finance/statements/unpaid"),
-                  Node.new(name: "Paid statements", path: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
-                ],
-              ),
-              Section.new(name: "Declarations", path: "#", prefix: "/npq-separation/admin/finance/declarations"),
-              Section.new(name: "Contracts", path: "#", prefix: "/npq-separation/admin/finance/contracts"),
-            ]
-          end,
-          "Schools" => -> { [] },
-          "Lead providers" => -> { [] },
-          "Settings" => -> { [] },
+          "Dashboard" => [
+            Section.new(
+              name: "Summary",
+              path: npq_separation_admin_dashboards_summary_path,
+              prefix: "/npq-separation/admin/dashboard",
+              nodes: [
+                Node.new(name: "Dashboard 1", path: "#", prefix: "/npq-separation/admin/dashboards/one"),
+                Node.new(name: "Dashboard 2", path: "#", prefix: "/npq-separation/admin/dashboards/two"),
+              ],
+            ),
+          ],
+          "Applications" => [],
+          "Finance" => [
+            Section.new(
+              name: "Statements",
+              path: npq_separation_admin_finance_statements_path,
+              prefix: "/npq-separation/admin/finance/statements",
+              nodes: [
+                Node.new(name: "Unpaid statements", path: npq_separation_admin_finance_unpaid_index_path, prefix: "/npq-separation/admin/finance/statements/unpaid"),
+                Node.new(name: "Paid statements", path: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
+              ],
+            ),
+            Section.new(name: "Declarations", path: "#", prefix: "/npq-separation/admin/finance/declarations"),
+            Section.new(name: "Contracts", path: "#", prefix: "/npq-separation/admin/finance/contracts"),
+          ],
+          "Schools" => [],
+          "Lead providers" => [],
+          "Settings" => [],
         }
       end
     end
