@@ -70,6 +70,12 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
       end
     end
 
+    it "serializes the `ecf_id`" do
+      statement.ecf_id = "123456"
+
+      expect(attributes["ecf_id"]).to eq("123456")
+    end
+
     describe "timestamp serialization" do
       it "serializes the `created_at`" do
         statement.created_at = Time.utc(2023, 7, 1, 12, 0, 0)

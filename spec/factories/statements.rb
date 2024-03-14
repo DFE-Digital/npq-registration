@@ -8,6 +8,7 @@ FactoryBot.define do
     lead_provider { association :lead_provider }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     state { "open" }
+    ecf_id { SecureRandom.uuid }
 
     trait(:paid) do
       state { "paid" }

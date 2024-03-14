@@ -17,6 +17,7 @@ module API
         field :deadline_date, name: :cut_off_date, datetime_format: "%Y-%m-%d"
         field :payment_date, datetime_format: "%Y-%m-%d"
         field(:paid) { |s, _| s.payment_date.present? }
+        field :ecf_id
         field :created_at
         field :updated_at
       end
