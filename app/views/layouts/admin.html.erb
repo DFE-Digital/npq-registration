@@ -18,9 +18,9 @@
 
     <div class="govuk-width-container">
       <%
-        primary_navigation = NpqSeparation::Admin::PrimaryNavigationComponent.new(
+        primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(
           request.path,
-          structure: NpqSeparation::Admin::PrimaryNavigationComponent::AdminNavigationStructure.new
+          structure: NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure.new
         )
       %>
       <%= render(primary_navigation) %>
@@ -30,10 +30,10 @@
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
             <%=
-              render NpqSeparation::Admin::SubNavigationComponent.new(
+              render NpqSeparation::SubNavigationComponent.new(
                 request.path,
                 current_section: primary_navigation.current_section.name,
-                structure: NpqSeparation::Admin::SubNavigationComponent::AdminNavigationStructure.new
+                structure: NpqSeparation::SubNavigationComponent::AdminNavigationStructure.new
               )
             %>
           </div>

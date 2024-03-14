@@ -1,6 +1,6 @@
 require "rails_helper"
 
-class TestSubNavigationStructure < NpqSeparation::Admin::SubNavigationComponent::SubNavigationStructure
+class TestSubNavigationStructure < NpqSeparation::SubNavigationComponent::SubNavigationStructure
   def sections
     {
       "First" => [
@@ -29,12 +29,12 @@ class TestSubNavigationStructure < NpqSeparation::Admin::SubNavigationComponent:
   end
 end
 
-RSpec.describe NpqSeparation::Admin::SubNavigationComponent, type: :component do
+RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   let(:current_path) { "/some-path" }
   let(:current_section) { "First" }
 
   subject do
-    NpqSeparation::Admin::SubNavigationComponent.new(current_path, current_section:, structure: TestSubNavigationStructure.new)
+    NpqSeparation::SubNavigationComponent.new(current_path, current_section:, structure: TestSubNavigationStructure.new)
   end
 
   it "renders a visually hidden level 2 heading" do

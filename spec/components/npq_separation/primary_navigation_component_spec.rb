@@ -1,6 +1,6 @@
 require "rails_helper"
 
-class TestPrimaryNavigationStructure < NpqSeparation::Admin::PrimaryNavigationComponent::PrimaryNavigationStructure
+class TestPrimaryNavigationStructure < NpqSeparation::PrimaryNavigationComponent::PrimaryNavigationStructure
   def sections
     [
       Node.new(
@@ -17,11 +17,11 @@ class TestPrimaryNavigationStructure < NpqSeparation::Admin::PrimaryNavigationCo
   end
 end
 
-RSpec.describe NpqSeparation::Admin::PrimaryNavigationComponent, type: :component do
+RSpec.describe NpqSeparation::PrimaryNavigationComponent, type: :component do
   let(:current_path) { "/some-path" }
 
   subject do
-    NpqSeparation::Admin::PrimaryNavigationComponent.new(current_path, structure: TestPrimaryNavigationStructure.new)
+    NpqSeparation::PrimaryNavigationComponent.new(current_path, structure: TestPrimaryNavigationStructure.new)
   end
 
   it "renders a visually hidden level 2 heading" do
@@ -79,9 +79,9 @@ RSpec.describe NpqSeparation::Admin::PrimaryNavigationComponent, type: :componen
     end
   end
 
-  describe NpqSeparation::Admin::PrimaryNavigationComponent::AdminNavigationStructure do
+  describe NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure do
     describe "#sections" do
-      subject { NpqSeparation::Admin::PrimaryNavigationComponent::AdminNavigationStructure.new.sections }
+      subject { NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure.new.sections }
 
       {
         "Dashboard" => "/npq-separation/admin",
