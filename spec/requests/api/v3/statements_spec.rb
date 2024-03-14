@@ -32,6 +32,24 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(parsed_response["data"].size).to eq(0)
         end
       end
+
+      describe "filtering" do
+        describe "by cohort" do
+          let(:cohort_2023) { create(:cohort, start_year: 2023) }
+          let(:cohort_2024) { create(:cohort, start_year: 2024) }
+          let(:cohort_2025) { create(:cohort, start_year: 2025) }
+
+          it "returns statements for the specified cohort" do
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2023)
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2024)
+            create(:statement, lead_provider: current_lead_provider, cohort: cohort_2025)
+
+            api_get("/api/v3/statements", params: { filter: { cohort: "2023,2024" } })
+
+            expect(parsed_response["data"].size).to eq(2)
+          end
+        end
+      end
     end
 
     context "when unauthorized" do

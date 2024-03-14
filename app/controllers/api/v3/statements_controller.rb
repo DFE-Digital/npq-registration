@@ -12,13 +12,17 @@ module API
     private
 
       def statements_query
-        ::Statements::Query.new(
-          lead_provider: current_lead_provider,
-        )
+        ::Statements::Query.new
+                           .by_lead_provider(current_lead_provider)
+                           .by_cohorts(cohorts)
       end
 
       def statement_params
-        params.permit(:id)
+        params.permit(:id, filter: %i[cohort])
+      end
+
+      def cohorts
+        params[:filter] && params[:filter][:cohort].split(",")
       end
 
       def to_json(obj)
