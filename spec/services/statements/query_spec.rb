@@ -7,7 +7,7 @@ RSpec.describe Statements::Query do
     it "returns all statements for a Lead Provider" do
       statement = create(:statement, lead_provider:)
       query = Statements::Query.new
-                               .by_lead_provider(lead_provider)
+                               .belonging_to(lead_provider:)
 
       expect(query.statements).to eq([statement])
     end
@@ -17,7 +17,7 @@ RSpec.describe Statements::Query do
       create(:statement, lead_provider: other_lead_provider)
 
       query = Statements::Query.new
-                               .by_lead_provider(lead_provider)
+                               .belonging_to(lead_provider:)
 
       expect(query.statements).to eq([])
     end
@@ -32,7 +32,7 @@ RSpec.describe Statements::Query do
           _statement = create(:statement, lead_provider:, cohort: cohort_2023)
           statement = create(:statement, lead_provider:, cohort: cohort_2024)
           query = Statements::Query.new
-                                   .by_lead_provider(lead_provider)
+                                   .belonging_to(lead_provider:)
                                    .by_cohorts(2024)
 
           expect(query.statements).to eq([statement])
@@ -43,7 +43,7 @@ RSpec.describe Statements::Query do
           statement2 = create(:statement, lead_provider:, cohort: cohort_2024)
           _statement = create(:statement, lead_provider:, cohort: cohort_2025)
           query = Statements::Query.new
-                                   .by_lead_provider(lead_provider)
+                                   .belonging_to(lead_provider:)
                                    .by_cohorts(2024, 2023)
 
           expect(query.statements).to match_array([statement1, statement2])
@@ -51,7 +51,7 @@ RSpec.describe Statements::Query do
 
         it "returns no statements if no cohorts are found" do
           query = Statements::Query.new
-                                   .by_lead_provider(lead_provider)
+                                   .belonging_to(lead_provider:)
                                    .by_cohorts(0)
 
           expect(query.statements).to be_empty
@@ -66,7 +66,7 @@ RSpec.describe Statements::Query do
           statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now)
 
           query = Statements::Query.new
-                                   .by_lead_provider(lead_provider)
+                                   .belonging_to(lead_provider:)
                                    .since(updated_since)
 
           expect(query.statements).to eq([statement2])
@@ -79,14 +79,14 @@ RSpec.describe Statements::Query do
     it "returns the statement for a Lead Provider" do
       statement = create(:statement, lead_provider:)
       query = Statements::Query.new
-                               .by_lead_provider(lead_provider)
+                               .belonging_to(lead_provider:)
 
       expect(query.statement(id: statement.id)).to eq(statement)
     end
 
     it "raises an error if the statement does not exist" do
       query = Statements::Query.new
-                               .by_lead_provider(lead_provider)
+                               .belonging_to(lead_provider:)
 
       expect { query.statement(id: 0) }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -96,7 +96,7 @@ RSpec.describe Statements::Query do
       other_statement = create(:statement, lead_provider: other_lead_provider)
 
       query = Statements::Query.new
-                               .by_lead_provider(lead_provider)
+                               .belonging_to(lead_provider:)
 
       expect { query.statement(id: other_statement.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end

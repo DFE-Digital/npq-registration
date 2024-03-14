@@ -13,7 +13,7 @@ module API
 
       def statements_query
         Statements::Query.new
-                         .by_lead_provider(current_lead_provider)
+                         .belonging_to(lead_provider: current_lead_provider)
                          .by_cohorts(cohorts)
                          .since(updated_since)
       end

@@ -4,7 +4,7 @@ module Statements
       @scope = Statement.all
     end
 
-    def by_lead_provider(lead_provider)
+    def belonging_to(lead_provider:)
       @scope = @scope
                  .includes(:cohort)
                  .where(lead_provider:)
