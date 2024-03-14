@@ -63,6 +63,7 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
   gem "rspec-rails", "~> 6.1.2"
+  gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
 end

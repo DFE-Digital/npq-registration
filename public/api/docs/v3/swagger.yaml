@@ -1,0 +1,209 @@
+---
+openapi: 3.0.1
+info:
+  title: NPQ Registration API
+  version: v3
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io/
+paths:
+  api/v3/statements:
+    get:
+      summary: Retrieve financial statements
+      tags:
+      - Statements
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListStatementsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of statements as part of which the DfE will make output
+            payments for participants
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StatementsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+  api/v3/statements/{id}:
+    get:
+      summary: Retrieve a specific financial statement
+      tags:
+      - Statements
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A specific financial statement
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/StatementResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+servers:
+- url: https://register-national-professional-qualifications.sandbox.education.gov.uk/
+components:
+  securitySchemes:
+    api_key:
+      description: Bearer token
+      type: apiKey
+      name: Authorization
+      in: header
+  schemas:
+    PaginationFilter:
+      description: Pagination options to navigate through the list of results.
+      type: object
+      properties:
+        page:
+          type: integer
+          description: The page number to paginate to in the collection. If no value
+            is specified it defaults to the first page.
+          example: 3
+        per_page:
+          type: integer
+          description: The number items to display on a page. Defaults to 100. Maximum
+            is 3000, if the value is greater that the maximum allowed it will fallback
+            to 3000.
+          example: 10
+    ListStatementsFilter:
+      description: Filter statements to return more specific results
+      type: object
+      properties:
+        cohort:
+          description: Return statements associated to the specified cohort or cohorts.
+            This is a comma delimited string of years.
+          type: string
+          example: '2021,2022'
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format)
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    UnauthorisedResponse:
+      description: Authorization information is missing or invalid.
+      type: object
+      properties:
+        error:
+          type: string
+          example: 'HTTP Token: Access denied'
+    NotFoundResponse:
+      description: The requested resource was not found.
+      type: object
+      properties:
+        error:
+          type: string
+          description: Resource not found
+      example:
+        error: Resource not found
+    StatementResponse:
+      description: A financial statement.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/Statement"
+    StatementsResponse:
+      description: A list of financial statement.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Statement"
+    Statement:
+      description: A financial statement.
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type.
+          type: string
+          example: statement
+        attributes:
+          properties:
+            month:
+              description: The month which appears on the statement in the DfE portal.
+              type: string
+              nullable: false
+              example: May
+            year:
+              description: The calendar year which appears on the statement in the
+                dfe portal.
+              type: string
+              nullable: false
+              example: '2022'
+            cohort:
+              description: The cohort - 2021 or 2022 - which the statement funds.
+              type: string
+              nullable: false
+              example: '2021'
+            cut_off_date:
+              description: The milestone cut off or review point for the statement.
+              type: string
+              nullable: false
+              example: '2022-04-30'
+            payment_date:
+              description: The date we expect to pay you for any declarations attached
+                to the statement, which are eligible for payment.
+              type: string
+              nullable: false
+              example: '2022-05-25'
+            paid:
+              description: Indicates whether the DfE has paid providers for any declarations
+                attached to the statement.
+              type: boolean
+              nullable: false
+              example: true
+            created_at:
+              description: The date the statement was created.
+              type: string
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            updated_at:
+              description: The date the statement was last updated.
+              type: string
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+    IDAttribute:
+      description: The unique ID of the resource.
+      type: uuid
+      example: d0b4a32e-a272-489e-b30a-cb17131457fc
