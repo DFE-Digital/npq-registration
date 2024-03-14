@@ -1,56 +1,114 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::SubNavigationComponent, type: :component do
-  let(:fake_logger) { object_double(Rails.logger, error: true) }
-  let(:path) { "/npq-separation/admin" }
+class TestSubNavigationStructure < NpqSeparation::Admin::SubNavigationComponent::SubNavigationStructure
+  def sections
+    {
+      "First" => [
+        Section.new(
+          name: "This is the first page",
+          path: "/first",
+          prefix: "/first",
+          nodes: [
+            Node.new(name: "First part 1", path: "#", prefix: "/first/one"),
+            Node.new(name: "First part 2", path: "#", prefix: "/first/two"),
+          ],
+        ),
+      ],
+      "Second" => [
+        Section.new(
+          name: "This is the second page",
+          path: "/second",
+          prefix: "/second",
+          nodes: [
+            Node.new(name: "Second part 1", path: "#", prefix: "/second/one"),
+            Node.new(name: "Second part 2", path: "#", prefix: "/second/two"),
+          ],
+        ),
+      ],
+    }
+  end
+end
 
-  before do
-    allow(Rails).to receive(:logger).and_return(fake_logger)
-    render_inline(NpqSeparation::Admin::SubNavigationComponent.new(path))
+RSpec.describe NpqSeparation::Admin::SubNavigationComponent, type: :component do
+  let(:current_path) { "/some-path" }
+  let(:current_section) { "First" }
+
+  subject do
+    NpqSeparation::Admin::SubNavigationComponent.new(current_path, current_section:, structure: TestSubNavigationStructure.new)
   end
 
   it "renders a visually hidden level 2 heading" do
+    render_inline(subject)
+
     expect(rendered_content).to have_css("h2.govuk-visually-hidden", text: "Navigation")
   end
 
-  context "when a current path that doesn't match any section prefixes is provided" do
-    let(:path) { "/npq-separation/some-other-path" }
+  context "when an unrecognised section is provided" do
+    let(:current_section) { "Missing" }
 
-    it "doesn't render anything" do
-      expect(rendered_content).to be_empty
-    end
-
-    it "logs an error but doesn't raise" do
-      expect(fake_logger).to have_received(:error).with("No matching admin section for '#{path}'")
+    it "renders a visually hidden level 2 heading" do
+      expect { render_inline(subject) }.to raise_error(KeyError, %(key not found: "#{current_section}"))
     end
   end
 
-  describe "main sections" do
-    # disabling this for now while the navigation structure settles down a bit
-    xdescribe "Dashboard" do
-      context "when the path is '/npq-separation/dashboard'" do
-        let(:path) { "/npq-separation/admin/dashboard" }
-        let(:list_item_matcher) { "ul.x-govuk-sub-navigation__section li.x-govuk-sub-navigation__section-item.x-govuk-sub-navigation__section-item--current" }
-        let(:sublist_item_matcher) { "ul.x-govuk-sub-navigation__section.x-govuk-sub-navigation__section--nested" }
+  it "only renders the provided current_section" do
+    render_inline(subject)
 
-        it "renders the secondary nav with 'Dashboard' marked as current " do
-          expect(rendered_content).to have_css(list_item_matcher)
-          expect(rendered_content).to have_css("#{list_item_matcher} a.x-govuk-sub-navigation__link[aria-current='true']", text: "Summary")
-        end
+    selector = "li.x-govuk-sub-navigation__section-item > a.x-govuk-sub-navigation__link"
 
-        it "renders the nested items beneath 'Dashboard' as extra subnavigation nodes" do
-          { "Dashboard 1" => "#", "Dashboard 2" => "#" }.each do |text, href|
-            expect(page).to have_css("#{list_item_matcher} #{sublist_item_matcher} a[href='#{href}']", text:)
-          end
-        end
+    expect(rendered_content).to have_css(selector, text: "This is the first page")
+    expect(rendered_content).not_to have_css(selector, text: "This is the second page")
+  end
 
-        context "when a subnavigation node is current" do
-          let(:path) { "/npq-separation/admin/dashboards/one" }
+  it "only renders the navigation nodes within the subsection" do
+    render_inline(subject)
 
-          it "adds aria-current to the current subnode" do
-            expect(page).to have_css("#{list_item_matcher} #{sublist_item_matcher} a[aria-current='true'][href='#']", text: "Dashboard 1")
-          end
-        end
+    selector = %w[
+      li.x-govuk-sub-navigation__section-item
+      ul.x-govuk-sub-navigation__section--nested
+      li.x-govuk-sub-navigation__section-item
+      a.x-govuk-sub-navigation__link
+    ].join(" > ")
+
+    expect(rendered_content).to have_css(selector, text: "First part 1")
+    expect(rendered_content).to have_css(selector, text: "First part 2")
+
+    expect(rendered_content).not_to have_css(selector, text: /Second/)
+  end
+
+  describe "highlighting the current section" do
+    context "when the prefix matches the start of the current path" do
+      let(:current_path) { "/second" }
+      let(:current_section) { "Second" }
+
+      it "marks only the section as current" do
+        render_inline(subject)
+
+        selector = "li.x-govuk-sub-navigation__section-item--current"
+
+        expect(rendered_content).to have_css(selector, text: "This is the second page")
+        expect(rendered_content).to have_css(selector, count: 1)
+      end
+    end
+  end
+
+  describe "highlighting the current link in the right subsection" do
+    context "when the prefix matches the start of the current path" do
+      let(:current_path) { "/second/two" }
+      let(:current_section) { "Second" }
+
+      it "marks only the section as current" do
+        render_inline(subject)
+
+        selector = %w[
+          li.x-govuk-sub-navigation__section-item
+          ul.x-govuk-sub-navigation__section--nested
+          li.x-govuk-sub-navigation__section-item
+          a.x-govuk-sub-navigation__link[aria-current="true"]
+        ].join(" > ")
+
+        expect(rendered_content).to have_css(selector, text: "Second part 2")
+        expect(rendered_content).to have_css(selector, count: 1)
       end
     end
   end
