@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe Statements::Query do
   let(:lead_provider) { create(:lead_provider) }
-  let(:statement) { create(:statement, lead_provider:) }
 
   describe "#statements" do
     it "returns all statements for a Lead Provider" do
+      statement = create(:statement, lead_provider:)
       query = Statements::Query.new
                                .by_lead_provider(lead_provider)
 
@@ -24,9 +24,9 @@ RSpec.describe Statements::Query do
 
     describe "filtering" do
       describe "by cohort" do
-        let(:cohort_2023) { create(:cohort, start_year: 2023) }
-        let(:cohort_2024) { create(:cohort, start_year: 2024) }
-        let(:cohort_2025) { create(:cohort, start_year: 2025) }
+        let!(:cohort_2023) { create(:cohort, start_year: 2023) }
+        let!(:cohort_2024) { create(:cohort, start_year: 2024) }
+        let!(:cohort_2025) { create(:cohort, start_year: 2025) }
 
         it "filters by cohort" do
           _statement = create(:statement, lead_provider:, cohort: cohort_2023)
@@ -57,11 +57,27 @@ RSpec.describe Statements::Query do
           expect(query.statements).to be_empty
         end
       end
+
+      describe "by updated_since" do
+        let(:updated_since) { 1.day.ago }
+
+        it "filters by updated since" do
+          create(:statement, lead_provider:, updated_at: 2.days.ago)
+          statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now)
+
+          query = Statements::Query.new
+                                   .by_lead_provider(lead_provider)
+                                   .since(updated_since)
+
+          expect(query.statements).to eq([statement2])
+        end
+      end
     end
   end
 
   describe "#statement" do
     it "returns the statement for a Lead Provider" do
+      statement = create(:statement, lead_provider:)
       query = Statements::Query.new
                                .by_lead_provider(lead_provider)
 

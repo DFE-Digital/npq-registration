@@ -15,14 +15,19 @@ module API
         ::Statements::Query.new
                            .by_lead_provider(current_lead_provider)
                            .by_cohorts(cohorts)
+                           .since(updated_since)
       end
 
       def statement_params
-        params.permit(:id, filter: %i[cohort])
+        params.permit(:id)
       end
 
       def cohorts
-        params[:filter] && params[:filter][:cohort].split(",")
+        params.dig(:filter, :cohort)&.split(",")
+      end
+
+      def updated_since
+        params.dig(:filter, :updated_since)
       end
 
       def to_json(obj)

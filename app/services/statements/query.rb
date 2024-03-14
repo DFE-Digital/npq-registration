@@ -20,6 +20,14 @@ module Statements
       self
     end
 
+    def since(date)
+      if date.present?
+        @scope = @scope.where("updated_at >= ?", date)
+      end
+
+      self
+    end
+
     def statements
       @scope
     end

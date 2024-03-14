@@ -49,6 +49,18 @@ RSpec.describe "Statements endpoint", type: "request" do
             expect(parsed_response["data"].size).to eq(2)
           end
         end
+
+        describe "by updated_since" do
+          it "returns statements updated since the specified date" do
+            create(:statement, lead_provider: current_lead_provider, updated_at: 6.hours.ago)
+            create(:statement, lead_provider: current_lead_provider, updated_at: 3.hours.ago)
+            create(:statement, lead_provider: current_lead_provider, updated_at: 1.hour.ago)
+
+            api_get("/api/v3/statements", params: { filter: { updated_since: 4.hours.ago } })
+
+            expect(parsed_response["data"].size).to eq(2)
+          end
+        end
       end
     end
 
