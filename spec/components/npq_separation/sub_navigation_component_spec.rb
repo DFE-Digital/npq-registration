@@ -1,27 +1,35 @@
 require "rails_helper"
 
-class TestSubNavigationStructure < NpqSeparation::SubNavigationComponent::SubNavigationStructure
-  def sections
+class TestSubNavigationStructure < NpqSeparation::NavigationStructure
+  def structure
     {
-      "First" => [
-        Section.new(
+      Node.new(
+        name: "First",
+        href: "/a",
+        prefix: "/a",
+      ) => [
+        Node.new(
           name: "This is the first page",
-          path: "/first",
-          prefix: "/first",
+          href: "/a/first",
+          prefix: "/a/first",
           nodes: [
-            Node.new(name: "First part 1", path: "#", prefix: "/first/one"),
-            Node.new(name: "First part 2", path: "#", prefix: "/first/two"),
+            Node.new(name: "First part 1", href: "#", prefix: "/a/first/one"),
+            Node.new(name: "First part 2", href: "#", prefix: "/a/first/two"),
           ],
         ),
       ],
-      "Second" => [
-        Section.new(
+      Node.new(
+        name: "Second",
+        href: "/b",
+        prefix: "/b",
+      ) => [
+        Node.new(
           name: "This is the second page",
-          path: "/second",
-          prefix: "/second",
+          href: "/b/second",
+          prefix: "/b/second",
           nodes: [
-            Node.new(name: "Second part 1", path: "#", prefix: "/second/one"),
-            Node.new(name: "Second part 2", path: "#", prefix: "/second/two"),
+            Node.new(name: "Second part 1", href: "#", prefix: "/b/second/one"),
+            Node.new(name: "Second part 2", href: "#", prefix: "/b/second/two"),
           ],
         ),
       ],
@@ -32,9 +40,10 @@ end
 RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   let(:current_path) { "/some-path" }
   let(:current_section) { "First" }
+  let(:structure) { TestSubNavigationStructure.new }
 
   subject do
-    NpqSeparation::SubNavigationComponent.new(current_path, current_section:, structure: TestSubNavigationStructure.new)
+    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section))
   end
 
   it "renders a visually hidden level 2 heading" do
@@ -47,7 +56,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
     let(:current_section) { "Missing" }
 
     it "renders a visually hidden level 2 heading" do
-      expect { render_inline(subject) }.to raise_error(KeyError, %(key not found: "#{current_section}"))
+      expect { render_inline(subject) }.to raise_error(NpqSeparation::NavigationStructure::SectionNotFoundError)
     end
   end
 
@@ -78,7 +87,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
   describe "highlighting the current section" do
     context "when the prefix matches the start of the current path" do
-      let(:current_path) { "/second" }
+      let(:current_path) { "/b/second" }
       let(:current_section) { "Second" }
 
       it "marks only the section as current" do
@@ -94,7 +103,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
   describe "highlighting the current link in the right subsection" do
     context "when the prefix matches the start of the current path" do
-      let(:current_path) { "/second/two" }
+      let(:current_path) { "/b/second/two" }
       let(:current_section) { "Second" }
 
       it "marks only the section as current" do

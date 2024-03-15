@@ -3,15 +3,17 @@ module NpqSeparation
     attr_accessor :current_path, :sections
 
     def initialize(current_path, structure:)
+      fail unless structure.is_a?(NpqSeparation::NavigationStructure)
+
       @current_path = current_path
-      @sections = mark_current(structure)
+      @sections = mark_current(structure.primary_structure)
     end
 
     def build_sections
       safe_join(
         sections.map do |section|
           tag.li(
-            link_to(section.name, section.path, class: "x-govuk-primary-navigation__link"),
+            link_to(section.name, section.href, class: "x-govuk-primary-navigation__link"),
             class: class_names(
               "x-govuk-primary-navigation__item",
               "x-govuk-primary-navigation__item--current" => section == current_section,
@@ -28,58 +30,7 @@ module NpqSeparation
   private
 
     def mark_current(structure)
-      structure.sections.each { |node| node.current = current_path.start_with?(node.prefix) }
-    end
-
-    class PrimaryNavigationStructure
-      include Rails.application.routes.url_helpers
-
-      Node = Struct.new(:name, :path, :prefix, :current, keyword_init: true)
-
-      def sections = fail(NotImplementedError)
-    end
-
-    class AdminNavigationStructure < PrimaryNavigationStructure
-      def sections
-        [
-          Node.new(
-            name: "Dashboard",
-            path: npq_separation_admin_path,
-            prefix: "/npq-separation/admin/dashboard",
-          ),
-          Node.new(
-            name: "Applications",
-            path: npq_separation_admin_applications_path,
-            prefix: "/npq-separation/admin/applications",
-          ),
-          Node.new(
-            name: "Finance",
-            path: npq_separation_admin_finance_statements_path,
-            prefix: "/npq-separation/admin/finance",
-          ),
-          Node.new(
-            name: "Schools",
-            path: "#",
-            prefix: "/npq-separation/admin/schools",
-          ),
-          Node.new(
-            name: "Lead providers",
-            path: "#",
-            prefix: "/npq-separation/admin/lead_providers",
-          ),
-          Node.new(
-            name: "Settings",
-            path: "#",
-            prefix: "/npq-separation/admin/settings",
-          ),
-        ]
-      end
-    end
-
-    class APIGuidanceNavigation < PrimaryNavigationStructure
-      def sections
-        []
-      end
+      structure.each { |node| node.current = current_path.start_with?(node.prefix) }
     end
   end
 end

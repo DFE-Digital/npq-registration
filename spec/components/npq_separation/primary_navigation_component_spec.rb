@@ -1,19 +1,25 @@
 require "rails_helper"
 
-class TestPrimaryNavigationStructure < NpqSeparation::PrimaryNavigationComponent::PrimaryNavigationStructure
-  def sections
-    [
+class TestPrimaryNavigationStructure < NpqSeparation::NavigationStructure
+  def primary_structure
+    structure.keys
+  end
+
+private
+
+  def structure
+    {
       Node.new(
         name: "First",
-        path: "/some-path/first",
+        href: "/some-path/first",
         prefix: "/some-path/first",
-      ),
+      ) => [],
       Node.new(
         name: "Second",
-        path: "/some-path/second",
+        href: "/some-path/second",
         prefix: "/some-path/second",
-      ),
-    ]
+      ) => [],
+    }
   end
 end
 
@@ -39,8 +45,8 @@ RSpec.describe NpqSeparation::PrimaryNavigationComponent, type: :component do
   it "lists the right primary navigation items" do
     render_inline(subject)
 
-    TestPrimaryNavigationStructure.new.sections.each do |section|
-      selector = %(ul > li.x-govuk-primary-navigation__item a.x-govuk-primary-navigation__link[href="#{section.path}"])
+    TestPrimaryNavigationStructure.new.primary_structure.each do |section|
+      selector = %(ul > li.x-govuk-primary-navigation__item a.x-govuk-primary-navigation__link[href="#{section.href}"])
 
       expect(rendered_content).to have_css(selector, text: section.name)
     end
@@ -75,26 +81,6 @@ RSpec.describe NpqSeparation::PrimaryNavigationComponent, type: :component do
       # /admin but actually render /admin/dashboard or whatever
       it "returns the first section by default" do
         expect(subject.current_section.name).to eql("First")
-      end
-    end
-  end
-
-  describe NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure do
-    describe "#sections" do
-      subject { NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure.new.sections }
-
-      {
-        "Dashboard" => "/npq-separation/admin",
-        "Applications" => "/npq-separation/admin/applications",
-        "Finance" => "/npq-separation/admin/finance/statements",
-        "Schools" => "#",
-        "Lead providers" => "#",
-        "Settings" => "#",
-      }.each_with_index do |(name, href), i|
-        it "#{name} with href #{href} is at position #{i + 1}" do
-          expect(subject[i].name).to eql(name)
-          expect(subject[i].path).to eql(href)
-        end
       end
     end
   end

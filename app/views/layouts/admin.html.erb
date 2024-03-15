@@ -17,13 +17,10 @@
     <%= render partial: "layouts/shared/header" %>
 
     <div class="govuk-width-container">
-      <%
-        primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(
-          request.path,
-          structure: NpqSeparation::PrimaryNavigationComponent::AdminNavigationStructure.new
-        )
-      %>
+      <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, structure: admin_navigation_structure) %>
+
       <%= render(primary_navigation) %>
+
       <main class="govuk-main-wrapper" id="main-content" role="main">
         <%= render partial: "layouts/shared/messages" %>
 
@@ -32,8 +29,7 @@
             <%=
               render NpqSeparation::SubNavigationComponent.new(
                 request.path,
-                current_section: primary_navigation.current_section.name,
-                structure: NpqSeparation::SubNavigationComponent::AdminNavigationStructure.new
+                structure: admin_navigation_structure.sub_structure(primary_navigation.current_section.name),
               )
             %>
           </div>

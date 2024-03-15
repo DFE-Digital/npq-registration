@@ -1,7 +1,7 @@
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
     <ul class="x-govuk-sub-navigation__section">
-      <% sections.each do |section| %>
+      <% structure.each do |section| %>
       <%= tag.li(class: navigation_item_classes(section)) do %>
         <%= navigation_link(section) %>
 
