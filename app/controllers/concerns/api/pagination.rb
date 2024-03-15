@@ -3,6 +3,10 @@ module API
     extend ActiveSupport::Concern
     include Pagy::Backend
 
+    included do
+      rescue_from Pagy::VariableError, with: :invalid_pagination_response
+    end
+
   private
 
     def paginate(scope)
@@ -29,6 +33,10 @@ module API
 
     def page_params
       params.permit(page: %i[per_page page])
+    end
+
+    def invalid_pagination_response(_exception)
+      render json: { errors: API::Errors::Response.new(error: I18n.t(:bad_request), params: I18n.t(:invalid_page_parameters)).call }, status: :bad_request
     end
   end
 end

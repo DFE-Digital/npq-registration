@@ -90,6 +90,15 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(response.status).to eq 200
           expect(parsed_response["data"].size).to eq(3)
         end
+
+        it "returns error for statements on page 3" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 3 } })
+
+          expect(response.status).to eq 400
+          expect(parsed_response["errors"].size).to eq(1)
+          expect(parsed_response["errors"][0]["title"]).to eql("Bad request")
+          expect(parsed_response["errors"][0]["detail"]).to eql("The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number")
+        end
       end
     end
 
