@@ -67,7 +67,7 @@ RSpec.describe Statements::Query do
 
           query = Statements::Query.new
                                    .belonging_to(lead_provider:)
-                                   .since(updated_since)
+                                   .updated_since(updated_since)
 
           expect(query.statements).to eq([statement2])
         end

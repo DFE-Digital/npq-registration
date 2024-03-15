@@ -20,7 +20,7 @@ module Statements
       self
     end
 
-    def since(date)
+    def updated_since(date)
       if date.present?
         @scope = @scope.where(updated_at: date..)
       end

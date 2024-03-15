@@ -15,7 +15,7 @@ module API
         Statements::Query.new
                          .belonging_to(lead_provider: current_lead_provider)
                          .by_cohorts(cohorts)
-                         .since(updated_since)
+                         .updated_since(updated_since)
       end
 
       def statement_params
