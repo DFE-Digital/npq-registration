@@ -6,6 +6,7 @@ class Statement < ApplicationRecord
   validates :output_fee, inclusion: [true, false]
   validates :month, numericality: { in: 1..12, only_integer: true }
   validates :year, numericality: { in: 2020..2050, only_integer: true }
+  validates :ecf_id, presence: true, uniqueness: { case_sensitive: false }
 
   validate :validate_max_statement_items_count
 

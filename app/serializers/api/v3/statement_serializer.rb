@@ -1,7 +1,7 @@
 module API
   module V3
     class StatementSerializer < Blueprinter::Base
-      identifier :id
+      identifier :ecf_id, name: :id
       field(:type) { "statement" }
 
       field :attributes do |statement, _options|
@@ -17,7 +17,6 @@ module API
         field :deadline_date, name: :cut_off_date, datetime_format: "%Y-%m-%d"
         field :payment_date, datetime_format: "%Y-%m-%d"
         field(:paid) { |s, _| s.payment_date.present? }
-        field :ecf_id
         field :created_at
         field :updated_at
       end

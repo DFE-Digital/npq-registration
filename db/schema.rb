@@ -321,7 +321,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_12_212008) do
     t.enum "state", default: "open", null: false, enum_type: "statement_states"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "ecf_id"
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["ecf_id"], name: "index_statements_on_ecf_id", unique: true
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
