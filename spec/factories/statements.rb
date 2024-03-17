@@ -9,6 +9,7 @@ FactoryBot.define do
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     state { "open" }
     ecf_id { SecureRandom.uuid }
+    output_fee { true }
 
     trait(:paid) do
       state { "paid" }

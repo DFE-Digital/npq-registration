@@ -20,6 +20,14 @@ RSpec.describe Statements::Query do
       expect(query.statements).to eq([])
     end
 
+    it "return only statements with an output fee" do
+      create(:statement, lead_provider:, output_fee: false)
+
+      query = Statements::Query.new(lead_provider:)
+
+      expect(query.statements).to be_empty
+    end
+
     describe "filtering" do
       describe "by cohort" do
         let!(:cohort_2023) { create(:cohort, start_year: 2023) }
