@@ -14,7 +14,7 @@ module Statements
       scope = scope.where(cohort: { start_year: cohorts_start_years }) if cohorts_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
 
-      scope
+      scope.order(payment_date: :asc)
     end
 
     def statement(id:)

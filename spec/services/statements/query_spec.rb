@@ -28,6 +28,16 @@ RSpec.describe Statements::Query do
       expect(query.statements).to be_empty
     end
 
+    it "orders statements by payment date in ascending order" do
+      statement1 = create(:statement, lead_provider:, payment_date: 2.days.ago)
+      statement2 = create(:statement, lead_provider:, payment_date: 1.day.ago)
+      statement3 = create(:statement, lead_provider:, payment_date: Time.zone.now)
+
+      query = Statements::Query.new(lead_provider:)
+
+      expect(query.statements).to eq([statement1, statement2, statement3])
+    end
+
     describe "filtering" do
       describe "by cohort" do
         let!(:cohort_2023) { create(:cohort, start_year: 2023) }
