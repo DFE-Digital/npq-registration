@@ -1,8 +1,8 @@
 module Statements
   class Query
-    def initialize(lead_provider:, cohorts_start_years: nil, updated_since: nil)
+    def initialize(lead_provider:, cohort_start_years: nil, updated_since: nil)
       @lead_provider = lead_provider
-      @cohorts_start_years = cohorts_start_years&.split(",")
+      @cohort_start_years = cohort_start_years&.split(",")
       @updated_since = updated_since
     end
 
@@ -11,7 +11,7 @@ module Statements
                 .includes(:cohort)
                 .where(lead_provider:, output_fee: true)
 
-      scope = scope.where(cohort: { start_year: cohorts_start_years }) if cohorts_start_years.present?
+      scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
 
       scope.order(payment_date: :asc)
@@ -23,6 +23,6 @@ module Statements
 
   private
 
-    attr_reader :lead_provider, :cohorts_start_years, :updated_since
+    attr_reader :lead_provider, :cohort_start_years, :updated_since
   end
 end

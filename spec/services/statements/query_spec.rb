@@ -47,7 +47,7 @@ RSpec.describe Statements::Query do
         it "filters by cohort" do
           _statement = create(:statement, lead_provider:, cohort: cohort_2023)
           statement = create(:statement, lead_provider:, cohort: cohort_2024)
-          query = Statements::Query.new(lead_provider:, cohorts_start_years: "2024")
+          query = Statements::Query.new(lead_provider:, cohort_start_years: "2024")
 
           expect(query.statements).to eq([statement])
         end
@@ -56,13 +56,13 @@ RSpec.describe Statements::Query do
           statement1 = create(:statement, lead_provider:, cohort: cohort_2023)
           statement2 = create(:statement, lead_provider:, cohort: cohort_2024)
           _statement = create(:statement, lead_provider:, cohort: cohort_2025)
-          query = Statements::Query.new(lead_provider:, cohorts_start_years: "2023,2024")
+          query = Statements::Query.new(lead_provider:, cohort_start_years: "2023,2024")
 
           expect(query.statements).to match_array([statement1, statement2])
         end
 
         it "returns no statements if no cohorts are found" do
-          query = Statements::Query.new(lead_provider:, cohorts_start_years: "0000")
+          query = Statements::Query.new(lead_provider:, cohort_start_years: "0000")
 
           expect(query.statements).to be_empty
         end

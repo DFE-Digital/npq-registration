@@ -14,7 +14,7 @@ module API
       def statements_query
         Statements::Query.new(
           lead_provider: current_lead_provider,
-          cohorts_start_years: cohort_start_years,
+          cohort_start_years: cohort_start_years,
           updated_since:,
         )
       end
