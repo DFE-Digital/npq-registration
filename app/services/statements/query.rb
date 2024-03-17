@@ -9,7 +9,8 @@ module Statements
     def statements
       scope = Statement
                 .includes(:cohort)
-                .where(lead_provider:, output_fee: true)
+                .where(lead_provider:)
+                .with_output_fee
 
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
