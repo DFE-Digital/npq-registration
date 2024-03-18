@@ -49,25 +49,3 @@ We currently have a simple controller that renders out a custom layout to pull i
 We have to use `swagger-ui-dist` instead of `swagger-ui` as the latter doesn't transpile properly with our outdated version of webpacker/webpack.
 
 We plan on replacing Swagger UI with a more accessible/custom documentation solution in the future.
-
-## Limitations
-
-At the moment we have to manually define the models in our swagger schema. There is a test in place to ensure parity between Blueprinter serializers and these models (which will fail if an attribute is added to a serializer but not the schema and vice-versa) however in the future we may be able to build on Blueprinter to auto-generate these schemas.
-
-Currently only the `default` Blueprinter view is supported in the parity checks, however if we find we have multiple views we could extend the functionality.
-
-Blueprinter fields that render other serializers are not supported. We can't traverse the serializer when doing this, so instead we need to make sure to use associations where possible:
-
-```
-association :attributes, blueprint: AttributesSerializer do |statement|
-  statement
-end
-```
-
-Instead of:
-
-```
-field :attributes do |statement, _options|
-  AttributesSerializer.render_as_hash(statement)
-end
-```
