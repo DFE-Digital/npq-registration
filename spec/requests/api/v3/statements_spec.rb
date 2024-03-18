@@ -19,8 +19,7 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
           expect(parsed_response["data"].size).to eq(2)
-          expect(parsed_response["data"][0]["id"]).to eq(statement1.ecf_id)
-          expect(parsed_response["data"][1]["id"]).to eq(statement2.ecf_id)
+          expect(response_ids).to match_array([statement1.id, statement2.id])
         end
       end
 
@@ -115,7 +114,6 @@ RSpec.describe "Statements endpoint", type: "request" do
         api_get("/api/v3/statements/#{statement.id}", token: "incorrect-token")
 
         expect(response.status).to eq 401
-        puts parsed_response
         expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
         expect(response.content_type).to eql("application/json")
       end

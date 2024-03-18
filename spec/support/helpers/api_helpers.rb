@@ -30,6 +30,10 @@ module Helpers
       Oj.load(response.body)
     end
 
+    def response_ids
+      parsed_response["data"].map { |statement| statement["id"] }
+    end
+
     def lead_provider_token
       lead_provider = current_lead_provider if defined?(current_lead_provider)
       lead_provider ||= FactoryBot.create(:lead_provider)
