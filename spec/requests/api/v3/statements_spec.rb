@@ -54,9 +54,21 @@ RSpec.describe "Statements endpoint", type: "request" do
           it "returns statements updated since the specified date" do
             create(:statement, lead_provider: current_lead_provider, updated_at: 2.hours.ago)
 
-            api_get("/api/v3/statements", params: { filter: { updated_since: 1.hour.ago } })
+            api_get("/api/v3/statements", params: { filter: { updated_since: 1.hour.ago.iso8601 } })
 
             expect(parsed_response["data"].size).to be_zero
+          end
+
+          it "returns 400 - bad request for invalid updated_since" do
+            api_get("/api/v3/statements", params: { filter: { updated_since: "invalid" } })
+
+            expect(response.status).to eq 400
+            expect(parsed_response["errors"]).to eq([
+              {
+                "detail" => "The filter '#/updated_since' must be a valid ISO 8601 date",
+                "title" => "Bad request",
+              },
+            ])
           end
         end
       end
@@ -103,6 +115,7 @@ RSpec.describe "Statements endpoint", type: "request" do
         api_get("/api/v3/statements/#{statement.id}", token: "incorrect-token")
 
         expect(response.status).to eq 401
+        puts parsed_response
         expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
         expect(response.content_type).to eql("application/json")
       end

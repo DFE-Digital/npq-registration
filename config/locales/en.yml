@@ -4,6 +4,7 @@ en:
   unauthorized: "HTTP Token: Access denied"
   bad_request: "Bad request"
   not_found: "Not found"
+  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
 
   time:
     formats:

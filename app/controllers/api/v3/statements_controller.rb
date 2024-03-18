@@ -1,6 +1,8 @@
 module API
   module V3
     class StatementsController < BaseController
+      before_action :validate_updated_since, only: %i[index]
+
       def index
         render json: to_json(statements_query.statements)
       end
@@ -33,6 +35,14 @@ module API
 
       def to_json(obj)
         StatementSerializer.render(obj, root: "data")
+      end
+
+      def validate_updated_since
+        return if updated_since.blank?
+
+        Time.iso8601(URI.decode_www_form_component(updated_since))
+      rescue ArgumentError
+        raise ActionController::BadRequest, I18n.t(:invalid_updated_since_filter)
       end
     end
   end
