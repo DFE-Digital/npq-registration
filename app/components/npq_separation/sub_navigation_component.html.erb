@@ -1,15 +1,15 @@
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
     <ul class="x-govuk-sub-navigation__section">
-      <% sections.each do |section| %>
-      <%= tag.li(class: class_names("x-govuk-sub-navigation__section-item", "x-govuk-sub-navigation__section-item--current" => current?(section.prefix))) do %>
-        <%= sub_navigation_link(section) %>
+      <% structure.each do |section| %>
+      <%= tag.li(class: navigation_item_classes(section)) do %>
+        <%= navigation_link(section) %>
 
         <% if section.nodes.present? %>
           <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
             <% section.nodes.each do |node| %>
               <li class="x-govuk-sub-navigation__section-item">
-                <%= sub_navigation_item_link(node) %>
+                <%= navigation_link(node) %>
               </li>
             <% end %>
           </ul>

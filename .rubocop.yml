@@ -30,6 +30,9 @@ Style/HashLikeCase:
 Style/StringLiteralsInInterpolation:
   Enabled: false
 
+Style/SignalException:
+  Enabled: false
+
 Lint/MissingSuper:
   Enabled: false
 
@@ -61,6 +64,9 @@ RSpec/AnyInstance:
   Enabled: false
 
 RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/LeadingSubject:
   Enabled: false
 
 Rails/UnknownEnv:
