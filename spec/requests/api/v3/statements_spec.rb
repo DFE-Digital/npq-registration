@@ -91,8 +91,15 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(parsed_response["data"].size).to eq(3)
         end
 
-        it "returns error for statements on page 3" do
+        it "returns empty for page 3" do
           api_get("/api/v3/statements", params: { page: { per_page: 5, page: 3 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(0)
+        end
+
+        it "returns error when requesting page -1" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: -1 } })
 
           expect(response.status).to eq 400
           expect(parsed_response["errors"].size).to eq(1)
