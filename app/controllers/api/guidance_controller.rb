@@ -1,5 +1,7 @@
 module API
   class GuidanceController < ApplicationController
+    layout "api_guidance"
+
     def index; end
 
     def show
