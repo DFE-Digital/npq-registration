@@ -1,3 +1,5 @@
+### To be replaced with an actual guidance page
+
 #content
 
 This is a markdown page with .md extension
@@ -7,6 +9,6 @@ This is a markdown page with .md extension
   "name": "test",
   "title": "Test",
   "description": "This is a test page",
-  "type": "markdown"cohort_start_years
+  "type": "markdown"
 }
 ```

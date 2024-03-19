@@ -1,4 +1,4 @@
-# nested content
+### To be replaced with an actual guidance page
 
 This is a nested markdown page with .md extension
 
@@ -7,6 +7,6 @@ This is a nested markdown page with .md extension
   "name": "test",
   "title": "Test",
   "description": "This is a test page",
-  "type": "markdown"cohort_start_years
+  "type": "markdown"
 }
 ```
