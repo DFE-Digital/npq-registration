@@ -259,6 +259,9 @@ GEM
       activemodel (>= 6.1)
       activesupport (>= 6.1)
       html-attributes-utils (~> 1)
+    govuk_markdown (2.0.1)
+      activesupport
+      redcarpet
     hashdiff (1.1.0)
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
@@ -447,6 +450,7 @@ GEM
       ffi (~> 1.0)
     rdoc (6.6.2)
       psych (>= 4.0.0)
+    redcarpet (3.6.0)
     regexp_parser (2.9.0)
     reline (0.4.3)
       io-console (~> 0.5)
@@ -664,6 +668,7 @@ DEPENDENCIES
   google-cloud-bigquery
   govuk-components (~> 5.2.1)
   govuk_design_system_formbuilder (~> 5.2.0)
+  govuk_markdown
   httparty (~> 0.21)
   i18n-debug
   iconv
