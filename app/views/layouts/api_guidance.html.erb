@@ -1,5 +1,34 @@
-<p>
-  # app/views/layouts/api_guidance.html.erb
-</p>
+<!DOCTYPE html>
+<html lang="en" class="govuk-template admin--wide">
+<%= render partial: "layouts/shared/head" %>
 
-<%= yield %>
+<body class="govuk-template__body ">
+
+<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+
+<%= render partial: "layouts/shared/header" %>
+
+<div class="govuk-width-container">
+  <nav class="x-govuk-primary-navigation" aria-labelledby="primary-navigation-heading">
+    <div class="govuk-width-container">
+      <h2 class="govuk-visually-hidden" id="primary-navigation-heading">Navigation</h2>
+      <ul class="x-govuk-primary-navigation__list">
+        <li class="x-govuk-primary-navigation__item"><%= link_to "Get started", api_guidance_page_path(page: "test"), class: "x-govuk-primary-navigation__link" %></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="govuk-main-wrapper api-guidance" id="main-content" role="main">
+    <%= render partial: "layouts/shared/messages" %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <%= yield %>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+
+<%= render partial: "layouts/shared/footer" %>
+</html>
