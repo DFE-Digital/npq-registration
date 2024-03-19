@@ -1,6 +1,6 @@
 class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::AdminController
   def index
-    @statements = Statements::Find.new.all
+    @pagy, @statements = pagy(Statements::Find.new.all)
   end
 
   def show

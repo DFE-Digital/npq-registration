@@ -4,7 +4,7 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
   include Helpers::NPQSeparationAdminLogin
 
   describe "/npq_separation/admin/statements" do
-    let(:fake_statements_find) { instance_double("Statements::Find", all: []) }
+    let(:fake_statements_find) { instance_double("Statements::Find", all: Statement.limit(0)) }
 
     before do
       allow(Statements::Find).to receive(:new).and_return(fake_statements_find)
