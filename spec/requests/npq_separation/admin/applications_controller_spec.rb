@@ -4,7 +4,7 @@ RSpec.describe NpqSeparation::Admin::ApplicationsController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   describe "/npq_separation/admin/applications" do
-    let(:fake_applications_find) { instance_double("Applications::Find", all: []) }
+    let(:fake_applications_find) { instance_double("Applications::Find", all: Application.limit(0)) }
 
     before do
       allow(Applications::Find).to receive(:new).and_return(fake_applications_find)
