@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Statement, type: :model do
+  subject(:statement) { build(:statement) }
+
   describe "relationships" do
     it { is_expected.to belong_to(:cohort).required }
     it { is_expected.to belong_to(:lead_provider).required }
@@ -12,10 +14,10 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to validate_numericality_of(:year).only_integer.is_in(2020..2050) }
     it { is_expected.to allow_value(%w[true false]).for(:output_fee) }
     it { is_expected.not_to allow_value(nil).for(:output_fee) }
+    it { is_expected.to validate_presence_of(:ecf_id) }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive }
 
     describe "Validation for statement items count" do
-      let(:statement) { create(:statement) }
-
       context "when the statement has two or fewer statement items" do
         it "is valid" do
           create_list(:statement_item, 2, statement:)

@@ -101,6 +101,7 @@ module Migration
                  else
                    ecf_statement.type == "Finance::Statement::NPQ::Paid" ? :paid : :open
                  end,
+          ecf_id: ecf_statement.id,
         )
         result
       end

@@ -19,8 +19,8 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
           expect(parsed_response["data"].size).to eq(2)
-          expect(parsed_response["data"][0]["id"]).to eq(statement1.id)
-          expect(parsed_response["data"][1]["id"]).to eq(statement2.id)
+          expect(parsed_response["data"][0]["id"]).to eq(statement1.ecf_id)
+          expect(parsed_response["data"][1]["id"]).to eq(statement2.ecf_id)
         end
       end
 
@@ -55,7 +55,7 @@ RSpec.describe "Statements endpoint", type: "request" do
 
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
-          expect(parsed_response["data"]["id"]).to eq(statement.id)
+          expect(parsed_response["data"]["id"]).to eq(statement.ecf_id)
         end
       end
 

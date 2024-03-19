@@ -1,7 +1,7 @@
 module API
   module V3
     class StatementSerializer < Blueprinter::Base
-      identifier :id
+      identifier :ecf_id, name: :id
       field(:type) { "statement" }
 
       field :attributes do |statement, _options|

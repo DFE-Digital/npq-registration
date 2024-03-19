@@ -11,9 +11,9 @@ RSpec.describe API::V3::StatementSerializer, type: :serializer do
     subject(:response) { JSON.parse(described_class.render(statement)) }
 
     it "serializes the `id`" do
-      cohort.save!
+      statement.ecf_id = "fe1a5280-1b13-4b09-b9c7-e2b01d37e851"
 
-      expect(response["id"]).to eq(statement.id)
+      expect(response["id"]).to eq("fe1a5280-1b13-4b09-b9c7-e2b01d37e851")
     end
 
     it "serializes the `type`" do
