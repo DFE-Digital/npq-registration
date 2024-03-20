@@ -1,13 +1,6 @@
 module API
   module V3
     class StatementSerializer < Blueprinter::Base
-      identifier :ecf_id, name: :id
-      field(:type) { "statement" }
-
-      field :attributes do |statement, _options|
-        AttributesSerializer.render_as_hash(statement)
-      end
-
       class AttributesSerializer < Blueprinter::Base
         exclude :id
 
@@ -19,6 +12,13 @@ module API
         field(:paid) { |s, _| s.payment_date.present? }
         field :created_at
         field :updated_at
+      end
+
+      identifier :ecf_id, name: :id
+      field(:type) { "statement" }
+
+      association :attributes, blueprint: AttributesSerializer do |statement|
+        statement
       end
     end
   end

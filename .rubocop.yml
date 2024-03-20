@@ -42,6 +42,19 @@ Rails/Delegate:
 Style/DoubleNegation:
   Enabled: false
 
+Rails/FindEach:
+  Exclude:
+    - 'spec/features/api/documentation_spec.rb'
+
+RSpec/VariableName:
+  Exclude:
+    - 'spec/requests/api/docs/**/*'
+    - 'spec/support/shared_contexts/api_doc_request_auth.rb'
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/requests/api/docs/**/*'
+
 Rails/SaveBang:
   Exclude:
     - "app/models/external/ecf_api/base.rb"

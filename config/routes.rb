@@ -80,6 +80,7 @@ Rails.application.routes.draw do
     constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
       get :guidance, to: "guidance#index"
       get "guidance/*page", to: "guidance#show", as: :guidance_page
+      get "docs/:version", to: "documentation#index", as: :documentation
     end
 
     namespace :v1 do

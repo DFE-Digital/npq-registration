@@ -47,3 +47,11 @@ h1.govuk-fieldset__heading {
   padding: 20px 20px 0 20px;
   margin-bottom: 20px;
 }
+
+$admin-template-max-width: 1200px;
+
+.govuk-template--wide {
+  .govuk-width-container {
+    max-width: 1200px;
+  }
+}

@@ -1,4 +1,4 @@
-name: "RSpec"
+name: "Lead Provider OpenAPI Check"
 
 on:
   workflow_call:
@@ -16,7 +16,7 @@ on:
 
 jobs:
   rspec:
-    name: Run Rspec
+    name: Check OpenAPI schema
 
     runs-on: ubuntu-latest
 
@@ -64,14 +64,23 @@ jobs:
       - name: Install node.js dependencies
         run: yarn install
 
-      - name: Create screenshots directory
-        run: mkdir -p tmp/capybara
-
       - name: Set up test database
         run: bin/rails db:setup
 
-      - name: Precompile assets
-        run: bundle exec rake assets:precompile
+      - name: Generate API doc checksums (original)
+        run: find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-original.txt
 
-      - name: Run tests
-        run: bundle exec rspec
+      - name: Run swaggerize
+        run: bundle exec rake rswag:specs:swaggerize
+
+      - name: Generate API doc checksums (after swaggerize)
+        run: find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-after-swaggerize.txt
+
+      - name: Compare Checksums
+        run: |
+          if ! diff -q api-doc-checksums-original.txt api-doc-checksums-after-swaggerize.txt; then
+            echo "OpenAPI schema has changed! run rake rswag:specs:swaggerize"
+            exit 1
+          else
+            echo "OpenAPI schema has not changed"
+          fi
