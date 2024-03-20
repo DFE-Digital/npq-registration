@@ -126,7 +126,7 @@ RSpec.describe "Statements endpoint", type: "request" do
         let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
 
         it "returns statement" do
-          api_get("/api/v3/statements/#{statement.id}")
+          api_get("/api/v3/statements/#{statement.ecf_id}")
 
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
@@ -147,7 +147,7 @@ RSpec.describe "Statements endpoint", type: "request" do
       let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
 
       it "returns 401 - unauthorized" do
-        api_get("/api/v3/statements/#{statement.id}", token: "incorrect-token")
+        api_get("/api/v3/statements/#{statement.ecf_id}", token: "incorrect-token")
 
         expect(response.status).to eq 401
         expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
