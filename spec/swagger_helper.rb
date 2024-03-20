@@ -33,7 +33,7 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: "https://#{ENV["DOMAIN"]}/",
+          url: "https://npq-registration-sandbox-web.teacherservices.cloud/",
         },
       ],
       components: {
