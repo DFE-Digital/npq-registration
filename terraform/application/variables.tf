@@ -25,6 +25,9 @@ variable "azure_resource_prefix" {
 variable "config_short" {
   description = "Short name of the environment configuration, e.g. dv, st, pd..."
 }
+variable "domain" {
+  description = "Domain name of the service"
+}
 variable "service_name" {
   description = "Full name of the service. Lowercase and hyphen separated"
 }

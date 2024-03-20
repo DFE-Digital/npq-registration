@@ -33,7 +33,7 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: "https://register-national-professional-qualifications.sandbox.education.gov.uk/",
+          url: "https://#{ENV["DOMAIN"]}/",
         },
       ],
       components: {
