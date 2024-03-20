@@ -1,6 +1,6 @@
 module Statements
   class Query
-    def initialize(lead_provider:, cohort_start_years: nil, updated_since: nil)
+    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil)
       @lead_provider = lead_provider
       @cohort_start_years = cohort_start_years&.split(",")
       @updated_since = updated_since
@@ -9,9 +9,9 @@ module Statements
     def statements
       scope = Statement
                 .includes(:cohort)
-                .where(lead_provider:)
                 .with_output_fee
 
+      scope = scope.where(lead_provider:) if lead_provider.present?
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
 

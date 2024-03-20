@@ -1,68 +1,78 @@
 require "rails_helper"
 
 RSpec.describe Statements::Query do
-  let(:lead_provider) { create(:lead_provider) }
-
   describe "#statements" do
-    it "returns all statements for a Lead Provider" do
-      statement = create(:statement, lead_provider:)
-      query = Statements::Query.new(lead_provider:)
+    let(:lead_provider) { create(:lead_provider) }
+
+    it "returns all statements" do
+      statement = create(:statement)
+      query = Statements::Query.new
 
       expect(query.statements).to eq([statement])
     end
 
-    it "does not return statements for other Lead Providers" do
-      other_lead_provider = create(:lead_provider)
-      create(:statement, lead_provider: other_lead_provider)
-
-      query = Statements::Query.new(lead_provider:)
-
-      expect(query.statements).to eq([])
-    end
-
     it "return only statements with an output fee" do
-      create(:statement, lead_provider:, output_fee: false)
+      create(:statement, output_fee: false)
 
-      query = Statements::Query.new(lead_provider:)
+      query = Statements::Query.new
 
       expect(query.statements).to be_empty
     end
 
     it "orders statements by payment date in ascending order" do
-      statement1 = create(:statement, lead_provider:, payment_date: 2.days.ago)
-      statement2 = create(:statement, lead_provider:, payment_date: 1.day.ago)
-      statement3 = create(:statement, lead_provider:, payment_date: Time.zone.now)
+      statement1 = create(:statement, payment_date: 2.days.ago)
+      statement2 = create(:statement, payment_date: 1.day.ago)
+      statement3 = create(:statement, payment_date: Time.zone.now)
 
-      query = Statements::Query.new(lead_provider:)
+      query = Statements::Query.new
 
       expect(query.statements).to eq([statement1, statement2, statement3])
     end
 
     describe "filtering" do
+      describe "by lead provider" do
+        it "filters by lead provider" do
+          statement = create(:statement, lead_provider:)
+          _statement = create(:statement)
+          query = Statements::Query.new(lead_provider:)
+
+          expect(query.statements).to eq([statement])
+        end
+
+        it "does not return statements for other Lead Providers" do
+          other_lead_provider = create(:lead_provider)
+          create(:statement, lead_provider: other_lead_provider)
+
+          query = Statements::Query.new(lead_provider:)
+
+          expect(query.statements).to eq([])
+        end
+      end
+
       describe "by cohort" do
         let!(:cohort_2023) { create(:cohort, start_year: 2023) }
         let!(:cohort_2024) { create(:cohort, start_year: 2024) }
         let!(:cohort_2025) { create(:cohort, start_year: 2025) }
 
         it "filters by cohort" do
-          _statement = create(:statement, lead_provider:, cohort: cohort_2023)
-          statement = create(:statement, lead_provider:, cohort: cohort_2024)
-          query = Statements::Query.new(lead_provider:, cohort_start_years: "2024")
+          _statement = create(:statement, cohort: cohort_2023)
+          statement = create(:statement, cohort: cohort_2024)
+          query = Statements::Query.new(cohort_start_years: "2024")
 
           expect(query.statements).to eq([statement])
         end
 
         it "filters by multiple cohorts" do
-          statement1 = create(:statement, lead_provider:, cohort: cohort_2023)
-          statement2 = create(:statement, lead_provider:, cohort: cohort_2024)
-          _statement = create(:statement, lead_provider:, cohort: cohort_2025)
-          query = Statements::Query.new(lead_provider:, cohort_start_years: "2023,2024")
+          statement1 = create(:statement, cohort: cohort_2023)
+          statement2 = create(:statement, cohort: cohort_2024)
+          _statement = create(:statement, cohort: cohort_2025)
+          query = Statements::Query.new(cohort_start_years: "2023,2024")
 
           expect(query.statements).to match_array([statement1, statement2])
         end
 
         it "returns no statements if no cohorts are found" do
-          query = Statements::Query.new(lead_provider:, cohort_start_years: "0000")
+          query = Statements::Query.new(cohort_start_years: "0000")
 
           expect(query.statements).to be_empty
         end
@@ -84,20 +94,22 @@ RSpec.describe Statements::Query do
   end
 
   describe "#statement" do
+    let(:lead_provider) { create(:lead_provider) }
+
     it "returns the statement for a Lead Provider" do
       statement = create(:statement, lead_provider:)
-      query = Statements::Query.new(lead_provider:)
+      query = Statements::Query.new
 
       expect(query.statement(id: statement.id)).to eq(statement)
     end
 
     it "raises an error if the statement does not exist" do
-      query = Statements::Query.new(lead_provider:)
+      query = Statements::Query.new
 
       expect { query.statement(id: 0) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "raises an error if the statement belong to other Lead Provider" do
+    it "raises an error if the statement is not in the filtered query" do
       other_lead_provider = create(:lead_provider)
       other_statement = create(:statement, lead_provider: other_lead_provider)
 
