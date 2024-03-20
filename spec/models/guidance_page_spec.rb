@@ -9,7 +9,7 @@ RSpec.describe GuidancePage, type: :model do
       let(:content) { "# Heading" }
 
       it "returns an empty array" do
-        expect(guidance_page.sub_headings).to eq([])
+        expect(guidance_page.sub_headings).to eq({})
       end
     end
   end
@@ -18,14 +18,14 @@ RSpec.describe GuidancePage, type: :model do
     let(:content) do
       <<~MARKDOWN
         # Heading
-        ## Subheading1
-        ## Subheading2
-        ### Subheading3
+        ## SubHeading 1
+        ## SubHeading 2
+        ### SubHeading 3
       MARKDOWN
     end
 
     it "returns all subheadings in the markdown file" do
-      expect(guidance_page.sub_headings).to eq(%w[Subheading1 Subheading2])
+      expect(guidance_page.sub_headings).to eq("sub-heading-1" => "SubHeading 1", "sub-heading-2" => "SubHeading 2")
     end
   end
 end
