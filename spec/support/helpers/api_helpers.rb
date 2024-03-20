@@ -31,7 +31,7 @@ module Helpers
     end
 
     def response_ids
-      parsed_response["data"].map { |statement| statement["id"] }
+      parsed_response["data"].map { |data| data["id"] }
     end
 
     def lead_provider_token
