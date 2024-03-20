@@ -1,3 +1,5 @@
 <h1 class="govuk-heading-l">Paid statements</h1>
 
 <%= render NpqSeparation::Admin::StatementsTableComponent.new(@statements) %>
+
+<%= govuk_pagination(pagy: @pagy) %>
