@@ -19,7 +19,7 @@ RSpec.describe "Statements endpoint", type: "request" do
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
           expect(parsed_response["data"].size).to eq(2)
-          expect(response_ids).to match_array([statement1.id, statement2.id])
+          expect(response_ids).to match_array([statement1.ecf_id, statement2.ecf_id])
         end
       end
 
