@@ -12,6 +12,7 @@ class Statement < ApplicationRecord
 
   scope :unpaid, -> { where(state: %w[open payable]) }
   scope :paid, -> { where(state: "paid") }
+  scope :with_output_fee, -> { where(output_fee: true) }
 
   state_machine :state, initial: :open do
     state :open
