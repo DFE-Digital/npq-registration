@@ -44,6 +44,9 @@ RSpec.describe Ecf::NpqProfileCreator do
       employment_type: SecureRandom.uuid,
       employment_role: SecureRandom.uuid,
       employer_name: SecureRandom.uuid,
+      primary_establishment: false,
+      number_of_pupils: 0,
+      tsf_primary_plus_eligibility: false,
     )
   end
 
@@ -96,6 +99,9 @@ RSpec.describe Ecf::NpqProfileCreator do
             teacher_catchment_country:,
             itt_provider: itt_provider.legal_name,
             lead_mentor: false,
+            primary_establishment: false,
+            number_of_pupils: 0,
+            tsf_primary_plus_eligibility: false,
           },
         },
       }.to_json
