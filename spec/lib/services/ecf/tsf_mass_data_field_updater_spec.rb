@@ -13,11 +13,11 @@ RSpec.describe Ecf::TsfMassDataFieldUpdater do
   end
 
   it "calls ecf to update the eligible_for_funding attribute" do
-    stubbed_updater = double(:stubbed_updater)
+    stubbed_updater = instance_double("Ecf::NpqProfileUpdater")
     allow(stubbed_updater).to receive(:tsf_data_field_update)
     applications.each do |application|
-      expect(Ecf::NpqProfileUpdater).to receive(:new).with(application:).and_return(stubbed_updater)
-      expect(provided_proc).to receive(:call).with(application)
+      allow(Ecf::NpqProfileUpdater).to receive(:new).with(application:).and_return(stubbed_updater)
+      allow(provided_proc).to receive(:call).with(application)
     end
 
     subject.call
