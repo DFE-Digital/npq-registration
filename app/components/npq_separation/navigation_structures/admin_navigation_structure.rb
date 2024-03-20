@@ -30,6 +30,11 @@ module NpqSeparation
             prefix: "/npq-separation/admin/applications",
           ) => [],
           Node.new(
+            name: "Participants",
+            href: npq_separation_admin_users_path,
+            prefix: "/npq-separation/admin/users",
+          ) => [],
+          Node.new(
             name: "Finance",
             href: npq_separation_admin_finance_statements_path,
             prefix: "/npq-separation/admin/finance",
