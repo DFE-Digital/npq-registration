@@ -25,7 +25,10 @@ RSpec.describe GuidancePage, type: :model do
     end
 
     it "returns all subheadings in the markdown file" do
-      expect(guidance_page.sub_headings).to eq("sub-heading-1" => "SubHeading 1", "sub-heading-2" => "SubHeading 2")
+      expect(guidance_page.sub_headings).to eq(
+        "#sub-heading-1" => "SubHeading 1",
+        "#sub-heading-2" => "SubHeading 2"
+      )
     end
   end
 end

@@ -7,7 +7,7 @@ class GuidancePage
   def sub_headings
     headings = page_contents.scan(/^##\s(.*)$/).map(&:first)
 
-    headings.index_by { |heading| heading.underscore.parameterize.gsub("_", "-") }
+    headings.index_by { |heading| "##{heading.underscore.parameterize.gsub("_", "-")}" }
   end
 
   def template
