@@ -56,7 +56,7 @@ RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.
                 }
 
       response "200", "A specific financial statement" do
-        let(:id) { statement.id }
+        let(:id) { statement.ecf_id }
         schema({ "$ref": "#/components/schemas/StatementResponse" })
 
         run_test!
@@ -70,7 +70,7 @@ RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.
       end
 
       response "401", "Unauthorized" do
-        let(:id) { statement.id }
+        let(:id) { statement.ecf_id }
         let(:token) { "invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })

@@ -19,7 +19,7 @@ module Statements
     end
 
     def statement(id:)
-      statements.find(id)
+      statements.find_by!(ecf_id: id)
     end
 
   private

@@ -71,6 +71,42 @@ RSpec.describe "Statements endpoint", type: "request" do
           end
         end
       end
+
+      context "with pagination" do
+        before do
+          create_list(:statement, 8, lead_provider: current_lead_provider)
+        end
+
+        it "returns 5 statements on page 1" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 1 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(5)
+        end
+
+        it "returns 3 statements on page 2" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 2 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(3)
+        end
+
+        it "returns empty for page 3" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: 3 } })
+
+          expect(response.status).to eq 200
+          expect(parsed_response["data"].size).to eq(0)
+        end
+
+        it "returns error when requesting page -1" do
+          api_get("/api/v3/statements", params: { page: { per_page: 5, page: -1 } })
+
+          expect(response.status).to eq 400
+          expect(parsed_response["errors"].size).to eq(1)
+          expect(parsed_response["errors"][0]["title"]).to eql("Bad request")
+          expect(parsed_response["errors"][0]["detail"]).to eql("The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number")
+        end
+      end
     end
 
     context "when unauthorized" do
@@ -90,7 +126,7 @@ RSpec.describe "Statements endpoint", type: "request" do
         let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
 
         it "returns statement" do
-          api_get("/api/v3/statements/#{statement.id}")
+          api_get("/api/v3/statements/#{statement.ecf_id}")
 
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
@@ -111,7 +147,7 @@ RSpec.describe "Statements endpoint", type: "request" do
       let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
 
       it "returns 401 - unauthorized" do
-        api_get("/api/v3/statements/#{statement.id}", token: "incorrect-token")
+        api_get("/api/v3/statements/#{statement.ecf_id}", token: "incorrect-token")
 
         expect(response.status).to eq 401
         expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
