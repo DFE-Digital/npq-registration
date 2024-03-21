@@ -174,6 +174,7 @@ Rails.application.routes.draw do
         end
 
         resources :applications, only: %i[index]
+        resources :users, only: %i[index show]
 
         namespace :finance do
           resources :statements, only: %i[index show] do
