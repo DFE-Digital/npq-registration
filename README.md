@@ -21,6 +21,10 @@
 1. [BigQuery Reports](docs/bigquery_reports.md)
 1. [Migration Environment](docs/migration_environment.md)
 
+## Content Editors
+
+1. [Lead Provider API Guidance Pages](docs/content_editors/api_guidance_pages.md)
+
 ## Flow Visualisation
 
 ![](https://raw.githubusercontent.com/wiki/DFE-Digital/npq-registration/visualisations/registration_wizard_visualisation.png)
