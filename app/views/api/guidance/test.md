@@ -12,3 +12,5 @@ This is a markdown page with .md extension
   "type": "markdown"
 }
 ```
+
+Here are some changes
