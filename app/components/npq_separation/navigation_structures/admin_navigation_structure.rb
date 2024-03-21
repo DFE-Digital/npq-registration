@@ -53,7 +53,7 @@ module NpqSeparation
           ) => [],
           Node.new(
             name: "Lead providers",
-            href: "#",
+            href: npq_separation_admin_lead_providers_path,
             prefix: "/npq-separation/admin/lead_providers",
           ) => [],
           Node.new(
