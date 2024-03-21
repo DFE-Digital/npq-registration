@@ -23,4 +23,16 @@ namespace :sync do
 
     mass_updater.call
   end
+
+  desc "Sync tsf primary attributes of application with ecf service"
+  task :tsf_primary_attributs, [:offset] => :environment do |task, args|
+    Rails.logger.info "syncing applications"
+    offset = args[:offset].to_i || 0 # Default offset to 0 if not provided
+  
+    applications = Application.where.not(ecf_id: nil)
+                              .order(created_at: :asc)
+                              .offset(offset).limit(2000)
+  
+    Ecf::TsfMassDataFieldUpdater.new(applications: applications).call
+  end  
 end
