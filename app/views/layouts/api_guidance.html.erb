@@ -22,10 +22,35 @@
     <%= render partial: "layouts/shared/messages" %>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <%= yield %>
-      </div>
+      <% if @page.sub_headings.any? %>
+        <div class="govuk-grid-column-one-quarter">
+          <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+            <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
+            <ul class="x-govuk-sub-navigation__section">
+              <% @page.sub_headings.each do |href, text| %>
+                <li class="x-govuk-sub-navigation__section-item">
+                  <%= link_to(text, href, class: "x-govuk-sub-navigation__link") %>
+                </li>
+              <% end %>
+            </ul>
+          </nav>
+        </div>
+        <div class="govuk-grid-column-three-quarters">
+          <%= yield %>
+        </div>
+      <% else %>
+        <div class="govuk-grid-column-full">
+          <%= yield %>
+        </div>
+      <% end %>
     </div>
+    <% if @page.sub_headings.any? %>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <%= govuk_link_to("↑ Back to top", "#top") %>
+        </div>
+      </div>
+    <% end %>
   </main>
 </div>
 </body>

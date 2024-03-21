@@ -14,11 +14,21 @@ class GuidancePage
     "api/guidance/#{path}"
   end
 
+  def self.index_page
+    GuidanceIndexPage.new
+  end
+
 private
 
   attr_reader :path
 
   def page_contents
     @content || File.read(Rails.root.join("app", "views", "#{template}.md"))
+  end
+
+  class GuidanceIndexPage
+    def sub_headings
+      {}
+    end
   end
 end
