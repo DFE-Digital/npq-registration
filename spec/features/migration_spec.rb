@@ -174,5 +174,43 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
         end
       end
     end
+
+    context "when migrating users" do
+      before do
+        ecf_user1 = create(:ecf_migration_user, :npq)
+        ecf_user2 = create(:ecf_migration_user, :npq)
+
+        create(:user, :with_random_name, ecf_id: ecf_user1.id)
+        create(:user, :with_random_name, ecf_id: ecf_user2.id)
+
+        create(:ecf_migration_user, :npq, get_an_identity_id: "123456")
+        create(:user, :with_random_name, uid: "123456")
+      end
+
+      scenario "running a migration" do
+        visit npq_separation_migration_migrations_path
+
+        click_button "Run migration"
+
+        within ".data-migration-user" do
+          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "User")
+          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
+        end
+      end
+
+      scenario "viewing the completed migration" do
+        visit npq_separation_migration_migrations_path
+
+        perform_enqueued_jobs do
+          click_button "Run migration"
+        end
+
+        within ".data-migration-user" do
+          expect(page).to have_css(".total-count", text: 3)
+          expect(page).to have_css(".failure-count", text: 1)
+          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+        end
+      end
+    end
   end
 end
