@@ -52,13 +52,23 @@ RSpec.describe Migration::Migrator do
           expect(Migration::DataMigration.find_by(model: :lead_provider).processed_count).to eq(2)
         end
 
-        it "increments the failure count when a lead provider cannot be found" do
-          create(:ecf_migration_npq_lead_provider)
+        context "when a lead provider cannot be found" do
+          let!(:ecf_migration_npq_lead_provider) { create(:ecf_migration_npq_lead_provider) }
 
-          migrate
+          it "increments the failure count" do
+            migrate
 
-          expect(Migration::DataMigration.find_by(model: :lead_provider).processed_count).to eq(3)
-          expect(Migration::DataMigration.find_by(model: :lead_provider).failure_count).to eq(1)
+            expect(Migration::DataMigration.find_by(model: :lead_provider).processed_count).to eq(3)
+            expect(Migration::DataMigration.find_by(model: :lead_provider).failure_count).to eq(1)
+          end
+
+          it "calls FailuresRecorder with correct params" do
+            data_migration = Migration::DataMigration.find_by(model: :lead_provider)
+
+            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_npq_lead_provider])
+
+            migrate
+          end
         end
       end
 
@@ -77,13 +87,23 @@ RSpec.describe Migration::Migrator do
           expect(Migration::DataMigration.find_by(model: :cohort).processed_count).to eq(2)
         end
 
-        it "increments the failure count when a cohort is not correctly created" do
-          create(:ecf_migration_cohort, registration_start_date: nil)
+        context "when a cohort is not correctly created" do
+          let!(:ecf_migration_cohort) { create(:ecf_migration_cohort, registration_start_date: nil) }
 
-          migrate
+          it "increments the failure count" do
+            migrate
 
-          expect(Migration::DataMigration.find_by(model: :cohort).processed_count).to eq(3)
-          expect(Migration::DataMigration.find_by(model: :cohort).failure_count).to eq(1)
+            expect(Migration::DataMigration.find_by(model: :cohort).processed_count).to eq(3)
+            expect(Migration::DataMigration.find_by(model: :cohort).failure_count).to eq(1)
+          end
+
+          it "calls FailuresRecorder with correct params" do
+            data_migration = Migration::DataMigration.find_by(model: :cohort)
+
+            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_cohort])
+
+            migrate
+          end
         end
       end
 
@@ -105,13 +125,25 @@ RSpec.describe Migration::Migrator do
           expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(2)
         end
 
-        it "increments the failure count when a statement is not correctly created" do
-          create(:ecf_migration_statement, output_fee: nil)
+        context "when a statement is not correctly created" do
+          let!(:ecf_migration_statement) { create(:ecf_migration_statement, output_fee: nil) }
 
-          migrate
+          before { create(:lead_provider, ecf_id: ecf_migration_statement.npq_lead_provider.id) }
 
-          expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(3)
-          expect(Migration::DataMigration.find_by(model: :statement).failure_count).to eq(1)
+          it "increments the failure count" do
+            migrate
+
+            expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(3)
+            expect(Migration::DataMigration.find_by(model: :statement).failure_count).to eq(1)
+          end
+
+          it "calls FailuresRecorder with correct params" do
+            data_migration = Migration::DataMigration.find_by(model: :statement)
+
+            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_statement])
+
+            migrate
+          end
         end
       end
     end

@@ -14,6 +14,13 @@ class NpqSeparation::Migration::MigrationsController < ApplicationController
     redirect_to npq_separation_migration_migrations_path
   end
 
+  def download_report
+    result = Migration::DataMigration.find(params[:id])
+    yaml = result.cached_failures
+
+    send_data(yaml, filename: "#{result.migration_failures_key}.yaml", type: "text/yaml", disposition: "attachment")
+  end
+
 private
 
   def require_super_admin

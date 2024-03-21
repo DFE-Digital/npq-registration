@@ -55,4 +55,26 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
       end
     end
   end
+
+  describe("download_report") do
+    let(:data_migration) { create(:data_migration) }
+    let(:make_request) { get(download_report_npq_separation_migration_migrations_path(data_migration.id)) }
+
+    context "when not signed in as a super admin" do
+      let(:super_admin) { false }
+
+      it { expect(response).to redirect_to(sign_in_path) }
+
+      it "asks the user to sign in as an admin" do
+        follow_redirect!
+        expect(response.body).to include("Sign in with your administrator account")
+      end
+    end
+
+    context "when signed in as a super admin" do
+      let(:super_admin) { true }
+
+      it { expect(response).to be_successful }
+    end
+  end
 end

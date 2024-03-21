@@ -127,4 +127,20 @@ RSpec.describe MigrationHelper, type: :helper do
       it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "75%") }
     end
   end
+
+  describe "#data_migration_download_failures_report_link" do
+    subject { helper.data_migration_download_failures_report_link(data_migration) }
+
+    context "when data migration failures count is positive" do
+      let(:data_migration) { create(:data_migration, :with_failures)  }
+
+      it { is_expected.to include("/npq-separation/migration/migrations/download_report/#{data_migration.id}") }
+    end
+
+    context "when data migration failures count is not positive" do
+      let(:data_migration) { create(:data_migration) }
+
+      it { is_expected.to be_nil }
+    end
+  end
 end

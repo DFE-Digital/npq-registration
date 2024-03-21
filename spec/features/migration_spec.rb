@@ -85,6 +85,9 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+
+          data_migration = Migration::DataMigration.find_by(model: :lead_provider)
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
         end
       end
     end
@@ -122,6 +125,9 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+
+          data_migration = Migration::DataMigration.find_by(model: :cohort)
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
         end
       end
     end
@@ -162,6 +168,9 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+
+          data_migration = Migration::DataMigration.find_by(model: :statement)
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
         end
       end
     end
