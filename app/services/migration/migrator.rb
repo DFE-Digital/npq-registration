@@ -49,12 +49,16 @@ module Migration
       data_migration = DataMigration.find_by(model:)
       data_migration.update!(started_at: Time.zone.now, total_count: items.count)
 
-      items.each do |item|
+      failures_to_record = items.each_with_object([]) do |item, failures|
         data_migration.increment!(:processed_count)
         result = yield(item)
-        data_migration.increment!(:failure_count) unless result
+        unless result
+          data_migration.increment!(:failure_count)
+          failures << item
+        end
       end
 
+      FailuresRecorder.record(data_migration:, items: failures_to_record) if failures_to_record.present?
       data_migration.update!(completed_at: Time.zone.now)
     end
 
