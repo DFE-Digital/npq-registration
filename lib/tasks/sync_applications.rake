@@ -23,14 +23,4 @@ namespace :sync do
 
     mass_updater.call
   end
-
-  desc "Sync tsf primary attributes of application with ecf service"
-  task tsf_primary_attributs: :environment do
-    Rails.logger.info "syncing applications"
-
-    applications = Application.where.not(ecf_id: nil)
-                              .order(created_at: :asc)
-
-    Ecf::TsfMassDataFieldUpdater.new(applications:).call
-  end
 end
