@@ -18,6 +18,10 @@ class GuidancePage
     GuidanceIndexPage.new
   end
 
+  def index_page?
+    false
+  end
+
 private
 
   attr_reader :path
@@ -29,6 +33,10 @@ private
   class GuidanceIndexPage
     def sub_headings
       {}
+    end
+
+    def index_page?
+      true
     end
   end
 end

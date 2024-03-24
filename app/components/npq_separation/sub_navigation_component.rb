@@ -30,6 +30,8 @@ module NpqSeparation
   private
 
     def current?(prefix)
+      return unless prefix
+
       # return nil instead of false so Rails' link helper drops the
       # attribute rather than setting "current='false'"
       current_path.start_with?(prefix) || nil
