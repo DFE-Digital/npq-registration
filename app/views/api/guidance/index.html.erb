@@ -52,19 +52,19 @@
           update data. The data enables providers to manage and deliver NPQ-based training, and ensure they get paid the
           right amount by the DfE</p>
         <p class="govuk-body govuk-!-margin-bottom-0">
-          <a href="#" class="govuk-link govuk-!-font-weight-bold">Browse guidance</a></p>
+          <%= govuk_link_to "Browse guidance", api_guidance_path, class: "govuk-link govuk-!-font-weight-bold" %></p>
       </div>
       <div class="govuk-grid-column-one-third-from-desktop">
         <h2 class="govuk-heading-l">Definitions</h2>
         <p class="govuk-body">Take a look at the key concepts and data states we use</p>
         <p class="govuk-body govuk-!-margin-bottom-0">
-          <a href="#" class="govuk-link govuk-!-font-weight-bold">Browse definitions</a></p>
+          <%= govuk_link_to "Browse definitions", api_guidance_page_path(page: 'definitions'), class: "govuk-link govuk-!-font-weight-bold" %></p>
       </div>
       <div class="govuk-grid-column-one-third-from-desktop">
         <h2 class="govuk-heading-l">API latest version</h2>
         <p class="govuk-body">Access the v3.0.0 of the NPQs data management API for lead providers</p>
         <p class="govuk-body">
-          <a href="#" class="govuk-link govuk-!-font-weight-bold">Browse v.3.0.0 of the API</a></p>
+          <%= govuk_link_to "Browse v.3.0.0 of the API", api_guidance_page_path(page: 'api-latest-version'), class: "govuk-link govuk-!-font-weight-bold" %></p>
       </div>
     </div>
   </div>
