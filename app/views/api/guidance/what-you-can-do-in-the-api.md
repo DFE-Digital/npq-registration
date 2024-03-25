@@ -1,3 +1,4 @@
+[//]: # (Placeholder for What you can do in the API)
 # What you can do in the API
 
 ## Overview of API requests
