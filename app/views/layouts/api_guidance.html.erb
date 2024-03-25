@@ -33,7 +33,7 @@
             <%= yield %>
           </div>
         </div>
-        <% if @page.sub_headings.any? %>
+        <% if @page.sections.any? %>
           <div class="govuk-grid-row govuk-!-padding-bottom-5">
             <div class="govuk-grid-column-one-quarter">
               <%= govuk_link_to("↑ Back to top", "#top") %>

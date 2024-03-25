@@ -4,7 +4,7 @@ class GuidancePage
     @content = content
   end
 
-  def sub_headings
+  def sections
     headings = page_contents.scan(/^##\s(.*)$/).map(&:first)
 
     headings.index_by { |heading| "##{heading.underscore.parameterize.gsub("_", "-")}" }
@@ -31,7 +31,7 @@ private
   end
 
   class GuidanceIndexPage
-    def sub_headings
+    def sections
       {}
     end
 

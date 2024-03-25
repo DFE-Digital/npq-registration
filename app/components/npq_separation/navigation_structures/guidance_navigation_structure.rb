@@ -38,7 +38,7 @@ module NpqSeparation
       end
 
       def side_structure(side_option_name)
-        GuidancePage.new(side_option_name).sub_headings.map do |href, text|
+        GuidancePage.new(side_option_name).sections.map do |href, text|
           Node.new(
             name: text,
             href: "/api/guidance/#{side_option_name}#{href}",

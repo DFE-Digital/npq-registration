@@ -10,12 +10,12 @@ RSpec.describe GuidancePage, type: :model do
     end
   end
 
-  describe "#sub_headings" do
+  describe "#sections" do
     context "when there are no subheadings" do
       let(:content) { "# Heading" }
 
       it "returns an empty array" do
-        expect(guidance_page.sub_headings).to eq({})
+        expect(guidance_page.sections).to eq({})
       end
     end
   end
@@ -31,7 +31,7 @@ RSpec.describe GuidancePage, type: :model do
     end
 
     it "returns all subheadings in the markdown file" do
-      expect(guidance_page.sub_headings).to eq(
+      expect(guidance_page.sections).to eq(
         "#sub-heading-1" => "SubHeading 1",
         "#sub-heading-2" => "SubHeading 2",
       )
