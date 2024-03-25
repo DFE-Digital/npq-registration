@@ -20,7 +20,7 @@ RSpec.describe ReleaseNotes do
 
     latest = release_notes.latest
     expect(latest.date).to eq("2021-10-10")
-    expect(latest.note).to eq("First note")
+    expect(latest.content).to eq("First note")
   end
 
   it "parses release notes from a file" do

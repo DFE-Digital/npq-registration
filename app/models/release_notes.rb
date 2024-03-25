@@ -13,7 +13,7 @@ private
     content.scan(regexp).map do |match|
       ReleaseNote.new(
         date: match[0],
-        note: match[1].strip,
+        content: match[1].strip,
       )
     end
   end
@@ -27,11 +27,11 @@ private
   end
 
   class ReleaseNote
-    attr_reader :date, :note
+    attr_reader :date, :content
 
-    def initialize(date:, note:)
+    def initialize(date:, content:)
       @date = date
-      @note = note
+      @content = content
     end
   end
 end
