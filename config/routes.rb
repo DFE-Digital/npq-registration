@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
+  resource :registration_closed, only: [:show], controller: :registration_closed
+
   root "registration_wizard#show", step: "start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
