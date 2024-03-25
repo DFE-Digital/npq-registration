@@ -1,7 +1,6 @@
 // Move the blue border from the container to the header so that it spans
 // the full width of the page
 @import "./api_guidance/_masthead";
-@import "./api_guidance/_whats_new";
 
 .api-guidance {
   $orange: darken(#f47738, 20%);
@@ -14,6 +13,11 @@
   $light-pink: lighten(#f499be, 20%);
   $red: #d4351c;
   $dark-green: #365e07;
+
+  .whats-new {
+    background-color: $light-grey;
+    border-bottom: 1px solid rgb(177, 180, 182);
+  }
 
   pre > code {
     color: $text;
