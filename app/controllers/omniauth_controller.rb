@@ -77,7 +77,7 @@ private
   end
 
   def after_sign_in_path_for(user)
-    return account_path if user.applications.any?
+    return account_path if user.applications.any? || Feature.registration_closed?(nil)
 
     start_questionnaire_path(user)
   end

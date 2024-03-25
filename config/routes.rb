@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   resource :registration_closed, only: [:show], controller: :registration_closed
 
-  root "registration_wizard#show", step: "start"
+  root "root_redirection#redirect"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
   get "/registration/:step/change", to: "registration_wizard#show", as: "registration_wizard_show_change", changing_answer: "1"
