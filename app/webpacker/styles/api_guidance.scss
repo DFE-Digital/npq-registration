@@ -1,6 +1,7 @@
 // Move the blue border from the container to the header so that it spans
 // the full width of the page
 @import "./api_guidance/_header";
+@import "./api_guidance/_masthead";
 
 .api-guidance {
   $orange: darken(#f47738, 20%);
@@ -49,3 +50,4 @@
     }
   }
 }
+
