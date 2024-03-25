@@ -77,10 +77,10 @@
       <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">API previous versions </h2>
         <p class="govuk-body">
-          <%= govuk_link_to("View API v1.0.0", "#") %>
+          <%= govuk_link_to("View API v1.0.0", "#", class: "govuk-link govuk-!-font-weight-bold") %>
         </p>
         <p class="govuk-body">
-          <%= govuk_link_to("View API v2.0.0", "#") %>
+          <%= govuk_link_to("View API v2.0.0", "#", class: "govuk-link govuk-!-font-weight-bold") %>
         </p>
       </div>
     </div>
@@ -97,7 +97,7 @@
           We've got a test (sandbox) environment that can be used to test API integrations without affecting real data.
         </p>
         <p class="govuk-body">
-          <%= govuk_link_to("Use the test environment", api_guidance_page_path(page: "test-environment")) %>
+          <%= govuk_link_to("Use the test environment", api_guidance_page_path(page: "test-environment"), class: "govuk-link govuk-!-font-weight-bold") %>
         </p>
       </div>
     </div>
