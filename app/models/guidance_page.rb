@@ -14,12 +14,12 @@ class GuidancePage
     "api/guidance/#{path}"
   end
 
-  def self.index_page
-    GuidanceIndexPage.new
-  end
-
   def index_page?
     false
+  end
+
+  def self.index_page
+    GuidanceIndexPage.new
   end
 
 private
