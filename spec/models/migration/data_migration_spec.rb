@@ -112,20 +112,4 @@ RSpec.describe Migration::DataMigration, type: :model, in_memory_rails_cache: tr
       it { is_expected.to be_complete }
     end
   end
-
-  describe "#migration_failures_key" do
-    before { instance.save! }
-
-    it "returns the migrations failures cache key" do
-      expect(subject.migration_failures_key).to eq("migration_failures_any_#{instance.id}")
-    end
-  end
-
-  describe "#cached_failures" do
-    before { Rails.cache.write(subject.migration_failures_key, "123456") }
-
-    it "returns the cached failures" do
-      expect(subject.cached_failures).to eq("123456")
-    end
-  end
 end

@@ -40,13 +40,5 @@ module Migration
     def complete?
       completed_at.present?
     end
-
-    def migration_failures_key
-      "migration_failures_#{model}_#{id}"
-    end
-
-    def cached_failures
-      Rails.cache.read(migration_failures_key)
-    end
   end
 end

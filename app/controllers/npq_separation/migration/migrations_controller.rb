@@ -15,10 +15,10 @@ class NpqSeparation::Migration::MigrationsController < ApplicationController
   end
 
   def download_report
-    result = Migration::DataMigration.find(params[:id])
-    yaml = result.cached_failures
+    data_migration = Migration::DataMigration.find(params[:id])
+    failures = Migration::FailureManager.new(data_migration:).all_failures
 
-    send_data(yaml, filename: "#{result.migration_failures_key}.yaml", type: "text/yaml", disposition: "attachment")
+    send_data(failures, filename: "migration_failures_#{data_migration.model}_#{data_migration.id}.yaml", type: "text/yaml", disposition: "attachment")
   end
 
 private
