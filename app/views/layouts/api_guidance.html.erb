@@ -18,12 +18,13 @@
           Design your service using GOV.UK styles, components and patterns
         </h1>
         <p class="x-govuk-masthead__description">
-          Use this design system to make your service consistent with GOV.UK. Learn from the research and experience of other service teams and avoid repeating work that’s already been done.
+          Use this design system to make your service consistent with GOV.UK. Learn from the research and experience of
+          other service teams and avoid repeating work that’s already been done.
         </p>
         <a href="#" role="button" draggable="false" class="govuk-button govuk-button--inverse govuk-button--start" data-module="govuk-button">
           Get started
           <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
-            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"/>
           </svg>
         </a>
       </div>
@@ -31,6 +32,32 @@
   </div>
 </div>
 
+<div class="whats-new">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h2 class="govuk-heading-m">
+          What's new
+        </h2>
+
+        <p class="govuk-body">
+          9 November 2023: We're trialing new functionality in the API v3 sandbox which allows lead providers to add a
+          participant’s schedule when accepting NPQ applications. We've added the optional schedule-identifier field on
+          the NPQ accept an application request body. This will prevent providers having to make manual changes if a
+          participant has been defaulted to the wrong schedule. We'd welcome feedback on this sandbox update before it
+          goes into production.
+        </p>
+
+        <p class="govuk-body">
+          <%= govuk_link_to("Read the full release notes for more details.", "#") %>
+        </p>
+        <p class="govuk-body">
+          <%= govuk_link_to("Sign up to get update emails about the NPQs data management API for lead providers.", "#") %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 
 <%= render partial: "layouts/shared/footer" %>
