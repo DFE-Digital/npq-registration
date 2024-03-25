@@ -23,7 +23,12 @@ module NpqSeparation
             name: "What you can do in the API",
             href: api_guidance_page_path(page: "what-you-can-do-in-the-api"),
             prefix: "/api/guidance/what-you-can-do-in-the-api",
-          ) => [],
+          ) => GuidancePage.new("what-you-can-do-in-the-api").sub_headings.map do |href, text|
+            Node.new(
+              name: text,
+              href: "/api/guidance/what-you-can-do-in-the-api#{href}",
+            )
+          end,
           Node.new(
             name: "Definitions",
             href: api_guidance_page_path(page: "definitions"),
