@@ -62,10 +62,8 @@ RSpec.describe Migration::Migrator do
             expect(Migration::DataMigration.find_by(model: :lead_provider).failure_count).to eq(1)
           end
 
-          it "calls FailuresRecorder with correct params" do
-            data_migration = Migration::DataMigration.find_by(model: :lead_provider)
-
-            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_npq_lead_provider])
+          it "calls FailureManager with correct params" do
+            expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_npq_lead_provider, "Couldn't find LeadProvider with [WHERE \"lead_providers\".\"ecf_id\" = $1]").and_call_original
 
             migrate
           end
@@ -97,10 +95,8 @@ RSpec.describe Migration::Migrator do
             expect(Migration::DataMigration.find_by(model: :cohort).failure_count).to eq(1)
           end
 
-          it "calls FailuresRecorder with correct params" do
-            data_migration = Migration::DataMigration.find_by(model: :cohort)
-
-            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_cohort])
+          it "calls FailureManager with correct params" do
+            expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_cohort, "Validation failed: Registration start date can't be blank").and_call_original
 
             migrate
           end
@@ -137,10 +133,8 @@ RSpec.describe Migration::Migrator do
             expect(Migration::DataMigration.find_by(model: :statement).failure_count).to eq(1)
           end
 
-          it "calls FailuresRecorder with correct params" do
-            data_migration = Migration::DataMigration.find_by(model: :statement)
-
-            expect(Migration::FailuresRecorder).to receive(:record).with(data_migration:, items: [ecf_migration_statement])
+          it "calls FailureManager with correct params" do
+            expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_statement, "Validation failed: Output fee is not included in the list").and_call_original
 
             migrate
           end

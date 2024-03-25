@@ -49,22 +49,24 @@ module Migration
       data_migration = DataMigration.find_by(model:)
       data_migration.update!(started_at: Time.zone.now, total_count: items.count)
 
-      failures_to_record = items.each_with_object([]) do |item, failures|
+      failure_manager = FailureManager.new(data_migration:)
+
+      items.each do |item|
         data_migration.increment!(:processed_count)
-        result = yield(item)
-        unless result
+        begin
+          yield(item)
+        rescue ActiveRecord::ActiveRecordError => e
           data_migration.increment!(:failure_count)
-          failures << item
+          failure_manager.record_failure(item, e.message)
         end
       end
 
-      FailuresRecorder.record(data_migration:, items: failures_to_record) if failures_to_record.present?
       data_migration.update!(completed_at: Time.zone.now)
     end
 
     def migrate_lead_providers
       migrate(ecf_npq_lead_providers, :lead_provider) do |ecf_npq_lead_provider|
-        LeadProvider.find_by(ecf_id: ecf_npq_lead_provider.id)
+        LeadProvider.find_by!(ecf_id: ecf_npq_lead_provider.id)
       end
     end
 
@@ -79,8 +81,7 @@ module Migration
     def migrate_cohorts
       migrate(ecf_cohorts, :cohort) do |ecf_cohort|
         cohort = Cohort.find_or_initialize_by(start_year: ecf_cohort.start_year)
-        result = cohort.update(registration_start_date: ecf_cohort.npq_registration_start_date.presence || ecf_cohort.registration_start_date)
-        result
+        cohort.update!(registration_start_date: ecf_cohort.npq_registration_start_date.presence || ecf_cohort.registration_start_date)
       end
     end
 
@@ -92,7 +93,7 @@ module Migration
       migrate(ecf_statements, :statement) do |ecf_statement|
         statement = Statement.find_or_initialize_by(month: Date::MONTHNAMES.find_index(ecf_statement.name.split[0]), year: ecf_statement.name.split[1])
 
-        result = statement.update(
+        statement.update!(
           deadline_date: ecf_statement.deadline_date,
           payment_date: ecf_statement.payment_date,
           output_fee: ecf_statement.output_fee,
@@ -107,7 +108,6 @@ module Migration
                  end,
           ecf_id: ecf_statement.id,
         )
-        result
       end
     end
   end
