@@ -33,7 +33,12 @@ module NpqSeparation
             name: "Definitions",
             href: api_guidance_page_path(page: "definitions"),
             prefix: "/api/guidance/definitions",
-          ) => [],
+          ) => GuidancePage.new("definitions").sub_headings.map do |href, text|
+            Node.new(
+              name: text,
+              href: "/api/guidance/definitions#{href}",
+            )
+          end,
           Node.new(
             name: "API latest version",
             href: api_guidance_page_path(page: "api-latest-version"),
