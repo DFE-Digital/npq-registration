@@ -26,12 +26,5 @@ private
     File.read(Rails.root.join("release_notes.md"))
   end
 
-  class ReleaseNote
-    attr_reader :date, :content
-
-    def initialize(date:, content:)
-      @date = date
-      @content = content
-    end
-  end
+  ReleaseNote = Struct.new(:date, :content, keyword_init: true)
 end
