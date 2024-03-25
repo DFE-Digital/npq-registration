@@ -38,7 +38,6 @@ module NpqSeparation
 
     def mark_current(structure)
       structure.each do |node|
-        Rails.logger.debug current_path
         node.current = current_path.start_with?(node.prefix)
       end
     end
