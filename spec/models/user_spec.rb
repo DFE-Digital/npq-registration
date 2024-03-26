@@ -34,14 +34,13 @@ RSpec.describe User do
       end
     end
 
-
     context "when value is changed" do
       let(:user) { create(:user, email_updates_unsubscribe_key: "432") }
 
       it "does not changes unsubscribe key" do
         expect {
           user.update_email_updates_status(form)
-        }.not_to change { user.reload.email_updates_unsubscribe_key }
+        }.not_to(change { user.reload.email_updates_unsubscribe_key })
       end
     end
   end

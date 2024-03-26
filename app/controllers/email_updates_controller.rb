@@ -1,7 +1,11 @@
 class EmailUpdatesController < ApplicationController
+  before_action do
+    redirect_to root_path unless current_user.persisted?
+  end
   def new
-    @form = EmailUpdates.new
+    session["request_email_updates"] = nil
 
+    @form = EmailUpdates.new
   end
 
   # Save form
@@ -15,11 +19,9 @@ class EmailUpdatesController < ApplicationController
   end
 
   # Reguires `email_updates_unsubscribe_key` as param
-  def unsubscribe
+  def unsubscribe; end
 
-  end
-
-  private
+private
 
   def email_update_params
     params[:email_updates] ? params.require(:email_updates).permit(:email_updates_status) : {}

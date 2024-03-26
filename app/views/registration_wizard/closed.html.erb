@@ -4,7 +4,22 @@
 
     <h2 class="govuk-heading-m">Registration for NPQs has closed temporarily</h2>
 
-    <p class="govuk-body"><%= govuk_link_to "Sign up for an email", new_email_update_path %> to be notified when registration reopens.</p>
+    <p class="govuk-body">
+      <strong>Request email updates to tell you when registration opens</strong>,
+      this is usually in the summer. You can also tell us about your interest in the special educational needs coordinator (SENCO) NPQ course.
+    </p>
+
+    <p class="govuk-body">You’ll be asked to create a DfE Identity account or sign in to your account. </p>
+
+    <p class="govuk-body">You will need a teacher reference number (TRN), even if you’re not a teacher. <a class="govuk-link" href="https://www.gov.uk/guidance/teacher-reference-number-trn">Learn about TRNs</a> including how to request one if you do not have one.</p>
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Request email updates",
+        href: user_tra_openid_connect_omniauth_authorize_path,
+        as_button: true,
+        html_attributes: { params: { request_email_updates: "true" }}
+      )
+    %>
 
     <h2 class="govuk-heading-m">When registration reopens</h2>
 

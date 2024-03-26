@@ -30,6 +30,10 @@ module Omniauth
       extra { { "raw_info" => raw_info } }
 
       def authorize_params
+        if request.params["request_email_updates"] == "true"
+          request.session["request_email_updates"] = "true"
+        end
+
         return super.merge(prompt: :login) if request.session["clear_tra_login"] == true
 
         super

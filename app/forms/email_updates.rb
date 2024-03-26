@@ -11,7 +11,7 @@ class EmailUpdates
         name: :email_updates_status,
         options:,
         style_options: { legend: { size: "xl", tag: "h1" } },
-        ),
+      ),
     ]
   end
 
@@ -30,6 +30,6 @@ class EmailUpdates
       link_errors:,
       divider:,
       revealed_question:,
-      )
+    )
   end
 end

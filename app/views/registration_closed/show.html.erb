@@ -6,12 +6,23 @@
     <h3 class="govuk-heading-m">Registration has closed temporarily</h3>
     <p class="govuk-body">When registration reopens, use this service to register for a NPQ or the early headship coaching offer starting before November 2024. </p>
     <p class="govuk-body">
-      <strong><a class="govuk-link" href="<%= new_email_update_path %>">Request email updates to tell you when registration opens</a></strong>,
+      <strong>Request email updates to tell you when registration opens</strong>,
       this is usually in the summer. You can also tell us about your interest in the special educational needs coordinator (SENCO) NPQ course.
     </p>
 
     <p class="govuk-body">You’ll be asked to create a DfE Identity account or sign in to your account. </p>
+
     <p class="govuk-body">You will need a teacher reference number (TRN), even if you’re not a teacher. <a class="govuk-link" href="https://www.gov.uk/guidance/teacher-reference-number-trn">Learn about TRNs</a> including how to request one if you do not have one.</p>
+
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Request email updates",
+        href: user_tra_openid_connect_omniauth_authorize_path,
+        as_button: true,
+        html_attributes: { params: { request_email_updates: "true" }}
+      )
+    %>
+
     <p class="govuk-body">If you're starting a national professional qualification (NPQ) course before July 2024, contact your course provider for support.</p>
 
     <h3 class="govuk-heading-m">Check your existing registrations</h3>
@@ -25,7 +36,7 @@
         text: "Sign in to your account",
         href: user_tra_openid_connect_omniauth_authorize_path,
         classes: "govuk-button--secondary",
-        as_button: true
+        as_button: true,
       )
     %>
   </div>

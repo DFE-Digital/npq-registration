@@ -13,7 +13,7 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
-  EMAIL_UPDATES_STATES = [:senco, :other_npq]
+  EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
   EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
 
   enum email_updates_status: EMAIL_UPDATES_ALL_STATES
@@ -149,7 +149,7 @@ class User < ApplicationRecord
 
   def update_email_updates_status(form)
     self.email_updates_status = form.email_updates_status
-    self.email_updates_unsubscribe_key = SecureRandom.uuid if self.email_updates_unsubscribe_key.nil?
-    self.save
+    self.email_updates_unsubscribe_key = SecureRandom.uuid if email_updates_unsubscribe_key.nil?
+    save!
   end
 end
