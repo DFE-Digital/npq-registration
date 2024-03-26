@@ -22,12 +22,18 @@
       <div class="govuk-width-container  govuk-!-padding-top-7">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
-            <%=
-              render NpqSeparation::SubNavigationComponent.new(
-                request.original_url,
-                structure: guidance_navigation_structure.sub_structure(primary_navigation.current_section.name),
-              )
-            %>
+            <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+              <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
+              <ul class="x-govuk-sub-navigation__section">
+                <% @page.sections.each do |href, text| %>
+                  <li class="x-govuk-sub-navigation__section-item">
+                    <a class="x-govuk-sub-navigation__link" href="<%= href %>">
+                      <%= text %>
+                    </a>
+                  </li>
+                <% end %>
+              </ul>
+            </nav>
           </div>
           <div class="govuk-grid-column-three-quarters">
             <%= yield %>
