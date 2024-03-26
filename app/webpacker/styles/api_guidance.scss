@@ -1,5 +1,3 @@
-// Move the blue border from the container to the header so that it spans
-// the full width of the page
 @import "./api_guidance/_masthead";
 
 .api-guidance {
@@ -19,38 +17,43 @@
     border-bottom: 1px solid rgb(177, 180, 182);
   }
 
-  pre > code {
-    color: $text;
+  .highlight {
+    background-color: $light-grey;
+    padding: 0.2em 0.5em;
 
-    .s, .s1, .s2, .vi, .sx {
-      color: $pink;
-    }
+    pre > code {
+      color: $text;
 
-    .nt, .nf, .nc {
-      color: $orange;
-    }
+      .s, .s1, .s2, .vi, .sx {
+        color: $pink;
+      }
 
-    .n, .p, .k, .mi, .n, .o, .na, .ss {
-      color: $dark-blue;
-    }
+      .nt, .nf, .nc {
+        color: $orange;
+      }
 
-    .k {
-      font-weight: 600;
-    }
+      .n, .p, .k, .mi, .n, .o, .na, .ss {
+        color: $dark-blue;
+      }
 
-    .no {
-      color: #0e5e5e;
-    }
+      .k {
+        font-weight: 600;
+      }
 
-    .kp {
-      color: $green;
-    }
+      .no {
+        color: #0e5e5e;
+      }
 
-    // comments
-    .c,
-    .c1 {
-      color: $dark-green;
-      font-style: italic;
+      .kp {
+        color: $green;
+      }
+
+      // comments
+      .c,
+      .c1 {
+        color: $dark-green;
+        font-style: italic;
+      }
     }
   }
 }
