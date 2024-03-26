@@ -13,6 +13,8 @@ RSpec.feature "Guidance", type: :feature do
 
       expect(page).to have_link("Get started", href: "/api/guidance/get-started")
     end
+
+
   end
 
   describe "GET /api/guidance/get-started" do
