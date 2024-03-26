@@ -1,0 +1,21 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">
+        Your email request has been set up
+      </h1>
+
+    </div>
+
+
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">We'll send email updates to <strong><%= current_user.email %></strong> about registration opening. This is usually in the summer.</p>
+    <p class="govuk-body">When registration opens use this service to register for a NPQ or the early headship coaching offer starting before November 2024.</p>
+
+    <% if current_user.applications.any? %>
+      <p class="govuk-body"><a class="govuk-link" href="<%= application_count_based_account_url %>">View your existing registrations</a>.</p>
+    <% end %>
+
+  </div>
+</div>

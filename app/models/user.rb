@@ -13,6 +13,10 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
+  EMAIL_UPDATES_STATES = [:senco, :other_npq]
+  EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
+
+  enum email_updates_status: EMAIL_UPDATES_ALL_STATES
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end
@@ -141,5 +145,11 @@ class User < ApplicationRecord
 
   def super_admin?
     raise StandardError, "deprecated"
+  end
+
+  def update_email_updates_status(form)
+    self.email_updates_status = form.email_updates_status
+    self.email_updates_unsubscribe_key = SecureRandom.uuid if self.email_updates_unsubscribe_key.nil?
+    self.save
   end
 end

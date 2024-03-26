@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
+  resources :email_updates
+
   resource :registration_closed, only: [:show], controller: :registration_closed
 
   root "root_redirection#redirect"

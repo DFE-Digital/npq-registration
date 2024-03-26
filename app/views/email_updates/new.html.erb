@@ -1,0 +1,31 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column">
+    <h1 class="govuk-heading-xl">Request email updates about registration opening</h1>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column">
+    <%= form_with model: @form, url: email_updates_path do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <% @form.questions.each do |question| %>
+
+        <% content_for :title do %>
+          <%= @form.errors.present? ? "Error: " : nil %>
+          <%= question.question_text %>
+        <% end %>
+
+        <%=
+          render(
+            "registration_wizard/shared/questions/#{question.type}",
+            form: f,
+            question: question,
+            )
+        %>
+      <% end %>
+
+      <%= f.govuk_submit('Request email updates') %>
+    <% end %>
+  </div>
+</div>
