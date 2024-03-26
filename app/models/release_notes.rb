@@ -1,6 +1,6 @@
 class ReleaseNotes
   def initialize(markdown: nil)
-    @notes = parse_release_notes(markdown || content)
+    @notes = parse_release_notes(markdown || file_content)
   end
 
   def latest
@@ -22,7 +22,7 @@ private
     /^## (.*?)\n\n(.*?)(?=\n##|\z)/m
   end
 
-  def content
+  def file_content
     File.read(Rails.root.join("release_notes.md"))
   end
 

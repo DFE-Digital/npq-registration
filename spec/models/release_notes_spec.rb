@@ -2,20 +2,22 @@ require "rails_helper"
 
 RSpec.describe ReleaseNotes do
   it "parses release notes" do
-    release_notes = ReleaseNotes.new(markdown: <<~RELEASE_NOTES,
-      # Release notes
+    release_notes = ReleaseNotes.new(
+      markdown: <<~RELEASE_NOTES,
+        # Release notes
 
-      If you have any questions or comments...
+        If you have any questions or comments...
 
-      ## 2021-10-10
+        ## 2021-10-10
 
-      First note
+        First note
 
-      ## 2021-10-09
+        ## 2021-10-09
 
-      Second note
+        Second note
 
-    RELEASE_NOTES
+      RELEASE_NOTES
+    )
 
     latest = release_notes.latest
     expect(latest.date).to eq("2021-10-10")
