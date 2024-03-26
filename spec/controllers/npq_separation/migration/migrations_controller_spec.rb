@@ -71,6 +71,13 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
       make_request
     end
 
+    before do
+      allow(Migration::FailureManager).to receive(:new).with(data_migration:).and_return(failure_manager_double)
+      allow(failure_manager_double).to receive(:all_failures).and_return([{ failure: 1 }, { failure: 2 }])
+
+      make_request
+    end
+
     context "when not signed in as a super admin" do
       let(:super_admin) { false }
 
