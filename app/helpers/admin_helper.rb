@@ -9,8 +9,4 @@ module AdminHelper
   def admin_navigation_structure
     @admin_navigation_structure ||= NpqSeparation::NavigationStructures::AdminNavigationStructure.new
   end
-
-  def guidance_navigation_structure
-    @guidance_navigation_structure ||= NpqSeparation::NavigationStructures::GuidanceNavigationStructure.new
-  end
 end
