@@ -5,8 +5,6 @@ module NpqSeparation
 
     private
 
-      # Returns a hash where the keys are primary nodes and the values are
-      # sub nodes nested with the 'nodes: key'
       def structure
         {
           Node.new(

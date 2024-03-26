@@ -37,9 +37,7 @@ module NpqSeparation
   private
 
     def mark_current(structure)
-      structure.each do |node|
-        node.current = current_path.start_with?(node.prefix)
-      end
+      structure.each { |node| node.current = current_path.start_with?(node.prefix) }
     end
   end
 end

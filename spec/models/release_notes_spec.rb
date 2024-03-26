@@ -16,7 +16,6 @@ RSpec.describe ReleaseNotes do
       Second note
 
     RELEASE_NOTES
-                                    )
 
     latest = release_notes.latest
     expect(latest.date).to eq("2021-10-10")
