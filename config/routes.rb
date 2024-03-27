@@ -8,7 +8,11 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
-  resources :email_updates
+  resources :email_updates do
+    collection do
+      get 'unsubscribe'
+    end
+  end
 
   resource :registration_closed, only: [:show], controller: :registration_closed
 

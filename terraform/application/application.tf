@@ -1,7 +1,7 @@
 locals {
   environment  = "${var.environment}${var.pull_request_number}"
   service_name = "cpd-npq"
-  # domain       = var.environment == "review" ? "cpd-npq-${local.environment}-web.test.teacherservices.cloud" : var.domain
+  domain       = var.environment == "review" ? "cpd-npq-${local.environment}-web.test.teacherservices.cloud" : var.domain
 }
 
 module "application_configuration" {
@@ -21,6 +21,7 @@ module "application_configuration" {
     ENVIRONMENT_NAME = var.environment
     PGSSLMODE        = local.postgres_ssl_mode
     RAILS_ENV        = var.environment
+    DOMAIN           = local.domain
   }
   secret_variables = {
     DATABASE_URL = module.postgres.url

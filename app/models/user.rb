@@ -152,4 +152,10 @@ class User < ApplicationRecord
     self.email_updates_unsubscribe_key = SecureRandom.uuid if email_updates_unsubscribe_key.nil?
     save!
   end
+
+  def unsubscribe_from_email_updates
+    self.email_updates_status = "empty"
+    self.email_updates_unsubscribe_key = nil
+    self.save
+  end
 end
