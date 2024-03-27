@@ -9,7 +9,7 @@ module Helpers
     end
 
     def retrieve_latest_application_user_data
-      latest_application_user&.as_json(except: %i[id feature_flag_id created_at updated_at updated_from_tra_at])
+      latest_application_user&.as_json(except: %i[id feature_flag_id created_at updated_at updated_from_tra_at email_updates_status email_updates_unsubscribe_key allow_closed_registration])
     end
 
     def retrieve_latest_application_data
