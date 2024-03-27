@@ -1,7 +1,7 @@
 locals {
   environment  = "${var.environment}${var.pull_request_number}"
   service_name = "cpd-npq"
-  domain       = var.environment == "review" ? "cpd-npq-${local.environment}-web.test.teacherservices.cloud" : var.domain
+  domain       = var.environment == "review" ? "cpd-npq-${local.environment}-web.test.teacherservices.cloud" : module.web_application.hostname
 }
 
 module "application_configuration" {
