@@ -1,11 +1,11 @@
 class Admin::SuperAdminsController < SuperAdminController
   def update
-    @user = User.find(params[:id])
+    @admin = Admin.find(params[:id])
 
-    if @user.update(super_admin: true)
-      flash[:success] = t(".success", email: @user.email)
+    if @admin.update(super_admin: true)
+      flash[:success] = t(".success", email: @admin.email)
     else
-      flash[:error] = t(".failure", email: @user.email)
+      flash[:error] = t(".failure", email: @admin.email)
     end
 
     redirect_back(fallback_location: admin_admins_path)
