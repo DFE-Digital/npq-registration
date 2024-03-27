@@ -29,12 +29,14 @@ module NpqSeparation
     end
 
     def default_section
-      return nil unless @default_to_first_section
+      return nil unless default_to_first_section
 
       sections.first
     end
 
   private
+
+    attr_reader :default_to_first_section
 
     def mark_current(structure)
       structure.each { |node| node.current = current_path.start_with?(node.prefix) }
