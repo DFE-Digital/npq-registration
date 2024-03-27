@@ -1,14 +1,7 @@
 require "rails_helper"
-require "tempfile"
 
-RSpec.describe GuidancePage, type: :model do
+RSpec.describe Guidance::GuidancePage do
   subject(:guidance_page) { described_class.new("test", content:) }
-
-  describe ".index_page" do
-    it "returns a new instance of GuidanceIndexPage" do
-      expect(described_class.index_page).to be_a(GuidancePage::GuidanceIndexPage)
-    end
-  end
 
   describe "#sections" do
     context "when there are no subheadings" do
@@ -17,6 +10,14 @@ RSpec.describe GuidancePage, type: :model do
       it "returns an empty array" do
         expect(guidance_page.sections).to eq({})
       end
+    end
+  end
+
+  describe "#index_page?" do
+    let(:content) { "# Heading" }
+
+    it "returns false" do
+      expect(guidance_page.index_page?).to be false
     end
   end
 
