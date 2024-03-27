@@ -42,7 +42,7 @@ test:
     database: npq_registration_test
   ecf:
     <<: *default_ecf
-#    <<: *default_primary # We share the database in the test environment
+    <<: *default_primary # We share the database in the test environment
     database: early_careers_framework_test
 
 staging:
