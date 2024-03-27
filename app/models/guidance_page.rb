@@ -7,11 +7,15 @@ class GuidancePage
   def sub_headings
     headings = page_contents.scan(/^##\s(.*)$/).map(&:first)
 
-    headings.index_by { |heading| heading.underscore.parameterize.gsub("_", "-") }
+    headings.index_by { |heading| "##{heading.underscore.parameterize.gsub("_", "-")}" }
   end
 
   def template
     "api/guidance/#{path}"
+  end
+
+  def self.index_page
+    GuidanceIndexPage.new
   end
 
 private
@@ -20,5 +24,11 @@ private
 
   def page_contents
     @content || File.read(Rails.root.join("app", "views", "#{template}.md"))
+  end
+
+  class GuidanceIndexPage
+    def sub_headings
+      {}
+    end
   end
 end

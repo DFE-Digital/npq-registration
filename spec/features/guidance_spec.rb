@@ -7,17 +7,25 @@ RSpec.feature "Guidance", type: :feature do
     expect(page).to have_content("Guidance")
   end
 
-  it "renders a markdown page with .md extension" do
-    # to be updated with a valid guidance page
-    visit "/api/guidance/test.md"
+  describe "GET /api/guidance/get-started" do
+    it "renders the .html page" do
+      visit "/api/guidance/get-started"
 
-    expect(page).to have_content("This is a markdown page with .md extension")
+      expect(page).not_to have_content("#Connect to the API")
+      expect(page).to have_content("Connect to the API")
+    end
+
+    it "renders the navigation menu" do
+      visit "/api/guidance/get-started"
+
+      expect(page).to have_link("Connect to the API", href: "#connect-to-the-api")
+    end
   end
 
   it "renders a nested markdown page" do
     # to be updated with a valid nested page
-    visit "/api/guidance/nested/nested/test.md"
+    visit "/api/guidance/nested/nested/test"
 
-    expect(page).to have_content("This is a nested markdown page with .md extension")
+    expect(page).to have_content("This is a nested markdown page")
   end
 end
