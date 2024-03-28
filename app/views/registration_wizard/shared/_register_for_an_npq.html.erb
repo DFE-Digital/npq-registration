@@ -1,11 +1,32 @@
 <hr class="govuk-!-margin-top-8"/>
-<div class="govuk-!-padding-top-5">
-  <h1 class="govuk-heading-l">Register for another NPQ</h1>
+<% if Feature.registration_closed?(current_user) %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-top-0">
 
-  <p class="govuk-body">Use this service to submit a new registration.</p>
-  <% if Feature.trn_required? && current_user.trn.blank? %>
-    <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>
-  <% else %>
-    <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:provider_check)) %>
-  <% end %>
-</div>
+      <h2 class="govuk-heading-l">Registration has closed temporarily</h2>
+      <p class="govuk-body"><strong>Request email updates to tell you when registration opens</strong>. This is usually in the summer.</pc>
+      <p class="govuk-body">When registration opens use this service to register for a NPQ or the early headship coaching offer starting before November 2024. </p>
+
+      <%=
+        render GovukComponent::ContinueButtonComponent.new(
+          text: "Request email updates",
+          href: user_tra_openid_connect_omniauth_authorize_path,
+          as_button: true,
+          html_attributes: { params: { request_email_updates: "true" }}
+        )
+      %>
+
+    </div>
+  </div>
+<% else %>
+  <div class="govuk-!-padding-top-5">
+    <h1 class="govuk-heading-l">Register for another NPQ</h1>
+
+    <p class="govuk-body">Use this service to submit a new registration.</p>
+    <% if Feature.trn_required? && current_user.trn.blank? %>
+      <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:teacher_reference_number)) %>
+    <% else %>
+      <%= govuk_start_button(text: "Register for another NPQ", href: registration_wizard_show_path(:provider_check)) %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,20 +1,23 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Register for a national professional qualification (NPQ)</h1>
+    <h1 class="govuk-heading-xl">Registration has closed temporarily</h1>
 
-    <h2 class="govuk-heading-m">Registration for NPQs has closed temporarily</h2>
+    <p class="govuk-body">
+      <strong>Request email updates to tell you when registration opens</strong>,
+      this is usually in the summer.
+    </p>
 
-    <p class="govuk-body"><%= govuk_link_to "Sign up for an email", registration_interest_sign_up_path %> to be notified when registration reopens.</p>
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Request email updates",
+        href: user_tra_openid_connect_omniauth_authorize_path,
+        as_button: true,
+        html_attributes: { params: { request_email_updates: "true" }}
+      )
+    %>
 
-    <h2 class="govuk-heading-m">When registration reopens</h2>
-
-    <p class="govuk-body">You will be able to use this service to register:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>to study for an NPQ</li>
-      <li>for <%= localise_sentence_embedded_course_name(Course.ehco) %> for new headteachers</li>
-    </ul>
-
-    <p class="govuk-body">For more information you can read guidance on the <%= govuk_link_to "NPQ reforms.", "https://www.gov.uk/government/publications/national-professional-qualifications-npqs-reforms/national-professional-qualifications-npqs-reforms" %></p>
+    <p class="govuk-body">
+      When registration opens use this service to register for a NPQ or the early headship coaching offer starging before November 2024.
+    </p>
   </div>
 </div>

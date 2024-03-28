@@ -77,6 +77,7 @@ private
   end
 
   def after_sign_in_path_for(user)
+    return new_email_update_path if session["request_email_updates"]
     return account_path if user.applications.any?
 
     start_questionnaire_path(user)

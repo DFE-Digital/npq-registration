@@ -8,6 +8,18 @@ Rails.application.routes.draw do
   resources :institutions, only: [:index]
   resources :private_childcare_providers, only: [:index]
 
+  resources :email_updates do
+    collection do
+      get "unsubscribe"
+    end
+  end
+
+  resource :registration_closed, only: [:show], controller: :registration_closed do
+    collection do
+      get "change"
+    end
+  end
+
   root "registration_wizard#show", step: "start"
 
   get "/registration/:step", to: "registration_wizard#show", as: "registration_wizard_show"
@@ -35,6 +47,7 @@ Rails.application.routes.draw do
   get "/privacy-policy", to: redirect("https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ"), as: :privacy_policy
   get "/accessibility-statement", to: "pages#show", page: "accessibility"
   get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
+  get "/closed_registration_exception", to: "pages#show", page: "closed_registration_exception"
 
   resource :cookie_preferences do
     member do
@@ -72,6 +85,7 @@ Rails.application.routes.draw do
     end
 
     resources "settings"
+    resources :closed_registration_users
   end
 
   get "/admin", to: "admin#show"

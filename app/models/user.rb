@@ -13,6 +13,10 @@ class User < ApplicationRecord
          .where(provider: "tra_openid_connect")
   }
 
+  EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
+  EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
+
+  enum email_updates_status: EMAIL_UPDATES_ALL_STATES
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end
@@ -129,11 +133,6 @@ class User < ApplicationRecord
                 .order(run_at: :asc)
   end
 
-  # Whether this user has admin access to the feature flagging interface
-  def flipper_access?
-    admin? && super_admin?
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end
@@ -146,5 +145,17 @@ class User < ApplicationRecord
 
   def super_admin?
     raise StandardError, "deprecated"
+  end
+
+  def update_email_updates_status(form)
+    self.email_updates_status = form.email_updates_status
+    self.email_updates_unsubscribe_key = SecureRandom.uuid if email_updates_unsubscribe_key.nil?
+    save!
+  end
+
+  def unsubscribe_from_email_updates
+    self.email_updates_status = "empty"
+    self.email_updates_unsubscribe_key = nil
+    save!
   end
 end

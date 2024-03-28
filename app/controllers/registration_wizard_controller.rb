@@ -1,4 +1,5 @@
 class RegistrationWizardController < ApplicationController
+  before_action :registration_closed
   before_action :set_wizard
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
@@ -49,12 +50,24 @@ private
     end
   end
 
+  def registration_closed
+    return if request.path == registration_wizard_show_path(:closed)
+
+    if Feature.registration_closed?(current_user)
+      if params[:step] == "start"
+        redirect_to registration_closed_path
+      else
+        redirect_to registration_wizard_show_path(:closed)
+      end
+    end
+  end
+
   def store
     session["registration_store"] ||= {}
   end
 
   def wizard_params
-    return {} if Feature.registration_closed?
+    return {} if Feature.registration_closed?(current_user)
 
     params.fetch(:registration_wizard, {}).permit(RegistrationWizard.permitted_params_for_step(params[:step].underscore))
   end

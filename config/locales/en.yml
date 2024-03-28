@@ -161,6 +161,10 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
+        email_updates:
+          attributes:
+            email_updates_status:
+              blank: 'You must choose an option to continue'
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
@@ -349,6 +353,7 @@ en:
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
         qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"
+        email_updates_status: "Do you want to register for the special educational needs co-ordinator (SENCO) NPQ when registration opens?"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -403,6 +408,10 @@ en:
 
         course_start_date_options:
           "yes": "Yes"
+          "no": "No, I want to start later"
+
+        emai_updates_status:
+          "senco": "Yes"
           "no": "No, I want to start later"
 
         maths_understanding_of_approach_options:
