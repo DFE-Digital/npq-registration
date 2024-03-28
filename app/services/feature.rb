@@ -29,6 +29,7 @@ class Feature
 
     def registration_closed?
       Flipper.enabled?(REGISTRATION_CLOSED_KEY)
+      #
     end
 
     def registration_disabled?
