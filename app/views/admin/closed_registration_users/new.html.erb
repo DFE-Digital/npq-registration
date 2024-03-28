@@ -1,0 +1,13 @@
+<h1>Admin::LateRegistrants#new</h1>
+<p>Find me in app/views/admin/late_registrants/new.html.erb</p>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Settings" %>
+    <%= form_for [:admin, @user] do |f| %>
+      <%= f.govuk_error_summary %>
+      <%= f.govuk_text_field :email,  legend: { text: 'Provide course start date' } %>
+      <%= f.govuk_submit "Save" %>
+    <% end %>
+  </div>
+</div>

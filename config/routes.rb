@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   get "/privacy-policy", to: redirect("https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ"), as: :privacy_policy
   get "/accessibility-statement", to: "pages#show", page: "accessibility"
   get "/choose-an-npq-and-provider", to: "pages#show", page: "choose_an_npq_and_provider"
+  get "/closed_registration_exception", to: "pages#show", page: "closed_registration_exception"
 
   resource :cookie_preferences do
     member do
@@ -72,6 +73,7 @@ Rails.application.routes.draw do
     end
 
     resources "settings"
+    resources :closed_registration_users
   end
 
   get "/admin", to: "admin#show"

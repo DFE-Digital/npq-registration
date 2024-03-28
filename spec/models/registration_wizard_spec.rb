@@ -23,16 +23,6 @@ RSpec.describe RegistrationWizard do
         }.to raise_error(RegistrationWizard::InvalidStep)
       end
     end
-
-    context "when registration is closed" do
-      before do
-        Flipper.enable(Feature::REGISTRATION_CLOSED_KEY)
-      end
-
-      it "always returns closed" do
-        expect(subject.current_step).to be(:closed)
-      end
-    end
   end
 
   describe "#answers" do

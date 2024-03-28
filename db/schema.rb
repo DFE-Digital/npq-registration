@@ -89,6 +89,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_12_212008) do
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
+  create_table "closed_registration_users", force: :cascade do |t|
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cohorts", force: :cascade do |t|
     t.integer "start_year", null: false
     t.datetime "registration_start_date", null: false

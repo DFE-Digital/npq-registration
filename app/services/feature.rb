@@ -1,11 +1,11 @@
 class Feature
   REGISTRATION_OPEN_DATE = Time.zone.parse("6 June 2022 12:00")
 
-  REGISTRATION_CLOSED_KEY = "Registration closed".freeze
+  REGISTRATION_OPEN = "Registration open".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
 
   FEATURE_FLAG_KEYS = [
-    REGISTRATION_CLOSED_KEY,
+    REGISTRATION_OPEN,
   ].freeze
 
   class << self
@@ -27,8 +27,8 @@ class Feature
       true
     end
 
-    def registration_closed?
-      Flipper.enabled?(REGISTRATION_CLOSED_KEY)
+    def registration_closed?(user)
+      !Flipper.enabled?(REGISTRATION_OPEN, user)
     end
 
     def registration_disabled?

@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :set_sentry_user
+  before_action :set_feature_flag_users
 
 private
 
@@ -41,4 +42,9 @@ private
     Admin.find_by(id: session[:admin_id])
   end
   helper_method :current_admin
+
+  def set_feature_flag_users
+    users = User.where(email: ClosedRegistrationUser.pluck(:email))
+    users.each { |u| Flipper.enable_actor(Feature::REGISTRATION_OPEN, u) }
+  end
 end

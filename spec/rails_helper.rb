@@ -113,6 +113,10 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  config.before do
+    Flipper.enable(Feature::REGISTRATION_OPEN)
+  end
+
   config.before(:each, exceptions_app: true) do
     # Make the app behave how it does in non dev/test environments and use the
     # ErrorsController via config.exceptions_app = routes in config/application.rb

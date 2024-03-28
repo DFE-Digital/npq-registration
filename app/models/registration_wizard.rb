@@ -59,7 +59,6 @@ class RegistrationWizard
   attr_reader :current_step, :params, :store, :request, :current_user
 
   def initialize(current_step:, store:, request:, current_user:, params: {})
-    current_step = :closed if Feature.registration_closed?
     set_current_step(current_step)
 
     @current_user = current_user
