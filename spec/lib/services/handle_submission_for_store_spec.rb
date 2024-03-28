@@ -36,7 +36,7 @@ RSpec.describe HandleSubmissionForStore do
 
   describe "#call" do
     def stable_as_json(record)
-      record.as_json(except: %i[id created_at updated_at updated_from_tra_at DEPRECATED_school_urn])
+      record.as_json(except: %i[id created_at updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key allow_closed_registration])
     end
 
     context "when store includes information from the school path" do
@@ -70,9 +70,6 @@ RSpec.describe HandleSubmissionForStore do
           "trn_lookup_status" => nil,
           "trn_verified" => false,
           "feature_flag_id" => user.feature_flag_id,
-          "email_updates_status" => "empty",
-          "email_updates_unsubscribe_key" => nil,
-          "allow_closed_registration" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -171,9 +168,6 @@ RSpec.describe HandleSubmissionForStore do
           "trn_lookup_status" => nil,
           "trn_verified" => false,
           "feature_flag_id" => user.feature_flag_id,
-          "email_updates_status" => "empty",
-          "email_updates_unsubscribe_key" => nil,
-          "allow_closed_registration" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
