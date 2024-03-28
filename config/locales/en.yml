@@ -161,6 +161,10 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
+        email_updates:
+          attributes:
+            email_updates_status:
+              blank: 'You must choose an option to continue'
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
