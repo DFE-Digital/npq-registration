@@ -77,7 +77,7 @@ end
 
 group :test do
   gem "axe-core-capybara", "~> 4.6"
-  gem "axe-core-rspec", "~> 4.8"
+  gem "axe-core-rspec", "~> 4.9"
   gem "shoulda-matchers", "~> 6.2"
   gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
