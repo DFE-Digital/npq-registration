@@ -156,6 +156,6 @@ class User < ApplicationRecord
   def unsubscribe_from_email_updates
     self.email_updates_status = "empty"
     self.email_updates_unsubscribe_key = nil
-    self.save
+    save!
   end
 end

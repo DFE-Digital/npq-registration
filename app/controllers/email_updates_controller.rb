@@ -13,7 +13,7 @@ class EmailUpdatesController < ApplicationController
     @form = EmailUpdates.new(email_update_params)
     if @form.valid?
       current_user.update_email_updates_status(@form)
-      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: current_user.email, service_link: "https://#{ENV['DOMAIN']}", unsubscribe_link: unsubscribe_link).deliver_now
+      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: current_user.email, service_link: "https://#{ENV['DOMAIN']}", unsubscribe_link:).deliver_now
     else
       render :new
     end
@@ -23,11 +23,11 @@ class EmailUpdatesController < ApplicationController
   def unsubscribe
     user = User.find_by(email_updates_unsubscribe_key: params[:unsubscribe_key])
 
-    unless user
+    if user
+      user.unsubscribe_from_email_updates
+    else
       flash[:error] = "Invalid unsubscribe link"
       redirect_to root_path
-    else
-      user.unsubscribe_from_email_updates
     end
   end
 
