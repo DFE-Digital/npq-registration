@@ -14,7 +14,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :registration_closed, only: [:show], controller: :registration_closed
+  resource :registration_closed, only: [:show], controller: :registration_closed do
+    collection do
+      get "change"
+    end
+  end
 
   root "registration_wizard#show", step: "start"
 

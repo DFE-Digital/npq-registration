@@ -12,9 +12,15 @@
           <%= title_embedded_course_name(application.course) %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
-            Change<span class="govuk-visually-hidden"> Course</span>
-          </a>
+          <% if Feature.registration_closed?(current_user) %>
+            <a class="govuk-link" href="<%= change_registration_closed_path %>">
+              Change<span class="govuk-visually-hidden"> Course</span>
+            </a>
+          <% else %>
+            <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
+              Change<span class="govuk-visually-hidden"> Course</span>
+            </a>
+          <% end %>
         </dd>
       </div>
 
@@ -26,9 +32,15 @@
           <%= application.lead_provider.name %>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
-            Change<span class="govuk-visually-hidden"> Provider</span>
-          </a>
+          <% if Feature.registration_closed?(current_user) %>
+            <a class="govuk-link" href="<%= change_registration_closed_path %>">
+              Change<span class="govuk-visually-hidden"> Course</span>
+            </a>
+          <% else %>
+            <a class="govuk-link" href="<%= registration_wizard_show_url('change_your_course_or_provider'.dasherize) %>">
+              Change<span class="govuk-visually-hidden"> Provider</span>
+            </a>
+          <% end %>
         </dd>
       </div>
 
@@ -61,7 +73,7 @@
           </dt>
           <dd class="govuk-summary-list__value">
             Before <%= application_course_start_date %>
-            <% if application.eligible_for_funding %>  
+            <% if application.eligible_for_funding %>
               <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.eligible_for_funding", date: application_course_start_date) %></p>
             <% else %>
               <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("course_start_details.not_eligible_for_funding", date: application_course_start_date) %></p>
