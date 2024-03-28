@@ -14,6 +14,13 @@ class NpqSeparation::Migration::MigrationsController < ApplicationController
     redirect_to npq_separation_migration_migrations_path
   end
 
+  def download_report
+    data_migration = Migration::DataMigration.find(params[:id])
+    failures = Migration::FailureManager.new(data_migration:).all_failures
+
+    send_data(failures, filename: "migration_failures_#{data_migration.model}_#{data_migration.id}.yaml", type: "text/yaml", disposition: "attachment")
+  end
+
 private
 
   def require_super_admin
