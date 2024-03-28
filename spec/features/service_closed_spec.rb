@@ -78,7 +78,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       click_on("Start now")
 
-      expect_page_to_have(path: "/account")
+      expect_page_to_have(path: "/registration/closed")
     end
   end
 

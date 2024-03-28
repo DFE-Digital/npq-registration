@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_action :set_sentry_user
   before_action :set_feature_flag_users
+  before_action :initialize_store
 
 private
 
@@ -46,5 +47,9 @@ private
   def set_feature_flag_users
     users = User.where(email: ClosedRegistrationUser.pluck(:email))
     users.each { |u| Flipper.enable_actor(Feature::REGISTRATION_OPEN, u) }
+  end
+
+  def initialize_store
+    session["registration_store"] ||= {}
   end
 end
