@@ -1,17 +1,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl">Register for a national professional qualification (NPQ)</h1>
-
-    <h2 class="govuk-heading-m">Registration for NPQs has closed temporarily</h2>
+    <h1 class="govuk-heading-xl">Registration has closed temporarily</h1>
 
     <p class="govuk-body">
       <strong>Request email updates to tell you when registration opens</strong>,
-      this is usually in the summer. You can also tell us about your interest in the special educational needs coordinator (SENCO) NPQ course.
+      this is usually in the summer.
     </p>
 
-    <p class="govuk-body">You’ll be asked to create a DfE Identity account or sign in to your account. </p>
-
-    <p class="govuk-body">You will need a teacher reference number (TRN), even if you’re not a teacher. <a class="govuk-link" href="https://www.gov.uk/guidance/teacher-reference-number-trn">Learn about TRNs</a> including how to request one if you do not have one.</p>
     <%=
       render GovukComponent::ContinueButtonComponent.new(
         text: "Request email updates",
@@ -21,15 +16,8 @@
       )
     %>
 
-    <h2 class="govuk-heading-m">When registration reopens</h2>
-
-    <p class="govuk-body">You will be able to use this service to register:</p>
-
-    <ul class="govuk-list govuk-list--bullet">
-      <li>to study for an NPQ</li>
-      <li>for <%= localise_sentence_embedded_course_name(Course.ehco) %> for new headteachers</li>
-    </ul>
-
-    <p class="govuk-body">For more information you can read guidance on the <%= govuk_link_to "NPQ reforms.", "https://www.gov.uk/government/publications/national-professional-qualifications-npqs-reforms/national-professional-qualifications-npqs-reforms" %></p>
+    <p class="govuk-body">
+      When registration opens use this service to register for a NPQ or the early headship coaching offer starging before November 2024.
+    </p>
   </div>
 </div>
