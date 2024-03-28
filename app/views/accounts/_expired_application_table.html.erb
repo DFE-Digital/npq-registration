@@ -24,8 +24,10 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <strong class="govuk-tag govuk-tag--grey">EXPIRED</strong>
-          <% if Feature.registration_closed? %>
-            <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.expired_status_when_service_is_closed")  %></p>
+          <% if Feature.registration_closed?(current_user) %>
+            <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+              Your registration has expired but you can register again for future courses when registrations open.
+            </p>
           <% elsif Feature.trn_required? && current_user.trn.blank? %>
             <p> <%= link_to "Submit a new registration", registration_wizard_show_path(:teacher_reference_number) %> if you still want to take this course. </p>
           <% else %>
