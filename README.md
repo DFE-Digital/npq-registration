@@ -1,6 +1,8 @@
 ![Tests](https://github.com/DFE-Digital/npq-registration/actions/workflows/test.yml/badge.svg)
 ![Deployment](https://github.com/DFE-Digital/npq-registration/actions/workflows/deploy_to_prod.yml/badge.svg)
 
+required for Accessibility testing branch
+
 # npq-registration (National professional qualification)
 
 1. [Setting up the App](docs/setup.md)
