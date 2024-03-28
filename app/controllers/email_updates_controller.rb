@@ -13,7 +13,7 @@ class EmailUpdatesController < ApplicationController
     @form = EmailUpdates.new(email_update_params)
     if @form.valid?
       current_user.update_email_updates_status(@form)
-      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: current_user.email, service_link: "https://#{ENV['DOMAIN']}", unsubscribe_link:).deliver_now
+      EmailUpdatesConfirmationMailer.email_updates_confirmation_mail(to: current_user.email, service_link: service_url, unsubscribe_link:).deliver_now
     else
       render :new
     end
@@ -38,6 +38,14 @@ private
   end
 
   def unsubscribe_link
-    "https://#{ENV['DOMAIN']}#{unsubscribe_email_updates_path(unsubscribe_key: current_user.email_updates_unsubscribe_key)}"
+    "#{service_url}#{unsubscribe_email_updates_path(unsubscribe_key: current_user.email_updates_unsubscribe_key)}"
+  end
+
+  def service_url
+    if Rails.env.production?
+      "https://register-national-professional-qualifications.education.gov.uk/"
+    else
+      "https://#{ENV['DOMAIN']}"
+    end
   end
 end
