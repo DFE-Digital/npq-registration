@@ -70,6 +70,9 @@ RSpec.describe HandleSubmissionForStore do
           "trn_lookup_status" => nil,
           "trn_verified" => false,
           "feature_flag_id" => user.feature_flag_id,
+          "email_updates_status" => "empty",
+          "email_updates_unsubscribe_key" => nil,
+          "allow_closed_registration" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)
@@ -168,6 +171,9 @@ RSpec.describe HandleSubmissionForStore do
           "trn_lookup_status" => nil,
           "trn_verified" => false,
           "feature_flag_id" => user.feature_flag_id,
+          "email_updates_status" => "empty",
+          "email_updates_unsubscribe_key" => nil,
+          "allow_closed_registration" => nil,
         })
         expect(user.applications.reload.count).to eq 0
         expect(stable_as_json(user.applications.last)).to match(nil)

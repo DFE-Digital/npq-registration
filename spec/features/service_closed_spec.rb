@@ -1,19 +1,23 @@
 require "rails_helper"
 
-RSpec.feature "Service is hard closed", type: :feature do
+RSpec.feature "Service is closed", type: :feature do
   include Helpers::AdminLogin
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
+
+  include_context "Stub Get An Identity Omniauth Responses"
 
   scenario "Service close date has passed" do
     close_registration!
 
     visit "/"
-    expect(page).to have_content("Registration for NPQs has closed temporarily")
+    expect(page).to have_content("Registration has closed temporarily")
     expect(page).to be_axe_clean
 
-    page.click_link("Sign up for an email")
-    expect(page).to have_content("What’s your email address?")
+    page.click_button("Request email updates")
+    # Due to mocking GAI, we need to manually follow the path
+    visit new_email_update_path
+    expect(page).to have_content("Request email updates about registration opening")
     expect(page).to be_axe_clean
   end
 
@@ -45,7 +49,7 @@ RSpec.feature "Service is hard closed", type: :feature do
 
     scenario "Allow user to register" do
       visit "/"
-      expect(page).to have_content("Registration for NPQs has closed temporarily")
+      expect(page).to have_content("Registration has closed temporarily")
 
       sign_in_as(super_admin)
 
@@ -68,13 +72,13 @@ RSpec.feature "Service is hard closed", type: :feature do
 
     scenario "When user is not whitelisted" do
       visit "/"
-      expect(page).to have_content("Registration for NPQs has closed temporarily")
+      expect(page).to have_content("Registration has closed temporarily")
 
       visit "/closed_registration_exception"
 
       click_on("Start now")
 
-      expect_page_to_have(path: "/registration/closed")
+      expect_page_to_have(path: "/account")
     end
   end
 
