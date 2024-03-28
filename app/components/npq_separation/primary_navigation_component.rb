@@ -2,9 +2,10 @@ module NpqSeparation
   class PrimaryNavigationComponent < ViewComponent::Base
     attr_accessor :current_path, :sections
 
-    def initialize(current_path, structure:)
+    def initialize(current_path, structure:, default_to_first_section: true)
       fail unless structure.is_a?(NpqSeparation::NavigationStructure)
 
+      @default_to_first_section = default_to_first_section
       @current_path = current_path
       @sections = mark_current(structure.primary_structure)
     end
@@ -24,10 +25,18 @@ module NpqSeparation
     end
 
     def current_section
-      sections.find(&:current) || sections.first
+      sections.find(&:current) || default_section
+    end
+
+    def default_section
+      return nil unless default_to_first_section
+
+      sections.first
     end
 
   private
+
+    attr_reader :default_to_first_section
 
     def mark_current(structure)
       structure.each { |node| node.current = current_path.start_with?(node.prefix) }

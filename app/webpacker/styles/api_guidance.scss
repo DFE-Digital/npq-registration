@@ -1,3 +1,6 @@
+@import "./api_guidance/_masthead";
+@import "./api_guidance/_header";
+
 .api-guidance {
   $orange: darken(#f47738, 20%);
   $blue: #1d70b8;
@@ -10,38 +13,49 @@
   $red: #d4351c;
   $dark-green: #365e07;
 
-  pre > code {
-    color: $text;
+  .whats-new {
+    background-color: $light-grey;
+    border-bottom: 1px solid rgb(177, 180, 182);
+  }
 
-    .s, .s1, .s2, .vi, .sx {
-      color: $pink;
-    }
+  .highlight {
+    background-color: $light-grey;
+    padding: 0.2em 0.5em;
 
-    .nt, .nf, .nc {
-      color: $orange;
-    }
+    pre > code {
+      color: $text;
 
-    .n, .p, .k, .mi, .n, .o, .na, .ss {
-      color: $dark-blue;
-    }
+      .s, .s1, .s2, .vi, .sx {
+        color: $pink;
+      }
 
-    .k {
-      font-weight: 600;
-    }
+      .nt, .nf, .nc {
+        color: $orange;
+      }
 
-    .no {
-      color: #0e5e5e;
-    }
+      .n, .p, .k, .mi, .n, .o, .na, .ss {
+        color: $dark-blue;
+      }
 
-    .kp {
-      color: $green;
-    }
+      .k {
+        font-weight: 600;
+      }
 
-    // comments
-    .c,
-    .c1 {
-      color: $dark-green;
-      font-style: italic;
+      .no {
+        color: #0e5e5e;
+      }
+
+      .kp {
+        color: $green;
+      }
+
+      // comments
+      .c,
+      .c1 {
+        color: $dark-green;
+        font-style: italic;
+      }
     }
   }
 }
+

@@ -2,58 +2,54 @@
 <html lang="en" class="govuk-template admin--wide">
 <%= render partial: "layouts/shared/head" %>
 
-<body class="govuk-template__body api-guidance">
+<body class="govuk-template__body">
 
 <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-<%= render partial: "layouts/shared/header" %>
+<%= render partial: "layouts/api_guidance/header" %>
+<% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, default_to_first_section: false, structure: guidance_navigation_structure) %>
+<%= render(primary_navigation) %>
 
-<div class="govuk-width-container">
-  <nav class="x-govuk-primary-navigation" aria-labelledby="primary-navigation-heading">
-    <div class="govuk-width-container">
-      <h2 class="govuk-visually-hidden" id="primary-navigation-heading">Navigation</h2>
-      <ul class="x-govuk-primary-navigation__list">
-        <li class="x-govuk-primary-navigation__item"><%= link_to "Get started", api_guidance_page_path(page: "get-started"), class: "x-govuk-primary-navigation__link" %></li>
-      </ul>
-    </div>
-  </nav>
+<main id="main-content" class="api-guidance" role="main">
+  <%= render partial: "layouts/shared/messages" %>
 
-  <main class="govuk-main-wrapper api-guidance" id="main-content" role="main">
-    <%= render partial: "layouts/shared/messages" %>
-
-    <div class="govuk-grid-row">
-      <% if @page.sub_headings.any? %>
-        <div class="govuk-grid-column-one-quarter">
-          <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
-            <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
-            <ul class="x-govuk-sub-navigation__section">
-              <% @page.sub_headings.each do |href, text| %>
-                <li class="x-govuk-sub-navigation__section-item">
-                  <%= link_to(text, href, class: "x-govuk-sub-navigation__link") %>
-                </li>
-              <% end %>
-            </ul>
-          </nav>
+  <div class="govuk-grid-row">
+    <% if @page.index_page? %>
+      <div class="govuk-grid-column-full">
+        <%= yield %>
+      </div>
+    <% else %>
+      <div class="govuk-width-container  govuk-!-padding-top-7">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-quarter">
+            <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+              <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Navigation</h2>
+              <ul class="x-govuk-sub-navigation__section">
+                <% @page.sections.each do |href, text| %>
+                  <li class="x-govuk-sub-navigation__section-item">
+                    <a class="x-govuk-sub-navigation__link" href="<%= href %>">
+                      <%= text %>
+                    </a>
+                  </li>
+                <% end %>
+              </ul>
+            </nav>
+          </div>
+          <div class="govuk-grid-column-three-quarters">
+            <%= yield %>
+          </div>
         </div>
-        <div class="govuk-grid-column-three-quarters">
-          <%= yield %>
-        </div>
-      <% else %>
-        <div class="govuk-grid-column-full">
-          <%= yield %>
-        </div>
-      <% end %>
-    </div>
-    <% if @page.sub_headings.any? %>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-quarter">
-          <%= govuk_link_to("↑ Back to top", "#top") %>
-        </div>
+        <% if @page.sections.any? %>
+          <div class="govuk-grid-row govuk-!-padding-bottom-5">
+            <div class="govuk-grid-column-one-quarter">
+              <%= govuk_link_to("↑ Back to top", "#top") %>
+            </div>
+          </div>
+        <% end %>
       </div>
     <% end %>
-  </main>
-</div>
+  </div>
+</main>
 </body>
-
 <%= render partial: "layouts/shared/footer" %>
 </html>
