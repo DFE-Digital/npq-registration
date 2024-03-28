@@ -35,7 +35,7 @@ RSpec.feature "Service is closed", type: :feature do
     close_registration!
     page.click_button("Continue")
 
-    expect(page).to have_content("Registration for NPQs has closed temporarily")
+    expect(page).to have_content("Registration has closed temporarily")
   end
 
   context "when service is closed" do
