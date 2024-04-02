@@ -16,13 +16,12 @@ module Questionnaires
       translated_lines = translations.map do |line|
         line.include?("<a href") ? line.html_safe : line
       end
-      body = translated_lines
 
       [
         QuestionTypes::CheckBox.new(
           name: :can_share_choices,
           required: true,
-          body: body,
+          body: translated_lines,
         ),
       ]
     end
