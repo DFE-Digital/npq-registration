@@ -375,8 +375,9 @@ en:
           "npq-early-headship-coaching-offer": "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship."
         npqh_status_title_hint: "To be eligible for the Early headship coaching offer you need to do the Headship NPQ."
         can_share_choices:
-          - All the information you enter for your NPQ application will be shared with your training provider - this lets your provider register the details to start your course.
-          - If you do not share this, you cannot progress with your NPQ.
+          - All the information you enter for your NPQ registration will be shared with external organisations including auditors, evaluators, relevant bodies and training providers – this allows your provider to register you onto their course.
+          - "For more information about who we share your data with read our <a href=\"https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ\" class=\"govuk-link\">privacy notice</a>."
+          - If you do not agree to share your information you will not be able to progress with your NPQ.
         choose_childcare_provider: "Search for your workplace in %{institution_location}"
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
         choose_school: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
@@ -436,7 +437,7 @@ en:
         itt_provider: "Enter the name of the ITT provider you are working with"
 
         can_share_choices_options:
-          1: Yes, I agree my information can be shared
+          1: Yes, I agree to share my information
         ehco_funding_choice_options:
           school: "My workplace is covering the cost"
           trust: "My trust is paying"
