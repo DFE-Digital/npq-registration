@@ -9,9 +9,9 @@ RSpec.describe User do
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name) }
 
-    it { is_expected.to validate_presence_of(:email) }
-    it { is_expected.to validate_uniqueness_of(:email).case_insensitive }
-    it { is_expected.not_to allow_value("invalid-email").for(:email) }
+    it { is_expected.to validate_presence_of(:email).on(:npq_separation) }
+    it { is_expected.to validate_uniqueness_of(:email).on(:npq_separation).case_insensitive }
+    it { is_expected.not_to allow_value("invalid-email").for(:email).on(:npq_separation) }
 
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
 
@@ -19,7 +19,7 @@ RSpec.describe User do
       user = create(:user, uid: "123")
       user.uid = "456"
 
-      expect(user).to be_invalid
+      expect(user).to be_invalid(:npq_separation)
       expect(user.errors[:uid]).to be_present
     end
   end
