@@ -31,6 +31,9 @@ module Ecf
         teacher_catchment_country: application.teacher_catchment_country,
         itt_provider: application.itt_provider&.legal_name,
         lead_mentor: application.lead_mentor,
+        primary_establishment: application.primary_establishment,
+        number_of_pupils: application.number_of_pupils,
+        tsf_primary_plus_eligibility: application.tsf_primary_plus_eligibility,
         relationships: {
           user: ecf_user,
           npq_course: ecf_npq_course,
