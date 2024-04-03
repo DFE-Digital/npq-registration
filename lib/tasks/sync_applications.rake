@@ -29,7 +29,9 @@ namespace :sync do
     Rails.logger.info "syncing applications"
     offset = args[:offset].to_i || 0 # Default offset to 0 if not provided
 
-    applications = Application.where.not(ecf_id: nil)
+    applications = Application.where.not(number_of_pupils: 0)
+                              .or(Application.where.not(primary_establishment: false))
+                              .or(Application.where.not(tsf_primary_plus_eligibility: false))
                               .order(created_at: :asc)
                               .offset(offset).limit(2000)
 
