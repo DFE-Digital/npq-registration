@@ -47,4 +47,10 @@ module MigrationHelper
 
     govuk_tag(text: "#{percentage}%", colour:)
   end
+
+  def data_migration_download_failures_report_link(data_migration)
+    return unless data_migration.failure_count.positive?
+
+    govuk_link_to("Failures report", download_report_npq_separation_migration_migrations_path(data_migration))
+  end
 end

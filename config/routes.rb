@@ -205,7 +205,9 @@ Rails.application.routes.draw do
     end
 
     namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
-      resources :migrations, only: %i[index create]
+      resources :migrations, only: %i[index create] do
+        get "download_report/:id", on: :collection, action: :download_report, as: :download_report
+      end
     end
   end
 
