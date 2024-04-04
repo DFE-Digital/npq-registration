@@ -76,12 +76,10 @@
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">API previous versions </h2>
-        <p class="govuk-body">
-          <%= govuk_link_to("View API v1.0.0", "#", class: "govuk-!-font-weight-bold") %>
-        </p>
-        <p class="govuk-body">
-          <%= govuk_link_to("View API v2.0.0", "#", class: "govuk-!-font-weight-bold") %>
-        </p>
+        <ul class="govuk-list">
+          <li><%= govuk_link_to("View API v1.0.0", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API v2.0.0", "#", class: "govuk-!-font-weight-bold") %></li>
+        </ul>
       </div>
     </div>
   </div>
