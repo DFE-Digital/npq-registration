@@ -3,11 +3,12 @@ module API
     layout "api_guidance"
 
     def index
-      @page = GuidancePage.index_page
+      @page = Guidance::IndexPage.new
+      @latest_release_note = ReleaseNotes.new.latest
     end
 
     def show
-      @page = GuidancePage.new(params[:page])
+      @page = Guidance::GuidancePage.new(params[:page])
 
       render template: @page.template
     end

@@ -1,0 +1,96 @@
+// source: https://x-govuk.github.io/govuk-prototype-components/masthead/#masthead-preview
+.x-govuk-masthead {
+  padding-bottom: 15px;
+  background-color: #1d70b8;
+  color: #ffffff;
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead {
+    padding-bottom: 20px;
+  }
+}
+.x-govuk-masthead > .govuk-width-container {
+  flex: 1;
+}
+
+.x-govuk-masthead__title {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.09375;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__title {
+    font-size: 3rem;
+    line-height: 1.0416666667;
+  }
+}
+@media print {
+  .x-govuk-masthead__title {
+    font-size: 32pt;
+    line-height: 1.15;
+  }
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__title {
+    margin-bottom: 30px;
+  }
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__title {
+    margin-top: 30px;
+  }
+}
+
+.x-govuk-masthead__description {
+  font-family: "GDS Transport", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.1111111111;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__description {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__description {
+    margin-bottom: 30px;
+  }
+}
+.x-govuk-masthead__description a:link, .x-govuk-masthead__description a:visited {
+  color: #ffffff;
+}
+.x-govuk-masthead__description a:hover, .x-govuk-masthead__description a:active {
+  color: rgba(255, 255, 255, 0.99);
+}
+.x-govuk-masthead__description a:focus {
+  color: #0b0c0c;
+}
+
+.x-govuk-masthead__image {
+  padding-top: 20px;
+}
+@media (min-width: 40.0625em) {
+  .x-govuk-masthead__image {
+    padding-top: 30px;
+  }
+}
+.x-govuk-masthead__image img {
+  max-width: 100%;
+}
+@media (max-width: 48.0525em) {
+  .x-govuk-masthead__image {
+    display: none;
+  }
+}
