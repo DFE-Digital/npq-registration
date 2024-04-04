@@ -41,10 +41,15 @@ class Course < ApplicationRecord
     identifier == NPQ_LEADING_PRIMARY_MATHEMATICS
   end
 
+  def npqs?
+    identifier == NPQ_SENCO
+  end
+
   NPQ_HEADSHIP = "npq-headship".freeze
   NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
   NPQ_EARLY_HEADSHIP_COACHING_OFFER = "npq-early-headship-coaching-offer".freeze
   NPQ_EARLY_YEARS_LEADERSHIP = "npq-early-years-leadership".freeze
   NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze
   NPQ_LEADING_PRIMARY_MATHEMATICS = "npq-leading-primary-mathematics".freeze
+  NPQ_SENCO = "npq-senco".freeze
 end

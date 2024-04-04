@@ -1,0 +1,14 @@
+<%=
+  render(
+    'registration_wizard/shared/copy_page',
+    form: @form,
+    wizard: @wizard,
+    ) do
+%>
+
+  <%= render "registration_wizard/possible_funding/#{@form.funding_eligibility_senco}", course: @form.course %>
+
+  <%= form_with model: @form, url: registration_wizard_form_url(@form), scope: 'registration_wizard', method: :patch do |f| %>
+    <%= f.govuk_submit %>
+  <% end %>
+<% end %>

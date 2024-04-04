@@ -161,6 +161,12 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
+        questionnaires/senco_in_role:
+          attributes:
+            blank: Choose one of the following options
+        questionnaires/senco_start_date:
+          attributes:
+            blank: Senco start date can't be blank
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
@@ -257,6 +263,7 @@ en:
       "npq-early-years-leadership": "NPQEYL"
       "npq-leading-literacy": "NPQLL"
       "npq-leading-primary-mathematics": "NPQLPM"
+      "npq-senco": "NPQS"
     name:
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"
@@ -269,6 +276,7 @@ en:
       "npq-early-years-leadership": "Early years leadership"
       "npq-leading-literacy": "Leading literacy"
       "npq-leading-primary-mathematics": "Leading primary mathematics"
+      "npq-senco": "Senco"
     outcome:
       passed_html: "<a href=\"https://access-your-teaching-qualifications.education.gov.uk/qualifications/start\" class=\"govuk-link\">Access your teaching qualifications</a> to get your certificate."
       failed: "If you think this is mistake or need to appeal this outcome, contact your training provider."
@@ -324,6 +332,9 @@ en:
         full_name: "Full name"
         national_insurance_number: "National Insurance number (optional)"
         change_your_course_or_provider: "Change your course or provider"
+        senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
+        senco_start_date: "When did you become a SENCO?"
+        funding_eligibility_senco: "Funding"
 
     legend:
       registration_wizard:
@@ -349,6 +360,9 @@ en:
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
         qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"
+        senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
+        senco_start_date: "When did you become a SENCO?"
+        funding_eligibility_senco: "Funding"
     hint:
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
@@ -388,6 +402,7 @@ en:
         full_name: Your full name exactly as it appears on the Teaching Regulation Agency records
         date_of_birth: For example, 31 3 1980
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+        senco_start_date: For example, 1 2024
     label:
       registration_wizard:
         work_setting_options:
@@ -409,6 +424,13 @@ en:
           "taken_a_similar_course": "No – but taken a similar course"
           "another_way": "No – but can show understanding of mastery approaches another way"
           "cannot_show": "I cannot show an understanding of mastery approaches to teaching maths"
+        
+        senco_in_role_options:
+          "yes": "Yes"
+          "no_but_i_plan_to_become_one": "No, but I plan to become one"
+          "no_i_do_not_plan_to_be_a_SENCO": "No, I do not plan to be a SENCO"
+
+        senco_start_date: "When did you become a SENCO?"
 
         kind_of_nursery_options:
           local_authority_maintained_nursery: "Local authority-maintained nursery"
