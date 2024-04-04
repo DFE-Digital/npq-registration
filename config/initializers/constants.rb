@@ -1,2 +1,3 @@
 APRIL_2024_CUTOFF_DATE = Time.zone.local(2024, 4, 2)
 FEEDBACK_FORM_URL = "https://mcas-proxyweb.mcas.ms/certificate-checker?login=false&originalUrl=https%3A%2F%2Fforms.office.com.mcas.ms%2Fpages%2Fresponsepage.aspx%3Fid%3DyXfS-grGoU2187O4s0qC-XFs6Aph9JFAlL3W5RWOR_5URTJBQUEwWDBYWFRGRE5BMk8zUFhGT0tSMy4u%26McasTsid%3D20596&McasCSRF=8e879a84ec3a43936192e3ce1fb0272db2944f987a1fb90e0bdcd305795a7c2e".freeze
+PRIVACY_NOTICE = "https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ".freeze
