@@ -1,5 +1,6 @@
+<% service_url = Feature.registration_closed?(current_user) ? "/registration/closed" : "/" %>
 <%=
-  govuk_header(service_name: "Register for a national professional qualification") do |header|
+  govuk_header(service_name: "Register for a national professional qualification", service_url: service_url) do |header|
     if current_user.actual_user?
       header.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")
 

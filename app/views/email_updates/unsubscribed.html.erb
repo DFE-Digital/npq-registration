@@ -1,0 +1,31 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">
+        You have unsubscribed
+      </h1>
+    </div>
+
+    <p class="govuk-body">
+      You will not receive any further emails about the opening of the 'Register for a national professional qualification (NPQ)' service.
+    </p>
+
+    <% if current_user.persisted? %>
+      <p class="govuk-body">
+        Did you unsubscribe by accident? <%= link_to "Re-subscribe", new_email_update_path, class: "govuk-link" %>
+      </p>
+    <% else %>
+      <p class="govuk-body">
+        Did you unsubscribe by accident?
+      </p>
+      <%=
+        render GovukComponent::ContinueButtonComponent.new(
+          text: "Re-subscribe",
+          href: user_tra_openid_connect_omniauth_authorize_path,
+          as_button: true,
+          html_attributes: { params: { request_email_updates: "true" }}
+        )
+      %>
+    <% end %>
+  </div>
+</div>
