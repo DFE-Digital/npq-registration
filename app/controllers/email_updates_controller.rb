@@ -1,5 +1,5 @@
 class EmailUpdatesController < ApplicationController
-  before_action do
+  before_action only: %i[new create] do
     redirect_to root_path unless current_user.persisted?
   end
   def new

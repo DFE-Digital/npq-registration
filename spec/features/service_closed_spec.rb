@@ -113,7 +113,7 @@ RSpec.feature "Service is closed", type: :feature do
       expect(page).to have_content("Are you sure you want to unsubscribe?")
       click_button "Unsubscribe"
 
-      expect(page).to have_content("Invalid link")
+      expect(page).to have_content("Invalid unsubscribe link")
     end
   end
 
