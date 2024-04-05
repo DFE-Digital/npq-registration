@@ -38,7 +38,7 @@ RSpec.feature "Service is closed", type: :feature do
     expect(page).to have_content("Registration has closed temporarily")
   end
 
-  context "when service is closed" do
+  context "when using late registration" do
     include_context "Stub Get An Identity Omniauth Responses"
 
     let(:super_admin) { create(:super_admin) }
@@ -79,6 +79,41 @@ RSpec.feature "Service is closed", type: :feature do
       click_on("Start now")
 
       expect_page_to_have(path: "/registration/closed")
+    end
+  end
+
+  context "when using email updates" do
+    before { close_registration! }
+
+    scenario "Register to email and unsubscribe" do
+      visit "/"
+      click_button "Sign in to your account"
+
+      visit new_email_update_path
+
+      # choose "Yes" # its not working for some reason
+      find_all(:label)[0].click # HACK: instead `choose "Yes"`
+      click_button "Request email updates"
+
+      expect(page).to have_content("Your email request has been set up")
+
+      user = User.last
+      expect(user.email_updates_status).to eq("senco")
+
+      visit "/email_updates/unsubscribe?unsubscribe_key=#{user.email_updates_unsubscribe_key}"
+      expect(page).to have_content("Are you sure you want to unsubscribe?")
+      click_button "Unsubscribe"
+
+      expect(page).to have_content("You have unsubscribed")
+      expect(user.reload.email_updates_status).to eq("empty")
+    end
+
+    scenario "Invalid unsubscribe link" do
+      visit "/email_updates/unsubscribe?unsubscribe_key=user.email_updates_unsubscribe_key"
+      expect(page).to have_content("Are you sure you want to unsubscribe?")
+      click_button "Unsubscribe"
+
+      expect(page).to have_content("Invalid link")
     end
   end
 

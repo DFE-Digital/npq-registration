@@ -1,6 +1,6 @@
 <hr class="govuk-!-margin-top-8"/>
 <% if Feature.registration_closed?(current_user) %>
-  <div class="govuk-grid-row">
+  <div class="govuk-grid-row govuk-!-padding-top-7">
     <div class="govuk-grid-column-two-thirds govuk-!-margin-top-0">
 
       <h2 class="govuk-heading-l">Registration has closed temporarily</h2>
@@ -10,8 +10,7 @@
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Request email updates",
-          href: user_tra_openid_connect_omniauth_authorize_path,
-          as_button: true,
+          href: new_email_update_path,
           html_attributes: { params: { request_email_updates: "true" }}
         )
       %>
@@ -19,7 +18,7 @@
     </div>
   </div>
 <% else %>
-  <div class="govuk-!-padding-top-5">
+  <div class="govuk-!-padding-top-7">
     <h1 class="govuk-heading-l">Register for another NPQ</h1>
 
     <p class="govuk-body">Use this service to submit a new registration.</p>

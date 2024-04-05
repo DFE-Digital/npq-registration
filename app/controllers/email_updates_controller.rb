@@ -21,15 +21,20 @@ class EmailUpdatesController < ApplicationController
 
   # Reguires `email_updates_unsubscribe_key` as param
   def unsubscribe
-    user = User.find_by(email_updates_unsubscribe_key: params[:unsubscribe_key])
+    if request.post?
+      user = User.find_by(email_updates_unsubscribe_key: params[:unsubscribe_key])
 
-    if user
-      user.unsubscribe_from_email_updates
-    else
-      flash[:error] = "Invalid unsubscribe link"
-      redirect_to root_path
+      if user
+        user.unsubscribe_from_email_updates
+        redirect_to unsubscribed_email_updates_path
+      else
+        flash[:error] = "Invalid unsubscribe link"
+        redirect_to root_path
+      end
     end
   end
+
+  def unsubscribed; end
 
 private
 

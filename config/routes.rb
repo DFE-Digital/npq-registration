@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :email_updates do
     collection do
       get "unsubscribe"
+      post "unsubscribe"
+      get "unsubscribed"
     end
   end
 

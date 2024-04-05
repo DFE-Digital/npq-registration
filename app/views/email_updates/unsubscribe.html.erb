@@ -1,10 +1,20 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
-    <div class="govuk-panel govuk-panel--confirmation">
-      <h1 class="govuk-panel__title">
-        You are no longer subscribed to NPQ email updates
-      </h1>
-    </div>
+    <h1 class="govuk-heading-xl">
+      Are you sure you want to unsubscribe?
+    </h1>
+    <p class="govuk-body">
+      You will not get any more emails about when the "Register for an national professional qualification (NPQ)" service will open.
+    </p>
+
+    <%=
+      render GovukComponent::ContinueButtonComponent.new(
+        text: "Unsubscribe",
+        href: unsubscribe_email_updates_path,
+        as_button: true,
+        html_attributes: { params: { unsubscribe_key: params[:unsubscribe_key] }}
+      )
+    %>
   </div>
 </div>
