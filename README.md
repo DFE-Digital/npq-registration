@@ -20,6 +20,7 @@
 1. [Manual validation lifecycle](docs/manual_validation_lifecycle.md)
 1. [BigQuery Reports](docs/bigquery_reports.md)
 1. [Migration Environment](docs/migration_environment.md)
+1. [Sending emails from application](docs/emails.md)
 
 ## Content Editors
 
