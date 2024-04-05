@@ -213,3 +213,24 @@ konduit: get-cluster-credentials
 konduit-snapshot: get-cluster-credentials
 	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv cpd-ecf-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
+
+define SET_APP_ID_FROM_PULL_REQUEST_NUMBER
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+endef
+
+# downloads the given file from the app/tmp directory of all
+# pods in the cluster to the local computer (in a subdirectory matching the pod name).
+## ie: FILENAME=restart.txt make staging aks-download-tmp-file
+## ie: FILENAME=restart.txt make ci production aks-download-tmp-file
+aks-download-tmp-file: get-cluster-credentials
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-download-tmp-file))
+	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
+
+# uploads the given file to the app/tmp directory of all
+# pods in the cluster.
+## ie: FILENAME=local_file.txt make staging aks-upload-tmp-file
+aks-upload-tmp-file: get-cluster-credentials
+	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-upload-tmp-file))
+	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
