@@ -11,11 +11,17 @@ module Questionnaires
     end
 
     def questions
+      translations = I18n.t("helpers.hint.registration_wizard.can_share_choices")
+
+      translated_lines = translations.map do |line|
+        line.include?("<a href") ? line.html_safe : line
+      end
+
       [
         QuestionTypes::CheckBox.new(
           name: :can_share_choices,
           required: true,
-          body: I18n.t("helpers.hint.registration_wizard.can_share_choices"),
+          body: translated_lines,
         ),
       ]
     end

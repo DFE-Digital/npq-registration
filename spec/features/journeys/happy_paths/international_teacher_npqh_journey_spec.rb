@@ -66,7 +66,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
-      page.check("Yes, I agree my information can be shared", visible: :all)
+      page.check("Yes, I agree to share my information", visible: :all)
     end
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)

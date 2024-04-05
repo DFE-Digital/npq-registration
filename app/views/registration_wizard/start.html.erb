@@ -18,7 +18,7 @@
     <p class="govuk-body">
       You need to know which NPQ you want to do and who your provider is. If you have not chosen
       yet, <%= govuk_link_to("find out about NPQ courses", "https://www.gov.uk/guidance/national-professional-qualification-npq-courses") %>.
-      
+
     </p>
 
     <p class="govuk-body">
@@ -35,6 +35,10 @@
 
     <p class="govuk-body">
       Before registering for an NPQ you’ll be asked to create a DfE Identity account or sign in to your account.
+    </p>
+
+    <p class="govuk-body">
+      By continuing, you agree to our <%= govuk_link_to("privacy notice", PRIVACY_NOTICE) %>.
     </p>
 
     <% if Feature.registration_enabled? %>
