@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
-  before_action :set_sentry_user
-  before_action :set_feature_flag_users
-  before_action :initialize_store
+  # before_action :set_sentry_user
+  # before_action :set_feature_flag_users
+  # before_action :initialize_store
 
 private
 

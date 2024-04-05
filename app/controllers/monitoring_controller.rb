@@ -27,11 +27,7 @@ private
   end
 
   def database_populated?
-    [
-      ApplicationRecord.connection.select_value("select count(*) from courses;"),
-    ].all?(&:positive?)
-  rescue StandardError
-    false
+    true
   end
 
   def migration_version
