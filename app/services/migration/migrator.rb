@@ -10,6 +10,7 @@ module Migration
       Migration::Migrators::Cohort,
       Migration::Migrators::Statement,
       Migration::Migrators::User,
+      Migration::Migrators::Course,
     ].freeze
 
     class << self
