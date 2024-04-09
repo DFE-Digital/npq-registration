@@ -20,7 +20,7 @@ module Migration::Migrators
 
       failure_manager = Migration::FailureManager.new(data_migration:)
 
-      items.each do |item|
+      items.in_batches.each_record do |item|
         data_migration.increment!(:processed_count)
         begin
           yield(item)

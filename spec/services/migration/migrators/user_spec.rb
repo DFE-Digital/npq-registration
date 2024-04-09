@@ -37,7 +37,7 @@ RSpec.describe Migration::Migrators::User do
       end
 
       it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_user, "PG::UniqueViolation: ERROR:  duplicate key value violates unique constraint \"index_users_on_uid\"\nDETAIL:  Key (uid)=(123456) already exists.\n").and_call_original
+        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_user, "Validation failed: Uid has already been taken").and_call_original
 
         subject
       end

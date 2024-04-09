@@ -27,7 +27,7 @@ module Migration::Migrators
           .all
           .where("npq_applications.id is not NULL")
 
-        (users_with_npq_profiles + users_with_npq_applications).flatten.uniq
+        Migration::Ecf::User.from("(#{users_with_npq_profiles.to_sql} UNION #{users_with_npq_applications.to_sql}) AS users")
       end
     end
   end
