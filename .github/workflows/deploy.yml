@@ -5,10 +5,20 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy environment"
+        required: true
+        default: migration
+        type: choice
+        options:
+          - migration
+          - separation
+
   push:
     branches:
       - main
-
   pull_request:
     branches:
       - main
