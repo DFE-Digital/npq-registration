@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Course do
+  describe "validations" do
+    it { is_expected.to validate_presence_of(:name) }
+  end
+
   describe "#eyl?" do
     context "when the course identifier is npq-early-years-leadership" do
       let(:course) { described_class.new(identifier: "npq-early-years-leadership") }
