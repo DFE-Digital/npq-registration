@@ -39,6 +39,10 @@ variable "deploy_snapshot_database" {
   type    = string
   default = false
 }
+variable "deploy_redis_cache" {
+  type    = bool
+  default = false
+}
 variable "enable_postgres_ssl" {
   default     = true
   description = "Enforce SSL connection from the client side"
@@ -61,6 +65,18 @@ variable "statuscake_contact_groups" {
 variable "enable_monitoring" {
   default     = false
   description = "Enable monitoring and alerting"
+}
+
+variable "redis_cache_capacity" {
+  default = 1
+}
+
+variable "redis_cache_family" {
+  default = "C"
+}
+
+variable "redis_cache_sku_name" {
+  default = "Standard"
 }
 
 variable "webapp_memory_max" {

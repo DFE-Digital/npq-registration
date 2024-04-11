@@ -25,6 +25,7 @@ module "application_configuration" {
   }
   secret_variables = {
     DATABASE_URL = module.postgres.url
+    REDIS_CACHE_URL = var.deploy_redis_cache ? module.redis-cache[0].url : ""
   }
 }
 
