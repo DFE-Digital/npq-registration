@@ -6,13 +6,13 @@ RSpec.describe Migration::Migrators::User do
   subject { instance.call }
 
   describe "#call" do
+    let(:ecf_user1) { create(:ecf_migration_user, :npq) }
+    let(:ecf_user2) { create(:ecf_migration_user, :npq) }
+
+    let!(:user1) { create(:user, :with_random_name, ecf_id: ecf_user1.id) }
+    let!(:user2) { create(:user, :with_random_name, ecf_id: ecf_user2.id) }
+
     before do
-      ecf_user1 = create(:ecf_migration_user, :npq)
-      ecf_user2 = create(:ecf_migration_user, :npq)
-
-      create(:user, :with_random_name, ecf_id: ecf_user1.id)
-      create(:user, :with_random_name, ecf_id: ecf_user2.id)
-
       create(:data_migration, model: :user)
     end
 
@@ -20,6 +20,36 @@ RSpec.describe Migration::Migrators::User do
       subject
 
       expect(Migration::DataMigration.find_by(model: :user).processed_count).to eq(2)
+    end
+
+    describe "migrated users" do
+      it "sets the TRN correctly" do
+        subject
+
+        expect(user1.reload.trn).to eq(ecf_user1.teacher_profile.trn)
+        expect(user2.reload.trn).to eq(ecf_user2.teacher_profile.trn)
+      end
+
+      it "sets the full name correctly" do
+        subject
+
+        expect(user1.reload.full_name).to eq(ecf_user1.full_name)
+        expect(user2.reload.full_name).to eq(ecf_user2.full_name)
+      end
+
+      it "sets the email correctly" do
+        subject
+
+        expect(user1.reload.email).to eq(ecf_user1.email)
+        expect(user2.reload.email).to eq(ecf_user2.email)
+      end
+
+      it "sets the UID correctly" do
+        subject
+
+        expect(user1.reload.uid).to eq(ecf_user1.get_an_identity_id)
+        expect(user2.reload.uid).to eq(ecf_user2.get_an_identity_id)
+      end
     end
 
     context "when a user is not correctly created" do
