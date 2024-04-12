@@ -4,7 +4,7 @@ RSpec.describe HandleSubmissionForStore do
   subject { described_class.new(store:) }
 
   let(:user_record_trn) { "0012345" }
-  let(:user) { create(:user, trn: user_record_trn) }
+  let(:user) { create(:user, trn: user_record_trn, full_name: "John Doe") }
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
