@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :user do
-    full_name { "John Doe" }
+    sequence(:full_name) { |n| "John Doe #{n}" }
     sequence(:email) { |n| "user#{n}@example.com" }
     trn { "1234567" }
     date_of_birth { 30.years.ago }
