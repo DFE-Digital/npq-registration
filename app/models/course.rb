@@ -1,4 +1,6 @@
 class Course < ApplicationRecord
+  validates :name, presence: true
+
   class << self
     def npqeyl
       find_by(identifier: NPQ_EARLY_YEARS_LEADERSHIP)
