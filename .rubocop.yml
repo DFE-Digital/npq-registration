@@ -90,3 +90,5 @@ Rails/UnknownEnv:
     - sandbox
     - staging
     - test
+    - migration
+    - separation

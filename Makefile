@@ -39,6 +39,9 @@ sandbox: production-cluster
 migration: production-cluster
 	$(eval include global_config/migration.sh)
 
+separation: production-cluster
+	$(eval include global_config/separation.sh)
+
 production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
 	$(eval include global_config/production.sh)

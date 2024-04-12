@@ -63,6 +63,12 @@ migration:
   ecf:
     <<: *default_ecf
 
+separation:
+  primary:
+    <<: *default_primary
+  ecf:
+    <<: *default_ecf
+
 production:
   primary:
     <<: *default_primary
