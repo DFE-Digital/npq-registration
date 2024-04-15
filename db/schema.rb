@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_15_104534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -19,6 +19,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
+  create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
+  create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
 
@@ -50,9 +53,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "ecf_id"
-    t.text "headteacher_status"
+    t.enum "headteacher_status", enum_type: "headteacher_statuses"
     t.boolean "eligible_for_funding", default: false, null: false
-    t.text "funding_choice"
+    t.enum "funding_choice", enum_type: "funding_choices"
     t.text "ukprn"
     t.text "teacher_catchment"
     t.text "teacher_catchment_country"
@@ -76,7 +79,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
     t.integer "number_of_pupils", default: 0
     t.boolean "tsf_primary_eligibility", default: false
     t.boolean "tsf_primary_plus_eligibility", default: false
-    t.text "lead_provider_approval_status"
+    t.enum "lead_provider_approval_status", enum_type: "lead_provider_approval_statuses"
     t.text "participant_outcome_state"
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
