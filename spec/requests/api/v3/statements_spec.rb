@@ -121,38 +121,15 @@ RSpec.describe "Statements endpoint", type: "request" do
   end
 
   describe "GET /api/v3/statements/:id" do
-    context "when authorized" do
-      context "when statement exists" do
-        let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
+    describe "GET /api/v1/applications/:id" do
+      let(:resource) { create(:statement, lead_provider: current_lead_provider) }
+      let(:resource_id) { resource.ecf_id }
 
-        it "returns statement" do
-          api_get("/api/v3/statements/#{statement.ecf_id}")
-
-          expect(response.status).to eq 200
-          expect(response.content_type).to eql("application/json")
-          expect(parsed_response["data"]["id"]).to eq(statement.ecf_id)
-        end
+      def path(id = nil)
+        api_v3_statement_path(id)
       end
 
-      context "when statement does not exist", exceptions_app: true do
-        it "returns not found" do
-          api_get("/api/v3/statements/123XXX")
-
-          expect(response.status).to eq 404
-        end
-      end
-    end
-
-    context "when unauthorized" do
-      let!(:statement) { create(:statement, lead_provider: current_lead_provider) }
-
-      it "returns 401 - unauthorized" do
-        api_get("/api/v3/statements/#{statement.ecf_id}", token: "incorrect-token")
-
-        expect(response.status).to eq 401
-        expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
-        expect(response.content_type).to eql("application/json")
-      end
+      it_behaves_like "an API show endpoint", Statements::Query, API::StatementSerializer
     end
   end
 end
