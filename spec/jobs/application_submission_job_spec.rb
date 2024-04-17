@@ -5,7 +5,7 @@ RSpec.describe ApplicationSubmissionJob do
   subject { described_class.new(user:, email_template: "b8b53310-fa6f-4587-972a-f3f3c6e0892e") }
 
   describe "#perform" do
-    let!(:application) { create(:application, user:, school:) }
+    let!(:application) { create(:application, user:, school:, ecf_id: nil) }
     let(:user) { create(:user, :with_get_an_identity_id) }
     let(:school) { create(:school) }
 

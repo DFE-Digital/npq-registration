@@ -8,10 +8,7 @@ FactoryBot.define do
     course { Course.all.sample }
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
-
-    trait :with_ecf_id do
-      ecf_id { SecureRandom.uuid }
-    end
+    ecf_id { SecureRandom.uuid }
 
     trait :application_for_school do
       school { build(:school) }
