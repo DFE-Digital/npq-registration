@@ -20,6 +20,8 @@ class Application < ApplicationRecord
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :expired_applications, -> { where(lead_provider_approval_status: "rejected").where("created_at < ?", cut_off_date_for_expired_applications) }
   scope :active_applications, -> { where.not(id: expired_applications) }
+  scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
+  scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
@@ -50,6 +52,21 @@ class Application < ApplicationRecord
     accepted: "accepted",
     rejected: "rejected",
   }
+
+  def previously_funded?
+    @previously_funded ||= user.applications
+      .where.not(id:)
+      .where(course: course.rebranded_alternative_courses)
+      .accepted
+      .eligible_for_funding
+      .exists?
+  end
+
+  def ineligible_for_funding_reason
+    return "previously-funded" if previously_funded?
+
+    "establishment-ineligible" unless eligible_for_funding
+  end
 
   def private_nursery?
     Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(kind_of_nursery)

@@ -59,6 +59,24 @@ RSpec.describe Application do
         expect(described_class.unsynced.to_sql).to match(%("ecf_id" IS NULL))
       end
     end
+
+    describe ".accepted" do
+      it "returns accepted applications" do
+        accepted_application = create(:application, :accepted)
+        create(:application, :pending)
+
+        expect(described_class.accepted).to contain_exactly(accepted_application)
+      end
+    end
+
+    describe ".eligible_for_funding" do
+      it "returns applications that are eligible for funding" do
+        application_eligible_for_funding = create(:application, :eligible_for_funding)
+        create(:application, eligible_for_funding: false)
+
+        expect(described_class.eligible_for_funding).to contain_exactly(application_eligible_for_funding)
+      end
+    end
   end
 
   describe "#employer_name" do
@@ -117,6 +135,58 @@ RSpec.describe Application do
         expect(previous_application.lead_provider_approval_status).to eq("pending")
         expect(previous_application.participant_outcome_state).to eq(nil)
       end
+    end
+  end
+
+  describe "#previously_funded?" do
+    let(:user) { application.user }
+    let(:application) { create(:application, :previously_funded) }
+    let(:previous_application) { user.applications.where.not(id: application.id).first! }
+
+    subject { application }
+
+    context "when the application has been previously funded" do
+      it { is_expected.to be_previously_funded }
+    end
+
+    context "when the application has not been previously funded (previous application not accepted)" do
+      before { previous_application.update!(lead_provider_approval_status: "rejected") }
+
+      it { is_expected.not_to be_previously_funded }
+    end
+
+    context "when the application has not been previously funded (previous application is not for a rebranded alternative course)" do
+      before { previous_application.update!(course: Course.npqeyl) }
+
+      it { is_expected.not_to be_previously_funded }
+    end
+
+    context "when the application has not been previously funded (previous application is not eligible for funding)" do
+      before { previous_application.update!(eligible_for_funding: false) }
+
+      it { is_expected.not_to be_previously_funded }
+    end
+  end
+
+  describe "#ineligible_for_funding_reason" do
+    subject { application.ineligible_for_funding_reason }
+
+    context "when not previously funded or eligible_for_funding" do
+      let(:application) { create(:application) }
+
+      it { is_expected.to eq("establishment-ineligible") }
+    end
+
+    context "when not previously funded and eligible_for_funding" do
+      let(:application) { create(:application, :eligible_for_funding) }
+
+      it { is_expected.to be_nil }
+    end
+
+    context "when previously funded" do
+      let(:application) { create(:application, :previously_funded) }
+
+      it { is_expected.to eq("previously-funded") }
     end
   end
 end

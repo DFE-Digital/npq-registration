@@ -42,6 +42,25 @@ FactoryBot.define do
       kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
     end
 
+    trait :accepted do
+      lead_provider_approval_status { :accepted }
+    end
+
+    trait :pending do
+      lead_provider_approval_status { :pending }
+    end
+
+    trait :eligible_for_funding do
+      eligible_for_funding { true }
+    end
+
+    trait :previously_funded do
+      after(:create) do |application|
+        course = application.course.rebranded_alternative_courses.sample
+        create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
+      end
+    end
+
     trait :with_random_work_setting do
       work_setting { %w[a_school an_academy_trust a_16_to_19_educational_setting].sample }
     end
