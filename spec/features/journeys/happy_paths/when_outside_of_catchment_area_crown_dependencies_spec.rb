@@ -115,8 +115,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
-      "eligible_for_funding_updated_at" => nil,
-      "eligible_for_funding_updated_by_id" => nil,
+
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,

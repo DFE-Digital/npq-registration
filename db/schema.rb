@@ -84,8 +84,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
     t.string "teacher_catchment_iso_country_code", limit: 3
     t.boolean "targeted_support_funding_eligibility", default: false
     t.string "notes"
-    t.datetime "eligible_for_funding_updated_at"
-    t.text "eligible_for_funding_updated_by_id"
     t.bigint "cohort_id"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
@@ -363,7 +361,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
     t.boolean "allow_closed_registration"
     t.integer "email_updates_status", default: 0
     t.string "email_updates_unsubscribe_key"
-    t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
+    t.index ["ecf_id"], name: "index_users_on_ecf_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["uid"], name: "index_users_on_uid", unique: true
@@ -387,7 +385,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
   add_foreign_key "applications", "private_childcare_providers"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
-  add_foreign_key "applications", "users", column: "eligible_for_funding_updated_by_id", primary_key: "ecf_id"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

@@ -170,8 +170,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "employer_name" => nil,
       "employment_type" => "lead_mentor_for_accredited_itt_provider",
       "employment_role" => nil,
-      "eligible_for_funding_updated_at" => nil,
-      "eligible_for_funding_updated_by_id" => nil,
+
       "notes" => nil,
       "funding_choice" => "self",
       "funding_eligiblity_status_code" => "not_lead_mentor_course",
