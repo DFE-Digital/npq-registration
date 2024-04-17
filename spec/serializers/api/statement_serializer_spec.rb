@@ -1,9 +1,6 @@
-# spec/serializers/api/v1/statement_serializer_spec.rb
-
 require "rails_helper"
 
-RSpec.describe API::V3::StatementSerializer, type: :serializer do
-  let(:subject) { described_class }
+RSpec.describe API::StatementSerializer, type: :serializer do
   let(:cohort) { build(:cohort) }
   let(:statement) { build(:statement, cohort:) }
 
