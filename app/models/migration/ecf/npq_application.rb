@@ -6,5 +6,6 @@ module Migration::Ecf
     belongs_to :cohort, optional: true
     has_one :profile, class_name: "ParticipantProfile", foreign_key: :id
     has_one :user, through: :participant_identity
+    has_one :school, class_name: "School", foreign_key: :urn, primary_key: :school_urn
   end
 end
