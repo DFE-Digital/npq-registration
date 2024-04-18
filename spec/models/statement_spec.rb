@@ -30,7 +30,7 @@ RSpec.describe Statement, type: :model do
           create_list(:statement_item, 3, statement:)
 
           expect(statement.valid?).to be false
-          expect(statement.errors[:statement_items]).to include("cannot have more than two items")
+          expect(statement.errors[:statement_items]).to include("There cannot be more than two items per statement")
         end
       end
     end

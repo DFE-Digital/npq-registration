@@ -52,7 +52,7 @@ private
 
   def validate_max_statement_items_count
     if statement_items.count > 2
-      errors.add(:statement_items, "cannot have more than two items")
+      errors.add(:statement_items, "There cannot be more than two items per statement")
     end
   end
 end
