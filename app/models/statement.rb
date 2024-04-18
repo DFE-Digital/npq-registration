@@ -3,7 +3,12 @@ class Statement < ApplicationRecord
   belongs_to :lead_provider
   has_many :statement_items
 
-  validates :output_fee, inclusion: [true, false]
+  validates :output_fee,
+            inclusion: {
+              in: [true, false],
+              message: "Choose yes or no for output fee",
+            }
+
   validates :month,
             numericality: {
               in: 1..12,
