@@ -7,7 +7,7 @@ RSpec.describe User do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:full_name) }
+    it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
 
     it { is_expected.to validate_presence_of(:email).on(:npq_separation) }
     it { is_expected.to validate_uniqueness_of(:email).on(:npq_separation).case_insensitive }

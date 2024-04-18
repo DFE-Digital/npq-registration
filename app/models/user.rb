@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
 
-  validates :full_name, presence: true
+  validates :full_name, presence: { message: "Enter a full name" }
   validates :email, presence: true, uniqueness: true, notify_email: true, on: :npq_separation # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :uid, uniqueness: { allow_blank: true }
   validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
