@@ -13,6 +13,46 @@ RSpec.describe Application do
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
   end
 
+  describe "enums" do
+    it {
+      expect(subject).to define_enum_for(:kind_of_nursery).with_values(
+        local_authority_maintained_nursery: "local_authority_maintained_nursery",
+        preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
+        private_nursery: "private_nursery",
+        another_early_years_setting: "another_early_years_setting",
+      ).backed_by_column_of_type(:text)
+    }
+
+    it {
+      expect(subject).to define_enum_for(:headteacher_status).with_values(
+        no: "no",
+        yes_when_course_starts: "yes_when_course_starts",
+        yes_in_first_two_years: "yes_in_first_two_years",
+        yes_over_two_years: "yes_over_two_years",
+        yes_in_first_five_years: "yes_in_first_five_years",
+        yes_over_five_years: "yes_over_five_years",
+      ).backed_by_column_of_type(:enum)
+    }
+
+    it {
+      expect(subject).to define_enum_for(:funding_choice).with_values(
+        school: "school",
+        trust: "trust",
+        self: "self",
+        another: "another",
+        employer: "employer",
+      ).backed_by_column_of_type(:enum)
+    }
+
+    it {
+      expect(subject).to define_enum_for(:lead_provider_approval_status).with_values(
+        pending: "pending",
+        accepted: "accepted",
+        rejected: "rejected",
+      ).backed_by_column_of_type(:enum)
+    }
+  end
+
   describe "scopes" do
     describe ".unsynced" do
       it "returns records where ecf_id is null" do
