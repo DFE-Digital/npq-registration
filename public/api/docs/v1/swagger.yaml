@@ -328,7 +328,11 @@ components:
                 their NPQ online registration.
               nullable: true
               type: string
+<<<<<<< HEAD
               example: United Kingdom of Great Britain and Northern Ireland
+=======
+              example: France
+>>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
             teacher_catchment_iso_country_code:
               description: |
                 This field identifies which non-UK country the participant has registered from.

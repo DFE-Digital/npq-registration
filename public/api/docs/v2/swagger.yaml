@@ -286,7 +286,10 @@ components:
             created_at:
               description: The date the application was created
               type: string
+<<<<<<< HEAD
               nullable: false
+=======
+>>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
               format: date-time
               example: '2021-05-31T02:21:32.000Z'
             updated_at:

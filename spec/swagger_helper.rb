@@ -54,6 +54,7 @@ RSpec.configure do |config|
           ApplicationsResponse: APPLICATIONS_RESPONSE[version],
           Application: APPLICATION[version],
           IDAttribute: ID_ATTRIBUTE,
+          SortingOptions: SORTING_OPTIONS,
         },
       },
     }.tap do |h|
