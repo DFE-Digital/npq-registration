@@ -165,9 +165,11 @@ RSpec.feature "Happy journeys", type: :feature do
     )
 
     deep_compare_application_data(
+      "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
+
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
@@ -180,11 +182,14 @@ RSpec.feature "Happy journeys", type: :feature do
       "headteacher_status" => "yes_in_first_five_years",
       "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "notes" => nil,
       "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY123456").id,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
+      "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
+      "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,

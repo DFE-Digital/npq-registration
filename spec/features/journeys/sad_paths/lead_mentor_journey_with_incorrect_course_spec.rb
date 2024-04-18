@@ -163,12 +163,15 @@ RSpec.feature "Sad journeys", type: :feature do
     )
 
     deep_compare_application_data(
+      "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => "lead_mentor_for_accredited_itt_provider",
       "employment_role" => nil,
+
+      "notes" => nil,
       "funding_choice" => "self",
       "funding_eligiblity_status_code" => "not_lead_mentor_course",
       "kind_of_nursery" => nil,
@@ -177,8 +180,10 @@ RSpec.feature "Sad journeys", type: :feature do
       "private_childcare_provider_id" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
+      "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
+      "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,

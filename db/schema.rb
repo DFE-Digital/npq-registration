@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_25_180813) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_12_130037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -81,6 +81,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_25_180813) do
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
     t.bigint "school_id"
+    t.string "teacher_catchment_iso_country_code", limit: 3
+    t.boolean "targeted_support_funding_eligibility", default: false
+    t.string "notes"
+    t.bigint "cohort_id"
+    t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
@@ -373,6 +378,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_25_180813) do
   end
 
   add_foreign_key "api_tokens", "lead_providers"
+  add_foreign_key "applications", "cohorts"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"

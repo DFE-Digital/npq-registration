@@ -130,6 +130,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
     )
 
     deep_compare_application_data(
+      "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
@@ -145,11 +146,14 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
+      "notes" => nil,
       "private_childcare_provider_id" => nil,
       "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => true,
+      "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
+      "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
       "ukprn" => nil,
       "primary_establishment" => false,
