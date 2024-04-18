@@ -28,6 +28,29 @@ class Application < ApplicationRecord
     another_early_years_setting: "another_early_years_setting",
   }
 
+  enum headteacher_status: {
+    no: "no",
+    yes_when_course_starts: "yes_when_course_starts",
+    yes_in_first_two_years: "yes_in_first_two_years",
+    yes_over_two_years: "yes_over_two_years",
+    yes_in_first_five_years: "yes_in_first_five_years",
+    yes_over_five_years: "yes_over_five_years",
+  }
+
+  enum funding_choice: {
+    school: "school",
+    trust: "trust",
+    self: "self",
+    another: "another",
+    employer: "employer",
+  }
+
+  enum lead_provider_approval_status: {
+    pending: "pending",
+    accepted: "accepted",
+    rejected: "rejected",
+  }
+
   def private_nursery?
     Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.include?(kind_of_nursery)
   end
