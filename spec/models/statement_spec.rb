@@ -10,7 +10,7 @@ RSpec.describe Statement, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer }
+    it { is_expected.to validate_numericality_of(:month).is_in(1..12).only_integer.with_message("Month must be a number between 1 and 12") }
     it { is_expected.to validate_numericality_of(:year).only_integer.is_in(2020..2050) }
     it { is_expected.to allow_value(%w[true false]).for(:output_fee) }
     it { is_expected.not_to allow_value(nil).for(:output_fee) }

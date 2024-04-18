@@ -4,7 +4,12 @@ class Statement < ApplicationRecord
   has_many :statement_items
 
   validates :output_fee, inclusion: [true, false]
-  validates :month, numericality: { in: 1..12, only_integer: true }
+  validates :month,
+            numericality: {
+              in: 1..12,
+              only_integer: true,
+              message: "Month must be a number between 1 and 12",
+            }
   validates :year, numericality: { in: 2020..2050, only_integer: true }
   validates :ecf_id, presence: true, uniqueness: { case_sensitive: false }
 
