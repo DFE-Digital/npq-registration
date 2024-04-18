@@ -2,12 +2,12 @@
 openapi: 3.0.1
 info:
   title: NPQ Registration API
-  version: v3
+  version: v2
 externalDocs:
   description: Find out more about Swagger
   url: https://swagger.io/
 paths:
-  api/v3/npq-applications:
+  api/v2/npq-applications:
     get:
       summary: Retrieve multiple NPQ applications
       tags:
@@ -43,7 +43,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
-  api/v3/npq-applications/{id}:
+  api/v2/npq-applications/{id}:
     get:
       summary: Retrieve a single NPQ application
       tags:
@@ -75,70 +75,6 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
-  api/v3/statements:
-    get:
-      summary: Retrieve financial statements
-      tags:
-      - Statements
-      security:
-      - api_key: []
-      parameters:
-      - name: filter
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/ListStatementsFilter"
-      - name: page
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/PaginationFilter"
-      responses:
-        '200':
-          description: A list of statements as part of which the DfE will make output
-            payments for participants
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/StatementsResponse"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/UnauthorisedResponse"
-  api/v3/statements/{id}:
-    get:
-      summary: Retrieve a specific financial statement
-      tags:
-      - Statements
-      security:
-      - api_key: []
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          "$ref": "#/components/schemas/IDAttribute"
-      responses:
-        '200':
-          description: A specific financial statement
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/StatementResponse"
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/NotFoundResponse"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/UnauthorisedResponse"
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
 components:
@@ -169,20 +105,14 @@ components:
       type: object
       properties:
         cohort:
-          description: Return only NPQ applications from the specified cohort or cohorts.
-            This is a comma delimited string of years.
+          description: Return only NPQ applications from the specified cohort.
           type: string
-          example: '2021,2022'
+          example: '2022'
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
           type: string
           example: '2021-05-13T11:21:55Z'
-        participant_id:
-          description: Return only NPQ applications from the specified participant
-            or participants. This is comma delimited string of participant IDs.
-          type: string
-          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0,c2a7ef98-bbfc-48c5-8f02-d484071d2165
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object
@@ -249,95 +179,6 @@ components:
           - npq_application
         attributes:
           properties:
-            participant_id:
-              description: The unique identifier of this NPQ participant
-              type: string
-              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
-              format: uuid
-            full_name:
-              description: The full name of this NPQ participant
-              type: string
-              example: Isabelle MacDonald
-            email:
-              description: The email address registered for this NPQ participant
-              type: string
-              example: isabelle.macdonald2@some-school.example.com
-            email_validated:
-              description: Indicates whether the email address has been validated
-              type: boolean
-              example: true
-            teacher_reference_number:
-              description: The Teacher Reference Number (TRN) for this NPQ participant
-              type: string
-              example: '1234567'
-            teacher_reference_number_validated:
-              description: Indicates whether the Teacher Reference Number (TRN) has
-                been validated
-              type: boolean
-              example: true
-            works_in_school:
-              description: Indicates whether the participant is currently employed
-                by school
-              type: boolean
-              example: true
-            employer_name:
-              description: The name of current employer of the participant if not
-                currently employed by school
-              type: string
-              nullable: true
-              example: Some Company Ltd
-            employment_role:
-              description: Participant's current role in the company they are employed
-                in if not currently employed by school
-              type: string
-              nullable: true
-              example: Director
-            school_urn:
-              description: The Unique Reference Number (URN) of the school where this
-                NPQ participant is employed
-              type: string
-              example: '106286'
-            private_childcare_provider_urn:
-              description: The Unique Reference Number (URN) of the private child
-                care provider
-              type: string
-              example: EY944860
-              nullable: true
-            school_ukprn:
-              description: The UK Provider Reference Number (UK Provider Reference
-                Number) of the school where this NPQ participant is employed
-              nullable: true
-              type: string
-              example: '10079319'
-            headteacher_status:
-              description: Indicates whether this NPQ participant is or will be a
-                head teacher
-              type: string
-              example: 'no'
-              enum:
-              - 'no'
-              - yes_when_course_starts
-              - yes_in_first_two_years
-              - yes_over_two_years
-              - yes_in_first_five_years
-              - yes_over_five_years
-            eligible_for_funding:
-              description: Indicates whether this NPQ participant would be eligible
-                for funding from the DfE
-              type: boolean
-              example: true
-            funding_choice:
-              description: Indicates how this NPQ participant has said they will funded
-                their training
-              type: string
-              nullable: true
-              example: trust
-              enum:
-              - school
-              - trust
-              - self
-              - another
-              - employer
             course_identifier:
               description: The NPQ course this NPQ application relates to
               type: string
@@ -354,6 +195,94 @@ components:
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
               - npq-leading-primary-mathematics
+            email:
+              description: The email address registered for this NPQ participant
+              type: string
+              example: isabelle.macdonald2@some-school.example.com
+            email_validated:
+              description: Indicates whether the email address has been validated
+              type: boolean
+              example: true
+            employer_name:
+              description: The name of current employer of the participant if not
+                currently employed by school
+              type: string
+              nullable: true
+              example: Some Company Ltd
+            employment_role:
+              description: Participant's current role in the company they are employed
+                in if not currently employed by school
+              type: string
+              nullable: true
+              example: Director
+            full_name:
+              description: The full name of this NPQ participant
+              type: string
+              example: Isabelle MacDonald
+            funding_choice:
+              description: Indicates how this NPQ participant has said they will funded
+                their training
+              type: string
+              nullable: true
+              example: trust
+              enum:
+              - school
+              - trust
+              - self
+              - another
+              - employer
+            headteacher_status:
+              description: Indicates whether this NPQ participant is or will be a
+                head teacher
+              type: string
+              example: 'no'
+              enum:
+              - 'no'
+              - yes_when_course_starts
+              - yes_in_first_two_years
+              - yes_over_two_years
+              - yes_in_first_five_years
+              - yes_over_five_years
+            ineligible_for_funding_reason:
+              description: Indicates why this NPQ participant is not eligible for
+                DfE funding
+              type: string
+              nullable: true
+              example: establishment-ineligible
+              enum:
+              - establishment-ineligible
+              - previously-funded
+            participant_id:
+              description: The unique identifier of this NPQ participant
+              type: string
+              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+              format: uuid
+            private_childcare_provider_urn:
+              description: The Unique Reference Number (URN) of the private child
+                care provider
+              type: string
+              example: EY944860
+              nullable: true
+            teacher_reference_number:
+              description: The Teacher Reference Number (TRN) for this NPQ participant
+              type: string
+              example: '1234567'
+            teacher_reference_number_validated:
+              description: Indicates whether the Teacher Reference Number (TRN) has
+                been validated
+              type: boolean
+              example: true
+            school_urn:
+              description: The Unique Reference Number (URN) of the school where this
+                NPQ participant is employed
+              type: string
+              example: '106286'
+            school_ukprn:
+              description: The UK Provider Reference Number (UK Provider Reference
+                Number) of the school where this NPQ participant is employed
+              nullable: true
+              type: string
+              example: '10079319'
             status:
               description: The current state of the NPQ application
               type: string
@@ -363,6 +292,11 @@ components:
               - pending
               - accepted
               - rejected
+            works_in_school:
+              description: Indicates whether the participant is currently employed
+                by school
+              type: boolean
+              example: true
             created_at:
               description: The date the application was created
               type: string
@@ -373,15 +307,6 @@ components:
               type: string
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
-            ineligible_for_funding_reason:
-              description: Indicates why this NPQ participant is not eligible for
-                DfE funding
-              type: string
-              nullable: true
-              example: establishment-ineligible
-              enum:
-              - establishment-ineligible
-              - previously-funded
             cohort:
               description: Indicates which call-off contract would fund this participant's
                 training. 2021 indicates a participant that has started, or will start,
@@ -391,6 +316,11 @@ components:
               type: string
               nullable: true
               example: '2022'
+            eligible_for_funding:
+              description: Indicates whether this NPQ participant would be eligible
+                for funding from the DfE
+              type: boolean
+              example: true
             targeted_delivery_funding_eligibility:
               description: Whether or not this application is eligible for Targeted
                 Delivery Funding uplift
@@ -406,6 +336,8 @@ components:
               type: boolean
               example: true
             teacher_catchment_country:
+              description: This field shows the text entered by the participant during
+                their NPQ online registration.
               nullable: true
               type: string
               example: France
@@ -416,14 +348,6 @@ components:
               nullable: true
               type: string
               example: FRA
-            lead_mentor:
-              description: 'This field indicates whether the applicant is an ITT lead
-                mentor.
-
-                '
-              nullable: true
-              type: boolean
-              example: true
             itt_provider:
               description: 'This field contains the legal name of the ITT accredited
                 provider from the <a href="https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024"
@@ -434,101 +358,17 @@ components:
               nullable: true
               type: string
               example: University of Southampton
-            schedule_identifier:
-              description: The new schedule of the participant
+            lead_mentor:
+              description: 'This field indicates whether the applicant is an ITT lead
+                mentor.
+
+                '
               nullable: true
-              type: string
-              example: npq-leadership-spring
-              enum:
-              - npq-aso-march
-              - npq-aso-june
-              - npq-aso-november
-              - npq-aso-december
-              - npq-ehco-march
-              - npq-ehco-june
-              - npq-ehco-november
-              - npq-ehco-december
-              - npq-leadership-autumn
-              - npq-leadership-spring
-              - npq-specialist-autumn
-              - npq-specialist-spring
-    StatementResponse:
-      description: A financial statement.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          "$ref": "#/components/schemas/Statement"
-    StatementsResponse:
-      description: A list of financial statement.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            "$ref": "#/components/schemas/Statement"
-    Statement:
-      description: A financial statement.
-      type: object
-      required:
-      - id
-      - type
-      - attributes
-      properties:
-        id:
-          "$ref": "#/components/schemas/IDAttribute"
-        type:
-          description: The data type.
-          type: string
-          example: statement
-        attributes:
-          properties:
-            month:
-              description: The month which appears on the statement in the DfE portal.
-              type: string
-              nullable: false
-              example: May
-            year:
-              description: The calendar year which appears on the statement in the
-                dfe portal.
-              type: string
-              nullable: false
-              example: '2022'
-            cohort:
-              description: The cohort - 2021 or 2022 - which the statement funds.
-              type: string
-              nullable: false
-              example: '2021'
-            cut_off_date:
-              description: The milestone cut off or review point for the statement.
-              type: string
-              nullable: false
-              example: '2022-04-30'
-            payment_date:
-              description: The date we expect to pay you for any declarations attached
-                to the statement, which are eligible for payment.
-              type: string
-              nullable: false
-              example: '2022-05-25'
-            paid:
-              description: Indicates whether the DfE has paid providers for any declarations
-                attached to the statement.
               type: boolean
-              nullable: false
               example: true
-            created_at:
-              description: The date the statement was created.
-              type: string
-              format: date-time
-              example: '2021-05-31T02:22:32.000Z'
-            updated_at:
-              description: The date the statement was last updated.
-              type: string
-              format: date-time
-              example: '2021-05-31T02:22:32.000Z'
+    StatementResponse:
+    StatementsResponse:
+    Statement:
     IDAttribute:
       description: The unique ID of the resource.
       type: uuid

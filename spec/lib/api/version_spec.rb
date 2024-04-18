@@ -5,7 +5,7 @@ RSpec.describe API::Version do
   describe ".all" do
     subject { described_class.all }
 
-    it { is_expected.to contain_exactly(:v3) }
+    it { is_expected.to match_array(%i[v1 v2 v3]) }
   end
 
   describe ".exists?" do

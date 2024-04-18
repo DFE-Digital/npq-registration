@@ -47,13 +47,18 @@ RSpec.configure do |config|
         },
         schemas: {
           PaginationFilter: PAGINATION_FILTER,
+          ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
           ListStatementsFilter: LIST_STATEMENTS_FILTER,
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
+          ApplicationResponse: APPLICATION_RESPONSE[version],
+          ApplicationsResponse: APPLICATIONS_RESPONSE[version],
+          Application: APPLICATION[version],
           StatementResponse: STATEMENT_RESPONSE[version],
           StatementsResponse: STATEMENTS_RESPONSE[version],
           Statement: STATEMENT[version],
           IDAttribute: ID_ATTRIBUTE,
+          SortingOptions: SORTING_OPTIONS,
         },
       },
     }

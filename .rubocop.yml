@@ -1,4 +1,6 @@
-inherit_from: .rubocop_todo.yml
+inherit_from:
+  - .rubocop_todo.yml
+  - config/rspec-rswag.yml
 
 inherit_gem:
   rubocop-govuk:
