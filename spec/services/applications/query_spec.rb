@@ -29,6 +29,69 @@ RSpec.describe Applications::Query do
         query = Applications::Query.new(lead_provider:)
         expect(query.applications).to contain_exactly(application)
       end
+
+      it "filters by updated since" do
+        create(:application, lead_provider:, updated_at: 2.days.ago)
+        application = create(:application, lead_provider:, updated_at: Time.zone.now)
+
+        query = Applications::Query.new(lead_provider:, updated_since: 1.day.ago)
+
+        expect(query.applications).to contain_exactly(application)
+      end
+
+      context "when filtering by cohort" do
+        let(:cohort_2023) { create(:cohort, start_year: 2023) }
+        let(:cohort_2024) { create(:cohort, start_year: 2024) }
+        let(:cohort_2025) { create(:cohort, start_year: 2025) }
+
+        it "filters by cohort" do
+          create(:application, cohort: cohort_2023)
+          application = create(:application, cohort: cohort_2024)
+          query = Applications::Query.new(cohort_start_years: "2024")
+
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "filters by multiple cohorts" do
+          application1 = create(:application, cohort: cohort_2023)
+          application2 = create(:application, cohort: cohort_2024)
+          create(:application, cohort: cohort_2025)
+          query = Applications::Query.new(cohort_start_years: "2023,2024")
+
+          expect(query.applications).to contain_exactly(application1, application2)
+        end
+
+        it "returns no applications if no cohorts are found" do
+          query = Applications::Query.new(cohort_start_years: "0000")
+
+          expect(query.applications).to be_empty
+        end
+      end
+
+      context "when filtering by participant_id" do
+        it "filters by participant_id" do
+          create(:application, user: create(:user))
+          application = create(:application, user: create(:user))
+          query = Applications::Query.new(participant_ids: application.user.ecf_id)
+
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "filters by multiple participant_ids" do
+          application1 = create(:application, user: create(:user))
+          application2 = create(:application, user: create(:user))
+          create(:application, user: create(:user))
+          query = Applications::Query.new(participant_ids: [application1.user.ecf_id, application2.user.ecf_id].join(","))
+
+          expect(query.applications).to contain_exactly(application1, application2)
+        end
+
+        it "returns no applications if no participants are found" do
+          query = Applications::Query.new(participant_ids: SecureRandom.uuid)
+
+          expect(query.applications).to be_empty
+        end
+      end
     end
   end
 

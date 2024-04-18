@@ -6,7 +6,7 @@ RSpec.describe ApplicationSubmissionJob do
 
   describe "#perform" do
     let!(:application) { create(:application, user:, school:, ecf_id: nil) }
-    let(:user) { create(:user, :with_get_an_identity_id) }
+    let(:user) { create(:user, :with_get_an_identity_id, ecf_id: nil) }
     let(:school) { create(:school) }
 
     it "calls correct services" do
@@ -72,7 +72,7 @@ RSpec.describe ApplicationSubmissionJob do
     end
 
     context "when user already exists in ecf but not npq" do
-      let(:user) { create(:user) }
+      let(:user) { create(:user, ecf_id: nil) }
       let(:ecf_user) { External::EcfAPI::User.new(email: user.email, id: "123") }
 
       it "calls correct services" do
