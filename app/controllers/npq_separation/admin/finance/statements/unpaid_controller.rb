@@ -1,5 +1,5 @@
 class NpqSeparation::Admin::Finance::Statements::UnpaidController < NpqSeparation::AdminController
   def index
-    @statements = Statements::Find.new.unpaid
+    @statements = Statements::Query.new(state: "open,payable").statements
   end
 end

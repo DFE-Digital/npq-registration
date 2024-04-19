@@ -4,18 +4,16 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
   include Helpers::NPQSeparationAdminLogin
 
   describe "/npq_separation/admin/statements" do
-    let(:fake_statements_find) { instance_double("Statements::Find", all: Statement.limit(0)) }
-
     before do
-      allow(Statements::Find).to receive(:new).and_return(fake_statements_find)
+      allow(Statements::Query).to receive(:new).and_call_original
 
       sign_in_as_admin
     end
 
-    it "calls Statements::Find.all" do
+    it "calls Statements::Query.all" do
       get(npq_separation_admin_finance_statements_path)
 
-      expect(fake_statements_find).to have_received(:all).once
+      expect(Statements::Query).to have_received(:new).with(no_args).once
     end
   end
 end
