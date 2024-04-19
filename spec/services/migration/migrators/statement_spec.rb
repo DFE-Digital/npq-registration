@@ -41,7 +41,7 @@ RSpec.describe Migration::Migrators::Statement do
       end
 
       it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_statement, "Validation failed: Output fee is not included in the list").and_call_original
+        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_statement, "Validation failed: Output fee Choose yes or no for output fee").and_call_original
 
         subject
       end

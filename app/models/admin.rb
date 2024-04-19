@@ -1,6 +1,11 @@
 class Admin < ApplicationRecord
-  validates :full_name, presence: true, length: { maximum: 64 }
-  validates :email, presence: true, length: { maximum: 64 }
+  validates :full_name,
+            presence: { message: "Enter a full name" },
+            length: { maximum: 64, message: "Full name must be shorter than 64 characters" }
+
+  validates :email,
+            presence: { message: "Enter an email address" },
+            length: { maximum: 64, message: "Email must be shorter than 64 characters" }
 
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?

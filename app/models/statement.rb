@@ -3,10 +3,30 @@ class Statement < ApplicationRecord
   belongs_to :lead_provider
   has_many :statement_items
 
-  validates :output_fee, inclusion: [true, false]
-  validates :month, numericality: { in: 1..12, only_integer: true }
-  validates :year, numericality: { in: 2020..2050, only_integer: true }
-  validates :ecf_id, presence: true, uniqueness: { case_sensitive: false }
+  validates :output_fee,
+            inclusion: {
+              in: [true, false],
+              message: "Choose yes or no for output fee",
+            }
+
+  validates :month,
+            numericality: {
+              in: 1..12,
+              only_integer: true,
+              message: "Month must be a number between 1 and 12",
+            }
+  validates :year,
+            numericality: {
+              in: 2020..2050,
+              only_integer: true,
+              message: "Year must be a 4 digit number",
+            }
+  validates :ecf_id,
+            presence: { message: "Enter an ECF ID" },
+            uniqueness: {
+              case_sensitive: false,
+              message: "ECF ID must be unique",
+            }
 
   validate :validate_max_statement_items_count
 
@@ -32,7 +52,7 @@ private
 
   def validate_max_statement_items_count
     if statement_items.count > 2
-      errors.add(:statement_items, "cannot have more than two items")
+      errors.add(:statement_items, "There cannot be more than two items per statement")
     end
   end
 end
