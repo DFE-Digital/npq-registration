@@ -13,5 +13,14 @@ FactoryBot.define do
     trait :closed do
       establishment_status_code { 2 }
     end
+
+    trait :with_address do
+      address_1 { Faker::Address.building_number }
+      address_2 { Faker::Address.street_address }
+      address_3 { Faker::Address.community }
+      town { "town" }
+      county { "county" }
+      postcode { Faker::Address.postcode }
+    end
   end
 end

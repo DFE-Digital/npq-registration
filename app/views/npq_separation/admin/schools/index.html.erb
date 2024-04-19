@@ -1,0 +1,22 @@
+<h1 class="govuk-heading-l">All schools</h1>
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "URN")
+        row.with_cell(text: "School")
+      end
+    end
+
+    table.with_body do |body|
+      @schools.each do |school|
+        body.with_row do |row|
+          row.with_cell(text: school.urn)
+          row.with_cell(text: govuk_link_to(school.name, npq_separation_admin_school_path(school)))
+        end
+      end
+    end
+  end
+%>
+
+<%= govuk_pagination(pagy: @pagy) %>

@@ -9,7 +9,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Applications" => "/npq-separation/admin/applications",
       "Participants" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
-      "Schools" => "#",
+      "Schools" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
       "Settings" => "#",
     }.each_with_index do |(name, href), i|
