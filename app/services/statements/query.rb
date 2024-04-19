@@ -18,12 +18,14 @@ module Statements
       scope.order(payment_date: :asc)
     end
 
-    def statement(id:)
-      statements.find_by!(ecf_id: id)
-    end
+    def statement(id: nil, ecf_id: nil)
+      return statements.find_by!(ecf_id:) if ecf_id.present?
+      return statements.find(id) if id.present?
 
   private
 
     attr_reader :lead_provider, :cohort_start_years, :updated_since
+      fail(ArgumentError, "id or ecf_id needed")
+    end
   end
 end

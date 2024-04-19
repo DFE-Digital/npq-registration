@@ -100,12 +100,14 @@ RSpec.describe Statements::Query do
       statement = create(:statement, lead_provider:)
       query = Statements::Query.new
 
-      expect(query.statement(id: statement.ecf_id)).to eq(statement)
+      expect(query.statement(ecf_id: statement.ecf_id)).to eq(statement)
+      expect(query.statement(id: statement.id)).to eq(statement)
     end
 
     it "raises an error if the statement does not exist" do
       query = Statements::Query.new
 
+      expect { query.statement(ecf_id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
       expect { query.statement(id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -115,7 +117,12 @@ RSpec.describe Statements::Query do
 
       query = Statements::Query.new(lead_provider:)
 
-      expect { query.statement(id: other_statement.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.statement(ecf_id: other_statement.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.statement(id: other_statement.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if neither an ecf_id or id is supplied" do
+      expect { Statements::Query.new.statement }.to raise_error(ArgumentError, "id or ecf_id needed")
     end
   end
 end
