@@ -1,9 +1,12 @@
 module Statements
   class Query
-    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil)
+    attr_reader :lead_provider, :cohort_start_years, :updated_since, :state
+
+    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil)
       @lead_provider = lead_provider
       @cohort_start_years = cohort_start_years&.split(",")
       @updated_since = updated_since
+      @state = state&.split(",")
     end
 
     def statements
@@ -14,6 +17,7 @@ module Statements
       scope = scope.where(lead_provider:) if lead_provider.present?
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
+      scope = scope.where(state:) if state.present?
 
       scope.order(payment_date: :asc)
     end
@@ -22,9 +26,6 @@ module Statements
       return statements.find_by!(ecf_id:) if ecf_id.present?
       return statements.find(id) if id.present?
 
-  private
-
-    attr_reader :lead_provider, :cohort_start_years, :updated_since
       fail(ArgumentError, "id or ecf_id needed")
     end
   end

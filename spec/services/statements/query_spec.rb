@@ -90,6 +90,26 @@ RSpec.describe Statements::Query do
           expect(query.statements).to eq([statement2])
         end
       end
+
+      describe "by state" do
+        let!(:open_statement) { create(:statement, :open) }
+        let!(:payable_statement) { create(:statement, :payable) }
+        let!(:paid_statement) { create(:statement, :paid) }
+
+        it "filters by state" do
+          expect(Statements::Query.new(state: "open").statements).to eq([open_statement])
+          expect(Statements::Query.new(state: "payable").statements).to eq([payable_statement])
+          expect(Statements::Query.new(state: "paid").statements).to eq([paid_statement])
+        end
+
+        it "filters by multiple states" do
+          expect(Statements::Query.new(state: "open,paid").statements).to match_array([open_statement, paid_statement])
+        end
+
+        xit "raises when invalid states queried" do
+          expect { Statements::Query.new(state: "error").statements }.to raise_error(ArgumentError)
+        end
+      end
     end
   end
 
