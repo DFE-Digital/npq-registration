@@ -1,4 +1,4 @@
-<%= form.govuk_radio_buttons_fieldset(question.name, legend: { text: question.question_text, tag: "h1", size: "xl" }, **question.fieldset_styles) do %>
+<%= form.govuk_radio_buttons_fieldset(question.name, **{ legend: { text: question.question_text, tag: "h1", size: "xl" }}.deep_merge(question.fieldset_styles)) do %>
   <%= yield :additional_info %>
   <%=
     render(
