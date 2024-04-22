@@ -23,7 +23,7 @@
           Provider application
         </dt>
         <dd class="govuk-summary-list__value">
-          <strong class="govuk-tag govuk-tag--grey">Expired</strong>
+          <%= govuk_tag(text: "Expired", colour: "grey") %>
           <% if Feature.registration_closed?(current_user) %>
             <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
               Your registration has expired but you can register again for future courses when registrations open.

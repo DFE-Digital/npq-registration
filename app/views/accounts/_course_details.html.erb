@@ -50,12 +50,12 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <% if application.lead_provider_approval_status.blank? || pending?(application) %>
-            <strong class="govuk-tag govuk-tag--yellow">Apply with provider</strong>
+            <%= govuk_tag(text: "Apply with provider", colour: "yellow") %>
             <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.pending_status")  %></p>
           <% elsif accepted?(application) %>
-            <strong class="govuk-tag govuk-tag--green">Successful</strong>
+            <%= govuk_tag(text: "Successful", colour: "green") %>
           <% elsif rejected?(application) %>
-            <strong class="govuk-tag govuk-tag--red">Unsuccessful</strong>
+            <%= govuk_tag(text: "Unsuccessful", colour: "red") %>
           <% end %>
         </dd>
         <!-- This code is only written for review apps in order to update the external statuses -->
@@ -89,10 +89,10 @@
           </dt>
           <dd class="govuk-summary-list__value">
               <% if application.participant_outcome_state.capitalize == "Passed" %>
-                <strong class="govuk-tag govuk-tag--green">Passed</strong>
+                <%= govuk_tag(text: "Passed", colour: "green") %>
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
               <% elsif application.participant_outcome_state.capitalize == "Failed" %>
-                <strong class="govuk-tag govuk-tag--red">Not passed</strong>
+                <%= govuk_tag(text: "Not passed", colour: "red") %>
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
               <% end %>
           </dd>
@@ -109,7 +109,7 @@
             Course outcome
           </dt>
           <dd class="govuk-summary-list__value">
-            <strong class="govuk-tag govuk-tag--red">N/A</strong>
+            <%= govuk_tag(text: "N/A", colour: "red") %>
           </dd>
           <% if accepted?(application)%>
             <dd class="govuk-summary-list__actions">

@@ -27,13 +27,9 @@
           <td class="govuk-table__cell">
             <% service_user = User.find_by(email: user.email) %>
             <% if service_user.present? %>
-              <strong class="govuk-tag govuk-tag--green">
-                Yes
-              </strong>
+              <%= govuk_tag(text: "Yes", colour: "green") %>
             <% else %>
-              <strong class="govuk-tag govuk-tag--red">
-                No
-              </strong>
+              <%= govuk_tag(text: "No", colour: "red") %>
             <% end %>
           </td>
           <td class="govuk-table__cell">
