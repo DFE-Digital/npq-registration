@@ -15,6 +15,11 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Identifier")
+      row.with_value(text: @course.identifier)
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Position")
       row.with_value(text: @course.position)
     end
