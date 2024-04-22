@@ -10,7 +10,7 @@ class EmailUpdates
       QuestionTypes::RadioButtonGroup.new(
         name: :email_updates_status,
         options:,
-        style_options: { legend: { size: "xl", tag: "h1" } },
+        style_options: { legend: { size: "m", tag: "h2" } },
       ),
     ]
   end
