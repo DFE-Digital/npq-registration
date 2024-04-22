@@ -18,10 +18,10 @@ module ApplicationHelper
   end
 
   def boolean_red_green_tag(bool, text = nil)
-    text ||= bool ? "YES" : "NO"
+    text ||= bool ? "Yes" : "No"
     colour = bool ? "green" : "red"
 
-    content_tag(:strong, text, class: "govuk-tag govuk-tag--#{colour}")
+    govuk_tag(text:, colour:)
   end
 
   def boolean_tag(bool)

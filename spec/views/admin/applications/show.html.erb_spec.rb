@@ -8,7 +8,7 @@ RSpec.describe "admin/applications/show.html.erb", type: :view do
 
     render
 
-    expect(rendered).to match(/Targeted delivery funding eligibility.*YES/m)
+    expect(rendered).to match(/Targeted delivery funding eligibility.*Yes/m)
   end
 
   it "displays application created_at" do

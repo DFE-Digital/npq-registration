@@ -27,6 +27,7 @@ Rails.logger.info("Seeding database")
   "add_cohorts.rb",
   "add_statements.rb",
   "add_api_tokens.rb",
+  "add_feature_flags.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   load_base_file(seed_file)
