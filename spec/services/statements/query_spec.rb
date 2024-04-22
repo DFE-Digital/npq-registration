@@ -11,14 +11,6 @@ RSpec.describe Statements::Query do
       expect(query.statements).to eq([statement])
     end
 
-    it "return only statements with an output fee" do
-      create(:statement, output_fee: false)
-
-      query = Statements::Query.new
-
-      expect(query.statements).to be_empty
-    end
-
     it "orders statements by payment date in ascending order" do
       statement1 = create(:statement, payment_date: 2.days.ago)
       statement2 = create(:statement, payment_date: 1.day.ago)
@@ -108,6 +100,26 @@ RSpec.describe Statements::Query do
 
         xit "raises when invalid states queried" do
           expect { Statements::Query.new(state: "error").statements }.to raise_error(ArgumentError)
+        end
+      end
+
+      describe "by output fee" do
+        it "return only statements with an output fee by default" do
+          create(:statement, output_fee: false)
+
+          query = Statements::Query.new
+
+          expect(query.statements).to be_empty
+        end
+
+        context "when output_fee: false" do
+          it "return only statements with an output fee by default" do
+            output_fee = create(:statement, output_fee: false)
+
+            query = Statements::Query.new(output_fee: false)
+
+            expect(query.statements).to include(output_fee)
+          end
         end
       end
     end

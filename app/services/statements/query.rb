@@ -1,23 +1,23 @@
 module Statements
   class Query
-    attr_reader :lead_provider, :cohort_start_years, :updated_since, :state
+    attr_reader :lead_provider, :cohort_start_years, :updated_since, :state, :output_fee
 
-    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil)
+    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil, output_fee: true)
       @lead_provider = lead_provider
       @cohort_start_years = cohort_start_years&.split(",")
       @updated_since = updated_since
       @state = state&.split(",")
+      @output_fee = output_fee
     end
 
     def statements
-      scope = Statement
-                .includes(:cohort)
-                .with_output_fee
+      scope = Statement.includes(:cohort)
 
       scope = scope.where(lead_provider:) if lead_provider.present?
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(updated_at: updated_since..) if updated_since.present?
       scope = scope.where(state:) if state.present?
+      scope = scope.where(output_fee:)
 
       scope.order(payment_date: :asc)
     end
