@@ -31,7 +31,7 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :npqh_status,
           options:,
-          style_options: { legend: { size: "m", tag: "h1" } },
+          style_options: { legend: { size: "m", tag: "h2" } },
         ),
       ]
     end

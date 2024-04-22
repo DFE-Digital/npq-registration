@@ -6,7 +6,7 @@
     <dd class="govuk-summary-list__value">
       <% unless scholarship_eligibility_in_review?(application) %>
         <strong class="govuk-tag <%= application.eligible_for_funding ? 'govuk-tag--green' : 'govuk-tag--red' %>">
-          <%= application.eligible_for_funding ? 'ELIGIBLE' : 'NOT ELIGIBLE' %>
+          <%= application.eligible_for_funding ? 'Eligible' : 'Not eligible' %>
         </strong>
       <% end %>
       <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= scholarship_funding_eligibility(application) %></p>
@@ -34,7 +34,7 @@
               Targeted support funding
             </dt>
             <dd class="govuk-summary-list__value">
-              <strong class="govuk-tag govuk-tag--green">ELIGIBLE</strong>
+              <strong class="govuk-tag govuk-tag--green">Eligible</strong>
               <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= targeted_support_funding %></p>
             </dd>
           </div>
