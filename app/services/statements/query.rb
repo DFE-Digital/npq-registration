@@ -4,9 +4,9 @@ module Statements
 
     def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil, output_fee: true)
       @lead_provider = lead_provider
-      @cohort_start_years = cohort_start_years&.split(",")
+      @cohort_start_years = extract_conditions(cohort_start_years)
       @updated_since = updated_since
-      @state = state&.split(",")
+      @state = extract_conditions(state)
       @output_fee = output_fee
     end
 
@@ -27,6 +27,19 @@ module Statements
       return statements.find(id) if id.present?
 
       fail(ArgumentError, "id or ecf_id needed")
+    end
+
+  private
+
+    def extract_conditions(list)
+      case list
+      when String
+        list.split(",")
+      when Array
+        list.compact
+      else
+        list
+      end
     end
   end
 end

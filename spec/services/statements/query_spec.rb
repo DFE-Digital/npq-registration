@@ -57,10 +57,13 @@ RSpec.describe Statements::Query do
         it "filters by multiple cohorts" do
           statement1 = create(:statement, cohort: cohort_2023)
           statement2 = create(:statement, cohort: cohort_2024)
-          _statement = create(:statement, cohort: cohort_2025)
-          query = Statements::Query.new(cohort_start_years: "2023,2024")
+          statement3 = create(:statement, cohort: cohort_2025)
 
-          expect(query.statements).to match_array([statement1, statement2])
+          query1 = Statements::Query.new(cohort_start_years: "2023,2024")
+          expect(query1.statements).to match_array([statement1, statement2])
+
+          query2 = Statements::Query.new(cohort_start_years: %w[2024 2025])
+          expect(query2.statements).to match_array([statement2, statement3])
         end
 
         it "returns no statements if no cohorts are found" do
@@ -94,8 +97,12 @@ RSpec.describe Statements::Query do
           expect(Statements::Query.new(state: "paid").statements).to eq([paid_statement])
         end
 
-        it "filters by multiple states" do
+        it "filters by multiple states with a comma separated list" do
           expect(Statements::Query.new(state: "open,paid").statements).to match_array([open_statement, paid_statement])
+        end
+
+        it "filters by multiple states with an array" do
+          expect(Statements::Query.new(state: %w[open paid]).statements).to match_array([open_statement, paid_statement])
         end
 
         xit "raises when invalid states queried" do
