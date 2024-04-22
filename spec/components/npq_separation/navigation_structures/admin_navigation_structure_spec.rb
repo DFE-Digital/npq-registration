@@ -7,6 +7,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
     {
       "Dashboard" => "/npq-separation/admin",
       "Applications" => "/npq-separation/admin/applications",
+      "Courses" => "/npq-separation/admin/courses",
       "Participants" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
       "Schools" => "/npq-separation/admin/schools",
