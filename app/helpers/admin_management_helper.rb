@@ -1,9 +1,9 @@
 module AdminManagementHelper
   def admin_type_cell_contents(admin)
     if admin.super_admin?
-      content_tag(:strong, t(".admin_type.super_admin"), class: "govuk-tag govuk-tag--blue")
+      govuk_tag(text: t(".admin_type.super_admin"), colour: "blue")
     else
-      content_tag(:strong, t(".admin_type.admin"), class: "govuk-tag govuk-tag--green")
+      govuk_tag(text: t(".admin_type.admin"), colour: "green")
     end
   end
 
