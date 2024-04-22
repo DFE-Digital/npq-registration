@@ -1,0 +1,1 @@
+Feature.initialize_feature_flags
