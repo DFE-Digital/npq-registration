@@ -18,7 +18,7 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :course_identifier,
           options:,
-          style_options: { legend: { size: "m", tag: "h1" } },
+          style_options: { legend: { size: "m", tag: "h2" } },
         ),
       ]
     end

@@ -27,12 +27,12 @@
         </dt>
         <dd class="govuk-summary-list__value">
           <% if application.lead_provider_approval_status.blank? || pending?(application) %>
-            <strong class="govuk-tag govuk-tag--yellow">APPLY WITH PROVIDER</strong>
+            <%= govuk_tag(text: "Apply with provider", colour: "yellow") %>
             <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.pending_status")  %></p>
           <% elsif accepted?(application) %>
-            <strong class="govuk-tag govuk-tag--green">SUCCESSFUL</strong>
+            <%= govuk_tag(text: "Successful", colour: "green") %>
           <% elsif rejected?(application) %>
-            <strong class="govuk-tag govuk-tag--red">UNSUCCESSFUL</strong>
+            <%= govuk_tag(text: "Unsuccessful", colour: "red") %>
           <% end %>
         </dd>
       </div>
@@ -44,10 +44,10 @@
           </dt>
           <dd class="govuk-summary-list__value">
               <% if application.participant_outcome_state.capitalize == "Passed" %>
-                <strong class="govuk-tag govuk-tag--green">PASSED</strong>
+                <%= govuk_tag(text: "Passed", colour: "green") %>
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
               <% elsif application.participant_outcome_state.capitalize == "Failed" %>
-                <strong class="govuk-tag govuk-tag--red">NOT PASSED</strong>
+                <%= govuk_tag(text: "Not passed", colour: "red") %>
                 <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
               <% end %>
           </dd>
