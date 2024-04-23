@@ -1,0 +1,20 @@
+<h1 class="govuk-heading-l">All courses</h1>
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Name")
+      end
+    end
+  
+    table.with_body do |body|
+      @courses.each do |course|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(course.name, npq_separation_admin_course_path(course)))
+        end
+      end
+    end
+  end
+%>
+
+<%= govuk_pagination(pagy: @pagy) %>

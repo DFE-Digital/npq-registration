@@ -1,0 +1,32 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<h1 class="govuk-heading-l"><%= @school.name %></h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "ID")
+      row.with_value(text: @school.id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "URN")
+      row.with_value(text: @school.urn)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "UKPRN")
+      row.with_value(text: @school.ukprn)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Local authority")
+      row.with_value(text: @school.la_name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Address")
+      row.with_value(text: format_address(@school))
+    end
+  end
+%>

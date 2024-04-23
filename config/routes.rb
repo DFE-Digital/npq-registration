@@ -190,6 +190,8 @@ Rails.application.routes.draw do
         end
 
         resources :applications, only: %i[index]
+        resources :schools, only: %i[index show]
+        resources :courses, only: %i[index show]
         resources :users, only: %i[index show]
 
         namespace :finance do
