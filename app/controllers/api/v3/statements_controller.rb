@@ -11,7 +11,7 @@ module API
       end
 
       def show
-        render json: to_json(statements_query.statement(id: statement_params[:id]))
+        render json: to_json(statements_query.statement(ecf_id: statement_params[:id]))
       end
 
     private

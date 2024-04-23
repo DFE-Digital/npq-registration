@@ -1,9 +1,9 @@
 class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::AdminController
   def index
-    @pagy, @statements = pagy(Statements::Find.new.all)
+    @pagy, @statements = pagy(Statements::Query.new.statements)
   end
 
   def show
-    @statement = Statements::Find.new.find_by_id(params[:id])
+    @statement = Statements::Query.new.statement(id: params[:id])
   end
 end

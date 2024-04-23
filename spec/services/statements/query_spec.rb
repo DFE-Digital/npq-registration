@@ -11,14 +11,6 @@ RSpec.describe Statements::Query do
       expect(query.statements).to eq([statement])
     end
 
-    it "return only statements with an output fee" do
-      create(:statement, output_fee: false)
-
-      query = Statements::Query.new
-
-      expect(query.statements).to be_empty
-    end
-
     it "orders statements by payment date in ascending order" do
       statement1 = create(:statement, payment_date: 2.days.ago)
       statement2 = create(:statement, payment_date: 1.day.ago)
@@ -65,10 +57,13 @@ RSpec.describe Statements::Query do
         it "filters by multiple cohorts" do
           statement1 = create(:statement, cohort: cohort_2023)
           statement2 = create(:statement, cohort: cohort_2024)
-          _statement = create(:statement, cohort: cohort_2025)
-          query = Statements::Query.new(cohort_start_years: "2023,2024")
+          statement3 = create(:statement, cohort: cohort_2025)
 
-          expect(query.statements).to match_array([statement1, statement2])
+          query1 = Statements::Query.new(cohort_start_years: "2023,2024")
+          expect(query1.statements).to match_array([statement1, statement2])
+
+          query2 = Statements::Query.new(cohort_start_years: %w[2024 2025])
+          expect(query2.statements).to match_array([statement2, statement3])
         end
 
         it "returns no statements if no cohorts are found" do
@@ -90,6 +85,50 @@ RSpec.describe Statements::Query do
           expect(query.statements).to eq([statement2])
         end
       end
+
+      describe "by state" do
+        let!(:open_statement) { create(:statement, :open) }
+        let!(:payable_statement) { create(:statement, :payable) }
+        let!(:paid_statement) { create(:statement, :paid) }
+
+        it "filters by state" do
+          expect(Statements::Query.new(state: "open").statements).to eq([open_statement])
+          expect(Statements::Query.new(state: "payable").statements).to eq([payable_statement])
+          expect(Statements::Query.new(state: "paid").statements).to eq([paid_statement])
+        end
+
+        it "filters by multiple states with a comma separated list" do
+          expect(Statements::Query.new(state: "open,paid").statements).to match_array([open_statement, paid_statement])
+        end
+
+        it "filters by multiple states with an array" do
+          expect(Statements::Query.new(state: %w[open paid]).statements).to match_array([open_statement, paid_statement])
+        end
+
+        xit "raises when invalid states queried" do
+          expect { Statements::Query.new(state: "error").statements }.to raise_error(ArgumentError)
+        end
+      end
+
+      describe "by output fee" do
+        it "return only statements with an output fee by default" do
+          create(:statement, output_fee: false)
+
+          query = Statements::Query.new
+
+          expect(query.statements).to be_empty
+        end
+
+        context "when output_fee: false" do
+          it "return only statements with an output fee by default" do
+            output_fee = create(:statement, output_fee: false)
+
+            query = Statements::Query.new(output_fee: false)
+
+            expect(query.statements).to include(output_fee)
+          end
+        end
+      end
     end
   end
 
@@ -100,12 +139,14 @@ RSpec.describe Statements::Query do
       statement = create(:statement, lead_provider:)
       query = Statements::Query.new
 
-      expect(query.statement(id: statement.ecf_id)).to eq(statement)
+      expect(query.statement(ecf_id: statement.ecf_id)).to eq(statement)
+      expect(query.statement(id: statement.id)).to eq(statement)
     end
 
     it "raises an error if the statement does not exist" do
       query = Statements::Query.new
 
+      expect { query.statement(ecf_id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
       expect { query.statement(id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -115,7 +156,12 @@ RSpec.describe Statements::Query do
 
       query = Statements::Query.new(lead_provider:)
 
-      expect { query.statement(id: other_statement.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.statement(ecf_id: other_statement.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.statement(id: other_statement.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if neither an ecf_id or id is supplied" do
+      expect { Statements::Query.new.statement }.to raise_error(ArgumentError, "id or ecf_id needed")
     end
   end
 end

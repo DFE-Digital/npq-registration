@@ -5,6 +5,6 @@ class NpqSeparation::Admin::LeadProvidersController < NpqSeparation::AdminContro
 
   def show
     @lead_provider = LeadProviders::Find.new.find_by_id(params[:id])
-    @statements = Statements::Find.new.belonging_to(lead_provider: @lead_provider)
+    @statements = Statements::Query.new(lead_provider: @lead_provider).statements
   end
 end
