@@ -106,7 +106,7 @@ Rails.application.routes.draw do
 
       constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
         defaults format: :json do
-          resources :applications, path: "npq-applications", only: %i[index show] do
+          resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
             post :reject, path: "reject"
             post :accept, path: "accept"
           end
@@ -129,7 +129,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
-      resources :applications, path: "npq-applications", only: %i[index show] do
+      resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         post :reject, path: "reject"
         post :accept, path: "accept"
       end
@@ -155,7 +155,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v3, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
-      resources :applications, path: "npq-applications", only: %i[index show] do
+      resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         post :reject, path: "reject"
         post :accept, path: "accept"
       end

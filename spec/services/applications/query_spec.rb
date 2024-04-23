@@ -35,11 +35,30 @@ RSpec.describe Applications::Query do
   describe "#application" do
     let(:lead_provider) { create(:lead_provider) }
 
-    it "returns the application for a `lead_provider`" do
+    it "raises an error if no `id` or `ecf_id` is provided" do
+      query = Applications::Query.new
+      expect { query.application }.to raise_error(ArgumentError).with_message("id or ecf_id needed")
+    end
+
+    it "returns the application using the `id`" do
       application = create(:application, lead_provider:)
 
       query = Applications::Query.new
-      expect(query.application(id: application.ecf_id)).to eq(application)
+      expect(query.application(id: application.id)).to eq(application)
+    end
+
+    it "returns the application using the `ecf_id`" do
+      application = create(:application, lead_provider:)
+
+      query = Applications::Query.new
+      expect(query.application(ecf_id: application.ecf_id)).to eq(application)
+    end
+
+    it "returns the application for a `lead_provider`" do
+      application = create(:application, lead_provider:)
+
+      query = Applications::Query.new(lead_provider:)
+      expect(query.application(id: application.id)).to eq(application)
     end
 
     it "raises an error if the application does not exist" do

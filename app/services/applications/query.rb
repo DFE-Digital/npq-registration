@@ -20,8 +20,11 @@ module Applications
       scope.order(created_at: :asc)
     end
 
-    def application(id:)
-      applications.find_by!(ecf_id: id)
+    def application(id: nil, ecf_id: nil)
+      return applications.find_by!(ecf_id:) if ecf_id.present?
+      return applications.find(id) if id.present?
+
+      fail(ArgumentError, "id or ecf_id needed")
     end
 
   private

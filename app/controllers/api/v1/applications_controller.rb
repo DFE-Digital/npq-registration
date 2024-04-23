@@ -4,7 +4,7 @@ module API
       def index = head(:method_not_allowed)
 
       def show
-        render json: to_json(applications_query.application(id: application_params[:id]))
+        render json: to_json(applications_query.application(ecf_id: application_params[:ecf_id]))
       end
 
       def accept = head(:method_not_allowed)
@@ -19,7 +19,7 @@ module API
       end
 
       def application_params
-        params.permit(:id)
+        params.permit(:ecf_id)
       end
 
       def to_json(obj)
