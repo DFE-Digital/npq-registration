@@ -25,7 +25,7 @@ module API
       field(:lead_provider_approval_status, name: :status)
       field(:targeted_delivery_funding_eligibility)
       field(:eligible_for_funding)
-      field(:teacher_catchment) { |a| a.teacher_catchment.present? }
+      field(:inside_uk_catchment?, name: :teacher_catchment)
       field(:teacher_catchment_country)
       field(:teacher_catchment_iso_country_code)
       field(:lead_mentor)

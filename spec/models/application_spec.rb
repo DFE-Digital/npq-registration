@@ -79,6 +79,20 @@ RSpec.describe Application do
     end
   end
 
+  describe "#inside_catchment?" do
+    it { expect(build(:application, teacher_catchment: "england")).to be_inside_catchment }
+    it { expect(build(:application, teacher_catchment: "scotland")).not_to be_inside_catchment }
+  end
+
+  describe "#inside_uk_catchment?" do
+    it { expect(build(:application, teacher_catchment: "england")).to be_inside_uk_catchment }
+    it { expect(build(:application, teacher_catchment: "scotland")).to be_inside_uk_catchment }
+    it { expect(build(:application, teacher_catchment: "wales")).to be_inside_uk_catchment }
+    it { expect(build(:application, teacher_catchment: "northern_ireland")).to be_inside_uk_catchment }
+    it { expect(build(:application, teacher_catchment: "jersey_guernsey_isle_of_man")).to be_inside_uk_catchment }
+    it { expect(build(:application, teacher_catchment: "other")).not_to be_inside_uk_catchment }
+  end
+
   describe "#employer_name" do
     shared_examples "employer_name" do
       it "displays proper employer_name" do

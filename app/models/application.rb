@@ -5,6 +5,8 @@ class Application < ApplicationRecord
   # within the rails model
   self.ignored_columns = %w[DEPRECATED_cohort]
 
+  UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
+
   has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
 
   belongs_to :user
@@ -78,6 +80,10 @@ class Application < ApplicationRecord
 
   def synced_to_ecf?
     ecf_id.present?
+  end
+
+  def inside_uk_catchment?
+    teacher_catchment.in?(UK_CATCHMENT_AREA)
   end
 
   def inside_catchment?

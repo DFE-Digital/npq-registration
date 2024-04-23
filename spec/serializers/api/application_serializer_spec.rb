@@ -71,7 +71,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     end
 
     it "serializes the `teacher_catchment`" do
-      application.teacher_catchment = "catchment"
+      application.teacher_catchment = "england"
       expect(attributes["teacher_catchment"]).to eq(true)
     end
 
