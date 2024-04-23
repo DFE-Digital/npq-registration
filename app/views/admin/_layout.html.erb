@@ -37,6 +37,10 @@
     <%= t(".webhook_messages") %>
   <% end %>
 
+  <% component.with_nav_item(path: "/admin/closed_registration_users") do %>
+    <%= "Closed registration users" %>
+  <% end %>
+
   <% if super_admin? %>
     <% component.with_nav_item(path: admin_admins_path) do %>
       <%= t(".admins") %>
@@ -50,8 +54,5 @@
       <%= t(".settings") %>
     <% end %>
 
-    <% component.with_nav_item(path: "/admin/closed_registration_users") do %>
-      <%= "Closed registration users" %>
-    <% end %>
   <% end %>
 <% end %>

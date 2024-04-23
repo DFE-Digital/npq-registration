@@ -1,4 +1,4 @@
-class Admin::ClosedRegistrationUsersController < SuperAdminController
+class Admin::ClosedRegistrationUsersController < AdminController
   def index
     @users = ClosedRegistrationUser.all
     @user = ClosedRegistrationUser.new
