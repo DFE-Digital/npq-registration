@@ -11,10 +11,6 @@ FactoryBot.define do
     ecf_id { SecureRandom.uuid }
     cohort
 
-    trait :with_ecf_id do
-      ecf_id { SecureRandom.uuid }
-    end
-
     trait :application_for_school do
       school { build(:school) }
       private_childcare_provider_id { nil }
