@@ -17,6 +17,10 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
 
       expect(response["id"]).to eq("fe1a5280-1b13-4b09-b9c7-e2b01d37e851")
     end
+
+    it "serializes the `type`" do
+      expect(response["type"]).to eq("npq_application")
+    end
   end
 
   describe "nested attributes" do
