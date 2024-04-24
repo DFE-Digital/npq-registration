@@ -11,7 +11,7 @@ module API
       end
 
       def show
-        render json: to_json(statements_query.statement(ecf_id: statement_params[:id]))
+        render json: to_json(statements_query.statement(ecf_id: statement_params[:ecf_id]))
       end
 
     private
@@ -25,7 +25,7 @@ module API
       end
 
       def statement_params
-        params.permit(:id, filter: %i[cohort updated_since])
+        params.permit(:ecf_id, filter: %i[cohort updated_since])
       end
 
       def cohort_start_years
