@@ -91,7 +91,7 @@ RSpec.feature "admin", type: :feature, rack_test_driver: true do
   end
 
   scenario "when logged in as a regular admin, it allows access to the applications interfaces" do
-    create_list(:application, 4)
+    create_list(:application, 4, ecf_id: nil)
 
     sign_in_as_admin
 
@@ -254,8 +254,8 @@ RSpec.feature "admin", type: :feature, rack_test_driver: true do
     expect(page).to have_content("All applications have been successfuly linked with an ECF user.")
 
     # when there are some unsynced records
-    unsynced_applications = create_list(:application, 2)
-    create_list(:application, 1, :with_ecf_id) # synced applications
+    unsynced_applications = create_list(:application, 2, ecf_id: nil)
+    create_list(:application, 1) # synced applications
 
     page.click_link("Unsynced applications")
 

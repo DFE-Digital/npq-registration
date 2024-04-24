@@ -8,10 +8,7 @@ FactoryBot.define do
     course { Course.all.sample }
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
-
-    trait :with_ecf_id do
-      ecf_id { SecureRandom.uuid }
-    end
+    ecf_id { SecureRandom.uuid }
 
     trait :application_for_school do
       school { build(:school) }
@@ -40,6 +37,25 @@ FactoryBot.define do
       works_in_school { false }
       works_in_childcare { true }
       kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+    end
+
+    trait :accepted do
+      lead_provider_approval_status { :accepted }
+    end
+
+    trait :pending do
+      lead_provider_approval_status { :pending }
+    end
+
+    trait :eligible_for_funding do
+      eligible_for_funding { true }
+    end
+
+    trait :previously_funded do
+      after(:create) do |application|
+        course = application.course.rebranded_alternative_courses.sample
+        create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
+      end
     end
 
     trait :with_random_work_setting do

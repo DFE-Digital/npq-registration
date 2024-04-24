@@ -2,25 +2,19 @@ require "rails_helper"
 
 RSpec.describe API::V2::DeclarationsController, type: "request" do
   describe("index") do
-    before { api_get(api_v2_applications_path) }
+    before { api_get(api_v2_declarations_path) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
   describe("show") do
-    before { api_get(api_v2_application_path(123)) }
+    before { api_get(api_v2_declaration_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
-  describe("accept") do
-    before { api_post(api_v2_application_accept_path(123)) }
-
-    specify { expect(response).to(be_method_not_allowed) }
-  end
-
-  describe("reject") do
-    before { api_post(api_v2_application_reject_path(123)) }
+  describe("void") do
+    before { api_put(api_v2_declaration_void_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
