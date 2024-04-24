@@ -177,7 +177,7 @@ Rails.application.routes.draw do
         put :void, path: "void"
       end
 
-      resources :statements, only: %i[index show]
+      resources :statements, only: %i[index show], param: :ecf_id
     end
   end
 
