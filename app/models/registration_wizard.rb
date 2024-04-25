@@ -265,7 +265,7 @@ class RegistrationWizard
   end
 
   def query_store
-    @query_store ||= QueryStore.new(store:)
+    @query_store ||= RegistrationQueryStore.new(store:)
   end
 
 private

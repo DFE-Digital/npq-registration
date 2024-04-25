@@ -30,9 +30,9 @@ It defines the question name, it's validations, and the next_step and previous_s
 
 The store is a session based store of the user's current application state. It is a hash that is stored in the user's session and is updated as the user progresses through the wizard. It is accessed by calling `wizard.store` on or within a form. The Query Store (detailed below) provides a way to access the store in a stuctured way.
 
-### QueryStore
+### RegistrationQueryStore
 
-The QueryStore service is a wrapper around the store hash to provide a way to provide helper methods to access store information. 
+The RegistrationQueryStore service is a wrapper around the store hash to provide a way to provide helper methods to access store information. 
 
 ## Courses
 
