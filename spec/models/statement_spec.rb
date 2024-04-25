@@ -48,19 +48,19 @@ RSpec.describe Statement, type: :model do
   end
 
   describe "scopes" do
-    describe "paid" do
+    describe ".paid" do
       it "selects only paid statements" do
         expect(Statement.paid.to_sql).to include(%(WHERE "statements"."state" = 'paid'))
       end
     end
 
-    describe "unpaid" do
+    describe ".unpaid" do
       it "selects only unpaid statements" do
         expect(Statement.unpaid.to_sql).to include(%(WHERE "statements"."state" IN ('open', 'payable')))
       end
     end
 
-    describe "state" do
+    describe ".with_state" do
       it "selects only statements with states matching the provided name" do
         expect(Statement.with_state("foo").to_sql).to include(%(WHERE "statements"."state" = 'foo'))
       end
