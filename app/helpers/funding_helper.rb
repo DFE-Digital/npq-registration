@@ -4,7 +4,7 @@ module FundingHelper
     funding_eligibility = funding_eligibility_calculator(application)
 
     return I18n.t("funding_details.no_Ofsted") if application.raw_application_data["has_ofsted_urn"] == "no" && !application.course.ehco?
-    
+
     funding_eligibility.get_description_for_funding_status
   end
 
