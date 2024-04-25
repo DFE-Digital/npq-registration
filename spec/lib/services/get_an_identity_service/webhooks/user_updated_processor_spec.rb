@@ -15,7 +15,7 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
   let(:old_email) { "mail@example.com" }
   let(:old_date_of_birth) { 30.years.ago.to_date }
 
-  let(:user) { create(:user, :with_get_an_identity_id, email: old_email, date_of_birth: old_date_of_birth) }
+  let(:user) { create(:user, :with_get_an_identity_id, email: old_email, date_of_birth: old_date_of_birth, full_name: "John Doe") }
 
   context "when passed the correct message_type" do
     let(:message_type) { "UserUpdated" }
