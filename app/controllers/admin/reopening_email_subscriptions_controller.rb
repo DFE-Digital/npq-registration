@@ -8,7 +8,7 @@ class Admin::ReopeningEmailSubscriptionsController < SuperAdminController
     respond_to do |format|
       format.html
       format.csv do
-        response.headers["Content-Type"] = "text/csv"
+        response.headers["Content-Type"] = "text/csv; charset=utf-8"
         response.headers["Content-Disposition"] = "attachment; filename=reopening_email_subscriptions_#{subscriptions.join("-")}.csv"
       end
     end
