@@ -59,6 +59,16 @@ RSpec.describe Statement, type: :model do
         expect(Statement.unpaid.to_sql).to include(%(WHERE "statements"."state" IN ('open', 'payable')))
       end
     end
+
+    describe "state" do
+      it "selects only statements with states matching the provided name" do
+        expect(Statement.with_state("foo").to_sql).to include(%(WHERE "statements"."state" = 'foo'))
+      end
+
+      it "selects only multiple statements with states matching the provided names" do
+        expect(Statement.with_state("foo", "bar").to_sql).to include(%(WHERE "statements"."state" IN ('foo', 'bar')))
+      end
+    end
   end
 
   describe "State transition" do

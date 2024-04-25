@@ -1,32 +1,66 @@
 module Statements
   class Query < Query
-    attr_reader :lead_provider, :cohort_start_years, :updated_since, :state, :output_fee
+    attr_reader :scope
 
-    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil, output_fee: true)
-      @lead_provider = lead_provider
-      @cohort_start_years = extract_conditions(cohort_start_years)
-      @updated_since = updated_since
-      @state = extract_conditions(state)
-      @output_fee = output_fee
+    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, state: :ignore, output_fee: true)
+      @scope = Statement.includes(:cohort)
+
+      where_lead_provider_is(lead_provider)
+      where_cohort_start_year_in(extract_conditions(cohort_start_years))
+      where_updated_since(updated_since)
+      where_state_is(extract_conditions(state))
+      where_output_fee_is(output_fee)
     end
 
     def statements
-      scope = Statement.includes(:cohort)
-
-      scope = scope.where(lead_provider:) if lead_provider.present?
-      scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
-      scope = scope.where(updated_at: updated_since..) if updated_since.present?
-      scope = scope.where(state:) if state.present?
-      scope = scope.where(output_fee:)
-
       scope.order(payment_date: :asc)
     end
 
     def statement(id: nil, ecf_id: nil)
-      return statements.find_by!(ecf_id:) if ecf_id.present?
-      return statements.find(id) if id.present?
+      return scope.find_by!(ecf_id:) if ecf_id.present?
+      return scope.find(id) if id.present?
 
       fail(ArgumentError, "id or ecf_id needed")
+    end
+
+    def where_lead_provider_is(lead_provider)
+      return if lead_provider == :ignore
+
+      scope.merge!(Statement.where(lead_provider:))
+
+      self
+    end
+
+    def where_cohort_start_year_in(cohort_start_years)
+      return if cohort_start_years == :ignore
+
+      scope.merge!(Statement.where(cohort: { start_year: cohort_start_years }))
+
+      self
+    end
+
+    def where_updated_since(updated_since)
+      return if updated_since == :ignore
+
+      scope.merge!(Statement.where(updated_at: updated_since..))
+
+      self
+    end
+
+    def where_state_is(state)
+      return if state == :ignore
+
+      scope.merge!(Statement.with_state(state))
+
+      self
+    end
+
+    def where_output_fee_is(output_fee)
+      return if output_fee == :ignore
+
+      scope.merge!(Statement.with_output_fee(output_fee:))
+
+      self
     end
   end
 end
