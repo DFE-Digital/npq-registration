@@ -7,7 +7,7 @@ RSpec.feature "Reopening Email Subscription Management", type: :feature, rack_te
 
   before do
     sign_in_as(super_admin)
-    create :user, email_updates_status: :senco, email: "example@example.org"
+    create :user, email_updates_status: :senco, email: "example@example.org", full_name: "John Doe"
   end
 
   scenario "unsubscribe user" do
