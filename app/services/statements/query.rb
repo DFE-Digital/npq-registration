@@ -1,5 +1,5 @@
 module Statements
-  class Query
+  class Query < Query
     attr_reader :lead_provider, :cohort_start_years, :updated_since, :state, :output_fee
 
     def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, state: nil, output_fee: true)
@@ -27,19 +27,6 @@ module Statements
       return statements.find(id) if id.present?
 
       fail(ArgumentError, "id or ecf_id needed")
-    end
-
-  private
-
-    def extract_conditions(list)
-      case list
-      when String
-        list.split(",")
-      when Array
-        list.compact
-      else
-        list
-      end
     end
   end
 end
