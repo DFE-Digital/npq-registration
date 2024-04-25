@@ -93,6 +93,49 @@ RSpec.describe Applications::Query do
         end
       end
     end
+
+    describe "sorting" do
+      let(:application1) { travel_to(1.month.ago) { create(:application) } }
+      let(:application2) { travel_to(1.week.ago) { create(:application) } }
+      let(:application3) { create(:application) }
+      let(:sort) { nil }
+
+      subject(:applications) { Applications::Query.new(sort:).applications }
+
+      it { is_expected.to eq([application1, application2, application3]) }
+
+      context "when sorting by created at, descending" do
+        let(:sort) { "-created_at" }
+
+        it { is_expected.to eq([application3, application2, application1]) }
+      end
+
+      context "when sorting by updated at, ascending" do
+        let(:sort) { "+updated_at" }
+
+        before do
+          application1.update!(updated_at: 1.day.from_now)
+          application2.update!(updated_at: 2.days.from_now)
+        end
+
+        it { is_expected.to eq([application3, application1, application2]) }
+      end
+
+      context "when sorting by multiple attributes" do
+        let(:sort) { "+updated_at,-created_at" }
+
+        before do
+          application1.update!(updated_at: 1.day.from_now)
+          application2.update!(updated_at: application1.updated_at)
+          application3.update!(updated_at: 2.days.from_now)
+
+          application2.update!(created_at: 1.day.from_now)
+          application1.update!(created_at: 1.day.ago)
+        end
+
+        it { expect(applications).to eq([application2, application1, application3]) }
+      end
+    end
   end
 
   describe "#application" do

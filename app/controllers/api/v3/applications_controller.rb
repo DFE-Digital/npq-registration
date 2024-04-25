@@ -23,6 +23,7 @@ module API
           cohort_start_years:,
           participant_ids:,
           updated_since:,
+          sort: application_params[:sort],
         )
       end
 
@@ -35,7 +36,7 @@ module API
       end
 
       def application_params
-        params.permit(:ecf_id, filter: %i[cohort updated_since participant_id])
+        params.permit(:ecf_id, :sort, filter: %i[cohort updated_since participant_id])
       end
 
       def to_json(obj)
