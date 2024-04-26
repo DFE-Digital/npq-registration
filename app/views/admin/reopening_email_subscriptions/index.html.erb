@@ -2,7 +2,7 @@
   <div class="govuk-grid-column-full">
     <%= render "admin/layout", title: "Email subscription list" %>
 
-    <h2 class="govuk-heading-l">Users who've requested emails about registration reopening (<%= @users.count %>)</h2>
+    <h2 class="govuk-heading-l">Users who've requested emails about registration reopening (<%= @all_users.count %>)</h2>
 
     <%= govuk_button_link_to("Export all with SENCO interest", admin_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
     <%= govuk_button_link_to("Export all", admin_reopening_email_subscriptions_path(format: :csv)) %>

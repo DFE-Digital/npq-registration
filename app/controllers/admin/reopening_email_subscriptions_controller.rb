@@ -3,7 +3,8 @@ class Admin::ReopeningEmailSubscriptionsController < SuperAdminController
 
   def index
     subscriptions = params[:senco_only] ? [:senco] : %i[senco other_npq]
-    @pagy, @users = pagy(User.where(email_updates_status: subscriptions))
+    @all_users = User.where(email_updates_status: subscriptions)
+    @pagy, @users = pagy(@all_users)
 
     respond_to do |format|
       format.html
