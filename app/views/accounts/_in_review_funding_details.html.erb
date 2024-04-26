@@ -3,27 +3,25 @@
   If you have not done so already.
 </p>
 
-<details class="govuk-details">
-  <summary class="govuk-details__summary">
-    <span class="govuk-details__summary-text">
-      What if I'm not eligible for scholarship funding or there are not funded spaces available with my chosen provider?
-    </span>
-  </summary>
-  <div class="govuk-details__text">
-    <p class="govuk-!-margin-bottom-2">You can:</p>
+<% def details_text %>
+  <p class="govuk-!-margin-bottom-2">You can:</p>
 
-    <ul class="govuk-list govuk-list--bullet">
-      <li>
-        register with this provider again at a later date (courses are run twice a year,
-        except for the Early headship coaching offer which varies by provider and is available year-round)
-      </li>
-      <li>
-        register with a different provider
-      </li>
-      <li>
-        explore other payment options, including paying for the course yourself or checking
-        if your workplace or trust can cover the cost
-      </li>
-    </ul>
-  </div>
-</details>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>
+      register with this provider again at a later date (courses are run twice a year,
+      except for the Early headship coaching offer which varies by provider and is available year-round)
+    </li>
+    <li>
+      register with a different provider
+    </li>
+    <li>
+      explore other payment options, including paying for the course yourself or checking
+      if your workplace or trust can cover the cost
+    </li>
+  </ul>
+<% end %>
+
+<%= govuk_details(
+  summary_text: "What if I'm not eligible for scholarship funding or there are not funded spaces available with my chosen provider?",
+  text: details_text.html_safe
+) %>
