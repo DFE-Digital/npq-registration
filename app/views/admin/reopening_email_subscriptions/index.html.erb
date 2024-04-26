@@ -1,0 +1,36 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Email subscription list" %>
+
+    <h2 class="govuk-heading-l">Users who've requested emails about registration reopening (<%= @users.count %>)</h2>
+
+    <%= govuk_button_link_to("Export all with SENCO interest", admin_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
+    <%= govuk_button_link_to("Export all", admin_reopening_email_subscriptions_path(format: :csv)) %>
+
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Email address</th>
+        <th scope="col" class="govuk-table__header">Interested in SENCO?</th>
+        <th scope="col" class="govuk-table__header">Unsubscribe</th>
+      </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+      <% @users.each do |user| %>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"><%= user.email %></td>
+          <td class="govuk-table__cell">
+            <%= user.senco_email_updates_status? ? "Yes" : "No" %>
+          </td>
+          <td class="govuk-table__cell">
+            <%= govuk_link_to "Unsubscribe", unsubscribe_admin_reopening_email_subscription_path(user.id) %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%== govuk_pagination(pagy: @pagy) %>
+  </div>
+</div>

@@ -29,7 +29,7 @@ class User < ApplicationRecord
   EMAIL_UPDATES_STATES = %i[senco other_npq].freeze
   EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
 
-  enum email_updates_status: EMAIL_UPDATES_ALL_STATES
+  enum email_updates_status: EMAIL_UPDATES_ALL_STATES, _suffix: true
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end

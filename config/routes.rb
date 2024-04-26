@@ -88,6 +88,16 @@ Rails.application.routes.draw do
 
     resources "settings"
     resources :closed_registration_users
+    resources :reopening_email_subscriptions do
+      member do
+        get "unsubscribe"
+        post "unsubscribe"
+      end
+      collection do
+        get "all_users"
+        get "senco"
+      end
+    end
   end
 
   get "/admin", to: "admin#show"
