@@ -1,0 +1,24 @@
+<p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+  This means that if <%= application.lead_provider.name %> confirms that you have a scholarship funded space, you will not need to pay for the course fees.
+</p>
+<p class="govuk-!-margin-top-2">
+  Contact <%= application.lead_provider.name %> to check if they can offer you a scholarship funded space, if you have not done so already.
+</p>
+
+<%= govuk_details(summary_text: "What if no funded spaces are available with my chosen provider?") do %>
+  <p class="govuk-!-margin-bottom-2">You can:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>
+      register with this provider again at a later date (courses are run twice a year,
+      except for the Early headship coaching offer which varies by provider and is available year-round)
+    </li>
+    <li>
+      register with a different provider
+    </li>
+    <li>
+      explore other payment options, including paying for the course yourself or checking
+      if your workplace or trust can cover the cost
+    </li>
+  </ul>
+<% end %>
