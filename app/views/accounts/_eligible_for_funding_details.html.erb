@@ -5,7 +5,7 @@
   Contact <%= application.lead_provider.name %> to check if they can offer you a scholarship funded space, if you have not done so already.
 </p>
 
-<% def details_text %>
+<%= govuk_details(summary_text: "What if no funded spaces are available with my chosen provider?") do %>
   <p class="govuk-!-margin-bottom-2">You can:</p>
 
   <ul class="govuk-list govuk-list--bullet">
@@ -22,8 +22,3 @@
     </li>
   </ul>
 <% end %>
-
-<%= govuk_details(
-  summary_text: "What if no funded spaces are available with my chosen provider?",
-  text: details_text.html_safe
-) %>
