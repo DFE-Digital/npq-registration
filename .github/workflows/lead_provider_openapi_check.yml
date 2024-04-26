@@ -69,6 +69,7 @@ jobs:
 
       - name: Generate API doc checksums (original)
         run: |
+          find public/api/docs/ -type f -exec sed -i 's/[[:space:]]\+$//' {} \;
           find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-original.txt
           cat api-doc-checksums-original.txt
 
@@ -77,6 +78,7 @@ jobs:
 
       - name: Generate API doc checksums (after swaggerize)
         run: |
+          find public/api/docs/ -type f -exec sed -i 's/[[:space:]]\+$//' {} \;
           find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-after-swaggerize.txt
           cat api-doc-checksums-after-swaggerize.txt
 
