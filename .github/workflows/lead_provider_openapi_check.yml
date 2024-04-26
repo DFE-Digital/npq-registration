@@ -68,13 +68,17 @@ jobs:
         run: bin/rails db:setup
 
       - name: Generate API doc checksums (original)
-        run: find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-original.txt
+        run: |
+          find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-original.txt
+          cat api-doc-checksums-original.txt
 
       - name: Run swaggerize
         run: bundle exec rake rswag:specs:swaggerize
 
       - name: Generate API doc checksums (after swaggerize)
-        run: find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-after-swaggerize.txt
+        run: |
+          find public/api/docs/ -type f | sort | xargs shasum -a 256 > api-doc-checksums-after-swaggerize.txt
+          cat api-doc-checksums-after-swaggerize.txt
 
       - name: Compare Checksums
         run: |
