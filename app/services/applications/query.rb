@@ -1,7 +1,13 @@
 module Applications
   class Query
-    def initialize(lead_provider: nil)
+    include API::Concerns::Orderable
+
+    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, participant_ids: nil, sort: nil)
       @lead_provider = lead_provider
+      @cohort_start_years = cohort_start_years&.split(",")
+      @updated_since = updated_since
+      @participant_ids = participant_ids&.split(",")
+      @sort = sort
     end
 
     def applications
@@ -16,8 +22,11 @@ module Applications
         )
 
       scope = scope.where(lead_provider:) if lead_provider.present?
+      scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
+      scope = scope.where(user: { ecf_id: participant_ids }) if participant_ids.present?
+      scope = scope.where(updated_at: updated_since..) if updated_since.present?
 
-      scope.order(created_at: :asc)
+      scope.order(sort_order(sort:, model: Application, default: { created_at: :asc }))
     end
 
     def application(id: nil, ecf_id: nil)
@@ -29,6 +38,6 @@ module Applications
 
   private
 
-    attr_reader :lead_provider
+    attr_reader :lead_provider, :cohort_start_years, :updated_since, :participant_ids, :sort
   end
 end

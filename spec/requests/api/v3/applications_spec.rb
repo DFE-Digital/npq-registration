@@ -2,6 +2,9 @@ require "rails_helper"
 
 RSpec.describe "Application endpoints", type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
+  let(:query) { Applications::Query }
+  let(:serializer) { API::ApplicationSerializer }
+  let(:serializer_version) { :v3 }
 
   describe "GET /api/v3/applications/:id" do
     let(:resource) { create(:application, lead_provider: current_lead_provider) }
@@ -11,13 +14,22 @@ RSpec.describe "Application endpoints", type: :request do
       api_v3_application_path(id)
     end
 
-    it_behaves_like "an API show endpoint", Applications::Query, API::ApplicationSerializer, :v3
+    it_behaves_like "an API show endpoint"
   end
 
-  describe("index") do
-    before { api_get(api_v1_applications_path) }
+  describe "GET /api/v3/npq-applications" do
+    let(:path) { api_v3_applications_path }
+    let(:resource_id_key) { :ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def create_resource(**attrs)
+      create(:application, **attrs)
+    end
+
+    it_behaves_like "an API index endpoint"
+    it_behaves_like "an API index endpoint with pagination"
+    it_behaves_like "an API index endpoint with filter by cohort"
+    it_behaves_like "an API index endpoint with filter by updated_since"
+    it_behaves_like "an API index endpoint with filter by participant_id"
   end
 
   describe("accept") do

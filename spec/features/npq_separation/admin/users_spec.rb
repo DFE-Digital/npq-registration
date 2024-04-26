@@ -6,7 +6,7 @@ RSpec.feature "Listing and viewing users", type: :feature do
   let(:users_per_page) { Pagy::DEFAULT[:items] }
 
   before do
-    create_list(:user, users_per_page + 1, :with_ecf_id, :with_get_an_identity_id)
+    create_list(:user, users_per_page + 1, :with_get_an_identity_id)
     sign_in_as(create(:admin))
   end
 

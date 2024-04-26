@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API show endpoint" do |query, serializer, serializer_version|
+RSpec.shared_examples "an API show endpoint" do
   context "when authorized" do
     context "when the resource exists" do
       it "returns the resource" do
@@ -13,10 +13,10 @@ RSpec.shared_examples "an API show endpoint" do |query, serializer, serializer_v
 
       it "calls the correct query/serializer" do
         serializer_params = { root: "data" }
-        serializer_params[:view] = serializer_version if serializer_version
+        serializer_params[:view] = serializer_version if defined?(serializer_version)
 
         expect(serializer).to receive(:render).with(resource, **serializer_params).and_call_original
-        expect(query).to receive(:new).and_call_original
+        expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider)).and_call_original
 
         api_get(path(resource_id))
       end
