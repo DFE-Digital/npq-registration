@@ -79,5 +79,12 @@ module Courses
       description: "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship.",
       display: true,
     },
+    {
+      position: 10,
+      name: "NPQ for Senco(NPQS)",
+      ecf_id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
+      identifier: "npq-senco",
+      display: true,
+    },
   ].freeze
 end

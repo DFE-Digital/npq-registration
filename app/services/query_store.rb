@@ -125,4 +125,20 @@ class QueryStore
   def maths_understanding?
     store["maths_understanding"]
   end
+
+  def senco_in_role
+    store["senco_in_role"]
+  end
+
+  def senco_in_role_status?
+    store["senco_in_role_status"]
+  end
+
+  def senco_start_date
+    store["senco_start_date"]
+  end
+
+  def formatted_senco_start_date
+    senco_start_date&.to_fs(:govuk)
+  end
 end

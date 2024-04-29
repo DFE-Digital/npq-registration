@@ -33,6 +33,9 @@ class RegistrationWizard
     maths_eligibility_teaching_for_mastery
     maths_understanding_of_approach
     maths_cannot_register
+    senco_in_role
+    funding_eligibility_senco
+    senco_start_date
     funding_eligibility_maths
     choose_your_provider
     find_school
