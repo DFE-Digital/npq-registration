@@ -10,6 +10,12 @@ FactoryBot.define do
     headteacher_status { "no" }
     ecf_id { SecureRandom.uuid }
     cohort
+    teacher_catchment { "england" }
+    teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
+    teacher_catchment_iso_country_code { "GBR" }
+    itt_provider
+    funding_choice { Application.funding_choices.keys.sample }
+    lead_mentor { true }
 
     trait :application_for_school do
       school { build(:school) }
