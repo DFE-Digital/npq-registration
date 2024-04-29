@@ -1,5 +1,5 @@
 <%= tag.h1(@lead_provider.name, class: "govuk-heading-l") %>
 
-<%= govuk_summary_card(title: "Statements", actions: [govuk_link_to("View all statements", "#", no_visited_state: true)]) do %>
+<%= govuk_summary_card(title: "Statements", actions: [govuk_link_to("View all statements", npq_separation_admin_finance_statements_path, no_visited_state: true)]) do %>
   <%= render NpqSeparation::Admin::StatementsTableComponent.new(@statements, show_lead_provider: false) %>
 <% end %>
