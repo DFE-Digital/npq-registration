@@ -2,7 +2,7 @@
 
 RSpec.shared_examples "an API index Csv endpoint documentation" do |url, tag, resource_description, filter_schema_ref, response_schema_ref|
   path url do
-    get "Retrieve multiple #{resource_description}" do
+    get "Retrieve all #{resource_description} in CSV format" do
       tags tag
       produces "text/csv"
       security [api_key: []]
@@ -14,7 +14,7 @@ RSpec.shared_examples "an API index Csv endpoint documentation" do |url, tag, re
                   "$ref": filter_schema_ref,
                 }
 
-      response "200", "A list of #{resource_description}" do
+      response "200", "A CSV file of #{resource_description}" do
         schema({ "$ref": response_schema_ref })
 
         run_test!
