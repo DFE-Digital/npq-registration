@@ -14,7 +14,7 @@ class AddIdentifierToCourses < ActiveRecord::Migration[6.1]
       "66dff4af-a518-498f-9042-36a41f9e8aa7" => "npq-early-years-leadership",
       "829fcd45-e39d-49a9-b309-26d26debfa90" => "npq-leading-literacy",
     }.each do |ecf_id, identifier|
-      Course.find_by!(ecf_id:).update(identifier:)
+      Course.where(ecf_id:).update(identifier:)
     end
   end
 end
