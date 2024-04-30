@@ -1,13 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Eligibility::TargetedDeliveryFunding do
-  CourseService::DefinitionLoader.call
-  unsupported_course_codes = %w[npq-early-headship-coaching-offer].freeze
-  supported_course_codes = Course.pluck(:identifier) - unsupported_course_codes
-
   subject { described_class.call(institution:, course:) }
 
   describe ".call" do
+    unsupported_course_codes = %w[npq-early-headship-coaching-offer].freeze
+    supported_course_codes = Course::IDENTIFIERS - unsupported_course_codes
+
     let(:course) { Course.find_by!(identifier: supported_course_codes.sample) }
 
     context "when eligible" do

@@ -18,7 +18,7 @@ RSpec.describe Courses::Query do
 
   describe "#course" do
     it "returns the course" do
-      course = Course.all.sample
+      course = create(:course)
       query = Courses::Query.new
       expect(query.course(id: course.id)).to eq(course)
     end

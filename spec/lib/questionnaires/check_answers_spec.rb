@@ -4,7 +4,7 @@ RSpec.describe Questionnaires::CheckAnswers do
   let(:user_record_trn) { "7654321" }
   let(:user) { create(:user, trn: user_record_trn) }
   let(:load_provider) { LeadProvider.all.sample }
-  let(:course) { Course.all.sample }
+  let(:course) { create(:course) }
   let(:school) { create(:school) }
   let(:verified_trn) { rand(1_000_000..9_999_999).to_s }
   let(:store_trn) { "1234567" }

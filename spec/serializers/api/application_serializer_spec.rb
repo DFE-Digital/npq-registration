@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe API::ApplicationSerializer, type: :serializer do
   let(:user) { application.user }
-  let(:course) { Course.all.sample }
+  let(:course) { create(:course) }
   let(:cohort) { build(:cohort) }
   let(:private_childcare_provider) { build(:private_childcare_provider) }
   let(:school) { build(:school) }

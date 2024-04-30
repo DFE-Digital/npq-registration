@@ -21,7 +21,7 @@ RSpec.describe Migration::Migrators::Course do
 
     context "when a courses is not correctly created" do
       let!(:ecf_migration_npq_course) { create(:ecf_migration_npq_course) }
-      let(:course) { Course.all.sample }
+      let(:course) { create(:course) }
 
       before do
         course.update!(ecf_id: ecf_migration_npq_course.id)

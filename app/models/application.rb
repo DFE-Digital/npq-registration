@@ -56,6 +56,10 @@ class Application < ApplicationRecord
   }
 
   def previously_funded?
+    # This is an optimization used by the API Applications::Query in order
+    # to speed up the bulk-retrieval of Applications.
+    return transient_previously_funded if respond_to?(:transient_previously_funded)
+
     @previously_funded ||= user.applications
       .where.not(id:)
       .where(course: course.rebranded_alternative_courses)

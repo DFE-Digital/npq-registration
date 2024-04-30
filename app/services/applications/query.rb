@@ -11,15 +11,24 @@ module Applications
     end
 
     def applications
-      scope = Application
-        .includes(
-          :course,
-          :user,
-          :school,
-          :cohort,
-          :private_childcare_provider,
-          :itt_provider,
-        )
+      # The subquery is an optimization so that we don't have to perform
+      # a separate query for each record as part of Application#previously_funded?
+      scope = all_applications.select(
+        "applications.*",
+        "EXISTS(
+          WITH json_data(alt_courses) AS (VALUES ('#{ActiveRecord::Base.sanitize_sql(alternative_courses)}'::jsonb))
+          SELECT 1 AS one FROM applications AS a, json_data
+            WHERE a.id != applications.id AND
+                  a.user_id = applications.user_id AND
+                  a.eligible_for_funding = true AND
+                  a.lead_provider_approval_status = 'accepted' AND
+                  a.course_id IN (
+                    SELECT jsonb_array_elements_text(alt_courses->(applications.course_id::text))::bigint
+                    FROM json_data
+                  )
+            LIMIT 1
+        ) AS transient_previously_funded",
+      )
 
       scope = scope.where(lead_provider:) if lead_provider.present?
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
@@ -39,5 +48,24 @@ module Applications
   private
 
     attr_reader :lead_provider, :cohort_start_years, :updated_since, :participant_ids, :sort
+
+    def alternative_courses
+      Course
+        .all
+        .each_with_object({}) { |c, h| h[c.id] = c.rebranded_alternative_courses.map(&:id) }
+        .to_json
+    end
+
+    def all_applications
+      Application
+        .includes(
+          :course,
+          :user,
+          :school,
+          :cohort,
+          :private_childcare_provider,
+          :itt_provider,
+        )
+    end
   end
 end

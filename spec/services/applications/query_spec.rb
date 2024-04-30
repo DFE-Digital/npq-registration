@@ -136,6 +136,92 @@ RSpec.describe Applications::Query do
         it { expect(applications).to eq([application2, application1, application3]) }
       end
     end
+
+    describe "transient_previously_funded" do
+      let(:course) { create(:course, :sl) }
+      let!(:application) { create(:application, lead_provider:, course:) }
+      let(:query_applications) { Applications::Query.new(lead_provider:).applications }
+      let(:returned_application) { query_applications.find(application.id) }
+
+      it { expect(returned_application).not_to be_transient_previously_funded }
+
+      context "when there is a previous, rejected application that was eligible for funding" do
+        before do
+          create(
+            :application,
+            :rejected,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).not_to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was not eligible for funding" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: false,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).not_to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding in a different (not rebranded) course" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            course: Course.find_by(identifier: Course::NPQ_LEADING_TEACHING_DEVELOPMENT),
+          )
+        end
+
+        it { expect(returned_application).not_to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
+        let(:course) { Course.find_by(identifier: Course::NPQ_ADDITIONAL_SUPPORT_OFFER) }
+
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            course:,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+    end
   end
 
   describe "#application" do
