@@ -361,7 +361,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_22_135109) do
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"
     t.boolean "notify_user_for_future_reg", default: false
-    t.boolean "allow_closed_registration"
     t.integer "email_updates_status", default: 0
     t.string "email_updates_unsubscribe_key"
     t.index ["ecf_id"], name: "index_users_on_ecf_id"
