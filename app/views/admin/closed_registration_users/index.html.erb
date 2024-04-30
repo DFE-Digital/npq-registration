@@ -37,7 +37,7 @@
           </td>
           <td class="govuk-table__cell">
             <% if service_user.present? %>
-              <%= service_user.applications.order("created_at DESC").first.try(:created_at).strftime("%-d %b %Y") %>
+              <%= service_user.applications.order("created_at DESC").first.try(:created_at).strftime("%-d %b %Y") rescue "-" %>
             <% else %>
               –
             <% end %>
