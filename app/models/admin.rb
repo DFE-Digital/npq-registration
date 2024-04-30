@@ -7,6 +7,8 @@ class Admin < ApplicationRecord
             presence: { message: "Enter an email address" },
             length: { maximum: 64, message: "Email must be shorter than 64 characters" }
 
+  has_many :events, dependent: :nullify
+
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
     super_admin?

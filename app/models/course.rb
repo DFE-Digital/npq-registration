@@ -1,5 +1,6 @@
 class Course < ApplicationRecord
   belongs_to :course_group, optional: true
+  has_many :events, dependent: :nullify
 
   validates :name, presence: true
   validates :identifier,

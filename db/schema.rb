@@ -189,6 +189,33 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
     t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
   end
 
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "title", limit: 256, null: false
+    t.string "byline", limit: 128
+    t.text "event_type", null: false
+    t.text "description"
+    t.integer "admin_id"
+    t.integer "application_id"
+    t.integer "user_id"
+    t.integer "school_id"
+    t.integer "private_childcare_provider_id"
+    t.integer "statement_id"
+    t.integer "statement_item_id"
+    t.integer "lead_provider_id"
+    t.integer "cohort_id"
+    t.integer "course_id"
+    t.index ["admin_id"], name: "index_events_on_admin_id"
+    t.index ["application_id"], name: "index_events_on_application_id"
+    t.index ["lead_provider_id"], name: "index_events_on_lead_provider_id"
+    t.index ["private_childcare_provider_id"], name: "index_events_on_private_childcare_provider_id"
+    t.index ["school_id"], name: "index_events_on_school_id"
+    t.index ["statement_id"], name: "index_events_on_statement_id"
+    t.index ["statement_item_id"], name: "index_events_on_statement_item_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
   create_table "flipper_features", force: :cascade do |t|
     t.string "key", null: false
     t.datetime "created_at", null: false
@@ -448,6 +475,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "events", "admins", on_delete: :nullify
+  add_foreign_key "events", "applications", on_delete: :nullify
+  add_foreign_key "events", "cohorts", on_delete: :nullify
+  add_foreign_key "events", "courses", on_delete: :nullify
+  add_foreign_key "events", "lead_providers", on_delete: :nullify
+  add_foreign_key "events", "private_childcare_providers", on_delete: :nullify
+  add_foreign_key "events", "schools", on_delete: :nullify
+  add_foreign_key "events", "statement_items", on_delete: :nullify
+  add_foreign_key "events", "statements", on_delete: :nullify
+  add_foreign_key "events", "users", on_delete: :nullify
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "statements"

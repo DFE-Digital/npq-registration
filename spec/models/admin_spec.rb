@@ -13,6 +13,10 @@ RSpec.describe Admin, type: :model do
     end
   end
 
+  describe "relationships" do
+    it { is_expected.to have_many(:events).dependent(:nullify) }
+  end
+
   describe "defaults" do
     specify "super_admin defaults to false" do
       expect(Admin.new.super_admin?).to be false

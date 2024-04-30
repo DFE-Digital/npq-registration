@@ -4,6 +4,7 @@ class StatementItem < ApplicationRecord
 
   belongs_to :statement
   # belongs_to :declaration
+  has_many :events, dependent: :nullify
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }

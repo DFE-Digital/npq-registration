@@ -1,4 +1,6 @@
 class Cohort < ApplicationRecord
+  has_many :events, dependent: :nullify
+
   validates :start_year,
             presence: true,
             numericality: {
