@@ -52,7 +52,7 @@ RSpec.describe Ecf::EcfUserCreator do
         {
           data: {
             type: "user",
-            id: "123",
+            id: "93b23032-a82e-4912-aac7-992868af8848",
           },
         }
       end
@@ -60,7 +60,7 @@ RSpec.describe Ecf::EcfUserCreator do
       it "sets user.ecf_id with returned guid" do
         expect {
           subject.call
-        }.to change(user, :ecf_id).to("123")
+        }.to change(user, :ecf_id).to("93b23032-a82e-4912-aac7-992868af8848")
       end
 
       it "creates a EcfSyncRequestLog with status :success" do
