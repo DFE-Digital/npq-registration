@@ -607,9 +607,6 @@ components:
           nullable: true
           type: boolean
           example: true
-    StatementResponse:
-    StatementsResponse:
-    Statement:
     IDAttribute:
       description: The unique ID of the resource.
       type: uuid

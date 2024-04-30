@@ -459,24 +459,6 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
-    IDAttribute:
-      description: The unique ID of the resource.
-      type: uuid
-      example: d0b4a32e-a272-489e-b30a-cb17131457fc
-    ListStatementsFilter:
-      description: Filter statements to return more specific results
-      type: object
-      properties:
-        cohort:
-          description: Return statements associated to the specified cohort or cohorts.
-            This is a comma delimited string of years.
-          type: string
-          example: '2021,2022'
-        updated_since:
-          description: Return only records that have been updated since this date
-            and time (ISO 8601 date format)
-          type: string
-          example: '2021-05-13T11:21:55Z'
     ApplicationCsv:
       description: The details of an NPQ application
       type: object
@@ -684,6 +666,24 @@ components:
           nullable: true
           type: boolean
           example: true
+    IDAttribute:
+      description: The unique ID of the resource.
+      type: uuid
+      example: d0b4a32e-a272-489e-b30a-cb17131457fc
+    ListStatementsFilter:
+      description: Filter statements to return more specific results
+      type: object
+      properties:
+        cohort:
+          description: Return statements associated to the specified cohort or cohorts.
+            This is a comma delimited string of years.
+          type: string
+          example: '2021,2022'
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format)
+          type: string
+          example: '2021-05-13T11:21:55Z'
     StatementResponse:
       description: A financial statement.
       type: object

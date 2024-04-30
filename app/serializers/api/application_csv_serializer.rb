@@ -6,13 +6,44 @@ module API
   class ApplicationCsvSerializer
     attr_reader :scope
 
+    CSV_HEADERS = %w[
+      id
+      participant_id
+      full_name
+      email
+      email_validated
+      teacher_reference_number
+      teacher_reference_number_validated
+      school_urn
+      school_ukprn
+      private_childcare_provider_urn
+      headteacher_status
+      eligible_for_funding
+      funding_choice
+      course_identifier
+      status
+      works_in_school
+      employer_name
+      employment_role
+      created_at
+      updated_at
+      cohort
+      ineligible_for_funding_reason
+      targeted_delivery_funding_eligibility
+      teacher_catchment
+      teacher_catchment_country
+      teacher_catchment_iso_country_code
+      itt_provider
+      lead_mentor
+    ].freeze
+
     def initialize(scope)
       @scope = scope
     end
 
     def call
       CSV.generate do |csv|
-        csv << csv_headers
+        csv << CSV_HEADERS
 
         scope.each do |record|
           csv << to_row(record)
@@ -21,39 +52,6 @@ module API
     end
 
   private
-
-    def csv_headers
-      %w[
-        id
-        participant_id
-        full_name
-        email
-        email_validated
-        teacher_reference_number
-        teacher_reference_number_validated
-        school_urn
-        school_ukprn
-        private_childcare_provider_urn
-        headteacher_status
-        eligible_for_funding
-        funding_choice
-        course_identifier
-        status
-        works_in_school
-        employer_name
-        employment_role
-        created_at
-        updated_at
-        cohort
-        ineligible_for_funding_reason
-        targeted_delivery_funding_eligibility
-        teacher_catchment
-        teacher_catchment_country
-        teacher_catchment_iso_country_code
-        itt_provider
-        lead_mentor
-      ]
-    end
 
     def to_row(record)
       [
