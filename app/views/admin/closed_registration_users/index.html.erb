@@ -2,21 +2,24 @@
   <div class="govuk-grid-column-full">
     <%= render "admin/layout", title: "Closed registration users" %>
 
-    <h2 class="govuk-heading-l">Add new email</h2>
-    <%= form_for [:admin, @user] do |f| %>
-      <%= f.govuk_error_summary %>
-      <%= f.govuk_text_field :email,  legend: { text: 'Provide course start date' } %>
-      <%= f.govuk_submit "Save" %>
-    <% end %>
+    <div class="admin-search-box">
+      <h2 class="govuk-heading-l">Add closed registration user</h2>
+      <%= form_for [:admin, @user] do |f| %>
+        <%= f.govuk_error_summary %>
+        <%= f.govuk_text_field :email, label: { text: "Email address" }, legend: { text: 'Provide course start date' } %>
+        <%= f.govuk_submit "Add user" %>
+      <% end %>
+    </div>
 
-    <h2 class="govuk-heading-l">Currently allowed emails</h2>
+    <h2 class="govuk-heading-l">Users with access to closed registration service</h2>
 
     <table class="govuk-table">
       <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">User</th>
-        <th scope="col" class="govuk-table__header">Has account</th>
-        <th scope="col" class="govuk-table__header">Last application date</th>
+        <th scope="col" class="govuk-table__header">Email address</th>
+        <th scope="col" class="govuk-table__header">DfE identity account</th>
+        <th scope="col" class="govuk-table__header">Most recent registration submission date</th>
+        <th scope="col" class="govuk-table__header">Remove access</th>
       </tr>
       </thead>
 
@@ -29,13 +32,18 @@
             <% if service_user.present? %>
               <%= govuk_tag(text: "Yes", colour: "green") %>
             <% else %>
-              <%= govuk_tag(text: "No", colour: "red") %>
+              <%= govuk_tag(text: "–", colour: "red") %>
             <% end %>
           </td>
           <td class="govuk-table__cell">
             <% if service_user.present? %>
-              <%= service_user.applications.order("created_at DESC").first.try(:created_at) %>
+              <%= service_user.applications.order("created_at DESC").first.try(:created_at).strftime("%-d %b %Y") %>
+            <% else %>
+              –
             <% end %>
+          </td>
+          <td class="govuk-table__cell">
+            <%= govuk_link_to "Remove user", admin_closed_registration_user_path(user) %>
           </td>
         </tr>
       <% end %>

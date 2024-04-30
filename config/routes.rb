@@ -87,7 +87,13 @@ Rails.application.routes.draw do
     end
 
     resources "settings"
-    resources :closed_registration_users
+    resources :closed_registration_users do
+      member do
+        get "destroy"
+        delete "destroy"
+      end
+    end
+
     resources :reopening_email_subscriptions do
       member do
         get "unsubscribe"
