@@ -1,0 +1,10 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= render "admin/layout", title: "Closed registration users" %>
+    <h2 class="govuk-heading-l">Do you want to delete <%= @user.email %>?</h2>
+    <div class="govuk-button-group">
+      <%= govuk_button_link_to("Delete", admin_closed_registration_user_path(@user), method: :delete) %>
+      <%= govuk_button_link_to("Back", admin_closed_registration_users_path, secondary: :true) %>
+    </div>
+  </div>
+</div>
