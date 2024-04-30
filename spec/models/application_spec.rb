@@ -9,7 +9,6 @@ RSpec.describe Application do
     it { is_expected.to belong_to(:private_childcare_provider).optional }
     it { is_expected.to belong_to(:itt_provider).optional }
     it { is_expected.to belong_to(:cohort).optional }
-
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
   end
 
@@ -180,6 +179,34 @@ RSpec.describe Application do
 
       it { is_expected.not_to be_previously_funded }
     end
+
+    context "when transient_previously_funded is declared on the model" do
+      subject { create(:application, eligible_for_funding: false) }
+
+      before do
+        def subject.transient_previously_funded
+          false
+        end
+      end
+
+      it "does not make a query to determine the previously_funded status" do
+        expect(Application).not_to receive(:connection)
+        expect(subject).not_to be_previously_funded
+      end
+
+      context "when transient_previously_funded is true" do
+        before do
+          def subject.transient_previously_funded
+            true
+          end
+        end
+
+        it "does not make a query to determine the previously_funded status" do
+          expect(Application).not_to receive(:connection)
+          expect(subject).to be_previously_funded
+        end
+      end
+    end
   end
 
   describe "#ineligible_for_funding_reason" do
@@ -201,6 +228,34 @@ RSpec.describe Application do
       let(:application) { create(:application, :previously_funded) }
 
       it { is_expected.to eq("previously-funded") }
+    end
+
+    context "when transient_previously_funded is declared on the model" do
+      subject { create(:application, eligible_for_funding: false) }
+
+      before do
+        def subject.transient_previously_funded
+          false
+        end
+      end
+
+      it "does not make a query to determine the previously_funded status" do
+        expect(Application).not_to receive(:connection)
+        expect(subject.ineligible_for_funding_reason).to eq("establishment-ineligible")
+      end
+
+      context "when transient_previously_funded is true" do
+        before do
+          def subject.transient_previously_funded
+            true
+          end
+        end
+
+        it "does not make a query to determine the previously_funded status" do
+          expect(Application).not_to receive(:connection)
+          expect(subject.ineligible_for_funding_reason).to eq("previously-funded")
+        end
+      end
     end
   end
 end

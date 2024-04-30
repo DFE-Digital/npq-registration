@@ -59,7 +59,7 @@ RSpec.describe Questionnaires::ChooseSchool, type: :model do
   describe "#next_step" do
     subject { described_class.new(institution_identifier: "School-#{school.urn}", wizard:) }
 
-    let(:course) { Course.all.sample }
+    let(:course) { create(:course) }
     let(:store) do
       {
         "course_identifier" => course.identifier.to_s,

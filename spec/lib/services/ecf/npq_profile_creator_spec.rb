@@ -15,7 +15,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       national_insurance_number: "AB123456C",
     )
   end
-  let(:course) { Course.create!(name: "Some course", ecf_id: "c8c9c80b-375b-48fc-92ea-670c2cb4da5c") }
+  let(:course) { create(:course, name: "Some course", ecf_id: "c8c9c80b-375b-48fc-92ea-670c2cb4da5c") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "0d2ac426-e67c-47ad-b53b-a214ec7f999a") }
   let(:itt_provider) { create :itt_provider }
   let(:school) { create(:school) }
