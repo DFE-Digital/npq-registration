@@ -22,7 +22,8 @@ class Admin::ClosedRegistrationUsersController < AdminController
   def destroy
     @user = ClosedRegistrationUser.find(params[:id])
     if request.delete?
-      Flipper.disable_actor(Feature::REGISTRATION_OPEN, User.find_by!(email: @user.email))
+      user = User.find_by(email: @user.email)
+      Flipper.disable_actor(Feature::REGISTRATION_OPEN, user) if user
       if @user.delete
         flash[:success] = "Closed registration user was deleted"
         redirect_to admin_closed_registration_users_path
