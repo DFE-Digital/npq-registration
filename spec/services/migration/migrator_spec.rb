@@ -9,7 +9,7 @@ RSpec.describe Migration::Migrator do
   describe ".prepare_for_migration" do
     subject(:prepare) { described_class.prepare_for_migration }
 
-    it { expect { prepare }.to change(Migration::DataMigration, :count).by(7) }
+    it { expect { prepare }.to change(Migration::DataMigration, :count).by(8) }
 
     context "when attempting to prepare multiple times" do
       before { described_class.prepare_for_migration }
@@ -64,6 +64,12 @@ RSpec.describe Migration::Migrator do
 
       it "calls Migration::Migrators::Application correctly" do
         expect(Migration::Migrators::Application).to receive(:call)
+
+        migrate
+      end
+
+      it "calls Migration::Migrators::ApplicationNotInEcf correctly" do
+        expect(Migration::Migrators::ApplicationNotInEcf).to receive(:call)
 
         migrate
       end

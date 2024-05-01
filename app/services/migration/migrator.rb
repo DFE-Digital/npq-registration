@@ -13,6 +13,7 @@ module Migration
       Migration::Migrators::School,
       Migration::Migrators::Course,
       Migration::Migrators::Application,
+      Migration::Migrators::ApplicationNotInEcf,
     ].freeze
 
     class << self
