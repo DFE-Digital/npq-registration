@@ -8,9 +8,9 @@ module Statements
       @scope = Statement.includes(:cohort)
 
       where_lead_provider_is(lead_provider)
-      where_cohort_start_year_in(extract_conditions(cohort_start_years))
+      where_cohort_start_year_in(cohort_start_years)
       where_updated_since(updated_since)
-      where_state_is(extract_conditions(state))
+      where_state_is(state)
       where_output_fee_is(output_fee)
     end
 
@@ -36,7 +36,7 @@ module Statements
     def where_cohort_start_year_in(cohort_start_years)
       return if cohort_start_years == :ignore
 
-      scope.merge!(Statement.where(cohort: { start_year: cohort_start_years }))
+      scope.merge!(Statement.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
 
       self
     end
@@ -52,7 +52,7 @@ module Statements
     def where_state_is(state)
       return if state == :ignore
 
-      scope.merge!(Statement.with_state(state))
+      scope.merge!(Statement.with_state(extract_conditions(state)))
 
       self
     end

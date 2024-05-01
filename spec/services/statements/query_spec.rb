@@ -46,6 +46,23 @@ RSpec.describe Statements::Query do
         let!(:cohort_2024) { create(:cohort, start_year: 2024) }
         let!(:cohort_2025) { create(:cohort, start_year: 2025) }
 
+        context "when cohort param omitted" do
+          it "returns all statements" do
+            statement1 = FactoryBot.create(:statement, cohort: cohort_2023)
+            statement2 = FactoryBot.create(:statement, cohort: cohort_2024)
+            statement3 = FactoryBot.create(:statement, cohort: cohort_2025)
+
+            expect(Statements::Query.new.statements).to match_array([statement1, statement2, statement3])
+          end
+
+          it "doesn't reference the cohort's start_year in the query" do
+            column_name = %("cohort"."start_year")
+
+            expect(Statements::Query.new.scope.to_sql).not_to include(column_name)
+            expect(Statements::Query.new(cohort_start_years: "2021").scope.to_sql).to include(column_name)
+          end
+        end
+
         it "filters by cohort" do
           _statement = create(:statement, cohort: cohort_2023)
           statement = create(:statement, cohort: cohort_2024)
@@ -84,6 +101,22 @@ RSpec.describe Statements::Query do
 
           expect(query.statements).to eq([statement2])
         end
+
+        context "when updated_since param omitted" do
+          it "returns all statements" do
+            statement1 = FactoryBot.create(:statement, updated_at: 1.week.ago)
+            statement2 = FactoryBot.create(:statement, updated_at: 2.weeks.ago)
+
+            expect(Statements::Query.new.statements).to match_array([statement1, statement2])
+          end
+
+          it "doesn't reference updated_at in the query" do
+            column_name = %("updated_at")
+
+            expect(Statements::Query.new.scope.to_sql).not_to include(column_name)
+            expect(Statements::Query.new(updated_since: 1.day.ago).scope.to_sql).to include(column_name)
+          end
+        end
       end
 
       describe "by state" do
@@ -108,6 +141,19 @@ RSpec.describe Statements::Query do
         xit "raises when invalid states queried" do
           expect { Statements::Query.new(state: "error").statements }.to raise_error(ArgumentError)
         end
+
+        context "when state param omitted" do
+          it "returns all statements" do
+            expect(Statements::Query.new.statements).to match_array([open_statement, payable_statement, paid_statement])
+          end
+
+          it "doesn't reference the state in the query" do
+            column_name = %("state")
+
+            expect(Statements::Query.new.scope.to_sql).not_to include(column_name)
+            expect(Statements::Query.new(state: "open").scope.to_sql).to include(column_name)
+          end
+        end
       end
 
       describe "by output fee" do
@@ -126,6 +172,22 @@ RSpec.describe Statements::Query do
             query = Statements::Query.new(output_fee: false)
 
             expect(query.statements).to include(output_fee)
+          end
+        end
+
+        context "when output_fee: :ignore" do
+          it "returns all statements" do
+            statement1 = FactoryBot.create(:statement, output_fee: true)
+            statement2 = FactoryBot.create(:statement, output_fee: false)
+
+            expect(Statements::Query.new(output_fee: :ignore).statements).to match_array([statement1, statement2])
+          end
+
+          it "doesn't reference the output_fee in the query" do
+            column_name = %("output_fee")
+
+            expect(Statements::Query.new.scope.to_sql).to include(column_name)
+            expect(Statements::Query.new(output_fee: :ignore).scope.to_sql).not_to include(column_name)
           end
         end
       end
