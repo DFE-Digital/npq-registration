@@ -26,8 +26,10 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   context "when course start date is set" do
+    let(:course_start_date) { Date.tomorrow }
+
     before do
-      Setting.create(course_start_date: Date.new(2024, 5, 1))
+      Setting.create(course_start_date:)
     end
 
     scenario do
@@ -42,7 +44,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
         expect(page).to have_text("NPQ start dates are usually every February and October.")
-        expect(page).to have_text("Do you want to start a course before May 2024?")
+        expect(page).to have_text("Do you want to start a course before #{course_start_date.strftime("%B %Y")}?")
       end
     end
   end
