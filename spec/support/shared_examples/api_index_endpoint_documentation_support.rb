@@ -22,12 +22,14 @@ RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resour
                   "$ref": "#/components/schemas/PaginationFilter",
                 }
 
-      parameter name: :sort,
-                in: :query,
-                required: false,
-                schema: {
-                  "$ref": "#/components/schemas/SortingOptions",
-                }
+      if url =~ /v3/
+        parameter name: :sort,
+                  in: :query,
+                  required: false,
+                  schema: {
+                    "$ref": "#/components/schemas/SortingOptions",
+                  }
+      end
 
       response "200", "A list of #{resource_description}" do
         schema({ "$ref": response_schema_ref })

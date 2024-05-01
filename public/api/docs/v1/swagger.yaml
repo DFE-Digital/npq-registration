@@ -25,11 +25,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       responses:
         '200':
           description: A list of NPQ applications
@@ -111,20 +106,6 @@ components:
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
-          type: string
-          example: '2021-05-13T11:21:55Z'
-    ListStatementsFilter:
-      description: Filter statements to return more specific results
-      type: object
-      properties:
-        cohort:
-          description: Return statements associated to the specified cohort or cohorts.
-            This is a comma delimited string of years.
-          type: string
-          example: '2021,2022'
-        updated_since:
-          description: Return only records that have been updated since this date
-            and time (ISO 8601 date format)
           type: string
           example: '2021-05-13T11:21:55Z'
     UnauthorisedResponse:
@@ -372,18 +353,7 @@ components:
               nullable: true
               type: boolean
               example: true
-    StatementResponse:
-    StatementsResponse:
-    Statement:
     IDAttribute:
       description: The unique ID of the resource.
       type: uuid
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
-    SortingOptions:
-      description: Sort records being returned.
-      example:
-      - "-updated_at"
-      - created_at
-      - "-created_at"
-      - updated_at
-      - "-updated_at"

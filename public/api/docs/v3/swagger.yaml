@@ -183,20 +183,6 @@ components:
             or participants. This is comma delimited string of participant IDs.
           type: string
           example: 7e5bcdbf-c818-4961-8da5-439cab1984e0,c2a7ef98-bbfc-48c5-8f02-d484071d2165
-    ListStatementsFilter:
-      description: Filter statements to return more specific results
-      type: object
-      properties:
-        cohort:
-          description: Return statements associated to the specified cohort or cohorts.
-            This is a comma delimited string of years.
-          type: string
-          example: '2021,2022'
-        updated_since:
-          description: Return only records that have been updated since this date
-            and time (ISO 8601 date format)
-          type: string
-          example: '2021-05-13T11:21:55Z'
     UnauthorisedResponse:
       description: Authorization information is missing or invalid.
       type: object
@@ -459,6 +445,24 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
+    IDAttribute:
+      description: The unique ID of the resource.
+      type: uuid
+      example: d0b4a32e-a272-489e-b30a-cb17131457fc
+    ListStatementsFilter:
+      description: Filter statements to return more specific results
+      type: object
+      properties:
+        cohort:
+          description: Return statements associated to the specified cohort or cohorts.
+            This is a comma delimited string of years.
+          type: string
+          example: '2021,2022'
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format)
+          type: string
+          example: '2021-05-13T11:21:55Z'
     StatementResponse:
       description: A financial statement.
       type: object
@@ -536,14 +540,9 @@ components:
               type: string
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
-    IDAttribute:
-      description: The unique ID of the resource.
-      type: uuid
-      example: d0b4a32e-a272-489e-b30a-cb17131457fc
     SortingOptions:
       description: Sort records being returned.
       example:
-      - "-updated_at"
       - created_at
       - "-created_at"
       - updated_at
