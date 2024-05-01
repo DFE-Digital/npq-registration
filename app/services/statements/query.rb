@@ -25,44 +25,36 @@ module Statements
       fail(ArgumentError, "id or ecf_id needed")
     end
 
+  private
+
     def where_lead_provider_is(lead_provider)
       return if lead_provider == :ignore
 
       scope.merge!(Statement.where(lead_provider:))
-
-      self
     end
 
     def where_cohort_start_year_in(cohort_start_years)
       return if cohort_start_years == :ignore
 
       scope.merge!(Statement.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
-
-      self
     end
 
     def where_updated_since(updated_since)
       return if updated_since == :ignore
 
       scope.merge!(Statement.where(updated_at: updated_since..))
-
-      self
     end
 
     def where_state_is(state)
       return if state == :ignore
 
       scope.merge!(Statement.with_state(extract_conditions(state)))
-
-      self
     end
 
     def where_output_fee_is(output_fee)
       return if output_fee == :ignore
 
       scope.merge!(Statement.with_output_fee(output_fee:))
-
-      self
     end
   end
 end
