@@ -362,3 +362,14 @@ components:
       description: The unique ID of the resource.
       type: uuid
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
+<<<<<<< HEAD
+=======
+    SortingOptions:
+      description: Sort records being returned.
+      example:
+      - "-updated_at"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"
+>>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)

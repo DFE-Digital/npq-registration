@@ -287,9 +287,13 @@ components:
               description: The date the application was created
               type: string
 <<<<<<< HEAD
+<<<<<<< HEAD
               nullable: false
 =======
 >>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
+=======
+              nullable: false
+>>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
               format: date-time
               example: '2021-05-31T02:21:32.000Z'
             updated_at:
@@ -361,3 +365,14 @@ components:
       description: The unique ID of the resource.
       type: uuid
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
+<<<<<<< HEAD
+=======
+    SortingOptions:
+      description: Sort records being returned.
+      example:
+      - "-updated_at"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"
+>>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)

@@ -544,6 +544,10 @@ components:
     SortingOptions:
       description: Sort records being returned.
       example:
+<<<<<<< HEAD
+=======
+      - "-updated_at"
+>>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
       - created_at
       - "-created_at"
       - updated_at
