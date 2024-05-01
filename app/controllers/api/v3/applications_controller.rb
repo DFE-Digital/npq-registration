@@ -1,9 +1,19 @@
 module API
   module V3
-    class ApplicationsController < V1::ApplicationsController
+    class ApplicationsController < BaseController
+      include Pagination
+      include ::API::Concerns::FilterByUpdatedSince
+
       def index
         render json: to_json(paginate(applications_query.applications))
       end
+
+      def show
+        render json: to_json(applications_query.application(ecf_id: application_params[:ecf_id]))
+      end
+
+      def accept = head(:method_not_allowed)
+      def reject = head(:method_not_allowed)
 
     private
 
@@ -11,6 +21,10 @@ module API
         conditions = { lead_provider: current_lead_provider, cohort_start_years:, participant_ids:, updated_since: }
 
         Applications::Query.new(**conditions.compact, sort: application_params[:sort])
+      end
+
+      def cohort_start_years
+        application_params.dig(:filter, :cohort)
       end
 
       def participant_ids
