@@ -22,14 +22,22 @@ module Migration::Migrators
     ].freeze
 
     def call
-      migrate(ecf_npq_applications, :application) do |ecf_npq_application|
+      migrate(ecf_npq_applications, :application, group: true) do |ecf_npq_application|
         application = ::Application.find_by!(ecf_id: ecf_npq_application.id)
 
         compare_attributes_values!(ecf_npq_application, application)
       end
+
+      migrate(applications_not_in_ecf, :application) do |application_not_in_ecf|
+        Migration::Ecf::NpqApplication.joins(:participant_identity).find_by!(id: application_not_in_ecf.ecf_id)
+      end
     end
 
   private
+
+    def applications
+      @applications ||= ::Application.joins(:user).all
+    end
 
     def ecf_npq_applications
       @ecf_npq_applications ||= Migration::Ecf::NpqApplication.joins(:participant_identity).all
@@ -41,6 +49,10 @@ module Migration::Migrators
 
       application.errors.add(:base, "There are some discrepancies in one or more attributes values")
       raise ActiveRecord::RecordInvalid, application
+    end
+
+    def applications_not_in_ecf
+      ::Application.where(ecf_id: applications.map(&:ecf_id).difference(ecf_npq_applications.map(&:id)).compact)
     end
   end
 end

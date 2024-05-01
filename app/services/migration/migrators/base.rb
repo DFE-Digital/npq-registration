@@ -14,7 +14,7 @@ module Migration::Migrators
 
   private
 
-    def migrate(items, model)
+    def migrate(items, model, group: false)
       data_migration = Migration::DataMigration.find_by(model:)
       data_migration.update!(started_at: Time.zone.now, total_count: items.count)
 
@@ -30,7 +30,7 @@ module Migration::Migrators
         end
       end
 
-      data_migration.update!(completed_at: Time.zone.now)
+      data_migration.update!(completed_at: Time.zone.now) unless group
     end
   end
 end

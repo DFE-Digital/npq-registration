@@ -60,5 +60,22 @@ RSpec.describe Migration::Migrators::Application do
         subject
       end
     end
+
+    context "when an application exists in NPQ registration but cannot be matched to an application in ECF" do
+      let!(:npq_application) { create(:application) }
+
+      it "increments the failure count" do
+        subject
+
+        expect(Migration::DataMigration.find_by(model: :application).processed_count).to eq(3)
+        expect(Migration::DataMigration.find_by(model: :application).failure_count).to eq(1)
+      end
+
+      it "calls FailureManager with correct params" do
+        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(npq_application, "Couldn't find Migration::Ecf::NpqApplication with [WHERE \"npq_applications\".\"id\" = $1]").and_call_original
+
+        subject
+      end
+    end
   end
 end
