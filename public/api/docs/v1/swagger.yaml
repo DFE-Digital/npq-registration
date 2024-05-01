@@ -182,6 +182,7 @@ components:
             course_identifier:
               description: The NPQ course this NPQ application relates to
               type: string
+              nullable: false
               example: npq-leading-teaching
               enum:
               - npq-leading-teaching
@@ -198,6 +199,7 @@ components:
             email:
               description: The email address registered for this NPQ participant
               type: string
+              nullable: false
               example: isabelle.macdonald2@some-school.example.com
             email_validated:
               description: Indicates whether the email address has been validated
@@ -218,6 +220,7 @@ components:
             full_name:
               description: The full name of this NPQ participant
               type: string
+              nullable: false
               example: Isabelle MacDonald
             funding_choice:
               description: Indicates how this NPQ participant has said they will funded
@@ -271,6 +274,7 @@ components:
               description: Indicates whether the Teacher Reference Number (TRN) has
                 been validated
               type: boolean
+              nullable: false
               example: true
             school_urn:
               description: The Unique Reference Number (URN) of the school where this
@@ -300,11 +304,13 @@ components:
             created_at:
               description: The date the application was created
               type: string
+              nullable: false
               format: date-time
               example: '2021-05-31T02:21:32.000Z'
             updated_at:
               description: The date the application was last updated
               type: string
+              nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
             cohort:
@@ -375,4 +381,9 @@ components:
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
     SortingOptions:
       description: Sort records being returned.
-      example: "-updated_at"
+      example:
+      - "-updated_at"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"

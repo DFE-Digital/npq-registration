@@ -20,6 +20,7 @@ APPLICATION = {
           course_identifier: {
             description: "The NPQ course this NPQ application relates to",
             type: :string,
+            nullable: false,
             example: "npq-leading-teaching",
             enum: %w[
               npq-leading-teaching
@@ -38,6 +39,7 @@ APPLICATION = {
           email: {
             description: "The email address registered for this NPQ participant",
             type: :string,
+            nullable: false,
             example: "isabelle.macdonald2@some-school.example.com",
           },
           email_validated: {
@@ -60,6 +62,7 @@ APPLICATION = {
           full_name: {
             description: "The full name of this NPQ participant",
             type: :string,
+            nullable: false,
             example: "Isabelle MacDonald",
           },
           funding_choice: {
@@ -118,6 +121,7 @@ APPLICATION = {
           teacher_reference_number_validated: {
             description: "Indicates whether the Teacher Reference Number (TRN) has been validated",
             type: :boolean,
+            nullable: false,
             example: true,
           },
           school_urn: {
@@ -150,12 +154,14 @@ APPLICATION = {
           created_at: {
             description: "The date the application was created",
             type: :string,
+            nullable: false,
             format: :"date-time",
             example: "2021-05-31T02:21:32.000Z",
           },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
+            nullable: false,
             format: :"date-time",
             example: "2021-05-31T02:22:32.000Z",
           },
@@ -233,17 +239,20 @@ APPLICATION = {
           participant_id: {
             description: "The unique identifier of this NPQ participant",
             type: :string,
+            nullable: false,
             example: "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
             format: "uuid",
           },
           full_name: {
             description: "The full name of this NPQ participant",
             type: :string,
+            nullable: false,
             example: "Isabelle MacDonald",
           },
           email: {
             description: "The email address registered for this NPQ participant",
             type: :string,
+            nullable: false,
             example: "isabelle.macdonald2@some-school.example.com",
           },
           email_validated: {
@@ -259,6 +268,7 @@ APPLICATION = {
           teacher_reference_number_validated: {
             description: "Indicates whether the Teacher Reference Number (TRN) has been validated",
             type: :boolean,
+            nullable: false,
             example: true,
           },
           works_in_school: {
@@ -329,6 +339,7 @@ APPLICATION = {
           course_identifier: {
             description: "The NPQ course this NPQ application relates to",
             type: :string,
+            nullable: false,
             example: "npq-leading-teaching",
             enum: %w[
               npq-leading-teaching
@@ -358,12 +369,14 @@ APPLICATION = {
           created_at: {
             description: "The date the application was created",
             type: :string,
+            nullable: false,
             format: :"date-time",
             example: "2021-05-31T02:21:32.000Z",
           },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
+            nullable: false,
             format: :"date-time",
             example: "2021-05-31T02:22:32.000Z",
           },

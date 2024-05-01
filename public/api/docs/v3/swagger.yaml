@@ -252,15 +252,18 @@ components:
             participant_id:
               description: The unique identifier of this NPQ participant
               type: string
+              nullable: false
               example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
               format: uuid
             full_name:
               description: The full name of this NPQ participant
               type: string
+              nullable: false
               example: Isabelle MacDonald
             email:
               description: The email address registered for this NPQ participant
               type: string
+              nullable: false
               example: isabelle.macdonald2@some-school.example.com
             email_validated:
               description: Indicates whether the email address has been validated
@@ -274,6 +277,7 @@ components:
               description: Indicates whether the Teacher Reference Number (TRN) has
                 been validated
               type: boolean
+              nullable: false
               example: true
             works_in_school:
               description: Indicates whether the participant is currently employed
@@ -341,6 +345,7 @@ components:
             course_identifier:
               description: The NPQ course this NPQ application relates to
               type: string
+              nullable: false
               example: npq-leading-teaching
               enum:
               - npq-leading-teaching
@@ -366,11 +371,13 @@ components:
             created_at:
               description: The date the application was created
               type: string
+              nullable: false
               format: date-time
               example: '2021-05-31T02:21:32.000Z'
             updated_at:
               description: The date the application was last updated
               type: string
+              nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
             ineligible_for_funding_reason:
@@ -535,4 +542,9 @@ components:
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
     SortingOptions:
       description: Sort records being returned.
-      example: "-updated_at"
+      example:
+      - "-updated_at"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"
