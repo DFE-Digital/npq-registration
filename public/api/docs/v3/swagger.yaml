@@ -545,9 +545,12 @@ components:
       description: Sort records being returned.
       example:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       - "-updated_at"
 >>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
+=======
+>>>>>>> c404a5e0 ([CPDLP-2965] Scope api docs schemas by api version)
       - created_at
       - "-created_at"
       - updated_at

@@ -363,6 +363,7 @@ components:
       type: uuid
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     SortingOptions:
       description: Sort records being returned.
@@ -373,3 +374,5 @@ components:
       - updated_at
       - "-updated_at"
 >>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
+=======
+>>>>>>> c404a5e0 ([CPDLP-2965] Scope api docs schemas by api version)
