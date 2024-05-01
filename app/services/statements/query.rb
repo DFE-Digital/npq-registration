@@ -1,5 +1,7 @@
 module Statements
-  class Query < Query
+  class Query
+    include Queries::ConditionFormats
+
     attr_reader :scope
 
     def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, state: :ignore, output_fee: true)
