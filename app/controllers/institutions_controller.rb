@@ -11,6 +11,6 @@ class InstitutionsController < ApplicationController
       .search_by_name(params[:name])
       .limit(100)
 
-    @institutions = schools + local_authorities
+    render(json: InstitutionSerializer.render(schools + local_authorities))
   end
 end
