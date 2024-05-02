@@ -67,6 +67,9 @@ RSpec.configure do |config|
           SortingOptions: SORTING_OPTIONS,
         )
       end
+      if Rails.env.in?(%w[review])
+        h[:servers].merge!(url: "https://npq-registration-review-#{ENV.fetch("PULL_REQUEST_NUMBER", nil)}-web.test.teacherservices.cloud/")
+      end
     end
   end
 
