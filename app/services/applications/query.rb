@@ -1,17 +1,12 @@
 module Applications
   class Query
     include API::Concerns::Orderable
+    include Queries::ConditionFormats
 
-    def initialize(lead_provider: nil, cohort_start_years: nil, updated_since: nil, participant_ids: nil, sort: nil)
-      @lead_provider = lead_provider
-      @cohort_start_years = cohort_start_years&.split(",")
-      @updated_since = updated_since
-      @participant_ids = participant_ids&.split(",")
-      @sort = sort
-    end
+    attr_reader :scope, :sort
 
-    def applications
-      scope = Application
+    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, participant_ids: :ignore, sort: nil)
+      @scope = Application
         .includes(
           :course,
           :user,
@@ -20,24 +15,53 @@ module Applications
           :private_childcare_provider,
           :itt_provider,
         )
+      @sort = sort
 
-      scope = scope.where(lead_provider:) if lead_provider.present?
-      scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
-      scope = scope.where(user: { ecf_id: participant_ids }) if participant_ids.present?
-      scope = scope.where(updated_at: updated_since..) if updated_since.present?
+      where_lead_provider_is(lead_provider)
+      where_cohort_start_year_in(cohort_start_years)
+      where_updated_since(updated_since)
+      where_participant_ids_in(participant_ids)
+    end
 
-      scope.order(sort_order(sort:, model: Application, default: { created_at: :asc }))
+    def applications
+      scope.order(order_by)
     end
 
     def application(id: nil, ecf_id: nil)
-      return applications.find_by!(ecf_id:) if ecf_id.present?
-      return applications.find(id) if id.present?
+      return scope.find_by!(ecf_id:) if ecf_id.present?
+      return scope.find(id) if id.present?
 
       fail(ArgumentError, "id or ecf_id needed")
     end
 
   private
 
-    attr_reader :lead_provider, :cohort_start_years, :updated_since, :participant_ids, :sort
+    def where_lead_provider_is(lead_provider)
+      return if lead_provider == :ignore
+
+      scope.merge!(Application.where(lead_provider:))
+    end
+
+    def where_cohort_start_year_in(cohort_start_years)
+      return if cohort_start_years == :ignore
+
+      scope.merge!(Application.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
+    end
+
+    def where_updated_since(updated_since)
+      return if updated_since == :ignore
+
+      scope.merge!(Application.where(updated_at: updated_since..))
+    end
+
+    def where_participant_ids_in(participant_ids)
+      return if participant_ids == :ignore
+
+      scope.merge!(Application.where(user: { ecf_id: extract_conditions(participant_ids) }))
+    end
+
+    def order_by
+      sort_order(sort:, model: Application, default: { created_at: :asc })
+    end
   end
 end

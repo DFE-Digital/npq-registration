@@ -22,21 +22,39 @@ RSpec.describe Applications::Query do
     end
 
     describe "filtering" do
-      it "filters by lead provider" do
-        application = create(:application, lead_provider:)
-        create(:application, lead_provider: create(:lead_provider))
+      describe "lead provider" do
+        it "filters by lead provider" do
+          application = create(:application, lead_provider:)
+          create(:application, lead_provider: create(:lead_provider))
 
-        query = Applications::Query.new(lead_provider:)
-        expect(query.applications).to contain_exactly(application)
+          query = Applications::Query.new(lead_provider:)
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "doesn't filter by lead provider when none supplied" do
+          condition_string = %("applications"."lead_provider_id" =)
+
+          expect(Applications::Query.new(lead_provider:).scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+        end
       end
 
-      it "filters by updated since" do
-        create(:application, lead_provider:, updated_at: 2.days.ago)
-        application = create(:application, lead_provider:, updated_at: Time.zone.now)
+      describe "updated since" do
+        it "filters by updated since" do
+          create(:application, lead_provider:, updated_at: 2.days.ago)
+          application = create(:application, lead_provider:, updated_at: Time.zone.now)
 
-        query = Applications::Query.new(lead_provider:, updated_since: 1.day.ago)
+          query = Applications::Query.new(lead_provider:, updated_since: 1.day.ago)
 
-        expect(query.applications).to contain_exactly(application)
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "doesn't filter by lead provider when none supplied" do
+          condition_string = %("applications"."updated_at" >=)
+
+          expect(Applications::Query.new(updated_since: 2.days.ago).scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+        end
       end
 
       context "when filtering by cohort" do
@@ -66,6 +84,13 @@ RSpec.describe Applications::Query do
 
           expect(query.applications).to be_empty
         end
+
+        it "doesn't filter by cohort when none supplied" do
+          condition_string = %("cohort"."start_year" =)
+
+          expect(Applications::Query.new(cohort_start_years: 2021).scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+        end
       end
 
       context "when filtering by participant_id" do
@@ -90,6 +115,13 @@ RSpec.describe Applications::Query do
           query = Applications::Query.new(participant_ids: SecureRandom.uuid)
 
           expect(query.applications).to be_empty
+        end
+
+        it "doesn't filter by participant_ids when none supplied" do
+          condition_string = %("user"."ecf_id" =)
+
+          expect(Applications::Query.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
         end
       end
     end
