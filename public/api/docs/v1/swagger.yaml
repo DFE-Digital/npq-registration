@@ -329,10 +329,14 @@ components:
               nullable: true
               type: string
 <<<<<<< HEAD
+<<<<<<< HEAD
               example: United Kingdom of Great Britain and Northern Ireland
 =======
               example: France
 >>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
+=======
+              example: United Kingdom of Great Britain and Northern Ireland
+>>>>>>> d9c30e73 ([CPDLP-2965] Address PO review comments)
             teacher_catchment_iso_country_code:
               description: |
                 This field identifies which non-UK country the participant has registered from.
