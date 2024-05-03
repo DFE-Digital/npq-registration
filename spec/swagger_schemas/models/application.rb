@@ -192,13 +192,13 @@ APPLICATION = {
             description: "This field shows the text entered by the participant during their NPQ online registration.",
             nullable: true,
             type: :string,
-            example: "France",
+            example: "United Kingdom of Great Britain and Northern Ireland",
           },
           teacher_catchment_iso_country_code: {
             description: "This field identifies which non-UK country the participant has registered from.\nThe API uses <a href=\"https://www.iso.org/iso-3166-country-codes.html\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.\n",
             nullable: true,
             type: :string,
-            example: "FRA",
+            example: "GBR",
           },
           itt_provider: {
             description: "This field contains the legal name of the ITT accredited provider from the <a href=\"https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024\" class=\"govuk-link\" rel=\"noreferrer noopener\" target=\"_blank\">list of providers</a>.\n",
