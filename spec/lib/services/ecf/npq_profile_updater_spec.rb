@@ -7,7 +7,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
     User.create!(
       email: "john.doe@example.com",
       full_name: "John Doe",
-      ecf_id: "123",
+      ecf_id: "f661f5af-c6ec-4b38-8582-8f50107a3918",
       trn: "1234567",
       trn_verified: true,
       active_alert: true,
@@ -33,8 +33,8 @@ RSpec.describe Ecf::NpqProfileUpdater do
           },
         )
   end
-  let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
-  let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
+  let(:course) { Course.create!(name: "Some course", ecf_id: "d182edb5-2f5a-4ad3-a897-8cce0650ae93") }
+  let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "73ab3215-0403-4de1-a537-066dae9ded60") }
   let(:school) { create(:school) }
 
   let(:old_teacher_catchment) { "england" }
@@ -53,7 +53,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
       eligible_for_funding: true,
       funding_eligiblity_status_code: FundingEligibility::FUNDED_ELIGIBILITY_RESULT,
       funding_choice: "trust",
-      ecf_id: "1234",
+      ecf_id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
       teacher_catchment: new_teacher_catchment,
       teacher_catchment_country: new_teacher_catchment_country,
     )
@@ -63,7 +63,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
     {
       data: {
         type: "npq_profiles",
-        id: "1234",
+        id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
         attributes: {
           teacher_reference_number: "1234567",
           teacher_reference_number_verified: true,
@@ -85,7 +85,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
   let(:request_body) do
     {
       data: {
-        id: "1234",
+        id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
         type: "npq_profiles",
         attributes: {
           eligible_for_funding: true,
@@ -101,7 +101,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
     {
       data: {
         type: "npq_profiles",
-        id: "1234",
+        id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
       },
     }.to_json
   end

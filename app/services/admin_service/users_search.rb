@@ -13,7 +13,7 @@ class AdminService::UsersSearch
 
       chain = chain.where(users[:email].matches("%#{q}%"))
       chain = chain.or(default_scope.where(users[:full_name].matches("%#{q}%")))
-      chain = chain.or(default_scope.where(users[:ecf_id].matches("%#{q}%")))
+      chain = chain.or(default_scope.where(ecf_id: q))
       chain = chain.or(default_scope.where(applications: { ecf_id: q }))
       chain = chain.or(default_scope.where(users[:trn].matches("%#{q}%")))
       chain = chain.or(default_scope.where(applications: { school_id: find_schools.pluck(:id) }))

@@ -7,7 +7,7 @@ RSpec.describe Ecf::NpqProfileCreator do
     User.create!(
       email: "john.doe@example.com",
       full_name: "John Doe",
-      ecf_id: "123",
+      ecf_id: "c72fef68-e92f-40ff-9d73-b0e551006e32",
       trn: "1234567",
       trn_verified: true,
       active_alert: true,
@@ -15,8 +15,8 @@ RSpec.describe Ecf::NpqProfileCreator do
       national_insurance_number: "AB123456C",
     )
   end
-  let(:course) { Course.create!(name: "Some course", ecf_id: "234") }
-  let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "345") }
+  let(:course) { Course.create!(name: "Some course", ecf_id: "c8c9c80b-375b-48fc-92ea-670c2cb4da5c") }
+  let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "0d2ac426-e67c-47ad-b53b-a214ec7f999a") }
   let(:itt_provider) { create :itt_provider }
   let(:school) { create(:school) }
   let(:teacher_catchment_country) { AutocompleteCountries.names.sample }
@@ -59,7 +59,7 @@ RSpec.describe Ecf::NpqProfileCreator do
             user: {
               data: {
                 type: "users",
-                id: "123",
+                id: "c72fef68-e92f-40ff-9d73-b0e551006e32",
               },
             },
             npq_course: {
@@ -111,7 +111,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       {
         data: {
           type: "npq_profiles",
-          id: "789",
+          id: "d7236e96-4ff8-4e12-9cf9-7592b9699c94",
         },
       }.to_json
     end
@@ -142,7 +142,7 @@ RSpec.describe Ecf::NpqProfileCreator do
         {
           data: {
             type: "npq_profiles",
-            id: "789",
+            id: "d7236e96-4ff8-4e12-9cf9-7592b9699c94",
           },
         }
       end
@@ -150,7 +150,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       it "sets application.ecf_id with returned guid" do
         expect {
           subject.call
-        }.to change(application, :ecf_id).to("789")
+        }.to change(application, :ecf_id).to("d7236e96-4ff8-4e12-9cf9-7592b9699c94")
       end
 
       it "creates a EcfSyncRequestLog with status :success" do
