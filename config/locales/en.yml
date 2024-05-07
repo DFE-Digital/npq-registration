@@ -186,6 +186,7 @@ en:
       webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
+      settings: "Settings"
 
     super_admins:
       update:
