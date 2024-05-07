@@ -170,7 +170,7 @@ RSpec.feature "admin", type: :feature, rack_test_driver: true do
   end
 
   scenario "when logged in as a regular admin, it allows access to the users interface" do
-    users = create_list(:user, 4)
+    users = create_list(:user, 4, ecf_id: nil)
 
     sign_in_as_admin
 
@@ -304,13 +304,13 @@ RSpec.feature "admin", type: :feature, rack_test_driver: true do
     expect(page).to have_content("All users have been successfuly linked with an ECF user.")
 
     # An unsynced user without applications shouldn't appear in the list
-    unsynced_without_application = create(:user)
+    unsynced_without_application = create(:user, ecf_id: nil)
     # A synced user shouldn't appear in the list
-    synced_user = create(:user, :with_ecf_id)
+    synced_user = create(:user)
     create(:application, user: synced_user)
 
     # Unsynced users with applications should appear in the list.
-    unsynced_users = create_list(:user, 2)
+    unsynced_users = create_list(:user, 2, ecf_id: nil)
     unsynced_users.each do |unsynced_user|
       create_list(:application, 2, user: unsynced_user)
     end

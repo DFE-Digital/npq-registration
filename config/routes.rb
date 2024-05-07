@@ -87,7 +87,23 @@ Rails.application.routes.draw do
     end
 
     resources "settings"
-    resources :closed_registration_users
+    resources :closed_registration_users do
+      member do
+        get "destroy"
+        delete "destroy"
+      end
+    end
+
+    resources :reopening_email_subscriptions do
+      member do
+        get "unsubscribe"
+        post "unsubscribe"
+      end
+      collection do
+        get "all_users"
+        get "senco"
+      end
+    end
   end
 
   get "/admin", to: "admin#show"
@@ -189,7 +205,7 @@ Rails.application.routes.draw do
           resource :summary, only: :show, controller: "summary"
         end
 
-        resources :applications, only: %i[index]
+        resources :applications, only: %i[index show]
         resources :schools, only: %i[index show]
         resources :courses, only: %i[index show]
         resources :users, only: %i[index show]

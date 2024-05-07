@@ -4,8 +4,6 @@ module API
       include Pagination
       include ::API::Concerns::FilterByUpdatedSince
 
-      before_action :validate_updated_since, only: %i[index]
-
       def index
         render json: to_json(paginate(statements_query.statements))
       end
@@ -17,11 +15,9 @@ module API
     private
 
       def statements_query
-        Statements::Query.new(
-          lead_provider: current_lead_provider,
-          cohort_start_years:,
-          updated_since:,
-        )
+        conditions = { lead_provider: current_lead_provider, cohort_start_years:, updated_since: }
+
+        Statements::Query.new(**conditions.compact)
       end
 
       def statement_params

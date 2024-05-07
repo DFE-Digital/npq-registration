@@ -1,4 +1,4 @@
-class QueryStore
+class RegistrationQueryStore
   attr_reader :store
 
   def initialize(store:)

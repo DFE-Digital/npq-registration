@@ -6,7 +6,7 @@ RSpec.describe ApplicationSubmissionJob do
 
   describe "#perform" do
     let!(:application) { create(:application, user:, school:, ecf_id: nil) }
-    let(:user) { create(:user, :with_get_an_identity_id) }
+    let(:user) { create(:user, :with_get_an_identity_id, ecf_id: nil) }
     let(:school) { create(:school) }
 
     it "calls correct services" do
@@ -49,7 +49,7 @@ RSpec.describe ApplicationSubmissionJob do
     end
 
     context "when user already exists in ecf and npq" do
-      let(:user) { create(:user, ecf_id: "123") }
+      let(:user) { create(:user, ecf_id: "6c693c6b-6103-4afb-9315-af0d4b314c6c") }
 
       it "calls correct servivces" do
         instance_double(Ecf::EcfUserCreator)
@@ -72,8 +72,8 @@ RSpec.describe ApplicationSubmissionJob do
     end
 
     context "when user already exists in ecf but not npq" do
-      let(:user) { create(:user) }
-      let(:ecf_user) { External::EcfAPI::User.new(email: user.email, id: "123") }
+      let(:user) { create(:user, ecf_id: nil) }
+      let(:ecf_user) { External::EcfAPI::User.new(email: user.email, id: "15e62e53-239b-4688-bf8c-8a8f879a220c") }
 
       it "calls correct services" do
         user_finder_double = instance_double(Ecf::EcfUserFinder, call: ecf_user)
@@ -92,7 +92,7 @@ RSpec.describe ApplicationSubmissionJob do
 
         subject.perform_now
 
-        expect(user.reload.ecf_id).to eql("123")
+        expect(user.reload.ecf_id).to eql("15e62e53-239b-4688-bf8c-8a8f879a220c")
 
         expect(user_finder_double).to have_received(:call)
         expect(profile_creator_double).to have_received(:call)
@@ -100,8 +100,8 @@ RSpec.describe ApplicationSubmissionJob do
     end
 
     context "when applications already exists in ecf" do
-      let(:user) { create(:user, ecf_id: "123") }
-      let(:application) { create(:application, user:, ecf_id: "456", school:) }
+      let(:user) { create(:user, ecf_id: "61363b02-73c7-4488-8832-ee4825070a59") }
+      let(:application) { create(:application, user:, ecf_id: "441ea49f-824e-45b7-98d6-0691209a0b90", school:) }
 
       it "calls correct servivces" do
         instance_double(Ecf::EcfUserCreator)

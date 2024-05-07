@@ -1,0 +1,85 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<h1 class="govuk-heading-l">Application for <%= @application.user.full_name %></h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Application ID")
+      row.with_value(text: @application.id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "ECF ID")
+      row.with_value(text: @application.ecf_id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Email")
+      row.with_value(text: @application.user.email)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Course name")
+      row.with_value(text: @application.course.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Lead provider name")
+      row.with_value(text: @application.lead_provider.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Lead provider approval status")
+      row.with_value(text: @application.lead_provider_approval_status&.humanize)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Application submitted date")
+      row.with_value(text: @application.created_at.to_fs(:govuk_short))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Last updated at")
+      row.with_value(text: @application.updated_at.to_fs(:govuk_short))
+    end
+  end
+%>
+
+<h2 class="govuk-heading-m govuk-!-margin-top-9">Scholarship funding</h2>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Eligible for funding")
+      row.with_value(text: boolean_red_green_tag(@application.eligible_for_funding?))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Funding eligibility status code")
+      row.with_value(text: @application.funding_eligiblity_status_code&.humanize)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Employment type")
+      row.with_value(text: @application.employment_type&.humanize)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Employer name")
+      row.with_value(text: @application.employer_name&.humanize)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Employment role")
+      row.with_value(text: @application.employment_role&.humanize)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Notes")
+      row.with_value do
+        @application.notes.present? ? simple_format(@application.notes) : "No notes"
+      end
+    end
+  end
+%>

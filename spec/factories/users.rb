@@ -1,13 +1,10 @@
 FactoryBot.define do
   factory :user do
-    full_name { "John Doe" }
+    sequence(:full_name) { |n| "John Doe #{n}" }
     sequence(:email) { |n| "user#{n}@example.com" }
     trn { "1234567" }
     date_of_birth { 30.years.ago }
-
-    trait :with_ecf_id do
-      ecf_id { SecureRandom.uuid }
-    end
+    ecf_id { SecureRandom.uuid }
 
     trait :with_get_an_identity_id do
       transient do

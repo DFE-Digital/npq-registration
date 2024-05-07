@@ -43,6 +43,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     let(:super_admin) { create(:super_admin) }
     let(:email) { "example@example.com" }
+    let(:other_email) { "example2@example.com" }
     let(:user_email) { email }
 
     before { close_registration! }
@@ -55,9 +56,9 @@ RSpec.feature "Service is closed", type: :feature do
 
       click_link("Closed registration user")
       fill_in("Email", with: email)
-      click_on("Save")
+      click_on("Add user")
 
-      expect(page).to have_content("New closed registration user created")
+      expect(page).to have_content("New closed registration user added")
 
       click_link("Sign out")
 
@@ -67,6 +68,73 @@ RSpec.feature "Service is closed", type: :feature do
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
         expect(page).to have_text("NPQ start dates are usually every February and October.")
+      end
+    end
+
+    scenario "When user is deleted" do
+      visit "/closed_registration_exception"
+
+      click_on("Start now")
+      expect(page).to have_content("Registration has closed temporarily")
+
+      sign_in_as(super_admin)
+
+      click_link("Closed registration user")
+      fill_in("Email", with: email)
+      click_on("Add user")
+
+      expect(page).to have_content("New closed registration user added")
+
+      visit "/closed_registration_exception"
+
+      click_on("Start now")
+
+      expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
+        expect(page).to have_text("NPQ start dates are usually every February and October.")
+      end
+
+      visit "/admin"
+
+      click_link("Closed registration user")
+
+      click_link("Remove access")
+      click_link("Remove access")
+      expect(page).to have_content("Closed registration user was deleted")
+
+      visit "/closed_registration_exception"
+
+      click_on("Start now")
+
+      expect_page_to_have(path: "/registration/closed") do
+        expect(page).to have_content("Registration has closed temporarily")
+      end
+    end
+
+    scenario "When user is deleted and has no account" do
+      visit "/closed_registration_exception"
+
+      click_on("Start now")
+      expect(page).to have_content("Registration has closed temporarily")
+
+      sign_in_as(super_admin)
+
+      click_link("Closed registration user")
+      fill_in("Email", with: other_email)
+      click_on("Add user")
+
+      expect(page).to have_content("New closed registration user added")
+
+      click_link("Remove access")
+      click_link("Remove access")
+
+      expect(page).to have_content("Closed registration user was deleted")
+
+      visit "/closed_registration_exception"
+
+      click_on("Start now")
+
+      expect_page_to_have(path: "/registration/closed") do
+        expect(page).to have_content("Registration has closed temporarily")
       end
     end
 

@@ -1,7 +1,12 @@
 module API
   module V2
     class ApplicationsController < BaseController
-      def index = head(:method_not_allowed)
+      include Pagination
+      include ::API::Concerns::FilterByUpdatedSince
+
+      def index
+        render json: to_json(paginate(applications_query.applications))
+      end
 
       def show
         render json: to_json(applications_query.application(ecf_id: application_params[:ecf_id]))
@@ -15,11 +20,17 @@ module API
       def applications_query
         Applications::Query.new(
           lead_provider: current_lead_provider,
+          cohort_start_years:,
+          updated_since:,
         )
       end
 
+      def cohort_start_years
+        application_params.dig(:filter, :cohort)
+      end
+
       def application_params
-        params.permit(:ecf_id)
+        params.permit(:ecf_id, filter: %i[cohort updated_since])
       end
 
       def to_json(obj)
