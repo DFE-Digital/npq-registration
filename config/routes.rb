@@ -205,7 +205,7 @@ Rails.application.routes.draw do
           resource :summary, only: :show, controller: "summary"
         end
 
-        resources :applications, only: %i[index]
+        resources :applications, only: %i[index show]
         resources :schools, only: %i[index show]
         resources :courses, only: %i[index show]
         resources :users, only: %i[index show]
