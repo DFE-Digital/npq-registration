@@ -59,7 +59,10 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     npqlpm_codes = %w[
       npq-leading-primary-mathematics
     ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes
+    senco_codes = %w[
+      npq-senco
+    ]
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes - senco_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do
@@ -302,7 +305,10 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     npqlpm_codes = %w[
       npq-leading-primary-mathematics
     ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes
+    senco_codes = %w[
+      npq-senco
+    ]
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes - senco_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do

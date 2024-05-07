@@ -43,6 +43,10 @@ class Course < ApplicationRecord
     identifier == NPQ_LEADING_PRIMARY_MATHEMATICS
   end
 
+  def senco?
+    identifier == NPQ_SENCO
+  end
+
   def rebranded_alternative_courses
     case identifier
     when NPQ_ADDITIONAL_SUPPORT_OFFER

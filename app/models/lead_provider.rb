@@ -55,6 +55,15 @@ class LeadProvider < ApplicationRecord
     "National Institute of Teaching",
   ].freeze
 
+  SENCO_PROVIDERS = [
+    "Ambition Institute",
+    "Best Practice Network (home of Outstanding Leaders Partnership)",
+    "Church of England",
+    "National Institute of Teaching",
+    "Teach First",
+    "UCL Institute of Education",
+  ].freeze
+
   # TODO: Move all of this mapping into the database
   #       Hardcoding this has been done for expediency but
   #       longterm having this handled in the DB so none of
@@ -67,13 +76,11 @@ class LeadProvider < ApplicationRecord
     "npq-leading-behaviour-culture" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
     "npq-early-headship-coaching-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
     "npq-additional-support-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-
     "npq-early-years-leadership" => EYL_LL_PROVIDERS,
     "npq-leading-literacy" => EYL_LL_PROVIDERS,
-
     "npq-executive-leadership" => EL_PROVIDERS,
-
     "npq-leading-primary-mathematics" => LPM_PROVIDERS,
+    "npq-senco" => SENCO_PROVIDERS,
   }.freeze
 
   has_many :applications

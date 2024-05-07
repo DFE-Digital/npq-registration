@@ -29,7 +29,7 @@ module Questionnaires
     end
 
     def previous_step
-      if course.npqs? && wizard.query_store.inside_catchment?
+      if course&.npqs? && wizard.query_store.inside_catchment?
         :funding_eligibility_senco
       elsif !wizard.query_store.inside_catchment? || !wizard.query_store.works_in_school?
         :funding_your_npq

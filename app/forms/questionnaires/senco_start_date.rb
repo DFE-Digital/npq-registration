@@ -1,10 +1,15 @@
 module Questionnaires
   class SencoStartDate < Base
+    include ActiveRecord::AttributeAssignment
     include Helpers::Institution
 
     QUESTION_NAME = :senco_start_date
 
-    attr_accessor QUESTION_NAME
+    attr_reader QUESTION_NAME
+
+    def senco_start_date=(value)
+      @senco_start_date = ActiveRecord::Type::Date.new.cast(value)
+    end
 
     validates QUESTION_NAME, presence: true
 
@@ -16,12 +21,13 @@ module Questionnaires
       [
         QuestionTypes::DateField.new(
           name: :senco_start_date,
+          style_options: { omit_day: true },
         ),
       ]
     end
 
     def next_step
-      if !wizard.query_store.teacher_catchment?
+      if !wizard.query_store.teacher_catchment_england?
         :ineligible_for_funding
       else
         :funding_eligibility_senco

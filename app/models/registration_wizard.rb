@@ -224,6 +224,12 @@ class RegistrationWizard
       end
     end
 
+    if course.senco?
+      array << OpenStruct.new(key: "Special educational needs co-ordinator (SENCO)",
+                              value: store["senco_in_role_status"] ? "Yes - since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
+                              change_step: :senco_in_role)
+    end
+
     if query_store.course.identifier == "npq-leading-primary-mathematics"
       if store["maths_eligibility_teaching_for_mastery"] == "yes"
         array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme",

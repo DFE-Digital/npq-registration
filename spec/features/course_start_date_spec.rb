@@ -27,7 +27,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
   context "when course start date is set" do
     before do
-      Setting.create(course_start_date: Date.new(2024, 5, 1))
+      Setting.create!(course_start_date: Date.new(2024, 5, 1))
+      travel_to(Date.new(2024, 4, 1))
     end
 
     scenario do
