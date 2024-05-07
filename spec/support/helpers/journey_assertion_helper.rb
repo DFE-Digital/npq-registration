@@ -10,7 +10,7 @@ module Helpers
       expect(page).to have_current_path(path)
 
       if axe_check && Capybara.current_driver != :rack_test
-        expect(page).to(be_axe_clean)
+        expect(page).to(be_accessible)
       end
 
       block.call if block_given?
