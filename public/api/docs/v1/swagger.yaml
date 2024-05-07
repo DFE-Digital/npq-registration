@@ -358,15 +358,7 @@ components:
                 their NPQ online registration.
               nullable: true
               type: string
-<<<<<<< HEAD
-<<<<<<< HEAD
               example: United Kingdom of Great Britain and Northern Ireland
-=======
-              example: France
->>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
-=======
-              example: United Kingdom of Great Britain and Northern Ireland
->>>>>>> d9c30e73 ([CPDLP-2965] Address PO review comments)
             teacher_catchment_iso_country_code:
               description: |
                 This field identifies which non-UK country the participant has registered from.
@@ -612,24 +604,3 @@ components:
           nullable: true
           type: boolean
           example: true
-<<<<<<< HEAD
-    IDAttribute:
-      description: The unique ID of the resource.
-      type: uuid
-      example: d0b4a32e-a272-489e-b30a-cb17131457fc
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    SortingOptions:
-      description: Sort records being returned.
-      example:
-      - "-updated_at"
-      - created_at
-      - "-created_at"
-      - updated_at
-      - "-updated_at"
->>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
-=======
->>>>>>> c404a5e0 ([CPDLP-2965] Scope api docs schemas by api version)
-=======
->>>>>>> a180bf0f ([CPDLP-3010] Remove CSV endpoints schemas from api v3 swagger docs)

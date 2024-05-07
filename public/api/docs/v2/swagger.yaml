@@ -316,14 +316,7 @@ components:
             created_at:
               description: The date the application was created
               type: string
-<<<<<<< HEAD
-<<<<<<< HEAD
               nullable: false
-=======
->>>>>>> 08569446 ([CPDLP-2965] Add NPQ application endpoints swagger docs)
-=======
-              nullable: false
->>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
               format: date-time
               example: '2021-05-31T02:21:32.000Z'
             updated_at:
@@ -611,24 +604,3 @@ components:
           nullable: true
           type: boolean
           example: true
-<<<<<<< HEAD
-    IDAttribute:
-      description: The unique ID of the resource.
-      type: uuid
-      example: d0b4a32e-a272-489e-b30a-cb17131457fc
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    SortingOptions:
-      description: Sort records being returned.
-      example:
-      - "-updated_at"
-      - created_at
-      - "-created_at"
-      - updated_at
-      - "-updated_at"
->>>>>>> 45da5f5e ([CPDLP-2965] Address PR comments)
-=======
->>>>>>> c404a5e0 ([CPDLP-2965] Scope api docs schemas by api version)
-=======
->>>>>>> a180bf0f ([CPDLP-3010] Remove CSV endpoints schemas from api v3 swagger docs)
