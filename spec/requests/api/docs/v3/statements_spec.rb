@@ -57,6 +57,7 @@ RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.
 
       response "200", "A specific financial statement" do
         let(:id) { statement.ecf_id }
+
         schema({ "$ref": "#/components/schemas/StatementResponse" })
 
         run_test!
@@ -64,6 +65,7 @@ RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.
 
       response "404", "Not found", exceptions_app: true do
         let(:id) { SecureRandom.uuid }
+
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
         run_test!

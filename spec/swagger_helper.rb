@@ -47,16 +47,26 @@ RSpec.configure do |config|
         },
         schemas: {
           PaginationFilter: PAGINATION_FILTER,
-          ListStatementsFilter: LIST_STATEMENTS_FILTER,
+          ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
-          StatementResponse: STATEMENT_RESPONSE[version],
-          StatementsResponse: STATEMENTS_RESPONSE[version],
-          Statement: STATEMENT[version],
+          ApplicationResponse: APPLICATION_RESPONSE[version],
+          ApplicationsResponse: APPLICATIONS_RESPONSE[version],
+          Application: APPLICATION[version],
           IDAttribute: ID_ATTRIBUTE,
         },
       },
-    }
+    }.tap do |h|
+      if version == :v3
+        h[:components][:schemas].merge!(
+          ListStatementsFilter: LIST_STATEMENTS_FILTER,
+          StatementResponse: STATEMENT_RESPONSE[version],
+          StatementsResponse: STATEMENTS_RESPONSE[version],
+          Statement: STATEMENT[version],
+          SortingOptions: SORTING_OPTIONS,
+        )
+      end
+    end
   end
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.

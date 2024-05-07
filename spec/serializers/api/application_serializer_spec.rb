@@ -214,8 +214,9 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     describe "nested attributes" do
       subject(:attributes) { JSON.parse(described_class.render(application, view: :v3))["attributes"] }
 
+      # FIXME: When we migrate schedules we can test this fully.
       it "serializes the `schedule_identifier`" do
-        expect(attributes["schedule_identifier"]).to eq("placeholder-schedule-identifier")
+        expect(attributes["schedule_identifier"]).to be_nil
       end
     end
   end
