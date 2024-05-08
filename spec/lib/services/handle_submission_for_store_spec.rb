@@ -124,7 +124,7 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment_country" => nil,
           "teacher_catchment_iso_country_code" => nil,
           "teacher_catchment_synced_to_ecf" => false,
-          "ukprn" => nil,
+          "ukprn" => school.ukprn,
           "number_of_pupils" => nil,
           "primary_establishment" => false,
           "tsf_primary_eligibility" => false,
