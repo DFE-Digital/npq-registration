@@ -1,15 +1,12 @@
 module Questionnaires
   class SencoStartDate < Base
+    include ActiveModel::Attributes
     include ActiveRecord::AttributeAssignment
     include Helpers::Institution
 
     QUESTION_NAME = :senco_start_date
 
-    attr_reader QUESTION_NAME
-
-    def senco_start_date=(value)
-      @senco_start_date = ActiveRecord::Type::Date.new.cast(value)
-    end
+    attribute QUESTION_NAME, :date
 
     validates QUESTION_NAME, presence: true
 
