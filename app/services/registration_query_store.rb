@@ -137,8 +137,4 @@ class RegistrationQueryStore
   def senco_start_date
     store["senco_start_date"]
   end
-
-  def formatted_senco_start_date
-    senco_start_date&.to_fs(:govuk)
-  end
 end
