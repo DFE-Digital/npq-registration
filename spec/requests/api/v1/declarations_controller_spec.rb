@@ -13,6 +13,12 @@ RSpec.describe API::V1::DeclarationsController, type: "request" do
     specify { expect(response).to(be_method_not_allowed) }
   end
 
+  describe("create") do
+    before { api_post(api_v1_declarations_path) }
+
+    specify { expect(response).to(be_method_not_allowed) }
+  end
+
   describe("void") do
     before { api_put(api_v1_declaration_void_path(123)) }
 

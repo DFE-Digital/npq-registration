@@ -8,13 +8,19 @@ RSpec.describe API::V3::DeclarationsController, type: "request" do
   end
 
   describe("show") do
-    before { api_get(api_v1_declaration_path(123)) }
+    before { api_get(api_v3_declaration_path(123)) }
+
+    specify { expect(response).to(be_method_not_allowed) }
+  end
+
+  describe("create") do
+    before { api_post(api_v3_declarations_path) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
   describe("void") do
-    before { api_put(api_v1_declaration_void_path(123)) }
+    before { api_put(api_v3_declaration_void_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end

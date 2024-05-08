@@ -5,7 +5,7 @@ FactoryBot.define do
     cohort_id { create(:ecf_migration_cohort).id }
     npq_course_id { create(:ecf_migration_npq_course).id }
     npq_lead_provider_id { create(:ecf_migration_npq_lead_provider).id }
-    participant_identity_id { create(:ecf_migration_participant_identity, user:).id }
+    participant_identity_id { create(:ecf_migration_participant_identity).id }
     works_in_school { true }
     school_urn { rand(100_000..999_999).to_s }
     school_ukprn { rand(10_000_000..99_999_999).to_s }

@@ -40,8 +40,8 @@ module API
       end
 
       view :v3 do
-        # When we migrate schedules we can implement this fully.
-        field(:schedule_identifier) { "placeholder-schedule-identifier" }
+        # FIXME: When we migrate schedules we can test this fully.
+        field(:schedule_identifier) { nil }
       end
     end
 

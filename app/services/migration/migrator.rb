@@ -12,6 +12,7 @@ module Migration
       Migration::Migrators::User,
       Migration::Migrators::School,
       Migration::Migrators::Course,
+      Migration::Migrators::Application,
     ].freeze
 
     class << self
