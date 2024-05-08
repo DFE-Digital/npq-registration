@@ -154,7 +154,7 @@ RSpec.describe Application do
 
   describe "#previously_funded?" do
     let(:user) { create(:user) }
-    let(:application) { create(:application, :previously_funded, user:) }
+    let(:application) { create(:application, :previously_funded, user:, course: Course.ehco) }
     let(:previous_application) { user.applications.where.not(id: application.id).first! }
 
     subject { application }

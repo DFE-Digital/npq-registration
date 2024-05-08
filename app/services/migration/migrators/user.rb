@@ -1,7 +1,7 @@
 module Migration::Migrators
   class User < Base
     def call
-      migrate(ecf_users, :user) do |ecf_user|
+      migrate(ecf_users) do |ecf_user|
         user = ::User.find_or_initialize_by(ecf_id: ecf_user.id)
 
         validate_multiple_trns!(ecf_user, user)

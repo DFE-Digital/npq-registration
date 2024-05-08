@@ -45,7 +45,7 @@ module MigrationHelper
                "green"
              end
 
-    govuk_tag(text: "#{percentage}%", colour:)
+    govuk_tag(text: "#{sprintf("%g", percentage)}%", colour:)
   end
 
   def data_migration_download_failures_report_link(data_migration)

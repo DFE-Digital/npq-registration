@@ -35,10 +35,6 @@ RSpec.describe Migration::DataMigration, type: :model, in_memory_rails_cache: tr
     describe ".pending" do
       it { expect(described_class.pending).to eq(described_class.where(started_at: nil)) }
     end
-
-    describe ".not_pending" do
-      it { expect(described_class.not_pending).to eq(described_class.where.not(started_at: nil)) }
-    end
   end
 
   describe "#percentage_migrated_successfully" do
@@ -49,12 +45,12 @@ RSpec.describe Migration::DataMigration, type: :model, in_memory_rails_cache: tr
     context "when processed_count is present" do
       before { instance.processed_count = 100 }
 
-      it { is_expected.to be(100) }
+      it { is_expected.to be(100.to_f) }
 
       context "when failure_count is present" do
         before { instance.failure_count = 27 }
 
-        it { is_expected.to be(73) }
+        it { is_expected.to be(73.to_f) }
       end
     end
   end

@@ -1,7 +1,7 @@
 module Migration::Migrators
   class Statement < Base
     def call
-      migrate(ecf_statements, :statement) do |ecf_statement|
+      migrate(ecf_statements) do |ecf_statement|
         statement = ::Statement.find_or_initialize_by(month: Date::MONTHNAMES.find_index(ecf_statement.name.split[0]), year: ecf_statement.name.split[1])
 
         statement.update!(

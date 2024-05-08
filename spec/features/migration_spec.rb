@@ -23,25 +23,14 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
       expect(page).not_to have_content("Completed migration")
     end
 
-    scenario "running a migration" do
-      visit npq_separation_migration_migrations_path
-
-      click_button "Run migration"
-
-      expect(page).to have_button("Run migration", disabled: true)
-
-      expect(page).to have_content("A migration is currently in-progress")
-      expect(page).to have_content("It was started less than a minute ago.")
-
-      expect(page).not_to have_content("Completed migration")
-    end
-
     scenario "viewing the completed migration" do
       visit npq_separation_migration_migrations_path
 
       perform_enqueued_jobs do
         click_button "Run migration"
       end
+
+      expect(page).to have_button("Run migration", disabled: true)
 
       expect(page).not_to have_content("A migration is currently in-progress")
       expect(page).not_to have_content("It was started less than a minute ago.")
@@ -61,17 +50,6 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
         create(:lead_provider, ecf_id: ecf_npq_lead_provider2.id)
 
         create(:ecf_migration_npq_lead_provider)
-      end
-
-      scenario "running a migration" do
-        visit npq_separation_migration_migrations_path
-
-        click_button "Run migration"
-
-        within ".data-migration-lead_provider" do
-          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Lead provider")
-          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
-        end
       end
 
       scenario "viewing the completed migration" do
@@ -101,17 +79,6 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
         create(:cohort, start_year: ecf_cohort2.start_year)
 
         create(:ecf_migration_cohort, registration_start_date: nil)
-      end
-
-      scenario "running a migration" do
-        visit npq_separation_migration_migrations_path
-
-        click_button "Run migration"
-
-        within ".data-migration-cohort" do
-          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Cohort")
-          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
-        end
       end
 
       scenario "viewing the completed migration" do
@@ -146,17 +113,6 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
         create(:ecf_migration_statement, output_fee: nil)
       end
 
-      scenario "running a migration" do
-        visit npq_separation_migration_migrations_path
-
-        click_button "Run migration"
-
-        within ".data-migration-statement" do
-          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Statement")
-          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
-        end
-      end
-
       scenario "viewing the completed migration" do
         visit npq_separation_migration_migrations_path
 
@@ -185,17 +141,6 @@ RSpec.feature "Migration", type: :feature, in_memory_rails_cache: true, rack_tes
 
         create(:ecf_migration_user, :npq, get_an_identity_id: "123456")
         create(:user, :with_random_name, uid: "123456")
-      end
-
-      scenario "running a migration" do
-        visit npq_separation_migration_migrations_path
-
-        click_button "Run migration"
-
-        within ".data-migration-user" do
-          expect(page).to have_css(".govuk-task-list__name-and-hint", text: "User")
-          expect(page).to have_css(".govuk-task-list__status", text: "Pending")
-        end
       end
 
       scenario "viewing the completed migration" do

@@ -9,12 +9,11 @@ module Migration
     default_scope { order(created_at: :asc) }
 
     scope :pending, -> { where(started_at: nil) }
-    scope :not_pending, -> { where.not(started_at: nil) }
 
     def percentage_migrated_successfully
       return 0 unless processed_count&.positive?
 
-      ((processed_count - failure_count) / processed_count.to_f * 100).round
+      ((processed_count - failure_count) / processed_count.to_f * 100).round(2)
     end
 
     def percentage_migrated

@@ -1,7 +1,7 @@
 module Migration::Migrators
   class School < Base
     def call
-      migrate(ecf_schools, :school) do |ecf_school|
+      migrate(ecf_schools) do |ecf_school|
         ::School.find_by!(urn: ecf_school.urn, name: ecf_school.name)
       end
     end

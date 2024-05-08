@@ -4,8 +4,7 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   before do
-    allow(Migration::Migrator).to receive(:prepare_for_migration)
-    allow(MigrationJob).to receive(:perform_later)
+    allow(ActiveJob).to receive(:perform_all_later)
     sign_in_as_admin(super_admin:)
   end
 
@@ -34,8 +33,13 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
 
   describe("create") do
     let(:make_request) { post(npq_separation_migration_migrations_path) }
+    let(:migration_job_double) { instance_double(MigrationJob) }
 
-    before { make_request }
+    before do
+      allow(MigrationJob).to receive(:new).and_return(migration_job_double)
+
+      make_request
+    end
 
     context "when not signed in as a super admin" do
       let(:super_admin) { false }
@@ -53,8 +57,7 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
 
       it "triggers a migration" do
         expect(response).to redirect_to(npq_separation_migration_migrations_path)
-        expect(Migration::Migrator).to have_received(:prepare_for_migration)
-        expect(MigrationJob).to have_received(:perform_later)
+        expect(ActiveJob).to have_received(:perform_all_later).with([migration_job_double, migration_job_double])
       end
     end
   end
