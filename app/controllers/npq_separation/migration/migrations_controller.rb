@@ -8,8 +8,7 @@ class NpqSeparation::Migration::MigrationsController < ApplicationController
   end
 
   def create
-    Migration::Migrator.prepare_for_migration
-    MigrationJob.perform_later
+    ActiveJob.perform_all_later([MigrationJob.new, MigrationJob.new])
 
     redirect_to npq_separation_migration_migrations_path
   end
