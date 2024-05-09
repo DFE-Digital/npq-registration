@@ -67,7 +67,7 @@
 
     sl.with_row do |row|
       row.with_key(text: "Employer name")
-      row.with_value(text: @application.employer_name&.humanize)
+      row.with_value(text: @application.employer_name)
     end
 
     sl.with_row do |row|

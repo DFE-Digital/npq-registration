@@ -16,7 +16,7 @@ RSpec.feature "Listing and viewing users", type: :feature do
     expect(page).to have_css("h1", text: "All participants")
 
     User.limit(users_per_page).each do |user|
-      expect(page).to have_css("td a", text: user.full_name)
+      expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
       expect(page).to have_css("td", text: user.trn)
       expect(page).to have_css("td", text: user.created_at.to_date.to_formatted_s(:govuk))
     end
@@ -43,12 +43,13 @@ RSpec.feature "Listing and viewing users", type: :feature do
     expect(page).to have_css("h1", text: user.full_name)
 
     within(".govuk-summary-list") do |summary_list|
-      expect(summary_list).to have_text(user.id)
-      expect(summary_list).to have_text(user.ecf_id)
-      expect(summary_list).to have_text(user.email)
-      expect(summary_list).to have_text(user.full_name)
-      expect(summary_list).to have_text(user.trn)
-      expect(summary_list).to have_text(user.get_an_identity_id)
+      expect(summary_list).to have_summary_item("ID", user.id)
+      expect(summary_list).to have_summary_item("ECF ID", user.ecf_id)
+      expect(summary_list).to have_summary_item("Email", user.email)
+      expect(summary_list).to have_summary_item("Name", user.full_name)
+      expect(summary_list).to have_summary_item("TRN", user.trn)
+      expect(summary_list).to have_summary_item("TRN validated", "No")
+      expect(summary_list).to have_summary_item("Get an Identity ID", user.get_an_identity_id)
     end
   end
 end
