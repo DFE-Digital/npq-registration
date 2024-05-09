@@ -169,10 +169,10 @@ RSpec.feature "Happy journeys", type: :feature do
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
-
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
+      "funded_place" => nil,
       "funding_choice" => "self",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
