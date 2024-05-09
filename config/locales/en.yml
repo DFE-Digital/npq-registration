@@ -7,6 +7,10 @@ en:
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
 
+  errors:
+    email:
+      invalid: Enter a valid email address
+
   time:
     formats:
       admin: "%R on %d/%m/%Y"
@@ -181,6 +185,13 @@ en:
       pural_title: "Your NPQ registrations"
 
   admin:
+    application_submissions:
+      ecf_sync_request_log:
+        sync_type:
+          user_creation: "User Creation"
+          application_creation: "Application Creation"
+        success: "Success"
+        failed: "Failed"
     layout:
       title: "Admin"
       dashboard: "Dashboard"
@@ -192,6 +203,7 @@ en:
       webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
+      settings: "Settings"
 
     super_admins:
       update:
@@ -516,3 +528,5 @@ en:
         trn: "Teacher reference number (TRN)"
         full_name: "Full name"
         national_insurance_number: "National Insurance number (optional)"
+
+        date_of_birth: What is your date of birth?
