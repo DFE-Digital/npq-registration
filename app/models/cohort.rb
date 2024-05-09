@@ -9,6 +9,11 @@ class Cohort < ApplicationRecord
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
+  validates :funding_cap,
+            inclusion: {
+              in: [true, false],
+              message: "Choose true or false for funding cap",
+            }
 
   def registration_start_date_matches_start_year
     return if registration_start_date.blank?
