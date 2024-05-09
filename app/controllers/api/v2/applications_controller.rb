@@ -5,7 +5,6 @@ module API
       include ::API::Concerns::FilterByUpdatedSince
 
       def index
-        render json: to_json(paginate(applications_query.applications))
         respond_to do |format|
           format.json do
             render json: to_json(paginate(applications_query.applications))
