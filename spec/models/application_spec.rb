@@ -155,7 +155,7 @@ RSpec.describe Application do
   describe "#previously_funded?" do
     let(:user) { create(:user) }
     let(:application) { create(:application, :previously_funded, user:) }
-    let(:previous_application) { user.applications.where.not(id: application.id).first! }
+    let(:previous_applications) { user.applications.where.not(id: application.id) }
 
     subject { application }
 
@@ -164,19 +164,19 @@ RSpec.describe Application do
     end
 
     context "when the application has not been previously funded (previous application not accepted)" do
-      before { previous_application.update!(lead_provider_approval_status: "rejected") }
+      before { previous_applications.update!(lead_provider_approval_status: "rejected") }
 
       it { is_expected.not_to be_previously_funded }
     end
 
     context "when the application has not been previously funded (previous application is not for a rebranded alternative course)" do
-      before { previous_application.update!(course: Course.npqeyl) }
+      before { previous_applications.update!(course: Course.npqeyl) }
 
       it { is_expected.not_to be_previously_funded }
     end
 
     context "when the application has not been previously funded (previous application is not eligible for funding)" do
-      before { previous_application.update!(eligible_for_funding: false) }
+      before { previous_applications.update!(eligible_for_funding: false) }
 
       it { is_expected.not_to be_previously_funded }
     end
