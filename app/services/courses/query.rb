@@ -1,11 +1,17 @@
 module Courses
   class Query
+    attr_reader :scope
+
+    def initialize
+      @scope = Course.all
+    end
+
     def courses
-      Course.all.order(name: :asc)
+      scope.order(name: :asc)
     end
 
     def course(id:)
-      courses.find_by!(id:)
+      scope.find_by!(id:)
     end
   end
 end
