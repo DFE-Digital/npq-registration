@@ -7,6 +7,7 @@ module Courses
       identifier: "npq-additional-support-offer",
       description: "The Additional Support Offer is a targeted support package for new headteachers.",
       display: false,
+      replaced_by_identifier: "npq-early-headship-coaching-offer",
     },
     {
       position: 1,

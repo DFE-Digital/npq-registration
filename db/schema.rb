@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_29_195521) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_10_124025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -120,6 +120,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_195521) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.integer "replaced_by_course_id"
   end
 
   create_table "data_migrations", force: :cascade do |t|
