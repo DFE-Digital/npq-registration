@@ -36,4 +36,14 @@ RSpec.feature "Listing and viewing lead providers", type: :feature do
       expect(summary_list).to have_link("View", href: npq_separation_admin_finance_statement_path(statement))
     end
   end
+
+  scenario "viewing all statements" do
+    visit(npq_separation_admin_lead_providers_path)
+
+    click_link(LeadProvider.first.name)
+
+    click_link("View all statements")
+
+    expect(page).to have_css("h1", text: "Statements")
+  end
 end

@@ -14,7 +14,7 @@
         body.with_row do |row|
           row.with_cell(text: govuk_link_to(application.ecf_id, npq_separation_admin_application_path(application.id)))
           row.with_cell(text: govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user)))
-          row.with_cell(text: govuk_link_to(application.school&.name, "#"))
+          row.with_cell(text: govuk_link_to(application.school&.name, npq_separation_admin_school_path(application.school)))
         end
       end
     end

@@ -25,11 +25,6 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: "Name")
-      row.with_value(text: @course.name)
-    end
-
-    sl.with_row do |row|
       row.with_key(text: "Description")
       row.with_value(text: @course.description)
     end
