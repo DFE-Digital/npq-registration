@@ -9,6 +9,7 @@ FactoryBot.define do
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
     ecf_id { SecureRandom.uuid }
+    cohort
 
     trait :application_for_school do
       school { build(:school) }
