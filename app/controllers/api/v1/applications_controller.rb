@@ -18,11 +18,9 @@ module API
     private
 
       def applications_query
-        Applications::Query.new(
-          lead_provider: current_lead_provider,
-          cohort_start_years:,
-          updated_since:,
-        )
+        conditions = { lead_provider: current_lead_provider, cohort_start_years:, updated_since: }
+
+        Applications::Query.new(**conditions.compact)
       end
 
       def cohort_start_years
