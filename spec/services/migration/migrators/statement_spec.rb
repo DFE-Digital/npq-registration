@@ -46,5 +46,22 @@ RSpec.describe Migration::Migrators::Statement do
         subject
       end
     end
+
+    context "with multiple statements with same month and year" do
+      before do
+        create(:ecf_migration_statement, name: "July 2026")
+        create(:ecf_migration_statement, name: "January 2030")
+      end
+
+      it "migrates all ecf_statements" do
+        expect(Migration::Ecf::Finance::Statement.count).to be(4)
+        expect(Statement.count).to be(2)
+
+        subject
+
+        expect(Migration::Ecf::Finance::Statement.count).to be(4)
+        expect(Statement.count).to be(4)
+      end
+    end
   end
 end
