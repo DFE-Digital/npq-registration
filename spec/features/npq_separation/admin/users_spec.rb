@@ -38,7 +38,8 @@ RSpec.feature "Listing and viewing users", type: :feature do
 
     user = User.first
 
-    first("td").click_link(user.full_name)
+    all_participants_table = find("h1", text: "All participants").sibling("table")
+    all_participants_table.click_link(user.full_name)
 
     expect(page).to have_css("h1", text: user.full_name)
 

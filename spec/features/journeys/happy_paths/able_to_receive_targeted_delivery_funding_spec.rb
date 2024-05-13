@@ -137,6 +137,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
+      "funded_place" => nil,
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "funded",
       "headteacher_status" => nil,
