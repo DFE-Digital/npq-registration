@@ -8,7 +8,7 @@ module API
       field(:cohort) { |s, _| s.cohort.start_year.to_s }
       field :deadline_date, name: :cut_off_date, datetime_format: "%Y-%m-%d"
       field :payment_date, datetime_format: "%Y-%m-%d"
-      field(:paid) { |s, _| s.payment_date.present? }
+      field(:paid?, name: :paid)
       field :created_at
       field :updated_at
     end

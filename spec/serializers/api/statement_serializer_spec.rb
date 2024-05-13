@@ -54,14 +54,14 @@ RSpec.describe API::StatementSerializer, type: :serializer do
     end
 
     describe "`paid` status" do
-      it "returns `true` when `payment_date` is not nil" do
-        statement.payment_date = Date.new(2023, 7, 1)
+      it "returns `true` when state is `paid`" do
+        statement.state = :paid
 
         expect(attributes["paid"]).to eq(true)
       end
 
-      it "returns `false` when `payment_date` is nil" do
-        statement.payment_date = nil
+      it "returns `false` when `state` is not `paid`" do
+        statement.state = :open
 
         expect(attributes["paid"]).to eq(false)
       end
