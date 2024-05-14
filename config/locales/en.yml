@@ -11,6 +11,11 @@ en:
     email:
       invalid: Enter a valid email address
 
+  application:
+    missing_application: "The entered '#/application' is missing from your request. Check details and try again."
+    has_already_been_rejected: This NPQ application has already been rejected
+    cannot_change_from_accepted: Once accepted an application cannot change state
+
   time:
     formats:
       admin: "%R on %d/%m/%Y"

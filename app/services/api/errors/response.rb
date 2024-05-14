@@ -21,6 +21,15 @@ module API
           detail: params,
         }]
       end
+
+      def self.from(service)
+        {
+          errors: service
+            .errors
+            .messages
+            .map { |title, detail| { title:, detail: detail.uniq.join(", ") } },
+        }
+      end
     end
   end
 end

@@ -17,11 +17,16 @@ module API
       end
 
       def show
-        render json: to_json(applications_query.application(ecf_id: application_params[:ecf_id]))
+        render json: to_json(application)
       end
 
       def accept = head(:method_not_allowed)
-      def reject = head(:method_not_allowed)
+
+      def reject
+        service = Applications::Reject.new(application:)
+
+        render_from_service(service)
+      end
 
     private
 
@@ -29,6 +34,10 @@ module API
         conditions = { lead_provider: current_lead_provider, cohort_start_years:, updated_since: }
 
         Applications::Query.new(**conditions.compact)
+      end
+
+      def application
+        applications_query.application(ecf_id: application_params[:ecf_id])
       end
 
       def cohort_start_years
