@@ -213,6 +213,12 @@ APPLICATION = {
             type: :boolean,
             example: true,
           },
+          funded_place: {
+            description: "This field indicates whether the application is funded.\n",
+            nullable: true,
+            type: :boolean,
+            example: true,
+          },
         },
       },
     },
@@ -452,6 +458,12 @@ APPLICATION = {
               npq-specialist-autumn
               npq-specialist-spring
             ],
+          },
+          funded_place: {
+            description: "This field indicates whether the application is funded.\n",
+            nullable: true,
+            type: :boolean,
+            example: true,
           },
         },
       },

@@ -14,7 +14,7 @@ module Helpers
       headers["Authorization"] = "Bearer #{token}"
       headers["Content-Type"] = "application/json"
 
-      post url, params:, headers:
+      post url, params: params.to_json, headers:
     end
 
     def api_put(url, params: {}, headers: {}, token: nil)

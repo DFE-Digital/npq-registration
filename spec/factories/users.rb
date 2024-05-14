@@ -18,5 +18,9 @@ FactoryBot.define do
     trait :with_random_name do
       full_name { Faker::Name.name }
     end
+
+    trait :with_verified_trn do
+      trn_verified { true }
+    end
   end
 end

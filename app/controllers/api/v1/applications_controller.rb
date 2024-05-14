@@ -20,7 +20,11 @@ module API
         render json: to_json(application)
       end
 
-      def accept = head(:method_not_allowed)
+      def accept
+        service = Applications::Accept.new(application:, funded_place:)
+
+        render_from_service(service)
+      end
 
       def reject
         service = Applications::Reject.new(application:)
@@ -58,6 +62,26 @@ module API
 
       def to_csv(obj)
         ApplicationCsvSerializer.new(obj).call
+      end
+
+      def application
+        @application ||= applications_query.application(ecf_id: application_params[:ecf_id])
+      end
+
+      def accept_permitted_params
+        parameters = params
+          .fetch(:data)
+          .permit(:type, attributes: %i[funded_place])
+
+        return parameters unless parameters["attributes"].empty?
+
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      rescue ActionController::ParameterMissing
+        {}
+      end
+
+      def funded_place
+        accept_permitted_params.dig("attributes", "funded_place")
       end
     end
   end

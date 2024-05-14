@@ -27,7 +27,7 @@ module API
           errors: service
             .errors
             .messages
-            .map { |title, detail| { title:, detail: detail.uniq.join(", ") } },
+            .map { |error, detail| new(error:, params: detail.uniq).call }.flatten,
         }
       end
     end
