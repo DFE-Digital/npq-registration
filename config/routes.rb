@@ -126,6 +126,7 @@ Rails.application.routes.draw do
             member do
               post :reject, path: "reject"
               post :accept, path: "accept"
+              put :change_funded_place, path: "change-funded-place"
             end
           end
 
@@ -151,6 +152,7 @@ Rails.application.routes.draw do
         member do
           post :reject, path: "reject"
           post :accept, path: "accept"
+          put :change_funded_place, path: "change-funded-place"
         end
       end
 
@@ -179,6 +181,7 @@ Rails.application.routes.draw do
         member do
           post :reject, path: "reject"
           post :accept, path: "accept"
+          put :change_funded_place, path: "change-funded-place"
         end
       end
 

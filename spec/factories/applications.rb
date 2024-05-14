@@ -59,6 +59,15 @@ FactoryBot.define do
       eligible_for_funding { true }
     end
 
+    trait :eligible_for_funded_place do
+      eligible_for_funding { true }
+      lead_provider_approval_status { :accepted }
+
+      after(:create) do |application|
+        application.cohort.update!(funding_cap: true)
+      end
+    end
+
     trait :previously_funded do
       after(:create) do |application|
         course = application.course.rebranded_alternative_courses.sample

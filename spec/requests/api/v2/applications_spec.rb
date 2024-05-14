@@ -66,4 +66,15 @@ RSpec.describe "Application endpoints", type: :request do
 
     it_behaves_like "an API reject application endpoint"
   end
+
+  describe("change-funded-place") do
+    let(:application) { create(:application, :eligible_for_funded_place, lead_provider: current_lead_provider) }
+    let(:application_id) { application.ecf_id }
+
+    def path(id = nil)
+      change_funded_place_api_v3_application_path(id)
+    end
+
+    it_behaves_like "an API change application funded place endpoint"
+  end
 end

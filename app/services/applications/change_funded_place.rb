@@ -1,0 +1,52 @@
+# frozen_string_literal: true
+
+module Applications
+  class ChangeFundedPlace
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+
+    attribute :application
+    attribute :funded_place, :boolean
+
+    validates :application, presence: { message: I18n.t("application.missing_application") }
+    validate :funded_place_not_nil
+    validate :accepted_application
+    validate :eligible_for_funding
+    validate :cohort_has_funding_cap
+
+    def change
+      return false unless valid?
+
+      application.update!(funded_place:)
+    end
+
+  private
+
+    delegate :cohort, to: :application
+
+    def accepted_application
+      return if application.accepted?
+
+      errors.add(:application, I18n.t("application.cannot_change_funded_status_from_non_accepted"))
+    end
+
+    def eligible_for_funding
+      return unless funded_place
+      return if application.eligible_for_funding?
+
+      errors.add(:application, I18n.t("application.cannot_change_funded_status_non_eligible"))
+    end
+
+    def funded_place_not_nil
+      errors.add(:application, I18n.t("application.missing_funded_place")) if funded_place.nil?
+    end
+
+    def cohort_has_funding_cap
+      return if errors.any?
+      return if funded_place.nil?
+      return if cohort&.funding_cap?
+
+      errors.add(:application, I18n.t("application.cohort_does_not_accept_capping"))
+    end
+  end
+end
