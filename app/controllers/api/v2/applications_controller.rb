@@ -40,6 +40,16 @@ module API
         end
       end
 
+      def change_funded_place
+        service = Applications::ChangeFundedPlace.new(application:, funded_place:)
+
+        if service.change
+          render json: to_json(service.application)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
     private
 
       def applications_query

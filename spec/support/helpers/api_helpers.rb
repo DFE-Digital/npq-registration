@@ -23,7 +23,7 @@ module Helpers
       headers["Authorization"] = "Bearer #{token}"
       headers["Content-Type"] = "application/json"
 
-      put url, params:, headers:
+      put url, params: params.to_json, headers:
     end
 
     def parsed_response
