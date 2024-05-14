@@ -33,9 +33,15 @@ RSpec.describe "Application endpoints", type: :request do
   end
 
   describe("accept") do
-    before { api_post(accept_api_v3_application_path(123)) }
+    let(:course) { create(:course, :sl) }
+    let(:application) { create(:application, course:, lead_provider: current_lead_provider) }
+    let(:application_id) { application.ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      accept_api_v3_application_path(id)
+    end
+
+    it_behaves_like "an API accept application endpoint"
   end
 
   describe "POST /api/v3/npq-applications/:ecf_id/reject" do

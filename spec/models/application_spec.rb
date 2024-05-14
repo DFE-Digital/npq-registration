@@ -62,7 +62,7 @@ RSpec.describe Application do
     describe ".accepted" do
       it "returns accepted applications" do
         accepted_application = create(:application, :accepted)
-        create(:application, :pending)
+        create(:application)
 
         expect(described_class.accepted).to contain_exactly(accepted_application)
       end

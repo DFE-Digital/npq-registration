@@ -38,6 +38,7 @@ module API
           a.updated_at,
         ].compact.max
       end
+      field(:funded_place)
 
       view :v3 do
         # FIXME: When we migrate schedules we can test this fully.

@@ -8,6 +8,7 @@ FactoryBot.define do
     course
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
+    lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
     cohort
     teacher_catchment { "england" }
@@ -50,8 +51,8 @@ FactoryBot.define do
       lead_provider_approval_status { :accepted }
     end
 
-    trait :pending do
-      lead_provider_approval_status { :pending }
+    trait :rejected do
+      lead_provider_approval_status { :rejected }
     end
 
     trait :eligible_for_funding do

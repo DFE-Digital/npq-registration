@@ -23,5 +23,13 @@ module API
       Sentry.capture_exception(exception)
       render json: { errors: API::Errors::Response.new(error: I18n.t(:bad_request), params: exception.message).call }, status: :bad_request
     end
+
+    def render_from_service(service)
+      if service.valid?
+        render json: to_json(service.call)
+      else
+        render json: API::Errors::Response.from(service), status: :unprocessable_entity
+      end
+    end
   end
 end
