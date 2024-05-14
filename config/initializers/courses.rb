@@ -73,6 +73,13 @@ module Courses
     },
     {
       position: 9,
+      name: "NPQ for Senco(NPQS)",
+      ecf_id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
+      identifier: "npq-senco",
+      display: true,
+    },
+    {
+      position: 10,
       name: "Early Headship Coaching Offer",
       ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a",
       identifier: "npq-early-headship-coaching-offer",

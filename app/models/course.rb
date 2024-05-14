@@ -43,6 +43,10 @@ class Course < ApplicationRecord
     identifier == NPQ_LEADING_PRIMARY_MATHEMATICS
   end
 
+  def senco?
+    identifier == NPQ_SENCO
+  end
+
   def rebranded_alternative_courses
     case identifier
     when NPQ_ADDITIONAL_SUPPORT_OFFER
@@ -54,6 +58,10 @@ class Course < ApplicationRecord
     end
   end
 
+  def npqs?
+    identifier == NPQ_SENCO
+  end
+
   NPQ_HEADSHIP = "npq-headship".freeze
   NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
   NPQ_EARLY_HEADSHIP_COACHING_OFFER = "npq-early-headship-coaching-offer".freeze
@@ -61,4 +69,5 @@ class Course < ApplicationRecord
   NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze
   NPQ_LEADING_PRIMARY_MATHEMATICS = "npq-leading-primary-mathematics".freeze
   NPQ_ADDITIONAL_SUPPORT_OFFER = "npq-additional-support-offer".freeze
+  NPQ_SENCO = "npq-senco".freeze
 end

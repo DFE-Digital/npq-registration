@@ -68,6 +68,8 @@ module Questionnaires
         :npqh_status
       elsif course.npqlpm?
         :maths_eligibility_teaching_for_mastery
+      elsif course.npqs?
+        :senco_in_role
       elsif eligible_for_funding?
         :possible_funding
       elsif wizard.query_store.works_in_other?

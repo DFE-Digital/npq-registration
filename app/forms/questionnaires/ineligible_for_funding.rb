@@ -25,6 +25,12 @@ module Questionnaires
         else
           :maths_understanding_of_approach
         end
+      elsif course.npqs?
+        if wizard.query_store.senco_in_role_status?
+          :senco_start_date
+        else
+          :senco_in_role
+        end
       else
         :choose_your_npq
       end
