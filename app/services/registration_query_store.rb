@@ -125,4 +125,16 @@ class RegistrationQueryStore
   def maths_understanding?
     store["maths_understanding"]
   end
+
+  def senco_in_role
+    store["senco_in_role"]
+  end
+
+  def senco_in_role_status?
+    store["senco_in_role_status"]
+  end
+
+  def senco_start_date
+    store["senco_start_date"]
+  end
 end

@@ -4,8 +4,11 @@ class Feature
   REGISTRATION_OPEN = "Registration open".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
 
+  SENCO_ENABLED = "Senco enabled".freeze
+
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
+    SENCO_ENABLED,
   ].freeze
 
   class << self
