@@ -83,3 +83,7 @@
     end
   end
 %>
+
+<h2 class="govuk-heading-m govuk-!-margin-top-9">Timeline</h2>
+
+<%= render NpqSeparation::TimelineComponent.new(@application.events) %>
