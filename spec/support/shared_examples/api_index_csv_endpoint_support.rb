@@ -105,3 +105,35 @@ RSpec.shared_examples "an API index Csv endpoint with filter by updated_since" d
     end
   end
 end
+
+RSpec.shared_examples "an API index Csv endpoint with filter by created_since" do
+  context "when fitlering by created_since" do
+    it "returns resources created since the specified date" do
+      create_resource(lead_provider: current_lead_provider, created_at: 2.hours.ago)
+      create_resource(lead_provider: current_lead_provider, created_at: 1.minute.ago)
+
+      api_get(path, params: { filter: { created_since: 1.hour.ago.iso8601 } })
+
+      expect(parsed_csv_response.size).to eq(2)
+    end
+
+    it "calls the correct query" do
+      created_since = 1.hour.ago.iso8601
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, created_since: Time.iso8601(created_since))).and_call_original
+
+      api_get(path, params: { filter: { created_since: } })
+    end
+
+    it "returns 400 - bad request for invalid created_since" do
+      api_get(path, params: { filter: { created_since: "invalid" } })
+
+      expect(response.status).to eq 400
+      expect(parsed_response["errors"]).to eq([
+        {
+          "detail" => "The filter '#/created_since' must be a valid ISO 8601 date",
+          "title" => "Bad request",
+        },
+      ])
+    end
+  end
+end

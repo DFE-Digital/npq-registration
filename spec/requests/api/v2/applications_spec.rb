@@ -28,6 +28,23 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index endpoint with pagination"
     it_behaves_like "an API index endpoint with filter by cohort"
     it_behaves_like "an API index endpoint with filter by updated_since"
+    it_behaves_like "an API index endpoint with filter by created_since"
+  end
+
+  describe "GET /api/v2/npq-applications.csv" do
+    let(:serializer) { API::ApplicationCsvSerializer }
+    let(:mock_serializer) { instance_double(API::ApplicationCsvSerializer, call: nil) }
+    let(:path) { api_v1_applications_path(format: :csv) }
+    let(:resource_id_key) { :ecf_id }
+
+    def create_resource(**attrs)
+      create(:application, **attrs)
+    end
+
+    it_behaves_like "an API index Csv endpoint"
+    it_behaves_like "an API index Csv endpoint with filter by cohort"
+    it_behaves_like "an API index Csv endpoint with filter by updated_since"
+    it_behaves_like "an API index Csv endpoint with filter by created_since"
   end
 
   describe("accept") do

@@ -5,6 +5,7 @@ en:
   bad_request: "Bad request"
   not_found: "Not found"
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
+  invalid_created_since_filter: "The filter '#/created_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
 
   errors:
@@ -444,7 +445,7 @@ en:
           "taken_a_similar_course": "No – but taken a similar course"
           "another_way": "No – but can show understanding of mastery approaches another way"
           "cannot_show": "I cannot show an understanding of mastery approaches to teaching maths"
-        
+
         senco_in_role_options:
           "yes": "Yes"
           "no_but_i_plan_to_become_one": "No, but I plan to become one"

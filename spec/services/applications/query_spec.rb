@@ -124,6 +124,24 @@ RSpec.describe Applications::Query do
           expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
         end
       end
+
+      context "when filtering by created since" do
+        it "filters by created since" do
+          create(:application, lead_provider:, created_at: 2.days.ago)
+          application = create(:application, lead_provider:, created_at: Time.zone.now)
+
+          query = Applications::Query.new(lead_provider:, created_since: 1.day.ago)
+
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "doesn't filter by lead provider when none supplied" do
+          condition_string = %("applications"."created_at" >=)
+
+          expect(Applications::Query.new(created_since: 2.days.ago).scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+        end
+      end
     end
 
     describe "sorting" do
