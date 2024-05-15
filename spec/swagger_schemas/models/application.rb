@@ -214,7 +214,7 @@ APPLICATION = {
             example: true,
           },
           funded_place: {
-            description: "This field indicates whether the application is funded.\n",
+            description: "This field indicates whether the application is funded",
             nullable: true,
             type: :boolean,
             example: true,
@@ -460,7 +460,7 @@ APPLICATION = {
             ],
           },
           funded_place: {
-            description: "This field indicates whether the application is funded.\n",
+            description: "This field indicates whether the application is funded",
             nullable: true,
             type: :boolean,
             example: true,

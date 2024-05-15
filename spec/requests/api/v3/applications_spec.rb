@@ -32,7 +32,7 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index endpoint with filter by participant_id"
   end
 
-  describe("accept") do
+  describe "POST /api/v3/npq-applications/:ecf_id/accept" do
     let(:course) { create(:course, :sl) }
     let(:application) { create(:application, course:, lead_provider: current_lead_provider) }
     let(:application_id) { application.ecf_id }

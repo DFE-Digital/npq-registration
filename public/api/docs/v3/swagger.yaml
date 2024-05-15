@@ -450,6 +450,11 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
+            funded_place:
+              description: This field indicates whether the application is funded
+              nullable: true
+              type: boolean
+              example: true
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object

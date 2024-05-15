@@ -384,6 +384,11 @@ components:
               nullable: true
               type: boolean
               example: true
+            funded_place:
+              description: This field indicates whether the application is funded
+              nullable: true
+              type: boolean
+              example: true
     ApplicationsCsvResponse:
       description: A list of NPQ applications in the Comma Separated Value (CSV) format
       properties:

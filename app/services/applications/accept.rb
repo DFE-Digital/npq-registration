@@ -8,15 +8,15 @@ module Applications
     attribute :application
     attribute :funded_place, :boolean
 
-    validates :application, presence: { message: I18n.t("application.missing_npq_application") }
+    validates :application, presence: { message: I18n.t("application.missing_application") }
     validate :not_already_accepted
     validate :cannot_change_from_rejected
     validate :other_accepted_applications_with_same_course?
     validate :eligible_for_funded_place
     validate :validate_funded_place
 
-    def call
-      return self unless valid?
+    def accept
+      return false unless valid?
 
       ApplicationRecord.transaction do
         accept_application!
@@ -24,22 +24,12 @@ module Applications
         set_funded_place_on_npq_application!
       end
 
-      application
+      true
     end
 
   private
 
-    def cohort
-      @cohort ||= application.cohort
-    end
-
-    def user
-      @user ||= application.user
-    end
-
-    def course
-      @course ||= application.course
-    end
+    delegate :cohort, :user, :course, to: :application
 
     def not_already_accepted
       return if application.blank?
@@ -103,6 +93,7 @@ module Applications
 
     def eligible_for_funded_place
       return if errors.any?
+      return unless cohort&.funding_cap?
 
       if funded_place && !application.eligible_for_funding
         errors.add(:application, I18n.t("application.not_eligible_for_funded_place"))

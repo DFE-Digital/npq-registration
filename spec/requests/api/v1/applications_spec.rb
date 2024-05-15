@@ -45,7 +45,7 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index Csv endpoint with filter by updated_since"
   end
 
-  describe("accept") do
+  describe "POST /api/v1/npq-applications/:ecf_id/accept" do
     let(:course) { create(:course, :sl) }
     let(:application) { create(:application, course:, lead_provider: current_lead_provider) }
     let(:application_id) { application.ecf_id }

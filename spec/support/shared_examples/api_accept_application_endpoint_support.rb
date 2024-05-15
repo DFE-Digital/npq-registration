@@ -2,7 +2,7 @@
 
 RSpec.shared_examples "an API accept application endpoint" do
   context "when authorized" do
-    it "update status to accepted" do
+    it "updates status to accepted" do
       expect { api_post(path(application_id)) }
         .to change { application.reload.lead_provider_approval_status }.from("pending").to("accepted")
     end
@@ -35,7 +35,7 @@ RSpec.shared_examples "an API accept application endpoint" do
     context "when application has been rejected" do
       let(:application) { create(:application, :rejected, lead_provider: current_lead_provider) }
 
-      it "return 422" do
+      it "returns 422" do
         api_post(path(application_id))
 
         expect(response).to have_http_status(:unprocessable_entity)
