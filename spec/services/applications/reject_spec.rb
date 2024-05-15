@@ -38,9 +38,9 @@ RSpec.describe Applications::Reject do
     end
   end
 
-  describe ".call" do
+  describe ".reject" do
     it "marks the lead provider approval status as rejected" do
-      expect { service.call }.to change { application.reload.lead_provider_approval_status }.from("pending").to("rejected")
+      expect { service.reject }.to change { application.reload.lead_provider_approval_status }.from("pending").to("rejected")
     end
   end
 end

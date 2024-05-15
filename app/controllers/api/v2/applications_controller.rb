@@ -25,7 +25,11 @@ module API
       def reject
         service = Applications::Reject.new(application:)
 
-        render_from_service(service)
+        if service.reject
+          render json: to_json(service.application)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
       end
 
     private

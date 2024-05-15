@@ -52,29 +52,12 @@ RSpec.describe "Application endpoints", type: :request do
   end
 
   describe "POST /api/v2/npq-applications/:ecf_id/reject" do
-    let(:application) { create(:application, lead_provider: current_lead_provider) }
+    let(:service_class) { Applications::Reject }
 
-    context "when application is pending" do
-      it "returns successfully" do
-        api_post "/api/v2/npq-applications/#{application.ecf_id}/reject"
-
-        expect(response).to be_successful
-        expect(parsed_response.dig("data", "attributes", "status")).to eql("rejected")
-      end
+    def path(id = nil)
+      reject_api_v2_application_path(id)
     end
 
-    context "when application is accepted" do
-      let(:application) { create(:application, lead_provider: current_lead_provider, lead_provider_approval_status: "accepted") }
-
-      it "returns error" do
-        api_post "/api/v2/npq-applications/#{application.ecf_id}/reject"
-
-        expect(response).to have_http_status(:unprocessable_entity)
-
-        expect(parsed_response).to be_key("errors")
-        expect(parsed_response["errors"][0]["title"]).to eql("application")
-        expect(parsed_response.dig("errors", 0, "detail")).to eql("Once accepted an application cannot change state")
-      end
-    end
+    it_behaves_like "an API reject application endpoint"
   end
 end

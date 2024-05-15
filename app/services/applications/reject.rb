@@ -9,11 +9,12 @@ module Applications
     validate :not_already_rejected
     validate :cannot_change_from_accepted
 
-    def call
-      return self unless valid?
+    def reject
+      return false unless valid?
 
       application.update!(lead_provider_approval_status: "rejected")
-      application
+
+      true
     end
 
   private
