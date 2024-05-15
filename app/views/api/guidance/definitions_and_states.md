@@ -2,70 +2,185 @@
 
 ## Key concepts
 
-| Concept | Definition
-|---------|------------|
-| application | The application a person makes to be trained on an NPQ course. Applications include funding details |
-| participant | A person registered for an NPQ course |
-| cohort | The grouping of participants who begin their course in a given academic year under a given funding contract. For example, a participant who started their training in the 2021/2022 academic year will be in the 2021 cohort. This is because their funding comes from the 2021/2022 call-off contract. In most cases providers cannot change a participant’s cohort once they’ve started their training |
-| schedule | The expected timeframe in which a participant will complete their NPQ course. Schedules include defined milestone dates [ADD LINK] against which DfE validates the declarations submitted by providers |
-| course_identifier | The NPQ course a participant applies for and is registered for |
-| outcome | The assessment result a participant achieves at the end of an NPQ course |
-|declaration | The notification submitted by providers via the API to trigger output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period |
-| statement | A record of output payments (based on declarations), service fees and any adjustments DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes |
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">Concepts and definitions</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Concept</th>
+      <th scope="col" class="govuk-table__header">Definition</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>application</code></th>
+      <td class="govuk-table__cell">The application a person makes to be trained on an NPQ course. Applications include funding details</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>participant</code></th>
+      <td class="govuk-table__cell">A person registered for an NPQ course</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>schedule</code></th>
+      <td class="govuk-table__cell">The expected timeframe in which a participant will complete their NPQ course. Schedules include defined [milestone dates](ADD LINK) against which DfE validates the declarations submitted by providers</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>course_identifier</code></th>
+      <td class="govuk-table__cell">The NPQ course a participant applies for and is registered for</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>outcome</code></th>
+      <td class="govuk-table__cell">The assessment result a participant achieves at the end of an NPQ course</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>declaration</code></th>
+      <td class="govuk-table__cell">The notification submitted by providers via the API to trigger output payments from DfE. Declarations are submitted where there is evidence of a participant’s engagement in training for a given milestone period</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>statement</code></th>
+      <td class="govuk-table__cell">A record of output payments (based on declarations), service fees and any adjustments DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes</td>
+    </tr>
+  </tbody>
+</table>
 
-## Data states
+## Application data states
 
 This API uses a ‘state’ model to reflect the NPQ participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
 
-### Application states
-
-Application states are defined by the status attribute. 
+Application states are defined by the <code>status</code> attribute. 
 
 A application’s status value will determine whether a provider can:
 
-* accept or reject applications [ADD LINK]
+* [accept or reject applications](ADD LINK)
 
-* submit a declaration [ADD LINK]. For example, notifying DfE that a participant has started their training 
+* [submit a declaration](ADD LINK). For example, notifying DfE that a participant has started their training 
 
-| Status | Definition | Action | 
-|------|-------|-------|
-| pending | Applications which have been made for an NPQ course | Providers can only accept or reject pending applications |
-| accepted | Applications which have been accepted by a provider | Providers can submit declarations and update participant data only for those who have had their application accepted |
-| rejected | Applications which have been rejected by a provider, or which have been accepted by another provider | Providers cannot submit any API requests for participants who have had their application rejected |
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Application status values</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Status</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Definition</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">What providers can do</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>pending</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Applications which have been made for an NPQ course</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Accept or reject applications</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>accepted</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Applications which have been accepted by a provider</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Submit declarations and update participant data</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>rejected</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Applications which have been rejected by a provider, or which have been accepted by another provider</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">No action required</td>
+    </tr>
+  </tbody>
+</table>
 
-View more detailed specifications for the NPQ application schema [ADD LINK]
+[View more detailed specifications for the NPQ application schema](ADD LINK)
 
-### Participant states
+## Participant data states
 
-Participant states are defined by the training_status attribute. 
+Participant states are defined by the <code>training_status</code> attribute. 
 
-A participant’s training_status value will determine whether a provider can:
+A participant’s <code>training_status</code> value will determine whether a provider can:
 
-* update their details [ADD LINK]. For example, notifying DfE that a participant has withdrawn from the course 
+* [update their details](ADD LINK). For example, notifying DfE that a participant has withdrawn from the course 
 
-* submit a declaration [ADD LINK]. For example, notifying DfE that a participant has started their training 
+* [submit a declaration](ADD LINK). For example, notifying DfE that a participant has started their training 
 
-| Training status | Definition | Action |
-|------|-------|-----|
-| active | Participants currently in training | Providers can update participant data and submit declarations for active participants |
-| deferred | Participants who have deferred training | Providers cannot update participant data or submit declarations for deferred participants. Providers must notify DfE when the participant resumes training [ADD LINK] |
-| withdrawn | Participants who have withdrawn from training | Providers cannot update participant data for withdrawn participants. Providers can only submit declarations for withdrawn participants if the declaration_date is backdated to before the withdrawal_date |
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Training status values</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Training status</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Definition</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">What providers can do</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>active</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Participants currently in training</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Update participant data and submit declarations</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>deferred</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Participants who've deferred training</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Notify DfE when the participant [resumes training](ADD LINK)</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>withdrawn</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Participants who have withdrawn from training</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">Submit declarations for withdrawn participants if the <code>declaration_date</code> is backdated to before the <code>withdrawal_date</code></td>
+    </tr>
+  </tbody>
+</table>
 
-View more detailed specifications for the NPQ participant schema [ADD LINK]
+[View more detailed specifications for the NPQ participant schema](ADD LINK)
 
-### Declaration states
+## Declaration data states
 
-Declaration states are defined by the state attribute. 
+Declaration states are defined by the <code>state</code> attribute. 
 
-Providers must submit declarations [ADD LINK] to confirm a participant has engaged in training within a given milestone period. A declaration’s state value will reflect if and when DfE will pay providers for the training delivered.
+Providers must [submit declarations](ADD LINK) to confirm a participant has engaged in training within a given milestone period. A declaration’s state value will reflect if and when DfE will pay providers for the training delivered.
 
-| State | Definition | Action |
-|---|----|-----|
-| submitted | A declaration associated with to a participant who has not yet been confirmed to be eligible for funding | Providers can view and void submitted declarations |
-| eligible | A declaration associated with a participant who has been confirmed to be eligible for funding | Providers can view and void eligible declarations |
-| ineligible | A declaration associated with a participant who is not eligible for funding or a duplicate submission for a given participant | Providers can view and void ineligible declarations |
-| payable | A declaration that has been approved and is ready for payment by DfE | Providers can view and void payable declarations |
-| awaiting_clawback | A paid declaration that has since been voided by a provider | Providers can only view awaiting_clawback declarations |
-| clawed_back | An awaiting_clawback declaration that has since had its value deducted from payment by DfE to a provider | Providers can only view clawed_back declarations |
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Declaration status values</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">State</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">Definition</th>
+      <th scope="col" class="govuk-table__header govuk-table__header--numeric">What providers can do</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>submitted</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration associated with to a participant who has not yet been confirmed to be eligible for funding</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View and void</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>eligible</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration associated with a participant who has been confirmed to be eligible for funding</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View and void</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>ineligible</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration associated with a participant who is not eligible for funding or a duplicate submission for a given participant</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View and void</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>payable</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration that has been approved and is ready for payment by DfE</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View and void</td>
+    </tr>
+     <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>voided</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration that has been retracted by a provider</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View</td>
+    </tr>
+     <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>paid</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A declaration that has been paid for by DfE</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View and void</td>
+    </tr>
+     <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>awaiting_clawback</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">A <code>paid</code> declaration that has since been voided by a provider</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View</td>
+    </tr>
+     <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>clawed_back</code></th>
+      <td class="govuk-table__cell govuk-table__cell--numeric">An <code>awaiting_clawback</code> declaration that has since had its value deducted from payment by DfE to a provider</td>
+      <td class="govuk-table__cell govuk-table__cell--numeric">View</td>
+    </tr>
+  </tbody>
+</table>
 
-View more detailed specifications for the declaration schema [ADD LINK]
+[View more detailed specifications for the declaration schema](ADD LINK)
