@@ -16,7 +16,7 @@ The tokens do not expire.
 
 ### How to use an authentication token 
 
-Include an authentication token in all requests to the API by adding an <code>Authorization</code> request header (not as part of the URL) in the following format: 
+Include an authentication token in all requests to the API by adding an `Authorization` request header (not as part of the URL) in the following format: 
 
 [HIGHLIGHT] <code>Authorization: Bearer {token} </code>
 

@@ -1,4 +1,4 @@
-# What you can do in the API
+# Overview of  API fits in with the NPQ life cycle  
 
 <div class="govuk-inset-text">
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, authentication is not detailed.
@@ -38,11 +38,3 @@ Before delving into the specifics of API requests, here's an overview of how NPQ
 * providers can view financial statements via the API
 * changes can happen during training. Some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API
 * DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training)
-
-## View, accept or reject applications
-
-## View and update participant data
-
-## View payments information 
-
-## Submit, view and void declarations
