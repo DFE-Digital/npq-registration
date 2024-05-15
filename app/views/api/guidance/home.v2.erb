@@ -1,4 +1,4 @@
-<div class="x-govuk-masthead">
+v<div class="x-govuk-masthead">
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -34,6 +34,9 @@
 
         <p class="govuk-body">
           <%= govuk_link_to("Read the full release notes for more details.", "https://github.com/DFE-Digital/npq-registration/blob/main/release-notes.md") %>
+        </p>
+        <p class="govuk-body">
+          <%= govuk_link_to("Sign up to get update emails about the NPQs data management API for lead providers.", "#") %>
         </p>
       </div>
     </div>
@@ -101,80 +104,10 @@
     <div class="govuk-grid-column-full-from-desktop">
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">How-to guides</h2>
-                 <p class="govuk-body">Guidance on how lead providers can integrate with this API so they can view, submit and update data.</p>
-        <p class="govuk-body">
-        <ul class="govuk-list">
-          <li><%= govuk_link_to("How NPQs work", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View, accept or reject applications", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View and update participant data", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View payments information", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("Submit, view and void declarations", "#", class: "govuk-!-font-weight-bold") %></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-      <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">Definitions and states</h2>
-         <p class="govuk-body">Take a look at the key concepts and data states we use.</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "Browse definitions and states", '/api/guidance/definitions_and_states', class: "govuk-!-font-weight-bold" %></p>
-        <ul class="govuk-list">
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-      <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">Schedules and milestone dates</h2>
-         <p class="govuk-body">ADD INTRO TEXT.</p>
-        <p class="govuk-body">
-        <ul class="govuk-list">
-          <li><%= govuk_link_to("ADD LINK TEXT", "#", class: "govuk-!-font-weight-bold") %></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-      <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">API latest version</h2>
-                 <p class="govuk-body">Access version 3 of the NPQs data management API documentation for lead providers.</p>
-        <p class="govuk-body">
-        <ul class="govuk-list">
-          <li><%= govuk_link_to("View API version 3", "#", class: "govuk-!-font-weight-bold") %></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-      <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">API previous versions</h2>
-                         <p class="govuk-body">Access the first and second versions of the NPQs data management API documentation for lead providers.</p>
-        <p class="govuk-body">
         <ul class="govuk-list">
-          <li><%= govuk_link_to("View API version 2", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View API version 1", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API v1.0.0", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API v2.0.0", "#", class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
