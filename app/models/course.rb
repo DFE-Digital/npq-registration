@@ -13,6 +13,7 @@ class Course < ApplicationRecord
     npq-leading-primary-mathematics
     npq-additional-support-offer
     npq-early-headship-coaching-offer
+    npq-senco
   ].freeze
 
   class << self

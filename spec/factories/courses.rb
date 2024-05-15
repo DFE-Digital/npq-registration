@@ -64,6 +64,11 @@ FactoryBot.define do
       identifier { "npq-leading-primary-mathematics" }
     end
 
+    trait :senco do
+      sequence(:name) { |n| "NPQ for Senco #{n}" }
+      identifier { "npq-senco" }
+    end
+
     factory :"npq-executive-leadership", traits: [:el]
     factory :"npq-leading-behaviour-culture", traits: [:lbc]
     factory :"npq-headship", traits: [:hs]
@@ -75,5 +80,6 @@ FactoryBot.define do
     factory :"npq-additional-support-offer", traits: [:aso]
     factory :"npq-early-headship-coaching-offer", traits: [:ehco]
     factory :"npq-leading-primary-mathematics", traits: [:lpm]
+    factory :"npq-senco", traits: [:senco]
   end
 end

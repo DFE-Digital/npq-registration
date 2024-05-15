@@ -34,6 +34,7 @@ APPLICATION = {
               npq-additional-support-offer
               npq-early-headship-coaching-offer
               npq-leading-primary-mathematics
+              npq-senco
             ],
           },
           email: {
@@ -353,6 +354,7 @@ APPLICATION = {
               npq-additional-support-offer
               npq-early-headship-coaching-offer
               npq-leading-primary-mathematics
+              npq-senco
             ],
           },
           status: {
