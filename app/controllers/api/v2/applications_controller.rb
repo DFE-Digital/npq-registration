@@ -23,7 +23,11 @@ module API
       def accept
         service = Applications::Accept.new(application:, funded_place:)
 
-        render_from_service(service)
+        if service.accept
+          render json: to_json(service.application)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
       end
 
       def reject
@@ -62,10 +66,6 @@ module API
 
       def to_csv(obj)
         ApplicationCsvSerializer.new(obj).call
-      end
-
-      def application
-        @application ||= applications_query.application(ecf_id: application_params[:ecf_id])
       end
 
       def accept_permitted_params

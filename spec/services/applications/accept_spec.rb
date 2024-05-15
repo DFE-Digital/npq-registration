@@ -13,7 +13,7 @@ RSpec.describe Applications::Accept do
     described_class.new(params)
   end
 
-  describe "#call" do
+  describe "#accept" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user, :with_verified_trn) }
     let(:course) { create(:course, :sl) }
@@ -36,7 +36,7 @@ RSpec.describe Applications::Accept do
         it "is invalid and returns an error message" do
           expect(subject).to be_invalid
 
-          expect(service.errors.messages_for(:application)).to include("The entered '#/npq_application' is missing from your request. Check details and try again.")
+          expect(service.errors.messages_for(:application)).to include("The entered '#/application' is missing from your request. Check details and try again.")
         end
       end
 
@@ -65,7 +65,7 @@ RSpec.describe Applications::Accept do
 
         it "throws ActiveRecord::RecordInvalid" do
           application.lead_provider_id = nil
-          expect { service.call }.to raise_error(ActiveRecord::RecordInvalid)
+          expect { service.accept }.to raise_error(ActiveRecord::RecordInvalid)
         end
       end
     end
@@ -83,12 +83,12 @@ RSpec.describe Applications::Accept do
       end
 
       before do
-        service.call
+        service.accept
       end
 
       it "does not accept the EHCO application" do
         expect {
-          described_class.new(application: other_application).call
+          described_class.new(application: other_application).accept
         }.not_to(change { other_application.reload.lead_provider_approval_status })
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe Applications::Accept do
       end
 
       it "rejects other_application" do
-        service.call
+        service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_application.reload.lead_provider_approval_status).to eql("rejected")
       end
@@ -128,18 +128,24 @@ RSpec.describe Applications::Accept do
                  cohort:)
         end
 
+        let(:params) do
+          {
+            application: other_application,
+          }
+        end
+
         before do
           application.update!(lead_provider_approval_status: "accepted")
         end
 
         it "does not allow 2 applications with same course to be accepted" do
           expect {
-            described_class.new(application: other_application).call
+            service.accept
           }.not_to(change { other_application.reload.lead_provider_approval_status })
         end
 
         it "attaches errors to the object" do
-          service = described_class.new(application: other_application).call
+          service.accept
 
           expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
         end
@@ -156,18 +162,24 @@ RSpec.describe Applications::Accept do
                  cohort:)
         end
 
+        let(:params) do
+          {
+            application: other_application,
+          }
+        end
+
         before do
           application.update!(lead_provider_approval_status: "accepted")
         end
 
         it "does not allow 2 applications with same course to be accepted" do
           expect {
-            described_class.new(application: other_application).call
+            service.accept
           }.not_to(change { other_application.reload.lead_provider_approval_status })
         end
 
         it "attaches errors to the object" do
-          service = described_class.new(application: other_application).call
+          service.accept
 
           expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
         end
@@ -176,7 +188,7 @@ RSpec.describe Applications::Accept do
 
     context "when user has applied for different course" do
       let(:other_lead_provider) { create(:lead_provider) }
-      let(:other_course) { create(:course) }
+      let(:other_course) { create(:course, :eyl) }
 
       let(:other_application) do
         create(:application,
@@ -192,7 +204,7 @@ RSpec.describe Applications::Accept do
       end
 
       it "does not reject the other course" do
-        service.call
+        service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
         expect(other_application.reload.lead_provider_approval_status).to eql("pending")
       end
@@ -205,7 +217,7 @@ RSpec.describe Applications::Accept do
       end
 
       it "cannot then be accepted" do
-        service.call
+        service.accept
         expect(application.reload).to be_rejected
         expect(service.errors.messages_for(:application)).to be_present
       end
@@ -231,7 +243,7 @@ RSpec.describe Applications::Accept do
 
         it "does not affect 2021 application" do
           expect {
-            service.call
+            service.accept
           }.to change { application.reload.lead_provider_approval_status }
            .and(not_change { previous_application.reload.lead_provider_approval_status })
         end
@@ -249,7 +261,7 @@ RSpec.describe Applications::Accept do
         let(:params) { { application:, funded_place: true } }
 
         it "sets the funded place to true" do
-          service.call
+          service.accept
 
           expect(application.reload.funded_place).to be_truthy
         end
@@ -257,7 +269,7 @@ RSpec.describe Applications::Accept do
         it "does not set funded place if eligible for funding is false" do
           application.update!(eligible_for_funding: false)
 
-          service.call
+          service.accept
           expect(service.errors.messages_for(:application)).to include("The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
         end
       end
@@ -266,7 +278,7 @@ RSpec.describe Applications::Accept do
         let(:params) { { application:, funded_place: false } }
 
         it "sets the funded place to false" do
-          service.call
+          service.accept
 
           expect(application.reload.funded_place).to be_falsey
         end
@@ -277,7 +289,7 @@ RSpec.describe Applications::Accept do
 
         context "when funding_cap is true" do
           it "returns funding_place is required error" do
-            service.call
+            service.accept
             expect(service.errors.messages_for(:application)).to include("Set '#/funded_place' to true or false.")
           end
         end
@@ -286,7 +298,7 @@ RSpec.describe Applications::Accept do
           let(:cohort) { create(:cohort, :current) }
 
           it "does not validate funded_place" do
-            service.call
+            service.accept
             expect(service.errors.messages_for(:application)).to be_empty
           end
         end

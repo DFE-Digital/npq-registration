@@ -6,6 +6,7 @@ en:
   not_found: "Not found"
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
+  invalid_data_structure: correct json data structure required. See API docs for reference
 
   errors:
     email:
@@ -15,7 +16,6 @@ en:
     missing_application: "The entered '#/application' is missing from your request. Check details and try again."
     has_already_been_rejected: This NPQ application has already been rejected
     cannot_change_from_accepted: Once accepted an application cannot change state
-    missing_npq_application: "The entered '#/npq_application' is missing from your request. Check details and try again."
     has_another_accepted_application: The participant has already had an application accepted for this course.
     has_already_been_accepted: This NPQ application has already been accepted
     cannot_change_from_rejected: Once rejected an application cannot change state

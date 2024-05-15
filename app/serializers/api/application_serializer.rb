@@ -31,6 +31,7 @@ module API
       field(:teacher_catchment_iso_country_code)
       field(:itt_provider) { |a| a.itt_provider&.legal_name }
       field(:lead_mentor)
+      field(:funded_place)
       field(:created_at)
       field(:updated_at) do |a|
         [
@@ -38,7 +39,6 @@ module API
           a.updated_at,
         ].compact.max
       end
-      field(:funded_place)
 
       view :v3 do
         # FIXME: When we migrate schedules we can test this fully.
