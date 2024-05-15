@@ -1,5 +1,13 @@
 # Schedules and milestone dates
 
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-visually-hidden">Warning</span>
+    Providers must submit declarations in line with terms set out in their contracts.
+  </strong>
+</div>
+
 [WARNING TEXT] Providers should [MUST?] submit declarations in line with terms set out in their contracts. 
 
 DfE makes payment to providers in line with agreed contractual schedules and training criteria.
