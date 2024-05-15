@@ -39,10 +39,10 @@ RSpec.describe Events::ApplicationAcceptance do
       expect(event.lead_provider).to eql(lead_provider)
     end
 
-    it "sets application type to 'Application accepted'" do
+    it "sets application type to 'ApplicationAcceptance'" do
       event = application_acceptance.create_event
 
-      expect(event.event_type).to eql("Application accepted")
+      expect(event.event_type).to eql("ApplicationAcceptance")
     end
   end
 

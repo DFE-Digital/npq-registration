@@ -44,7 +44,7 @@ module Events
   private
 
     def event_type
-      "Application accepted"
+      "ApplicationAcceptance"
     end
   end
 end

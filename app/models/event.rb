@@ -1,10 +1,12 @@
 class Event < ApplicationRecord
+  EVENT_TYPES = %w[ApplicationAcceptance].freeze
+
   validates :title,
             presence: { message: "Enter a title" },
             length: { maximum: 256, message: "Title must be shorter than 256 characters" }
 
   validates :event_type,
-            presence: { message: "Choose an event type" }
+            inclusion: { in: EVENT_TYPES, message: "Event type must be in the list of valid event types" }
 
   belongs_to :admin, optional: true
   belongs_to :application, optional: true

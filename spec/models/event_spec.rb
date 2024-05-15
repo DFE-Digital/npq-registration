@@ -8,7 +8,7 @@ RSpec.describe Event do
     end
 
     describe "event_type" do
-      it { is_expected.to validate_presence_of(:event_type).with_message("Choose an event type") }
+      it { is_expected.to validate_inclusion_of(:event_type).in_array(Event::EVENT_TYPES).with_message("Event type must be in the list of valid event types") }
     end
   end
 
