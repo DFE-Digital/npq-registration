@@ -3,7 +3,6 @@ module API
     class ApplicationsController < BaseController
       include Pagination
       include ::API::Concerns::FilterByUpdatedSince
-      include ::API::Concerns::FilterByCreatedSince
 
       def index
         render json: to_json(paginate(applications_query.applications))
@@ -19,7 +18,7 @@ module API
     private
 
       def applications_query
-        conditions = { lead_provider: current_lead_provider, cohort_start_years:, participant_ids:, updated_since:, created_since: }
+        conditions = { lead_provider: current_lead_provider, cohort_start_years:, participant_ids:, updated_since: }
 
         Applications::Query.new(**conditions.compact, sort: application_params[:sort])
       end
@@ -33,7 +32,7 @@ module API
       end
 
       def application_params
-        params.permit(:ecf_id, :sort, filter: %i[cohort updated_since participant_id created_since])
+        params.permit(:ecf_id, :sort, filter: %i[cohort updated_since participant_id])
       end
 
       def to_json(obj)

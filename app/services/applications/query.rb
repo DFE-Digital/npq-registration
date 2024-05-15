@@ -30,7 +30,6 @@ module Applications
       where_cohort_start_year_in(cohort_start_years)
       where_updated_since(updated_since)
       where_participant_ids_in(participant_ids)
-      where_created_since(created_since)
     end
 
     def applications
@@ -68,12 +67,6 @@ module Applications
       return if participant_ids == :ignore
 
       scope.merge!(Application.where(user: { ecf_id: extract_conditions(participant_ids) }))
-    end
-
-    def where_created_since(created_since)
-      return if created_since == :ignore
-
-      scope.merge!(Application.where(created_at: created_since..))
     end
 
     def order_by

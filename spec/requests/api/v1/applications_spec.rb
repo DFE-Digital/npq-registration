@@ -28,7 +28,6 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index endpoint with pagination"
     it_behaves_like "an API index endpoint with filter by cohort"
     it_behaves_like "an API index endpoint with filter by updated_since"
-    it_behaves_like "an API index endpoint with filter by created_since"
   end
 
   describe "GET /api/v1/npq-applications.csv" do
@@ -44,7 +43,6 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index Csv endpoint"
     it_behaves_like "an API index Csv endpoint with filter by cohort"
     it_behaves_like "an API index Csv endpoint with filter by updated_since"
-    it_behaves_like "an API index Csv endpoint with filter by created_since"
   end
 
   describe("accept") do
