@@ -1,9 +1,8 @@
-# Definitions and states
+# Data states
 
-## Key concepts
+## Concepts and definitions
 
 <table class="govuk-table">
-  <caption class="govuk-table__caption govuk-table__caption--m">Concepts and definitions</caption>
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">Concept</th>
@@ -44,9 +43,9 @@
 
 ## Application data states
 
-This API uses a ‘state’ model to reflect the NPQ participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
+This API uses a `state` model to reflect the NPQ participant journey, meet contractual requirements for how providers should report participants’ training and how DfE will pay for this training.
 
-Application states are defined by the <code>status</code> attribute. 
+Application states are defined by the `status` attribute. 
 
 A application’s status value will determine whether a provider can:
 
@@ -86,9 +85,9 @@ A application’s status value will determine whether a provider can:
 
 ## Participant data states
 
-Participant states are defined by the <code>training_status</code> attribute. 
+Participant states are defined by the `training_status` attribute. 
 
-A participant’s <code>training_status</code> value will determine whether a provider can:
+A participant’s `training_status` value will determine whether a provider can:
 
 * [update their details](ADD LINK). For example, notifying DfE that a participant has withdrawn from the course 
 
@@ -126,9 +125,9 @@ A participant’s <code>training_status</code> value will determine whether a pr
 
 ## Declaration data states
 
-Declaration states are defined by the <code>state</code> attribute. 
+Declaration states are defined by the `state` attribute. 
 
-Providers must [submit declarations](ADD LINK) to confirm a participant has engaged in training within a given milestone period. A declaration’s state value will reflect if and when DfE will pay providers for the training delivered.
+Providers must [submit declarations](ADD LINK) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
 
 <table class="govuk-table">
 <caption class="govuk-table__caption govuk-table__caption--m">Declaration status values</caption>
