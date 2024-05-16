@@ -50,22 +50,29 @@ RSpec.configure do |config|
           ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
+          IDAttribute: ID_ATTRIBUTE,
           ApplicationResponse: APPLICATION_RESPONSE[version],
           ApplicationsResponse: APPLICATIONS_RESPONSE[version],
           Application: APPLICATION[version],
-          IDAttribute: ID_ATTRIBUTE,
         },
       },
     }.tap do |h|
-      if version == :v3
-        h[:components][:schemas].merge!(
-          ListStatementsFilter: LIST_STATEMENTS_FILTER,
-          StatementResponse: STATEMENT_RESPONSE[version],
-          StatementsResponse: STATEMENTS_RESPONSE[version],
-          Statement: STATEMENT[version],
-          SortingOptions: SORTING_OPTIONS,
-        )
-      end
+      h[:components][:schemas].merge!(
+        if version == :v3
+          {
+            ListStatementsFilter: LIST_STATEMENTS_FILTER,
+            StatementResponse: STATEMENT_RESPONSE[version],
+            StatementsResponse: STATEMENTS_RESPONSE[version],
+            Statement: STATEMENT[version],
+            SortingOptions: SORTING_OPTIONS,
+          }
+        else
+          {
+            ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE,
+            ApplicationCsv: APPLICATION_CSV,
+          }
+        end,
+      )
     end
   end
 

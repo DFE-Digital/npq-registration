@@ -2,14 +2,12 @@ require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   describe "validations" do
-    let(:valid_course_identifier) do
-      Course.where(display: true).sample.identifier
-    end
+    let(:valid_course_identifier) { create(:course, :ehco).identifier }
 
     it { is_expected.to validate_presence_of(:course_identifier) }
 
     it "course for course_id must be available to applicant" do
-      subject.course_identifier = Course.find_by(display: false).identifier
+      subject.course_identifier = create(:course, :aso).identifier
       subject.valid?
       expect(subject.errors[:course_identifier]).to be_present
 
@@ -24,7 +22,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       described_class.new(course_identifier:)
     end
 
-    let(:course_identifier) { Course.where(display: true).first.identifier }
+    let(:course_identifier) { create(:course, :lbc).identifier }
 
     context "when changing answers" do
       before do
@@ -32,8 +30,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course_identifier) { "npq-headship" }
-        let(:course) { Course.find_by(identifier: course_identifier) }
+        let(:course) { create(:course, :ehco) }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
@@ -58,10 +55,9 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course_identifier) { "npq-leading-teaching" }
-        let(:course) { Course.find_by(identifier: course_identifier) }
+        let(:course) { create(:course, :lt) }
         let(:school) { create(:school) }
-        let(:previous_course) { Course.find_by(identifier: "npq-headship") }
+        let(:previous_course) { create(:course, :hs) }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do

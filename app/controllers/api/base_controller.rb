@@ -3,6 +3,7 @@ module API
     before_action :remove_charset
 
     include API::TokenAuthenticatable
+    include ActionController::MimeResponds
 
     rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
     rescue_from ActionController::BadRequest, with: :bad_request_response

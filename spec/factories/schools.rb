@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :school do
     sequence(:name) { |n| "school #{n}" }
-    sequence(:urn) { |n| (100_000 + n).to_s }
+    sequence(:urn) { rand(100_000..999_999).to_s }
+    sequence(:ukprn) { rand(10_000_000..99_999_999).to_s }
     establishment_status_code { %w[1 3 4].sample }
 
     trait :funding_eligible_establishment_type_code do

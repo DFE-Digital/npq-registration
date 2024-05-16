@@ -199,6 +199,10 @@ components:
           description: Resource not found
       example:
         error: Resource not found
+    IDAttribute:
+      description: The unique ID of the resource.
+      type: uuid
+      example: d0b4a32e-a272-489e-b30a-cb17131457fc
     ApplicationResponse:
       description: A single NPQ application
       type: object
@@ -446,10 +450,6 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
-    IDAttribute:
-      description: The unique ID of the resource.
-      type: uuid
-      example: d0b4a32e-a272-489e-b30a-cb17131457fc
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object

@@ -34,6 +34,14 @@ module Helpers
       parsed_response["data"].map { |data| data["id"] }
     end
 
+    def parsed_csv_response
+      CSV.parse(response.body)
+    end
+
+    def response_ids_from_csv
+      parsed_csv_response.transpose[0]&.drop(1)
+    end
+
     def lead_provider_token
       lead_provider = current_lead_provider if defined?(current_lead_provider)
       lead_provider ||= FactoryBot.create(:lead_provider)
