@@ -16,6 +16,7 @@ end
 Rails.logger.info("Seeding database")
 
 [
+  "add_cohorts.rb",
   "add_childcare_providers.rb",
   "add_schools.rb",
   "add_courses.rb",
@@ -24,7 +25,6 @@ Rails.logger.info("Seeding database")
   "add_users.rb",
   "add_applications.rb",
   "add_settings.rb",
-  "add_cohorts.rb",
   "add_statements.rb",
   "add_api_tokens.rb",
   "add_feature_flags.rb",
