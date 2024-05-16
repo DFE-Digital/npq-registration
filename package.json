@@ -14,7 +14,7 @@
     "rails-ujs": "^5.2.8",
     "serialize-javascript": "^6.0.2",
     "yarn": "^1.22.22",
-    "swagger-ui-dist": "^5.17.9"
+    "swagger-ui-dist": "^5.17.10"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5",
