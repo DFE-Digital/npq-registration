@@ -6,14 +6,11 @@ class User < ApplicationRecord
 
   validates :full_name, presence: { message: "Enter a full name" }
 
-  # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :email,
             presence: { message: "Enter an email address" },
             uniqueness: { message: "Email address must be unique" },
             notify_email: true,
             on: :npq_separation
-  # rubocop:enable Rails/UniqueValidationWithoutIndex
-
   validates :uid, uniqueness: { allow_blank: true }
   validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
 
