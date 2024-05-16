@@ -85,7 +85,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      page.choose("Best Practice Network (home of Outstanding Leaders Partnership)", visible: :all)
+      page.choose("Best Practice Network", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -99,7 +99,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
-          "Provider" => "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Provider" => "Best Practice Network",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
@@ -130,7 +130,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).not_to have_text("Best Practice Network (home of Outstanding Leaders Partnership)")
+      expect(page).not_to have_text("Best Practice Network")
       page.choose("Teacher Development Trust", visible: :all)
     end
 

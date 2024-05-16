@@ -99,7 +99,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
@@ -129,14 +129,14 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Best Practice Network",
             "Church of England",
             "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
@@ -166,14 +166,14 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Best Practice Network",
             "Church of England",
             "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
@@ -331,7 +331,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
@@ -347,14 +347,14 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Best Practice Network",
             "Church of England",
             "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
@@ -370,14 +370,14 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Best Practice Network",
             "Church of England",
             "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
-            "UCL Institute of Education",
+            "University College London (UCL) Institute of Education",
           ])
         end
 

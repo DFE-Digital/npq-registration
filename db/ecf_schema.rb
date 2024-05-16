@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_02_102913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -460,10 +460,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.string "mailer_name", null: false
     t.date "scheduled_at", null: false
     t.string "status", default: "queued", null: false
-    t.integer "actual_email_count"
-    t.integer "failed_email_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "emails_sent_count"
   end
 
   create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -743,6 +742,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.uuid "eligible_for_funding_updated_by_id"
     t.datetime "eligible_for_funding_updated_at"
+    t.boolean "funded_place"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
@@ -766,6 +766,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.boolean "special_course", default: false, null: false
+    t.integer "funding_cap"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end
@@ -895,6 +896,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.datetime "updated_at", null: false
     t.index ["participant_profile_id"], name: "index_participant_profile_schedules_on_participant_profile_id"
     t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
+  end
+
+  create_table "participant_profile_start_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.date "dqt_value"
+    t.date "participant_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_77e3f2fe02", unique: true
   end
 
   create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -1337,6 +1347,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
   add_foreign_key "participant_outcomes", "participant_declarations"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
+  add_foreign_key "participant_profile_start_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
