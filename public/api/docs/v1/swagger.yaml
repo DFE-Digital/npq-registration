@@ -177,6 +177,7 @@ components:
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
               - npq-leading-primary-mathematics
+              - npq-senco
             email:
               description: The email address registered for this NPQ participant
               type: string
