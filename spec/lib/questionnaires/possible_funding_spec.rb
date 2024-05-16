@@ -8,7 +8,7 @@ RSpec.describe Questionnaires::PossibleFunding do
   end
 
   describe "#course" do
-    let(:course) { create(:course, :eyl) }
+    let(:course) { Course.find_by!(identifier: "npq-early-years-leadership") }
     let(:store) { { "course_identifier" => course.identifier } }
     let(:request) { nil }
     let(:wizard) do

@@ -15,7 +15,7 @@ RSpec.describe NpqSeparation::Admin::CoursesController, type: :request do
   end
 
   describe "/npq_separation/admin/courses/{id}" do
-    let(:course_id) { create(:course).id }
+    let(:course_id) { Course.first.id }
 
     subject do
       get npq_separation_admin_course_path(course_id)

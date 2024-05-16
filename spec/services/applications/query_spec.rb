@@ -170,7 +170,7 @@ RSpec.describe Applications::Query do
     end
 
     describe "transient_previously_funded" do
-      let(:course) { create(:course, :sl) }
+      let(:course) { Course.find_by!(identifier: "npq-senior-leadership") }
       let!(:application) { create(:application, lead_provider:, course:) }
       let(:query_applications) { Applications::Query.new(lead_provider:).applications }
       let(:returned_application) { query_applications.find(application.id) }

@@ -113,12 +113,6 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
-  config.before(:suite) do
-    Course::IDENTIFIERS.each do |identifier|
-      FactoryBot.create(identifier)
-    end
-  end
-
   config.before do
     Flipper.enable(Feature::REGISTRATION_OPEN)
   end
