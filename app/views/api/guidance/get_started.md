@@ -12,13 +12,20 @@ Emails us [INSERT EMAIL LINK]if you do not already have this token. We'll send i
 
 The tokens do not expire. 
 
-[WARNING TEXT] Providers must not share tokens in publicly accessible documents or repositories. 
+<div class="govuk-warning-text">
+  <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+  <strong class="govuk-warning-text__text">
+    <span class="govuk-visually-hidden">Warning</span>
+    Don't share tokens in publicly accessible documents or repositories.
+  </strong>
+</div>
 
 ### How to use an authentication token 
 
 Include an authentication token in all requests to the API by adding an `Authorization` request header (not as part of the URL) in the following format: 
 
-[HIGHLIGHT] <code>Authorization: Bearer {token} </code>
+<pre class="highlight plaintext" tabindex="0"><code>Authorization: Bearer {token}
+</code></pre>
 
 Unauthenticated requests will receive an <code>UnauthorizedResponse</code> with a <code>401</code> error code.
 
@@ -44,6 +51,6 @@ Do not perform testing in the production environment. Real participant and payme
 
 ### Rate limits
 
-Providers are limited to 1,000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see <code>429</code> HTTP status codes. 
+Providers are limited to 1,000 requests per 5 minutes when using the API in the production environment. If the limit is exceeded, providers will see `429` HTTP status codes. 
  
 This limit on requests for each authentication key is calculated on a rolling basis. 
