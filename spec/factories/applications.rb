@@ -5,7 +5,7 @@ FactoryBot.define do
     application_for_school
 
     user
-    course { Course.all.sample }
+    course
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
     ecf_id { SecureRandom.uuid }
@@ -55,6 +55,7 @@ FactoryBot.define do
     trait :previously_funded do
       after(:create) do |application|
         course = application.course.rebranded_alternative_courses.sample
+
         create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
       end
     end

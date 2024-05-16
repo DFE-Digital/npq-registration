@@ -8,7 +8,7 @@ RSpec.describe Questionnaires::PossibleFunding do
   end
 
   describe "#course" do
-    let(:course) { Course.all.sample }
+    let(:course) { create(:course, :eyl) }
     let(:store) { { "course_identifier" => course.identifier } }
     let(:request) { nil }
     let(:wizard) do

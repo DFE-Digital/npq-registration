@@ -9,6 +9,8 @@ RSpec.describe RegistrationWizard do
   let(:user) { create(:user) }
   let(:current_step) { "share_provider" }
 
+  before { create(:course, :aso) }
+
   describe "#current_step" do
     it "returns current step" do
       expect(subject.current_step).to be(:share_provider)
@@ -35,52 +37,6 @@ RSpec.describe RegistrationWizard do
         response: ecf_funding_lookup_response(previously_funded: false),
       )
     end
-
-    # context "when ASO is selected course and is eligible for funding" do
-    #   let(:store) do
-    #     {
-    #       "date_of_birth" => 30.years.ago,
-    #       "works_in_school" => "yes",
-    #       "institution_identifier" => "School-#{school.urn}",
-    #       "teacher_catchment" => "england",
-    #       "course_identifier" => "npq-additional-support-offer",
-    #       "lead_provider_id" => LeadProvider.all.sample.id,
-    #       "funding_choice" => "school",
-    #       "ehco_headteacher" => "yes",
-    #       "ehco_new_headteacher" => "yes",
-    #       "ehco_funding" => "yes",
-    #       "ehco_funding_choice" => "another",
-    #       "trn" => "123456",
-    #     }
-    #   end
-
-    #   it "does not show Course funding" do
-    #     expect(subject.answers.map(&:key)).not_to include("Course funding")
-    #   end
-
-    #   it "does not show ASO funding option" do
-    #     expect(subject.answers.map(&:key)).not_to include("How is the Additional Support Offer being paid for?")
-    #   end
-    # end
-
-    # context "when ASO and not eligible for funding" do
-    #   let(:store) do
-    #     {
-    #       "date_of_birth" => 30.years.ago,
-    #       "works_in_school" => "yes",
-    #       "institution_identifier" => "School-#{school.urn}",
-    #       "course_identifier" => "npq-additional-support-offer",
-    #       "lead_provider_id" => LeadProvider.all.sample.id,
-    #       "ehco_funding" => "yes",
-    #       "ehco_funding_choice" => "another",
-    #       "trn" => "123456",
-    #     }
-    #   end
-
-    #   it "shows ASO funding option" do
-    #     expect(subject.answers.find { |el| el.key == "How is the Additional Support Offer being paid for?" }.value).to eql("The Early headship coaching offer is being paid in another way")
-    #   end
-    # end
 
     context "when working in Local authority maintained nursery" do
       let(:store) do

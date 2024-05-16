@@ -1,6 +1,21 @@
 class Course < ApplicationRecord
   validates :name, presence: true
 
+  IDENTIFIERS = %w[
+    npq-senior-leadership
+    npq-headship
+    npq-executive-leadership
+    npq-early-years-leadership
+    npq-leading-teaching
+    npq-leading-behaviour-culture
+    npq-leading-teaching-development
+    npq-leading-literacy
+    npq-leading-primary-mathematics
+    npq-additional-support-offer
+    npq-early-headship-coaching-offer
+    npq-senco
+  ].freeze
+
   class << self
     def npqeyl
       find_by(identifier: NPQ_EARLY_YEARS_LEADERSHIP)
@@ -21,10 +36,6 @@ class Course < ApplicationRecord
 
   def npqh?
     identifier == NPQ_HEADSHIP
-  end
-
-  def npqsl?
-    identifier == NPQ_SENIOR_LEADERSHIP
   end
 
   def ehco?
@@ -63,7 +74,6 @@ class Course < ApplicationRecord
   end
 
   NPQ_HEADSHIP = "npq-headship".freeze
-  NPQ_SENIOR_LEADERSHIP = "npq-senior-leadership".freeze
   NPQ_EARLY_HEADSHIP_COACHING_OFFER = "npq-early-headship-coaching-offer".freeze
   NPQ_EARLY_YEARS_LEADERSHIP = "npq-early-years-leadership".freeze
   NPQ_LEADING_TEACHING_DEVELOPMENT = "npq-leading-teaching-development".freeze

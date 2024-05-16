@@ -33,7 +33,7 @@ RSpec.describe Ecf::NpqProfileUpdater do
           },
         )
   end
-  let(:course) { Course.create!(name: "Some course", ecf_id: "d182edb5-2f5a-4ad3-a897-8cce0650ae93") }
+  let(:course) { create(:course, name: "Some course", ecf_id: "d182edb5-2f5a-4ad3-a897-8cce0650ae93") }
   let(:lead_provider) { LeadProvider.create!(name: "Some lead provider", ecf_id: "73ab3215-0403-4de1-a537-066dae9ded60") }
   let(:school) { create(:school) }
 

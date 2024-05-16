@@ -8,7 +8,7 @@ RSpec.describe LeadProvider do
   describe "#for" do
     subject { described_class.for(course:).map(&:name) }
 
-    let(:course) { Course.find_by!(identifier: course_identifier) }
+    let(:course) { create(:course, identifier: course_identifier) }
 
     before { LeadProviders::Updater.call }
 

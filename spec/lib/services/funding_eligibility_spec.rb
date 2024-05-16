@@ -11,7 +11,7 @@ RSpec.describe FundingEligibility do
                         lead_mentor:)
   end
 
-  let(:course) { Course.all.find { |c| !c.ehco? } }
+  let(:course) { create(:course, :aso) }
   let(:inside_catchment) { true }
   let(:trn) { "1234567" }
   let(:get_an_identity_id) { SecureRandom.uuid }
@@ -69,7 +69,7 @@ RSpec.describe FundingEligibility do
             let(:eyl_funding_eligible) { true }
 
             context "when user has selected the NPQEYL course" do
-              let(:course) { Course.all.find(&:eyl?) }
+              let(:course) { create(:course, :eyl) }
 
               it "returns true" do
                 expect(subject).to be_funded
@@ -77,7 +77,7 @@ RSpec.describe FundingEligibility do
             end
 
             context "when user has not selected the NPQEYL course" do
-              let(:course) { Course.all.find(&:npqsl?) }
+              let(:course) { create(:course, :sl) }
 
               it "returns true" do
                 expect(subject).to be_funded
@@ -96,41 +96,11 @@ RSpec.describe FundingEligibility do
             expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
           end
 
-          # context "when undertaking ASO" do
-          #   let(:course) { Course.all.find(&:aso?) }
-
-          #   context "new headteacher" do
-          #     subject do
-          #       described_class.new(
-          #         institution:,
-          #         course:,
-          #         inside_catchment:,
-          #         new_headteacher: true,
-          #         get_an_identity_id:,
-          #         trn:,
-          #         approved_itt_provider:,
-          #         lead_mentor:,
-          #       )
-          #     end
-
-          #     it "returns false" do
-          #       expect(subject).not_to be_funded
-          #       expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
-          #     end
-          #   end
-
-          #   context "not a new headteacher" do
-          #     it "returns false" do
-          #       expect(subject).not_to be_funded
-          #       expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
-          #     end
-          #   end
-
           context "when school offering funding for the NPQEYL course" do
             let(:eyl_funding_eligible) { true }
 
             context "when user has selected the NPQEYL course" do
-              let(:course) { Course.all.find(&:eyl?) }
+              let(:course) { create(:course, :eyl) }
 
               it "returns true" do
                 expect(subject).to be_funded
@@ -138,7 +108,7 @@ RSpec.describe FundingEligibility do
             end
 
             context "when user has not selected the NPQEYL course" do
-              let(:course) { Course.all.find(&:npqsl?) }
+              let(:course) { create(:course, :aso) }
 
               it "returns false" do
                 expect(subject).not_to be_funded
@@ -155,7 +125,7 @@ RSpec.describe FundingEligibility do
       let(:lead_mentor) { true }
 
       context "and the course is NPQLTD" do
-        let(:course) { Course.all.find(&:npqltd?) }
+        let(:course) { create(:course, :ltd) }
 
         it "is eligible" do
           expect(subject).to be_funded
@@ -196,7 +166,7 @@ RSpec.describe FundingEligibility do
     context "when institution is a PrivateChildcareProvider" do
       context "when meets all the funding criteria" do
         let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
-        let(:course) { Course.all.find(&:eyl?) }
+        let(:course) { create(:course, :eyl) }
         let(:inside_catchment) { true }
 
         it "is eligible" do
@@ -207,7 +177,7 @@ RSpec.describe FundingEligibility do
 
       context "when does not meets all the funding criteria" do
         let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
-        let(:course) { Course.all.find(&:eyl?) }
+        let(:course) { create(:course, :eyl) }
         let(:inside_catchment) { true }
 
         context "when previously funded" do
@@ -232,7 +202,7 @@ RSpec.describe FundingEligibility do
         end
 
         context "when NPQ course is not Early Year Leadership" do
-          let(:course) { Course.all.find { |c| !c.eyl? } }
+          let(:course) { create(:course, :aso) }
 
           it "returns status code :early_years_invalid_npq" do
             expect(subject.funding_eligiblity_status_code).to eq :early_years_invalid_npq
