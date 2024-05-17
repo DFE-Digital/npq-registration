@@ -27,4 +27,22 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
                   "#/components/schemas/ApplicationResponse" do
     let(:resource) { application }
   end
+
+  it_behaves_like "an API accept application endpoint documentation",
+                  "api/v2/npq-applications/{id}/accept",
+                  "#/components/schemas/ApplicationResponse" do
+    let(:resource) { application }
+  end
+
+  it_behaves_like "an API reject application endpoint documentation",
+                  "api/v2/npq-applications/{id}/reject",
+                  "#/components/schemas/ApplicationResponse" do
+    let(:resource) { application }
+  end
+
+  it_behaves_like "an API change application funded place endpoint documentation",
+                  "api/v2/npq-applications/{id}/change-funded-place",
+                  "#/components/schemas/ApplicationResponse" do
+    let(:resource) { application }
+  end
 end
