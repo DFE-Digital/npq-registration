@@ -27,32 +27,28 @@ RSpec.describe Applications::ChangeFundedPlace do
     let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
     context "when application funded_place is false" do
-      before { params.merge!(funded_place: true) }
+      before do
+        params.merge!(funded_place: true)
+        application.update!(funded_place: false)
+      end
 
       it "sets the funded place to true" do
-        application.update!(funded_place: false)
-        service.change
-
-        expect(application.reload.funded_place).to be_truthy
+        expect { service.change }.to change { application.reload.funded_place }.to(true)
       end
     end
 
     context "when application funded_place is true" do
-      before { params.merge!(funded_place: false) }
+      before do
+        params.merge!(funded_place: false)
+        application.update!(funded_place: true)
+      end
 
       it "sets the funded place to false" do
-        application.update!(funded_place: true)
-        service.change
-
-        expect(application.reload.funded_place).to be_falsey
+        expect { service.change }.to change { application.reload.funded_place }.to(false)
       end
     end
 
     describe "validations" do
-      before do
-        params.merge!(funded_place: true)
-      end
-
       context "when funded_place is present" do
         before { params.merge!(funded_place: true) }
 
@@ -60,14 +56,14 @@ RSpec.describe Applications::ChangeFundedPlace do
           application.update!(lead_provider_approval_status: "pending")
 
           service.change
-          expect(service.errors.messages_for(:application)).to include("The application is not accepted (pending)")
+          expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
         end
 
         it "is invalid if the application is not eligible for funding" do
           application.update!(eligible_for_funding: false)
 
           service.change
-          expect(service.errors.messages_for(:application)).to include("The application is not eligible for funding (pending)")
+          expect(service.errors.messages_for(:application)).to include("This participant is not eligible for funding. Contact us if you think this is wrong.")
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to true" do
@@ -93,7 +89,7 @@ RSpec.describe Applications::ChangeFundedPlace do
 
             service.change
 
-            expect(service.errors.messages_for(:application)).to include("The application is not accepted (pending)")
+            expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
           end
         end
       end
@@ -104,7 +100,7 @@ RSpec.describe Applications::ChangeFundedPlace do
         it "is invalid if funded_place is `nil`" do
           service.change
 
-          expect(service.errors.messages_for(:application)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+          expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
         end
       end
     end

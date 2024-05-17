@@ -67,7 +67,7 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API reject application endpoint"
   end
 
-  describe("change-funded-place") do
+  describe "PUT /api/v2/npq-applications/:ecf_id/change-funded-place" do
     let(:application) { create(:application, :eligible_for_funded_place, lead_provider: current_lead_provider) }
     let(:application_id) { application.ecf_id }
 

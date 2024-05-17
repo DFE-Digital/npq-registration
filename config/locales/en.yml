@@ -21,8 +21,8 @@ en:
     cannot_change_from_rejected: Once rejected an application cannot change state
     not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
     funded_place_required: "Set '#/funded_place' to true or false."
-    cannot_change_funded_status_from_non_accepted: The application is not accepted (pending)
-    cannot_change_funded_status_non_eligible: The application is not eligible for funding (pending)
+    cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting.
+    cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "The cohort does not accept funded places (pending)"
 
