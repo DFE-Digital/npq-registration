@@ -2,7 +2,7 @@
 
 RSpec.shared_examples "an API change application funded place endpoint" do
   context "when authorized" do
-    let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: true } } } }
+    let(:params) { { data: { type: "npq-application-change-funded-place", attributes: { funded_place: true } } } }
 
     it "updates funded place" do
       expect { api_put(path(application_id), params:) }
@@ -17,7 +17,7 @@ RSpec.shared_examples "an API change application funded place endpoint" do
     end
 
     context "when funded_place is nil in the params" do
-      let(:params) { { data: { type: "npq-application-accept", attributes: { funded_place: nil } } } }
+      let(:params) { { data: { type: "npq-application-change-funded-place", attributes: { funded_place: nil } } } }
 
       it "return 422" do
         api_put(path(application_id), params:)
@@ -51,57 +51,36 @@ RSpec.shared_examples "an API change application funded place endpoint" do
     end
 
     context "when application is not accepted" do
-      before do
-        application.update!(lead_provider_approval_status: :pending)
-      end
+      before { allow_any_instance_of(Application).to receive(:accepted?).and_return(false) }
 
-      it "return 422" do
+      it "returns 422 & error in response" do
         api_put(path(application_id), params:)
 
         expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "returns error in response" do
-        api_put(path(application_id), params:)
-
         expect(parsed_response).to be_key("errors")
-        expect(parsed_response.dig("errors", 0, "detail")).to eql("The application is not accepted (pending)")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("You must accept the application before attempting to change the '#/funded_place' setting.")
       end
     end
 
     context "when application is not eligible for funding" do
-      before do
-        application.update!(eligible_for_funding: false)
-      end
+      before { allow_any_instance_of(Application).to receive(:eligible_for_funding?).and_return(false) }
 
-      it "return 422" do
+      it "returns 422 & error in response" do
         api_put(path(application_id), params:)
 
         expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "returns error in response" do
-        api_put(path(application_id), params:)
-
         expect(parsed_response).to be_key("errors")
-        expect(parsed_response.dig("errors", 0, "detail")).to eql("The application is not eligible for funding (pending)")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("This participant is not eligible for funding. Contact us if you think this is wrong.")
       end
     end
 
     context "when application cohort does not accept capping" do
-      before do
-        application.cohort.update!(funding_cap: false)
-      end
+      before { allow_any_instance_of(Cohort).to receive(:funding_cap?).and_return(false) }
 
-      it "return 422" do
+      it "returns 422 & error in response" do
         api_put(path(application_id), params:)
 
         expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "returns error in response" do
-        api_put(path(application_id), params:)
-
         expect(parsed_response).to be_key("errors")
         expect(parsed_response.dig("errors", 0, "detail")).to eql("The cohort does not accept funded places (pending)")
       end
