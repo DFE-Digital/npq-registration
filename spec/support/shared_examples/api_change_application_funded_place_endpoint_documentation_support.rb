@@ -1,7 +1,7 @@
-RSpec.shared_examples "an API accept application endpoint documentation" do |url, response_schema_ref|
+RSpec.shared_examples "an API change application funded place endpoint documentation" do |url, response_schema_ref|
   path url do
-    post "Accept an NPQ application" do
-      operationId :npq_applications_accept
+    put "Change funded place value of an NPQ application" do
+      operationId :npq_applications_change_funded_place
       tags "NPQ Applications"
       consumes "application/json"
       produces "application/json"
@@ -10,7 +10,7 @@ RSpec.shared_examples "an API accept application endpoint documentation" do |url
       parameter name: :id,
                 in: :path,
                 required: true,
-                description: "The ID of the NPQ application to accept.",
+                description: "The ID of the NPQ application to change the funded place value.",
                 schema: {
                   "$ref": "#/components/schemas/IDAttribute",
                 }
@@ -20,7 +20,7 @@ RSpec.shared_examples "an API accept application endpoint documentation" do |url
                 style: :deepObject,
                 required: false,
                 schema: {
-                  "$ref": "#/components/schemas/ApplicationAcceptRequest",
+                  "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest",
                 }
 
       response "200", "The NPQ application being accepted" do
@@ -29,7 +29,7 @@ RSpec.shared_examples "an API accept application endpoint documentation" do |url
         let(:params) do
           {
             "data": {
-              "type": "npq-application-accept",
+              "type": "npq-application-change-funded-place",
               "attributes": {
                 funded_place: true,
               },

@@ -54,6 +54,12 @@ RSpec.configure do |config|
           ApplicationResponse: APPLICATION_RESPONSE[version],
           ApplicationsResponse: APPLICATIONS_RESPONSE[version],
           Application: APPLICATION[version],
+          ApplicationAcceptRequest: APPLICATION_ACCEPT_REQUEST,
+          ApplicationAcceptDataRequest: APPLICATION_ACCEPT_DATA_REQUEST,
+          ApplicationAcceptAttributesRequest: APPLICATION_ACCEPT_ATTRIBUTES_REQUEST,
+          ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
+          ApplicationChangeFundedPlaceDataRequest: APPLICATION_CHANGE_FUNDED_PLACE_DATA_REQUEST,
+          ApplicationChangeFundedPlaceAttributesRequest: APPLICATION_CHANGE_FUNDED_PLACE_ATTRIBUTES_REQUEST,
         },
       },
     }.tap do |h|

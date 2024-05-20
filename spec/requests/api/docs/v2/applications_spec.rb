@@ -43,6 +43,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
   it_behaves_like "an API change application funded place endpoint documentation",
                   "api/v2/npq-applications/{id}/change-funded-place",
                   "#/components/schemas/ApplicationResponse" do
+    let(:application) { create(:application, :eligible_for_funded_place, lead_provider:) }
     let(:resource) { application }
   end
 end
