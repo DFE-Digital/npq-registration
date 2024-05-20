@@ -23,7 +23,7 @@ RSpec.shared_examples "an API change application funded place endpoint documenta
                   "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest",
                 }
 
-      response "200", "The NPQ application being accepted" do
+      response "200", "The NPQ application after changing the funded place" do
         let(:id) { resource.ecf_id }
 
         let(:params) do
