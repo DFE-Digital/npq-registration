@@ -246,4 +246,6 @@ Rails.application.routes.draw do
   authenticated :user, ->(user) { user.super_admin? } do
     mount DelayedJobWeb, at: "/delayed_job"
   end
+
+  get "/development_login", to: "registration_wizard#development_login"
 end

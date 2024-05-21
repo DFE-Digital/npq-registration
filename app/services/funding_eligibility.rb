@@ -4,6 +4,7 @@ class FundingEligibility
 
   NO_INSTITUTION = :no_institution
   INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
+  INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
   PREVIOUSLY_FUNDED = :previously_funded
 
@@ -32,6 +33,7 @@ class FundingEligibility
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
     INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.no_Ofsted",
+    INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
   }.freeze
 
   attr_reader :institution,
@@ -83,6 +85,7 @@ class FundingEligibility
       case institution.class.name
       when "School"
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
+        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 unless institution.pp50_institution?
         unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
           return INELIGIBLE_ESTABLISHMENT_TYPE
         end
