@@ -70,7 +70,7 @@ RSpec.describe Applications::ChangeFundedPlace do
           cohort.update!(funding_cap: false)
 
           service.change
-          expect(service.errors.messages_for(:application)).to include("The cohort does not accept funded places (pending)")
+          expect(service.errors.messages_for(:application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to false" do
@@ -78,7 +78,7 @@ RSpec.describe Applications::ChangeFundedPlace do
           cohort.update!(funding_cap: false)
 
           service.change
-          expect(service.errors.messages_for(:application)).to include("The cohort does not accept funded places (pending)")
+          expect(service.errors.messages_for(:application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
         end
 
         context "when the application is not accepted" do

@@ -82,7 +82,7 @@ RSpec.shared_examples "an API change application funded place endpoint" do
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(parsed_response).to be_key("errors")
-        expect(parsed_response.dig("errors", 0, "detail")).to eql("The cohort does not accept funded places (pending)")
+        expect(parsed_response.dig("errors", 0, "detail")).to eql("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
       end
     end
 

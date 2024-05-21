@@ -564,13 +564,12 @@ components:
             attributes:
               description: A NPQ application acceptance request attributes
               type: object
-              required:
-              - funded_place
               properties:
                 funded_place:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
+                  required: false
                   example: true
     ApplicationChangeFundedPlaceRequest:
       description: A NPQ application change funded place request
@@ -599,6 +598,7 @@ components:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
+                  required: true
                   example: true
     ListStatementsFilter:
       description: Filter statements to return more specific results

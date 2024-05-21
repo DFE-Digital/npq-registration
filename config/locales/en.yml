@@ -24,7 +24,7 @@ en:
     cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting.
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
-    cohort_does_not_accept_capping: "The cohort does not accept funded places (pending)"
+    cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
 
   time:
     formats:
