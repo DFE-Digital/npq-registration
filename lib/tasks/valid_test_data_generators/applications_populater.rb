@@ -1,40 +1,42 @@
 # frozen_string_literal: true
 
-require "tasks/school_urn_generator"
-require "tasks/trn_generator"
-require "active_support/testing/time_helpers"
+require "tasks/valid_test_data_generators/school_urn_generator"
+require "tasks/valid_test_data_generators/trn_generator"
 
-module ValidTestDataGenerator
-  class LeadProviderPopulater
+module ValidTestDataGenerators
+  class ApplicationsPopulater
     class << self
-      def call(name:, total_schools: 10, participants_per_school: 50)
-        new(name:, participants_per_school:).call(total_schools:)
+      def populate(lead_provider:, cohort:, total_schools: 10, participants_per_school: 50)
+        new(lead_provider:, cohort:, participants_per_school:).populate(total_schools:)
       end
     end
 
-    def call(total_schools: 10)
+    def populate(total_schools: 10)
       return unless Rails.env.in?(%w[development separation])
 
-      generate_new_schools(count: total_schools)
-      generate_new_statements
+      logger.info "ApplicationsPopulater: Started!"
+
+      ActiveRecord::Base.transaction do
+        generate_new_schools!(count: total_schools)
+      end
+
+      logger.info "ApplicationsPopulater: Finished!"
     end
 
   private
 
-    attr_reader :lead_provider, :participants_per_school, :courses
+    attr_reader :lead_provider, :cohort, :participants_per_school, :courses, :logger
 
-    def initialize(name:, participants_per_school:)
-      @lead_provider = LeadProvider.find_or_create_by!(name:)
+    def initialize(lead_provider:, cohort:, participants_per_school:, logger: Rails.logger)
+      @lead_provider = lead_provider
+      @cohort = cohort
       @participants_per_school = participants_per_school
+      @logger = logger
       @courses = Course.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }
     end
 
-    def generate_new_schools(count:)
+    def generate_new_schools!(count:)
       count.times { create_school_with(urn: SchoolURNGenerator.next) }
-    end
-
-    def generate_new_statements
-      Importers::CreateStatement.new(path_to_csv: Rails.root.join("config/data/statements.csv")).call
     end
 
     def find_or_create_participants(school:, number_of_participants:)
@@ -64,12 +66,12 @@ module ValidTestDataGenerator
       )
 
       application = Application.create!(
-        eligible_for_funding: true,
+        eligible_for_funding: [true, false].sample,
         lead_provider_approval_status: "pending",
         school:,
         lead_provider:,
         user:,
-        cohort: Cohort.find_by!(start_year: 2022),
+        cohort:,
         course:,
         ecf_id: SecureRandom.uuid,
         works_in_school: true,
@@ -83,23 +85,21 @@ module ValidTestDataGenerator
         lead_mentor: [true, false].sample,
       )
 
-      return if [true, false].sample
-
-      accept_application(application)
+      methods = %i[accept_application reject_application]
 
       return if [true, false].sample
 
-      reject_application(application)
+      send(methods.sample, application)
 
       return if [true, false].sample
 
       application = Application.create!(
-        eligible_for_funding: true,
+        eligible_for_funding: [true, false].sample,
         lead_provider_approval_status: "pending",
         school:,
         lead_provider:,
         user:,
-        cohort: Cohort.find_by!(start_year: 2022),
+        cohort:,
         course: courses.reject { |c| c.identifier == course.identifier }.sample,
         ecf_id: SecureRandom.uuid,
         works_in_school: true,
@@ -115,11 +115,7 @@ module ValidTestDataGenerator
 
       return if [true, false].sample
 
-      accept_application(application)
-
-      return if [true, false].sample
-
-      reject_application(application)
+      send(methods.sample, application)
     end
 
     def accept_application(application)
