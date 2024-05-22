@@ -16,7 +16,7 @@ FactoryBot.define do
     teacher_catchment_iso_country_code { "GBR" }
     itt_provider
     funding_choice { Application.funding_choices.keys.sample }
-    lead_mentor { true }
+    lead_mentor { Faker::Boolean.boolean }
 
     trait :application_for_school do
       school { build(:school) }

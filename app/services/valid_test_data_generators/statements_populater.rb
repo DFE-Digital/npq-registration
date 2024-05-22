@@ -53,18 +53,17 @@ module ValidTestDataGenerators
 
         state = state_for(payment_date, deadline_date)
 
-        Statement.create!(
-          month:,
-          year:,
-          lead_provider:,
-          deadline_date:,
-          payment_date:,
-          cohort:,
-          output_fee: [true, false].sample,
-          state:,
-          marked_as_paid_at: state == :paid ? payment_date : nil,
-          ecf_id: SecureRandom.uuid,
-        )
+        FactoryBot.create(:statement,
+                          month:,
+                          year:,
+                          lead_provider:,
+                          deadline_date:,
+                          payment_date:,
+                          cohort:,
+                          output_fee: [true, false].sample,
+                          state:,
+                          marked_as_paid_at: state == :paid ? payment_date : nil,
+                          ecf_id: SecureRandom.uuid)
 
         logger.info "StatementsPopulater: Statement #{month}/#{year} successfully created!"
       end
