@@ -12,7 +12,14 @@ RSpec.describe Courses::Query do
     it "orders courses by name in ascending order" do
       query = Courses::Query.new
       course_names = query.courses.map(&:name)
-      expect(course_names).to eq(course_names.sort)
+
+      # Postgres orders alphabetically regardless of case but
+      # Ruby orders by the hex value meaning lowercase entries
+      # come last, so we fix the case before sorting. This is
+      # triggered by 'NPQ for Senco 1'
+      sorted_course_names = course_names.sort_by(&:downcase)
+
+      expect(course_names).to eq(sorted_course_names)
     end
   end
 
