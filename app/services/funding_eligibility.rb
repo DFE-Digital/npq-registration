@@ -85,7 +85,7 @@ class FundingEligibility
       case institution.class.name
       when "School"
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 unless institution.pp50_institution?
+        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?
         unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
           return INELIGIBLE_ESTABLISHMENT_TYPE
         end
