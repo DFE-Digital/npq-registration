@@ -18,11 +18,13 @@ class FundingEligibility
   EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
+  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
 
   # Lead Mentor
   NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
 
   NOT_IN_ENGLAND = :not_in_england
+
 
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
@@ -84,11 +86,13 @@ class FundingEligibility
 
       case institution.class.name
       when "School"
+        return NOT_ENTITLED_EY_INSTITUTION if (course.eyl? && !institution.ey_eligible?) # TODO: and its not a childminder
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?
-        unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
-          return INELIGIBLE_ESTABLISHMENT_TYPE
-        end
+        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !(course.eyl?)
+        # TODO
+        # unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
+        #   return INELIGIBLE_ESTABLISHMENT_TYPE
+        # end
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT

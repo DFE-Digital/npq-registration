@@ -63,11 +63,15 @@ class School < ApplicationRecord
   end
 
   def eligible_establishment?
-    eligible_establishment_type_codes.include?(establishment_type_code) && pp50_institution?
+    eligible_establishment_type_codes.include?(establishment_type_code)
   end
 
   def pp50_institution?
-    !!PP50_SCHOOLS_HASH[urn.to_s]
+    !!PP50_SCHOOLS_URN_HASH[urn.to_s] || !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+  end
+
+  def ey_eligible?
+    !!EY_FUNDED_URN_HASH[urn.to_s]
   end
 
 private

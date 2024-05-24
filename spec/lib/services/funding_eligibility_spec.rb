@@ -50,6 +50,7 @@ RSpec.describe FundingEligibility do
       %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
         context "eligible establishment_type_code #{eligible_gias_code}" do
           let(:institution) { build(:school, establishment_type_code: eligible_gias_code, eyl_funding_eligible:) }
+          let(:course) { create(:course, :hs) }
 
           it "returns true" do
             expect(subject).to be_funded
@@ -77,7 +78,7 @@ RSpec.describe FundingEligibility do
             end
 
             context "when user has not selected the NPQEYL course" do
-              let(:course) { create(:course, :sl) }
+              let(:course) { create(:course, :hs) }
 
               it "returns true" do
                 expect(subject).to be_funded

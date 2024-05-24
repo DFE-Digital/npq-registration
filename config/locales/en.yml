@@ -461,6 +461,7 @@ en:
           local_authority_maintained_nursery: "Local authority-maintained nursery"
           preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
           private_nursery: "Private nursery"
+          childminder: "As a childminder"
           another_early_years_setting: "Another early years setting"
 
         employment_type_options:
