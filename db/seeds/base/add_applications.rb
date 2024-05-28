@@ -10,6 +10,7 @@ LeadProvider.find_each do |lead_provider|
       10,
       :with_random_user,
       :with_random_work_setting,
+      :with_participant_id_change,
       lead_provider:,
       course: Course.all.sample,
       lead_provider_approval_status: "pending",

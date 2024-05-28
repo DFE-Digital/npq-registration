@@ -81,5 +81,13 @@ FactoryBot.define do
     trait :with_random_user do
       user { FactoryBot.build(:user, :with_random_name) }
     end
+
+    trait :with_participant_id_change do
+      after(:create) do |application|
+        user = application.user
+
+        FactoryBot.create(:participant_id_change, from_participant: user, user:)
+      end
+    end
   end
 end

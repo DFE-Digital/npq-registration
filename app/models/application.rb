@@ -18,6 +18,7 @@ class Application < ApplicationRecord
   belongs_to :cohort, optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
+  has_many :participant_id_changes, through: :user
 
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :expired_applications, -> { where(lead_provider_approval_status: "rejected").where("created_at < ?", cut_off_date_for_expired_applications) }

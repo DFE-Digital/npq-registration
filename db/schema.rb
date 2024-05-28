@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_17_110612) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_28_103508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -227,6 +227,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_110612) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "participant_id_changes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "from_participant_id", null: false
+    t.bigint "to_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
+    t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
+    t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
   create_table "private_childcare_providers", force: :cascade do |t|
     t.text "provider_urn", null: false
     t.text "provider_name"
@@ -390,6 +401,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_17_110612) do
   add_foreign_key "applications", "private_childcare_providers"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "participant_id_changes", "users"
+  add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
+  add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

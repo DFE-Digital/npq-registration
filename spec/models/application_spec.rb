@@ -10,6 +10,7 @@ RSpec.describe Application do
     it { is_expected.to belong_to(:itt_provider).optional }
     it { is_expected.to belong_to(:cohort).optional }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
+    it { is_expected.to have_many(:participant_id_changes).through(:user) }
   end
 
   describe "enums" do
@@ -132,7 +133,7 @@ RSpec.describe Application do
     end
   end
 
-  describe "versioning" do
+  describe "versioning", versioning: true do
     context "when changing versioned fields" do
       let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
 
