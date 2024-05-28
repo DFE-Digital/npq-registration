@@ -41,6 +41,7 @@ class FundingEligibility
               :lead_mentor,
               :employment_role,
               :get_an_identity_id,
+              :query_store,
               :lead_mentor_for_accredited_itt_provider
 
   def initialize(institution:,
@@ -52,7 +53,8 @@ class FundingEligibility
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,
-                 employment_role: nil)
+                 employment_role: nil,
+                 query_store: nil)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
@@ -62,6 +64,7 @@ class FundingEligibility
     @get_an_identity_id = get_an_identity_id
     @trn = trn
     @employment_role = employment_role
+    @query_store = query_store
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
   end
 
@@ -71,7 +74,7 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!course.npqlpm? || (course.npqlpm? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
+      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor && lead_mentor_for_accredited_itt_provider && inside_catchment?))
         return lead_mentor_eligibility_status
       end
 
@@ -150,6 +153,10 @@ private
 
   def lead_mentor_course?
     course.npqltd?
+  end
+
+  def npqlpm_or_senco?
+    course.npqlpm? || course.npqs?
   end
 
   def eligible_urns

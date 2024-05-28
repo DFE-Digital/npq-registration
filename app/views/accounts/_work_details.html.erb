@@ -98,7 +98,7 @@
         </div>
       <% end %>
 
-      <% if application.course.senco? %>
+      <% if application.course.npqs? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key"><%= I18n.t("npq-senco", scope: "course.name") %></dt>
           <% if application.raw_application_data["senco_in_role_status"] %>

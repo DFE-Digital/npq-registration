@@ -176,10 +176,14 @@ en:
               blank: 'You must choose an option to continue'
         questionnaires/senco_in_role:
           attributes:
-            blank: Choose one of the following options
+            senco_in_role:
+              blank: Select an option to continue
         questionnaires/senco_start_date:
           attributes:
-            blank: Senco start date can't be blank
+            senco_start_date:
+              blank: Enter the date you became a SENCO to continue
+              in_future: The date you became a SENCO must be in the past
+              invalid: The date you became a SENCO must be a real date
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
