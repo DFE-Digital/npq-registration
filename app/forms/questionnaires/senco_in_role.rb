@@ -34,6 +34,9 @@ module Questionnaires
       if senco_in_role == "yes"
         wizard.store["senco_in_role_status"] = true
         :senco_start_date
+      elsif query_store.kind_of_nursery_private? && !query_store.has_ofsted_urn?
+        wizard.store["senco_in_role_status"] = false
+        :ineligible_for_funding
       else
         wizard.store["senco_in_role_status"] = false
         if wizard.query_store.inside_catchment?
