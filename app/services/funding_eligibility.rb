@@ -41,7 +41,6 @@ class FundingEligibility
               :lead_mentor,
               :employment_role,
               :get_an_identity_id,
-              :query_store,
               :lead_mentor_for_accredited_itt_provider
 
   def initialize(institution:,
@@ -53,8 +52,7 @@ class FundingEligibility
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,
-                 employment_role: nil,
-                 query_store: nil)
+                 employment_role: nil)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
@@ -64,7 +62,6 @@ class FundingEligibility
     @get_an_identity_id = get_an_identity_id
     @trn = trn
     @employment_role = employment_role
-    @query_store = query_store
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
   end
 
