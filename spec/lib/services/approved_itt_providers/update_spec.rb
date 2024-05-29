@@ -37,7 +37,7 @@ RSpec.describe ApprovedIttProviders::Update do
         subject
 
         expect(
-          IttProvider.all.map do |itt_provider|
+          IttProvider.all.order(:legal_name).map do |itt_provider|
             {
               legal_name: itt_provider.legal_name,
               operating_name: itt_provider.operating_name,
