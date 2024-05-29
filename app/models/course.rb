@@ -1,5 +1,8 @@
 class Course < ApplicationRecord
   validates :name, presence: true
+  validates :identifier,
+            presence: { message: "Enter a identifier" },
+            uniqueness: { message: "Identifier already exists, enter a unique one" }
 
   IDENTIFIERS = %w[
     npq-senior-leadership
