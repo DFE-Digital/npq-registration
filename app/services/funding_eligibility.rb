@@ -91,7 +91,7 @@ class FundingEligibility
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
-        return EARLY_YEARS_INVALID_NPQ unless course.eyl?
+        return EARLY_YEARS_INVALID_NPQ unless course.eyl? || course.npqs?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
 
         FUNDED_ELIGIBILITY_RESULT
