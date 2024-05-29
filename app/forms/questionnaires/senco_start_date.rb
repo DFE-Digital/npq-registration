@@ -38,13 +38,24 @@ module Questionnaires
     end
 
     def next_step
-      if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private?
-        :ineligible_for_funding
-      elsif wizard.query_store.works_in_other? && wizard.query_store.lead_mentor_for_accredited_itt_provider?
-        :ineligible_for_funding
-      else
+      if funding_eligibility.funded?
         :funding_eligibility_senco
+      else
+        :ineligible_for_funding
       end
+    end
+
+    def funding_eligibility
+      @funding_eligibility ||= FundingEligibility.new(
+        course:,
+        institution:,
+        approved_itt_provider: approved_itt_provider?,
+        lead_mentor: lead_mentor_for_accredited_itt_provider?,
+        inside_catchment: inside_catchment?,
+        new_headteacher: new_headteacher?,
+        trn:,
+        get_an_identity_id:,
+      )
     end
 
     def previous_step
@@ -60,5 +71,8 @@ module Questionnaires
     def validate_senco_start_date_valid?
       errors.add(:senco_start_date, :invalid) if @senco_start_date_invalid
     end
+
+    delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
+             :approved_itt_provider?, :get_an_identity_id, :trn, to: :query_store
   end
 end
