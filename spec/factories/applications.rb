@@ -86,7 +86,7 @@ FactoryBot.define do
       after(:create) do |application|
         user = application.user
 
-        FactoryBot.create(:participant_id_change, from_participant: user, user:)
+        FactoryBot.create(:participant_id_change, to_participant: user, user:)
       end
     end
   end
