@@ -8,7 +8,7 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater do
 
   before { allow(Rails).to receive(:env) { environment.inquiry } }
 
-  subject { described_class.new(lead_provider:, cohort:, number_of_participants: 10) }
+  subject { described_class.new(lead_provider:, cohort:, number_of_participants: 30) }
 
   describe "#populate" do
     context "when running in other environment other than separation or development" do
@@ -25,7 +25,7 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater do
       it "creates users # given in the params" do
         expect {
           subject.populate
-        }.to change(User, :count).by(10)
+        }.to change(User, :count).by(30)
       end
 
       it "creates applications" do

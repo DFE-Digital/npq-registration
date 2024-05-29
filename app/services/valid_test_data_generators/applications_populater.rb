@@ -9,7 +9,7 @@ module ValidTestDataGenerators
     end
 
     def populate
-      return unless Rails.env.in?(%w[development separation])
+      return unless Rails.env.in?(%w[development review separation])
 
       logger.info "ApplicationsPopulater: Started!"
 
