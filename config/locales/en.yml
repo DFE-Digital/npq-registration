@@ -6,6 +6,7 @@ en:
   not_found: "Not found"
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
+  invalid_data_structure: correct json data structure required. See API docs for reference
 
   errors:
     email:
@@ -15,6 +16,15 @@ en:
     missing_application: "The entered '#/application' is missing from your request. Check details and try again."
     has_already_been_rejected: This NPQ application has already been rejected
     cannot_change_from_accepted: Once accepted an application cannot change state
+    has_another_accepted_application: The participant has already had an application accepted for this course.
+    has_already_been_accepted: This NPQ application has already been accepted
+    cannot_change_from_rejected: Once rejected an application cannot change state
+    not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
+    funded_place_required: "Set '#/funded_place' to true or false."
+    cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting.
+    cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
+    missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
+    cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
 
   time:
     formats:

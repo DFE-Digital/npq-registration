@@ -32,10 +32,16 @@ RSpec.describe "Application endpoints", type: :request do
     it_behaves_like "an API index endpoint with filter by participant_id"
   end
 
-  describe("accept") do
-    before { api_post(accept_api_v3_application_path(123)) }
+  describe "POST /api/v3/npq-applications/:ecf_id/accept" do
+    let(:course) { create(:course, :sl) }
+    let(:application) { create(:application, course:, lead_provider: current_lead_provider) }
+    let(:application_id) { application.ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      accept_api_v3_application_path(id)
+    end
+
+    it_behaves_like "an API accept application endpoint"
   end
 
   describe "POST /api/v3/npq-applications/:ecf_id/reject" do
@@ -46,5 +52,16 @@ RSpec.describe "Application endpoints", type: :request do
     end
 
     it_behaves_like "an API reject application endpoint"
+  end
+
+  describe "PUT /api/v3/npq-applications/:ecf_id/change-funded-place" do
+    let(:application) { create(:application, :eligible_for_funded_place, lead_provider: current_lead_provider) }
+    let(:application_id) { application.ecf_id }
+
+    def path(id = nil)
+      change_funded_place_api_v3_application_path(id)
+    end
+
+    it_behaves_like "an API change application funded place endpoint"
   end
 end

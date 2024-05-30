@@ -8,6 +8,7 @@ FactoryBot.define do
     course
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
+    lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
     cohort
     teacher_catchment { "england" }
@@ -50,12 +51,21 @@ FactoryBot.define do
       lead_provider_approval_status { :accepted }
     end
 
-    trait :pending do
-      lead_provider_approval_status { :pending }
+    trait :rejected do
+      lead_provider_approval_status { :rejected }
     end
 
     trait :eligible_for_funding do
       eligible_for_funding { true }
+    end
+
+    trait :eligible_for_funded_place do
+      eligible_for_funding { true }
+      lead_provider_approval_status { :accepted }
+
+      after(:create) do |application|
+        application.cohort.update!(funding_cap: true)
+      end
     end
 
     trait :previously_funded do
