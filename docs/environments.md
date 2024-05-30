@@ -53,8 +53,8 @@ There are three permanent environments for NPQ and a fourth set of transient env
 - Temporary environment for NPQ separation work.
 - Enables lead providers and other external users to explore the NPQ separation endpoints.
 - Migration feature (for NPQ separation) is currently disabled as we have no corresponding environment in ECF to pull from.
-- https://npq-registration-seoaration-web.teacherservices.cloud
-- [View deployed commit](https://npq-registration-seoaration-web.teacherservices.cloud/healthcheck.json)
+- https://npq-registration-separation-web.teacherservices.cloud
+- [View deployed commit](https://npq-registration-separation-web.teacherservices.cloud/healthcheck.json)
 
 ## Production
 
@@ -63,5 +63,3 @@ There are three permanent environments for NPQ and a fourth set of transient env
 - The production environment is the live system, users that are applying for NPQs fill in the forms in this system. Once submitted applications are pushed to the production ECF environment and then out to lead providers.
 - https://register-national-professional-qualifications.education.gov.uk
 - [View deployed commit](https://register-national-professional-qualifications.education.gov.uk/healthcheck.json)
-
-
