@@ -99,5 +99,29 @@ FactoryBot.define do
         FactoryBot.create(:participant_id_change, to_participant: user, user:)
       end
     end
+
+    trait :withdrawn do
+      after(:create) do |application|
+        application.update!(training_status: ApplicationState.states[:withdrawn])
+
+        FactoryBot.create(:application_state,
+                          application:,
+                          lead_provider: application.lead_provider,
+                          state: ApplicationState.states[:withdrawn],
+                          reason: "other")
+      end
+    end
+
+    trait :deferred do
+      after(:create) do |application|
+        application.update!(training_status: ApplicationState.states[:deferred])
+
+        FactoryBot.create(:application_state,
+                          application:,
+                          lead_provider: application.lead_provider,
+                          state: ApplicationState.states[:deferred],
+                          reason: "other")
+      end
+    end
   end
 end

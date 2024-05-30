@@ -55,5 +55,33 @@ LeadProvider.find_each do |lead_provider|
       participant_outcome_state: "failed",
       cohort: Cohort.all.sample,
     )
+
+    # users with one deferred application each
+    FactoryBot.create_list(
+      :application,
+      4,
+      :deferred,
+      :with_random_user,
+      :with_random_work_setting,
+      :with_random_lead_provider_approval_status,
+      :with_random_participant_outcome_state,
+      lead_provider:,
+      course: Course.all.sample,
+      cohort: Cohort.all.sample,
+    )
+
+    # users with one withdrawn application each
+    FactoryBot.create_list(
+      :application,
+      4,
+      :withdrawn,
+      :with_random_user,
+      :with_random_work_setting,
+      :with_random_lead_provider_approval_status,
+      :with_random_participant_outcome_state,
+      lead_provider:,
+      course: Course.all.sample,
+      cohort: Cohort.all.sample,
+    )
   end
 end
