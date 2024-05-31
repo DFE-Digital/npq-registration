@@ -84,8 +84,9 @@ class FundingEligibility
       case institution.class.name
       when "School"
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
+        return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER if !institution.eyl_funding_eligible? && course.eyl?
+
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT
