@@ -84,6 +84,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    amazing_print (1.6.0)
     ast (2.4.2)
     axe-core-api (4.9.1)
       dumb_delegator
@@ -414,6 +415,10 @@ GEM
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
       nokogiri (~> 1.14)
+    rails_semantic_logger (4.14.0)
+      rack
+      railties (>= 5.1)
+      semantic_logger (~> 4.13)
     railties (7.1.2)
       actionpack (= 7.1.2)
       activesupport (= 7.1.2)
@@ -532,6 +537,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    semantic_logger (4.15.0)
+      concurrent-ruby (~> 1.0)
     semantic_range (3.0.0)
     sentry-delayed_job (5.17.3)
       delayed_job (>= 4.0)
@@ -639,6 +646,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-session_store
+  amazing_print
   axe-core-capybara (~> 4.6)
   axe-core-rspec (~> 4.9)
   blueprinter
@@ -687,6 +695,7 @@ DEPENDENCIES
   puma (~> 6.4.2)
   rack-attack
   rails (~> 7)
+  rails_semantic_logger
   redis
   rouge
   rspec-rails (~> 6.1.2)

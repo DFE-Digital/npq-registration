@@ -36,6 +36,7 @@ gem "pg_search"
 gem "puma", "~> 6.4.2"
 gem "rack-attack"
 gem "rails", "~> 7"
+gem "rails_semantic_logger"
 gem "redis"
 gem "rouge"
 gem "rubyzip"
@@ -54,6 +55,7 @@ gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.0", require: false
 
 group :development, :test do
+  gem "amazing_print"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
   gem "capybara-screenshot"
