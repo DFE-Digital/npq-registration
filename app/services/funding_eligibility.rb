@@ -31,7 +31,8 @@ class FundingEligibility
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
-    INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.no_Ofsted",
+    INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
+    NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
   }.freeze
 
   attr_reader :institution,
@@ -83,15 +84,14 @@ class FundingEligibility
       case institution.class.name
       when "School"
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
-          return INELIGIBLE_ESTABLISHMENT_TYPE
-        end
+        return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
+        return NOT_ON_EARLY_YEARS_REGISTER if !institution.eyl_funding_eligible? && course.eyl?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
-        return EARLY_YEARS_INVALID_NPQ unless course.eyl? || course.npqs?
+        return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
 
         FUNDED_ELIGIBILITY_RESULT
