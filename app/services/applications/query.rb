@@ -89,6 +89,7 @@ module Applications
           :cohort,
           :private_childcare_provider,
           :itt_provider,
+          :schedule,
         )
     end
   end

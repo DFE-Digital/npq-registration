@@ -48,7 +48,7 @@ FactoryBot.define do
 
     trait :accepted do
       lead_provider_approval_status { :accepted }
-      schedule { Schedule.where(cohort:, course_group: course.course_group).sample }
+      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, cohort:) }
     end
 
     trait :rejected do
