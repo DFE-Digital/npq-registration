@@ -49,6 +49,7 @@ RSpec.configure do |config|
           PaginationFilter: PAGINATION_FILTER,
           ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
           ListEnrolmentsFilter: LIST_ENROLMENTS_FILTER[version],
+          ListStatementsFilter: LIST_STATEMENTS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
           IDAttribute: ID_ATTRIBUTE,
@@ -59,26 +60,15 @@ RSpec.configure do |config|
           ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
           EnrolmentsCsvResponse: ENROLMENTS_CSV_RESPONSE[version],
           EnrolmentCsv: ENROLMENT_CSV[version],
+          ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE[version],
+          ApplicationCsv: APPLICATION_CSV[version],
+          StatementResponse: STATEMENT_RESPONSE[version],
+          StatementsResponse: STATEMENTS_RESPONSE[version],
+          Statement: STATEMENT[version],
+          SortingOptions: SORTING_OPTIONS[version],
         }.compact,
       },
-    }.tap do |h|
-      h[:components][:schemas].merge!(
-        if version == :v3
-          {
-            ListStatementsFilter: LIST_STATEMENTS_FILTER,
-            StatementResponse: STATEMENT_RESPONSE[version],
-            StatementsResponse: STATEMENTS_RESPONSE[version],
-            Statement: STATEMENT[version],
-            SortingOptions: SORTING_OPTIONS,
-          }
-        else
-          {
-            ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE,
-            ApplicationCsv: APPLICATION_CSV,
-          }
-        end,
-      )
-    end
+    }
   end
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
