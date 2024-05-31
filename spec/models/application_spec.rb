@@ -9,6 +9,7 @@ RSpec.describe Application do
     it { is_expected.to belong_to(:private_childcare_provider).optional }
     it { is_expected.to belong_to(:itt_provider).optional }
     it { is_expected.to belong_to(:cohort).optional }
+    it { is_expected.to belong_to(:schedule).optional }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
     it { is_expected.to have_many(:participant_id_changes).through(:user) }
     it { is_expected.to have_many(:application_states) }
