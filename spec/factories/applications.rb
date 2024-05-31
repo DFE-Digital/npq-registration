@@ -29,7 +29,6 @@ FactoryBot.define do
     end
 
     trait :application_for_private_childcare_provider do
-      school_urn { nil }
       private_childcare_provider { build(:private_childcare_provider) }
 
       works_in_school { false }

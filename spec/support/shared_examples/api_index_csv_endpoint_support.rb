@@ -24,7 +24,7 @@ RSpec.shared_examples "an API index Csv endpoint" do
 
         api_get(path)
 
-        expect(mock_serializer).to have_received(:call)
+        expect(mock_serializer).to have_received(:serialize)
       end
     end
 
