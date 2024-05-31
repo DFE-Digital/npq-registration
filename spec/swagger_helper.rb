@@ -48,6 +48,7 @@ RSpec.configure do |config|
         schemas: {
           PaginationFilter: PAGINATION_FILTER,
           ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
+          ListEnrolmentsFilter: LIST_ENROLMENTS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
           IDAttribute: ID_ATTRIBUTE,
@@ -56,7 +57,9 @@ RSpec.configure do |config|
           Application: APPLICATION[version],
           ApplicationAcceptRequest: APPLICATION_ACCEPT_REQUEST,
           ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
-        },
+          EnrolmentsCsvResponse: ENROLMENTS_CSV_RESPONSE[version],
+          EnrolmentCsv: ENROLMENT_CSV[version],
+        }.compact,
       },
     }.tap do |h|
       h[:components][:schemas].merge!(
