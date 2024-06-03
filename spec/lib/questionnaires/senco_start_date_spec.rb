@@ -15,7 +15,7 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
     end
 
     context "when senco_start_date is in range" do
-      it "adds an error to senco_start_date" do
+      it "does not add an error to senco_start_date" do
         subject.senco_start_date = Time.zone.today - 1.day
         subject.validate_senco_start_date_in_range?
         expect(subject.errors[:senco_start_date]).not_to include("The date you became a SENCO must be in the past")
@@ -24,7 +24,7 @@ RSpec.describe Questionnaires::SencoStartDate, type: :model do
   end
 
   describe "#validate_senco_start_date_valid?" do
-    context "when @senco_start_date_invalid is true" do
+    context "when date is invalid" do
       it "adds an error to senco_start_date" do
         subject.senco_start_date = { 3 => 1, 2 => 0, 1 => 0 }
         subject.validate_senco_start_date_valid?
