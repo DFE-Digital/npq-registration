@@ -5,6 +5,7 @@ module Questionnaires
     include Helpers::Institution
 
     QUESTION_NAME = :senco_start_date
+    EARLIEST_SENCO_START_DATE = Date.new(1960, 1, 1)
 
     attr_reader QUESTION_NAME
 
@@ -16,7 +17,7 @@ module Questionnaires
     end
 
     validate :validate_senco_start_date_valid?
-    validate :validate_senco_start_date_in_the_past?
+    validate :validate_senco_start_date_in_range?
 
     validates QUESTION_NAME, presence: true
 
@@ -62,8 +63,8 @@ module Questionnaires
       :senco_in_role
     end
 
-    def validate_senco_start_date_in_the_past?
-      if senco_start_date && (senco_start_date > Time.zone.now)
+    def validate_senco_start_date_in_range?
+      if senco_start_date && !senco_start_date.between?(EARLIEST_SENCO_START_DATE, Time.zone.today)
         errors.add(:senco_start_date, :in_future)
       end
     end
