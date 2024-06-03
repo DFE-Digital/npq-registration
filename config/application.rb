@@ -29,6 +29,7 @@ module NpqRegistration
 
     # don't use AJAX/XHR to submit forms by default
     config.action_view.form_with_generates_remote_forms = false
+    config.action_controller.always_permitted_parameters = %w( controller action format )
 
     config.action_mailer.delivery_method = :notify
     config.action_mailer.notify_settings = {
