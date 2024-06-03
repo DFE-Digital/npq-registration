@@ -1,11 +1,18 @@
 require "rails_helper"
 
 RSpec.describe Participants::Query do
+<<<<<<< HEAD
   let(:lead_provider) { create(:lead_provider) }
   let(:params) { {} }
 
   subject(:query) { described_class.new(**params) }
 
+=======
+  subject(:query) { described_class.new(**params) }
+
+  let(:params) { {} }
+
+>>>>>>> 2f7d32e3 ([CPDLP-3080] Add NPQ participant profiles endpoint)
   describe "#participants" do
     let(:lead_provider) { create(:lead_provider) }
     let!(:participant1) { create(:user, :with_application, lead_provider:) }
@@ -21,6 +28,7 @@ RSpec.describe Participants::Query do
       expect(query.participants).to eq([participant3, participant1, participant2])
     end
 
+<<<<<<< HEAD
     it "does not fetch participants with pending applications" do
       participant3 = create(:user, :with_application, lead_provider:)
       participant3.applications.update_all(lead_provider_approval_status: :pending)
@@ -35,6 +43,8 @@ RSpec.describe Participants::Query do
       expect(query.participants).to eq([participant1, participant2])
     end
 
+=======
+>>>>>>> 2f7d32e3 ([CPDLP-3080] Add NPQ participant profiles endpoint)
     describe "filtering" do
       describe "lead provider" do
         context "when a lead provider is supplied" do
