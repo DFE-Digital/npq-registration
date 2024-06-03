@@ -117,7 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("such as state funded schools")
+      expect(page).to have_text("not registered on the Ofsted Early Years Register")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
@@ -190,7 +190,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_eligiblity_status_code" => "not_on_early_years_register",
       "headteacher_status" => nil,
       "kind_of_nursery" => public_kind_of_nursery_key,
       "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
@@ -222,7 +222,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "email_template" => "not_on_ofsted_register",
         "funding" => "school",
         "funding_amount" => nil,
-        "funding_eligiblity_status_code" => "ineligible_establishment_type",
+        "funding_eligiblity_status_code" => "not_on_early_years_register",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
