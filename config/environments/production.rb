@@ -71,6 +71,9 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
+  # Don't log SQL
+  config.active_record.logger = nil
+
   # Logging
   config.log_level = :info
 
