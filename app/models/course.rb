@@ -57,14 +57,7 @@ class Course < ApplicationRecord
   end
 
   def rebranded_alternative_courses
-    case identifier
-    when NPQ_ADDITIONAL_SUPPORT_OFFER
-      [self, Course.find_by(identifier: NPQ_EARLY_HEADSHIP_COACHING_OFFER)]
-    when NPQ_EARLY_HEADSHIP_COACHING_OFFER
-      [self, Course.find_by(identifier: NPQ_ADDITIONAL_SUPPORT_OFFER)]
-    else
-      [self]
-    end
+    [self, self.replaced_by]
   end
 
   NPQ_HEADSHIP = "npq-headship".freeze
