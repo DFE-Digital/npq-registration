@@ -11,7 +11,13 @@ RSpec.describe "Enrolment endpoints", type: :request do
     let(:resource_id_key) { :ecf_id }
 
     def create_resource(**attrs)
-      create(:application, **attrs)
+      create(:application, :accepted, **attrs)
+    end
+
+    it "only returns accepted applications" do
+      expect(query).to receive(:new).with(a_hash_including(lead_provider_approval_status: "accepted")).and_call_original
+
+      api_get(path)
     end
 
     it_behaves_like "an API index Csv endpoint"

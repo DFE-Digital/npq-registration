@@ -55,6 +55,10 @@ FactoryBot.define do
       lead_provider_approval_status { :rejected }
     end
 
+    trait :pending do
+      lead_provider_approval_status { :pending }
+    end
+
     trait :eligible_for_funding do
       eligible_for_funding { true }
     end

@@ -18,7 +18,7 @@ module API
       end
 
       def applications_query
-        conditions = { lead_provider: current_lead_provider, updated_since: }
+        conditions = { lead_provider: current_lead_provider, updated_since:, lead_provider_approval_status: "accepted" }
 
         Applications::Query.new(**conditions.compact)
       end
