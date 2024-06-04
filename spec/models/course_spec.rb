@@ -49,7 +49,7 @@ RSpec.describe Course do
   end
 
   describe "#rebranded_alternative_courses" do
-    let(:course) { described_class.new(identifier:) }
+    let(:course) { Course.find_by!(identifier:) }
 
     subject { course.rebranded_alternative_courses }
 
@@ -66,7 +66,7 @@ RSpec.describe Course do
     end
 
     context "when the identifier is not npq-additional-support-offer or npq-early-headship-coaching-offer" do
-      let(:identifier) { "other" }
+      let(:identifier) { "npq-leading-primary-mathematics" }
 
       it { is_expected.to contain_exactly(course) }
     end
