@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.integer "replaced_by_course_id"
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
