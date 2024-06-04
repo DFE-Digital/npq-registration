@@ -76,6 +76,19 @@ RSpec.describe Application do
         expect(described_class.eligible_for_funding).to contain_exactly(application_eligible_for_funding)
       end
     end
+
+    # describe ".previously_funded" do
+    #   it "only returns previously funded applications" do
+    #     previously_funded_application = FactoryBot.create(:application, :previously_funded)
+    #     not_previously_funded_application = FactoryBot.create(:application)
+    #
+    #     binding.pry
+    #     1
+    #
+    #     expect(Application.previously_funded).to include(previously_funded_application)
+    #     expect(Application.previously_funded).not_to include(not_previously_funded_application)
+    #   end
+    # end
   end
 
   describe "#inside_catchment?" do

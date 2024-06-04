@@ -30,6 +30,8 @@ module Applications
         ) AS transient_previously_funded",
       )
 
+      # scope = all_applications
+
       scope = scope.where(lead_provider:) if lead_provider.present?
       scope = scope.where(cohort: { start_year: cohort_start_years }) if cohort_start_years.present?
       scope = scope.where(user: { ecf_id: participant_ids }) if participant_ids.present?

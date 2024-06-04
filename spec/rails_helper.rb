@@ -114,9 +114,10 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.before(:suite) do
-    Course::IDENTIFIERS.each do |identifier|
-      FactoryBot.create(identifier)
-    end
+    # Course::IDENTIFIERS.each do |identifier|
+    #   FactoryBot.create(identifier)
+    # end
+    CourseService::DefinitionLoader.new(silent: false).call
   end
 
   config.before do

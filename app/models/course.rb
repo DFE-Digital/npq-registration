@@ -19,6 +19,15 @@ class Course < ApplicationRecord
   ].freeze
 
   class << self
+    def grouped_ids
+      Course
+        .eager_load(:replaces)
+        .all
+        .each_with_object({}) do |c, h|
+          h[c.id] = [c.id, c.replaced_by_course_id, c.replaces.map(&:id)].flatten.compact
+        end
+    end
+
     def npqeyl
       find_by(identifier: NPQ_EARLY_YEARS_LEADERSHIP)
     end

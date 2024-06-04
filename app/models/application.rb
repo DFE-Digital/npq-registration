@@ -24,6 +24,7 @@ class Application < ApplicationRecord
   scope :active_applications, -> { where.not(id: expired_applications) }
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
+  scope :funded, -> { accepted.merge(eligible_for_funding) }
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
@@ -54,6 +55,24 @@ class Application < ApplicationRecord
     accepted: "accepted",
     rejected: "rejected",
   }
+
+  # def self.previously_funded
+  #   applications = arel_table
+  #   courses = Course.arel_table
+  #   users = User.arel_table
+  #   other_applications = arel_table.alias("other_applications")
+  #   other_applications_courses = Course.arel_table.alias("other_courses")
+  #
+  #   applications
+  #     .join(courses).on(applications[:course_id].eq(courses[:id]))
+  #     .join(users).on(applications[:user_id].eq(users[:id]))
+  #     .join(other_applications).on(
+  #       users[:id].eq(other_applications[:users_id])
+  #         .and(applications[:id].not_eq(other_applications[:id])),
+  #     ).join(other_applications_courses).on(
+  #       other_applications[:course_id].eq(other_applications_courses[:id]),
+  #     )
+  # end
 
   def previously_funded?
     # This is an optimization used by the API Applications::Query in order
