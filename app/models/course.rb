@@ -4,6 +4,9 @@ class Course < ApplicationRecord
             presence: { message: "Enter a identifier" },
             uniqueness: { message: "Identifier already exists, enter a unique one" }
 
+  belongs_to :replaced_by, class_name: "Course", foreign_key: :replaced_by_course_id, optional: true
+  has_many :replaces, class_name: "Course", foreign_key: :replaced_by_course_id
+
   IDENTIFIERS = %w[
     npq-senior-leadership
     npq-headship

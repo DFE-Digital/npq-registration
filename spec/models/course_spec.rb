@@ -1,6 +1,11 @@
 require "rails_helper"
 
 RSpec.describe Course do
+  describe "relationships" do
+    it { is_expected.to belong_to(:replaced_by).class_name("Course").with_foreign_key(:replaced_by_course_id).optional }
+    it { is_expected.to have_many(:replaces).class_name("Course").with_foreign_key(:replaced_by_course_id) }
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_uniqueness_of(:identifier).with_message("Identifier already exists, enter a unique one") }
