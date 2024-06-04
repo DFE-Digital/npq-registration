@@ -11,7 +11,6 @@ FactoryBot.define do
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
     cohort
-    schedule { Schedule.where(cohort:, course_group: course.course_group).sample }
     teacher_catchment { "england" }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
@@ -50,6 +49,7 @@ FactoryBot.define do
 
     trait :accepted do
       lead_provider_approval_status { :accepted }
+      schedule { Schedule.where(cohort:, course_group: course.course_group).sample }
     end
 
     trait :rejected do

@@ -7,7 +7,7 @@ RSpec.describe Course do
   end
 
   describe "associations" do
-    it { is_expected.to belong_to(:course_group) }
+    it { is_expected.to belong_to(:course_group).optional }
   end
 
   describe ".ehco" do

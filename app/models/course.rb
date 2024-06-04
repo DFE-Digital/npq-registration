@@ -1,5 +1,5 @@
 class Course < ApplicationRecord
-  belongs_to :course_group
+  belongs_to :course_group, optional: true
 
   validates :name, presence: true
   validates :identifier,
