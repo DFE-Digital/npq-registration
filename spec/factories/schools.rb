@@ -9,6 +9,7 @@ FactoryBot.define do
       establishment_type_code do
         %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].sample
       end
+      eyl_funding_eligible { true }
     end
 
     trait :closed do
