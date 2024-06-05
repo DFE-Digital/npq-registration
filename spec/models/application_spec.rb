@@ -10,6 +10,8 @@ RSpec.describe Application do
     it { is_expected.to belong_to(:itt_provider).optional }
     it { is_expected.to belong_to(:cohort).optional }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
+    it { is_expected.to have_many(:participant_id_changes).through(:user) }
+    it { is_expected.to have_many(:application_states) }
   end
 
   describe "enums" do
@@ -50,6 +52,14 @@ RSpec.describe Application do
         rejected: "rejected",
       ).backed_by_column_of_type(:enum)
     }
+
+    it {
+      expect(subject).to define_enum_for(:training_status).with_values(
+        active: "active",
+        deferred: "deferred",
+        withdrawn: "withdrawn",
+      ).backed_by_column_of_type(:enum)
+    }
   end
 
   describe "scopes" do
@@ -62,7 +72,7 @@ RSpec.describe Application do
     describe ".accepted" do
       it "returns accepted applications" do
         accepted_application = create(:application, :accepted)
-        create(:application, :pending)
+        create(:application)
 
         expect(described_class.accepted).to contain_exactly(accepted_application)
       end
@@ -132,7 +142,7 @@ RSpec.describe Application do
     end
   end
 
-  describe "versioning" do
+  describe "versioning", versioning: true do
     context "when changing versioned fields" do
       let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
 

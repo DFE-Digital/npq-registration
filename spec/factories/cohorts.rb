@@ -6,5 +6,17 @@ FactoryBot.define do
     initialize_with do
       Cohort.find_by(start_year:) || new(**attributes)
     end
+
+    trait :current do
+      start_year { Date.current.month < 9 ? Date.current.year.pred : Date.current.year }
+    end
+
+    trait :next do
+      start_year { Date.current.month < 9 ? Date.current.year : Date.current.year.succ }
+    end
+
+    trait :with_funding_cap do
+      funding_cap { true }
+    end
   end
 end

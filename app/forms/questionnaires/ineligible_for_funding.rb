@@ -78,7 +78,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
-        lead_mentor_for_accredited_itt_provider: wizard.query_store.lead_mentor_for_accredited_itt_provider?,
+        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
       ).funding_eligiblity_status_code
     end
 
@@ -98,6 +98,7 @@ module Questionnaires
              :new_headteacher?,
              :inside_catchment?,
              :approved_itt_provider?,
+             :lead_mentor_for_accredited_itt_provider?,
              to: :query_store
   end
 end

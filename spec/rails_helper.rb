@@ -20,6 +20,7 @@ require "active_support/core_ext/time/conversions"
 require "view_component/test_helpers"
 require "view_component/system_test_helpers"
 require "capybara/rspec"
+require "paper_trail/frameworks/rspec"
 
 Capybara.register_driver :headless_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium
@@ -160,3 +161,5 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+RSpec::Matchers.define_negated_matcher :not_change, :change

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "application_statuses", ["active", "deferred", "withdrawn"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
@@ -43,6 +44,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
     t.datetime "updated_at", null: false
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
+
+  create_table "application_states", force: :cascade do |t|
+    t.bigint "application_id", null: false
+    t.bigint "lead_provider_id"
+    t.enum "state", default: "active", null: false, enum_type: "application_statuses"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_application_states_on_application_id"
+    t.index ["lead_provider_id"], name: "index_application_states_on_lead_provider_id"
   end
 
   create_table "applications", force: :cascade do |t|
@@ -89,6 +101,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
     t.string "notes"
     t.bigint "cohort_id"
     t.boolean "funded_place"
+    t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
@@ -122,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
   create_table "data_migrations", force: :cascade do |t|
@@ -224,6 +238,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
+  end
+
+  create_table "participant_id_changes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "from_participant_id", null: false
+    t.bigint "to_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
+    t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
+    t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
   end
 
   create_table "private_childcare_providers", force: :cascade do |t|
@@ -382,6 +407,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
   end
 
   add_foreign_key "api_tokens", "lead_providers"
+  add_foreign_key "application_states", "applications"
+  add_foreign_key "application_states", "lead_providers"
   add_foreign_key "applications", "cohorts"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
@@ -389,6 +416,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_09_150727) do
   add_foreign_key "applications", "private_childcare_providers"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "participant_id_changes", "users"
+  add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
+  add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

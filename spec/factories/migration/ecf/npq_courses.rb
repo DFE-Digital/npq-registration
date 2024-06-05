@@ -3,6 +3,6 @@
 FactoryBot.define do
   factory :ecf_migration_npq_course, class: "Migration::Ecf::NpqCourse" do
     sequence(:name) { |n| "NPQ Course #{n}" }
-    identifier { Course::IDENTIFIERS.sample }
+    sequence(:identifier) { |n| "npq-course-#{n}" }
   end
 end

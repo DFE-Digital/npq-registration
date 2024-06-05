@@ -134,8 +134,8 @@ RSpec.describe FundingEligibility do
         end
       end
 
-      context "and the course is not NPQLTD" do
-        Course.all.reject(&:npqltd?).each do |course|
+      context "and the course is not NPQLTD or NPQS" do
+        Course.all.reject { |c| c.npqltd? || c.npqs? }.each do |course|
           let(:course) { course }
 
           it "is not eligible for #{course.identifier}" do

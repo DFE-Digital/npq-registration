@@ -7,7 +7,7 @@ externalDocs:
   description: Find out more about Swagger
   url: https://swagger.io/
 paths:
-  api/v3/npq-applications:
+  "/api/v3/npq-applications":
     get:
       summary: Retrieve multiple NPQ applications
       tags:
@@ -43,7 +43,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
-  api/v3/npq-applications/{id}:
+  "/api/v3/npq-applications/{id}":
     get:
       summary: Retrieve a single NPQ application
       tags:
@@ -75,7 +75,101 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
-  api/v3/statements:
+  "/api/v3/npq-applications/{id}/accept":
+    post:
+      summary: Accept an NPQ application
+      operationId: npq_applications_accept
+      tags:
+      - NPQ Applications
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the NPQ application to accept.
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The NPQ application being accepted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApplicationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ApplicationAcceptRequest"
+  "/api/v3/npq-applications/{id}/reject":
+    post:
+      summary: Reject an NPQ application
+      operationId: npq_applications_reject
+      tags:
+      - NPQ Applications
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the NPQ application to reject.
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The NPQ application being rejected
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApplicationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v3/npq-applications/{id}/change-funded-place":
+    put:
+      summary: Change funded place value of an NPQ application
+      operationId: npq_applications_change_funded_place
+      tags:
+      - NPQ Applications
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the NPQ application to change the funded place value.
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The NPQ application after changing the funded place
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApplicationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+  "/api/v3/statements":
     get:
       summary: Retrieve financial statements
       tags:
@@ -107,7 +201,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
-  api/v3/statements/{id}:
+  "/api/v3/statements/{id}":
     get:
       summary: Retrieve a specific financial statement
       tags:
@@ -201,7 +295,8 @@ components:
         error: Resource not found
     IDAttribute:
       description: The unique ID of the resource.
-      type: uuid
+      type: string
+      format: uuid
       example: d0b4a32e-a272-489e-b30a-cb17131457fc
     ApplicationResponse:
       description: A single NPQ application
@@ -408,27 +503,23 @@ components:
               type: string
               example: France
             teacher_catchment_iso_country_code:
-              description: |
+              description: |-
                 This field identifies which non-UK country the participant has registered from.
                 The API uses <a href="https://www.iso.org/iso-3166-country-codes.html" class="govuk-link" rel="noreferrer noopener" target="_blank">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.
               nullable: true
               type: string
               example: FRA
             lead_mentor:
-              description: 'This field indicates whether the applicant is an ITT lead
+              description: This field indicates whether the applicant is an ITT lead
                 mentor.
-
-                '
               nullable: true
               type: boolean
               example: true
             itt_provider:
-              description: 'This field contains the legal name of the ITT accredited
+              description: This field contains the legal name of the ITT accredited
                 provider from the <a href="https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024"
                 class="govuk-link" rel="noreferrer noopener" target="_blank">list
                 of providers</a>.
-
-                '
               nullable: true
               type: string
               example: University of Southampton
@@ -450,6 +541,65 @@ components:
               - npq-leadership-spring
               - npq-specialist-autumn
               - npq-specialist-spring
+            funded_place:
+              description: This field indicates whether the application is funded
+              nullable: true
+              type: boolean
+              example: true
+    ApplicationAcceptRequest:
+      description: A NPQ application acceptance request
+      type: object
+      properties:
+        data:
+          description: A NPQ application acceptance request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: npq-application-accept
+            attributes:
+              description: A NPQ application acceptance request attributes
+              type: object
+              properties:
+                funded_place:
+                  description: This field indicates whether the application is funded
+                  nullable: false
+                  type: boolean
+                  required: false
+                  example: true
+    ApplicationChangeFundedPlaceRequest:
+      description: A NPQ application change funded place request
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          description: A NPQ application change funded place request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: npq-application-change-funded-place
+            attributes:
+              description: A NPQ application change funded place request attributes
+              type: object
+              required:
+              - funded_place
+              properties:
+                funded_place:
+                  description: This field indicates whether the application is funded
+                  nullable: false
+                  type: boolean
+                  required: true
+                  example: true
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object

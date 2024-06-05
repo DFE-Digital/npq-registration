@@ -12,12 +12,30 @@ module API
         render json: to_json(application)
       end
 
-      def accept = head(:method_not_allowed)
+      def accept
+        service = Applications::Accept.new(application:, funded_place:)
+
+        if service.accept
+          render json: to_json(service.application)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
 
       def reject
         service = Applications::Reject.new(application:)
 
         if service.reject
+          render json: to_json(service.application)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
+      def change_funded_place
+        service = Applications::ChangeFundedPlace.new(application:, funded_place:)
+
+        if service.change
           render json: to_json(service.application)
         else
           render json: API::Errors::Response.from(service), status: :unprocessable_entity
@@ -50,6 +68,22 @@ module API
 
       def to_json(obj)
         ApplicationSerializer.render(obj, view: :v3, root: "data")
+      end
+
+      def accept_permitted_params
+        parameters = params
+          .fetch(:data)
+          .permit(:type, attributes: %i[funded_place])
+
+        return parameters unless parameters["attributes"].empty?
+
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      rescue ActionController::ParameterMissing
+        {}
+      end
+
+      def funded_place
+        accept_permitted_params.dig("attributes", "funded_place")
       end
     end
   end

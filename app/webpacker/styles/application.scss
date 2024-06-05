@@ -9,7 +9,12 @@
 $govuk-font-url-function: frontend-font-url;
 $govuk-image-url-function: frontend-image-url;
 
-@import "~govuk-frontend/dist/govuk/all";
+@import "~govuk-frontend/dist/govuk/base";
+@import "~govuk-frontend/dist/govuk/core/index";
+@import "~govuk-frontend/dist/govuk/objects/index";
+@import "~govuk-frontend/dist/govuk/components/index";
+@import "~govuk-frontend/dist/govuk/utilities/index";
+@import "~govuk-frontend/dist/govuk/overrides/index";
 @import "accessible-autocomplete";
 @import "contents-list";
 @import "subnav";

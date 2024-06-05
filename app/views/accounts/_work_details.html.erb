@@ -98,11 +98,11 @@
         </div>
       <% end %>
 
-      <% if application.course.senco? %>
+      <% if application.course.npqs? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key"><%= I18n.t("npq-senco", scope: "course.name") %></dt>
           <% if application.raw_application_data["senco_in_role_status"] %>
-            <dd class="govuk-summary-list__value"><%= "Yes - since #{application.raw_application_data["senco_start_date"].to_date.strftime("%B %Y")}" %></dd>
+            <dd class="govuk-summary-list__value"><%= "Yes – since #{application.raw_application_data["senco_start_date"].to_date.strftime("%B %Y")}" %></dd>
           <% else %>
             <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options")%></dd>
           <% end %>

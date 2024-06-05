@@ -9,7 +9,6 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 25 March 2024
 
-(to be replaced)
 We're trialing new functionality in the API v3 sandbox which allows lead providers to add a
 participant’s schedule when accepting NPQ applications. We've added the optional schedule-identifier field on
 the NPQ accept an application request body. This will prevent providers having to make manual changes if a

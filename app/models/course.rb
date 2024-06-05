@@ -8,6 +8,9 @@ class Course < ApplicationRecord
   NPQ_SENCO = "npq-senco".freeze
 
   validates :name, presence: true
+  validates :identifier,
+            presence: { message: "Enter a identifier" },
+            uniqueness: { message: "Identifier already exists, enter a unique one" }
 
   # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
   IDENTIFIERS = %w[

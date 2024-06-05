@@ -67,35 +67,22 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
-
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
+  # Don't log SQL
+  config.active_record.logger = nil
+
   # Logging
   config.log_level = :info
-  config.log_tags = [:request_id] # Prepend all log lines with the following tags.
-  logger = ActiveSupport::Logger.new($stdout)
-  logger.formatter = config.log_formatter
-  config.logger = ActiveSupport::TaggedLogging.new(logger)
-  config.active_record.logger = nil # Don't log SQL in production
 
-  # Use Lograge for cleaner logging
-  config.lograge.enabled = true
-  config.lograge.base_controller_class = ["ActionController::API", "ActionController::Base"]
-  config.lograge.formatter = Lograge::Formatters::Logstash.new
-  config.lograge.ignore_actions = []
-  config.lograge.logger = ActiveSupport::Logger.new($stdout)
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
+    config.rails_semantic_logger.add_file_appender = false
 
-  # Include params in logs: https://github.com/roidrage/lograge#what-it-doesnt-do
-  config.lograge.custom_options = lambda do |event|
-    exceptions = %w[controller action format id]
-    {
-      params: event.payload[:params].except(*exceptions),
-      exception: event.payload[:exception], # ["ExceptionClass", "the message"]
-    }
+    $stdout.sync = true
+
+    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
   end
 
   # Do not dump schema after migrations.

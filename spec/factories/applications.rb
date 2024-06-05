@@ -8,6 +8,7 @@ FactoryBot.define do
     course
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
+    lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
     cohort
     teacher_catchment { "england" }
@@ -15,7 +16,7 @@ FactoryBot.define do
     teacher_catchment_iso_country_code { "GBR" }
     itt_provider
     funding_choice { Application.funding_choices.keys.sample }
-    lead_mentor { true }
+    lead_mentor { Faker::Boolean.boolean }
 
     trait :application_for_school do
       school { build(:school) }
@@ -50,12 +51,21 @@ FactoryBot.define do
       lead_provider_approval_status { :accepted }
     end
 
-    trait :pending do
-      lead_provider_approval_status { :pending }
+    trait :rejected do
+      lead_provider_approval_status { :rejected }
     end
 
     trait :eligible_for_funding do
       eligible_for_funding { true }
+    end
+
+    trait :eligible_for_funded_place do
+      eligible_for_funding { true }
+      lead_provider_approval_status { :accepted }
+
+      after(:create) do |application|
+        application.cohort.update!(funding_cap: true)
+      end
     end
 
     trait :previously_funded do
@@ -80,6 +90,38 @@ FactoryBot.define do
 
     trait :with_random_user do
       user { FactoryBot.build(:user, :with_random_name) }
+    end
+
+    trait :with_participant_id_change do
+      after(:create) do |application|
+        user = application.user
+
+        FactoryBot.create(:participant_id_change, to_participant: user, user:)
+      end
+    end
+
+    trait :withdrawn do
+      after(:create) do |application|
+        application.update!(training_status: ApplicationState.states[:withdrawn])
+
+        FactoryBot.create(:application_state,
+                          application:,
+                          lead_provider: application.lead_provider,
+                          state: ApplicationState.states[:withdrawn],
+                          reason: "other")
+      end
+    end
+
+    trait :deferred do
+      after(:create) do |application|
+        application.update!(training_status: ApplicationState.states[:deferred])
+
+        FactoryBot.create(:application_state,
+                          application:,
+                          lead_provider: application.lead_provider,
+                          state: ApplicationState.states[:deferred],
+                          reason: "other")
+      end
     end
   end
 end

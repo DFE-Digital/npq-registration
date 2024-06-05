@@ -34,8 +34,9 @@ class FundingEligibility
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
-    INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.no_Ofsted",
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
+    INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
+    NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
   }.freeze
 
   attr_reader :institution,
@@ -75,7 +76,7 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!course.npqlpm? || (course.npqlpm? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
+      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor && lead_mentor_for_accredited_itt_provider && inside_catchment?))
         if lead_mentor_course?
           return PREVIOUSLY_FUNDED if previously_funded?
 
@@ -95,10 +96,9 @@ class FundingEligibility
         return NOT_ENTITLED_EY_INSTITUTION if (course.eyl? && !institution.ey_eligible?) # TODO: and its not a childminder
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !(course.eyl?)
-        # TODO
-        # unless institution.eligible_establishment? || (institution.eyl_funding_eligible? && course.eyl?)
-        #   return INELIGIBLE_ESTABLISHMENT_TYPE
-        # end
+        return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
+        return NOT_ON_EARLY_YEARS_REGISTER if !institution.eyl_funding_eligible? && course.eyl?
+
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT
@@ -153,6 +153,10 @@ private
 
   def lead_mentor_course?
     course.npqltd?
+  end
+
+  def npqlpm_or_senco?
+    course.npqlpm? || course.npqs?
   end
 
   def eligible_urns
