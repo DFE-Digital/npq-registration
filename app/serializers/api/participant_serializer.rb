@@ -32,8 +32,7 @@ module API
           applications(object, options).map do |application|
             {
               course_identifier: application.course.identifier,
-              # TODO: Add when schedules are implemented
-              schedule_identifier: nil,
+              schedule_identifier: application&.schedule&.identifier,
               cohort: application.cohort&.start_year&.to_s,
               npq_application_id: application.ecf_id,
               eligible_for_funding: application.eligible_for_funding,
@@ -52,8 +51,7 @@ module API
             {
               email: object.email,
               course_identifier: application.course.identifier,
-              # TODO: Add when schedules are implemented
-              schedule_identifier: nil,
+              schedule_identifier: application&.schedule&.identifier,
               cohort: application.cohort&.start_year&.to_s,
               npq_application_id: application.ecf_id,
               eligible_for_funding: application.eligible_for_funding,

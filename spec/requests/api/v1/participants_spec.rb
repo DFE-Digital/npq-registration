@@ -12,7 +12,7 @@ RSpec.describe "Participant endpoints", type: :request do
     let(:resource_id_key) { :ecf_id }
 
     def create_resource(**attrs)
-      create(:user, :with_application, **attrs)
+      create(:participant, **attrs)
     end
 
     it_behaves_like "an API index endpoint"
