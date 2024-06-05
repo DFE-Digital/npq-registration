@@ -6,6 +6,10 @@ RSpec.describe Course do
     it { is_expected.to validate_uniqueness_of(:identifier).with_message("Identifier already exists, enter a unique one") }
   end
 
+  describe "associations" do
+    it { is_expected.to belong_to(:course_group).optional }
+  end
+
   describe ".ehco" do
     it { expect(described_class.ehco).to eq(described_class.find_by(identifier: "npq-early-headship-coaching-offer")) }
   end

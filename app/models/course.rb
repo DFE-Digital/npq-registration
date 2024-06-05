@@ -1,4 +1,6 @@
 class Course < ApplicationRecord
+  belongs_to :course_group, optional: true
+
   validates :name, presence: true
   validates :identifier,
             presence: { message: "Enter a identifier" },
