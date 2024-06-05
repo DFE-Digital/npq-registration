@@ -18,6 +18,8 @@ module Questionnaires
       case funding_eligiblity_status_code
       when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :ehco_possible_funding
+      when FundingEligibility::NO_INSTITUTION
+        :possible_funding
       when FundingEligibility::PREVIOUSLY_FUNDED
         :ehco_previously_funded
       else

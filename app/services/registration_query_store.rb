@@ -70,6 +70,22 @@ class RegistrationQueryStore
     store["employment_type"] == "other"
   end
 
+  def employment_type_local_authority_virtual_school?
+    store["employment_type"] == "local_authority_virtual_school"
+  end
+
+  def local_authority_supply_teacher?
+    store["employment_type"] == "local_authority_supply_teacher"
+  end
+
+  def employment_type_hospital_school?
+    store["employment_type"] == "hospital_school"
+  end
+
+  def young_offender_institution?
+    store["employment_type"] == "young_offender_institution"
+  end
+
   def teacher_catchment_england?
     store["teacher_catchment"] == "england"
   end

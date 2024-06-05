@@ -19,7 +19,9 @@ module Questionnaires
     end
 
     def previous_step
-      if course.npqlpm?
+      if works_in_other? && employment_type_other?
+        :choose_your_npq
+      elsif course.npqlpm?
         if wizard.query_store.maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
@@ -95,6 +97,8 @@ module Questionnaires
              :inside_catchment?,
              :approved_itt_provider?,
              :lead_mentor_for_accredited_itt_provider?,
+             :works_in_other?,
+             :employment_type_other?,
              to: :query_store
   end
 end
