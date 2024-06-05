@@ -76,7 +76,13 @@ class FundingEligibility
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
       if approved_itt_provider && (!course.npqlpm? || (course.npqlpm? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
-        return lead_mentor_eligibility_status
+        if lead_mentor_course?
+          return PREVIOUSLY_FUNDED if previously_funded?
+
+          return FUNDED_ELIGIBILITY_RESULT
+        else
+          return NOT_LEAD_MENTOR_COURSE
+        end
       end
 
       return NOT_IN_ENGLAND unless inside_catchment?
@@ -136,16 +142,6 @@ class FundingEligibility
   end
 
 private
-
-  def lead_mentor_eligibility_status
-    if lead_mentor_course?
-      return PREVIOUSLY_FUNDED if previously_funded?
-
-      FUNDED_ELIGIBILITY_RESULT
-    else
-      NOT_LEAD_MENTOR_COURSE
-    end
-  end
 
   def inside_catchment?
     @inside_catchment
