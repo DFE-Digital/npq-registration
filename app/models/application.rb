@@ -62,7 +62,7 @@ class Application < ApplicationRecord
     active: "active",
     deferred: "deferred",
     withdrawn: "withdrawn",
-  }, _prefix: "training_status"
+  }
 
   def previously_funded?
     # This is an optimization used by the API Applications::Query in order

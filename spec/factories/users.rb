@@ -28,8 +28,8 @@ FactoryBot.define do
         lead_provider { LeadProvider.all.sample }
       end
 
-      after(:create) do |participant, evaluator|
-        create(:application, :accepted, user: participant, lead_provider: evaluator.lead_provider)
+      after(:create) do |user, evaluator|
+        create(:application, :accepted, user:, lead_provider: evaluator.lead_provider)
       end
     end
   end
