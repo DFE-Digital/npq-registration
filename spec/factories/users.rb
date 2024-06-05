@@ -23,7 +23,7 @@ FactoryBot.define do
       trn_verified { true }
     end
 
-    trait :with_application do
+    factory :participant do
       transient do
         lead_provider { LeadProvider.all.sample }
       end
