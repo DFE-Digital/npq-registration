@@ -11,4 +11,9 @@ RSpec.describe Schedule, type: :model do
     it { is_expected.to validate_presence_of(:applies_from) }
     it { is_expected.to validate_presence_of(:applies_to) }
   end
+
+  describe "associations" do
+    it { is_expected.to belong_to(:course_group) }
+    it { is_expected.to belong_to(:cohort) }
+  end
 end
