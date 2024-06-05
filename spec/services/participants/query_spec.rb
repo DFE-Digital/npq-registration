@@ -15,15 +15,15 @@ RSpec.describe Participants::Query do
 >>>>>>> 2f7d32e3 ([CPDLP-3080] Add NPQ participant profiles endpoint)
   describe "#participants" do
     let(:lead_provider) { create(:lead_provider) }
-    let!(:participant1) { create(:user, :with_application, lead_provider:) }
-    let!(:participant2) { create(:user, :with_application, lead_provider:) }
+    let!(:participant1) { create(:participant, lead_provider:) }
+    let!(:participant2) { create(:participant, lead_provider:) }
 
     it "returns all participants" do
       expect(query.participants).to contain_exactly(participant1, participant2)
     end
 
     it "orders participants by created_at in ascending order" do
-      participant3 = travel_to(1.minute.ago) { create(:user, :with_application, lead_provider:) }
+      participant3 = travel_to(1.minute.ago) { create(:participant, lead_provider:) }
 
       expect(query.participants).to eq([participant3, participant1, participant2])
     end
@@ -51,7 +51,7 @@ RSpec.describe Participants::Query do
           let(:params) { { lead_provider: } }
 
           it "filters by lead provider" do
-            create(:user, :with_application, lead_provider: create(:lead_provider))
+            create(:participant, lead_provider: create(:lead_provider))
 
             expect(query.participants).to contain_exactly(participant1, participant2)
           end
@@ -71,7 +71,7 @@ RSpec.describe Participants::Query do
           let(:params) { { updated_since: 1.day.ago } }
 
           it "filters by updated since" do
-            create(:user, :with_application, lead_provider:, updated_at: 2.days.ago)
+            create(:participant, lead_provider:, updated_at: 2.days.ago)
 
             expect(query.participants).to contain_exactly(participant1, participant2)
           end
@@ -147,9 +147,9 @@ RSpec.describe Participants::Query do
     end
 
     describe "sorting" do
-      let(:participant1) { travel_to(1.month.ago) { create(:user, :with_application, lead_provider:) } }
-      let(:participant2) { travel_to(1.week.ago) { create(:user, :with_application, lead_provider:) } }
-      let(:participant3) { create(:user, :with_application, lead_provider:) }
+      let(:participant1) { travel_to(1.month.ago) { create(:participant, lead_provider:) } }
+      let(:participant2) { travel_to(1.week.ago) { create(:participant, lead_provider:) } }
+      let(:participant3) { create(:participant, lead_provider:) }
       let(:sort) { nil }
       let(:params) { { sort: } }
 
