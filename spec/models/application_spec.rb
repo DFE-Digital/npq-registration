@@ -59,7 +59,7 @@ RSpec.describe Application do
         active: "active",
         deferred: "deferred",
         withdrawn: "withdrawn",
-      ).backed_by_column_of_type(:enum)
+      ).with_prefix("training_status").backed_by_column_of_type(:enum)
     }
   end
 
