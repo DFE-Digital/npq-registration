@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -23,6 +23,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
+  create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
 
@@ -102,11 +103,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
     t.bigint "cohort_id"
     t.boolean "funded_place"
     t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
+    t.bigint "schedule_id"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
+    t.index ["schedule_id"], name: "index_applications_on_schedule_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
@@ -126,6 +129,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
+  create_table "course_groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_course_groups_on_name", unique: true
+  end
+
   create_table "courses", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
@@ -135,6 +145,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.bigint "course_group_id"
+    t.index ["course_group_id"], name: "index_courses_on_course_group_id"
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
@@ -291,6 +303,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "schedules", force: :cascade do |t|
+    t.bigint "course_group_id", null: false
+    t.bigint "cohort_id", null: false
+    t.string "name", null: false
+    t.string "identifier", null: false
+    t.date "applies_from", null: false
+    t.date "applies_to", null: false
+    t.enum "allowed_declaration_types", default: ["started", "retained-1", "retained-2", "completed"], array: true, enum_type: "schedule_declaration_types"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+    t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
+    t.index ["identifier", "cohort_id"], name: "index_schedules_on_identifier_and_cohort_id", unique: true
+  end
+
   create_table "schools", force: :cascade do |t|
     t.text "urn", null: false
     t.text "la_code"
@@ -414,11 +441,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_29_151128) do
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "schedules"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "courses", "course_groups"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "schedules", "cohorts"
+  add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

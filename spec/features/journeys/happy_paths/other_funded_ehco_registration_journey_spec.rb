@@ -153,6 +153,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,

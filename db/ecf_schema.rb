@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_22_114103) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -260,10 +260,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.datetime "academic_year_start_date", precision: nil
     t.datetime "npq_registration_start_date", precision: nil
     t.date "automatic_assignment_period_end_date"
+    t.datetime "payments_frozen_at"
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
-  create_table "cohorts_lead_providers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "cohorts_lead_providers", force: :cascade do |t|
     t.uuid "lead_provider_id", null: false
     t.uuid "cohort_id", null: false
     t.datetime "created_at", null: false
@@ -460,10 +461,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.string "mailer_name", null: false
     t.date "scheduled_at", null: false
     t.string "status", default: "queued", null: false
-    t.integer "actual_email_count"
-    t.integer "failed_email_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "emails_sent_count"
   end
 
   create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -743,6 +743,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.uuid "eligible_for_funding_updated_by_id"
     t.datetime "eligible_for_funding_updated_at"
+    t.boolean "funded_place"
     t.index ["cohort_id"], name: "index_npq_applications_on_cohort_id"
     t.index ["npq_course_id"], name: "index_npq_applications_on_npq_course_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_applications_on_npq_lead_provider_id"
@@ -766,6 +767,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.boolean "special_course", default: false, null: false
+    t.integer "funding_cap"
     t.index ["cohort_id"], name: "index_npq_contracts_on_cohort_id"
     t.index ["npq_lead_provider_id"], name: "index_npq_contracts_on_npq_lead_provider_id"
   end
@@ -828,6 +830,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.boolean "pupil_premium_uplift"
     t.uuid "delivery_partner_id"
     t.uuid "mentor_user_id"
+    t.uuid "cohort_id", null: false
+    t.index ["cohort_id"], name: "index_participant_declarations_on_cohort_id"
     t.index ["cpd_lead_provider_id", "participant_profile_id", "declaration_type", "course_identifier", "state"], name: "unique_declaration_index", unique: true, where: "((state)::text = ANY (ARRAY[('submitted'::character varying)::text, ('eligible'::character varying)::text, ('payable'::character varying)::text, ('paid'::character varying)::text]))"
     t.index ["cpd_lead_provider_id"], name: "index_participant_declarations_on_cpd_lead_provider_id"
     t.index ["declaration_type"], name: "index_participant_declarations_on_declaration_type"
@@ -888,6 +892,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.index ["state"], name: "index_participant_outcomes_on_state"
   end
 
+  create_table "participant_profile_completion_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.date "dqt_value"
+    t.date "participant_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_b55d68e537", unique: true
+  end
+
   create_table "participant_profile_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "participant_profile_id", null: false
     t.uuid "schedule_id", null: false
@@ -895,6 +908,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.datetime "updated_at", null: false
     t.index ["participant_profile_id"], name: "index_participant_profile_schedules_on_participant_profile_id"
     t.index ["schedule_id"], name: "index_participant_profile_schedules_on_schedule_id"
+  end
+
+  create_table "participant_profile_start_date_inconsistencies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "participant_profile_id", null: false
+    t.date "dqt_value"
+    t.date "participant_value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["participant_profile_id"], name: "idx_on_participant_profile_id_77e3f2fe02", unique: true
   end
 
   create_table "participant_profile_states", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -936,6 +958,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
     t.date "induction_completion_date"
     t.date "mentor_completion_date"
     t.string "mentor_completion_reason"
+    t.boolean "cohort_changed_after_payments_frozen", default: false
     t.index ["cohort_id"], name: "index_participant_profiles_on_cohort_id"
     t.index ["core_induction_programme_id"], name: "index_participant_profiles_on_core_induction_programme_id"
     t.index ["mentor_profile_id"], name: "index_participant_profiles_on_mentor_profile_id"
@@ -1322,7 +1345,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
   add_foreign_key "npq_application_exports", "users"
   add_foreign_key "npq_applications", "npq_courses"
   add_foreign_key "npq_applications", "npq_lead_providers"
-  add_foreign_key "npq_applications", "participant_identities"
+  add_foreign_key "npq_applications", "participant_identities", validate: false
   add_foreign_key "npq_applications", "users", column: "eligible_for_funding_updated_by_id"
   add_foreign_key "npq_lead_providers", "cpd_lead_providers"
   add_foreign_key "participant_bands", "call_off_contracts"
@@ -1335,18 +1358,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
   add_foreign_key "participant_identities", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "participant_declarations"
+  add_foreign_key "participant_profile_completion_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "participant_profiles"
   add_foreign_key "participant_profile_schedules", "schedules"
+  add_foreign_key "participant_profile_start_date_inconsistencies", "participant_profiles"
   add_foreign_key "participant_profile_states", "participant_profiles"
   add_foreign_key "participant_profiles", "cohorts"
   add_foreign_key "participant_profiles", "core_induction_programmes"
   add_foreign_key "participant_profiles", "npq_courses"
-  add_foreign_key "participant_profiles", "participant_identities"
+  add_foreign_key "participant_profiles", "participant_identities", validate: false
   add_foreign_key "participant_profiles", "participant_profiles", column: "mentor_profile_id"
   add_foreign_key "participant_profiles", "schedules"
   add_foreign_key "participant_profiles", "school_cohorts"
   add_foreign_key "participant_profiles", "schools"
-  add_foreign_key "participant_profiles", "teacher_profiles"
+  add_foreign_key "participant_profiles", "teacher_profiles", validate: false
   add_foreign_key "partnership_notification_emails", "partnerships"
   add_foreign_key "partnerships", "cohorts"
   add_foreign_key "partnerships", "delivery_partners"
@@ -1362,7 +1387,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_135601) do
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "school_cohorts", "cohorts"
   add_foreign_key "school_cohorts", "core_induction_programmes"
-  add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id"
+  add_foreign_key "school_cohorts", "induction_programmes", column: "default_induction_programme_id", validate: false
   add_foreign_key "school_cohorts", "schools"
   add_foreign_key "school_local_authorities", "local_authorities"
   add_foreign_key "school_local_authorities", "schools"

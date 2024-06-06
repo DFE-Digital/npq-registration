@@ -5,6 +5,7 @@ module Courses
       name: "Additional Support Offer for new headteachers",
       ecf_id: "7fbefdd4-dd2d-4a4f-8995-d59e525124b7",
       identifier: "npq-additional-support-offer",
+      course_group_name: "support",
       description: "The Additional Support Offer is a targeted support package for new headteachers.",
       display: false,
     },
@@ -13,6 +14,7 @@ module Courses
       name: "NPQ for Leading Behaviour and Culture (NPQLBC)",
       ecf_id: "7d47a0a6-fa74-4587-92cc-cd1e4548a2e5",
       identifier: "npq-leading-behaviour-culture",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -20,6 +22,7 @@ module Courses
       name: "NPQ for Leading Literacy (NPQLL)",
       ecf_id: "829fcd45-e39d-49a9-b309-26d26debfa90",
       identifier: "npq-leading-literacy",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -27,6 +30,7 @@ module Courses
       name: "NPQ for Leading Teaching (NPQLT)",
       ecf_id: "15c52ed8-06b5-426e-81a2-c2664978a0dc",
       identifier: "npq-leading-teaching",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -34,6 +38,7 @@ module Courses
       name: "NPQ for Leading Teacher Development (NPQLTD)",
       ecf_id: "29fee78b-30ce-4b93-ba21-80be2fde286f",
       identifier: "npq-leading-teaching-development",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -41,6 +46,7 @@ module Courses
       name: "NPQ for Senior Leadership (NPQSL)",
       ecf_id: "a42736ad-3d0b-401d-aebe-354ef4c193ec",
       identifier: "npq-senior-leadership",
+      course_group_name: "leadership",
       display: true,
     },
     {
@@ -48,6 +54,7 @@ module Courses
       name: "Leading primary mathematics (NPQLPM)",
       ecf_id: "604c0c72-0e4b-42e7-ba5a-4aac7cafe1c5",
       identifier: "npq-leading-primary-mathematics",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -55,6 +62,7 @@ module Courses
       name: "NPQ for Headship (NPQH)",
       ecf_id: "0f7d6578-a12c-4498-92a0-2ee0f18e0768",
       identifier: "npq-headship",
+      course_group_name: "leadership",
       display: true,
     },
     {
@@ -62,6 +70,7 @@ module Courses
       name: "NPQ for Executive Leadership (NPQEL)",
       ecf_id: "aef853f2-9b48-4b6a-9d2a-91b295f5ca9a",
       identifier: "npq-executive-leadership",
+      course_group_name: "leadership",
       display: true,
     },
     {
@@ -69,6 +78,7 @@ module Courses
       name: "NPQ for Early Years Leadership (NPQEYL)",
       ecf_id: "66dff4af-a518-498f-9042-36a41f9e8aa7",
       identifier: "npq-early-years-leadership",
+      course_group_name: "leadership",
       display: true,
     },
     {
@@ -76,6 +86,7 @@ module Courses
       name: "NPQ for Senco (NPQSENCO)",
       ecf_id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
       identifier: "npq-senco",
+      course_group_name: "specialist",
       display: true,
     },
     {
@@ -83,6 +94,7 @@ module Courses
       name: "Early Headship Coaching Offer",
       ecf_id: "0222d1a8-a8e1-42e3-a040-2c585f6c194a",
       identifier: "npq-early-headship-coaching-offer",
+      course_group_name: "ehco",
       description: "Structured support and networking opportunities if you’re a headteacher in your first 5 years of headship.",
       display: true,
     },
