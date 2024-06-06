@@ -80,19 +80,15 @@ class FundingEligibility
       end
 
       return NOT_IN_ENGLAND unless inside_catchment?
-      return PREVIOUSLY_FUNDED if previously_funded?
-      return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
 
       unless institution
         if query_store
-          if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
+          return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
+
+          if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
+            return FUNDED_ELIGIBILITY_RESULT if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
+
             return NO_INSTITUTION
-          elsif query_store.employment_type_hospital_school? || query_store.young_offender_institution?
-            if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
-              return FUNDED_ELIGIBILITY_RESULT
-            else
-              return NO_INSTITUTION
-            end
           else
             return INELIGIBLE_INSTITUTION_TYPE
           end
@@ -100,6 +96,9 @@ class FundingEligibility
           return NO_INSTITUTION
         end
       end
+
+      return PREVIOUSLY_FUNDED if previously_funded?
+      return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
 
       case institution.class.name
       when "School"
