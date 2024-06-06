@@ -58,6 +58,8 @@ module Participants
             school
             cohort
             lead_provider
+            application_states
+            schedule
           ],
         )
     end

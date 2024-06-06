@@ -6,12 +6,11 @@ module API
     class AttributesSerializer < Blueprinter::Base
       exclude :id
 
-      field(:email)
-      field(:full_name)
-      field(:trn, name: :teacher_reference_number)
-      field(:updated_at)
-
       view :v1 do
+        field(:ecf_id, name: :participant_id)
+        field(:full_name)
+        field(:email)
+
         field(:npq_courses) do |object, options|
           applications(object, options).map { |application| application.course.identifier }
         end
@@ -25,9 +24,17 @@ module API
             }
           end
         end
+
+        field(:trn, name: :teacher_reference_number)
+        field(:updated_at)
       end
 
       view :v2 do
+        field(:email)
+        field(:full_name)
+        field(:trn, name: :teacher_reference_number)
+        field(:updated_at)
+
         field(:npq_enrolments) do |object, options|
           applications(object, options).map do |application|
             {
@@ -46,6 +53,10 @@ module API
       end
 
       view :v3 do
+        field(:full_name)
+        field(:trn, name: :teacher_reference_number)
+        field(:updated_at)
+
         field(:npq_enrolments) do |object, options|
           applications(object, options).map do |application|
             {
@@ -58,8 +69,8 @@ module API
               training_status: application.training_status,
               school_urn: application.school&.urn,
               targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              withdrawal: nil,
-              deferral: nil,
+              withdrawal: withdrawal(application:, lead_provider: options[:lead_provider]),
+              deferral: deferral(application:, lead_provider: options[:lead_provider]),
               created_at: application.created_at.rfc3339,
               funded_place: application.funded_place,
             }
@@ -77,13 +88,45 @@ module API
         end
       end
 
-      def self.applications(object, options)
-        scope = object.applications
+      class << self
+        def applications(object, options)
+          return Application.none unless options[:lead_provider]
 
-        if options[:lead_provider]
-          scope.where(lead_provider: options[:lead_provider])
-        else
-          Application.none
+          object.applications.select { |application| application.lead_provider_id == options[:lead_provider].id }
+        end
+
+        def withdrawal(application:, lead_provider:)
+          if application.withdrawn?
+            # We are doing this in memory to avoid running those as queries on each request
+            latest_application_state = application
+              .application_states.sort_by(&:created_at)
+              .reverse!
+              .find { |as| as.state == ApplicationState.states[:withdrawn] && as.lead_provider_id == lead_provider.id }
+
+            if latest_application_state.present?
+              {
+                reason: latest_application_state.reason,
+                date: latest_application_state.created_at.rfc3339,
+              }
+            end
+          end
+        end
+
+        def deferral(application:, lead_provider:)
+          if application.deferred?
+            # We are doing this in memory to avoid running those as queries on each request
+            latest_application_state = application
+              .application_states.sort_by(&:created_at)
+              .reverse!
+              .find { |as| as.state == ApplicationState.states[:deferred] && as.lead_provider_id == lead_provider.id }
+
+            if latest_application_state.present?
+              {
+                reason: latest_application_state.reason,
+                date: latest_application_state.created_at.rfc3339,
+              }
+            end
+          end
         end
       end
     end
