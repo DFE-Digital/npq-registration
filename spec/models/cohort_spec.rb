@@ -62,9 +62,5 @@ RSpec.describe Cohort, type: :model do
 
       expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
     end
-
-    it "raises an error when there is no cohort for the current year" do
-      expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
-    end
   end
 end

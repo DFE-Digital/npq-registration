@@ -264,7 +264,7 @@ RSpec.describe Applications::Accept do
     end
 
     describe "NPQ capping" do
-      let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+      let(:cohort) { create(:cohort, :next, :with_funding_cap) }
 
       before do
         application.update!(eligible_for_funding: true)

@@ -24,7 +24,7 @@ RSpec.describe Applications::ChangeFundedPlace do
     end
     let(:course) { create(:course, :sl) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+    let(:cohort) { create(:cohort, :next, :with_funding_cap) }
 
     context "when application funded_place is false" do
       before do

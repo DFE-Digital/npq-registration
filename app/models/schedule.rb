@@ -9,4 +9,17 @@ class Schedule < ApplicationRecord
 
   validates :applies_from, presence: true
   validates :applies_to, presence: true
+
+  def self.default_for(course_group:, cohort: Cohort.current)
+    case course_group.name
+    when "specialist"
+      find_by!(cohort:, identifier: "npq-specialist-spring")
+    when "leadership"
+      find_by!(cohort:, identifier: "npq-leadership-spring")
+    when "support"
+      find_by!(cohort:, identifier: "npq-aso-december")
+    when "ehco"
+      find_by!(cohort:, identifier: "npq-ehco-june")
+    end
+  end
 end

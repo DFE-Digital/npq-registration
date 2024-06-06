@@ -71,6 +71,10 @@ FactoryBot.define do
       eligible_for_funding { true }
     end
 
+    trait :with_random_funding_cap_cohort do
+      cohort { association :cohort, :with_funding_cap, start_year: Faker::Number.between(from: 2024, to: 2029) }
+    end
+
     trait :eligible_for_funded_place do
       accepted
       eligible_for_funding { true }
@@ -92,10 +96,6 @@ FactoryBot.define do
       work_setting { %w[a_school an_academy_trust a_16_to_19_educational_setting].sample }
     end
 
-    trait :with_random_lead_provider_approval_status do
-      lead_provider_approval_status { %w[accepted rejected].sample }
-    end
-
     trait :with_random_participant_outcome_state do
       participant_outcome_state { %w[passed failed].sample }
     end
@@ -110,6 +110,10 @@ FactoryBot.define do
 
         FactoryBot.create(:participant_id_change, to_participant: user, user:)
       end
+    end
+
+    trait :with_random_funded_place do
+      funded_place { Faker::Boolean.boolean }
     end
 
     trait :withdrawn do

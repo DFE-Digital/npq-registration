@@ -11,6 +11,10 @@ FactoryBot.define do
 
     allowed_declaration_types { %w[started retained-1 retained-2 completed] }
 
+    initialize_with do
+      Schedule.find_by(cohort:, identifier:) || new(**attributes)
+    end
+
     trait :npq_aso_december do
       name { "NPQ ASO December" }
       identifier { "npq-aso-december" }
