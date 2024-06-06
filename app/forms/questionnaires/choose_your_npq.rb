@@ -71,6 +71,8 @@ module Questionnaires
           :senco_in_role
         elsif course.ehco?
           :npqh_status
+        elsif lead_mentor?
+          :ineligible_for_funding
         else
           :possible_funding
         end

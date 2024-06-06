@@ -61,7 +61,7 @@ module Questionnaires
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
-        lead_mentor: lead_mentor_for_accredited_itt_provider?,
+        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn:,
