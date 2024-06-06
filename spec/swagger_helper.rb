@@ -58,6 +58,7 @@ RSpec.configure do |config|
           ApplicationsResponse: APPLICATIONS_RESPONSE[version],
           Application: APPLICATION[version],
           ApplicationAcceptRequest: APPLICATION_ACCEPT_REQUEST,
+          ApplicationAcceptRequestV3: APPLICATION_ACCEPT_REQUEST_V3,
           ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
           EnrolmentsCsvResponse: ENROLMENTS_CSV_RESPONSE[version],
           EnrolmentCsv: ENROLMENT_CSV[version],

@@ -42,6 +42,11 @@ class Course < ApplicationRecord
     npq-executive-leadership
     npq-early-years-leadership
   ].freeze
+
+  def schedule_for(cohort:)
+    course_group.schedule_for(cohort:)
+  end
+
   class << self
     def npqeyl
       find_by(identifier: NPQ_EARLY_YEARS_LEADERSHIP)

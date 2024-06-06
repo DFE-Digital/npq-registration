@@ -70,4 +70,13 @@ RSpec.describe Course do
       it { is_expected.to contain_exactly(course) }
     end
   end
+
+  describe "#schedule_for" do
+    let(:cohort) { build(:cohort, :current) }
+
+    it "calls course_group.schedule_for method" do
+      expect(subject.course_group).to receive(:schedule_for).with(cohort:)
+      subject.schedule_for(cohort:)
+    end
+  end
 end

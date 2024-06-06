@@ -4,7 +4,19 @@ require "swagger_helper"
 RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/swagger.yaml" do
   include_context "with authorization for api doc request"
 
-  let!(:application) { create(:application, lead_provider:) }
+  let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+  let(:course) { create(:course, :sl, course_group:) }
+  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+  let(:cohort) { create(:cohort, :current) }
+  let!(:application) do
+    create(
+      :application,
+      course:,
+      lead_provider:,
+      cohort:,
+      schedule:,
+    )
+  end
 
   it_behaves_like "an API index endpoint documentation",
                   "/api/v2/npq-applications",
