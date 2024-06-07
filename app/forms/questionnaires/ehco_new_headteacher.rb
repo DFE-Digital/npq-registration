@@ -15,6 +15,8 @@ module Questionnaires
     end
 
     def next_step
+      wizard.store["ehco_new_headteacher"] = ehco_new_headteacher
+
       case funding_eligiblity_status_code
       when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :ehco_possible_funding
