@@ -83,6 +83,7 @@ class FundingEligibility
 
       unless institution
         if query_store
+          return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
 
           if query_store.employment_type_hospital_school? || query_store.young_offender_institution?

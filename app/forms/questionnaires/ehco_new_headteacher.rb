@@ -55,6 +55,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
+        query_store:,
       ).funding_eligiblity_status_code
     end
 

@@ -65,7 +65,9 @@ module Questionnaires
           :check_answers
         end
       elsif works_in_other?
-        if course.npqlpm?
+        if employment_type_other?
+          :ineligible_for_funding
+        elsif course.npqlpm?
           :maths_eligibility_teaching_for_mastery
         elsif course.npqs?
           :senco_in_role
