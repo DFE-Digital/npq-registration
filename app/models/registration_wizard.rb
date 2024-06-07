@@ -248,7 +248,7 @@ class RegistrationWizard
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
                                 change_step: :funding_your_ehco)
-      elsif query_store.works_in_school? || query_store.works_in_childcare?
+      elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_other?)
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
                                 change_step: :funding_your_npq)

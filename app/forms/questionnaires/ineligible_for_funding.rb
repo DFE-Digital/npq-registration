@@ -57,11 +57,7 @@ module Questionnaires
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::NO_INSTITUTION
-                                 if query_store.works_in_school?
-                                   return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
-                                 else
-                                   return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-                                 end
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"

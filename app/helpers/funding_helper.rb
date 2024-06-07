@@ -10,6 +10,7 @@ module FundingHelper
 
   def scholarship_eligibility_in_review?(application)
     return false if application.eligible_for_funding
+    return false unless application.eligible_for_funding && application.funding_choice.present?
     return false if application.employment_type == "other"
     return true if application.teacher_catchment == "england" && application.course.ehco? && new_headteacher?(application)
 
