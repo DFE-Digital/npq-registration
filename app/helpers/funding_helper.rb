@@ -11,6 +11,7 @@ module FundingHelper
   def scholarship_eligibility_in_review?(application)
     return false if application.eligible_for_funding
     return false if application.employment_type == "other"
+    return true if application.teacher_catchment == "england" && application.course.ehco? && new_headteacher?(application)
 
     application.work_setting == "other" && application.employment_type != "lead_mentor_for_accredited_itt_provider" &&
       application.teacher_catchment == "england" && application.course.identifier != "npq-early-headship-coaching-offer"

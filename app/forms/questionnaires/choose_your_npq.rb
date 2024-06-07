@@ -74,13 +74,15 @@ module Questionnaires
         elsif course.ehco?
           :npqh_status
         elsif lead_mentor?
-          if course.npqltd?
+          if course.npqltd? && inside_catchment?
             :possible_funding
           else
             :ineligible_for_funding
           end
-        else
+        elsif inside_catchment?
           :possible_funding
+        else
+          :ineligible_for_funding
         end
       elsif course.ehco?
         :npqh_status
