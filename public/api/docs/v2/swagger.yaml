@@ -216,6 +216,69 @@ paths:
             text/csv:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participants/npq":
+    get:
+      summary: Retrieve multiple NPQ participants
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of NPQ participants
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participants/npq/{id}":
+    get:
+      summary: Retrieve a single NPQ participant
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single NPQ participant
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
 components:
@@ -256,6 +319,15 @@ components:
           example: '2021-05-13T11:21:55Z'
     ListEnrolmentsFilter:
       description: Filter enrolments to return more specific results
+      type: object
+      properties:
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListParticipantsFilter:
+      description: Filter applications to return more specific results
       type: object
       properties:
         updated_since:

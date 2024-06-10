@@ -207,7 +207,7 @@ paths:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v3/participants/npq/{id}":
     get:
-      summary: Retrieve a single NPQ participants
+      summary: Retrieve a single NPQ participant
       tags:
       - NPQ Participants
       security:
@@ -220,7 +220,7 @@ paths:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
         '200':
-          description: A single NPQ participants
+          description: A single NPQ participant
           content:
             application/json:
               schema:
@@ -860,6 +860,7 @@ components:
                     required:
                     - reason
                     - date
+                    example:
                     properties:
                       reason:
                         description: The reason a participant was withdrawn
@@ -897,6 +898,7 @@ components:
                     required:
                     - reason
                     - date
+                    example:
                     properties:
                       reason:
                         description: The reason a participant was deferred

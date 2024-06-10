@@ -60,7 +60,7 @@ PARTICIPANT = {
             },
           },
           funded_places: {
-            description: "Information about the course(s) the participant is enroled in",
+            description: "Information about the funded place(s) the participant is enroled in",
             type: :array,
             items: {
               type: :object,
@@ -398,6 +398,7 @@ PARTICIPANT = {
                   type: :object,
                   nullable: true,
                   required: %i[reason date],
+                  example: nil,
                   properties: {
                     reason: {
                       description: "The reason a participant was withdrawn",
@@ -438,6 +439,7 @@ PARTICIPANT = {
                   type: :object,
                   nullable: true,
                   required: %i[reason date],
+                  example: nil,
                   properties: {
                     reason: {
                       description: "The reason a participant was deferred",

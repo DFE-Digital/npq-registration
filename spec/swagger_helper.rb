@@ -63,8 +63,6 @@ RSpec.configure do |config|
           EnrolmentCsv: ENROLMENT_CSV[version],
           ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE[version],
           ApplicationCsv: APPLICATION_CSV[version],
-          ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE[version],
-          ApplicationCsv: APPLICATION_CSV[version],
           ParticipantResponse: PARTICIPANT_RESPONSE[version],
           ParticipantsResponse: PARTICIPANTS_RESPONSE[version],
           Participant: PARTICIPANT[version],

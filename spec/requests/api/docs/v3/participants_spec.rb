@@ -20,7 +20,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
   it_behaves_like "an API show endpoint documentation",
                   "/api/v3/participants/npq/{id}",
                   "NPQ Participants",
-                  "NPQ participants",
+                  "NPQ participant",
                   "#/components/schemas/ParticipantResponse" do
     let(:resource) { participant }
   end

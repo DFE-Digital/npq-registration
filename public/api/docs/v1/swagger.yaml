@@ -223,7 +223,7 @@ paths:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v1/participants/npq/{id}":
     get:
-      summary: Retrieve a single NPQ participants
+      summary: Retrieve a single NPQ participant
       tags:
       - NPQ Participants
       security:
@@ -236,7 +236,7 @@ paths:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
         '200':
-          description: A single NPQ participants
+          description: A single NPQ participant
           content:
             application/json:
               schema:
@@ -902,8 +902,8 @@ components:
                 - npq-leading-primary-mathematics
                 - npq-senco
             funded_places:
-              description: Information about the course(s) the participant is enroled
-                in
+              description: Information about the funded place(s) the participant is
+                enroled in
               type: array
               items:
                 type: object
