@@ -16,11 +16,7 @@ FactoryBot.define do
     end
 
     trait :with_funding_cap do
-      after(:build) do |cohort|
-        next unless cohort.start_year >= 2024
-
-        cohort.update!(funding_cap: true)
-      end
+      funding_cap { true }
     end
   end
 end

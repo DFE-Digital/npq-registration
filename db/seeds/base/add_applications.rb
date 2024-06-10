@@ -7,7 +7,7 @@ LeadProvider.find_each do |lead_provider|
     # users with one application each
     FactoryBot.create_list(
       :application,
-      10,
+      5,
       :with_random_user,
       :with_random_work_setting,
       :with_participant_id_change,
@@ -33,7 +33,7 @@ LeadProvider.find_each do |lead_provider|
     # users with one accepted application each
     FactoryBot.create_list(
       :application,
-      4,
+      2,
       :accepted,
       :with_random_user,
       :with_random_work_setting,
@@ -46,7 +46,7 @@ LeadProvider.find_each do |lead_provider|
     # users with one rejected application each
     FactoryBot.create_list(
       :application,
-      4,
+      2,
       :rejected,
       :with_random_user,
       :with_random_work_setting,
@@ -59,7 +59,7 @@ LeadProvider.find_each do |lead_provider|
     # users with one deferred application each
     FactoryBot.create_list(
       :application,
-      4,
+      2,
       :deferred,
       %i[accepted rejected].sample,
       :with_random_user,
@@ -73,7 +73,7 @@ LeadProvider.find_each do |lead_provider|
     # users with one withdrawn application each
     FactoryBot.create_list(
       :application,
-      4,
+      2,
       :withdrawn,
       %i[accepted rejected].sample,
       :with_random_user,
@@ -87,68 +87,52 @@ LeadProvider.find_each do |lead_provider|
     # users with one eligible for funded place application each (cohort funding_cap true)
     FactoryBot.create_list(
       :application,
-      5,
+      2,
       :eligible_for_funded_place,
       :with_random_user,
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
       course: Course.all.sample,
-    )
-
-    # users with one eligible for funded place application each (cohort funding_cap false)
-    FactoryBot.create_list(
-      :application,
-      5,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      :with_participant_id_change,
-      lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.where("start_year >= ?", 2024).sample.tap do |c|
-                c.funding_cap = false
+      funded_place: Faker::Boolean.boolean(true_ratio: 0.6),
+      cohort: Cohort.where(funding_cap: true).sample || Cohort.all.sample.tap do |c|
+                c.funding_cap = true
                 c.save!
               end,
     )
 
-    # users with one eligible for funded place & withdrawn application each
+    # users with one not eligible for funded place application each (cohort funding_cap true)
     FactoryBot.create_list(
       :application,
-      5,
-      :eligible_for_funded_place,
-      :withdrawn,
+      2,
+      :accepted,
       :with_random_user,
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
       course: Course.all.sample,
+      funded_place: false,
+      cohort: Cohort.where(funding_cap: true).sample || Cohort.all.sample.tap do |c|
+                c.funding_cap = true
+                c.save!
+              end,
     )
 
-    # users with one eligible for funded place & deferred application each
+    # users with one funded place nil application each (cohort funding_cap false)
     FactoryBot.create_list(
       :application,
-      5,
-      :eligible_for_funded_place,
-      :withdrawn,
+      2,
+      :accepted,
       :with_random_user,
       :with_random_work_setting,
+      :with_random_eligibility_for_funding,
       :with_participant_id_change,
       lead_provider:,
       course: Course.all.sample,
-    )
-
-    # users with one funded place application each
-    FactoryBot.create_list(
-      :application,
-      10,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      :with_participant_id_change,
-      :with_random_funded_place,
-      lead_provider:,
-      course: Course.all.sample,
+      cohort: Cohort.where(funding_cap: false).sample || Cohort.all.sample.tap do |c|
+                c.funding_cap = false
+                c.save!
+              end,
     )
   end
 end

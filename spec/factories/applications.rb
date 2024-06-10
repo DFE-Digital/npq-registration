@@ -71,13 +71,9 @@ FactoryBot.define do
       eligible_for_funding { true }
     end
 
-    trait :with_random_funding_cap_cohort do
-      cohort { association :cohort, :with_funding_cap, start_year: Faker::Number.between(from: 2024, to: 2029) }
-    end
-
     trait :eligible_for_funded_place do
       accepted
-      eligible_for_funding { true }
+      eligible_for_funding
 
       after(:create) do |application|
         application.cohort.update!(funding_cap: true)
@@ -104,16 +100,16 @@ FactoryBot.define do
       user { FactoryBot.build(:user, :with_random_name) }
     end
 
+    trait :with_random_eligibility_for_funding do
+      eligible_for_funding { Faker::Boolean.boolean }
+    end
+
     trait :with_participant_id_change do
       after(:create) do |application|
         user = application.user
 
         FactoryBot.create(:participant_id_change, to_participant: user, user:)
       end
-    end
-
-    trait :with_random_funded_place do
-      funded_place { Faker::Boolean.boolean }
     end
 
     trait :withdrawn do
