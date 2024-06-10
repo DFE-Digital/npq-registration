@@ -64,14 +64,14 @@ module Questionnaires
         else
           :check_answers
         end
+      elsif course.ehco?
+        :npqh_status
+      elsif course.npqlpm?
+        :maths_eligibility_teaching_for_mastery
+      elsif course.npqs?
+        :senco_in_role
       elsif works_in_other?
-        if course.npqlpm?
-          :maths_eligibility_teaching_for_mastery
-        elsif course.npqs?
-          :senco_in_role
-        elsif course.ehco?
-          :npqh_status
-        elsif employment_type_other?
+        if employment_type_other?
           :ineligible_for_funding
         elsif lead_mentor?
           if course.npqltd? && inside_catchment?
@@ -84,12 +84,6 @@ module Questionnaires
         else
           :ineligible_for_funding
         end
-      elsif course.ehco?
-        :npqh_status
-      elsif course.npqlpm?
-        :maths_eligibility_teaching_for_mastery
-      elsif course.npqs?
-        :senco_in_role
       elsif eligible_for_funding?
         :possible_funding
       else
