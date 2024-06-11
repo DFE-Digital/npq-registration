@@ -29,7 +29,6 @@ FactoryBot.define do
     end
 
     trait :application_for_private_childcare_provider do
-      school_urn { nil }
       private_childcare_provider { build(:private_childcare_provider) }
 
       works_in_school { false }
@@ -49,11 +48,15 @@ FactoryBot.define do
 
     trait :accepted do
       lead_provider_approval_status { :accepted }
-      schedule { Schedule.where(cohort:, course_group: course.course_group).sample }
+      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, cohort:) }
     end
 
     trait :rejected do
       lead_provider_approval_status { :rejected }
+    end
+
+    trait :pending do
+      lead_provider_approval_status { :pending }
     end
 
     trait :eligible_for_funding do

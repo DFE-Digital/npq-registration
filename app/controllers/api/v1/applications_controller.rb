@@ -75,7 +75,7 @@ module API
       end
 
       def to_csv(obj)
-        ApplicationCsvSerializer.new(obj).call
+        ApplicationsCsvSerializer.new(obj).serialize
       end
 
       def accept_permitted_params

@@ -190,6 +190,32 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+  "/api/v2/npq-enrolments.csv":
+    get:
+      summary: Retrieve all NPQ enrolments in CSV format
+      tags:
+      - NPQ Enrolments
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListEnrolmentsFilter"
+      responses:
+        '200':
+          description: A CSV file of NPQ enrolments
+          content:
+            text/csv:
+              schema:
+                "$ref": "#/components/schemas/EnrolmentsCsvResponse"
+        '401':
+          description: Unauthorized
+          content:
+            text/csv:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
 components:
@@ -223,6 +249,15 @@ components:
           description: Return only NPQ applications from the specified cohort.
           type: string
           example: '2022'
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListEnrolmentsFilter:
+      description: Filter enrolments to return more specific results
+      type: object
+      properties:
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
@@ -534,6 +569,105 @@ components:
                   type: boolean
                   required: true
                   example: true
+    EnrolmentsCsvResponse:
+      description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
+      properties:
+        example:
+          type: array
+          items:
+            "$ref": "#/components/schemas/EnrolmentCsv"
+      example: |
+        participant_id,course_identifier,schedule_identifier,cohort,npq_application_id,eligible_for_funding,training_status,school_urn,funded_place
+
+            52a606ba-4e49-4dab-aa11-42e1e9274884,npq-senior-leadership,npq-ehco-june,2022,8e788f3c-4eac-4bb3-876d-b7b701fcdbd3,true,active,945562,true
+
+            e6112b6f-e9c8-40ad-8e5a-3f74dc74d7fd,npq-leading-teaching,npq-leadership-autumn,2022,6feecd44-196a-4203-9fcd-207fb8ddc4eb,true,active,102561,true
+    EnrolmentCsv:
+      description: The details of an NPQ application
+      type: object
+      required:
+      - participant_id
+      - course_identifier
+      - schedule_identifier
+      - cohort
+      - npq_application_id
+      - eligible_for_funding
+      - training_status
+      - school_urn
+      - funded_place
+      properties:
+        participant_id:
+          description: The unique identifier of this NPQ participant
+          type: string
+          example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+          format: uuid
+        course_identifier:
+          description: The NPQ course the participant is enrolled in
+          type: string
+          example: npq-leading-teaching
+          enum:
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-senior-leadership
+          - npq-headship
+          - npq-executive-leadership
+          - npq-early-years-leadership
+          - npq-additional-support-offer
+          - npq-early-headship-coaching-offer
+          - npq-leading-primary-mathematics
+          - npq-senco
+        schedule_identifier:
+          description: The schedule currently applied to this enrolment
+          nullable: true
+          type: string
+          example: npq-leadership-spring
+          enum:
+          - npq-aso-march
+          - npq-aso-june
+          - npq-aso-november
+          - npq-aso-december
+          - npq-ehco-march
+          - npq-ehco-june
+          - npq-ehco-november
+          - npq-ehco-december
+          - npq-leadership-autumn
+          - npq-leadership-spring
+          - npq-specialist-autumn
+          - npq-specialist-spring
+        cohort:
+          description: The value indicates which call-off contract funds this participant’s
+            training. 2021 indicates a participant that has started, or will start,
+            their training in the 2021/22 academic year. Providers may change an NPQ
+            participant’s cohort up until the point of submitting a started declaration.
+          type: string
+          nullable: true
+          example: '2022'
+        npq_application_id:
+          description: The unique identifier of this NPQ application that was accepted
+            to create this enrolment
+          type: string
+          example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+          format: uuid
+        eligible_for_funding:
+          description: Indicates whether this NPQ participant would be eligible for
+            funding from the DfE
+          type: boolean
+          example: true
+        training_status:
+          description: The training status of the ECF participant
+          type: string
+          example: active
+          enum:
+          - active
+          - deferred
+          - withdrawn
+        school_urn:
+          description: The Unique Reference Number (URN) of the school where this
+            NPQ participant is teaching
+          type: string
+          example: '106286'
     ApplicationsCsvResponse:
       description: A list of NPQ applications in the Comma Separated Value (CSV) format
       properties:
