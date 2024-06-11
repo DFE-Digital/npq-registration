@@ -172,6 +172,24 @@ RSpec.describe Application do
 
     context "when the application has been previously funded" do
       it { is_expected.to be_previously_funded }
+
+      context "when funded place is `nil`" do
+        before { previous_application.update!(funded_place: nil) }
+
+        it { is_expected.to be_previously_funded }
+      end
+
+      context "when funded place is `false`" do
+        before { previous_application.update!(funded_place: false) }
+
+        it { is_expected.to_not be_previously_funded }
+      end
+
+      context "when funded place is `true`" do
+        before { previous_application.update!(funded_place: true) }
+
+        it { is_expected.to be_previously_funded }
+      end
     end
 
     context "when the application has not been previously funded (previous application not accepted)" do
