@@ -97,6 +97,7 @@ RSpec.describe HandleSubmissionForStore do
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({
           "course_id" => course.id,
+          "schedule_id" => nil,
           "ecf_id" => nil,
           "eligible_for_funding" => true,
           "employer_name" => nil,
@@ -201,6 +202,7 @@ RSpec.describe HandleSubmissionForStore do
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({
           "course_id" => course.id,
+          "schedule_id" => nil,
           "ecf_id" => nil,
           "eligible_for_funding" => false,
           "employer_name" => nil,

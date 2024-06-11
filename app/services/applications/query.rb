@@ -5,7 +5,7 @@ module Applications
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, participant_ids: :ignore, sort: nil)
+    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, lead_provider_approval_status: :ignore, participant_ids: :ignore, sort: nil)
       # The subquery is an optimization so that we don't have to perform
       # a separate query for each record as part of Application#previously_funded?
       @scope = all_applications.select(
@@ -26,6 +26,7 @@ module Applications
       )
       @sort = sort
 
+      where_lead_provider_approval_status_in(lead_provider_approval_status)
       where_lead_provider_is(lead_provider)
       where_cohort_start_year_in(cohort_start_years)
       where_updated_since(updated_since)
@@ -44,6 +45,12 @@ module Applications
     end
 
   private
+
+    def where_lead_provider_approval_status_in(lead_provider_approval_status)
+      return if lead_provider_approval_status == :ignore
+
+      scope.merge!(Application.where(lead_provider_approval_status: extract_conditions(lead_provider_approval_status, allowlist: Application.lead_provider_approval_statuses.values)))
+    end
 
     def where_lead_provider_is(lead_provider)
       return if lead_provider == :ignore
@@ -89,6 +96,7 @@ module Applications
           :cohort,
           :private_childcare_provider,
           :itt_provider,
+          :schedule,
         )
     end
   end

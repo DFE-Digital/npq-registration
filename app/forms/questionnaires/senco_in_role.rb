@@ -39,7 +39,16 @@ module Questionnaires
         :funding_eligibility_senco
       else
         wizard.store["senco_in_role_status"] = false
-        :ineligible_for_funding
+
+        if works_in_other?
+          if funding_eligibility.funding_eligiblity_status_code == FundingEligibility::NO_INSTITUTION
+            :possible_funding
+          else
+            :ineligible_for_funding
+          end
+        else
+          :ineligible_for_funding
+        end
       end
     end
 
@@ -52,16 +61,16 @@ module Questionnaires
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
-        lead_mentor: lead_mentor_for_accredited_itt_provider?,
+        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
         inside_catchment: inside_catchment?,
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
-        kind_of_nursery: wizard.query_store.kind_of_nursery,
+        query_store:,
       )
     end
 
     delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
-             :approved_itt_provider?, :get_an_identity_id, :trn, to: :query_store
+             :approved_itt_provider?, :get_an_identity_id, :works_in_other?, :trn, to: :query_store
   end
 end

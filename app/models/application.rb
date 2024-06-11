@@ -16,6 +16,7 @@ class Application < ApplicationRecord
   belongs_to :private_childcare_provider, optional: true
   belongs_to :itt_provider, optional: true
   belongs_to :cohort, optional: true
+  belongs_to :schedule, optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes, through: :user

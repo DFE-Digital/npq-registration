@@ -116,6 +116,7 @@ RSpec.feature "Happy journeys",
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",

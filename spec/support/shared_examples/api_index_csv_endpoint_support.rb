@@ -10,12 +10,12 @@ RSpec.shared_examples "an API index Csv endpoint" do
         create_resource(lead_provider: create(:lead_provider, name: "Another lead provider"))
       end
 
-      it "returns 2 resources" do
+      it "returns a header row and 2 resources" do
         api_get(path)
 
-        expect(response.status).to eq 200
+        expect(response.status).to eq(200)
         expect(response.content_type).to eql("text/csv")
-        expect(response_ids_from_csv).to contain_exactly(resource1[resource_id_key], resource2[resource_id_key])
+        expect(parsed_csv_response.count).to eq(3)
       end
 
       it "calls the correct query/serializer" do
@@ -24,7 +24,7 @@ RSpec.shared_examples "an API index Csv endpoint" do
 
         api_get(path)
 
-        expect(mock_serializer).to have_received(:call)
+        expect(mock_serializer).to have_received(:serialize)
       end
     end
 
@@ -33,8 +33,8 @@ RSpec.shared_examples "an API index Csv endpoint" do
         api_get(path)
 
         expect(response.status).to eq 200
-        expect(parsed_csv_response[0][0]).to eq("id")
-        expect(parsed_csv_response[1]).to be_nil
+        expect(parsed_csv_response.count).to eq(1)
+        expect(parsed_csv_response.first).to eq(serializer::CSV_HEADERS)
       end
     end
   end

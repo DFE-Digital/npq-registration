@@ -70,16 +70,22 @@ module Questionnaires
         :maths_eligibility_teaching_for_mastery
       elsif course.npqs?
         :senco_in_role
-      elsif eligible_for_funding?
-        :possible_funding
-      elsif wizard.query_store.works_in_other?
-        if lead_mentor?
+      elsif works_in_other?
+        if employment_type_other?
           :ineligible_for_funding
-        elsif wizard.query_store.employment_type_other? || wizard.query_store.valid_employent_type_for_england?
+        elsif lead_mentor?
+          if course.npqltd? && inside_catchment?
+            :possible_funding
+          else
+            :ineligible_for_funding
+          end
+        elsif inside_catchment?
           :possible_funding
         else
-          :choose_your_provider
+          :ineligible_for_funding
         end
+      elsif eligible_for_funding?
+        :possible_funding
       else
         :ineligible_for_funding
       end
@@ -147,7 +153,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
-        kind_of_nursery: wizard.query_store.kind_of_nursery,
+        query_store: wizard.query_store,
       ).funded?
     end
 
@@ -161,7 +167,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
-        kind_of_nursery: wizard.query_store.kind_of_nursery,
+        query_store: wizard.query_store,
       )
     end
 
@@ -170,7 +176,8 @@ module Questionnaires
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, to: :query_store
+    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_other?, :young_offender_institution?,
+             :employment_type_local_authority_virtual_school?, :employment_type_hospital_school?, :employment_type_other?, to: :query_store
 
     def validate_course_exists
       if course.blank?

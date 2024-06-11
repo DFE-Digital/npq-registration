@@ -8,7 +8,7 @@ module Questionnaires
 
     def previous_step
       if course.npqlpm?
-        if wizard.query_store.maths_understanding?
+        if maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
           :maths_understanding_of_approach
@@ -16,10 +16,6 @@ module Questionnaires
       else
         :choose_your_npq
       end
-    end
-
-    def course
-      @course ||= wizard.query_store.course
     end
 
     def funding_amount
@@ -44,28 +40,16 @@ module Questionnaires
 
   private
 
-    def works_in_other?
-      wizard.query_store.works_in_other?
-    end
-
-    def employment_type_other?
-      wizard.query_store.employment_type_other?
-    end
-
-    def valid_employent_type_for_england?
-      wizard.query_store.valid_employent_type_for_england?
-    end
-
     def is_funding_eligibility_unclear?
+      return true if works_in_other? && employment_type_local_authority_virtual_school?
+      return true if works_in_other? && local_authority_supply_teacher?
+      return false if works_in_other? &&
+        (employment_type_hospital_school? || young_offender_institution?) &&
+        (course.ehco? || course.npqh? || course.npqs? || course.npqlpm?)
+
       works_in_other? && (employment_type_other? || valid_employent_type_for_england?)
     end
 
-    def targeted_delivery_funding_eligibility?
-      wizard.query_store.targeted_delivery_funding_eligibility?
-    end
-
-    def tsf_primary_plus_eligibility?
-      wizard.query_store.tsf_primary_plus_eligibility?
-    end
+    delegate_missing_to :query_store
   end
 end

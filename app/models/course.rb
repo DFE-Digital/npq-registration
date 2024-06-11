@@ -7,6 +7,8 @@ class Course < ApplicationRecord
   NPQ_ADDITIONAL_SUPPORT_OFFER = "npq-additional-support-offer".freeze
   NPQ_SENCO = "npq-senco".freeze
 
+  belongs_to :course_group, optional: true
+
   validates :name, presence: true
   validates :identifier,
             presence: { message: "Enter a identifier" },

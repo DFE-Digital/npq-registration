@@ -15,9 +15,13 @@ module Questionnaires
     end
 
     def next_step
+      wizard.store["ehco_new_headteacher"] = ehco_new_headteacher
+
       case funding_eligiblity_status_code
       when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :ehco_possible_funding
+      when FundingEligibility::NO_INSTITUTION
+        :possible_funding
       when FundingEligibility::PREVIOUSLY_FUNDED
         :ehco_previously_funded
       else
@@ -53,7 +57,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
-        kind_of_nursery: wizard.query_store.kind_of_nursery,
+        query_store:,
       ).funding_eligiblity_status_code
     end
 

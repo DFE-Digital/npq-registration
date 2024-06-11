@@ -31,8 +31,8 @@ RSpec.describe "Application endpoints", type: :request do
   end
 
   describe "GET /api/v1/npq-applications.csv" do
-    let(:serializer) { API::ApplicationCsvSerializer }
-    let(:mock_serializer) { instance_double(API::ApplicationCsvSerializer, call: nil) }
+    let(:serializer) { API::ApplicationsCsvSerializer }
+    let(:mock_serializer) { instance_double(API::ApplicationsCsvSerializer, serialize: nil) }
     let(:path) { api_v1_applications_path(format: :csv) }
     let(:resource_id_key) { :ecf_id }
 
