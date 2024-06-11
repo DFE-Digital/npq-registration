@@ -24,7 +24,7 @@ module API
       field(:lead_provider_approval_status, name: :status)
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }
-      field(:eligible_for_funding)
+      field(:eligible_for_dfe_funding?, name: :eligible_for_funding)
       field(:targeted_delivery_funding_eligibility)
       field(:inside_uk_catchment?, name: :teacher_catchment)
       field(:teacher_catchment_country)

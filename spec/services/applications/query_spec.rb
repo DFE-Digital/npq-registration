@@ -210,7 +210,6 @@ RSpec.describe Applications::Query do
 
       it { expect(returned_application).not_to be_transient_previously_funded }
 
-
       context "when there is a previous, rejected application that was eligible for funding" do
         before do
           create(
@@ -316,8 +315,9 @@ RSpec.describe Applications::Query do
           )
         end
 
-        it { expect(returned_application).to_not be_transient_previously_funded }
+        it { expect(returned_application).not_to be_transient_previously_funded }
       end
+
       context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
         let(:course) { Course.find_by(identifier: Course::NPQ_ADDITIONAL_SUPPORT_OFFER) }
 

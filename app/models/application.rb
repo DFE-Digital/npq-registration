@@ -65,6 +65,19 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }
 
+  # `eligible_for_dfe_funding?`  takes into consideration what we know
+  # about user eligibility plus if it has been previously funded. We need
+  # to keep this method in place to keep consistency during the split between
+  # ECF and NPQ. In the mid term we will perform this calculation on NPQ and
+  # store the value in the `eligible_for_funding` attribute.
+  def eligible_for_dfe_funding?
+    if previously_funded?
+      false
+    else
+      eligible_for_funding
+    end
+  end
+
   def previously_funded?
     # This is an optimization used by the API Applications::Query in order
     # to speed up the bulk-retrieval of Applications.
