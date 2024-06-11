@@ -54,7 +54,7 @@ class FundingEligibility
                  inside_catchment:,
                  trn:,
                  get_an_identity_id:,
-                 kind_of_nursery:, lead_mentor_for_accredited_itt_provider: false,
+                 lead_mentor_for_accredited_itt_provider: false,
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,

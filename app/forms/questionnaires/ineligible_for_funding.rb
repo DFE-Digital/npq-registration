@@ -79,7 +79,7 @@ module Questionnaires
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
-        kind_of_nursery: wizard.query_store.kind_of_nursery,
+        query_store: wizard.query_store,
       ).funding_eligiblity_status_code
     end
 
