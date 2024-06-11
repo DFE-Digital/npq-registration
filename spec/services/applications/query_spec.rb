@@ -210,6 +210,7 @@ RSpec.describe Applications::Query do
 
       it { expect(returned_application).not_to be_transient_previously_funded }
 
+
       context "when there is a previous, rejected application that was eligible for funding" do
         before do
           create(
@@ -270,6 +271,53 @@ RSpec.describe Applications::Query do
         it { expect(returned_application).to be_transient_previously_funded }
       end
 
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `nil`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: nil,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `true`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: true,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `false`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: false,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to_not be_transient_previously_funded }
+      end
       context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do
         let(:course) { Course.find_by(identifier: Course::NPQ_ADDITIONAL_SUPPORT_OFFER) }
 

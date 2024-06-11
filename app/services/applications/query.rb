@@ -16,6 +16,7 @@ module Applications
             WHERE a.id != applications.id AND
                   a.user_id = applications.user_id AND
                   a.eligible_for_funding = true AND
+                  (a.funded_place is null OR a.funded_place = true) AND
                   a.lead_provider_approval_status = 'accepted' AND
                   a.course_id IN (
                     SELECT jsonb_array_elements_text(alt_courses->(applications.course_id::text))::bigint
