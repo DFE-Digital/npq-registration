@@ -19,7 +19,9 @@ module Questionnaires
     end
 
     def previous_step
-      if course.npqlpm?
+      if works_in_other? && employment_type_other?
+        :choose_your_npq
+      elsif course.npqlpm?
         if wizard.query_store.maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
@@ -55,11 +57,7 @@ module Questionnaires
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::NO_INSTITUTION
-                                 if query_store.works_in_school?
-                                   return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
-                                 else
-                                   return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-                                 end
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
@@ -95,6 +93,8 @@ module Questionnaires
              :inside_catchment?,
              :approved_itt_provider?,
              :lead_mentor_for_accredited_itt_provider?,
+             :works_in_other?,
+             :employment_type_other?,
              to: :query_store
   end
 end

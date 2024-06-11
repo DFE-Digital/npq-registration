@@ -31,7 +31,8 @@ module Questionnaires
     end
 
     def next_step
-      if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private?
+      if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private? || wizard.query_store.lead_mentor_for_accredited_itt_provider? ||
+          wizard.query_store.employment_type_other?
         :ineligible_for_funding
       elsif wizard.query_store.works_in_other? && maths_understanding_of_approach != "cannot_show"
         :possible_funding

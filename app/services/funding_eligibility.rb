@@ -42,7 +42,8 @@ class FundingEligibility
               :lead_mentor,
               :employment_role,
               :get_an_identity_id,
-              :lead_mentor_for_accredited_itt_provider
+              :lead_mentor_for_accredited_itt_provider,
+              :query_store
 
   def initialize(institution:,
                  course:,
@@ -53,7 +54,8 @@ class FundingEligibility
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,
-                 employment_role: nil)
+                 employment_role: nil,
+                 query_store: nil)
     @institution = institution
     @course = course
     @inside_catchment = inside_catchment
@@ -64,6 +66,7 @@ class FundingEligibility
     @trn = trn
     @employment_role = employment_role
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
+    @query_store = query_store
   end
 
   def funded?
@@ -72,12 +75,29 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor && lead_mentor_for_accredited_itt_provider && inside_catchment?))
+      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
         return lead_mentor_eligibility_status
       end
 
       return NOT_IN_ENGLAND unless inside_catchment?
-      return NO_INSTITUTION if institution.nil?
+
+      unless institution
+        if query_store
+          return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
+          return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
+
+          if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
+            return FUNDED_ELIGIBILITY_RESULT if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
+
+            return NO_INSTITUTION
+          else
+            return INELIGIBLE_INSTITUTION_TYPE
+          end
+        else
+          return NO_INSTITUTION
+        end
+      end
+
       return PREVIOUSLY_FUNDED if previously_funded?
       return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
 
