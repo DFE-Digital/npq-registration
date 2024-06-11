@@ -21,6 +21,7 @@ RSpec.shared_examples "an API index endpoint" do
       it "calls the correct query/serializer" do
         serializer_params = { root: "data" }
         serializer_params[:view] = serializer_version if defined?(serializer_version)
+        serializer_params[:lead_provider] = serializer_lead_provider if defined?(serializer_lead_provider)
 
         expect(serializer).to receive(:render).with([resource1, resource2], **serializer_params).and_call_original
         expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider)).and_call_original
@@ -146,7 +147,7 @@ end
 
 RSpec.shared_examples "an API index endpoint with filter by participant_id" do
   context "when fitlering by participant_id" do
-    it "returns resources with the given participant_id" do
+    it "returns resources with the given `participant_id`" do
       resource1 = create_resource(lead_provider: current_lead_provider, user: create(:user))
       resource2 = create_resource(lead_provider: current_lead_provider, user: create(:user))
       create_resource(lead_provider: current_lead_provider, user: create(:user))
@@ -161,6 +162,51 @@ RSpec.shared_examples "an API index endpoint with filter by participant_id" do
       expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, participant_ids: participant_id)).and_call_original
 
       api_get(path, params: { filter: { participant_id: } })
+    end
+  end
+end
+
+RSpec.shared_examples "an API index endpoint with filter by training_status" do
+  context "when fitlering by training_status" do
+    let!(:resource) { create_resource(lead_provider: current_lead_provider) }
+    let(:training_status) { ApplicationState.states[:withdrawn] }
+
+    before { resource.applications.first.update!(training_status:) }
+
+    it "returns resources with the given `training_status`" do
+      create_resource(lead_provider: current_lead_provider)
+
+      api_get(path, params: { filter: { training_status: } })
+
+      expect(parsed_response["data"].size).to eq(1)
+    end
+
+    it "calls the correct query" do
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, training_status:)).and_call_original
+
+      api_get(path, params: { filter: { training_status: } })
+    end
+  end
+end
+
+RSpec.shared_examples "an API index endpoint with filter by from_participant_id" do
+  context "when fitlering by from_participant_id" do
+    let!(:resource) { create_resource(lead_provider: current_lead_provider) }
+    let(:participant_id_change) { create(:participant_id_change, user: resource, to_participant: resource) }
+    let(:from_participant_id) { participant_id_change.from_participant.ecf_id }
+
+    it "returns resources with the given `from_participant_id`" do
+      create_resource(lead_provider: current_lead_provider)
+
+      api_get(path, params: { filter: { from_participant_id: } })
+
+      expect(parsed_response["data"].size).to eq(1)
+    end
+
+    it "calls the correct query" do
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, from_participant_id:)).and_call_original
+
+      api_get(path, params: { filter: { from_participant_id: } })
     end
   end
 end

@@ -22,5 +22,15 @@ FactoryBot.define do
     trait :with_verified_trn do
       trn_verified { true }
     end
+
+    trait :with_application do
+      transient do
+        lead_provider { LeadProvider.all.sample }
+      end
+
+      after(:create) do |participant, evaluator|
+        create(:application, :accepted, user: participant, lead_provider: evaluator.lead_provider)
+      end
+    end
   end
 end

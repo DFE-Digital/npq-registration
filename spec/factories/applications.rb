@@ -48,7 +48,7 @@ FactoryBot.define do
 
     trait :accepted do
       lead_provider_approval_status { :accepted }
-      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, cohort:) }
+      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, course_group: course.course_group, cohort:) }
     end
 
     trait :rejected do
@@ -64,8 +64,8 @@ FactoryBot.define do
     end
 
     trait :eligible_for_funded_place do
+      accepted
       eligible_for_funding { true }
-      lead_provider_approval_status { :accepted }
 
       after(:create) do |application|
         application.cohort.update!(funding_cap: true)

@@ -85,8 +85,7 @@ module ValidTestDataGenerators
     end
 
     def accept_application(application)
-      # TODO: replace by Applications::Accept.new(application:).accept when service class is added
-      application.update!(lead_provider_approval_status: "accepted")
+      Applications::Accept.new(application:).accept
       application.reload
     end
 
