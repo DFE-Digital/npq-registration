@@ -3,6 +3,10 @@ require "rails_helper"
 RSpec.describe Cohort, type: :model do
   subject(:statement) { build(:cohort) }
 
+  describe "relationships" do
+    it { is_expected.to have_many(:events).dependent(:nullify) }
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
     it { is_expected.to allow_value(%w[true false]).for(:funding_cap).with_message("Choose true or false for funding cap") }

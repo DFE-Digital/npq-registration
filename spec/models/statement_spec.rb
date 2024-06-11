@@ -7,6 +7,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to belong_to(:cohort).required }
     it { is_expected.to belong_to(:lead_provider).required }
     it { is_expected.to have_many(:statement_items) }
+    it { is_expected.to have_many(:events).dependent(:nullify) }
   end
 
   describe "validations" do

@@ -3,6 +3,8 @@ class School < ApplicationRecord
   PRIMARY_PHASE = "Primary".freeze
   MIDDLE_DEEMED_PRIMARY_PHASE = "Middle deemed primary".freeze
 
+  has_many :events, dependent: :nullify
+
   pg_search_scope :search_by_name,
                   against: [:name],
                   using: {

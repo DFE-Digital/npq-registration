@@ -63,6 +63,7 @@ Rails/SaveBang:
     - "app/services/ecf/ecf_user_creator.rb"
     - "app/services/ecf/npq_profile_creator.rb"
     - "app/services/ecf/npq_profile_updater.rb"
+    - "app/services/events/*"
 
 Rails/Output:
   Exclude:

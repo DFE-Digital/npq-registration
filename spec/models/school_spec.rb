@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe School do
+  describe "relationships" do
+    it { is_expected.to have_many(:events).dependent(:nullify) }
+  end
+
   describe ".primary_education_phase?" do
     let(:school) do
       build(:school,
