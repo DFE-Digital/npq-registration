@@ -166,6 +166,7 @@ private
       new_headteacher: new_headteacher?,
       trn: query_store.trn,
       get_an_identity_id: query_store.get_an_identity_id,
+      kind_of_nursery: query_store.kind_of_nursery,
     )
   end
 

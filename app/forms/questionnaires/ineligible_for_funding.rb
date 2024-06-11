@@ -58,6 +58,8 @@ module Questionnaires
                                  return "not_entitled_ey_institution"
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
                                  return "not_a_pp50_institution"
+                               when FundingEligibility::NOT_ENTITLED_CHILDMINDER
+                                 return "not_a_eligible_childminder"
                                when FundingEligibility::NO_INSTITUTION
                                  if query_store.works_in_school?
                                    return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
@@ -79,6 +81,7 @@ module Questionnaires
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
+        kind_of_nursery: wizard.query_store.kind_of_nursery,
       ).funding_eligiblity_status_code
     end
 

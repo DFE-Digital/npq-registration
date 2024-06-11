@@ -77,6 +77,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
+        kind_of_nursery: wizard.query_store.kind_of_nursery,
       )
     end
 

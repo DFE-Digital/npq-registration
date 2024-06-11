@@ -137,4 +137,8 @@ class RegistrationQueryStore
   def senco_start_date
     store["senco_start_date"]
   end
+
+  def kind_of_nursery
+    store["kind_of_nursery"]
+  end
 end

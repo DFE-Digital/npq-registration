@@ -72,6 +72,14 @@ class PrivateChildcareProvider < ApplicationRecord
     early_years_individual_registers.include?("EYR")
   end
 
+  def ey_eligible?
+    !!EY_OFSTED_URN_HASH[provider_urn.to_s]
+  end
+
+  def on_childminders_list?
+    !!CHILDMINDERS_OFSTED_URN_HASH[provider_urn.to_s]
+  end
+
   def registration_details
     details = []
 

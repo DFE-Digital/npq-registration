@@ -71,7 +71,7 @@ class School < ApplicationRecord
   end
 
   def ey_eligible?
-    !!EY_FUNDED_URN_HASH[urn.to_s]
+    !!EY_OFSTED_URN_HASH[urn.to_s]
   end
 
 private

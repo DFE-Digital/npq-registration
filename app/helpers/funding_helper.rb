@@ -29,6 +29,7 @@ private
       new_headteacher: new_headteacher?(application),
       trn: application.user.trn,
       get_an_identity_id: application.user.get_an_identity_id,
+      kind_of_nursery: application.kind_of_nursery,
     )
   end
 
