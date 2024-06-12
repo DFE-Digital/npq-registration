@@ -73,10 +73,11 @@ RSpec.describe Course do
 
   describe "#schedule_for" do
     let(:cohort) { build(:cohort, :current) }
+    let(:schedule_date) { Date.current }
 
     it "calls course_group.schedule_for method" do
-      expect(subject.course_group).to receive(:schedule_for).with(cohort:)
-      subject.schedule_for(cohort:)
+      expect(subject.course_group).to receive(:schedule_for).with(cohort:, schedule_date:)
+      subject.schedule_for(cohort:, schedule_date:)
     end
   end
 end
