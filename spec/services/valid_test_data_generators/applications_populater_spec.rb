@@ -6,7 +6,12 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater do
   let(:lead_provider) { create(:lead_provider) }
   let(:cohort) { create(:cohort) }
 
-  before { allow(Rails).to receive(:env) { environment.inquiry } }
+  before do
+    allow(Rails).to receive(:env) { environment.inquiry }
+    FactoryBot.create(:schedule, :npq_specialist_autumn, cohort:)
+    FactoryBot.create(:schedule, :npq_leadership_autumn, cohort:)
+    FactoryBot.create(:schedule, :npq_aso_december, cohort:)
+  end
 
   subject { described_class.new(lead_provider:, cohort:, number_of_participants: 30) }
 
