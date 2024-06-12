@@ -75,6 +75,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v3/npq-applications/{id}/accept":
+    post:
+      summary: Accept an NPQ application
+      operationId: npq_applications_accept
+      tags:
+      - NPQ Applications
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the NPQ application to accept.
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The NPQ application being accepted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ApplicationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ApplicationAcceptRequest"
   "/api/v3/npq-applications/{id}/reject":
     post:
       summary: Reject an NPQ application
@@ -136,39 +169,6 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
-  "/api/v3/npq-applications/{id}/accept":
-    post:
-      summary: Accept an NPQ application
-      operationId: npq_applications_accept
-      tags:
-      - NPQ Applications
-      security:
-      - api_key: []
-      parameters:
-      - name: id
-        in: path
-        required: true
-        description: The ID of the NPQ application to accept.
-        schema:
-          "$ref": "#/components/schemas/IDAttribute"
-      responses:
-        '200':
-          description: The NPQ application being accepted
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/ApplicationResponse"
-        '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/UnauthorisedResponse"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/ApplicationAcceptRequestV3"
   "/api/v3/participants/npq":
     get:
       summary: Retrieve multiple NPQ participants
@@ -674,37 +674,25 @@ components:
                   type: boolean
                   required: false
                   example: true
-    ApplicationAcceptRequestV3:
-      description: A NPQ application acceptance request
-      type: object
-      properties:
-        data:
-          description: A NPQ application acceptance request data
-          type: object
-          required:
-          - type
-          - attributes
-          properties:
-            type:
-              description: The data typed
-              type: string
-              example: npq-application-accept
-            attributes:
-              description: A NPQ application acceptance request attributes
-              type: object
-              properties:
-                funded_place:
-                  description: This field indicates whether the application is funded
-                  nullable: false
-                  type: boolean
-                  required: false
-                  example: true
                 schedule_identifier:
                   description: The new schedule of the participant
                   nullable: false
                   type: string
+                  example: npq-leadership-spring
                   required: false
-                  example: npq-leadership-autumn
+                  enum:
+                  - npq-aso-march
+                  - npq-aso-june
+                  - npq-aso-november
+                  - npq-aso-december
+                  - npq-ehco-march
+                  - npq-ehco-june
+                  - npq-ehco-november
+                  - npq-ehco-december
+                  - npq-leadership-autumn
+                  - npq-leadership-spring
+                  - npq-specialist-autumn
+                  - npq-specialist-spring
     ApplicationChangeFundedPlaceRequest:
       description: A NPQ application change funded place request
       type: object
