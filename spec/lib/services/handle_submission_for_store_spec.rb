@@ -8,7 +8,7 @@ RSpec.describe HandleSubmissionForStore do
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
-  let(:courses) { Course.where.not(identifier: Course.ehco.identifier) }
+  let(:courses) { Course.where(identifier: "npq-leading-primary-mathematics") }
 
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }

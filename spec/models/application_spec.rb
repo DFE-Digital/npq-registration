@@ -22,6 +22,7 @@ RSpec.describe Application do
         preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
         private_nursery: "private_nursery",
         another_early_years_setting: "another_early_years_setting",
+        childminder: "childminder",
       ).backed_by_column_of_type(:text)
     }
 
