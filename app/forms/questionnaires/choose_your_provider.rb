@@ -77,6 +77,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
+        query_store: wizard.query_store,
       )
     end
 

@@ -4,6 +4,7 @@ class FundingEligibility
 
   NO_INSTITUTION = :no_institution
   INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
+  INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
   PREVIOUSLY_FUNDED = :previously_funded
 
@@ -17,6 +18,8 @@ class FundingEligibility
   EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
+  NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
+  NOT_ENTITLED_CHILDMINDER = :not_entitled_childminder
 
   # Lead Mentor
   NOT_LEAD_MENTOR_COURSE = :not_lead_mentor_course
@@ -31,6 +34,7 @@ class FundingEligibility
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
+    INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
     INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
     NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
   }.freeze
@@ -76,7 +80,13 @@ class FundingEligibility
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
       if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
-        return lead_mentor_eligibility_status
+        if lead_mentor_course?
+          return PREVIOUSLY_FUNDED if previously_funded?
+
+          return FUNDED_ELIGIBILITY_RESULT
+        else
+          return NOT_LEAD_MENTOR_COURSE
+        end
       end
 
       return NOT_IN_ENGLAND unless inside_catchment?
@@ -103,9 +113,10 @@ class FundingEligibility
 
       case institution.class.name
       when "School"
+        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
+        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !course.eyl?
         return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
-        return NOT_ON_EARLY_YEARS_REGISTER if !institution.eyl_funding_eligible? && course.eyl?
 
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
@@ -114,6 +125,7 @@ class FundingEligibility
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
+        return NOT_ENTITLED_CHILDMINDER if course.eyl? && childminder? && !institution.on_childminders_list?
 
         FUNDED_ELIGIBILITY_RESULT
       when "LocalAuthority"
@@ -150,16 +162,6 @@ class FundingEligibility
   end
 
 private
-
-  def lead_mentor_eligibility_status
-    if lead_mentor_course?
-      return PREVIOUSLY_FUNDED if previously_funded?
-
-      FUNDED_ELIGIBILITY_RESULT
-    else
-      NOT_LEAD_MENTOR_COURSE
-    end
-  end
 
   def inside_catchment?
     @inside_catchment
@@ -234,5 +236,9 @@ private
 
   def not_eligible_england_ehco?
     inside_catchment? && course.ehco? unless funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
+  end
+
+  def childminder?
+    query_store.childminder?
   end
 end

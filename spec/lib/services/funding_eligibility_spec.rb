@@ -8,7 +8,8 @@ RSpec.describe FundingEligibility do
                         trn:,
                         get_an_identity_id:,
                         approved_itt_provider:,
-                        lead_mentor:)
+                        lead_mentor:,
+                        query_store:)
   end
 
   let(:course) { create(:course, :aso) }
@@ -20,6 +21,8 @@ RSpec.describe FundingEligibility do
   let(:eyl_funding_eligible) { false }
   let(:approved_itt_provider) { nil }
   let(:lead_mentor) { nil }
+  let(:eligible_ey_urn) { "EY364275" }
+  let(:query_store) { nil }
 
   before do
     mock_previous_funding_api_request(
@@ -49,7 +52,9 @@ RSpec.describe FundingEligibility do
     context "when institution is a School" do
       %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
         context "eligible establishment_type_code #{eligible_gias_code}" do
-          let(:institution) { build(:school, establishment_type_code: eligible_gias_code, eyl_funding_eligible:) }
+          let(:institution) { build(:school, establishment_type_code: eligible_gias_code, urn:) }
+          let(:course) { create(:course, :hs) }
+          let(:urn) { "123" }
 
           it "returns true" do
             expect(subject).to be_funded
@@ -66,18 +71,28 @@ RSpec.describe FundingEligibility do
           end
 
           context "when school offering funding for the NPQEYL course" do
-            let(:eyl_funding_eligible) { true }
+            context "and school is on the eligible list" do
+              let(:urn) { eligible_ey_urn }
+
+              context "when user has selected the NPQEYL course" do
+                let(:course) { create(:course, :eyl) }
+
+                it "returns true" do
+                  expect(subject).to be_funded
+                end
+              end
+            end
 
             context "when user has selected the NPQEYL course" do
               let(:course) { create(:course, :eyl) }
 
-              it "returns true" do
-                expect(subject).to be_funded
+              it "returns false" do
+                expect(subject).not_to be_funded
               end
             end
 
             context "when user has not selected the NPQEYL course" do
-              let(:course) { create(:course, :sl) }
+              let(:course) { create(:course, :hs) }
 
               it "returns true" do
                 expect(subject).to be_funded
@@ -89,7 +104,8 @@ RSpec.describe FundingEligibility do
 
       %w[11 25 27 29 30 37 56].each do |ineligible_gias_code|
         context "ineligible establishment_type_code #{ineligible_gias_code}" do
-          let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, eyl_funding_eligible:) }
+          let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, urn:) }
+          let(:urn) { "123" }
 
           it "returns false" do
             expect(subject).not_to be_funded
@@ -97,7 +113,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when school offering funding for the NPQEYL course" do
-            let(:eyl_funding_eligible) { true }
+            let(:urn) { eligible_ey_urn }
 
             context "when user has selected the NPQEYL course" do
               let(:course) { create(:course, :eyl) }
@@ -168,6 +184,7 @@ RSpec.describe FundingEligibility do
         let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
         let(:course) { create(:course, :eyl) }
         let(:inside_catchment) { true }
+        let(:query_store) { instance_double("RegistrationQueryStore", childminder?: false) }
 
         it "is eligible" do
           expect(subject).to be_funded

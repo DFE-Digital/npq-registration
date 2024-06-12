@@ -66,6 +66,14 @@ class School < ApplicationRecord
     eligible_establishment_type_codes.include?(establishment_type_code)
   end
 
+  def pp50_institution?
+    !!PP50_SCHOOLS_URN_HASH[urn.to_s] || !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+  end
+
+  def ey_eligible?
+    !!EY_OFSTED_URN_HASH[urn.to_s]
+  end
+
 private
 
   def eligible_establishment_type_codes

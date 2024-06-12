@@ -153,4 +153,8 @@ class RegistrationQueryStore
   def senco_start_date
     store["senco_start_date"]
   end
+
+  def childminder?
+    store["kind_of_nursery"] == "childminder"
+  end
 end

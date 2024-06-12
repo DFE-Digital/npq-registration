@@ -33,6 +33,26 @@ class RegistrationWizardController < ApplicationController
     end
   end
 
+  def development_login
+    return unless Rails.env.development?
+
+    user_email = ENV["DEV_USER_EMAIL_FOR_LOGIN"]
+    user = User.find_by!(email: user_email)
+    session["user_id"] = user.id
+    EcfUserUpdaterJob.perform_later(user:)
+
+    sign_in user
+    wizard = RegistrationWizard.new(
+      current_step: :get_an_identity_callback,
+      store: session["registration_store"],
+      params: {},
+      request:,
+      current_user: user,
+    )
+
+    redirect_to registration_wizard_show_path(wizard.next_step_path)
+  end
+
 private
 
   def set_wizard
