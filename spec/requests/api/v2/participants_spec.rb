@@ -20,32 +20,37 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API index endpoint with filter by updated_since"
   end
 
-  describe("show") do
-    before { api_get(api_v2_participant_path(123)) }
+  describe "GET /api/v2/participants/npq/:id" do
+    let(:resource) { create(:user, :with_application, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      api_v2_participant_path(id)
+    end
+
+    it_behaves_like "an API show endpoint"
   end
 
   describe("change_schedule") do
-    before { api_put(api_v2_participant_change_schedule_path(123)) }
+    before { api_put(change_schedule_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
   describe("defer") do
-    before { api_put(api_v2_participant_defer_path(123)) }
+    before { api_put(defer_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
   describe("withdraw") do
-    before { api_put(api_v2_participant_withdraw_path(123)) }
+    before { api_put(withdraw_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
   describe("resume") do
-    before { api_put(api_v2_participant_resume_path(123)) }
+    before { api_put(resume_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end

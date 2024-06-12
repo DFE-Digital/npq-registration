@@ -1,9 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Participants::Query do
-  subject(:query) { described_class.new(**params) }
-
+  let(:lead_provider) { create(:lead_provider) }
   let(:params) { {} }
+
+  subject(:query) { described_class.new(**params) }
 
   describe "#participants" do
     let(:lead_provider) { create(:lead_provider) }
@@ -177,6 +178,33 @@ RSpec.describe Participants::Query do
 
         it { expect(participants).to eq([participant2, participant1, participant3]) }
       end
+    end
+  end
+
+  describe "#participant" do
+    let!(:participant) { create(:user, :with_application, lead_provider:) }
+    let(:params) { { lead_provider: } }
+
+    it "returns a participant for a Lead Provider" do
+      expect(query.participant(ecf_id: participant.ecf_id)).to eq(participant)
+      expect(query.participant(id: participant.id)).to eq(participant)
+    end
+
+    it "raises an error if the participant does not exist" do
+      expect { query.participant(ecf_id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.participant(id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if the participant is not in the filtered query" do
+      other_lead_provider = create(:lead_provider)
+      other_participant = create(:user, :with_application, lead_provider: other_lead_provider)
+
+      expect { query.participant(ecf_id: other_participant.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.participant(id: other_participant.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if neither an ecf_id or id is supplied" do
+      expect { query.participant }.to raise_error(ArgumentError, "id or ecf_id needed")
     end
   end
 end

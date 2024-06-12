@@ -130,12 +130,17 @@ Rails.application.routes.draw do
             end
           end
 
-          resources :participants, only: %i[index show], path: "participants/npq" do
-            put :change_schedule, path: "change-schedule"
-            put :defer
-            put :resume
-            put :withdraw
-            get :outcomes
+          resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+            member do
+              put :change_schedule, path: "change-schedule"
+              put :defer
+              put :resume
+              put :withdraw, path: "change-funded-place"
+
+              scope module: :participants do
+                resources :outcomes, only: %i[create index], as: :participant_outcomes
+              end
+            end
           end
 
           resources :outcomes, only: %i[index]
@@ -158,14 +163,16 @@ Rails.application.routes.draw do
 
       resources :enrolments, path: "npq-enrolments", only: %i[index]
 
-      resources :participants, only: %i[index show], path: "participants/npq" do
-        put :change_schedule, path: "change-schedule"
-        put :defer
-        put :resume
-        put :withdraw
+      resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+        member do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw, path: "change-funded-place"
 
-        scope module: :participants do
-          resources :outcomes, only: %i[create index]
+          scope module: :participants do
+            resources :outcomes, only: %i[create index], as: :participant_outcomes
+          end
         end
       end
 
@@ -185,14 +192,16 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :participants, only: %i[index show], path: "participants/npq" do
-        put :change_schedule, path: "change-schedule"
-        put :defer
-        put :resume
-        put :withdraw
+      resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+        member do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw, path: "change-funded-place"
 
-        scope module: :participants do
-          resources :outcomes, only: %i[create index]
+          scope module: :participants do
+            resources :outcomes, only: %i[create index], as: :participant_outcomes
+          end
         end
       end
 

@@ -8,7 +8,10 @@ module API
         render json: to_json(paginate(participants_query.participants))
       end
 
-      def show = head(:method_not_allowed)
+      def show
+        render json: to_json(participant)
+      end
+
       def change_schedule = head(:method_not_allowed)
       def defer = head(:method_not_allowed)
       def withdraw = head(:method_not_allowed)
@@ -24,11 +27,15 @@ module API
       end
 
       def participant_params
-        params.permit(filter: %i[updated_since])
+        params.permit(:ecf_id, filter: %i[updated_since])
       end
 
       def to_json(obj)
         ParticipantSerializer.render(obj, view: :v2, root: "data", lead_provider: current_lead_provider)
+      end
+
+      def participant
+        participants_query.participant(ecf_id: participant_params[:ecf_id])
       end
     end
   end
