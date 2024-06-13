@@ -60,7 +60,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
+    choose_a_private_childcare_provider(js:, urn: "EY487263", name: "searchable childcare provider")
 
     eyl_course = ["Early years leadership"]
     ehco_course = ["Early headship coaching offer"]
@@ -115,7 +115,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "Early years leadership",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => "EY123456 – searchable childcare provider – street 1, manchester",
+          "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Workplace in England" => "Yes",
           "Early years setting" => "Private nursery",
         },
@@ -158,7 +158,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "kind_of_nursery" => "private_nursery",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
-      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY123456").id,
+      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY487263").id,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -192,8 +192,8 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_amount" => nil,
         "course_identifier" => "npq-early-years-leadership",
         "has_ofsted_urn" => "yes",
-        "institution_identifier" => "PrivateChildcareProvider-EY123456",
-        "institution_name" => js ? "" : "EY123456",
+        "institution_identifier" => "PrivateChildcareProvider-EY487263",
+        "institution_name" => js ? "" : "EY487263",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
