@@ -26,6 +26,13 @@ en:
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
 
+  participant: &participant
+    blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
+
+  participant_course_identifier: &participant_course_identifier
+    blank: Enter a '#/course_identifier' value for this participant.
+    inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
+
   time:
     formats:
       admin: "%R on %d/%m/%Y"
@@ -197,11 +204,22 @@ en:
         participants/resume:
           attributes:
             course_identifier:
-              blank: "Enter a '#/course_identifier' value for this participant."
-              inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
+              <<: *participant_course_identifier
             participant:
-              blank: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
+              <<: *participant
               already_active: The participant is already active
+        participants/defer:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+              already_deferred: The participant is already deferred
+              withdrawn: The participant is already withdrawn
+              no_declarations: You cannot defer an NPQ participant that has no declarations
+            reason:
+              blank: The property '#/reason' must be present
+              inclusion: The property '#/reason' must be a valid reason
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

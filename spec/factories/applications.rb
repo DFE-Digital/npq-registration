@@ -72,6 +72,12 @@ FactoryBot.define do
       end
     end
 
+    trait :with_declaration do
+      after(:create) do |application|
+        create(:declaration, application:)
+      end
+    end
+
     trait :previously_funded do
       after(:create) do |application|
         course = application.course.rebranded_alternative_courses.sample
