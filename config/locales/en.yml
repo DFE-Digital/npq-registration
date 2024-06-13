@@ -33,7 +33,6 @@ en:
     already_deferred: The participant is already deferred
     already_withdrawn: The participant is already withdrawn
     no_declarations: You cannot defer an NPQ participant that has no declarations
-    already_withdrawn: The participant is already withdrawn
     no_started_declarations: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
     
   participant_course_identifier: &participant_course_identifier
