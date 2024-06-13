@@ -4,13 +4,30 @@
 
 <h1 class="govuk-heading-xl">Funding</h1>
 
-<p class="govuk-body">
-  You’ve already been allocated scholarship funding for <%= localise_sentence_embedded_course_name(course) %> with <%= provider_name %>.
-  <br>
-  If you need to change something about your NPQ or provider, email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>.
+  <p class="govuk-body">
+    <% if course.identifier != "npq-early-headship-coaching-offer" %>
+      You’ve already been allocated scholarship funding for <%= localise_sentence_embedded_course_name(course) %> with <%= provider_name %>.
+      <br>
+      If you need to change something about your NPQ or provider, email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>.
 
-  <strong>If you’re taking the course again</strong>
+      <strong>If you’re taking the course again</strong>
+    <% else %>
+      You’ve already been allocated scholarship funding for Early headship coaching offer (EHCO) with <%= provider_name %>.
+      <br>
+      If you need to change something about your NPQ or provider, email <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "continuing-professional-development@digital.education.gov.uk" %>.
 
-  Contine to register.
+      <strong>If you’re taking the EHCO again</strong>
+    <% end %>
 
-  You would need to pay for <%= localise_sentence_embedded_course_name(course) %> if you were previously funded but you failed or withdrew from the course.
+    Continue to register.
+
+    You would need to pay for <%= localise_sentence_embedded_course_name(course) %> if you were previously funded but you failed or withdrew from the course.
+    For example you could pay for the course fees yourself or ask your workplace or trust to:
+  </p>
+
+  <p class="govuk-body">
+    <ul class="govuk-list govuk-list--bullet">
+      <li>cover the full cost of the course</li>
+      <li>share the cost of the course with you</li>
+    </ul>
+  </p>
