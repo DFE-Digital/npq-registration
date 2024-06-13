@@ -190,6 +190,69 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+  "/api/v1/participants/npq":
+    get:
+      summary: Retrieve multiple NPQ participants
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of NPQ participants
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v1/participants/npq/{id}":
+    get:
+      summary: Retrieve a single NPQ participant
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single NPQ participant
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
 components:
@@ -223,6 +286,15 @@ components:
           description: Return only NPQ applications from the specified cohort.
           type: string
           example: '2022'
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListParticipantsFilter:
+      description: Filter applications to return more specific results
+      type: object
+      properties:
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
@@ -757,3 +829,127 @@ components:
           nullable: true
           type: boolean
           example: true
+    ParticipantResponse:
+      description: A single NPQ participant
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/Participant"
+    ParticipantsResponse:
+      description: A list of NPQ participants.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Participant"
+    Participant:
+      description: The details of an NPQ Participant
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+          example: npq-participant
+          enum:
+          - npq-participant
+        attributes:
+          properties:
+            participant_id:
+              description: The unique identifier of this NPQ participant
+              type: string
+              format: uuid
+              nullable: false
+              example: db3a7848-7308-4879-942a-c4a70ced400a
+            full_name:
+              description: The full name of this NPQ participant
+              type: string
+              nullable: false
+              example: Isabelle MacDonald
+            email:
+              description: The email address registered for this NPQ participant
+              type: string
+              nullable: false
+              example: isabelle.macdonald2@some-school.example.com
+            npq_courses:
+              description: The type of course(s) the participant is enrolled in
+              type: array
+              items:
+                type: string
+                nullable: false
+                example: npq-leading-teaching
+                enum:
+                - npq-leading-teaching
+                - npq-leading-behaviour-culture
+                - npq-leading-teaching-development
+                - npq-leading-literacy
+                - npq-senior-leadership
+                - npq-headship
+                - npq-executive-leadership
+                - npq-early-years-leadership
+                - npq-additional-support-offer
+                - npq-early-headship-coaching-offer
+                - npq-leading-primary-mathematics
+                - npq-senco
+            funded_places:
+              description: Information about the funded place(s) the participant is
+                enroled in
+              type: array
+              items:
+                type: object
+                required:
+                - npq_course
+                - funded_place
+                - npq_application_id
+                properties:
+                  npq_course:
+                    description: The type of course the participant is enrolled in
+                    type: string
+                    nullable: false
+                    example: npq-leading-teaching
+                    enum:
+                    - npq-leading-teaching
+                    - npq-leading-behaviour-culture
+                    - npq-leading-teaching-development
+                    - npq-leading-literacy
+                    - npq-senior-leadership
+                    - npq-headship
+                    - npq-executive-leadership
+                    - npq-early-years-leadership
+                    - npq-additional-support-offer
+                    - npq-early-headship-coaching-offer
+                    - npq-leading-primary-mathematics
+                    - npq-senco
+                  funded_place:
+                    description: Indicates whether this NPQ participant is funded
+                      by DfE
+                    type: boolean
+                    example: true
+                    nullable: true
+                  npq_application_id:
+                    description: The ID of the NPQ application that was accepted to
+                      create this enrolment
+                    type: string
+                    format: uuid
+                    nullable: false
+                    example: db3a7848-7308-4879-942a-c4a70ced400a
+            teacher_reference_number:
+              description: The Teacher Reference Number (TRN) for this NPQ participant
+              type: string
+              example: '1234567'
+            updated_at:
+              description: The date the application was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
