@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_13_151304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -20,6 +20,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
   create_enum "application_statuses", ["active", "deferred", "withdrawn"]
+  create_enum "declaration_state_reasons", ["duplicate"]
+  create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
+  create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
@@ -159,6 +162,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "total_count"
+  end
+
+  create_table "declarations", force: :cascade do |t|
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.bigint "application_id", null: false
+    t.bigint "superseded_by_id"
+    t.bigint "lead_provider_id", null: false
+    t.bigint "cohort_id", null: false
+    t.enum "declaration_type", enum_type: "declaration_types"
+    t.date "declaration_date"
+    t.enum "state", default: "submitted", null: false, enum_type: "declaration_states"
+    t.enum "state_reason", enum_type: "declaration_state_reasons"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_declarations_on_application_id"
+    t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
+    t.index ["ecf_id"], name: "index_declarations_on_ecf_id"
+    t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
+    t.index ["superseded_by_id"], name: "index_declarations_on_superseded_by_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -445,6 +467,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_31_090547) do
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
   add_foreign_key "courses", "course_groups"
+  add_foreign_key "declarations", "applications"
+  add_foreign_key "declarations", "cohorts"
+  add_foreign_key "declarations", "declarations", column: "superseded_by_id"
+  add_foreign_key "declarations", "lead_providers"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
