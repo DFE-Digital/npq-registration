@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe StatementItem, type: :model do
   describe "relationships" do
     it { is_expected.to belong_to(:statement).required }
-    # it { is_expected.to belong_to(:declaration).required }
+    it { is_expected.to belong_to(:declaration).required }
   end
 
   describe "validations" do
