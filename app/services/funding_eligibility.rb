@@ -122,7 +122,7 @@ class FundingEligibility
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
-        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
+        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
@@ -135,6 +135,10 @@ class FundingEligibility
         INELIGIBLE_INSTITUTION_TYPE
       end
     end
+  end
+
+  def possible_funding_for_non_pp50_and_fe?
+    course.only_pp50? && institution.is_a?(School)
   end
 
   def targeted_funding
@@ -159,7 +163,7 @@ class FundingEligibility
     return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
     return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
 
-    I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code])
+    I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code]).html_safe
   end
 
 private

@@ -64,13 +64,19 @@ module Questionnaires
                                  return "not_a_eligible_childminder"
                                when FundingEligibility::NO_INSTITUTION
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
     end
 
     def funding_eligiblity_status_code
-      @funding_eligiblity_status_code ||= FundingEligibility.new(
+      @funding_eligiblity_status_code ||= funding_eligibility.funding_eligiblity_status_code
+    end
+
+    def funding_eligibility
+      @funding_eligiblity ||= FundingEligibility.new(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
@@ -80,7 +86,7 @@ module Questionnaires
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
         query_store: wizard.query_store,
-      ).funding_eligiblity_status_code
+        )
     end
 
     def tsf_elgible?

@@ -11,8 +11,18 @@ You’re not eligible for scholarship funding for <%= localise_sentence_embedded
 as you do not work in one of the eligible settings, such as state-funded schools.
 </p>
 
-<p class="govuk-body">This means that you would need to pay for the course another way.</p>
+<p class="govuk-body">
+  This means that you would need to pay for the course another way.
+  For example you could pay for the course fees yourself or ask your workplace or trust to:
+</p>
 
-<p class="govuk-body">However, you are eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqeyl) %>.</p>
+<p class="govuk-body">
+  <ul class="govuk-list govuk-list--bullet">
+    <li>cover the full cost of the course</li>
+    <li>share the cost of the course with you</li>
+  </ul>
+</p>
 
-<p class="govuk-body">You can <a class="govuk-link" href="<%= registration_wizard_show_url(@wizard.previous_step_path) %>"> go back and select <%= localise_sentence_embedded_course_name(npqeyl) %></a> instead.</p>
+<p class="govuk-body">However, you may be eligible for scholarship funding for <%= localise_sentence_embedded_course_name(npqeyl) %>.</p>
+
+<p class="govuk-body">You can <a class="govuk-link" href="<%= registration_wizard_show_url(@wizard.previous_step_path) %>"> go back and select <%= localise_sentence_embedded_course_name(npqeyl) %></a> instead to check if you're eligible.</p>
