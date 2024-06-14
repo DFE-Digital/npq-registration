@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Participants
-  class Withdraw
-    include ActiveModel::Model
-    include ActiveModel::Attributes
-
+  class Withdraw < Action
     WITHDRAWL_REASONS = %w[
       insufficient-capacity-to-undertake-programme
       personal-reason-health-or-pregnancy-related
@@ -25,16 +22,9 @@ module Participants
       other
     ].freeze
 
-    attribute :lead_provider
-    attribute :participant
-    attribute :course_identifier
     attribute :reason
 
-    validates :lead_provider, presence: true
-    validates :participant, presence: true
-    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false
     validates :reason, inclusion: { in: WITHDRAWL_REASONS }, allow_blank: false
-    validate :application_exists
     validate :not_withdrawn
     validate :has_started_declarations
 
@@ -42,7 +32,7 @@ module Participants
       return false if invalid?
 
       ActiveRecord::Base.transaction do
-        create_application_state!
+        create_application_state!(state: :withdrawn, reason:)
         application.withdrawn!
         participant.reload
       end
@@ -51,22 +41,6 @@ module Participants
     end
 
   private
-
-    def create_application_state!
-      ApplicationState.create!(application:, lead_provider:, reason:, state: :withdrawn)
-    end
-
-    def application
-      @application ||= participant
-        &.applications
-        &.accepted
-        &.includes(:course)
-        &.find_by(lead_provider:, course: { identifier: course_identifier })
-    end
-
-    def application_exists
-      errors.add(:participant, :blank) if application.blank?
-    end
 
     def not_withdrawn
       errors.add(:participant, :already_withdrawn) if application&.withdrawn?
