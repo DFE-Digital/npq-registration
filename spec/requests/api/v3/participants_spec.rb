@@ -33,6 +33,23 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API show endpoint"
   end
 
+  describe "PUT /api/v3/participants/:ecf_id/resume" do
+    let(:course_identifier) { application.course.identifier }
+    let(:application) { create(:application, :accepted, :withdrawn, lead_provider: current_lead_provider) }
+    let(:participant) { application.user }
+    let(:participant_id) { participant.ecf_id }
+
+    def path(id = nil)
+      resume_api_v3_participant_path(id)
+    end
+
+    it_behaves_like "an API resume participant endpoint" do
+      def assert_on_successful_response(parsed_response)
+        expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("active")
+      end
+    end
+  end
+
   describe("change_schedule") do
     before { api_put(change_schedule_api_v2_participant_path(123)) }
 
@@ -47,12 +64,6 @@ RSpec.describe "Participant endpoints", type: :request do
 
   describe("withdraw") do
     before { api_put(withdraw_api_v2_participant_path(123)) }
-
-    specify { expect(response).to(be_method_not_allowed) }
-  end
-
-  describe("resume") do
-    before { api_put(resume_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
