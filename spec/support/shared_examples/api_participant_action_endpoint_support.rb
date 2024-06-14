@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API resume participant endpoint" do
-  let(:params) { { data: { attributes: { course_identifier: } } } }
+RSpec.shared_examples "an API participant action endpoint" do |service|
+  let(:params) do
+    {
+      data: {
+        attributes: { course_identifier: }.tap { |h| h[:reason] = reason if defined?(reason) },
+      },
+    }
+  end
 
   context "when authorized" do
     context "when the participant exists" do
@@ -16,17 +22,19 @@ RSpec.shared_examples "an API resume participant endpoint" do
       end
 
       it "calls the correct service" do
-        resume_double = instance_double(Participants::Resume, resume: true, participant:)
+        action = service.name.demodulize.downcase.to_sym
+        service_double = instance_double(service, "#{action}": true, participant:)
 
-        allow(Participants::Resume).to receive(:new) { |args|
+        allow(service).to receive(:new) { |args|
           expect(args[:participant]).to eq(participant)
           expect(args[:lead_provider]).to eq(current_lead_provider)
           expect(args[:course_identifier]).to eq(course_identifier)
-        }.and_return(resume_double)
+          expect(args[:reason]).to eq(reason) if defined?(reason)
+        }.and_return(service_double)
 
         api_put(path(participant_id), params:)
 
-        expect(resume_double).to have_received(:resume)
+        expect(service_double).to have_received(action)
       end
 
       it "calls the correct serializer" do

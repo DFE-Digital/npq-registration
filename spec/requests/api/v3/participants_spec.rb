@@ -43,7 +43,7 @@ RSpec.describe "Participant endpoints", type: :request do
       resume_api_v3_participant_path(id)
     end
 
-    it_behaves_like "an API resume participant endpoint" do
+    it_behaves_like "an API participant action endpoint", Participants::Resume do
       def assert_on_successful_response(parsed_response)
         expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("active")
       end
@@ -61,7 +61,7 @@ RSpec.describe "Participant endpoints", type: :request do
       defer_api_v3_participant_path(id)
     end
 
-    it_behaves_like "an API defer participant endpoint" do
+    it_behaves_like "an API participant action endpoint", Participants::Defer do
       def assert_on_successful_response(parsed_response)
         expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("deferred")
       end
@@ -71,7 +71,7 @@ RSpec.describe "Participant endpoints", type: :request do
   describe "PUT /api/v3/participants/:ecf_id/withdraw" do
     let(:course_identifier) { application.course.identifier }
     let(:reason) { Participants::Withdraw::WITHDRAWL_REASONS.sample }
-    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
     let(:participant) { application.user }
     let(:participant_id) { participant.ecf_id }
 
@@ -79,7 +79,7 @@ RSpec.describe "Participant endpoints", type: :request do
       withdraw_api_v3_participant_path(id)
     end
 
-    it_behaves_like "an API withdraw participant endpoint" do
+    it_behaves_like "an API participant action endpoint", Participants::Withdraw do
       def assert_on_successful_response(parsed_response)
         expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("withdrawn")
       end
