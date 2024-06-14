@@ -53,7 +53,7 @@ RSpec.describe "Participant endpoints", type: :request do
   describe "PUT /api/v3/participants/:ecf_id/defer" do
     let(:course_identifier) { application.course.identifier }
     let(:reason) { Participants::Defer::DEFERRAL_REASONS.sample }
-    let(:application) { create(:application, :accepted, :with_declaration, lead_provider: current_lead_provider) }
+    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
     let(:participant) { application.user }
     let(:participant_id) { participant.ecf_id }
 

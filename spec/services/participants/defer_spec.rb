@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::Defer, type: :model do
   let(:lead_provider) { application.lead_provider }
   let(:participant) { application.user }
-  let(:application) { create(:application, :accepted, :with_declaration) }
+  let(:application) { create(:application, :with_declaration) }
   let(:course_identifier) { application.course.identifier }
   let(:reason) { described_class::DEFERRAL_REASONS.sample }
   let!(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
@@ -19,7 +19,7 @@ RSpec.describe Participants::Defer, type: :model do
     it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::DEFERRAL_REASONS) }
 
     context "when the application is already deferred" do
-      let(:application) { create(:application, :accepted, :deferred, :with_declaration) }
+      let(:application) { create(:application, :deferred, :with_declaration) }
 
       it "adds an error to the participant attribute" do
         expect(instance).to be_invalid
@@ -28,7 +28,7 @@ RSpec.describe Participants::Defer, type: :model do
     end
 
     context "when the application is withdrawn" do
-      let(:application) { create(:application, :accepted, :withdrawn, :with_declaration) }
+      let(:application) { create(:application, :withdrawn, :with_declaration) }
 
       it "adds an error to the participant attribute" do
         expect(instance).to be_invalid
@@ -55,7 +55,7 @@ RSpec.describe Participants::Defer, type: :model do
     end
 
     context "when there is a matching application, but it is not accepted" do
-      let(:application) { create(:application, :with_declaration) }
+      let(:application) { create(:application) }
 
       it "adds an error to the participant attribute" do
         expect(instance).to be_invalid
