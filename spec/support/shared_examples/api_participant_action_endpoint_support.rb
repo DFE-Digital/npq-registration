@@ -46,6 +46,19 @@ RSpec.shared_examples "an API participant action endpoint" do |service|
 
         api_put(path(participant_id), params:)
       end
+
+      context "when the request body is malformed" do
+        it "raises an error" do
+          api_put(path(participant_id), params: { data: { attributes: {} } })
+
+          expect(response.status).to eq 400
+          expect(response.content_type).to eql("application/json")
+          expect(parsed_response["errors"][0]).to include({
+            "title" => "Bad request",
+            "detail" => I18n.t(:invalid_data_structure),
+          })
+        end
+      end
     end
 
     context "when the participant does not exist", exceptions_app: true do

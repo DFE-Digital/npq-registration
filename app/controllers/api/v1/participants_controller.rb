@@ -66,6 +66,8 @@ module API
             participant:,
             lead_provider: current_lead_provider,
           )
+      rescue ActionController::ParameterMissing
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       end
 
       def to_json(obj)
