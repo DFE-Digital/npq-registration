@@ -51,6 +51,14 @@ FactoryBot.define do
       schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, course_group: course.course_group, cohort:) }
     end
 
+    trait :with_declaration do
+      accepted
+
+      after(:create) do |application|
+        create(:declaration, application:)
+      end
+    end
+
     trait :rejected do
       lead_provider_approval_status { :rejected }
     end

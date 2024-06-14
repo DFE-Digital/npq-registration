@@ -22,8 +22,17 @@ module API
         end
       end
 
+      def defer
+        service = ::Participants::Defer.new(participant_action_params)
+
+        if service.defer
+          render json: to_json(service.participant)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
       def change_schedule = head(:method_not_allowed)
-      def defer = head(:method_not_allowed)
       def withdraw = head(:method_not_allowed)
       def outcomes = head(:method_not_allowed)
 
@@ -43,7 +52,7 @@ module API
         params
           .require(:data)
           .require(:attributes)
-          .permit(:course_identifier)
+          .permit(:course_identifier, :reason)
           .merge(
             participant:,
             lead_provider: current_lead_provider,

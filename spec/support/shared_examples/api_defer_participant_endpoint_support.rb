@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API resume participant endpoint" do
-  let(:params) { { data: { attributes: { course_identifier: } } } }
+RSpec.shared_examples "an API defer participant endpoint" do
+  let(:params) { { data: { attributes: { course_identifier:, reason: } } } }
 
   context "when authorized" do
     context "when the participant exists" do
@@ -16,17 +16,18 @@ RSpec.shared_examples "an API resume participant endpoint" do
       end
 
       it "calls the correct service" do
-        resume_double = instance_double(Participants::Resume, resume: true, participant:)
+        defer_double = instance_double(Participants::Defer, defer: true, participant:)
 
-        allow(Participants::Resume).to receive(:new) { |args|
+        allow(Participants::Defer).to receive(:new) { |args|
           expect(args[:participant]).to eq(participant)
           expect(args[:lead_provider]).to eq(current_lead_provider)
           expect(args[:course_identifier]).to eq(course_identifier)
-        }.and_return(resume_double)
+          expect(args[:reason]).to eq(reason)
+        }.and_return(defer_double)
 
         api_put(path(participant_id), params:)
 
-        expect(resume_double).to have_received(:resume)
+        expect(defer_double).to have_received(:defer)
       end
 
       it "calls the correct serializer" do
