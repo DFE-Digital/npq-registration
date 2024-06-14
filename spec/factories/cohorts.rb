@@ -4,7 +4,7 @@ FactoryBot.define do
     registration_start_date { Date.new(start_year, 4, 3) }
 
     initialize_with do
-      Cohort.find_by(start_year:) || new(**attributes)
+      Cohort.find_or_create_by(start_year:)
     end
 
     trait :current do
