@@ -25,7 +25,7 @@ RSpec.shared_examples "a participant action" do |action, from_states, to_state|
     end
 
     context "when a matching application does not exist (different lead provider)" do
-      let(:lead_provider) { create(:lead_provider) }
+      let(:lead_provider) { create(:lead_provider, name: "Different to #{application.lead_provider.name}") }
 
       it "adds an error to the participant attribute" do
         expect(instance).to be_invalid
