@@ -220,6 +220,7 @@ RSpec.describe FundingEligibility do
 
         context "when institution is not on early years register" do
           let(:institution) { build(:private_childcare_provider, early_years_individual_registers: []) }
+          let(:query_store) { instance_double("RegistrationQueryStore", childminder?: false) }
 
           it "returns status code :not_on_early_years_register" do
             expect(subject.funding_eligiblity_status_code).to eq :not_entitled_ey_institution

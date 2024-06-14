@@ -76,7 +76,7 @@ module Questionnaires
     end
 
     def funding_eligibility
-      @funding_eligiblity ||= FundingEligibility.new(
+      @funding_eligibility ||= FundingEligibility.new(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
@@ -86,7 +86,7 @@ module Questionnaires
         get_an_identity_id: wizard.query_store.get_an_identity_id,
         lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
         query_store: wizard.query_store,
-        )
+      )
     end
 
     def tsf_elgible?

@@ -37,6 +37,7 @@ class FundingEligibility
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
     INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
     NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
+    NOT_ENTITLED_EY_INSTITUTION => "funding_details.not_entitled_ey_institution",
   }.freeze
 
   attr_reader :institution,

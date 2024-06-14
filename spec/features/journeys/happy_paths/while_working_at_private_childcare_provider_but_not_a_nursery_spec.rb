@@ -78,7 +78,7 @@ RSpec.feature "Happy journeys", type: :feature do
         page.choose(course, visible: :all)
       end
 
-      expect(page).to have_text("you are eligible for scholarship funding for") unless course.in?(["Leading primary mathematics", "Special educational needs co-ordinator (SENCO)"])
+      expect(page).to have_text("you may be eligible for scholarship funding for") unless course.in?(["Leading primary mathematics", "Special educational needs co-ordinator (SENCO)"])
       expect(page).to have_text("You can go back and select the Early years leadership") unless course.in?(["Leading primary mathematics", "Special educational needs co-ordinator (SENCO)"])
       expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
       expect(page).to have_text("Do you work as a special educational needs co-ordinator (SENCO)?") if course == "Special educational needs co-ordinator (SENCO)"
