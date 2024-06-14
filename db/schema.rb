@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_13_151304) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -395,6 +395,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_13_151304) do
     t.enum "state", default: "eligible", null: false, enum_type: "statement_item_states"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "declaration_id"
+    t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
     t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
 
@@ -476,6 +478,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_13_151304) do
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
+  add_foreign_key "statement_items", "declarations"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

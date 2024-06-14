@@ -3,7 +3,7 @@ class StatementItem < ApplicationRecord
   REFUNDABLE_STATES = %w[awaiting_clawback clawed_back].freeze
 
   belongs_to :statement
-  # belongs_to :declaration
+  belongs_to :declaration
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
