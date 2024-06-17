@@ -26,7 +26,7 @@ en:
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
-
+    cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
   participant: &participant
     blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
     already_active: The participant is already active

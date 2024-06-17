@@ -92,6 +92,49 @@ RSpec.describe Applications::ChangeFundedPlace do
             expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
           end
         end
+
+        context "with declarations" do
+          context "when funded_place is true" do
+            before do
+              params.merge!(funded_place: true)
+            end
+
+            %w[submitted eligible payable paid voided ineligible awaiting_clawback clawed_back].each do |state|
+              it "is valid if the application has #{state} declarations" do
+                create(:declaration, application:, state:)
+                service.change
+
+                expect(service.errors.messages_for(:application)).to be_empty
+              end
+            end
+          end
+
+          context "when funded_place is false" do
+            before do
+              params.merge!(funded_place: false)
+            end
+
+            %w[submitted eligible payable paid].each do |applicable_state|
+              it "is invalid if the application has #{applicable_state} declarations" do
+                create(:declaration, application:, state: applicable_state)
+
+                service.change
+
+                expect(service.errors.messages_for(:application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
+              end
+            end
+
+            %w[voided ineligible awaiting_clawback clawed_back].each do |non_applicable_state|
+              it "is valid if the application has #{non_applicable_state} declarations" do
+                create(:declaration, application:, state: non_applicable_state)
+                application.reload
+                service.change
+
+                expect(service.errors.messages_for(:application)).to be_empty
+              end
+            end
+          end
+        end
       end
 
       context "when funded_place is not present" do
