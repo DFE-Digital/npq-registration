@@ -39,7 +39,8 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v2/sw
   it_behaves_like "an API update endpoint documentation",
                   "/api/v2/participants/npq/{id}/resume",
                   "NPQ Participants",
-                  "NPQ participant (resume)",
+                  "Resume an NPQ participant",
+                  "The NPQ participant being resumed",
                   "#/components/schemas/ParticipantResponse",
                   "#/components/schemas/ParticipantResumeRequest" do
     before { application.withdrawn! }
@@ -53,7 +54,8 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v2/sw
   it_behaves_like "an API update endpoint documentation",
                   "/api/v2/participants/npq/{id}/defer",
                   "NPQ Participants",
-                  "NPQ participant (defer)",
+                  "Defer an NPQ participant",
+                  "The NPQ participant being deferred",
                   "#/components/schemas/ParticipantResponse",
                   "#/components/schemas/ParticipantDeferRequest" do
     let(:resource) { participant }
@@ -65,7 +67,8 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v2/sw
   it_behaves_like "an API update endpoint documentation",
                   "/api/v2/participants/npq/{id}/withdraw",
                   "NPQ Participants",
-                  "NPQ participant (withdraw)",
+                  "Withdraw an NPQ participant",
+                  "The NPQ participant being withdrawn",
                   "#/components/schemas/ParticipantResponse",
                   "#/components/schemas/ParticipantWithdrawRequest" do
     let(:resource) { participant }

@@ -99,7 +99,6 @@ paths:
   "/api/v1/npq-applications/{id}/accept":
     post:
       summary: Accept an NPQ application
-      operationId: npq_applications_accept
       tags:
       - NPQ Applications
       security:
@@ -108,7 +107,6 @@ paths:
       - name: id
         in: path
         required: true
-        description: The ID of the NPQ application to accept.
         schema:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
@@ -124,6 +122,24 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
         content:
           application/json:
@@ -132,7 +148,6 @@ paths:
   "/api/v1/npq-applications/{id}/reject":
     post:
       summary: Reject an NPQ application
-      operationId: npq_applications_reject
       tags:
       - NPQ Applications
       security:
@@ -141,7 +156,6 @@ paths:
       - name: id
         in: path
         required: true
-        description: The ID of the NPQ application to reject.
         schema:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
@@ -157,10 +171,15 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v1/npq-applications/{id}/change-funded-place":
     put:
       summary: Change funded place value of an NPQ application
-      operationId: npq_applications_change_funded_place
       tags:
       - NPQ Applications
       security:
@@ -169,7 +188,6 @@ paths:
       - name: id
         in: path
         required: true
-        description: The ID of the NPQ application to change the funded place value.
         schema:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
@@ -185,6 +203,24 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
         content:
           application/json:
@@ -275,7 +311,7 @@ paths:
                 "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v1/participants/npq/{id}/resume":
     put:
-      summary: Update an NPQ participant (resume)
+      summary: Resume an NPQ participant
       tags:
       - NPQ Participants
       security:
@@ -288,7 +324,7 @@ paths:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
         '200':
-          description: An NPQ participant (resume)
+          description: The NPQ participant being resumed
           content:
             application/json:
               schema:
@@ -325,7 +361,7 @@ paths:
         required: true
   "/api/v1/participants/npq/{id}/defer":
     put:
-      summary: Update an NPQ participant (defer)
+      summary: Defer an NPQ participant
       tags:
       - NPQ Participants
       security:
@@ -338,7 +374,7 @@ paths:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
         '200':
-          description: An NPQ participant (defer)
+          description: The NPQ participant being deferred
           content:
             application/json:
               schema:
@@ -375,7 +411,7 @@ paths:
         required: true
   "/api/v1/participants/npq/{id}/withdraw":
     put:
-      summary: Update an NPQ participant (withdraw)
+      summary: Withdraw an NPQ participant
       tags:
       - NPQ Participants
       security:
@@ -388,7 +424,7 @@ paths:
           "$ref": "#/components/schemas/IDAttribute"
       responses:
         '200':
-          description: An NPQ participant (withdraw)
+          description: The NPQ participant being withdrawn
           content:
             application/json:
               schema:
