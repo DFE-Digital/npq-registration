@@ -136,7 +136,7 @@ Rails.application.routes.draw do
               put :defer
               put :resume
               put :withdraw
-
+              
               scope module: :participants do
                 resources :outcomes, only: %i[create index], as: :participant_outcomes
               end
@@ -159,7 +159,7 @@ Rails.application.routes.draw do
         member do
           post :reject, path: "reject"
           post :accept, path: "accept"
-          put :change_funded_place, path: "change-funded-place"
+          put :change_funded_place
         end
       end
 

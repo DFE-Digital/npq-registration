@@ -299,6 +299,156 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v2/participants/npq/{id}/resume":
+    put:
+      summary: Update an NPQ participant (resume)
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: An NPQ participant (resume)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantResumeRequest"
+        required: true
+  "/api/v2/participants/npq/{id}/defer":
+    put:
+      summary: Update an NPQ participant (defer)
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: An NPQ participant (defer)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeferRequest"
+        required: true
+  "/api/v2/participants/npq/{id}/withdraw":
+    put:
+      summary: Update an NPQ participant (withdraw)
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: An NPQ participant (withdraw)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantWithdrawRequest"
+        required: true
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
 components:
@@ -371,6 +521,37 @@ components:
           description: Resource not found
       example:
         error: Resource not found
+    BadRequestResponse:
+      description: The request body did not match the expected payload.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                example: Bad request
+              detail:
+                type: string
+                example: correct json data structure required. See API docs for reference
+    UnprocessableEntityResponse:
+      description: The payload was not valid. See the errors for more information.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                example: course_identifier
+              detail:
+                type: string
+                example: The entered '#/course_identifier' is not recognised for the
+                  given participant. Check details and try again.
     IDAttribute:
       description: The unique ID of the resource.
       type: string
@@ -1225,3 +1406,153 @@ components:
                     nullable: true
                     type: boolean
                     example: true
+    ParticipantResumeRequest:
+      description: A participant resume request
+      type: object
+      properties:
+        data:
+          description: A participant resume request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: participant-resume
+            attributes:
+              description: A participant resume request attributes
+              type: object
+              properties:
+                course_identifier:
+                  description: The type of course the participant is enrolled in
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-senior-leadership
+                  enum:
+                  - npq-senior-leadership
+                  - npq-headship
+                  - npq-executive-leadership
+                  - npq-early-years-leadership
+                  - npq-leading-teaching
+                  - npq-leading-behaviour-culture
+                  - npq-leading-teaching-development
+                  - npq-leading-literacy
+                  - npq-leading-primary-mathematics
+                  - npq-additional-support-offer
+                  - npq-early-headship-coaching-offer
+                  - npq-senco
+    ParticipantDeferRequest:
+      description: A participant defer request
+      type: object
+      properties:
+        data:
+          description: A participant defer request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: participant-defer
+            attributes:
+              description: A participant defer request attributes
+              type: object
+              properties:
+                course_identifier:
+                  description: The type of course the participant is enrolled in
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-senior-leadership
+                  enum:
+                  - npq-senior-leadership
+                  - npq-headship
+                  - npq-executive-leadership
+                  - npq-early-years-leadership
+                  - npq-leading-teaching
+                  - npq-leading-behaviour-culture
+                  - npq-leading-teaching-development
+                  - npq-leading-literacy
+                  - npq-leading-primary-mathematics
+                  - npq-additional-support-offer
+                  - npq-early-headship-coaching-offer
+                  - npq-senco
+                reason:
+                  description: The reason for the deferral
+                  required: true
+                  nullable: false
+                  type: string
+                  example: bereavement
+                  enum:
+                  - bereavement
+                  - long-term-sickness
+                  - parental-leave
+                  - career-break
+                  - other
+    ParticipantWithdrawRequest:
+      description: A participant withdraw request
+      type: object
+      properties:
+        data:
+          description: A participant withdraw request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: participant-withdraw
+            attributes:
+              description: A participant withdraw request attributes
+              type: object
+              properties:
+                course_identifier:
+                  description: The type of course the participant is enrolled in
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-senior-leadership
+                  enum:
+                  - npq-senior-leadership
+                  - npq-headship
+                  - npq-executive-leadership
+                  - npq-early-years-leadership
+                  - npq-leading-teaching
+                  - npq-leading-behaviour-culture
+                  - npq-leading-teaching-development
+                  - npq-leading-literacy
+                  - npq-leading-primary-mathematics
+                  - npq-additional-support-offer
+                  - npq-early-headship-coaching-offer
+                  - npq-senco
+                reason:
+                  description: The reason for the withdrawl
+                  required: true
+                  nullable: false
+                  type: string
+                  example: insufficient-capacity-to-undertake-programme
+                  enum:
+                  - insufficient-capacity-to-undertake-programme
+                  - personal-reason-health-or-pregnancy-related
+                  - personal-reason-moving-school
+                  - personal-reason-other
+                  - insufficient-capacity
+                  - change-in-developmental-or-personal-priorities
+                  - change-in-school-circumstances
+                  - change-in-school-leadership
+                  - quality-of-programme-structure-not-suitable.
+                  - quality-of-programme-content-not-suitable
+                  - quality-of-programme-facilitation-not-effective
+                  - quality-of-programme-accessibility
+                  - quality-of-programme-other
+                  - programme-not-appropriate-for-role-and-cpd-needs
+                  - started-in-error
+                  - expected-commitment-unclear
+                  - other
