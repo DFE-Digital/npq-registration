@@ -99,7 +99,7 @@ RSpec.describe Applications::ChangeFundedPlace do
               params.merge!(funded_place: true)
             end
 
-            %w[submitted eligible payable paid voided ineligible awaiting_clawback clawed_back].each do |state|
+            (Declaration::BILLABLE_STATES + Declaration::NON_BILLABLE_STATES).each do |state|
               it "is valid if the application has #{state} declarations" do
                 create(:declaration, application:, state:)
                 service.change
@@ -114,7 +114,7 @@ RSpec.describe Applications::ChangeFundedPlace do
               params.merge!(funded_place: false)
             end
 
-            %w[submitted eligible payable paid].each do |applicable_state|
+            Declaration::BILLABLE_STATES.each do |applicable_state|
               it "is invalid if the application has #{applicable_state} declarations" do
                 create(:declaration, application:, state: applicable_state)
 
@@ -124,7 +124,7 @@ RSpec.describe Applications::ChangeFundedPlace do
               end
             end
 
-            %w[voided ineligible awaiting_clawback clawed_back].each do |non_applicable_state|
+            Declaration::NON_BILLABLE_STATES.each do |non_applicable_state|
               it "is valid if the application has #{non_applicable_state} declarations" do
                 create(:declaration, application:, state: non_applicable_state)
                 application.reload

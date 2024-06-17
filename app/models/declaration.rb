@@ -1,4 +1,7 @@
 class Declaration < ApplicationRecord
+  BILLABLE_STATES = %w[submitted eligible payable paid].freeze
+  NON_BILLABLE_STATES = %w[voided ineligible awaiting_clawback clawed_back].freeze
+
   belongs_to :application
   belongs_to :cohort
   belongs_to :lead_provider
