@@ -349,6 +349,8 @@ en:
     targeted_funding_eligibility: "Your workplace will receive a <a href=\"https://www.gov.uk/government/publications/targeted-support-funding-for-national-professional-qualifications\" class=\"govuk-link\">targeted support funding</a> payment to support you to do this NPQ."
     ineligible_message: "This means that you would need to pay for the course another way."
     not_eligible_ehco: "You’re not eligible for scholarship funding for %{course_name}."
+    not_a_pp50: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
+    not_entitled_ey_institution: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
 
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
