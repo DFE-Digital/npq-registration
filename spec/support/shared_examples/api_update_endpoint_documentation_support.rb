@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resource_description, response_schema_ref, request_schema_ref|
+RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resource_description, response_description, response_schema_ref, request_schema_ref|
   path url do
-    put "Update an #{resource_description}" do
+    put resource_description do
       tags tag
       consumes "application/json"
       produces "application/json"
@@ -32,7 +32,7 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
         }
       end
 
-      response "200", "An #{resource_description}" do
+      response "200", response_description do
         let(:id) { resource.ecf_id }
 
         schema({ "$ref": response_schema_ref })
