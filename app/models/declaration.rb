@@ -16,6 +16,8 @@ class Declaration < ApplicationRecord
   delegate :identifier, to: :course, prefix: true
   delegate :name, to: :lead_provider, prefix: true
 
+  scope :billable, -> { where(state: BILLABLE_STATES) }
+
   enum state: {
     submitted: "submitted",
     eligible: "eligible",

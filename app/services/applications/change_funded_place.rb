@@ -51,14 +51,9 @@ module Applications
 
     def eligible_for_removing_funding_place
       return if funded_place
+      return unless application.declarations.billable.any?
 
-      errors.add(:application, I18n.t("application.cannot_change_funded_place")) if applicable_declarations.any?
-    end
-
-    def applicable_declarations
-      application
-        .declarations
-        .where(state: %w[submitted eligible payable paid])
+      errors.add(:application, I18n.t("application.cannot_change_funded_place"))
     end
   end
 end

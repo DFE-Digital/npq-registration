@@ -148,4 +148,20 @@ RSpec.describe Declaration, type: :model do
       it { is_expected.to be_nil }
     end
   end
+
+  describe "scopes" do
+    describe ".billable" do
+      it "returns declarations with billable states" do
+        billable_declarations = Declaration::BILLABLE_STATES.map do |state|
+          create(:declaration, state:)
+        end
+
+        Declaration::NON_BILLABLE_STATES.map do |state|
+          create(:declaration, state:)
+        end
+
+        expect(Declaration.billable).to match_array(billable_declarations)
+      end
+    end
+  end
 end
