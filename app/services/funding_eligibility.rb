@@ -38,6 +38,7 @@ class FundingEligibility
     INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
     NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
     NOT_ENTITLED_EY_INSTITUTION => "funding_details.not_entitled_ey_institution",
+    NOT_ENTITLED_CHILDMINDER => "funding_details.not_entitled_childminder",
   }.freeze
 
   attr_reader :institution,
@@ -161,6 +162,7 @@ class FundingEligibility
 
   def get_description_for_funding_status
     status_code = funding_eligiblity_status_code
+
     return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
     return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
 
