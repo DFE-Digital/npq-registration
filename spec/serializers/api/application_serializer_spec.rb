@@ -211,12 +211,13 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
   end
 
   context "when serializing the `v3` view" do
+    let(:application) { build(:application, :accepted, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
+
     describe "nested attributes" do
       subject(:attributes) { JSON.parse(described_class.render(application, view: :v3))["attributes"] }
 
-      # FIXME: When we migrate schedules we can test this fully.
       it "serializes the `schedule_identifier`" do
-        expect(attributes["schedule_identifier"]).to be_nil
+        expect(attributes["schedule_identifier"]).to eq(application.schedule.identifier)
       end
     end
   end
