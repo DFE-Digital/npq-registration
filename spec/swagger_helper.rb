@@ -73,6 +73,7 @@ RSpec.configure do |config|
           ParticipantResumeRequest: PARTICIPANT_RESUME_REQUEST,
           ParticipantDeferRequest: PARTICIPANT_DEFER_REQUEST,
           ParticipantWithdrawRequest: PARTICIPANT_WITHDRAW_REQUEST,
+          ParticipantChangeScheduleRequest: PARTICIPANT_CHANGE_SCHEDULE_REQUEST,
           StatementResponse: STATEMENT_RESPONSE[version],
           StatementsResponse: STATEMENTS_RESPONSE[version],
           Statement: STATEMENT[version],
