@@ -342,16 +342,16 @@ en:
       failed: "If you think this is mistake or need to appeal this outcome, contact your training provider."
 
   funding_details:
-    ineligible_setting: "You’re not eligible for scholarship funding because you do not work in one of the eligible settings, such as state-funded schools."
-    inside_catchment: "You’re not eligible for scholarship funding because you do not work in England."
-    no_Ofsted: "You’re not eligible for schools funding because you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
+    ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
+    inside_catchment: "You’re not eligible for scholarship funding as you do not work in England."
+    no_Ofsted: "You’re not eligible for schools funding as you or your employer is not registered on the Ofsted Early Years Register or with a registered Childminder Agency."
     previously_funded: "You have already been allocated scholarship funding for %{course_name}."
     targeted_funding_eligibility: "Your workplace will receive a <a href=\"https://www.gov.uk/government/publications/targeted-support-funding-for-national-professional-qualifications\" class=\"govuk-link\">targeted support funding</a> payment to support you to do this NPQ."
     ineligible_message: "This means that you would need to pay for the course another way."
     not_eligible_ehco: "You’re not eligible for scholarship funding for %{course_name}."
-    not_a_pp50: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
-    not_entitled_ey_institution: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
-    not_entitled_childminder: "You’re not eligible for scholarship funding for the NPQ because you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
+    not_a_pp50: "You’re not eligible for scholarship funding for the NPQ as your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
+    not_entitled_ey_institution: "You’re not eligible for scholarship funding for the  NPQ as your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
+    not_entitled_childminder: "You’re not eligible for scholarship funding for the NPQ as you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
     expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."

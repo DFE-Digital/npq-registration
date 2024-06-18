@@ -94,6 +94,7 @@ class FundingEligibility
       return NOT_IN_ENGLAND unless inside_catchment?
 
       unless institution
+
         if query_store
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
@@ -102,8 +103,6 @@ class FundingEligibility
             return FUNDED_ELIGIBILITY_RESULT if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
 
             return NO_INSTITUTION
-          else
-            return INELIGIBLE_INSTITUTION_TYPE
           end
         else
           return NO_INSTITUTION
@@ -124,8 +123,8 @@ class FundingEligibility
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
-        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
+        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
         return NOT_ENTITLED_CHILDMINDER if course.eyl? && childminder? && !institution.on_childminders_list?
@@ -133,6 +132,8 @@ class FundingEligibility
         FUNDED_ELIGIBILITY_RESULT
       when "LocalAuthority"
         FUNDED_ELIGIBILITY_RESULT
+      when "NilClass" # bit of stretch, but can be nil only when private ey setting is selected
+        NOT_ON_EARLY_YEARS_REGISTER
       else
         INELIGIBLE_INSTITUTION_TYPE
       end
