@@ -674,6 +674,25 @@ components:
                   type: boolean
                   required: false
                   example: true
+                schedule_identifier:
+                  description: The new schedule of the participant
+                  nullable: false
+                  type: string
+                  example: npq-leadership-spring
+                  required: false
+                  enum:
+                  - npq-aso-march
+                  - npq-aso-june
+                  - npq-aso-november
+                  - npq-aso-december
+                  - npq-ehco-march
+                  - npq-ehco-june
+                  - npq-ehco-november
+                  - npq-ehco-december
+                  - npq-leadership-autumn
+                  - npq-leadership-spring
+                  - npq-specialist-autumn
+                  - npq-specialist-spring
     ApplicationChangeFundedPlaceRequest:
       description: A NPQ application change funded place request
       type: object

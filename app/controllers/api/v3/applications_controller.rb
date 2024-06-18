@@ -13,7 +13,7 @@ module API
       end
 
       def accept
-        service = Applications::Accept.new(application:, funded_place:)
+        service = Applications::Accept.new(application:, funded_place:, schedule_identifier:)
 
         if service.accept
           render json: to_json(service.application)
@@ -73,7 +73,7 @@ module API
       def accept_permitted_params
         parameters = params
           .fetch(:data)
-          .permit(:type, attributes: %i[funded_place])
+          .permit(:type, attributes: %i[funded_place schedule_identifier])
 
         return parameters unless parameters["attributes"].empty?
 
@@ -84,6 +84,10 @@ module API
 
       def funded_place
         accept_permitted_params.dig("attributes", "funded_place")
+      end
+
+      def schedule_identifier
+        accept_permitted_params.dig("attributes", "schedule_identifier")
       end
     end
   end

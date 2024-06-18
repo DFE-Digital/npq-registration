@@ -41,8 +41,7 @@ module API
       end
 
       view :v3 do
-        # FIXME: When we migrate schedules we can test this fully.
-        field(:schedule_identifier) { nil }
+        field(:schedule_identifier) { |a| a.schedule&.identifier }
       end
     end
 

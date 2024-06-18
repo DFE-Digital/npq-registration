@@ -16,18 +16,25 @@ RSpec.describe Applications::Accept do
   describe "#accept" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user, :with_verified_trn) }
-    let(:course) { create(:course, :sl) }
+    let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+    let(:course) { create(:course, :sl, course_group:) }
+    let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current) }
     let(:cohort_next) { create(:cohort, :next) }
 
     let(:application) do
-      create(:application,
-             user:,
-             course:,
-             lead_provider:,
-             cohort:)
+      create(
+        :application,
+        user:,
+        course:,
+        lead_provider:,
+        cohort:,
+        schedule:,
+      )
     end
+
+    before { schedule }
 
     describe "validations" do
       context "when the npq application is missing" do
@@ -61,7 +68,7 @@ RSpec.describe Applications::Accept do
       end
 
       context "when the existing data is invalid" do
-        let(:application) { create(:application) }
+        let(:application) { create(:application, cohort:, schedule:, course:) }
 
         it "throws ActiveRecord::RecordInvalid" do
           application.lead_provider_id = nil
@@ -71,15 +78,20 @@ RSpec.describe Applications::Accept do
     end
 
     context "when user applies for EHCO but has accepted ASO" do
-      let(:course) { create(:course, :aso) }
-      let(:npq_ehco) { create(:course, :ehco) }
+      let(:other_course_group) { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
+      let(:course) { create(:course, :aso, course_group: other_course_group) }
+      let(:npq_ehco) { create(:course, :ehco, course_group: other_course_group) }
+      let!(:other_schedule) { create(:schedule, :npq_ehco_june, course_group: other_course_group, cohort:) }
 
       let(:other_application) do
-        create(:application,
-               user:,
-               course: npq_ehco,
-               lead_provider:,
-               cohort:)
+        create(
+          :application,
+          user:,
+          course: npq_ehco,
+          lead_provider:,
+          cohort:,
+          schedule: other_schedule,
+        )
       end
 
       before do
@@ -224,6 +236,7 @@ RSpec.describe Applications::Accept do
     end
 
     context "when applying for 2022" do
+      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort: cohort_next) }
       let!(:application) do
         create(:application,
                user:,
@@ -301,6 +314,58 @@ RSpec.describe Applications::Accept do
             service.accept
             expect(service.errors.messages_for(:application)).to be_empty
           end
+        end
+      end
+    end
+
+    describe "changing schedule on accept" do
+      let(:cohort) { create(:cohort, :current) }
+      let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+      let(:course) { create(:course, :sl, course_group:) }
+      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+
+      let(:application) do
+        create(
+          :application,
+          :pending,
+          user:,
+          course:,
+          lead_provider:,
+          cohort:,
+          schedule:,
+        )
+      end
+
+      let(:params) { { application:, schedule_identifier: new_schedule.identifier } }
+
+      before { new_schedule }
+
+      context "when changing to correct schedule" do
+        let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
+
+        it "changes schedule successfully" do
+          expect(ApplicationState.count).to be(0)
+          expect(service.application.lead_provider_approval_status).to eql("pending")
+
+          expect(service.accept).to be_truthy
+          expect(service.application.lead_provider_approval_status).to eql("accepted")
+          expect(service.application.schedule).to eql(new_schedule)
+
+          application_state = ApplicationState.first
+          expect(application_state.lead_provider).to eql(lead_provider)
+          expect(application_state.application).to eql(application)
+          expect(application_state).to be_active
+        end
+      end
+
+      context "when changing to wrong schedule" do
+        let(:new_course_group) { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
+        let(:new_course) { create(:course, :sl, course_group: new_course_group) }
+        let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group: new_course_group, cohort:) }
+
+        it "returns validation error" do
+          expect(service.accept).to be_falsey
+          expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
         end
       end
     end
