@@ -42,7 +42,11 @@ module Helpers
           extract_swagger_properties(properties: value[:properties], version:)
         # If the value is an array of items, we need to extract the example from the items properties.
         elsif value[:type] == :array || value.key?(:items)
-          [extract_swagger_properties(properties: value[:items][:properties], version:)]
+          if value[:items].key?(:enum)
+            [value[:items][:example]]
+          else
+            [extract_swagger_properties(properties: value[:items][:properties], version:)]
+          end
         # If the value has an example, we're on an attribute and don't need to go any deeper.
         elsif value.key?(:example)
           value[:example]

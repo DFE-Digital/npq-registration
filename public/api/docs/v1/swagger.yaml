@@ -532,6 +532,74 @@ paths:
             schema:
               "$ref": "#/components/schemas/ParticipantWithdrawRequest"
         required: true
+  "/api/v1/participants/npq/{id}/change-schedule":
+    put:
+      summary: Notify that an NPQ participant is changing training schedule
+      tags:
+      - NPQ Participants
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The NPQ participant changing schedule
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: npq-participant
+                      attributes:
+                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        full_name: Isabelle MacDonald
+                        email: isabelle.macdonald2@some-school.example.com
+                        npq_courses:
+                        - npq-early-headship-coaching-offer
+                        funded_places:
+                        - npq_course: npq-early-headship-coaching-offer
+                          funded_place: true
+                          npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        teacher_reference_number: '1234567'
+                        updated_at: '2021-05-31T02:22:32.000Z'
+              schema:
+                "$ref": "#/components/schemas/ParticipantResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantChangeScheduleRequest"
+        required: true
 servers:
 - url: https://npq-registration-separation-web.teacherservices.cloud/
 components:
@@ -1537,3 +1605,76 @@ components:
                   - started-in-error
                   - expected-commitment-unclear
                   - other
+    ParticipantChangeScheduleRequest:
+      description: The change schedule request for a participant
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          description: An NPQ participant change schedule request data
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: participant-change-schedule
+              required: true
+            attributes:
+              description: An NPQ participant change schedule request attributes
+              type: object
+              required:
+              - schedule_identifier
+              - course_identifier
+              properties:
+                schedule_identifier:
+                  description: The new schedule of the participant
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-ehco-march
+                  enum:
+                  - npq-aso-march
+                  - npq-aso-june
+                  - npq-aso-november
+                  - npq-aso-december
+                  - npq-ehco-march
+                  - npq-ehco-june
+                  - npq-ehco-november
+                  - npq-ehco-december
+                  - npq-leadership-autumn
+                  - npq-leadership-spring
+                  - npq-specialist-autumn
+                  - npq-specialist-spring
+                course_identifier:
+                  description: The type of course the participant is enrolled in
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-early-headship-coaching-offer
+                  enum:
+                  - npq-senior-leadership
+                  - npq-headship
+                  - npq-executive-leadership
+                  - npq-early-years-leadership
+                  - npq-leading-teaching
+                  - npq-leading-behaviour-culture
+                  - npq-leading-teaching-development
+                  - npq-leading-literacy
+                  - npq-leading-primary-mathematics
+                  - npq-additional-support-offer
+                  - npq-early-headship-coaching-offer
+                  - npq-senco
+                cohort:
+                  description: Providers may change an NPQ participant's cohort up
+                    until the point of submitting a started declaration. The value
+                    indicates which call-off contract funds this participant's training.
+                    2023 indicates a participant that has started, or will start,
+                    their training in the 2023/24 academic year.
+                  required: false
+                  nullable: true
+                  type: string
+                  example: '2023'
