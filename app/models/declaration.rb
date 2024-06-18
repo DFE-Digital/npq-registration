@@ -1,6 +1,6 @@
 class Declaration < ApplicationRecord
-  BILLABLE_STATES = %w[submitted eligible payable paid].freeze
-  NON_BILLABLE_STATES = %w[voided ineligible awaiting_clawback clawed_back].freeze
+  BILLABLE_STATES = %w[eligible payable paid].freeze
+  CHANGEABLE_STATES = %w[eligible submitted].freeze
 
   belongs_to :application
   belongs_to :cohort
@@ -17,6 +17,8 @@ class Declaration < ApplicationRecord
   delegate :name, to: :lead_provider, prefix: true
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
+  scope :changeable, -> { where(state: CHANGEABLE_STATES) }
+  scope :billable_or_changeable, -> { billable.or(changeable) }
 
   enum state: {
     submitted: "submitted",

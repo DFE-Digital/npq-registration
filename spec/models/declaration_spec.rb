@@ -150,17 +150,30 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "scopes" do
+    let(:declarations) { Declaration.states.keys.map { |state| create(:declaration, state:) } }
+
     describe ".billable" do
       it "returns declarations with billable states" do
-        billable_declarations = Declaration::BILLABLE_STATES.map do |state|
-          create(:declaration, state:)
-        end
-
-        Declaration::NON_BILLABLE_STATES.map do |state|
-          create(:declaration, state:)
-        end
+        billable_declarations = declarations.select { |d| %w[eligible payable paid].include?(d.state) }
 
         expect(Declaration.billable).to match_array(billable_declarations)
+      end
+    end
+
+    describe ".changeable" do
+      it "returns declarations with changeable states" do
+        changeable_declarations = declarations.select { |d| %w[eligible submitted].include?(d.state) }
+
+        expect(Declaration.changeable).to match_array(changeable_declarations)
+      end
+    end
+
+    describe ".billable_or_changeable" do
+      it "returns declarations with either billable or changeable states" do
+        states = %w[submitted eligible payable paid]
+        billable_or_changeable = declarations.select { |d| states.include?(d.state) }
+
+        expect(Declaration.billable_or_changeable).to match_array(billable_or_changeable)
       end
     end
   end
