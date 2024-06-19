@@ -5,9 +5,13 @@ en:
   bad_request: "Bad request"
   not_found: "Not found"
   invalid_date_filter: "The filter '#/%{attribute}' must be a valid ISO 8601 date"
+  invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
+  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
+  invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
   schedule_invalid_for_course: Selected schedule is not valid for the course
+  missing_npq_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
 
   errors:
     email:
@@ -27,6 +31,21 @@ en:
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
     cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
+
+  declaration: &declaration
+    future_declaration_date: "The '#/declaration_date' value cannot be a future date. Check the date and try again."
+    invalid_declaration_date: "Enter a valid RCF3339 '#/declaration_date'."
+    declaration_before_milestone_start: "Enter a '#/declaration_date' that's on or after the milestone start."
+    declaration_after_milestone_cutoff: "Enter a '#/declaration_date' that's before the milestone end date."
+    declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
+    declaration_must_be_before_withdrawal_date: "This participant withdrew from this course on %{withdrawal_date}. Enter a '#/declaration_date' that's on or before the withdrawal date."
+    missing_declaration_date: "Enter a '#/declaration_date'."
+    missing_declaration_type: "Enter a '#/declaration_type'."
+    missing_npq_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
+    missing_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
+    mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
+    invalid_has_passed: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
+    missing_participant_id: "The property '#/participant_id' must be present"
 
   statement: &statement
     no_output_fee_statement: You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.

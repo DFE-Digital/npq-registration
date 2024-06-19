@@ -134,6 +134,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_101251) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
+  create_table "contracts", force: :cascade do |t|
+    t.bigint "statement_id", null: false
+    t.bigint "course_id", null: false
+    t.integer "recruitment_target", null: false
+    t.decimal "per_participant", null: false
+    t.integer "number_of_payment_periods", null: false
+    t.integer "output_payment_percentage", default: 60, null: false
+    t.integer "service_fee_installments", null: false
+    t.integer "service_fee_percentage", default: 40, null: false
+    t.decimal "monthly_service_fee", default: "0.0"
+    t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
+    t.boolean "special_course", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_contracts_on_course_id"
+    t.index ["statement_id"], name: "index_contracts_on_statement_id"
+  end
+
   create_table "course_groups", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -484,6 +502,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_101251) do
   add_foreign_key "applications", "schedules"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "contracts", "courses"
+  add_foreign_key "contracts", "statements"
   add_foreign_key "courses", "course_groups"
   add_foreign_key "declarations", "applications"
   add_foreign_key "declarations", "cohorts"
