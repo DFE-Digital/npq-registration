@@ -7,6 +7,7 @@ en:
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
+  schedule_invalid_for_course: Selected schedule is not valid for the course
 
   errors:
     email:
@@ -25,6 +26,13 @@ en:
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
+
+  participant: &participant
+    blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
+
+  participant_course_identifier: &participant_course_identifier
+    blank: Enter a '#/course_identifier' value for this participant.
+    inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
 
   time:
     formats:
@@ -194,7 +202,25 @@ en:
               blank: Enter the date you became a SENCO to continue
               in_future: The date you became a SENCO must be in the past
               invalid: The date you became a SENCO must be a real date
-
+        participants/resume:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+              already_active: The participant is already active
+        participants/defer:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+              already_deferred: The participant is already deferred
+              withdrawn: The participant is already withdrawn
+              no_declarations: You cannot defer an NPQ participant that has no declarations
+            reason:
+              blank: The property '#/reason' must be present
+              inclusion: The property '#/reason' must be a valid reason
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 
@@ -324,7 +350,9 @@ en:
     targeted_funding_eligibility: "Your workplace will receive a <a href=\"https://www.gov.uk/government/publications/targeted-support-funding-for-national-professional-qualifications\" class=\"govuk-link\">targeted support funding</a> payment to support you to do this NPQ."
     ineligible_message: "This means that you would need to pay for the course another way."
     not_eligible_ehco: "You’re not eligible for scholarship funding for %{course_name}."
-
+    not_a_pp50: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
+    not_entitled_ey_institution: "You’re not eligible for scholarship funding for the  NPQ because your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
+    not_entitled_childminder: "You’re not eligible for scholarship funding for the NPQ because you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
   provider_details:
     pending_status: "You need to apply separately with your training provider, if you have not done so already."
     expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."
@@ -378,6 +406,7 @@ en:
         work_setting: "What setting do you work in?"
         funding: "How are you funding your course?"
         teacher_catchment: "Do you work in England?"
+        referred_by_return_to_teaching_adviser: "Did a return to teaching adviser refer you to this service?"
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
         maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
@@ -407,7 +436,10 @@ en:
         course_start_date_three: "Registrations are currently open for courses starting before %{date}."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
-          other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
+          a_school: "This includes local authority maintained schools."
+          other: "For example a virtual school, initial teacher training (ITT) provider, hospital school, young offender institution or other local authority setting."
+        employment_type_options:
+          local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
         ehco_funding_choice_options:
@@ -438,6 +470,7 @@ en:
         date_of_birth: For example, 31 3 1980
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
         senco_start_date: For example, 1 2024
+        work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
     label:
       registration_wizard:
         work_setting_options:
@@ -471,6 +504,10 @@ en:
 
         senco_start_date: "When did you become a SENCO?"
 
+        referred_by_return_to_teaching_adviser_options:
+          "yes": "Yes"
+          "no": "No"
+
         kind_of_nursery_options:
           local_authority_maintained_nursery: "Local authority-maintained nursery"
           preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
@@ -482,7 +519,7 @@ en:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
-          local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          local_authority_supply_teacher: "As a teacher employed by a local authority to teach in more than one school"
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
 

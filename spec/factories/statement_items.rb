@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :statement_item do
-    statement { build :statement }
-    # declaration { association :declaration }
+    statement
+    declaration
     state { "eligible" }
 
     trait :eligible do

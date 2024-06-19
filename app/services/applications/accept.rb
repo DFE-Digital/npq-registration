@@ -7,6 +7,7 @@ module Applications
 
     attribute :application
     attribute :funded_place, :boolean
+    attribute :schedule_identifier, :string
 
     validates :application, presence: { message: I18n.t("application.missing_application") }
     validate :not_already_accepted
@@ -14,12 +15,14 @@ module Applications
     validate :other_accepted_applications_with_same_course?
     validate :eligible_for_funded_place
     validate :validate_funded_place
+    validate :validate_permitted_schedule_for_course
 
     def accept
       return false unless valid?
 
       ApplicationRecord.transaction do
         accept_application!
+        create_application_state!
         reject_other_applications_in_same_cohort!
         set_funded_place_on_npq_application!
       end
@@ -29,7 +32,8 @@ module Applications
 
   private
 
-    delegate :cohort, :user, :course, to: :application
+    delegate :cohort, :user, :course, :lead_provider,
+             to: :application
 
     def not_already_accepted
       return if application.blank?
@@ -48,7 +52,10 @@ module Applications
     end
 
     def accept_application!
-      application.update!(lead_provider_approval_status: "accepted")
+      application.update!(
+        lead_provider_approval_status: "accepted",
+        schedule:,
+      )
     end
 
     def reject_other_applications_in_same_cohort!
@@ -107,6 +114,32 @@ module Applications
       if funded_place.nil?
         errors.add(:application, I18n.t("application.funded_place_required"))
       end
+    end
+
+    def schedule
+      @schedule ||= Schedule.where(identifier: schedule_identifier, cohort:).first || fallback_schedule
+    end
+
+    def fallback_schedule
+      course.schedule_for(cohort:)
+    end
+
+    def validate_permitted_schedule_for_course
+      return if errors.any?
+      return if schedule_identifier.blank?
+      return unless schedule
+
+      unless schedule.course_group.courses.include?(course)
+        errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
+      end
+    end
+
+    def create_application_state!
+      ApplicationState.create!(
+        application:,
+        lead_provider:,
+        state: "active",
+      )
     end
   end
 end

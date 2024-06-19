@@ -11,6 +11,7 @@ class RegistrationWizard
     start
     closed
     teacher_catchment
+    referred_by_return_to_teaching_adviser
     work_setting
     provider_check
     change_your_course_or_provider
@@ -149,9 +150,17 @@ class RegistrationWizard
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    array << OpenStruct.new(key: "Work setting",
-                            value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
-                            change_step: :work_setting)
+    if store["work_setting"]
+      array << OpenStruct.new(key: "Work setting",
+                              value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
+                              change_step: :work_setting)
+    end
+
+    if query_store.inside_catchment?
+      array << OpenStruct.new(key: "Referred by return to teaching adviser",
+                              value: I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
+                              change_step: :referred_by_return_to_teaching_adviser)
+    end
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Early years setting",
@@ -193,7 +202,7 @@ class RegistrationWizard
                                 change_step: :itt_provider)
       end
 
-      unless query_store.lead_mentor_for_accredited_itt_provider?
+      unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_hospital_school? || query_store.young_offender_institution? || query_store.works_in_other?
         array << OpenStruct.new(key: "Role",
                                 value: store["employment_role"],
                                 change_step: :your_role)

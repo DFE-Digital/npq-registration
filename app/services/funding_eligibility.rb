@@ -7,6 +7,7 @@ class FundingEligibility
   INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
   PREVIOUSLY_FUNDED = :previously_funded
+  REFERRED_BY_RETURN_TO_TEACHING_ADVISER = :referred_by_return_to_teaching_adviser
 
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
@@ -37,6 +38,8 @@ class FundingEligibility
     INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 => "funding_details.not_a_pp50",
     INELIGIBLE_ESTABLISHMENT_TYPE => "funding_details.ineligible_setting",
     NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
+    NOT_ENTITLED_EY_INSTITUTION => "funding_details.not_entitled_ey_institution",
+    NOT_ENTITLED_CHILDMINDER => "funding_details.not_entitled_childminder",
   }.freeze
 
   attr_reader :institution,
@@ -93,6 +96,7 @@ class FundingEligibility
 
       unless institution
         if query_store
+          return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
 
@@ -117,11 +121,11 @@ class FundingEligibility
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !course.eyl?
         return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
-
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
+        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
@@ -136,6 +140,10 @@ class FundingEligibility
     end
   end
 
+  def possible_funding_for_non_pp50_and_fe?
+    course.only_pp50? && institution.is_a?(School)
+  end
+
   def targeted_funding
     @targeted_funding ||= Eligibility::TargetedFunding.new(
       institution:,
@@ -146,7 +154,8 @@ class FundingEligibility
 
   def previously_received_targeted_funding_support?
     # This makes an api call so limit usage
-    ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
+    false
+    # ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
   end
 
   def ineligible_institution_type?
@@ -155,10 +164,11 @@ class FundingEligibility
 
   def get_description_for_funding_status
     status_code = funding_eligiblity_status_code
+
     return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
     return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
 
-    I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code])
+    I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code]).html_safe
   end
 
 private

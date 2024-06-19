@@ -43,6 +43,8 @@ module Questionnaires
         :funding_eligibility_senco
       elsif works_in_other? && !employment_type_other? && funding_eligibility.funding_eligiblity_status_code == FundingEligibility::NO_INSTITUTION
         :possible_funding
+      elsif referred_by_return_to_teaching_adviser?
+        :possible_funding
       else
         :ineligible_for_funding
       end
@@ -58,6 +60,7 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn:,
         get_an_identity_id:,
+        query_store:,
       )
     end
 
@@ -75,7 +78,7 @@ module Questionnaires
       errors.add(:senco_start_date, :invalid) if @senco_start_date_invalid
     end
 
-    delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
+    delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?, :referred_by_return_to_teaching_adviser?,
              :approved_itt_provider?, :get_an_identity_id, :trn, :works_in_other?, :employment_type_other?, to: :query_store
   end
 end

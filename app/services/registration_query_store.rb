@@ -110,6 +110,10 @@ class RegistrationQueryStore
     store["has_ofsted_urn"] == "yes"
   end
 
+  def referred_by_return_to_teaching_adviser?
+    store["referred_by_return_to_teaching_adviser"] == "yes"
+  end
+
   def kind_of_nursery_public?
     Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(store["kind_of_nursery"])
   end

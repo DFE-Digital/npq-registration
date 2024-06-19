@@ -12,10 +12,28 @@ module API
         render json: to_json(participant)
       end
 
+      def resume
+        service = ::Participants::Resume.new(participant_action_params)
+
+        if service.resume
+          render json: to_json(service.participant)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
+      def defer
+        service = ::Participants::Defer.new(participant_action_params)
+
+        if service.defer
+          render json: to_json(service.participant)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
       def change_schedule = head(:method_not_allowed)
-      def defer = head(:method_not_allowed)
       def withdraw = head(:method_not_allowed)
-      def resume = head(:method_not_allowed)
       def outcomes = head(:method_not_allowed)
 
     private
@@ -35,7 +53,18 @@ module API
       end
 
       def participant_params
-        params.permit(:ecf_id, :sort, filter: %i[updated_since training_status from_participant_id])
+        params.permit(:ecf_id, filter: %i[training_status from_participant_id])
+      end
+
+      def participant_action_params
+        params
+          .require(:data)
+          .require(:attributes)
+          .permit(:course_identifier, :reason)
+          .merge(
+            participant:,
+            lead_provider: current_lead_provider,
+          )
       end
 
       def to_json(obj)

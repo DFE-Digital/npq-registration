@@ -180,18 +180,6 @@ RSpec.describe FundingEligibility do
     end
 
     context "when institution is a PrivateChildcareProvider" do
-      context "when meets all the funding criteria" do
-        let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
-        let(:course) { create(:course, :eyl) }
-        let(:inside_catchment) { true }
-        let(:query_store) { instance_double("RegistrationQueryStore", childminder?: false) }
-
-        it "is eligible" do
-          expect(subject).to be_funded
-          expect(subject.funding_eligiblity_status_code).to eq :funded
-        end
-      end
-
       context "when does not meets all the funding criteria" do
         let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
         let(:course) { create(:course, :eyl) }
@@ -232,15 +220,27 @@ RSpec.describe FundingEligibility do
 
         context "when institution is not on early years register" do
           let(:institution) { build(:private_childcare_provider, early_years_individual_registers: []) }
+          let(:query_store) { instance_double("RegistrationQueryStore", childminder?: false) }
 
           it "returns status code :not_on_early_years_register" do
-            expect(subject.funding_eligiblity_status_code).to eq :not_on_early_years_register
+            expect(subject.funding_eligiblity_status_code).to eq :not_entitled_ey_institution
           end
 
           it "is not eligible" do
             expect(subject.funded?).to be false
           end
         end
+      end
+    end
+
+    context "when user is referred by return to teaching adviser" do
+      let(:institution) { nil }
+      let(:inside_catchment) { true }
+      let(:query_store) { instance_double("RegistrationQueryStore", referred_by_return_to_teaching_adviser?: true) }
+
+      it "is ineligible" do
+        expect(subject.funded?).to be false
+        expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
       end
     end
   end

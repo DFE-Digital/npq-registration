@@ -31,26 +31,41 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API show endpoint"
   end
 
+  describe "PUT /api/v1/participants/:ecf_id/resume" do
+    let(:course_identifier) { application.course.identifier }
+    let(:application) { create(:application, :accepted, :withdrawn, lead_provider: current_lead_provider) }
+    let(:participant) { application.user }
+    let(:participant_id) { participant.ecf_id }
+
+    def path(id = nil)
+      resume_api_v1_participant_path(id)
+    end
+
+    it_behaves_like "an API resume participant endpoint"
+  end
+
+  describe "PUT /api/v1/participants/:ecf_id/defer" do
+    let(:course_identifier) { application.course.identifier }
+    let(:reason) { Participants::Defer::DEFERRAL_REASONS.sample }
+    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
+    let(:participant) { application.user }
+    let(:participant_id) { participant.ecf_id }
+
+    def path(id = nil)
+      defer_api_v1_participant_path(id)
+    end
+
+    it_behaves_like "an API defer participant endpoint"
+  end
+
   describe("change_schedule") do
     before { api_put(change_schedule_api_v1_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
 
-  describe("defer") do
-    before { api_put(defer_api_v1_participant_path(123)) }
-
-    specify { expect(response).to(be_method_not_allowed) }
-  end
-
   describe("withdraw") do
     before { api_put(withdraw_api_v1_participant_path(123)) }
-
-    specify { expect(response).to(be_method_not_allowed) }
-  end
-
-  describe("resume") do
-    before { api_put(resume_api_v1_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
