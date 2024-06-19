@@ -70,16 +70,22 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }
 
+  def funding_eligibility(with_funded_place:)
+    return eligible_for_funding unless with_funded_place
+
+    eligible_for_funding && (funded_place.nil? || funded_place)
+  end
+
   # `eligible_for_dfe_funding?`  takes into consideration what we know
   # about user eligibility plus if it has been previously funded. We need
   # to keep this method in place to keep consistency during the split between
   # ECF and NPQ. In the mid term we will perform this calculation on NPQ and
   # store the value in the `eligible_for_funding` attribute.
-  def eligible_for_dfe_funding?
+  def eligible_for_dfe_funding?(with_funded_place: false)
     if previously_funded?
       false
     else
-      eligible_for_funding
+      funding_eligibility(with_funded_place:)
     end
   end
 
@@ -163,5 +169,9 @@ class Application < ApplicationRecord
 
   def self.cut_off_date_for_expired_applications
     Time.zone.local(2024, 6, 30)
+  end
+
+  def fundable?
+    eligible_for_dfe_funding?(with_funded_place: true)
   end
 end

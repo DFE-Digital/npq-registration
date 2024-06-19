@@ -9,4 +9,7 @@ class ApplicationState < ApplicationRecord
     deferred: "deferred",
     withdrawn: "withdrawn",
   }
+
+  scope :most_recent, -> { order("created_at desc").limit(1) }
+  scope :for_lead_provider, ->(lead_provider) { where(lead_provider:) }
 end

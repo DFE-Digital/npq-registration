@@ -60,9 +60,35 @@ RSpec.describe "Declaration endpoints", type: :request do
     it_behaves_like "an API update endpoint"
   end
 
-  describe("create") do
-    before { api_post(api_v1_declarations_path) }
+  describe "POST /api/v1/participant-declarations" do
+    let(:path) { api_v1_declarations_path }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    let(:service) { Declarations::Create }
+    let(:lead_provider) { current_lead_provider }
+    let(:cohort) { create(:cohort, :current) }
+    let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+    let(:course) { create(:course, :sl, course_group:) }
+    let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+    let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
+    let(:participant) { application.user }
+    let!(:participant_id) { participant.ecf_id }
+    let(:declaration_type) { "completed" }
+    let(:declaration_date) { (schedule.applies_from + 1.day).rfc3339 }
+    let(:course_identifier) { course.identifier }
+    let(:has_passed) { true }
+    let(:service_args) do
+      {
+        lead_provider:,
+        participant_id:,
+        declaration_type:,
+        declaration_date:,
+        course_identifier:,
+        has_passed:,
+      }
+    end
+
+    before { create(:contract, course:, cohort:, lead_provider:) }
+
+    it_behaves_like "an API create declaration endpoint"
   end
 end

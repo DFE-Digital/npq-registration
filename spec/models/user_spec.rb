@@ -5,6 +5,7 @@ RSpec.describe User do
     it { is_expected.to have_many(:applications).dependent(:destroy) }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
     it { is_expected.to have_many(:participant_id_changes).order("created_at desc") }
+    it { is_expected.to have_many(:declarations).through(:applications) }
   end
 
   describe "validations" do
