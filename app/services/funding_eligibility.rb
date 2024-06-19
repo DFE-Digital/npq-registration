@@ -154,8 +154,7 @@ class FundingEligibility
 
   def previously_received_targeted_funding_support?
     # This makes an api call so limit usage
-    false
-    # ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
+    ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
   end
 
   def ineligible_institution_type?
