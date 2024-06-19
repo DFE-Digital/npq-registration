@@ -18,6 +18,13 @@ module Declarations
       scope.order(created_at: :asc)
     end
 
+    def declaration(id: nil, ecf_id: nil)
+      return scope.find_by!(ecf_id:) if ecf_id.present?
+      return scope.find(id) if id.present?
+
+      fail(ArgumentError, "id or ecf_id needed")
+    end
+
   private
 
     def where_lead_provider_is(lead_provider)

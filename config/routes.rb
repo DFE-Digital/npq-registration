@@ -145,7 +145,7 @@ Rails.application.routes.draw do
 
           resources :outcomes, only: %i[index]
 
-          resources :declarations, only: %i[create show index], path: "participant-declarations" do
+          resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
             put :void, path: "void"
           end
         end
@@ -178,7 +178,7 @@ Rails.application.routes.draw do
 
       resources :outcomes, only: %i[index]
 
-      resources :declarations, only: %i[create show index], path: "participant-declarations" do
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
         put :void, path: "void"
       end
     end
@@ -207,7 +207,7 @@ Rails.application.routes.draw do
 
       resources :outcomes, only: %i[index]
 
-      resources :declarations, only: %i[create show index], path: "participant-declarations" do
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
         put :void, path: "void"
       end
 
