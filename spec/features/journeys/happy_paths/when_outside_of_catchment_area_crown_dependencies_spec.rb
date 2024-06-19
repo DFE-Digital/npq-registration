@@ -116,7 +116,6 @@ RSpec.feature "Happy journeys", type: :feature do
       "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
-
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
@@ -133,6 +132,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
+      "referred_by_return_to_teaching_adviser" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "another",

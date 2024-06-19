@@ -44,6 +44,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
@@ -103,6 +107,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -150,6 +155,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Provider" => "Teacher Development Trust",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
+          "Referred by return to teaching adviser" => "No",
           "Early years setting" => public_kind_of_nursery,
           "Workplace in England" => "Yes",
         },
@@ -197,6 +203,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -229,6 +236,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_name" => js ? "" : "open",
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

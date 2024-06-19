@@ -37,6 +37,10 @@ RSpec.feature "Happy journeys",
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
     end
@@ -46,10 +50,6 @@ RSpec.feature "Happy journeys",
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In a hospital school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
-      page.fill_in "What is your role?", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -87,8 +87,8 @@ RSpec.feature "Happy journeys",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Provider" => "Teach First",
-          "Role" => "Trainer",
           "Workplace in England" => "Yes",
+          "Referred by return to teaching adviser" => "No",
         },
       )
     end
