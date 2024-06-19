@@ -317,4 +317,36 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "#fundable?" do
+    context "when it is eligible_for_funding" do
+      subject { create(:application, eligible_for_funding: true, funded_place: nil) }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding" do
+      subject { create(:application, eligible_for_funding: false, funded_place: nil) }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but has no funded place" do
+      subject { create(:application, eligible_for_funding: true, funded_place: false) }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but and has a funded place" do
+      subject { create(:application, eligible_for_funding: true, funded_place: true) }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding but and has a funded place" do
+      subject { create(:application, eligible_for_funding: false, funded_place: false) }
+
+      it { is_expected.not_to be_fundable }
+    end
+  end
 end
