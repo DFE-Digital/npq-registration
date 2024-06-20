@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API index Csv endpoint" do
+RSpec.shared_examples "an API index Csv endpoint" do |returns_headers_on_empty: true|
   context "when authorized" do
     context "when 2 resources exist for current_lead_provider" do
       let!(:resource1) { create_resource(lead_provider: current_lead_provider) }
@@ -19,7 +19,10 @@ RSpec.shared_examples "an API index Csv endpoint" do
       end
 
       it "calls the correct query/serializer" do
-        allow(serializer).to receive(:new).with([resource1, resource2]).and_return(mock_serializer)
+        csv_serializer_params = {}
+        csv_serializer_params[:view] = csv_serializer_version if defined?(csv_serializer_version)
+
+        allow(serializer).to receive(:new).with([resource1, resource2], **csv_serializer_params).and_return(mock_serializer)
         expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider)).and_call_original
 
         api_get(path)
@@ -29,12 +32,21 @@ RSpec.shared_examples "an API index Csv endpoint" do
     end
 
     context "when no resources exist" do
-      it "returns only the headers in csv" do
-        api_get(path)
+      if returns_headers_on_empty
+        it "returns only the headers in csv" do
+          api_get(path)
 
-        expect(response.status).to eq 200
-        expect(parsed_csv_response.count).to eq(1)
-        expect(parsed_csv_response.first).to eq(serializer::CSV_HEADERS)
+          expect(response.status).to eq 200
+          expect(parsed_csv_response.count).to eq(1)
+          expect(parsed_csv_response.first).to eq(serializer::CSV_HEADERS)
+        end
+      else
+        it "returns an empty CSV" do
+          api_get(path)
+
+          expect(response.status).to eq 200
+          expect(response.body).to be_blank
+        end
       end
     end
   end

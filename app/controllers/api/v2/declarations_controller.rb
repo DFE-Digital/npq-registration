@@ -5,7 +5,15 @@ module API
       include ::API::Concerns::FilterByUpdatedSince
 
       def index
-        render json: to_json(paginate(declarations_query.declarations))
+        respond_to do |format|
+          format.json do
+            render json: to_json(paginate(declarations_query.declarations))
+          end
+
+          format.csv do
+            render body: to_csv(declarations_query.declarations)
+          end
+        end
       end
 
       def show
@@ -41,6 +49,10 @@ module API
 
       def to_json(obj)
         DeclarationSerializer.render(obj, view: :v2, root: "data")
+      end
+
+      def to_csv(obj)
+        DeclarationsCsvSerializer.new(obj, view: :v2).serialize
       end
     end
   end

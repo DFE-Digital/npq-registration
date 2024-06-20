@@ -6,18 +6,18 @@ RSpec.describe "Declaration endpoints", type: :request do
   let(:serializer) { API::DeclarationSerializer }
   let(:serializer_version) { :v3 }
 
+  def create_resource(**attrs)
+    if attrs[:user]
+      attrs[:application] = create(:application, user: attrs[:user])
+      attrs.delete(:user)
+    end
+
+    create(:declaration, **attrs)
+  end
+
   describe "GET /api/v3/participant-declarations" do
     let(:path) { api_v3_declarations_path }
     let(:resource_id_key) { :ecf_id }
-
-    def create_resource(**attrs)
-      if attrs[:user]
-        attrs[:application] = create(:application, user: attrs[:user])
-        attrs.delete(:user)
-      end
-
-      create(:declaration, **attrs)
-    end
 
     it_behaves_like "an API index endpoint"
     it_behaves_like "an API index endpoint with pagination"
