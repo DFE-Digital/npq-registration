@@ -29,10 +29,19 @@ en:
 
   participant: &participant
     blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
-
+    already_active: The participant is already active
+    already_deferred: The participant is already deferred
+    already_withdrawn: The participant is already withdrawn
+    no_declarations: You cannot defer an NPQ participant that has no declarations
+    no_started_declarations: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
+    
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/course_identifier' value for this participant.
     inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
+
+  participant_reason: &participant_reason
+    blank: The property '#/reason' must be present
+    inclusion: The property '#/reason' must be a valid reason
 
   time:
     formats:
@@ -208,19 +217,22 @@ en:
               <<: *participant_course_identifier
             participant:
               <<: *participant
-              already_active: The participant is already active
         participants/defer:
           attributes:
             course_identifier:
               <<: *participant_course_identifier
             participant:
               <<: *participant
-              already_deferred: The participant is already deferred
-              withdrawn: The participant is already withdrawn
-              no_declarations: You cannot defer an NPQ participant that has no declarations
             reason:
-              blank: The property '#/reason' must be present
-              inclusion: The property '#/reason' must be a valid reason
+              <<: *participant_reason
+        participants/withdraw:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+            reason:
+              <<: *participant_reason
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

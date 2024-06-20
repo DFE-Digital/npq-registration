@@ -43,7 +43,7 @@ RSpec.describe "Participant endpoints", type: :request do
       resume_api_v3_participant_path(id)
     end
 
-    it_behaves_like "an API resume participant endpoint" do
+    it_behaves_like "an API participant action endpoint", Participants::Resume do
       def assert_on_successful_response(parsed_response)
         expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("active")
       end
@@ -61,21 +61,33 @@ RSpec.describe "Participant endpoints", type: :request do
       defer_api_v3_participant_path(id)
     end
 
-    it_behaves_like "an API defer participant endpoint" do
+    it_behaves_like "an API participant action endpoint", Participants::Defer do
       def assert_on_successful_response(parsed_response)
         expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("deferred")
       end
     end
   end
 
-  describe("change_schedule") do
-    before { api_put(change_schedule_api_v2_participant_path(123)) }
+  describe "PUT /api/v3/participants/:ecf_id/withdraw" do
+    let(:course_identifier) { application.course.identifier }
+    let(:reason) { Participants::Withdraw::WITHDRAWL_REASONS.sample }
+    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
+    let(:participant) { application.user }
+    let(:participant_id) { participant.ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      withdraw_api_v3_participant_path(id)
+    end
+
+    it_behaves_like "an API participant action endpoint", Participants::Withdraw do
+      def assert_on_successful_response(parsed_response)
+        expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("withdrawn")
+      end
+    end
   end
 
-  describe("withdraw") do
-    before { api_put(withdraw_api_v2_participant_path(123)) }
+  describe("change_schedule") do
+    before { api_put(change_schedule_api_v2_participant_path(123)) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end

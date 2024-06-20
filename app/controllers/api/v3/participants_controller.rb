@@ -32,8 +32,17 @@ module API
         end
       end
 
+      def withdraw
+        service = ::Participants::Withdraw.new(participant_action_params)
+
+        if service.withdraw
+          render json: to_json(service.participant)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
       def change_schedule = head(:method_not_allowed)
-      def withdraw = head(:method_not_allowed)
       def outcomes = head(:method_not_allowed)
 
     private
@@ -65,6 +74,8 @@ module API
             participant:,
             lead_provider: current_lead_provider,
           )
+      rescue ActionController::ParameterMissing
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       end
 
       def to_json(obj)
