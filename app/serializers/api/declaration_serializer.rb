@@ -12,7 +12,7 @@ module API
       field(:declaration_date)
       field(:state) { |declaration| declaration.state.dasherize }
       # TODO: implement once we have outcomes
-      field(:has_passed) { nil }
+      field(:has_passed) { "TODO" }
 
       view :v1 do
         field(:voided_state?, name: :voided)
