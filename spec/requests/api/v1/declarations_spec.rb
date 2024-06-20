@@ -6,7 +6,7 @@ RSpec.describe "Declaration endpoints", type: :request do
   let(:serializer) { API::DeclarationSerializer }
   let(:serializer_version) { :v1 }
 
-  describe "GET /api/v1/declarations" do
+  describe "GET /api/v1/participant-declarations" do
     let(:path) { api_v1_declarations_path }
     let(:resource_id_key) { :ecf_id }
 
