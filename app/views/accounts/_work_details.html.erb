@@ -65,10 +65,12 @@
         <% end %>
 
         <% unless application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Role</dt>
-            <dd class="govuk-summary-list__value"><%= application.employment_role %></dd>
-          </div>
+          <% if application.employment_role.present? %>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Role</dt>
+              <dd class="govuk-summary-list__value"><%= application.employment_role %></dd>
+            </div>
+          <% end %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Employer</dt>
             <dd class="govuk-summary-list__value"><%= application.employer_name %></dd>
