@@ -10,8 +10,8 @@ module Participants
     attribute :course_identifier
 
     validates :lead_provider, presence: true
-    validates :participant, presence: true
-    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false
+    validates :participant, presence: { message: I18n.t(:invalid_participant) }
+    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS, message: I18n.t(:invalid_course) }, allow_blank: false
     validate :application_exists
 
   private
