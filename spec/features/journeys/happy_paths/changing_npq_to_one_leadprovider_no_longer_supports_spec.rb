@@ -117,7 +117,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("Early years leadership NPQ because your workplace is not in the list of EY settings that are eligible for funding")
+      expect(page).to have_text("Early years leadership NPQ as your workplace is not in the list of EY settings that are eligible for funding")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
