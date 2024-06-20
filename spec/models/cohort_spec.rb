@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  subject(:statement) { build(:cohort) }
+  subject { build(:cohort) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }

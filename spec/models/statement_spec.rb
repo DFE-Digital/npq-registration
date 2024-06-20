@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Statement, type: :model do
-  subject(:statement) { build(:statement) }
+  subject(:statement) { create(:statement) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:cohort).required }
