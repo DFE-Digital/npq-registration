@@ -135,7 +135,7 @@ Rails.application.routes.draw do
               put :change_schedule, path: "change-schedule"
               put :defer
               put :resume
-              put :withdraw, path: "change-funded-place"
+              put :withdraw
 
               scope module: :participants do
                 resources :outcomes, only: %i[create index], as: :participant_outcomes
@@ -168,7 +168,7 @@ Rails.application.routes.draw do
           put :change_schedule, path: "change-schedule"
           put :defer
           put :resume
-          put :withdraw, path: "change-funded-place"
+          put :withdraw
 
           scope module: :participants do
             resources :outcomes, only: %i[create index], as: :participant_outcomes
@@ -197,7 +197,7 @@ Rails.application.routes.draw do
           put :change_schedule, path: "change-schedule"
           put :defer
           put :resume
-          put :withdraw, path: "change-funded-place"
+          put :withdraw
 
           scope module: :participants do
             resources :outcomes, only: %i[create index], as: :participant_outcomes
