@@ -236,8 +236,6 @@ private
   end
 
   def previously_funded?
-    return false
-
     ecf_api_funding_lookup["previously_funded"] == true
   end
 
