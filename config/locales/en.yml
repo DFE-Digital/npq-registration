@@ -452,7 +452,7 @@ en:
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
         choose_school: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
         choose_school_search: "Search for your school or 16 to 19 educational setting in %{institution_location}. If you work for a trust, enter one of their schools."
-        choose_private_childcare_provider: "For example EY456789"
+        choose_private_childcare_provider: "For example a 7 digit number (1234567) or a 6 digit number sometimes prefixed with EY (EY456789)"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
         find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
         institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
