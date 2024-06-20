@@ -22,12 +22,8 @@ LIST_PARTICIPANTS_FILTER = {
       training_status: {
         description: "Return only records that have this training status",
         type: :string,
-        enum: %w[
-          active
-          deferred
-          withdrawn
-        ],
-        example: "active",
+        enum: Application.training_statuses.keys,
+        example: Application.training_statuses.keys.first,
       },
       from_participant_id: {
         description: "Return only records that have this from Participant ID",

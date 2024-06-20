@@ -61,22 +61,9 @@ APPLICATION_ACCEPT_REQUEST = {
                 description: "The new schedule of the participant",
                 nullable: false,
                 type: :string,
-                example: "npq-leadership-spring",
                 required: false,
-                enum: %w[
-                  npq-aso-march
-                  npq-aso-june
-                  npq-aso-november
-                  npq-aso-december
-                  npq-ehco-march
-                  npq-ehco-june
-                  npq-ehco-november
-                  npq-ehco-december
-                  npq-leadership-autumn
-                  npq-leadership-spring
-                  npq-specialist-autumn
-                  npq-specialist-spring
-                ],
+                example: Schedule::IDENTIFIERS.first,
+                enum: Schedule::IDENTIFIERS,
               },
             },
           },

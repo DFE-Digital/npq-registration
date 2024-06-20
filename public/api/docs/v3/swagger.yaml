@@ -433,8 +433,6 @@ components:
           description: The data type
           type: string
           example: npq_application
-          enum:
-          - npq_application
         attributes:
           properties:
             participant_id:
@@ -523,7 +521,7 @@ components:
                 their training
               type: string
               nullable: true
-              example: trust
+              example: school
               enum:
               - school
               - trust
@@ -534,19 +532,19 @@ components:
               description: The NPQ course this NPQ application relates to
               type: string
               nullable: false
-              example: npq-leading-teaching
+              example: npq-senior-leadership
               enum:
-              - npq-leading-teaching
-              - npq-leading-behaviour-culture
-              - npq-leading-teaching-development
-              - npq-leading-literacy
               - npq-senior-leadership
               - npq-headship
               - npq-executive-leadership
               - npq-early-years-leadership
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-leading-primary-mathematics
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
-              - npq-leading-primary-mathematics
               - npq-senco
             status:
               description: The current state of the NPQ application
@@ -574,10 +572,10 @@ components:
                 DfE funding
               type: string
               nullable: true
-              example: establishment-ineligible
+              example: previously-funded
               enum:
-              - establishment-ineligible
               - previously-funded
+              - establishment-ineligible
             cohort:
               description: Indicates which call-off contract would fund this participant's
                 training. 2021 indicates a participant that has started, or will start,
@@ -630,7 +628,7 @@ components:
               description: The new schedule of the participant
               nullable: true
               type: string
-              example: npq-leadership-spring
+              example: npq-aso-march
               enum:
               - npq-aso-march
               - npq-aso-june
@@ -678,8 +676,8 @@ components:
                   description: The new schedule of the participant
                   nullable: false
                   type: string
-                  example: npq-leadership-spring
                   required: false
+                  example: npq-aso-march
                   enum:
                   - npq-aso-march
                   - npq-aso-june
@@ -754,8 +752,6 @@ components:
           description: The data type
           type: string
           example: npq-participant
-          enum:
-          - npq-participant
         attributes:
           properties:
             full_name:
@@ -797,25 +793,25 @@ components:
                     description: The NPQ course this NPQ application relates to
                     type: string
                     nullable: false
-                    example: npq-leading-teaching
+                    example: npq-senior-leadership
                     enum:
-                    - npq-leading-teaching
-                    - npq-leading-behaviour-culture
-                    - npq-leading-teaching-development
-                    - npq-leading-literacy
                     - npq-senior-leadership
                     - npq-headship
                     - npq-executive-leadership
                     - npq-early-years-leadership
+                    - npq-leading-teaching
+                    - npq-leading-behaviour-culture
+                    - npq-leading-teaching-development
+                    - npq-leading-literacy
+                    - npq-leading-primary-mathematics
                     - npq-additional-support-offer
                     - npq-early-headship-coaching-offer
-                    - npq-leading-primary-mathematics
                     - npq-senco
                   schedule_identifier:
                     description: The new schedule of the participant
                     nullable: true
                     type: string
-                    example: npq-leadership-spring
+                    example: npq-aso-march
                     enum:
                     - npq-aso-march
                     - npq-aso-june
@@ -885,7 +881,7 @@ components:
                         description: The reason a participant was withdrawn
                         type: string
                         nullable: false
-                        example: personal-reason-moving-school
+                        example: insufficient-capacity-to-undertake-programme
                         enum:
                         - insufficient-capacity-to-undertake-programme
                         - personal-reason-health-or-pregnancy-related
@@ -923,7 +919,7 @@ components:
                         description: The reason a participant was deferred
                         type: string
                         nullable: false
-                        example: career-break
+                        example: bereavement
                         enum:
                         - bereavement
                         - long-term-sickness
@@ -1008,6 +1004,8 @@ components:
           description: The data type.
           type: string
           example: statement
+          enum:
+          - statement
         attributes:
           properties:
             month:

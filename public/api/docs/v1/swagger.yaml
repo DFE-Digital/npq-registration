@@ -381,19 +381,19 @@ components:
               description: The NPQ course this NPQ application relates to
               type: string
               nullable: false
-              example: npq-leading-teaching
+              example: npq-senior-leadership
               enum:
-              - npq-leading-teaching
-              - npq-leading-behaviour-culture
-              - npq-leading-teaching-development
-              - npq-leading-literacy
               - npq-senior-leadership
               - npq-headship
               - npq-executive-leadership
               - npq-early-years-leadership
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-leading-primary-mathematics
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
-              - npq-leading-primary-mathematics
               - npq-senco
             email:
               description: The email address registered for this NPQ participant
@@ -426,7 +426,7 @@ components:
                 their training
               type: string
               nullable: true
-              example: trust
+              example: school
               enum:
               - school
               - trust
@@ -450,10 +450,10 @@ components:
                 DfE funding
               type: string
               nullable: true
-              example: establishment-ineligible
+              example: previously-funded
               enum:
-              - establishment-ineligible
               - previously-funded
+              - establishment-ineligible
             participant_id:
               description: The unique identifier of this NPQ participant
               type: string
@@ -822,7 +822,7 @@ components:
             their training
           type: string
           nullable: true
-          example: trust
+          example: school
           enum:
           - school
           - trust
@@ -832,19 +832,19 @@ components:
         course_identifier:
           description: The NPQ course this NPQ application relates to
           type: string
-          example: npq-leading-teaching
+          example: npq-senior-leadership
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
         status:
           description: The current state of the NPQ application
@@ -896,10 +896,10 @@ components:
             funding
           type: string
           nullable: true
-          example: establishment-ineligible
+          example: previously-funded
           enum:
-          - establishment-ineligible
           - previously-funded
+          - establishment-ineligible
         targeted_delivery_funding_eligibility:
           description: Whether or not this application is eligible for Targeted Delivery
             Funding uplift
@@ -997,19 +997,19 @@ components:
               items:
                 type: string
                 nullable: false
-                example: npq-leading-teaching
+                example: npq-senior-leadership
                 enum:
-                - npq-leading-teaching
-                - npq-leading-behaviour-culture
-                - npq-leading-teaching-development
-                - npq-leading-literacy
                 - npq-senior-leadership
                 - npq-headship
                 - npq-executive-leadership
                 - npq-early-years-leadership
+                - npq-leading-teaching
+                - npq-leading-behaviour-culture
+                - npq-leading-teaching-development
+                - npq-leading-literacy
+                - npq-leading-primary-mathematics
                 - npq-additional-support-offer
                 - npq-early-headship-coaching-offer
-                - npq-leading-primary-mathematics
                 - npq-senco
             funded_places:
               description: Information about the funded place(s) the participant is
@@ -1026,19 +1026,19 @@ components:
                     description: The type of course the participant is enrolled in
                     type: string
                     nullable: false
-                    example: npq-leading-teaching
+                    example: npq-senior-leadership
                     enum:
-                    - npq-leading-teaching
-                    - npq-leading-behaviour-culture
-                    - npq-leading-teaching-development
-                    - npq-leading-literacy
                     - npq-senior-leadership
                     - npq-headship
                     - npq-executive-leadership
                     - npq-early-years-leadership
+                    - npq-leading-teaching
+                    - npq-leading-behaviour-culture
+                    - npq-leading-teaching-development
+                    - npq-leading-literacy
+                    - npq-leading-primary-mathematics
                     - npq-additional-support-offer
                     - npq-early-headship-coaching-offer
-                    - npq-leading-primary-mathematics
                     - npq-senco
                   funded_place:
                     description: Indicates whether this NPQ participant is funded

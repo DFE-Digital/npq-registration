@@ -21,21 +21,8 @@ APPLICATION = {
             description: "The NPQ course this NPQ application relates to",
             type: :string,
             nullable: false,
-            example: "npq-leading-teaching",
-            enum: %w[
-              npq-leading-teaching
-              npq-leading-behaviour-culture
-              npq-leading-teaching-development
-              npq-leading-literacy
-              npq-senior-leadership
-              npq-headship
-              npq-executive-leadership
-              npq-early-years-leadership
-              npq-additional-support-offer
-              npq-early-headship-coaching-offer
-              npq-leading-primary-mathematics
-              npq-senco
-            ],
+            example: Course::IDENTIFIERS.first,
+            enum: Course::IDENTIFIERS,
           },
           email: {
             description: "The email address registered for this NPQ participant",
@@ -70,37 +57,21 @@ APPLICATION = {
             description: "Indicates how this NPQ participant has said they will funded their training",
             type: :string,
             nullable: true,
-            example: "trust",
-            enum: %w[
-              school
-              trust
-              self
-              another
-              employer
-            ],
+            example: Application.funding_choices.keys.first,
+            enum: Application.funding_choices.keys,
           },
           headteacher_status: {
             description: "Indicates whether this NPQ participant is or will be a head teacher",
             type: :string,
-            example: "no",
-            enum: %w[
-              no
-              yes_when_course_starts
-              yes_in_first_two_years
-              yes_over_two_years
-              yes_in_first_five_years
-              yes_over_five_years
-            ],
+            example: Application.headteacher_statuses.keys.first,
+            enum: Application.headteacher_statuses.keys,
           },
           ineligible_for_funding_reason: {
             description: "Indicates why this NPQ participant is not eligible for DfE funding",
             type: :string,
             nullable: true,
-            example: "establishment-ineligible",
-            enum: %w[
-              establishment-ineligible
-              previously-funded
-            ],
+            example: Application::INELIGIBLE_FOR_FUNDING_REASONS.first,
+            enum: Application::INELIGIBLE_FOR_FUNDING_REASONS,
           },
           participant_id: {
             description: "The unique identifier of this NPQ participant",
@@ -140,12 +111,8 @@ APPLICATION = {
             description: "The current state of the NPQ application",
             type: :string,
             nullable: true,
-            example: "pending",
-            enum: %w[
-              pending
-              accepted
-              rejected
-            ],
+            example: Application.lead_provider_approval_statuses.keys.first,
+            enum: Application.lead_provider_approval_statuses.keys,
           },
           works_in_school: {
             description: "Indicates whether the participant is currently employed by school",
@@ -237,9 +204,6 @@ APPLICATION = {
         description: "The data type",
         type: :string,
         example: "npq_application",
-        enum: %w[
-          npq_application
-        ],
       },
       attributes: {
         properties: {
@@ -315,15 +279,8 @@ APPLICATION = {
           headteacher_status: {
             description: "Indicates whether this NPQ participant is or will be a head teacher",
             type: :string,
-            example: "no",
-            enum: %w[
-              no
-              yes_when_course_starts
-              yes_in_first_two_years
-              yes_over_two_years
-              yes_in_first_five_years
-              yes_over_five_years
-            ],
+            example: Application.headteacher_statuses.keys.first,
+            enum: Application.headteacher_statuses.keys,
           },
           eligible_for_funding: {
             description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
@@ -334,45 +291,22 @@ APPLICATION = {
             description: "Indicates how this NPQ participant has said they will funded their training",
             type: :string,
             nullable: true,
-            example: "trust",
-            enum: %w[
-              school
-              trust
-              self
-              another
-              employer
-            ],
+            example: Application.funding_choices.keys.first,
+            enum: Application.funding_choices.keys,
           },
           course_identifier: {
             description: "The NPQ course this NPQ application relates to",
             type: :string,
             nullable: false,
-            example: "npq-leading-teaching",
-            enum: %w[
-              npq-leading-teaching
-              npq-leading-behaviour-culture
-              npq-leading-teaching-development
-              npq-leading-literacy
-              npq-senior-leadership
-              npq-headship
-              npq-executive-leadership
-              npq-early-years-leadership
-              npq-additional-support-offer
-              npq-early-headship-coaching-offer
-              npq-leading-primary-mathematics
-              npq-senco
-            ],
+            example: Course::IDENTIFIERS.first,
+            enum: Course::IDENTIFIERS,
           },
           status: {
             description: "The current state of the NPQ application",
             type: :string,
             nullable: true,
-            example: "pending",
-            enum: %w[
-              pending
-              accepted
-              rejected
-            ],
+            example: Application.lead_provider_approval_statuses.keys.first,
+            enum: Application.lead_provider_approval_statuses.keys,
           },
           created_at: {
             description: "The date the application was created",
@@ -392,11 +326,8 @@ APPLICATION = {
             description: "Indicates why this NPQ participant is not eligible for DfE funding",
             type: :string,
             nullable: true,
-            example: "establishment-ineligible",
-            enum: %w[
-              establishment-ineligible
-              previously-funded
-            ],
+            example: Application::INELIGIBLE_FOR_FUNDING_REASONS.first,
+            enum: Application::INELIGIBLE_FOR_FUNDING_REASONS,
           },
           cohort: {
             description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
@@ -443,21 +374,8 @@ APPLICATION = {
             description: "The new schedule of the participant",
             nullable: true,
             type: :string,
-            example: "npq-leadership-spring",
-            enum: %w[
-              npq-aso-march
-              npq-aso-june
-              npq-aso-november
-              npq-aso-december
-              npq-ehco-march
-              npq-ehco-june
-              npq-ehco-november
-              npq-ehco-december
-              npq-leadership-autumn
-              npq-leadership-spring
-              npq-specialist-autumn
-              npq-specialist-spring
-            ],
+            example: Schedule::IDENTIFIERS.first,
+            enum: Schedule::IDENTIFIERS,
           },
           funded_place: {
             description: "This field indicates whether the application is funded",
