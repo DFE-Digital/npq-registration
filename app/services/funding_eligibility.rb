@@ -96,8 +96,8 @@ class FundingEligibility
 
       unless institution
         if query_store
-          return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
+          return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
 
           if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
@@ -236,6 +236,8 @@ private
   end
 
   def previously_funded?
+    return false
+
     ecf_api_funding_lookup["previously_funded"] == true
   end
 
