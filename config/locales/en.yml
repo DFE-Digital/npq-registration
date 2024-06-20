@@ -90,6 +90,7 @@ en:
               too_short: Teacher reference number is at least %{count} digits long
               too_long: Teacher reference number is at most %{count} digits long
               invalid: Teacher reference number must only contain numbers
+              not_real: You must enter a valid teacher reference number (TRN)
             full_name:
               blank: Full name can’t be blank
             date_of_birth:

@@ -19,7 +19,7 @@
   <ul class="govuk-list govuk-list--bullet">
     <li>you have abbreviated your first name, for example Rob/Robert</li>
     <li>your surname is different to the name held on the Teaching Regulation Agency records</li>
-    <li>mistyped or entered some incorrect information</li>
+    <li>you mistyped or entered some incorrect information</li>
   </ul>
 
   <h2 class="govuk-heading-m">Check your details and try again</h2>
@@ -48,6 +48,10 @@
     <% end %>
   <% end %>
 
+  <p class="govuk-body">Use our <%= govuk_link_to("Find a lost teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %> service to check your TRN is correct.</p>
+
+  <p class="govuk-body">If you've never received a TRN, use our <%= govuk_link_to("Get a teacher reference number (TRN)", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn") %> service</p>
+
   <p class="govuk-body">
     <% if @wizard.store["national_insurance_number"].present? %>
       Try again to enter your details.
@@ -58,7 +62,7 @@
 
 <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), class: "govuk-button--secondary" %>
 
-  <h2 class="govuk-heading-m">Still can’t match your details?</h2>
+  <h2 class="govuk-heading-m">Still unable to match your details?</h2>
 
   <p class="govuk-body">
     You can still continue to register - our support team will manually match your details over the next few weeks. You will only be contacted if we cannot match your details.
