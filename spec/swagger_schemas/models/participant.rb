@@ -176,7 +176,6 @@ PARTICIPANT = {
                   description: "The training status of the NPQ participant",
                   type: Application.training_statuses.keys,
                   example: Application.training_statuses.keys.first,
-                  example: "active",
                 },
                 school_urn: {
                   description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",

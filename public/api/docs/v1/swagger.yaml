@@ -634,11 +634,11 @@ components:
           items:
             "$ref": "#/components/schemas/DeclarationCsv"
       example: |
-        id,participant_id,declaration_type,course_identifier,declaration_date,updated_at,state,has_passed
+        id,participant_id,declaration_type,course_identifier,declaration_date,updated_at,state,has_passed,voided,eligible_for_payment
 
-          4ccd9937-1a73-4b11-81e6-259f5bd3ca9d,eb8392d6-777e-4568-9c91-3fedb175c74c,started,npq-headship,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,TODO,false,false
+            4ccd9937-1a73-4b11-81e6-259f5bd3ca9d,eb8392d6-777e-4568-9c91-3fedb175c74c,started,npq-headship,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,TODO,false,false
 
-          0de68abf-3c43-421d-9f61-ae10b702e700,61ad2b52-de57-4f42-a5f2-0196ba543e8a,started,npq-early-headship-coaching-offer,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,true
+            0de68abf-3c43-421d-9f61-ae10b702e700,61ad2b52-de57-4f42-a5f2-0196ba543e8a,started,npq-early-headship-coaching-offer,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,true,false,false
     DeclarationCsv:
       description: Retrieve all participant declarations in CSV format
       type: object
@@ -651,6 +651,8 @@ components:
       - updated_at
       - state
       - has_passed
+      - eligible_for_payment
+      - voided
       properties:
         id:
           description: The unique identifier of the participant declaration record
@@ -714,6 +716,16 @@ components:
           example: '2021-05-31T02:22:32.000Z'
         has_passed:
           description: Whether the participant has failed or passed
+          type: boolean
+          example: true
+        voided:
+          description: "[Deprecated - use state instead] Indicates whether this declaration
+            has been voided"
+          type: boolean
+          example: true
+        eligible_for_payment:
+          description: "[Deprecated - use state instead] Indicates whether this declaration
+            would be eligible for funding from the DfE"
           type: boolean
           example: true
     ApplicationsCsvResponse:

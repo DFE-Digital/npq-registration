@@ -182,5 +182,5 @@ APPLICATION_CSV = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
+  h[:v2] = h[:v1].deep_dup
 }.freeze

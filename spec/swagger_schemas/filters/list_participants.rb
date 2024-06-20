@@ -11,8 +11,8 @@ LIST_PARTICIPANTS_FILTER = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
-  h[:v3] = h[:v1].merge({
+  h[:v2] = h[:v1].deep_dup
+  h[:v3] = h[:v1].deep_dup.merge({
     properties: {
       updated_since: {
         description: "Return only records that have been updated since this date and time (ISO 8601 date format).",

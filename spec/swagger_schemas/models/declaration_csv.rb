@@ -75,7 +75,7 @@ DECLARATION_CSV = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
+  h[:v2] = h[:v1].deep_dup
   h[:v2][:required] = h[:v2][:required].excluding(:voided, :eligible_for_payment)
   h[:v2][:properties] = h[:v2][:properties].except(:voided, :eligible_for_payment)
 }.freeze

@@ -10,6 +10,6 @@ PARTICIPANT_RESPONSE = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
-  h[:v3] = h[:v1]
+  h[:v2] = h[:v1].deep_dup
+  h[:v3] = h[:v1].deep_dup
 }.freeze
