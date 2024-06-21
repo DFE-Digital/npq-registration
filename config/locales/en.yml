@@ -27,6 +27,10 @@ en:
     missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
     cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
+
+  statement: &statement
+    no_output_fee_statement: You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.
+
   participant: &participant
     blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
     already_active: The participant is already active
@@ -248,6 +252,20 @@ en:
               invalid_for_course: Selected schedule is not valid for the course
             cohort:
               cannot_change: "You cannot change the '#/cohort' field"
+        declarations/statement_attacher:
+          attributes:
+            declaration:
+              <<: *statement
+              blank: You must specify a declaration
+              not_in_attachable_state: The declaration is not in a state eligible for attachment
+        declarations/void:
+          attributes:
+            declaration:
+              <<: *statement
+              already_voided: This declaration has already been voided.
+              not_voidable: This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it.
+              not_already_refunded: The declaration will or has been be refunded.
+              
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 
