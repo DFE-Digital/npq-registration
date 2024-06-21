@@ -69,6 +69,23 @@ RSpec.describe Statement, type: :model do
         expect(Statement.with_state("foo", "bar").to_sql).to include(%(WHERE "statements"."state" IN ('foo', 'bar')))
       end
     end
+
+    describe ".with_output_fee" do
+      it "selects only output fee statements" do
+        expect(Statement.with_output_fee.to_sql).to include(%(WHERE "statements"."output_fee" = TRUE))
+      end
+    end
+
+    describe ".next_output_fee_statements" do
+      it "selects the output fee statement with the earliest deadline date in the future" do
+        freeze_time do
+          sql = Statement.next_output_fee_statements.to_sql
+          expect(sql).to include(%(WHERE "statements"."output_fee" = TRUE))
+          expect(sql).to include(%(AND (deadline_date >= '#{Date.current}')))
+          expect(sql).to include(%(ORDER BY "statements"."deadline_date" ASC))
+        end
+      end
+    end
   end
 
   describe "State transition" do

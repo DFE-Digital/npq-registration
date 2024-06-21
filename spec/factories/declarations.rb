@@ -8,5 +8,9 @@ FactoryBot.define do
     declaration_date { Date.current }
 
     state { "submitted" }
+
+    trait :paid do
+      state { :paid }
+    end
   end
 end
