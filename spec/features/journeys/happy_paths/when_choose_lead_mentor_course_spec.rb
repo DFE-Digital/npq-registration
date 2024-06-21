@@ -43,6 +43,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
     end
@@ -87,6 +91,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
+          "Referred by return to teaching adviser" => "No",
           "Work setting" => "Other",
           "Workplace in England" => "Yes",
         },
@@ -167,6 +172,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -202,6 +208,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-leading-teaching-development",
         "employment_type" => "lead_mentor_for_accredited_itt_provider",
         "itt_provider" => approved_itt_provider_legal_name,
+        "referred_by_return_to_teaching_adviser" => "no",
         "lead_provider_id" => "3",
         "submitted" => true,
         "teacher_catchment" => "england",

@@ -44,6 +44,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
@@ -101,6 +105,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
+          "Referred by return to teaching adviser" => "No",
           "Workplace" => "open manchester school – street 1, manchester",
           "Workplace in England" => "Yes",
           "Early years setting" => public_kind_of_nursery,
@@ -117,10 +122,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In a hospital school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
-      page.fill_in "What is your role?", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -156,9 +157,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "Senior leadership",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
-          "Role" => "Trainer",
           "Work setting" => "Other",
           "Provider" => "Teach First",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -191,7 +192,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
-      "employment_role" => "Trainer",
+      "employment_role" => nil,
       "employment_type" => "hospital_school",
       "funded_place" => nil,
       "funding_choice" => nil,
@@ -205,6 +206,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -233,11 +235,11 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "employer_name" => "Big company",
-        "employment_role" => "Trainer",
         "employment_type" => "hospital_school",
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "no_institution",
         "lead_provider_id" => "9",
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

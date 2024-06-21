@@ -31,8 +31,13 @@ module Questionnaires
     end
 
     def next_step
-      if employment_type == "lead_mentor_for_accredited_itt_provider"
+      case employment_type
+      when "lead_mentor_for_accredited_itt_provider"
         :itt_provider
+      when "hospital_school", "young_offender_institution"
+        :your_employer
+      when "other"
+        :choose_your_npq
       else
         :your_role
       end

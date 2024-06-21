@@ -44,6 +44,10 @@ RSpec.feature "Sad journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end

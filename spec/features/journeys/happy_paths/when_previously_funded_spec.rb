@@ -44,6 +44,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Early years or childcare", visible: :all)
     end
@@ -139,6 +143,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Provider" => "Teach First",
           "Ofsted unique reference number (URN)" => "EY123456 – searchable childcare provider – street 1, manchester",
           "Early years setting" => "Private nursery",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -185,6 +190,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY123456").id,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -220,6 +226,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

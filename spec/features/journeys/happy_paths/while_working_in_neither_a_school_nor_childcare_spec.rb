@@ -36,6 +36,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("Other", visible: :all)
     end
@@ -45,10 +49,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In a hospital school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
-      page.fill_in "What is your role?", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -84,9 +84,9 @@ RSpec.feature "Happy journeys", type: :feature do
           "Course" => "Early years leadership",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
-          "Role" => "Trainer",
           "Work setting" => "Other",
           "Provider" => "Teach First",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -119,11 +119,11 @@ RSpec.feature "Happy journeys", type: :feature do
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
-      "employment_role" => "Trainer",
       "employment_type" => "hospital_school",
       "funded_place" => nil,
       "funding_choice" => nil,
       "funding_eligiblity_status_code" => "no_institution",
+      "employment_role" => nil,
       "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
@@ -133,6 +133,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -158,12 +159,12 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-early-years-leadership",
         "email_template" => "not_on_ofsted_register",
         "employer_name" => "Big company",
-        "employment_role" => "Trainer",
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "no_institution",
         "lead_provider_id" => "9",
         "submitted" => true,
         "funding_amount" => nil,
+        "referred_by_return_to_teaching_adviser" => "no",
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,

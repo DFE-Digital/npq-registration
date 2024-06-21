@@ -49,6 +49,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => "yes",
           "teacher_catchment" => "england",
           "work_setting" => "a_school",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
@@ -137,6 +138,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => true,
           "work_setting" => "a_school",
           "raw_application_data" => store.except("current_user"),
+          "referred_by_return_to_teaching_adviser" => "no",
         })
       end
     end
@@ -154,6 +156,7 @@ RSpec.describe HandleSubmissionForStore do
           "kind_of_nursery" => "private_nursery",
           "teacher_catchment" => "england",
           "work_setting" => "early_years_or_childcare",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
@@ -242,6 +245,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
           "raw_application_data" => store.except("current_user"),
+          "referred_by_return_to_teaching_adviser" => "no",
         })
       end
     end

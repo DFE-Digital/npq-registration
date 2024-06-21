@@ -232,5 +232,16 @@ RSpec.describe FundingEligibility do
         end
       end
     end
+
+    context "when user is referred by return to teaching adviser" do
+      let(:institution) { nil }
+      let(:inside_catchment) { true }
+      let(:query_store) { instance_double("RegistrationQueryStore", referred_by_return_to_teaching_adviser?: true) }
+
+      it "is ineligible" do
+        expect(subject.funded?).to be false
+        expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
+      end
+    end
   end
 end

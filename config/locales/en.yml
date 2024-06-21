@@ -418,6 +418,7 @@ en:
         work_setting: "What setting do you work in?"
         funding: "How are you funding your course?"
         teacher_catchment: "Do you work in England?"
+        referred_by_return_to_teaching_adviser: "Did a return to teaching adviser refer you to this service?"
         kind_of_nursery: "Which early years setting do you work in?"
         course_identifier: "Which NPQ do you want to do?"
         maths_eligibility_teaching_for_mastery: "Have you taken at least one year of the primary maths Teaching for Mastery programme?"
@@ -447,7 +448,10 @@ en:
         course_start_date_three: "Registrations are currently open for courses starting before %{date}."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
-          other: "For example a local authority, initial teacher training (ITT) provider, hospital school or young offender institution"
+          a_school: "This includes local authority maintained schools."
+          other: "For example a virtual school, initial teacher training (ITT) provider (for ITT lead mentors), hospital school, young offender institution or other local authority setting."
+        employment_type_options:
+          local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
         employer_name: "For example 'Essex County Council', or 'I'm self employed'"
         ehco_funding_choice_options:
@@ -478,6 +482,7 @@ en:
         date_of_birth: For example, 31 3 1980
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
         senco_start_date: For example, 1 2024
+        work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
     label:
       registration_wizard:
         work_setting_options:
@@ -511,6 +516,10 @@ en:
 
         senco_start_date: "When did you become a SENCO?"
 
+        referred_by_return_to_teaching_adviser_options:
+          "yes": "Yes"
+          "no": "No"
+
         kind_of_nursery_options:
           local_authority_maintained_nursery: "Local authority-maintained nursery"
           preschool_class_as_part_of_school: "Pre-school class or nursery that’s part of a school (maintained or independent)"
@@ -522,7 +531,7 @@ en:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
           hospital_school: "In a hospital school"
           young_offender_institution: "In a young offender institution"
-          local_authority_supply_teacher: "As a supply teacher employed by a local authority"
+          local_authority_supply_teacher: "As a teacher employed by a local authority to teach in more than one school"
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
           other: "Other"
 

@@ -7,6 +7,7 @@ class FundingEligibility
   INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 = :ineligible_establishment_not_a_pp50
   INELIGIBLE_INSTITUTION_TYPE = :ineligible_institution_type
   PREVIOUSLY_FUNDED = :previously_funded
+  REFERRED_BY_RETURN_TO_TEACHING_ADVISER = :referred_by_return_to_teaching_adviser
 
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
@@ -97,6 +98,7 @@ class FundingEligibility
 
         if query_store
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
+          return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
 
           if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
@@ -118,7 +120,6 @@ class FundingEligibility
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !course.eyl?
         return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
-
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         FUNDED_ELIGIBILITY_RESULT

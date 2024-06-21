@@ -21,7 +21,11 @@ module Questionnaires
     end
 
     def previous_step
-      :your_role
+      if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
+        :your_employment
+      else
+        :your_role
+      end
     end
   end
 end

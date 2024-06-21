@@ -38,11 +38,13 @@ module Questionnaires
           :ineligible_for_funding
         elsif wizard.query_store.works_in_other?
           case funding_eligibility_calculator.funding_eligiblity_status_code
-          when FundingEligibility::NO_INSTITUTION, FundingEligibility::FUNDED_ELIGIBILITY_RESULT
+          when FundingEligibility::NO_INSTITUTION, FundingEligibility::FUNDED_ELIGIBILITY_RESULT, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
             :possible_funding
           else
             :ineligible_for_funding
           end
+        elsif wizard.query_store.referred_by_return_to_teaching_adviser?
+          :possible_funding
         else
           :funding_eligibility_maths
         end

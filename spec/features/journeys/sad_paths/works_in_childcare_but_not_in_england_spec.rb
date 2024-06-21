@@ -134,6 +134,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
+      "referred_by_return_to_teaching_adviser" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "another",

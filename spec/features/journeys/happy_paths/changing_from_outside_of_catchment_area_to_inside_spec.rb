@@ -96,6 +96,10 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
+    end
+
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
@@ -142,6 +146,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "A school",
           "Provider" => "Teach First",
           "Workplace in England" => "Yes",
+          "Referred by return to teaching adviser" => "No",
         },
       )
     end
@@ -187,6 +192,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -218,6 +224,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => "9",
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
