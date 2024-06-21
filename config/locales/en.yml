@@ -437,7 +437,7 @@ en:
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           a_school: "This includes local authority maintained schools."
-          other: "For example a virtual school, initial teacher training (ITT) provider, hospital school, young offender institution or other local authority setting."
+          other: "For example a virtual school, initial teacher training (ITT) provider (for ITT lead mentors), hospital school, young offender institution or other local authority setting."
         employment_type_options:
           local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
