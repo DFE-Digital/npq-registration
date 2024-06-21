@@ -38,54 +38,53 @@ module ValidTestDataGenerators
 
     def create_participant(school:)
       course = courses.sample
+      user = create_user
+      application = create_application(user, school, course)
 
-      user = FactoryBot.create(:user,
-                               :with_get_an_identity_id,
-                               :with_random_name,
-                               date_of_birth: Date.new(1990, 1, 1),
-                               trn: Faker::Number.unique.number(digits: 7),
-                               trn_verified: true,
-                               trn_auto_verified: true)
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
 
-      application = FactoryBot.create(:application,
-                                      :pending,
-                                      :with_random_work_setting,
-                                      school:,
-                                      lead_provider:,
-                                      user:,
-                                      cohort:,
-                                      course:,
-                                      headteacher_status: Application.headteacher_statuses.keys.sample,
-                                      eligible_for_funding: Faker::Boolean.boolean,
-                                      itt_provider: IttProvider.currently_approved.order("RANDOM()").first)
+      accept_application(application)
 
-      methods = %i[accept_application reject_application]
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
 
-      return if Faker::Boolean.boolean
+      course = courses.reject { |c| c.identifier == course.identifier }.sample
+      application = create_application(user, school, course)
 
-      send(methods.sample, application)
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
 
-      return if Faker::Boolean.boolean
+      reject_application(application)
+    end
 
-      application = FactoryBot.create(:application,
-                                      :pending,
-                                      :with_random_work_setting,
-                                      school:,
-                                      lead_provider:,
-                                      user:,
-                                      cohort:,
-                                      course: courses.reject { |c| c.identifier == course.identifier }.sample,
-                                      headteacher_status: Application.headteacher_statuses.keys.sample,
-                                      eligible_for_funding: Faker::Boolean.boolean,
-                                      itt_provider: IttProvider.currently_approved.order("RANDOM()").first)
+    def create_user
+      FactoryBot.create(:user,
+                        :with_get_an_identity_id,
+                        :with_random_name,
+                        date_of_birth: Date.new(1990, 1, 1),
+                        trn: Faker::Number.unique.number(digits: 7),
+                        trn_verified: true,
+                        trn_auto_verified: true)
+    end
 
-      return if Faker::Boolean.boolean
-
-      send(methods.sample, application)
+    def create_application(user, school, course)
+      FactoryBot.create(:application,
+                        :pending,
+                        :with_random_work_setting,
+                        school:,
+                        lead_provider:,
+                        user:,
+                        cohort:,
+                        course:,
+                        headteacher_status: Application.headteacher_statuses.keys.sample,
+                        eligible_for_funding: Faker::Boolean.boolean,
+                        itt_provider: IttProvider.currently_approved.order("RANDOM()").first)
     end
 
     def accept_application(application)
-      Applications::Accept.new(application:).accept
+      funded_place = if application.cohort.funding_cap?
+                       application.eligible_for_funding? ? Faker::Boolean.boolean(true_ratio: 0.7) : false
+                     end
+
+      Applications::Accept.new(application:, funded_place:).accept
       application.reload
     end
 
