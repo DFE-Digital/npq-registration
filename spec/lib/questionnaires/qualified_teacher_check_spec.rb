@@ -143,6 +143,12 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         subject.valid?
         expect(subject.errors[:trn]).to be_present
       end
+
+      it "denies fake trn 0000000" do
+        subject.trn = "0000000"
+        subject.valid?
+        expect(subject.errors[:trn]).to be_present
+      end
     end
 
     describe "#date_of_birth" do
