@@ -17,6 +17,7 @@ module Applications
     validate :accepted_application
     validate :eligible_for_funding
     validate :cohort_has_funding_cap
+    validate :eligible_for_removing_funding_place
 
     def change
       return false unless valid?
@@ -46,6 +47,13 @@ module Applications
       return if cohort&.funding_cap?
 
       errors.add(:application, I18n.t("application.cohort_does_not_accept_capping"))
+    end
+
+    def eligible_for_removing_funding_place
+      return if funded_place
+      return unless application.declarations.billable_or_changeable.any?
+
+      errors.add(:application, I18n.t("application.cannot_change_funded_place"))
     end
   end
 end
