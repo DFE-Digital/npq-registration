@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_18_135124) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_21_044020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_135124) do
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
+  create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
@@ -275,6 +276,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_135124) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "outcomes", force: :cascade do |t|
+    t.enum "state", null: false, enum_type: "outcome_states"
+    t.date "completion_date", null: false
+    t.bigint "declaration_id", null: false
+    t.boolean "qualified_teachers_api_request_successful"
+    t.datetime "sent_to_qualified_teachers_api_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["declaration_id", "created_at"], name: "index_outcomes_on_declaration_id_and_created_at"
+    t.index ["declaration_id"], name: "index_outcomes_on_declaration_id"
+  end
+
   create_table "participant_id_changes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "from_participant_id", null: false
@@ -474,6 +487,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_135124) do
   add_foreign_key "declarations", "cohorts"
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
   add_foreign_key "declarations", "lead_providers"
+  add_foreign_key "outcomes", "declarations"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
