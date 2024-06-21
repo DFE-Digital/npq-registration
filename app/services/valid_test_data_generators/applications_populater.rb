@@ -80,7 +80,11 @@ module ValidTestDataGenerators
     end
 
     def accept_application(application)
-      Applications::Accept.new(application:, funded_place: Faker::Boolean.boolean(true_ratio: 0.7)).accept
+      funded_place = if application.cohort.funding_cap?
+                       application.eligible_for_funding? ? Faker::Boolean.boolean(true_ratio: 0.7) : false
+                     end
+
+      Applications::Accept.new(application:, funded_place:).accept
       application.reload
     end
 
