@@ -320,8 +320,6 @@ private
   end
 
   def employer_data_gathered?
-    return false if eligible_for_funding?
-
     works_in_other? && inside_catchment?
   end
 
