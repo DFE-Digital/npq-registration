@@ -8,14 +8,6 @@ en:
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
   schedule_invalid_for_course: Selected schedule is not valid for the course
-  cannot_change_cohort: "You cannot change the '#/cohort' field"
-  invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
-  withdrawn_participant: Cannot perform actions on a withdrawn participant
-  schedule_invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
-  schedule_already_on_the_profile: Selected schedule is already on the profile
-  missing_course_identifier: "Enter a '#/course_identifier' value for this participant."
-  invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
-  invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
 
   errors:
     email:
@@ -42,7 +34,7 @@ en:
     already_withdrawn: The participant is already withdrawn
     no_declarations: You cannot defer an NPQ participant that has no declarations
     no_started_declarations: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
-    
+
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/course_identifier' value for this participant.
     inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
@@ -242,6 +234,20 @@ en:
               <<: *participant
             reason:
               <<: *participant_reason
+        participants/change_schedule:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+              already_withdrawn: Cannot perform actions on a withdrawn participant
+            schedule_identifier:
+              invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
+              invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
+              already_on_the_profile: Selected schedule is already on the profile
+              invalid_for_course: Selected schedule is not valid for the course
+            cohort:
+              cannot_change: "You cannot change the '#/cohort' field"
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

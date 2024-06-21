@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Participants::ChangeSchedule do
+RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create(:lead_provider) }
   let(:course) { create(:course, :sl) }
@@ -32,45 +32,22 @@ RSpec.describe Participants::ChangeSchedule do
 
   describe "validations" do
     context "when validating a participant for a change schedule" do
-      context "when the schedule is missing" do
-        let(:new_schedule_identifier) { nil }
+      it_behaves_like "a participant action" do
+        let(:params) do
+          {
+            lead_provider:,
+            participant:,
+            course_identifier:,
 
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(subject.errors.messages_for(:schedule_identifier)).to include("The property '#/schedule_identifier' must be present and correspond to a valid schedule")
+            schedule_identifier: new_schedule_identifier,
+            cohort: new_cohort.start_year,
+          }
         end
+        let(:instance) { subject }
+        let(:application) { create(:application, :accepted, cohort:, course:, schedule:) }
       end
 
-      context "when the course identifier is missing" do
-        let(:course_identifier) { nil }
-
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(subject.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
-        end
-      end
-
-      context "when the course identifier is an invalid value" do
-        let(:course_identifier) { "invalid-value" }
-
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(subject.errors.messages_for(:course_identifier)).to include("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
-        end
-      end
-
-      context "when the participant is missing" do
-        let(:participant) { nil }
-
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(subject.errors.messages_for(:participant)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
-        end
-      end
+      it { is_expected.to validate_presence_of(:schedule_identifier).with_message("The property '#/schedule_identifier' must be present and correspond to a valid schedule") }
 
       context "when the schedule identifier change of the same type again" do
         before do
