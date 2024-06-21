@@ -12,8 +12,17 @@ module API
         render json: to_json(declaration)
       end
 
+      def void
+        service = Declarations::Void.new(declaration:)
+
+        if service.void
+          render json: to_json(service.declaration)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
       def create = head(:method_not_allowed)
-      def void = head(:method_not_allowed)
 
     private
 
