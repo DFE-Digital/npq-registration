@@ -3,7 +3,12 @@
 require "rails_helper"
 
 RSpec.describe Participants::Withdraw, type: :model do
-  it_behaves_like "a participant action", :withdraw, %w[active], "withdrawn" do
+  it_behaves_like "a participant action" do
+    let(:reason) { described_class::WITHDRAWL_REASONS.sample }
+    let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
+  end
+
+  it_behaves_like "a participant state transition", :withdraw, %w[active], "withdrawn" do
     let(:reason) { described_class::WITHDRAWL_REASONS.sample }
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
 

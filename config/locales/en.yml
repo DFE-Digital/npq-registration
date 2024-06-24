@@ -34,7 +34,7 @@ en:
     already_withdrawn: The participant is already withdrawn
     no_declarations: You cannot defer an NPQ participant that has no declarations
     no_started_declarations: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
-    
+
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/course_identifier' value for this participant.
     inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
@@ -234,6 +234,20 @@ en:
               <<: *participant
             reason:
               <<: *participant_reason
+        participants/change_schedule:
+          attributes:
+            course_identifier:
+              <<: *participant_course_identifier
+            participant:
+              <<: *participant
+            schedule_identifier:
+              blank: "The property '#/schedule_identifier' must be present"
+              invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
+              invalid_schedule: "The property '#/schedule_identifier' must be present and correspond to a valid schedule"
+              already_on_the_profile: Selected schedule is already on the profile
+              invalid_for_course: Selected schedule is not valid for the course
+            cohort:
+              cannot_change: "You cannot change the '#/cohort' field"
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

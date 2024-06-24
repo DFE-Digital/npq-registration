@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.shared_examples "a participant action" do |action, from_states, to_state|
+RSpec.shared_examples "a participant action" do
   let(:lead_provider) { application.lead_provider }
   let(:participant) { application.user }
-  let(:application) { create(:application, :accepted, :with_declaration, training_status: from_states.sample) }
+  let(:application) { create(:application, :accepted, :with_declaration) }
   let(:course_identifier) { application.course.identifier }
 
   it { expect(instance).to be_valid }
@@ -42,6 +42,15 @@ RSpec.shared_examples "a participant action" do |action, from_states, to_state|
       end
     end
   end
+end
+
+RSpec.shared_examples "a participant state transition" do |action, from_states, to_state|
+  let(:lead_provider) { application.lead_provider }
+  let(:participant) { application.user }
+  let(:application) { create(:application, :accepted, :with_declaration, training_status: from_states.sample) }
+  let(:course_identifier) { application.course.identifier }
+
+  it { expect(instance).to be_valid }
 
   describe "##{action}" do
     subject(:perform_action) { instance.send(action) }
