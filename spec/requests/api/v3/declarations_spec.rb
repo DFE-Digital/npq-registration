@@ -26,7 +26,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     it_behaves_like "an API index endpoint with filter by cohort"
   end
 
-  describe "GET /api/v3/declarations/:id" do
+  describe "GET /api/v3/participant-declarations/:ecf_id" do
     let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
     let(:resource_id) { resource.ecf_id }
 
@@ -37,14 +37,22 @@ RSpec.describe "Declaration endpoints", type: :request do
     it_behaves_like "an API show endpoint"
   end
 
-  describe("create") do
-    before { api_post(api_v3_declarations_path) }
+  describe "PUT /api/v3/participant-declarations/:ecf_id/void" do
+    let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Declarations::Void }
+    let(:action) { :void }
+    let(:service_args) { { declaration: resource } }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      void_api_v3_declaration_path(ecf_id: id)
+    end
+
+    it_behaves_like "an API update endpoint"
   end
 
-  describe("void") do
-    before { api_put(api_v3_declaration_void_path(123)) }
+  describe("create") do
+    before { api_post(api_v3_declarations_path) }
 
     specify { expect(response).to(be_method_not_allowed) }
   end
