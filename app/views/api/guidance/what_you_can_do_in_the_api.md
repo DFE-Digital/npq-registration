@@ -4,13 +4,13 @@
 The focus of the following guidance is on business logic only. Critical details which would be necessary for real-world usage have been left out. For example, authentication is not detailed.
 </div>
 
-## NPQ processes [CHANGE THIS HEADING]
+## NPQ processes
 
 Before delving into the specifics of API requests, here's an overview of how NPQs work.
 
 ### Applications
 
-1. A person submits an application for a course using the [Register for a national professional qualification service](ADD LINK).
+1. A person submits an application for a course using the [Register for a national professional qualification](https://register-national-professional-qualifications.education.gov.uk/) service.
 2. Providers view NPQ application data via the API.
 3. Providers complete their own suitability and application processes.
 4. Providers accept or reject applications via the API and onboarding participants onto their systems. 
@@ -38,11 +38,3 @@ Before delving into the specifics of API requests, here's an overview of how NPQ
 * providers can view financial statements via the API
 * changes can happen during training. Some participants may not complete their course within the standard schedule, or at all. Providers must update relevant data using the API
 * DfE will only make payments for participants if providers have accepted course applications. Accepting applications is a separate request to submitting a ‘started’ declaration (which notifies DfE a participant has started training)
-
-## View, accept or reject applications
-
-## View and update participant data
-
-## View payments information 
-
-## Submit, view and void declarations
