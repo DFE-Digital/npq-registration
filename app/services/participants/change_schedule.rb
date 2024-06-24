@@ -6,6 +6,7 @@ module Participants
     attribute :schedule_identifier
     attribute :cohort, :integer
 
+    validates :schedule_identifier, presence: true
     validate :validate_new_schedule_found
     # validates :cohort, npq_contract_for_cohort_and_course: true # TODO we don't have NPQ Contract yet
     validate :validate_not_withdrawn
@@ -41,7 +42,13 @@ module Participants
     end
 
     def update_application!
-      application.update!(schedule: new_schedule, cohort: new_cohort)
+      params = { schedule: new_schedule }
+
+      if application.cohort != new_cohort
+        params[:cohort] = new_cohort
+      end
+
+      application.update!(params)
     end
 
     def update_funded_place!

@@ -47,7 +47,13 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         let(:application) { create(:application, :accepted, cohort:, course:, schedule:) }
       end
 
-      it { is_expected.to validate_presence_of(:schedule_identifier).with_message("The property '#/schedule_identifier' must be present and correspond to a valid schedule") }
+      it { is_expected.to validate_presence_of(:schedule_identifier).with_message(:blank) }
+
+      context "when the schedule is invalid" do
+        let(:new_schedule_identifier) { "invalid" }
+
+        it { is_expected.to validate_presence_of(:schedule_identifier).with_message(:invalid_schedule) }
+      end
 
       context "when the schedule identifier change of the same type again" do
         before do
@@ -73,7 +79,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       it "is invalid and returns an error message" do
         expect(subject).to be_invalid
 
-        expect(subject.errors.messages_for(:participant)).to include("Cannot perform actions on a withdrawn participant")
+        expect(subject.errors.messages_for(:participant)).to include("The participant is already withdrawn")
       end
     end
 
@@ -224,6 +230,55 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
           expect(subject.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
         end
       end
+
+      context "when existing declarations is not valid for new_schedule" do
+        before do
+          create(
+            :declaration,
+            application:,
+            declaration_type: "retained-1",
+            state: :payable,
+            lead_provider:,
+            cohort: new_cohort,
+            declaration_date:,
+          )
+        end
+
+        context "when new_schedule does not allow existing declaration_type" do
+          let(:declaration_date) { Date.current }
+
+          before do
+            new_schedule.update!(allowed_declaration_types: [])
+          end
+
+          it "does not allow a change of schedule" do
+            expect(subject.change_schedule).to be_falsey
+            expect(subject.errors.messages_for(:schedule_identifier)).to include("Changing schedule would invalidate existing declarations. Please void them first.")
+          end
+        end
+
+        context "when declaration_date is before new_schedule.applies_from" do
+          let(:declaration_date) { new_schedule.applies_from - 1.day }
+
+          it "does not allow a change of schedule" do
+            expect(subject.change_schedule).to be_falsey
+            expect(subject.errors.messages_for(:schedule_identifier)).to include("Changing schedule would invalidate existing declarations. Please void them first.")
+          end
+        end
+      end
+
+      context "when new_schedule is not permitted for course" do
+        let(:not_permitted_course_group) { create(:course_group) }
+
+        before do
+          new_schedule.update!(course_group: not_permitted_course_group)
+        end
+
+        it "does not allow a change of schedule" do
+          expect(subject.change_schedule).to be_falsey
+          expect(subject.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+        end
+      end
     end
 
     # TODO: when NPQ Contract has been migrated
@@ -251,6 +306,38 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         application.reload
         expect(application.schedule).to eql(new_schedule)
         expect(application.cohort).to eql(cohort)
+      end
+
+      context "when using fallback_cohort" do
+        let(:cohort) { create(:cohort, start_year: (Date.current.year + 5)) }
+
+        context "when application has schedule" do
+          before do
+            create(:schedule, :npq_leadership_autumn, cohort: new_cohort)
+            application.schedule.update!(cohort: new_cohort)
+          end
+
+          it "fallback to application.schedule.cohort" do
+            expect(subject.change_schedule).to be_truthy
+            application.reload
+            expect(application.cohort).to eql(new_cohort)
+          end
+        end
+
+        context "when schedule is nil" do
+          let!(:current_cohort) { create(:cohort, :current) }
+
+          before do
+            create(:schedule, :npq_leadership_autumn, cohort: current_cohort)
+            application.update!(schedule: nil)
+          end
+
+          it "fallback to Cohort.current" do
+            expect(subject.change_schedule).to be_truthy
+            application.reload
+            expect(application.cohort).to eql(current_cohort)
+          end
+        end
       end
     end
 
