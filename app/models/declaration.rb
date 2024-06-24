@@ -71,7 +71,7 @@ class Declaration < ApplicationRecord
     when "duplicate"
       "duplicate_declaration"
     else
-      reason
+      state_reason
     end
   end
 end
