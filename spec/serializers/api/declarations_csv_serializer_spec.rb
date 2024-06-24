@@ -45,5 +45,15 @@ RSpec.describe API::DeclarationsCsvSerializer, type: :serializer do
 
       it { expect(csv).to be_nil }
     end
+
+    context "when using the v2 view" do
+      let(:view) { :v2 }
+
+      it "calls the DeclarationSerializer with the correct view" do
+        expect(API::DeclarationSerializer).to receive(:render).with(declarations, view:).and_call_original
+
+        csv
+      end
+    end
   end
 end

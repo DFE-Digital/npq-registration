@@ -28,7 +28,7 @@ module API
   private
 
     def declarations_json
-      @declarations_json ||= JSON.parse(DeclarationSerializer.render(declarations, view: :v1)).map(&method(:flatten_hash))
+      @declarations_json ||= JSON.parse(DeclarationSerializer.render(declarations, view:)).map(&method(:flatten_hash))
     end
 
     def headers
