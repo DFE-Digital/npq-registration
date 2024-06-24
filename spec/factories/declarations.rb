@@ -9,6 +9,10 @@ FactoryBot.define do
 
     state { "submitted" }
 
+    trait :eligible do
+      state { :eligible }
+    end
+
     trait :paid do
       state { :paid }
     end
