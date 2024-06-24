@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API update endpoint" do
+RSpec.shared_examples "an API create on resource endpoint" do
   let(:params) { defined?(attributes) ? { data: { attributes: } } : nil }
   let(:stub_service) do
     service_double = instance_double(service, "#{action}": true, **service_args)
@@ -15,7 +15,7 @@ RSpec.shared_examples "an API update endpoint" do
       it "returns the resource" do
         stub_service
 
-        api_put(path(resource_id), params:)
+        api_post(path(resource_id), params:)
 
         expect(response.status).to eq 200
         expect(response.content_type).to eql("application/json")
@@ -25,7 +25,7 @@ RSpec.shared_examples "an API update endpoint" do
       it "calls the correct service" do
         service_double = stub_service
 
-        api_put(path(resource_id), params:)
+        api_post(path(resource_id), params:)
 
         expect(service_double).to have_received(action)
       end
@@ -39,13 +39,13 @@ RSpec.shared_examples "an API update endpoint" do
 
         expect(serializer).to receive(:render).with(resource, **serializer_params).and_call_original
 
-        api_put(path(resource_id), params:)
+        api_post(path(resource_id), params:)
       end
     end
 
     context "when the resource does not exist", exceptions_app: true do
       it "returns not found" do
-        api_put(path("123XXX"), params:)
+        api_post(path("123XXX"), params:)
 
         expect(response.status).to eq(404)
       end
@@ -59,7 +59,7 @@ RSpec.shared_examples "an API update endpoint" do
           expect(args.to_hash.symbolize_keys).to eq(service_args)
         }.and_return(service_double)
 
-        api_put(path(resource_id), params:)
+        api_post(path(resource_id), params:)
 
         expect(response.status).to eq(422)
       end
@@ -68,7 +68,7 @@ RSpec.shared_examples "an API update endpoint" do
 
   context "when unauthorized" do
     it "returns 401 - unauthorized" do
-      api_put(path(resource_id), params:, token: "incorrect-token")
+      api_post(path(resource_id), params:, token: "incorrect-token")
 
       expect(response.status).to eq 401
       expect(parsed_response["error"]).to eql("HTTP Token: Access denied")

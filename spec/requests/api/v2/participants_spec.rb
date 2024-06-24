@@ -32,56 +32,51 @@ RSpec.describe "Participant endpoints", type: :request do
   end
 
   describe "PUT /api/v2/participants/:ecf_id/resume" do
-    let(:course_identifier) { application.course.identifier }
-    let(:application) { create(:application, :accepted, :withdrawn, lead_provider: current_lead_provider) }
-    let(:participant) { application.user }
-    let(:participant_id) { participant.ecf_id }
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Resume }
+    let(:action) { :resume }
+    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
 
     def path(id = nil)
-      resume_api_v2_participant_path(id)
+      resume_api_v2_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API participant action endpoint", Participants::Resume do
-      def assert_on_successful_response(parsed_response)
-        expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("active")
-      end
-    end
+    it_behaves_like "an API update endpoint"
   end
 
   describe "PUT /api/v2/participants/:ecf_id/defer" do
-    let(:course_identifier) { application.course.identifier }
-    let(:reason) { Participants::Defer::DEFERRAL_REASONS.sample }
-    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
-    let(:participant) { application.user }
-    let(:participant_id) { participant.ecf_id }
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Defer }
+    let(:action) { :defer }
+    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
 
     def path(id = nil)
-      defer_api_v2_participant_path(id)
+      defer_api_v2_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API participant action endpoint", Participants::Defer do
-      def assert_on_successful_response(parsed_response)
-        expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("deferred")
-      end
-    end
+    it_behaves_like "an API update endpoint"
   end
 
   describe "PUT /api/v2/participants/:ecf_id/withdraw" do
-    let(:course_identifier) { application.course.identifier }
-    let(:reason) { Participants::Withdraw::WITHDRAWL_REASONS.sample }
-    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
-    let(:participant) { application.user }
-    let(:participant_id) { participant.ecf_id }
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Withdraw }
+    let(:action) { :withdraw }
+    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
 
     def path(id = nil)
-      withdraw_api_v2_participant_path(id)
+      withdraw_api_v2_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API participant action endpoint", Participants::Withdraw do
-      def assert_on_successful_response(parsed_response)
-        expect(parsed_response["data"]["attributes"]["npq_enrolments"][0]["training_status"]).to eq("withdrawn")
-      end
-    end
+    it_behaves_like "an API update endpoint"
   end
 
   describe("change_schedule") do

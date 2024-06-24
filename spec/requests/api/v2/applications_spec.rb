@@ -46,41 +46,46 @@ RSpec.describe "Application endpoints", type: :request do
   end
 
   describe "POST /api/v2/npq-applications/:ecf_id/accept" do
-    let(:cohort) { create(:cohort, :current) }
-    let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
-    let(:course) { create(:course, :sl, course_group:) }
-    let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
-
-    let(:application) { create(:application, cohort:, course:, lead_provider: current_lead_provider) }
-    let(:application_id) { application.ecf_id }
+    let(:resource) { create(:application, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Applications::Accept }
+    let(:action) { :accept }
+    let(:attributes) { { funded_place: true } }
+    let(:service_args) { { application: resource }.merge!(attributes) }
 
     def path(id = nil)
-      accept_api_v2_application_path(id)
+      accept_api_v2_application_path(ecf_id: id)
     end
 
-    before { schedule }
-
-    it_behaves_like "an API accept application endpoint"
+    it_behaves_like "an API create on resource endpoint"
   end
 
   describe "POST /api/v2/npq-applications/:ecf_id/reject" do
-    let(:service_class) { Applications::Reject }
+    let(:resource) { create(:application, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Applications::Reject }
+    let(:action) { :reject }
+    let(:service_args) { { application: resource } }
 
     def path(id = nil)
-      reject_api_v2_application_path(id)
+      reject_api_v2_application_path(ecf_id: id)
     end
 
-    it_behaves_like "an API reject application endpoint"
+    it_behaves_like "an API create on resource endpoint"
   end
 
   describe "PUT /api/v2/npq-applications/:ecf_id/change-funded-place" do
-    let(:application) { create(:application, :eligible_for_funded_place, lead_provider: current_lead_provider) }
-    let(:application_id) { application.ecf_id }
+    let(:resource) { create(:application, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Applications::ChangeFundedPlace }
+    let(:action) { :change }
+    let(:attributes) { { funded_place: false } }
+    let(:service_args) { { application: resource }.merge!(attributes) }
 
     def path(id = nil)
-      change_funded_place_api_v3_application_path(id)
+      change_funded_place_api_v2_application_path(ecf_id: id)
     end
 
-    it_behaves_like "an API change application funded place endpoint"
+    it_behaves_like "an API update endpoint"
   end
 end
