@@ -64,7 +64,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
           expect(subject.change_schedule).to be_truthy
           expect(subject).to be_invalid
 
-          expect(subject.errors.messages_for(:schedule_identifier)).to include("Selected schedule is already on the profile")
+          expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :already_on_the_profile)
         end
       end
     end
@@ -79,7 +79,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       it "is invalid and returns an error message" do
         expect(subject).to be_invalid
 
-        expect(subject.errors.messages_for(:participant)).to include("The participant is already withdrawn")
+        expect(subject.errors.group_by_attribute[:participant].first).to have_attributes(attribute: :participant, type: :already_withdrawn)
       end
     end
 
@@ -140,7 +140,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
             cohort: cohort.start_year,
           }))
           expect(second_change_of_schedule).to be_invalid
-          expect(second_change_of_schedule.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+          expect(second_change_of_schedule.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
         end
       end
 
@@ -161,7 +161,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
             it "is invalid and returns an error message" do
               expect(subject).to be_invalid
 
-              expect(subject.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+              expect(subject.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
             end
           end
         end
@@ -227,7 +227,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         it "does not change the application to the new cohort" do
           expect(subject.change_schedule).to be_falsey
 
-          expect(subject.errors.messages_for(:cohort)).to include("You cannot change the '#/cohort' field")
+          expect(subject.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
         end
       end
 
@@ -253,7 +253,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           it "does not allow a change of schedule" do
             expect(subject.change_schedule).to be_falsey
-            expect(subject.errors.messages_for(:schedule_identifier)).to include("Changing schedule would invalidate existing declarations. Please void them first.")
+            expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalidates_declaration)
           end
         end
 
@@ -262,7 +262,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           it "does not allow a change of schedule" do
             expect(subject.change_schedule).to be_falsey
-            expect(subject.errors.messages_for(:schedule_identifier)).to include("Changing schedule would invalidate existing declarations. Please void them first.")
+            expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalidates_declaration)
           end
         end
       end
@@ -276,7 +276,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
         it "does not allow a change of schedule" do
           expect(subject.change_schedule).to be_falsey
-          expect(subject.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+          expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalid_for_course)
         end
       end
     end
@@ -297,7 +297,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
     ###########################################
   end
 
-  describe ".change_schedule" do
+  describe "#change_schedule" do
     context "when changing the schedule only" do
       let!(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort:) }
 
