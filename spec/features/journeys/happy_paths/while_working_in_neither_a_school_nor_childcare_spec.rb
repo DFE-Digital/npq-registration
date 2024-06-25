@@ -161,7 +161,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "no_institution",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "funding_amount" => nil,
         "referred_by_return_to_teaching_adviser" => "no",

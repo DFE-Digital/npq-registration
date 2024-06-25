@@ -208,7 +208,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "funding_amount" => nil,
         "referred_by_return_to_teaching_adviser" => "no",
         "npqh_status" => "completed_npqh",
