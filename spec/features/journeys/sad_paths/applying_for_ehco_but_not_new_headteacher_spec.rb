@@ -201,7 +201,7 @@ RSpec.feature "Sad journeys", type: :feature do
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
         "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,

@@ -2,7 +2,6 @@
   "Ambition Institute" => "ambition-token",
   "Best Practice Network" => "best-practice-token",
   "Church of England" => "coe-token",
-  "Education Development Trust" => "edt-token",
   "School-Led Network" => "school-led-token",
   "UCL Institute of Education" => "ucl-token",
   "Teacher Development Trust" => "tdt-token",

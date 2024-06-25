@@ -159,7 +159,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "work_setting" => "a_school",
       "raw_application_data" => {
         "email_template" => "not_england_wrong_catchment",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
