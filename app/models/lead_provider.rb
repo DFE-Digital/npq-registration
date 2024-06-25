@@ -3,7 +3,6 @@ class LeadProvider < ApplicationRecord
     "Ambition Institute" => "9e35e998-c63b-4136-89c4-e9e18ddde0ea",
     "Best Practice Network (home of Outstanding Leaders Partnership)" => "57ba9e86-559f-4ff4-a6d2-4610c7259b67",
     "Church of England" => "79cb41ca-cb6d-405c-b52c-b6f7c752388d",
-    "Education Development Trust" => "21e61f53-9b34-4384-a8f5-d8224dbf946d",
     "LLSE" => "230e67c0-071a-4a48-9673-9d043d456281",
     "National Institute of Teaching" => "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb",
     "School-Led Network" => "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0",
@@ -16,7 +15,6 @@ class LeadProvider < ApplicationRecord
     "Ambition Institute",
     "Best Practice Network (home of Outstanding Leaders Partnership)",
     "Church of England",
-    "Education Development Trust",
     "LLSE",
     "National Institute of Teaching",
     "Teacher Development Trust",
@@ -26,7 +24,6 @@ class LeadProvider < ApplicationRecord
 
   EYL_LL_PROVIDERS = [
     "Ambition Institute",
-    "Education Development Trust",
     "National Institute of Teaching",
     "Teacher Development Trust",
     "Teach First",
@@ -37,7 +34,6 @@ class LeadProvider < ApplicationRecord
     "Ambition Institute",
     "Best Practice Network (home of Outstanding Leaders Partnership)",
     "Church of England",
-    "Education Development Trust",
     "LLSE",
     "National Institute of Teaching",
     "Teacher Development Trust",
@@ -48,7 +44,6 @@ class LeadProvider < ApplicationRecord
   LPM_PROVIDERS = [
     "Ambition Institute",
     "Church of England",
-    "Education Development Trust",
     "LLSE",
     "Teach First",
     "UCL Institute of Education",

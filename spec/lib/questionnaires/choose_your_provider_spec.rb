@@ -95,7 +95,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:valid_lead_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Education Development Trust",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
@@ -131,7 +130,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Ambition Institute",
             "Best Practice Network (home of Outstanding Leaders Partnership)",
             "Church of England",
-            "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
@@ -168,7 +166,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Ambition Institute",
             "Best Practice Network (home of Outstanding Leaders Partnership)",
             "Church of England",
-            "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
@@ -327,7 +324,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
         let(:expected_providers) do
           LeadProvider.where(name: [
             "Ambition Institute",
-            "Education Development Trust",
             "National Institute of Teaching",
             "Teacher Development Trust",
             "Teach First",
@@ -349,7 +345,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Ambition Institute",
             "Best Practice Network (home of Outstanding Leaders Partnership)",
             "Church of England",
-            "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
@@ -372,7 +367,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Ambition Institute",
             "Best Practice Network (home of Outstanding Leaders Partnership)",
             "Church of England",
-            "Education Development Trust",
             "LLSE",
             "National Institute of Teaching",
             "Teacher Development Trust",
