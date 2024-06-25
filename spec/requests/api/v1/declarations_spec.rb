@@ -25,10 +25,15 @@ RSpec.describe "Declaration endpoints", type: :request do
     it_behaves_like "an API index endpoint with filter by participant_id"
   end
 
-  describe("show") do
-    before { api_get(api_v1_declaration_path(123)) }
+  describe "GET /api/v1/declarations/:id" do
+    let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      api_v1_declaration_path(id)
+    end
+
+    it_behaves_like "an API show endpoint"
   end
 
   describe("create") do

@@ -84,12 +84,18 @@ RSpec.describe Declaration, type: :model do
 
   describe "#ineligible_for_funding_reason" do
     let(:state) { :ineligible }
-    let(:state_reason) { :duplicate }
+    let(:state_reason) { nil }
     let(:declaration) { build(:declaration, state:, state_reason:) }
 
     subject { declaration.ineligible_for_funding_reason }
 
-    it { is_expected.to eq("duplicate_declaration") }
+    it { is_expected.to be_nil }
+
+    context "when the state_reason is 'duplicate'" do
+      let(:state_reason) { "duplicate" }
+
+      it { is_expected.to eq("duplicate_declaration") }
+    end
 
     described_class.states.keys.excluding("ineligible").each do |ineligible_state|
       context "when the state is #{ineligible_state}" do
