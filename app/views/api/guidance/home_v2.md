@@ -1,4 +1,4 @@
-v<div class="x-govuk-masthead">
+<div class="x-govuk-masthead">
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">

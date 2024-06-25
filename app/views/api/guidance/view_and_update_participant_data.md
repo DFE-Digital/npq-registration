@@ -2,11 +2,11 @@
 
 Once a provider has accepted an application, they can **view and update data** to notify DfE that a participant has:
 
-* deferred their course [ADD LINK]
-* resumed their course [ADD LINK]
-* withdrawn from their course [ADD LINK]
-* changed their course schedule [ADD LINK]
-* an updated course outcome [ADD LINK]
+* deferred their course [Add link to 'deferred' section]
+* resumed their course [Add link to 'resumed' section]
+* withdrawn from their course [Add link to 'withdrawn' section]
+* changed their course schedule [Add link to 'changed course schedule' section]
+* an updated course outcome [Add link to 'updated course outcome' section]
 
 ## View all participant data
 

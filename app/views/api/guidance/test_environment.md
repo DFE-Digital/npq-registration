@@ -1,6 +1,6 @@
-## What is the test environment
+## What are the test environments
 
-The test (sandbox) environment is used to test API integrations without affecting real data.
+The test (sandbox) environments are used to test API integrations without affecting real data.
 
 ## Test environment links
 

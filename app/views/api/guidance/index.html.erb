@@ -25,71 +25,16 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
         <h2 class="govuk-heading-m">
-          What's new (our latest release notes)
+          What's new
         </h2>
 
         <p class="govuk-body">
           <%= @latest_release_note.date %>: <%= @latest_release_note.content %>
         </p>
 
-        <p class="govuk-body">
-          <%= govuk_link_to("Browse all our release notes", "https://github.com/DFE-Digital/npq-registration/blob/main/release-notes.md") %>
+          <p class="govuk-body">
+          <%= govuk_link_to("Browse our latest release notes", "/api/guidance/release-notes") %>
         </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop govuk-!-padding-top-8">
-      <div class="govuk-grid-column-one-third-from-desktop">
-        <h2 class="govuk-heading-l govuk-!-font-weight-bold">What you can do in the API</h2>
-        <p class="govuk-body">Guidance on how lead providers can integrate with this API so they can view, submit and
-          update data.</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "Browse guidance", '/api/guidance/what_you_can_do_in_the_api', class: "govuk-!-font-weight-bold" %>
-        </p>
-      </div>
-      <div class="govuk-grid-column-one-third-from-desktop">
-        <h2 class="govuk-heading-l">Data states</h2>
-        <p class="govuk-body">See what data we use to help manage participant applications and training progress.</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "View data states", '/api/guidance/data_states', class: "govuk-!-font-weight-bold" %></p>
-      </div>
-      <div class="govuk-grid-column-one-third-from-desktop ">
-        <h2 class="govuk-heading-l">Schedules and milestone dates</h2>
-        <p class="govuk-body">ADD INTRO TEXT</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "ADD LINK TEXT", '/api/guidance/schedules_and_milestone_dates', class: "govuk-!-font-weight-bold" %></p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop govuk-!-padding-top-8">
-      <div class="govuk-grid-column-one-third-from-desktop">
-        <h2 class="govuk-heading-l govuk-!-font-weight-bold">API latest version</h2>
-        <p class="govuk-body">Access documentation for version 3 of the NPQs data management API for lead providers</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "View latest API documentation", 'https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html', class: "govuk-!-font-weight-bold" %>
-        </p>
-      </div>
-      <div class="govuk-grid-column-one-third-from-desktop">
-        <h2 class="govuk-heading-l">API previous versions</h2>
-        <p class="govuk-body">Access documentation for versions 1 and 2 of our API</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "View API version 1", 'https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v1.html', class: "govuk-!-font-weight-bold" %></p>
-      <p class="govuk-body">
-          <%= govuk_link_to "View API version 2", 'https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v2.html', class: "govuk-!-font-weight-bold" %></p>
-      </div>
-      <div class="govuk-grid-column-one-third-from-desktop ">
-        <h2 class="govuk-heading-l">Test environment</h2>
-        <p class="govuk-body">We've got a test (sandbox) environment that can be used to test API integrations without affecting real data.</p>
-        <p class="govuk-body">
-          <%= govuk_link_to "Use the test environment", api_guidance_page_path(page: 'test_environment'), class: "govuk-!-font-weight-bold" %></p>
       </div>
     </div>
   </div>
@@ -98,17 +43,17 @@
 <div class="govuk-width-container">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+            <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--invisible">
       <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">How-to guides</h2>
                  <p class="govuk-body">Guidance on how lead providers can integrate with this API so they can view, submit and update data.</p>
         <p class="govuk-body">
         <ul class="govuk-list">
-          <li><%= govuk_link_to("How NPQs work", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View, accept or reject applications", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View and update participant data", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View payments information", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("Submit, view and void declarations", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("How NPQs work", '/api/guidance/how_npqs_work', class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View, accept or reject applications", "/api/guidance/view_accept_or_reject_applications", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View and update participant data", "/api/guidance/view_and_update_participant_data", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View payments information", "/api/guidance/view_payments_information", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("Submit, view and void declarations", "/api/guidance/submit_view_and_void_declarations", class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
@@ -121,7 +66,7 @@
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">What data we use</h2>
-         <p class="govuk-body">Information on the data model we use to help manage participant applications and training progress.</p>
+         <p class="govuk-body">Take a look at the data model we use to help manage participant applications and training progress.</p>
         <p class="govuk-body">
           <%= govuk_link_to "View our data states", '/api/guidance/data_states', class: "govuk-!-font-weight-bold" %></p>
         <ul class="govuk-list">
@@ -137,10 +82,10 @@
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
         <h2 class="govuk-heading-l">Schedules and milestone dates</h2>
-         <p class="govuk-body">ADD INTRO TEXT.</p>
+         <p class="govuk-body">Details of the contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention.</p>
         <p class="govuk-body">
         <ul class="govuk-list">
-          <li><%= govuk_link_to("ADD LINK TEXT", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View NPQ, early headship coaching offer and addtional support offer schedules", "/api/guidance/schedules_and_milestone_dates", class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
@@ -156,7 +101,7 @@
                  <p class="govuk-body">Access version 3 of the NPQs data management API documentation for lead providers.</p>
         <p class="govuk-body">
         <ul class="govuk-list">
-          <li><%= govuk_link_to("View API version 3", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API version 3", "https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html", class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
@@ -172,8 +117,8 @@
                          <p class="govuk-body">Access the first and second versions of the NPQs data management API documentation for lead providers.</p>
         <p class="govuk-body">
         <ul class="govuk-list">
-          <li><%= govuk_link_to("View API version 2", "#", class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View API version 1", "#", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API version 2", "https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v2.html", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API version 1", "https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v1.html", class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
@@ -185,12 +130,12 @@
     <div class="govuk-grid-column-full-from-desktop">
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">Test environment</h2>
+        <h2 class="govuk-heading-l">Test environments</h2>
         <p class="govuk-body">
-          We've got a test (sandbox) environment that can be used to test API integrations without affecting real data.
+          We've got test (sandbox) environments that can be used to test API integrations without affecting real data.
         </p>
         <p class="govuk-body">
-          <%= govuk_link_to("Use the test environment", api_guidance_page_path(page: "test_environment"), class: "govuk-!-font-weight-bold") %>
+          <%= govuk_link_to("Use the test environments", api_guidance_page_path(page: "test_environment"), class: "govuk-!-font-weight-bold") %>
         </p>
       </div>
     </div>
@@ -212,20 +157,4 @@
   </div>
 </div>
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full-from-desktop">
-      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-      <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">Support</h2>
-        <p class="govuk-body">
-          If you have any questions or suggestions, email us at <a href="#" class="govuk-link">continuing-professional-development@digital.education.gov.uk</a>.
-        </p>
-        <p class="govuk-body">
-          We'll try to get back to you within 2 working days.
-        </p>
-      </div>
-    </div>
-  </div>
-  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-</div>
+
