@@ -26,7 +26,7 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
       let(:params) do
         {
           data: {
-            type: action,
+            type:,
             attributes:,
           },
         }
@@ -36,6 +36,21 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
         let(:id) { resource.ecf_id }
 
         schema({ "$ref": response_schema_ref })
+
+        after do |example|
+          if defined?(response_example)
+            example_spec = {
+              "application/json" => {
+                examples: {
+                  success: {
+                    value: response_example,
+                  },
+                },
+              },
+            }
+            example.metadata[:response][:content] = example_spec
+          end
+        end
 
         run_test!
       end

@@ -48,7 +48,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
                   "#/components/schemas/ApplicationResponse",
                   "#/components/schemas/ApplicationAcceptRequest" do
     let(:resource) { application }
-    let(:action) { "npq-application-accept" }
+    let(:type) { "npq-application-accept" }
     let(:attributes) { { funded_place: false } }
     let(:invalid_attributes) { { funded_place: nil } }
   end
@@ -60,7 +60,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
                   "The NPQ application being rejected",
                   "#/components/schemas/ApplicationResponse" do
     let(:resource) { application }
-    let(:action) { "npq-application-reject" }
+    let(:type) { "npq-application-reject" }
   end
 
   it_behaves_like "an API update endpoint documentation",
@@ -72,7 +72,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
                   "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
     let(:application) { create(:application, :eligible_for_funded_place, lead_provider:) }
     let(:resource) { application }
-    let(:action) { "npq-application-change-funded-place" }
+    let(:type) { "npq-application-change-funded-place" }
     let(:attributes) { { funded_place: true } }
     let(:invalid_attributes) { { funded_place: nil } }
   end

@@ -353,6 +353,27 @@ paths:
           description: The NPQ participant being resumed
           content:
             application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: 7acaabaf-71ec-4836-be82-5ae59863fdf7
+                      type: npq-participant
+                      attributes:
+                        email: 101.john.doe@doyle.test
+                        full_name: John Doe 163
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:30Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 58b364cb-1633-41d5-8d1d-eab55bedc986
+                          eligible_for_funding: true
+                          training_status: active
+                          school_urn: '495078'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
@@ -403,6 +424,27 @@ paths:
           description: The NPQ participant being deferred
           content:
             application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: 7acaabaf-71ec-4836-be82-5ae59863fdf7
+                      type: npq-participant
+                      attributes:
+                        email: 101.john.doe@doyle.test
+                        full_name: John Doe 163
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:30Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 58b364cb-1633-41d5-8d1d-eab55bedc986
+                          eligible_for_funding: true
+                          training_status: deferred
+                          school_urn: '495078'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
@@ -453,6 +495,27 @@ paths:
           description: The NPQ participant being withdrawn
           content:
             application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: 7acaabaf-71ec-4836-be82-5ae59863fdf7
+                      type: npq-participant
+                      attributes:
+                        email: 101.john.doe@doyle.test
+                        full_name: John Doe 163
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:30Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 58b364cb-1633-41d5-8d1d-eab55bedc986
+                          eligible_for_funding: true
+                          training_status: withdrawn
+                          school_urn: '495078'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
