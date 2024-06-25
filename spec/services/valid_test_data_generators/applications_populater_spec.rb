@@ -65,6 +65,12 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
           subject.populate
         }.to(change { Application.eligible_for_funding.count })
       end
+
+      it "creates declarations" do
+        expect {
+          subject.populate
+        }.to(change(Declaration, :count))
+      end
     end
   end
 end

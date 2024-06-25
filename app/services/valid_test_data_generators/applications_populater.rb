@@ -44,6 +44,7 @@ module ValidTestDataGenerators
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
       accept_application(application)
+      create_declarations(application)
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
@@ -91,6 +92,19 @@ module ValidTestDataGenerators
     def reject_application(application)
       Applications::Reject.new(application:).reject
       application.reload
+    end
+
+    def create_declarations(application)
+      %w[started retained-1 retained-2 completed].each do |declaration_type|
+        break if Faker::Boolean.boolean(true_ratio: 0.5)
+
+        FactoryBot.create(
+          :declaration,
+          :submitted_or_eligible,
+          application:,
+          declaration_type:,
+        )
+      end
     end
   end
 end
