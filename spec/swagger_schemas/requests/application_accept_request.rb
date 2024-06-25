@@ -11,7 +11,6 @@ APPLICATION_ACCEPT_REQUEST = {
           type: {
             description: "The data typed",
             type: :string,
-            example: "npq-application-accept",
           },
           attributes: {
             description: "A NPQ application acceptance request attributes",
@@ -22,7 +21,6 @@ APPLICATION_ACCEPT_REQUEST = {
                 nullable: false,
                 type: :boolean,
                 required: false,
-                example: true,
               },
             },
           },
@@ -44,7 +42,6 @@ APPLICATION_ACCEPT_REQUEST = {
           type: {
             description: "The data typed",
             type: :string,
-            example: "npq-application-accept",
           },
           attributes: {
             description: "A NPQ application acceptance request attributes",
@@ -55,13 +52,11 @@ APPLICATION_ACCEPT_REQUEST = {
                 nullable: false,
                 type: :boolean,
                 required: false,
-                example: true,
               },
               schedule_identifier: {
                 description: "The new schedule of the participant",
                 nullable: false,
                 type: :string,
-                example: "npq-leadership-spring",
                 required: false,
                 enum: %w[
                   npq-aso-march

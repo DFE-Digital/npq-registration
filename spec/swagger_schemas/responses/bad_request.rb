@@ -9,11 +9,9 @@ BAD_REQUEST_RESPONSE = {
         properties: {
           title: {
             type: :string,
-            example: "Bad request",
           },
           detail: {
             type: :string,
-            example: "correct json data structure required. See API docs for reference",
           },
         },
       },

@@ -10,7 +10,6 @@ PARTICIPANT_RESUME_REQUEST = {
         type: {
           description: "The data typed",
           type: :string,
-          example: "participant-resume",
         },
         attributes: {
           description: "A participant resume request attributes",
@@ -21,7 +20,6 @@ PARTICIPANT_RESUME_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: Course::IDENTIFIERS.first,
               enum: Course::IDENTIFIERS,
             },
           },

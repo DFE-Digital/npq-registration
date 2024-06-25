@@ -44,6 +44,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
     let(:action) { "npq-application-accept" }
     let(:attributes) { { funded_place: false, schedule_identifier: "npq-leadership-spring" } }
     let(:invalid_attributes) { { funded_place: nil } }
+    let(:type) { "npq-application-accept" }
   end
 
   it_behaves_like "an API create on resource endpoint documentation",
@@ -68,5 +69,6 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
     let(:action) { "npq-application-change-funded-place" }
     let(:attributes) { { funded_place: true } }
     let(:invalid_attributes) { { funded_place: nil } }
+    let(:type) { "npq-application-change-funded-place" }
   end
 end

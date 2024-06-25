@@ -10,7 +10,6 @@ PARTICIPANT = {
       type: {
         description: "The data type",
         type: :string,
-        example: "npq-participant",
         enum: %w[
           npq-participant
         ],
@@ -22,19 +21,16 @@ PARTICIPANT = {
             type: :string,
             format: :uuid,
             nullable: false,
-            example: "db3a7848-7308-4879-942a-c4a70ced400a",
           },
           full_name: {
             description: "The full name of this NPQ participant",
             type: :string,
             nullable: false,
-            example: "Isabelle MacDonald",
           },
           email: {
             description: "The email address registered for this NPQ participant",
             type: :string,
             nullable: false,
-            example: "isabelle.macdonald2@some-school.example.com",
           },
           npq_courses: {
             description: "The type of course(s) the participant is enrolled in",
@@ -42,7 +38,6 @@ PARTICIPANT = {
             items: {
               type: :string,
               nullable: false,
-              example: "npq-leading-teaching",
               enum: %w[
                 npq-leading-teaching
                 npq-leading-behaviour-culture
@@ -70,7 +65,6 @@ PARTICIPANT = {
                   description: "The type of course the participant is enrolled in",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
                   enum: %w[
                     npq-leading-teaching
                     npq-leading-behaviour-culture
@@ -89,7 +83,6 @@ PARTICIPANT = {
                 funded_place: {
                   description: "Indicates whether this NPQ participant is funded by DfE",
                   type: :boolean,
-                  example: true,
                   nullable: true,
                 },
                 npq_application_id: {
@@ -97,7 +90,6 @@ PARTICIPANT = {
                   type: :string,
                   format: :uuid,
                   nullable: false,
-                  example: "db3a7848-7308-4879-942a-c4a70ced400a",
                 },
               },
             },
@@ -105,14 +97,12 @@ PARTICIPANT = {
           teacher_reference_number: {
             description: "The Teacher Reference Number (TRN) for this NPQ participant",
             type: :string,
-            example: "1234567",
           },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
             nullable: false,
             format: :"date-time",
-            example: "2021-05-31T02:22:32.000Z",
           },
         },
       },
@@ -129,7 +119,6 @@ PARTICIPANT = {
       type: {
         description: "The data type",
         type: :string,
-        example: "npq-participant",
         enum: %w[
           npq-participant
         ],
@@ -140,25 +129,21 @@ PARTICIPANT = {
             description: "The email address registered for this NPQ participant",
             type: :string,
             nullable: false,
-            example: "isabelle.macdonald2@some-school.example.com",
           },
           full_name: {
             description: "The full name of this NPQ participant",
             type: :string,
             nullable: false,
-            example: "Isabelle MacDonald",
           },
           teacher_reference_number: {
             description: "The Teacher Reference Number (TRN) for this NPQ participant",
             type: :string,
-            example: "1234567",
           },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
             nullable: false,
             format: :"date-time",
-            example: "2021-05-31T02:22:32.000Z",
           },
           npq_enrolments: {
             description: "Information about the course(s) the participant is enroled in",
@@ -172,7 +157,6 @@ PARTICIPANT = {
                   description: "The NPQ course this NPQ application relates to",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
                   enum: %w[
                     npq-leading-teaching
                     npq-leading-behaviour-culture
@@ -192,7 +176,6 @@ PARTICIPANT = {
                   description: "The new schedule of the participant",
                   nullable: true,
                   type: :string,
-                  example: "npq-leadership-spring",
                   enum: %w[
                     npq-aso-march
                     npq-aso-june
@@ -212,20 +195,17 @@ PARTICIPANT = {
                   description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
                   type: :string,
                   nullable: true,
-                  example: "2022",
                 },
                 eligible_for_funding: {
                   description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
                   type: :boolean,
                   nullable: false,
-                  example: true,
                 },
                 npq_application_id: {
                   description: "The ID of the NPQ application that was accepted to create this enrolment",
                   type: :string,
                   format: :uuid,
                   nullable: false,
-                  example: "db3a7848-7308-4879-942a-c4a70ced400a",
                 },
                 training_status: {
                   description: "The training status of the NPQ participant",
@@ -235,25 +215,21 @@ PARTICIPANT = {
                     deferred
                     withdrawn
                   ],
-                  example: "active",
                 },
                 school_urn: {
                   description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
                   type: :string,
                   nullable: true,
-                  example: "106286",
                 },
                 targeted_delivery_funding_eligibility: {
                   description: "Whether or not this application is eligible for Targeted Delivery Funding uplift",
                   nullable: false,
                   type: :boolean,
-                  example: true,
                 },
                 funded_place: {
                   description: "Indicates whether this NPQ participant is funded by DfE",
                   nullable: true,
                   type: :boolean,
-                  example: true,
                 },
               },
             },
@@ -273,7 +249,6 @@ PARTICIPANT = {
       type: {
         description: "The data type",
         type: :string,
-        example: "npq-participant",
         enum: %w[
           npq-participant
         ],
@@ -284,19 +259,16 @@ PARTICIPANT = {
             description: "The full name of this NPQ participant",
             type: :string,
             nullable: false,
-            example: "Isabelle MacDonald",
           },
           teacher_reference_number: {
             description: "The Teacher Reference Number (TRN) for this NPQ participant",
             type: :string,
-            example: "1234567",
           },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
             nullable: false,
             format: :"date-time",
-            example: "2021-05-31T02:22:32.000Z",
           },
           npq_enrolments: {
             description: "Information about the course(s) the participant is enroled in",
@@ -310,13 +282,11 @@ PARTICIPANT = {
                   description: "The email address registered for this NPQ participant",
                   type: :string,
                   nullable: false,
-                  example: "isabelle.macdonald2@some-school.example.com",
                 },
                 course_identifier: {
                   description: "The NPQ course this NPQ application relates to",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
                   enum: %w[
                     npq-leading-teaching
                     npq-leading-behaviour-culture
@@ -336,7 +306,6 @@ PARTICIPANT = {
                   description: "The new schedule of the participant",
                   nullable: true,
                   type: :string,
-                  example: "npq-leadership-spring",
                   enum: %w[
                     npq-aso-march
                     npq-aso-june
@@ -356,20 +325,17 @@ PARTICIPANT = {
                   description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
                   type: :string,
                   nullable: true,
-                  example: "2022",
                 },
                 eligible_for_funding: {
                   description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
                   type: :boolean,
                   nullable: false,
-                  example: true,
                 },
                 npq_application_id: {
                   description: "The ID of the NPQ application that was accepted to create this enrolment",
                   type: :string,
                   format: :uuid,
                   nullable: false,
-                  example: "db3a7848-7308-4879-942a-c4a70ced400a",
                 },
                 training_status: {
                   description: "The training status of the NPQ participant",
@@ -379,32 +345,27 @@ PARTICIPANT = {
                     deferred
                     withdrawn
                   ],
-                  example: "active",
                 },
                 school_urn: {
                   description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
                   type: :string,
                   nullable: true,
-                  example: "106286",
                 },
                 targeted_delivery_funding_eligibility: {
                   description: "Whether or not this application is eligible for Targeted Delivery Funding uplift",
                   nullable: false,
                   type: :boolean,
-                  example: true,
                 },
                 withdrawal: {
                   description: "The details of an NPQ Participant withdrawal",
                   type: :object,
                   nullable: true,
                   required: %i[reason date],
-                  example: nil,
                   properties: {
                     reason: {
                       description: "The reason a participant was withdrawn",
                       type: :string,
                       nullable: false,
-                      example: "personal-reason-moving-school",
                       enum: %w[
                         insufficient-capacity-to-undertake-programme
                         personal-reason-health-or-pregnancy-related
@@ -430,7 +391,6 @@ PARTICIPANT = {
                       type: :string,
                       nullable: false,
                       format: :"date-time",
-                      example: "2021-05-31T02:22:32.000Z",
                     },
                   },
                 },
@@ -439,13 +399,11 @@ PARTICIPANT = {
                   type: :object,
                   nullable: true,
                   required: %i[reason date],
-                  example: nil,
                   properties: {
                     reason: {
                       description: "The reason a participant was deferred",
                       type: :string,
                       nullable: false,
-                      example: "career-break",
                       enum: %w[
                         bereavement
                         long-term-sickness
@@ -459,7 +417,6 @@ PARTICIPANT = {
                       type: :string,
                       nullable: false,
                       format: :"date-time",
-                      example: "2021-05-31T02:22:32.000Z",
                     },
                   },
                 },
@@ -468,13 +425,11 @@ PARTICIPANT = {
                   type: :string,
                   nullable: false,
                   format: :"date-time",
-                  example: "2021-05-31T02:21:32.000Z",
                 },
                 funded_place: {
                   description: "Indicates whether this NPQ participant is funded by DfE",
                   nullable: true,
                   type: :boolean,
-                  example: true,
                 },
               },
             },
@@ -491,19 +446,16 @@ PARTICIPANT = {
                   description: "The unique identifier of the changed from participant training record.",
                   type: :string,
                   format: :uuid,
-                  example: "23dd8d66-e11f-4139-9001-86b4f9abcb02",
                 },
                 to_participant_id: {
                   description: "The unique identifier of the changed to participant training record.",
                   type: :string,
                   format: :uuid,
-                  example: "ac3d1243-7308-4879-942a-c4a70ced400a",
                 },
                 changed_at: {
                   description: "The date and time the Participant ID change",
                   type: :string,
                   format: :"date-time",
-                  example: "2021-05-31T02:22:32.000Z",
                 },
               },
             },

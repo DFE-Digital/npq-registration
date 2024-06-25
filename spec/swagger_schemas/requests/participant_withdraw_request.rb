@@ -10,7 +10,6 @@ PARTICIPANT_WITHDRAW_REQUEST = {
         type: {
           description: "The data typed",
           type: :string,
-          example: "participant-withdraw",
         },
         attributes: {
           description: "A participant withdraw request attributes",
@@ -21,7 +20,6 @@ PARTICIPANT_WITHDRAW_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: Course::IDENTIFIERS.first,
               enum: Course::IDENTIFIERS,
             },
             reason: {
@@ -29,7 +27,6 @@ PARTICIPANT_WITHDRAW_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: Participants::Withdraw::WITHDRAWL_REASONS.first,
               enum: Participants::Withdraw::WITHDRAWL_REASONS,
             },
           },

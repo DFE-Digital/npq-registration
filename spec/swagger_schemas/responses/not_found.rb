@@ -7,7 +7,4 @@ NOT_FOUND_RESPONSE = {
       description: "Resource not found",
     },
   },
-  example: {
-    error: "Resource not found",
-  },
 }.freeze

@@ -10,7 +10,6 @@ PARTICIPANT_DEFER_REQUEST = {
         type: {
           description: "The data typed",
           type: :string,
-          example: "participant-defer",
         },
         attributes: {
           description: "A participant defer request attributes",
@@ -21,7 +20,6 @@ PARTICIPANT_DEFER_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: Course::IDENTIFIERS.first,
               enum: Course::IDENTIFIERS,
             },
             reason: {
@@ -29,7 +27,6 @@ PARTICIPANT_DEFER_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: Participants::Defer::DEFERRAL_REASONS.first,
               enum: Participants::Defer::DEFERRAL_REASONS,
             },
           },

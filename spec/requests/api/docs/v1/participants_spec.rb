@@ -46,7 +46,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v1/sw
     before { application.withdrawn! }
 
     let(:resource) { participant }
-    let(:action) { "participant-resume" }
+    let(:type) { "participant-resume" }
     let(:attributes) { { course_identifier: course.identifier } }
     let(:invalid_attributes) { { course_identifier: "invalid" } }
   end
@@ -59,7 +59,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v1/sw
                   "#/components/schemas/ParticipantResponse",
                   "#/components/schemas/ParticipantDeferRequest" do
     let(:resource) { participant }
-    let(:action) { "participant-defer" }
+    let(:type) { "participant-defer" }
     let(:attributes) { { course_identifier: course.identifier, reason: Participants::Defer::DEFERRAL_REASONS.sample } }
     let(:invalid_attributes) { { course_identifier: "invalid" } }
   end
@@ -72,7 +72,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v1/sw
                   "#/components/schemas/ParticipantResponse",
                   "#/components/schemas/ParticipantWithdrawRequest" do
     let(:resource) { participant }
-    let(:action) { "participant-withdraw" }
+    let(:type) { "participant-withdraw" }
     let(:attributes) { { course_identifier: course.identifier, reason: Participants::Withdraw::WITHDRAWL_REASONS.sample } }
     let(:invalid_attributes) { { course_identifier: "invalid" } }
   end

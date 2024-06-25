@@ -11,7 +11,6 @@ APPLICATION_CHANGE_FUNDED_PLACE_REQUEST = {
         type: {
           description: "The data typed",
           type: :string,
-          example: "npq-application-change-funded-place",
         },
         attributes: {
           description: "A NPQ application change funded place request attributes",
@@ -23,7 +22,6 @@ APPLICATION_CHANGE_FUNDED_PLACE_REQUEST = {
               nullable: false,
               type: :boolean,
               required: true,
-              example: true,
             },
           },
         },

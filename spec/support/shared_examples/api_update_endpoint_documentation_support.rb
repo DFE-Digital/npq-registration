@@ -26,7 +26,7 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
       let(:params) do
         {
           data: {
-            type: action,
+            type:,
             attributes:,
           },
         }

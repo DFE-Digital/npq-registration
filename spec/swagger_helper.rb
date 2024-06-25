@@ -85,4 +85,31 @@ RSpec.configure do |config|
   # the key, this may want to be changed to avoid putting yaml in json files.
   # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
+  config.after do |example|
+    metadata = example.metadata
+    response_types = metadata.dig(:operation, :produces) || []
+
+    # Only run for the API doc specs that return JSON (excludes CSV endpoints).
+    if metadata[:openapi_spec] && "application/json".in?(response_types)
+      response_example = {
+        "application/json" => {
+          examples: {
+            response_example: {
+              value: JSON.parse(response.body, symbolize_names: true),
+            },
+          },
+        },
+      }
+      example.metadata[:response][:content] = response_example
+
+      if request.body.string.present?
+        request_example = {
+          value: JSON.parse(request.body.string, symbolize_names: true),
+          name: "request_example_#{metadata[:full_description].parameterize(separator: "_")}",
+        }
+        example.metadata[:operation][:request_examples] = [request_example]
+      end
+    end
+  end
 end

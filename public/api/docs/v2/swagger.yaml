@@ -30,12 +30,52 @@ paths:
           description: A list of NPQ applications
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                    - id: '0588c2a7-638a-4d72-aa9d-b67541a31999'
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senior-leadership
+                        email: 61.doe.john@pollich-pfeffer.test
+                        email_validated: true
+                        employer_name:
+                        employment_role:
+                        full_name: John Doe 61
+                        funding_choice: school
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason: establishment-ineligible
+                        participant_id: d79c0c1b-aeb3-41e5-9e6f-e4ca11316b61
+                        private_childcare_provider_urn:
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: false
+                        school_urn: '862321'
+                        school_ukprn: '15457222'
+                        status: pending
+                        works_in_school: true
+                        cohort: '2023'
+                        eligible_for_funding: false
+                        targeted_delivery_funding_eligibility: false
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: amazing ITT provider 41
+                        lead_mentor: false
+                        funded_place:
+                        created_at: '2024-06-25T12:01:28Z'
+                        updated_at: '2024-06-25T12:01:28Z'
               schema:
                 "$ref": "#/components/schemas/ApplicationsResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v2/npq-applications.csv":
@@ -82,18 +122,62 @@ paths:
           description: A single NPQ application
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: 7eac2508-108f-4dd8-80fc-61d8b4d519ba
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senior-leadership
+                        email: doe.65.john@boehm.test
+                        email_validated: true
+                        employer_name:
+                        employment_role:
+                        full_name: John Doe 65
+                        funding_choice: school
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason: establishment-ineligible
+                        participant_id: 125ea807-6552-4ef6-bafd-44ffd647572a
+                        private_childcare_provider_urn:
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: false
+                        school_urn: '656816'
+                        school_ukprn: '96018856'
+                        status: pending
+                        works_in_school: true
+                        cohort: '2023'
+                        eligible_for_funding: false
+                        targeted_delivery_funding_eligibility: false
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: amazing ITT provider 45
+                        lead_mentor: false
+                        funded_place:
+                        created_at: '2024-06-25T12:01:28Z'
+                        updated_at: '2024-06-25T12:01:28Z'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v2/npq-applications/{id}/accept":
@@ -114,30 +198,87 @@ paths:
           description: The NPQ application being accepted
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: e6c44ec5-f5cf-4bbe-93cc-f45fbdc9bc68
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senior-leadership
+                        email: doe.68.john@morissette.test
+                        email_validated: true
+                        employer_name:
+                        employment_role:
+                        full_name: John Doe 68
+                        funding_choice: employer
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason: establishment-ineligible
+                        participant_id: d14477e2-0f10-4d8b-8efa-0e1e74a2c831
+                        private_childcare_provider_urn:
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: false
+                        school_urn: '910011'
+                        school_ukprn: '96405557'
+                        status: accepted
+                        works_in_school: true
+                        cohort: '2023'
+                        eligible_for_funding: false
+                        targeted_delivery_funding_eligibility: false
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: amazing ITT provider 48
+                        lead_mentor: true
+                        funded_place: false
+                        created_at: '2024-06-25T12:01:28Z'
+                        updated_at: '2024-06-25T12:01:28Z'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '400':
           description: Bad request
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: Bad request
+                      detail: correct json data structure required. See API docs for
+                        reference
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
           description: Unprocessable entity
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: application
+                      detail: Set '#/funded_place' to true or false.
               schema:
                 "$ref": "#/components/schemas/UnprocessableEntityResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
@@ -145,6 +286,14 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationAcceptRequest"
+            examples:
+              ? request_example_npq_applications_endpoint_behaves_like_an_api_create_on_resource_endpoint_documentation_api_v2_npq-applications_id_accept_post_not_found_returns_a_404_response
+              : summary: Accept an NPQ application
+                value:
+                  data:
+                    type: npq-application-accept
+                    attributes:
+                      funded_place: false
   "/api/v2/npq-applications/{id}/reject":
     post:
       summary: Reject an NPQ application
@@ -163,18 +312,62 @@ paths:
           description: The NPQ application being rejected
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: b27e2fdf-9635-4f56-a0b3-3c371eb2d99a
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senior-leadership
+                        email: john_doe_73@deckow-ziemann.example
+                        email_validated: true
+                        employer_name:
+                        employment_role:
+                        full_name: John Doe 73
+                        funding_choice: self
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason: establishment-ineligible
+                        participant_id: 65cbf868-89ff-47ac-a1aa-1b62b2c9519b
+                        private_childcare_provider_urn:
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: false
+                        school_urn: '752445'
+                        school_ukprn: '27143740'
+                        status: rejected
+                        works_in_school: true
+                        cohort: '2023'
+                        eligible_for_funding: false
+                        targeted_delivery_funding_eligibility: false
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: amazing ITT provider 53
+                        lead_mentor: false
+                        funded_place:
+                        created_at: '2024-06-25T12:01:29Z'
+                        updated_at: '2024-06-25T12:01:29Z'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v2/npq-applications/{id}/change-funded-place":
@@ -195,30 +388,88 @@ paths:
           description: The NPQ application after changing the funded place
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: dd638472-0236-4b68-83c2-f20c3b8dd364
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senco
+                        email: doe.76.john@casper-gorczany.example
+                        email_validated: true
+                        employer_name:
+                        employment_role:
+                        full_name: John Doe 76
+                        funding_choice: self
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason:
+                        participant_id: 1a360185-cc50-4183-8bc5-78dbe810935f
+                        private_childcare_provider_urn:
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: false
+                        school_urn: '510743'
+                        school_ukprn: '70605260'
+                        status: accepted
+                        works_in_school: true
+                        cohort: '2028'
+                        eligible_for_funding: true
+                        targeted_delivery_funding_eligibility: false
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: amazing ITT provider 56
+                        lead_mentor: true
+                        funded_place: true
+                        created_at: '2024-06-25T12:01:29Z'
+                        updated_at: '2024-06-25T12:01:29Z'
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '400':
           description: Bad request
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: Bad request
+                      detail: correct json data structure required. See API docs for
+                        reference
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
           description: Unprocessable entity
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: funded_place
+                      detail: The entered '#/funded_place' is missing from your request.
+                        Check details and try again.
               schema:
                 "$ref": "#/components/schemas/UnprocessableEntityResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
@@ -226,6 +477,14 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+            examples:
+              ? request_example_npq_applications_endpoint_behaves_like_an_api_update_endpoint_documentation_api_v2_npq-applications_id_change-funded-place_put_not_found_returns_a_404_response
+              : summary: Change funded place value of an NPQ application
+                value:
+                  data:
+                    type: npq-application-change-funded-place
+                    attributes:
+                      funded_place: true
         required: true
   "/api/v2/npq-enrolments.csv":
     get:
@@ -276,12 +535,37 @@ paths:
           description: A list of NPQ participants
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                    - id: 259d56ba-21cf-4586-9fe3-d75db30cebc2
+                      type: npq-participant
+                      attributes:
+                        email: john.81.doe@stracke-parker.test
+                        full_name: John Doe 81
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:29Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 1bbae83e-7e42-407f-b4e0-8cc4843e1723
+                          eligible_for_funding: true
+                          training_status: active
+                          school_urn: '805716'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantsResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v2/participants/npq/{id}":
@@ -302,18 +586,47 @@ paths:
           description: A single NPQ participant
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: 5e72292c-3328-41b3-b808-7bd1a76e91f5
+                      type: npq-participant
+                      attributes:
+                        email: john.85.doe@nikolaus.test
+                        full_name: John Doe 85
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:29Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: fe42f097-ee4d-4800-9a4a-0a14cb83dd50
+                          eligible_for_funding: true
+                          training_status: active
+                          school_urn: '546304'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v2/participants/npq/{id}/resume":
@@ -334,30 +647,76 @@ paths:
           description: The NPQ participant being resumed
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: 98527e7a-d113-4390-ba15-0e6b1a2e0665
+                      type: npq-participant
+                      attributes:
+                        email: doe.91.john@prosacco.test
+                        full_name: John Doe 91
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:29Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 66f73e7e-f21a-4306-8f7d-8cb7fec17b8f
+                          eligible_for_funding: true
+                          training_status: active
+                          school_urn: '623818'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '400':
           description: Bad request
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: Bad request
+                      detail: correct json data structure required. See API docs for
+                        reference
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
           description: Unprocessable entity
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: course_identifier
+                      detail: The entered '#/course_identifier' is not recognised
+                        for the given participant. Check details and try again.
+                    - title: participant
+                      detail: Your update cannot be made as the '#/participant_id'
+                        is not recognised. Check participant details and try again.
               schema:
                 "$ref": "#/components/schemas/UnprocessableEntityResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
@@ -365,6 +724,14 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ParticipantResumeRequest"
+            examples:
+              ? request_example_npq_participants_endpoint_behaves_like_an_api_update_endpoint_documentation_api_v2_participants_npq_id_resume_put_not_found_returns_a_404_response
+              : summary: Resume an NPQ participant
+                value:
+                  data:
+                    type: participant-resume
+                    attributes:
+                      course_identifier: npq-early-headship-coaching-offer
         required: true
   "/api/v2/participants/npq/{id}/defer":
     put:
@@ -384,30 +751,78 @@ paths:
           description: The NPQ participant being deferred
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: 61afbc7f-70b4-4aae-9998-eeb6518a5d86
+                      type: npq-participant
+                      attributes:
+                        email: 101.john.doe@doyle.test
+                        full_name: John Doe 101
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:29Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: 57a88fb7-2b76-46bf-a3a5-a6f075fd9358
+                          eligible_for_funding: true
+                          training_status: deferred
+                          school_urn: '340301'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '400':
           description: Bad request
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: Bad request
+                      detail: correct json data structure required. See API docs for
+                        reference
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
           description: Unprocessable entity
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: course_identifier
+                      detail: The entered '#/course_identifier' is not recognised
+                        for the given participant. Check details and try again.
+                    - title: participant
+                      detail: Your update cannot be made as the '#/participant_id'
+                        is not recognised. Check participant details and try again.
+                    - title: reason
+                      detail: The property '#/reason' must be a valid reason
               schema:
                 "$ref": "#/components/schemas/UnprocessableEntityResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
@@ -415,6 +830,15 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ParticipantDeferRequest"
+            examples:
+              ? request_example_npq_participants_endpoint_behaves_like_an_api_update_endpoint_documentation_api_v2_participants_npq_id_defer_put_not_found_returns_a_404_response
+              : summary: Defer an NPQ participant
+                value:
+                  data:
+                    type: participant-defer
+                    attributes:
+                      course_identifier: npq-early-headship-coaching-offer
+                      reason: parental-leave
         required: true
   "/api/v2/participants/npq/{id}/withdraw":
     put:
@@ -434,30 +858,81 @@ paths:
           description: The NPQ participant being withdrawn
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    data:
+                      id: f4e840b6-133a-49a4-9610-e3e541a47e51
+                      type: npq-participant
+                      attributes:
+                        email: john.111.doe@fahey.test
+                        full_name: John Doe 111
+                        teacher_reference_number: '1234567'
+                        updated_at: '2024-06-25T12:01:29Z'
+                        npq_enrolments:
+                        - course_identifier: npq-early-headship-coaching-offer
+                          schedule_identifier: npq-ehco-december
+                          cohort: '2023'
+                          npq_application_id: b88a40b3-492d-4016-b2af-863c1729e762
+                          eligible_for_funding: true
+                          training_status: withdrawn
+                          school_urn: '334681'
+                          targeted_delivery_funding_eligibility: false
+                          funded_place: true
               schema:
                 "$ref": "#/components/schemas/ParticipantResponse"
         '401':
           description: Unauthorized
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: 'HTTP Token: Access denied'
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
         '400':
           description: Bad request
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: Bad request
+                      detail: correct json data structure required. See API docs for
+                        reference
               schema:
                 "$ref": "#/components/schemas/BadRequestResponse"
         '422':
           description: Unprocessable entity
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    errors:
+                    - title: course_identifier
+                      detail: The entered '#/course_identifier' is not recognised
+                        for the given participant. Check details and try again.
+                    - title: participant
+                      detail: Your update cannot be made as the '#/participant_id'
+                        is not recognised. Check participant details and try again.
+                    - title: participant
+                      detail: An NPQ participant who has not got a started declaration
+                        cannot be withdrawn. Please contact support for assistance
+                    - title: reason
+                      detail: The property '#/reason' must be a valid reason
               schema:
                 "$ref": "#/components/schemas/UnprocessableEntityResponse"
         '404':
           description: Not found
           content:
             application/json:
+              examples:
+                response_example:
+                  value:
+                    error: Resource not found
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
       requestBody:
@@ -465,6 +940,15 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ParticipantWithdrawRequest"
+            examples:
+              ? request_example_npq_participants_endpoint_behaves_like_an_api_update_endpoint_documentation_api_v2_participants_npq_id_withdraw_put_not_found_returns_a_404_response
+              : summary: Withdraw an NPQ participant
+                value:
+                  data:
+                    type: participant-withdraw
+                    attributes:
+                      course_identifier: npq-early-headship-coaching-offer
+                      reason: programme-not-appropriate-for-role-and-cpd-needs
         required: true
 servers:
 - url: https://npq-registration-sandbox-web.teacherservices.cloud/
@@ -528,7 +1012,6 @@ components:
       properties:
         error:
           type: string
-          example: 'HTTP Token: Access denied'
     NotFoundResponse:
       description: The requested resource was not found.
       type: object
@@ -536,8 +1019,6 @@ components:
         error:
           type: string
           description: Resource not found
-      example:
-        error: Resource not found
     BadRequestResponse:
       description: The request body did not match the expected payload.
       type: object
@@ -549,10 +1030,8 @@ components:
             properties:
               title:
                 type: string
-                example: Bad request
               detail:
                 type: string
-                example: correct json data structure required. See API docs for reference
     UnprocessableEntityResponse:
       description: The payload was not valid. See the errors for more information.
       type: object
@@ -564,11 +1043,8 @@ components:
             properties:
               title:
                 type: string
-                example: course_identifier
               detail:
                 type: string
-                example: The entered '#/course_identifier' is not recognised for the
-                  given participant. Check details and try again.
     IDAttribute:
       description: The unique ID of the resource.
       type: string
@@ -605,7 +1081,6 @@ components:
         type:
           description: The data type
           type: string
-          example: npq_application
           enum:
           - npq_application
         attributes:
@@ -614,7 +1089,6 @@ components:
               description: The NPQ course this NPQ application relates to
               type: string
               nullable: false
-              example: npq-leading-teaching
               enum:
               - npq-leading-teaching
               - npq-leading-behaviour-culture
@@ -632,34 +1106,28 @@ components:
               description: The email address registered for this NPQ participant
               type: string
               nullable: false
-              example: isabelle.macdonald2@some-school.example.com
             email_validated:
               description: Indicates whether the email address has been validated
               type: boolean
-              example: true
             employer_name:
               description: The name of current employer of the participant if not
                 currently employed by school
               type: string
               nullable: true
-              example: Some Company Ltd
             employment_role:
               description: Participant's current role in the company they are employed
                 in if not currently employed by school
               type: string
               nullable: true
-              example: Director
             full_name:
               description: The full name of this NPQ participant
               type: string
               nullable: false
-              example: Isabelle MacDonald
             funding_choice:
               description: Indicates how this NPQ participant has said they will funded
                 their training
               type: string
               nullable: true
-              example: trust
               enum:
               - school
               - trust
@@ -670,7 +1138,6 @@ components:
               description: Indicates whether this NPQ participant is or will be a
                 head teacher
               type: string
-              example: 'no'
               enum:
               - 'no'
               - yes_when_course_starts
@@ -683,47 +1150,39 @@ components:
                 DfE funding
               type: string
               nullable: true
-              example: establishment-ineligible
               enum:
               - establishment-ineligible
               - previously-funded
             participant_id:
               description: The unique identifier of this NPQ participant
               type: string
-              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
               format: uuid
             private_childcare_provider_urn:
               description: The Unique Reference Number (URN) of the private child
                 care provider
               type: string
-              example: EY944860
               nullable: true
             teacher_reference_number:
               description: The Teacher Reference Number (TRN) for this NPQ participant
               type: string
-              example: '1234567'
             teacher_reference_number_validated:
               description: Indicates whether the Teacher Reference Number (TRN) has
                 been validated
               type: boolean
               nullable: false
-              example: true
             school_urn:
               description: The Unique Reference Number (URN) of the school where this
                 NPQ participant is employed
               type: string
-              example: '106286'
             school_ukprn:
               description: The UK Provider Reference Number (UK Provider Reference
                 Number) of the school where this NPQ participant is employed
               nullable: true
               type: string
-              example: '10079319'
             status:
               description: The current state of the NPQ application
               type: string
               nullable: true
-              example: pending
               enum:
               - pending
               - accepted
@@ -732,19 +1191,16 @@ components:
               description: Indicates whether the participant is currently employed
                 by school
               type: boolean
-              example: true
             created_at:
               description: The date the application was created
               type: string
               nullable: false
               format: date-time
-              example: '2021-05-31T02:21:32.000Z'
             updated_at:
               description: The date the application was last updated
               type: string
               nullable: false
               format: date-time
-              example: '2021-05-31T02:22:32.000Z'
             cohort:
               description: Indicates which call-off contract would fund this participant's
                 training. 2021 indicates a participant that has started, or will start,
@@ -753,18 +1209,15 @@ components:
                 point of submitting a started declaration.
               type: string
               nullable: true
-              example: '2022'
             eligible_for_funding:
               description: Indicates whether this NPQ participant would be eligible
                 for funding from the DfE
               type: boolean
-              example: true
             targeted_delivery_funding_eligibility:
               description: Whether or not this application is eligible for Targeted
                 Delivery Funding uplift
               nullable: false
               type: boolean
-              example: true
             teacher_catchment:
               description: This field will indicate whether or not the participant
                 is UK-based. <ul><li>If <code>true</code> then the registration relates
@@ -772,20 +1225,17 @@ components:
                 the registration relates to a participant who is not UK-based.</li></ul>
               nullable: true
               type: boolean
-              example: true
             teacher_catchment_country:
               description: This field shows the text entered by the participant during
                 their NPQ online registration.
               nullable: true
               type: string
-              example: United Kingdom of Great Britain and Northern Ireland
             teacher_catchment_iso_country_code:
               description: |-
                 This field identifies which non-UK country the participant has registered from.
                 The API uses <a href="https://www.iso.org/iso-3166-country-codes.html" class="govuk-link" rel="noreferrer noopener" target="_blank">ISO 3166 alpha-3 codes</a>, three-letter codes published by the International Organization for Standardization (ISO) to represent countries, dependent territories, and special areas of geographical interest.
               nullable: true
               type: string
-              example: GBR
             itt_provider:
               description: This field contains the legal name of the ITT accredited
                 provider from the <a href="https://www.gov.uk/government/publications/accredited-initial-teacher-training-itt-providers/list-of-providers-accredited-to-deliver-itt-from-september-2024"
@@ -793,18 +1243,15 @@ components:
                 of providers</a>.
               nullable: true
               type: string
-              example: University of Southampton
             lead_mentor:
               description: This field indicates whether the applicant is an ITT lead
                 mentor.
               nullable: true
               type: boolean
-              example: true
             funded_place:
               description: This field indicates whether the application is funded
               nullable: true
               type: boolean
-              example: true
     ApplicationAcceptRequest:
       description: A NPQ application acceptance request
       type: object
@@ -819,7 +1266,6 @@ components:
             type:
               description: The data typed
               type: string
-              example: npq-application-accept
             attributes:
               description: A NPQ application acceptance request attributes
               type: object
@@ -829,7 +1275,6 @@ components:
                   nullable: false
                   type: boolean
                   required: false
-                  example: true
     ApplicationChangeFundedPlaceRequest:
       description: A NPQ application change funded place request
       type: object
@@ -846,7 +1291,6 @@ components:
             type:
               description: The data typed
               type: string
-              example: npq-application-change-funded-place
             attributes:
               description: A NPQ application change funded place request attributes
               type: object
@@ -858,7 +1302,6 @@ components:
                   nullable: false
                   type: boolean
                   required: true
-                  example: true
     EnrolmentsCsvResponse:
       description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
       properties:
@@ -1212,7 +1655,6 @@ components:
         type:
           description: The data type
           type: string
-          example: npq-participant
           enum:
           - npq-participant
         attributes:
@@ -1221,22 +1663,18 @@ components:
               description: The email address registered for this NPQ participant
               type: string
               nullable: false
-              example: isabelle.macdonald2@some-school.example.com
             full_name:
               description: The full name of this NPQ participant
               type: string
               nullable: false
-              example: Isabelle MacDonald
             teacher_reference_number:
               description: The Teacher Reference Number (TRN) for this NPQ participant
               type: string
-              example: '1234567'
             updated_at:
               description: The date the application was last updated
               type: string
               nullable: false
               format: date-time
-              example: '2021-05-31T02:22:32.000Z'
             npq_enrolments:
               description: Information about the course(s) the participant is enroled
                 in
@@ -1255,7 +1693,6 @@ components:
                     description: The NPQ course this NPQ application relates to
                     type: string
                     nullable: false
-                    example: npq-leading-teaching
                     enum:
                     - npq-leading-teaching
                     - npq-leading-behaviour-culture
@@ -1273,7 +1710,6 @@ components:
                     description: The new schedule of the participant
                     nullable: true
                     type: string
-                    example: npq-leadership-spring
                     enum:
                     - npq-aso-march
                     - npq-aso-june
@@ -1296,20 +1732,17 @@ components:
                       declaration.
                     type: string
                     nullable: true
-                    example: '2022'
                   eligible_for_funding:
                     description: Indicates whether this NPQ participant would be eligible
                       for funding from the DfE
                     type: boolean
                     nullable: false
-                    example: true
                   npq_application_id:
                     description: The ID of the NPQ application that was accepted to
                       create this enrolment
                     type: string
                     format: uuid
                     nullable: false
-                    example: db3a7848-7308-4879-942a-c4a70ced400a
                   training_status:
                     description: The training status of the NPQ participant
                     type: string
@@ -1317,25 +1750,21 @@ components:
                     - active
                     - deferred
                     - withdrawn
-                    example: active
                   school_urn:
                     description: The Unique Reference Number (URN) of the school where
                       this NPQ participant is employed
                     type: string
                     nullable: true
-                    example: '106286'
                   targeted_delivery_funding_eligibility:
                     description: Whether or not this application is eligible for Targeted
                       Delivery Funding uplift
                     nullable: false
                     type: boolean
-                    example: true
                   funded_place:
                     description: Indicates whether this NPQ participant is funded
                       by DfE
                     nullable: true
                     type: boolean
-                    example: true
     ParticipantResumeRequest:
       description: A participant resume request
       type: object
@@ -1350,7 +1779,6 @@ components:
             type:
               description: The data typed
               type: string
-              example: participant-resume
             attributes:
               description: A participant resume request attributes
               type: object
@@ -1360,7 +1788,6 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: npq-senior-leadership
                   enum:
                   - npq-senior-leadership
                   - npq-headship
@@ -1388,7 +1815,6 @@ components:
             type:
               description: The data typed
               type: string
-              example: participant-defer
             attributes:
               description: A participant defer request attributes
               type: object
@@ -1398,7 +1824,6 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: npq-senior-leadership
                   enum:
                   - npq-senior-leadership
                   - npq-headship
@@ -1417,7 +1842,6 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: bereavement
                   enum:
                   - bereavement
                   - long-term-sickness
@@ -1438,7 +1862,6 @@ components:
             type:
               description: The data typed
               type: string
-              example: participant-withdraw
             attributes:
               description: A participant withdraw request attributes
               type: object
@@ -1448,7 +1871,6 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: npq-senior-leadership
                   enum:
                   - npq-senior-leadership
                   - npq-headship
@@ -1467,7 +1889,6 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: insufficient-capacity-to-undertake-programme
                   enum:
                   - insufficient-capacity-to-undertake-programme
                   - personal-reason-health-or-pregnancy-related

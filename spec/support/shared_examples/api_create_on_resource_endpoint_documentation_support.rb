@@ -27,7 +27,7 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
         let(:params) do
           {
             data: {
-              type: action,
+              type:,
               attributes:,
             },
           }
