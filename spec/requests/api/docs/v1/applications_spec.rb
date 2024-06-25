@@ -40,27 +40,78 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v1/sw
     let(:resource) { application }
   end
 
-  it_behaves_like "an API create on resource endpoint documentation",
-                  "/api/v1/npq-applications/{id}/accept",
-                  "NPQ Applications",
-                  "Accept an NPQ application",
-                  "The NPQ application being accepted",
-                  "#/components/schemas/ApplicationResponse",
-                  "#/components/schemas/ApplicationAcceptRequest" do
-    let(:resource) { application }
-    let(:type) { "npq-application-accept" }
-    let(:attributes) { { funded_place: false } }
-    let(:invalid_attributes) { { funded_place: nil } }
-  end
+  describe "accept/reject actions" do
+    let(:base_response_example) do
+      {
+        data: {
+          id: "de77d9c8-9082-4efa-9bda-cae7baa1c81e",
+          type: "npq_application",
+          attributes: {
+            course_identifier: "npq-senior-leadership",
+            email: "8_doe_john@vandervort.example",
+            email_validated: true,
+            employer_name: nil,
+            employment_role: nil,
+            full_name: "John Doe 8",
+            funding_choice: "employer",
+            headteacher_status: "no",
+            ineligible_for_funding_reason: "establishment-ineligible",
+            participant_id: "8ac3c8ab-ec27-4b9a-acca-fd50578171e3",
+            private_childcare_provider_urn: nil,
+            teacher_reference_number: "1234567",
+            teacher_reference_number_validated: false,
+            school_urn: "259846",
+            school_ukprn: "18025002",
+            status: "accepted",
+            works_in_school: true,
+            cohort: "2023",
+            eligible_for_funding: false,
+            targeted_delivery_funding_eligibility: false,
+            teacher_catchment: true,
+            teacher_catchment_country: "United Kingdom of Great Britain and Northern Ireland",
+            teacher_catchment_iso_country_code: "GBR",
+            itt_provider: "amazing ITT provider 8",
+            lead_mentor: false,
+            funded_place: false,
+            created_at: "2024-06-25T12:01:27Z",
+            updated_at: "2024-06-25T12:01:27Z",
+          },
+        },
+      }
+    end
 
-  it_behaves_like "an API create on resource endpoint documentation",
-                  "/api/v1/npq-applications/{id}/reject",
-                  "NPQ Applications",
-                  "Reject an NPQ application",
-                  "The NPQ application being rejected",
-                  "#/components/schemas/ApplicationResponse" do
-    let(:resource) { application }
-    let(:type) { "npq-application-reject" }
+    it_behaves_like "an API create on resource endpoint documentation",
+                    "/api/v1/npq-applications/{id}/accept",
+                    "NPQ Applications",
+                    "Accept an NPQ application",
+                    "The NPQ application being accepted",
+                    "#/components/schemas/ApplicationResponse",
+                    "#/components/schemas/ApplicationAcceptRequest" do
+      let(:resource) { application }
+      let(:type) { "npq-application-accept" }
+      let(:attributes) { { funded_place: false } }
+      let(:invalid_attributes) { { funded_place: nil } }
+      let(:response_example) do
+        base_response_example.tap do |example|
+          example[:data][:attributes][:status] = "accepted"
+        end
+      end
+    end
+
+    it_behaves_like "an API create on resource endpoint documentation",
+                    "/api/v1/npq-applications/{id}/reject",
+                    "NPQ Applications",
+                    "Reject an NPQ application",
+                    "The NPQ application being rejected",
+                    "#/components/schemas/ApplicationResponse" do
+      let(:resource) { application }
+      let(:type) { "npq-application-reject" }
+      let(:response_example) do
+        base_response_example.tap do |example|
+          example[:data][:attributes][:status] = "rejected"
+        end
+      end
+    end
   end
 
   it_behaves_like "an API update endpoint documentation",

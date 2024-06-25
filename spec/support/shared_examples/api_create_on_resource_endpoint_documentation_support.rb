@@ -39,6 +39,21 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
 
         schema({ "$ref": response_schema_ref })
 
+        after do |example|
+          if defined?(response_example)
+            example_spec = {
+              "application/json" => {
+                examples: {
+                  success: {
+                    value: response_example,
+                  },
+                },
+              },
+            }
+            example.metadata[:response][:content] = example_spec
+          end
+        end
+
         run_test!
       end
 
