@@ -263,8 +263,8 @@ en:
             declaration:
               <<: *statement
               already_voided: This declaration has already been voided.
-              not_voidable: This declaration cannot be voided. Contact the DfE if you have any questions about why you cannot void it.
               not_already_refunded: The declaration will or has been be refunded.
+              must_be_paid: The declaration must be paid before it can be clawed back.
               
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

@@ -11,47 +11,57 @@ RSpec.describe Declarations::Void, type: :model do
     it { is_expected.to validate_presence_of(:declaration) }
 
     context "when voiding the declaration" do
-      before { declaration.update!(state: :submitted) }
+      Declaration::VOIDABLE_STATES.each do |state|
+        context "with a #{state} declaration" do
+          before { declaration.update!(state:) }
 
-      context "when the declaration is already voided" do
-        before { declaration.update!(state: :voided) }
+          context "when the declaration is already voided" do
+            before { declaration.update!(state: :voided) }
 
-        it "adds an error to the declaration attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :already_voided)
-        end
-      end
-
-      context "when the declaration is not voidable" do
-        before { declaration.update!(state: :clawed_back) }
-
-        it "adds an error to the declaration attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :not_voidable)
+            it "adds an error to the declaration attribute" do
+              expect(instance).to be_invalid
+              expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :already_voided)
+            end
+          end
         end
       end
     end
 
     context "when clawing back the declaration" do
-      before { declaration.update!(state: :paid) }
+      described_class::CLAWBACK_STATES.each do |state|
+        context "with a #{state} declaration" do
+          before { declaration.update!(state: :paid) }
 
-      StatementItem::REFUNDABLE_STATES.each do |ineligible_state|
-        context "when the declaration already has a #{ineligible_state} statement item" do
-          before { create(:statement_item, declaration:, state: ineligible_state) }
+          StatementItem::REFUNDABLE_STATES.each do |ineligible_state|
+            context "when the declaration already has a #{ineligible_state} statement item" do
+              before { create(:statement_item, declaration:, state: ineligible_state) }
 
-          it "adds an error to the declaration attribute" do
-            expect(instance).to be_invalid
-            expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :not_already_refunded)
+              it "adds an error to the declaration attribute" do
+                expect(instance).to be_invalid
+                expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :not_already_refunded)
+              end
+            end
+          end
+
+          context "when there is no output fee statement" do
+            before { statement.update!(output_fee: false) }
+
+            it "adds an error to the declaration attribute" do
+              expect(instance).to be_invalid
+              expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :no_output_fee_statement)
+            end
           end
         end
       end
 
-      context "when there is no output fee statement" do
-        before { statement.update!(output_fee: false) }
+      described_class::CLAWBACK_STATES.excluding("paid").each do |state|
+        context "when the declaration is #{state}" do
+          before { declaration.update!(state:) }
 
-        it "adds an error to the declaration attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :no_output_fee_statement)
+          it "adds an error to the declaration attribute" do
+            expect(instance).to be_invalid
+            expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :must_be_paid)
+          end
         end
       end
     end
