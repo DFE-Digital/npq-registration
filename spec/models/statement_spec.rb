@@ -77,14 +77,20 @@ RSpec.describe Statement, type: :model do
     end
 
     describe ".next_output_fee_statements" do
-      it "selects the output fee statement with the earliest deadline date in the future" do
-        freeze_time do
-          sql = Statement.next_output_fee_statements.to_sql
-          expect(sql).to include(%(WHERE "statements"."output_fee" = TRUE))
-          expect(sql).to include(%(AND (deadline_date >= '#{Date.current}')))
-          expect(sql).to include(%(ORDER BY "statements"."deadline_date" ASC))
-        end
+      let(:next_output_fee_statement_1) { create(:statement, :next_output_fee, deadline_date: 5.days.from_now) }
+      let(:next_output_fee_statement_2) { create(:statement, :next_output_fee, deadline_date: 1.day.from_now) }
+      let(:next_output_fee_statement_3) { create(:statement, :next_output_fee, deadline_date: 2.days.from_now) }
+
+      before do
+        # Not output fee
+        create(:statement, output_fee: false, deadline_date: 1.hour.from_now)
+        # In the past
+        create(:statement, output_fee: true, deadline_date: 1.day.ago)
       end
+
+      subject { described_class.next_output_fee_statements }
+
+      it { is_expected.to eq([next_output_fee_statement_2, next_output_fee_statement_3, next_output_fee_statement_1]) }
     end
   end
 
