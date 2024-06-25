@@ -25,7 +25,9 @@ To prevent a participant being enrolled onto the same course with more than one 
 GET /api/v3/npq-applications
 ```
 
-Providers can filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
+Providers can filter results to see more specific or up to date data by adding `cohort`, `participant_id` and `updated_since` filters to the parameter. 
+
+For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
 See the ```view multiple NPQ applications``` endpoint documentation [ADD LINK] for more information.
 
