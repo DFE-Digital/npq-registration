@@ -38,37 +38,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
 
   describe "update actions" do
     let(:base_response_example) do
-      {
-        data: {
-          id: "7acaabaf-71ec-4836-be82-5ae59863fdf7",
-          type: "npq-participant",
-          attributes: {
-            full_name: "John Doe 163",
-            teacher_reference_number: "1234567",
-            updated_at: "2024-06-25T12:01:30Z",
-            npq_enrolments: [{
-              email: "john.doe.163@dare-beier.example",
-              course_identifier: "npq-early-headship-coaching-offer",
-              schedule_identifier: "npq-ehco-december",
-              cohort: "2023",
-              npq_application_id: "58b364cb-1633-41d5-8d1d-eab55bedc986",
-              eligible_for_funding: true,
-              training_status: "active",
-              school_urn: "495078",
-              targeted_delivery_funding_eligibility: false,
-              deferral: nil,
-              withdrawl: nil,
-              created_at: "2024-06-25T12:01:30Z",
-              funded_place: true,
-            }],
-            participant_id_changes: [{
-              from_participant_id: "2e61008e-df8d-4d70-8ca2-e0680193f391",
-              to_participant_id: "7acaabaf-71ec-4836-be82-5ae59863fdf7",
-              changed_at: "2024-06-25T12:01:30Z",
-            }],
-          },
-        },
-      }
+      extract_swagger_example(schema: "#/components/schemas/ParticipantResponse", version: :v3)
     end
 
     it_behaves_like "an API update endpoint documentation",
