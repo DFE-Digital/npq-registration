@@ -121,15 +121,15 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq_application
                       attributes:
-                        course_identifier: npq-leading-teaching
+                        course_identifier: npq-senior-leadership
                         email: isabelle.macdonald2@some-school.example.com
                         email_validated: true
                         employer_name: Some Company Ltd
                         employment_role: Director
                         full_name: Isabelle MacDonald
-                        funding_choice: trust
+                        funding_choice: school
                         headteacher_status: 'no'
-                        ineligible_for_funding_reason: establishment-ineligible
+                        ineligible_for_funding_reason: previously-funded
                         participant_id: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
                         private_childcare_provider_urn: EY944860
                         teacher_reference_number: '1234567'
@@ -206,15 +206,15 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq_application
                       attributes:
-                        course_identifier: npq-leading-teaching
+                        course_identifier: npq-senior-leadership
                         email: isabelle.macdonald2@some-school.example.com
                         email_validated: true
                         employer_name: Some Company Ltd
                         employment_role: Director
                         full_name: Isabelle MacDonald
-                        funding_choice: trust
+                        funding_choice: school
                         headteacher_status: 'no'
-                        ineligible_for_funding_reason: establishment-ineligible
+                        ineligible_for_funding_reason: previously-funded
                         participant_id: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
                         private_childcare_provider_urn: EY944860
                         teacher_reference_number: '1234567'
@@ -298,6 +298,7 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+        required: true
   "/api/v2/participant-declarations.csv":
     get:
       summary: Retrieve all Participant declarations in CSV format
@@ -1513,7 +1514,7 @@ components:
                   - npq-early-headship-coaching-offer
                   - npq-senco
                 reason:
-                  description: The reason for the withdrawl
+                  description: The reason for the withdrawal
                   required: true
                   nullable: false
                   type: string

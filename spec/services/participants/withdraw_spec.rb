@@ -4,16 +4,16 @@ require "rails_helper"
 
 RSpec.describe Participants::Withdraw, type: :model do
   it_behaves_like "a participant action" do
-    let(:reason) { described_class::WITHDRAWL_REASONS.sample }
+    let(:reason) { described_class::WITHDRAWAL_REASONS.sample }
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
   end
 
   it_behaves_like "a participant state transition", :withdraw, %w[active], "withdrawn" do
-    let(:reason) { described_class::WITHDRAWL_REASONS.sample }
+    let(:reason) { described_class::WITHDRAWAL_REASONS.sample }
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
 
     describe "validations" do
-      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::WITHDRAWL_REASONS) }
+      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::WITHDRAWAL_REASONS) }
 
       context "when the application is already withdrawn" do
         let(:application) { create(:application, :accepted, :withdrawn) }

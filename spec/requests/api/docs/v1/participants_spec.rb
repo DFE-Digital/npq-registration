@@ -73,7 +73,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v1/sw
                   "#/components/schemas/ParticipantWithdrawRequest" do
     let(:resource) { participant }
     let(:type) { "participant-withdraw" }
-    let(:attributes) { { course_identifier: course.identifier, reason: Participants::Withdraw::WITHDRAWL_REASONS.sample } }
+    let(:attributes) { { course_identifier: course.identifier, reason: Participants::Withdraw::WITHDRAWAL_REASONS.sample } }
     let(:invalid_attributes) { { course_identifier: "invalid" } }
   end
 end

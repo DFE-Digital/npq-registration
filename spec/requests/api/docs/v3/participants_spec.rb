@@ -58,7 +58,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
         base_response_example.tap do |example|
           example[:data][:attributes][:npq_enrolments][0][:training_status] = "active"
           example[:data][:attributes][:npq_enrolments][0][:deferral] = nil
-          example[:data][:attributes][:npq_enrolments][0][:withdrawl] = nil
+          example[:data][:attributes][:npq_enrolments][0][:withdrawal] = nil
         end
       end
     end
@@ -77,7 +77,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:npq_enrolments][0][:training_status] = "deferred"
-          example[:data][:attributes][:npq_enrolments][0][:withdrawl] = nil
+          example[:data][:attributes][:npq_enrolments][0][:withdrawal] = nil
         end
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
                     "#/components/schemas/ParticipantWithdrawRequest" do
       let(:resource) { participant }
       let(:type) { "participant-withdraw" }
-      let(:attributes) { { course_identifier: course.identifier, reason: Participants::Withdraw::WITHDRAWL_REASONS.sample } }
+      let(:attributes) { { course_identifier: course.identifier, reason: Participants::Withdraw::WITHDRAWAL_REASONS.sample } }
       let(:invalid_attributes) { { course_identifier: "invalid" } }
       let(:response_example) do
         base_response_example.tap do |example|
