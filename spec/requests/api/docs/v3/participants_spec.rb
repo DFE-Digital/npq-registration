@@ -57,6 +57,8 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:npq_enrolments][0][:training_status] = "active"
+          example[:data][:attributes][:npq_enrolments][0][:deferral] = nil
+          example[:data][:attributes][:npq_enrolments][0][:withdrawl] = nil
         end
       end
     end
@@ -75,10 +77,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:npq_enrolments][0][:training_status] = "deferred"
-          example[:data][:attributes][:npq_enrolments][0][:deferral] = {
-            reason: "bereavement",
-            date: "2024-06-25T12:01:30Z",
-          }
+          example[:data][:attributes][:npq_enrolments][0][:withdrawl] = nil
         end
       end
     end
@@ -97,10 +96,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:npq_enrolments][0][:training_status] = "withdrawn"
-          example[:data][:attributes][:npq_enrolments][0][:withdrawl] = {
-            reason: "change-in-developmental-or-personal-priorities",
-            date: "2024-06-25T12:01:30Z",
-          }
+          example[:data][:attributes][:npq_enrolments][0][:deferral] = nil
         end
       end
     end
