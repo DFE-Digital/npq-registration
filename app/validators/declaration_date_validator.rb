@@ -20,18 +20,18 @@ private
       false
     end
 
-    record.errors.add(:declaration_date, I18n.t("declaration.invalid_declaration_date"))
+    record.errors.add(:declaration_date, :invalid)
   end
 
   def declaration_within_schedule(record)
     return unless record.schedule && record.declaration_date.present?
 
     if record.declaration_date < record.schedule.applies_from.beginning_of_day
-      record.errors.add(:declaration_date, I18n.t("declaration.declaration_before_milestone_start"))
+      record.errors.add(:declaration_date, :declaration_before_milestone_start)
     end
 
     if record.schedule.applies_to.end_of_day <= record.declaration_date
-      record.errors.add(:declaration_date, I18n.t("declaration.declaration_after_milestone_cutoff"))
+      record.errors.add(:declaration_date, :declaration_after_milestone_cutoff)
     end
   end
 end

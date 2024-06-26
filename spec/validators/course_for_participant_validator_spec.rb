@@ -46,8 +46,22 @@ RSpec.describe CourseForParticipantValidator do
 
       it "has a meaningfull error", :aggregate_failures do
         expect(subject).to be_invalid
-        expect(subject.errors.messages_for(:course_identifier))
-          .to eq(["The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."])
+        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid_course)
+      end
+    end
+
+    context "when application has not been accepted yet" do
+      let(:application) { create(:application) }
+      let(:participant) { application.user }
+      let(:course_identifier) { application.course.identifier }
+
+      it "is invalid" do
+        expect(subject).to be_invalid
+      end
+
+      it "has a meaningfull error", :aggregate_failures do
+        expect(subject).to be_invalid
+        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid_course)
       end
     end
   end

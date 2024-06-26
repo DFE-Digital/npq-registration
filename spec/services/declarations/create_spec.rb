@@ -25,8 +25,7 @@ RSpec.describe Declarations::Create, type: :model do
       has_passed:,
     }
   end
-
-  before { create(:contract, course:, cohort:, lead_provider:) }
+  let!(:contract) { create(:contract, course:, cohort:, lead_provider:) }
 
   subject(:service) { described_class.new(**params) }
 
@@ -40,7 +39,7 @@ RSpec.describe Declarations::Create, type: :model do
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:participant_id)).to eq(["Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."])
+        expect(service.errors.first).to have_attributes(attribute: :participant_id, type: :invalid_participant)
       end
     end
 
@@ -49,7 +48,7 @@ RSpec.describe Declarations::Create, type: :model do
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:course_identifier)).to eq(["The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."])
+        expect(service.errors.first).to have_attributes(attribute: :course_identifier, type: :inclusion)
       end
     end
 
@@ -58,7 +57,7 @@ RSpec.describe Declarations::Create, type: :model do
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a '#/declaration_date'.")
+        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :blank)
       end
     end
 
@@ -67,7 +66,7 @@ RSpec.describe Declarations::Create, type: :model do
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
+        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :invalid)
       end
     end
 
@@ -76,7 +75,7 @@ RSpec.describe Declarations::Create, type: :model do
 
       it "has a meaningful error", :aggregate_failures do
         expect(service).to be_invalid
-        expect(service.errors.messages_for(:declaration_date)).to include("Enter a valid RCF3339 '#/declaration_date'.")
+        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :invalid)
       end
     end
 
@@ -94,17 +93,34 @@ RSpec.describe Declarations::Create, type: :model do
         it "has a meaningful error" do
           expect(subject).to be_invalid
 
-          expect(service.errors.messages_for(:participant_id)).to eq(["This participant withdrew from this course on #{application.application_states.last.created_at.rfc3339}. Enter a '#/declaration_date' that's on or before the withdrawal date."])
+          expect(service.errors.first).to have_attributes(attribute: :participant_id, type: :declaration_must_be_before_withdrawal_date, options: { withdrawal_date: application.application_states.last.created_at.rfc3339 })
         end
       end
     end
 
     context "when an existing declaration already exists" do
-      before { service.save }
+      before { service.create_declaration }
 
       context "when the state submitted" do
-        it "does create duplicates" do
-          expect { service.save }.not_to change(Declaration, :count)
+        it "does not create duplicates" do
+          expect { service.create_declaration }.not_to change(Declaration, :count)
+        end
+      end
+
+      context "with an fundable participant" do
+        let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
+        let(:existing_declaration) { Declaration.last }
+
+        %w[eligible payable paid].each do |state|
+          context "when the state is #{state}" do
+            before { existing_declaration.update!(state:) }
+
+            it "does not create duplicates" do
+              expect { service.create_declaration }.not_to change(Declaration, :count)
+
+              expect(existing_declaration.state).to eq(state)
+            end
+          end
         end
       end
     end
@@ -117,7 +133,7 @@ RSpec.describe Declarations::Create, type: :model do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
+          expect(service.errors.first).to have_attributes(attribute: :has_passed, type: :invalid)
         end
       end
 
@@ -126,14 +142,49 @@ RSpec.describe Declarations::Create, type: :model do
 
         it "returns error" do
           expect(service).to be_invalid
-          expect(service.errors.messages_for(:has_passed)).to eq(["Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."])
+          expect(service.errors.first).to have_attributes(attribute: :has_passed, type: :invalid)
+        end
+      end
+    end
+
+    context "when there is no contract for cohort & course" do
+      before { contract.update!(course: Course.all.excluding(course).sample) }
+
+      it "returns error" do
+        expect(service).to be_invalid
+        expect(service.errors.first).to have_attributes(attribute: :cohort, type: :missing_npq_contract_for_cohort_and_course)
+      end
+    end
+
+    context "when there are no available output fee statements" do
+      before { lead_provider.next_output_fee_statement(cohort).update!(output_fee: false) }
+
+      context "when the declarations is submitted" do
+        it { is_expected.to be_valid }
+      end
+
+      context "when the declaration is eligible" do
+        let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
+
+        it "returns an error" do
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :cohort, type: :no_output_fee_statement, options: { cohort: cohort.start_year })
+        end
+      end
+
+      context "when there is an existing billable declaration" do
+        before { create(:declaration, :paid, application:, declaration_date:) }
+
+        it "returns an error" do
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :cohort, type: :no_output_fee_statement, options: { cohort: cohort.start_year })
         end
       end
     end
   end
 
-  describe "#save" do
-    subject { described_class.new(**params).save }
+  describe "#create_declaration" do
+    subject { described_class.new(**params).create_declaration }
 
     it "creates a declaration" do
       expect { subject }.to change(Declaration, :count).by(1)
@@ -158,6 +209,51 @@ RSpec.describe Declarations::Create, type: :model do
         expect_any_instance_of(Declarations::StatementAttacher).to receive(:attach)
 
         subject
+      end
+    end
+
+    context "when declaration is not fundable" do
+      before do
+        application.update(eligible_for_funding: true, funded_place: false)
+      end
+
+      it "sets the declaration to submitted" do
+        subject
+
+        declaration = Declaration.last
+        expect(declaration).to be_submitted_state
+      end
+    end
+
+    context "when posting for next cohort" do
+      let(:cohort) { create(:cohort, :next) }
+      let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
+      let!(:statement) { create(:statement, cohort:, lead_provider:, deadline_date: declaration_date + 6.weeks) }
+
+      it "creates declaration to next cohort statement" do
+        travel_to declaration_date + 1.day do
+          expect { subject }.to change(Declaration, :count).by(1)
+
+          declaration = Declaration.last
+
+          expect(declaration).to be_eligible_state
+          expect(declaration.statements).to include(statement)
+        end
+      end
+    end
+
+    context "when duplicate declaration exists" do
+      let(:original_user) { create(:user, trn: participant.trn) }
+      let(:original_application) { create(:application, :accepted, cohort:, course:, user: original_user) }
+      let!(:original_declaration) { create(:declaration, application: original_application) }
+
+      it "creates an `ineligible` declaration superseded by the original declaration" do
+        subject
+
+        declaration = Declaration.last
+
+        expect(declaration).to be_ineligible_state
+        expect(declaration.superseded_by).to eq(original_declaration)
       end
     end
   end

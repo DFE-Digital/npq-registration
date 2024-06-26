@@ -8,6 +8,7 @@ class Declaration < ApplicationRecord
   belongs_to :superseded_by, class_name: "Declaration", optional: true
   has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
+  has_many :statements, through: :statement_items
 
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
@@ -99,6 +100,6 @@ class Declaration < ApplicationRecord
 private
 
   def declaration_date_not_in_the_future
-    errors.add(:declaration_date, I18n.t("declaration.future_declaration_date")) if declaration_date && declaration_date > Time.zone.today
+    errors.add(:declaration_date, :future_declaration_date) if declaration_date&.future?
   end
 end

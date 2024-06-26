@@ -10,6 +10,7 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to belong_to(:superseded_by).optional }
     it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
+    it { is_expected.to have_many(:statements).through(:statement_items) }
   end
 
   describe "validations" do
@@ -20,8 +21,8 @@ RSpec.describe Declaration, type: :model do
       context "when the declaration_date is in the future" do
         it "is not valid" do
           subject.declaration_date = 1.day.from_now
-          expect(subject).not_to be_valid
-          expect(subject.errors[:declaration_date]).to include("The '#/declaration_date' value cannot be a future date. Check the date and try again.")
+          expect(subject).to be_invalid
+          expect(subject.errors.first).to have_attributes(attribute: :declaration_date, type: :future_declaration_date)
         end
       end
 
@@ -231,7 +232,7 @@ RSpec.describe Declaration, type: :model do
     end
   end
 
-  describe "#duplication_declarations" do
+  describe "#duplicate_declarations" do
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
     let(:course) { create(:course, :sl, course_group:) }
@@ -255,7 +256,8 @@ RSpec.describe Declaration, type: :model do
 
         context "when declarations have been made for a different course" do
           before do
-            other_application = create(:application, :accepted, cohort:, user: other_user)
+            course = create(:course, :ehco, course_group:)
+            other_application = create(:application, :accepted, course:, cohort:, user: other_user)
             create(:declaration, application: other_application)
           end
 
