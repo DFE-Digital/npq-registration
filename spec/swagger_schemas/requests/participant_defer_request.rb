@@ -1,6 +1,7 @@
 PARTICIPANT_DEFER_REQUEST = {
   description: "A participant defer request",
   type: :object,
+  required: %i[data],
   properties: {
     data: {
       description: "A participant defer request data",
@@ -10,11 +11,13 @@ PARTICIPANT_DEFER_REQUEST = {
         type: {
           description: "The data typed",
           type: :string,
+          required: true,
           example: "participant-defer",
         },
         attributes: {
           description: "A participant defer request attributes",
           type: :object,
+          required: %i[course_identifier reason],
           properties: {
             course_identifier: {
               description: "The type of course the participant is enrolled in",

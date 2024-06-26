@@ -1042,6 +1042,8 @@ components:
     ApplicationAcceptRequest:
       description: A NPQ application acceptance request
       type: object
+      required:
+      - data
       properties:
         data:
           description: A NPQ application acceptance request data
@@ -1053,10 +1055,12 @@ components:
             type:
               description: The data typed
               type: string
+              required: true
               example: npq-application-accept
             attributes:
               description: A NPQ application acceptance request attributes
               type: object
+              required: false
               properties:
                 funded_place:
                   description: This field indicates whether the application is funded
@@ -1099,6 +1103,7 @@ components:
             type:
               description: The data typed
               type: string
+              required: true
               example: npq-application-change-funded-place
             attributes:
               description: A NPQ application change funded place request attributes
@@ -1367,6 +1372,8 @@ components:
     ParticipantResumeRequest:
       description: A participant resume request
       type: object
+      required:
+      - data
       properties:
         data:
           description: A participant resume request data
@@ -1379,9 +1386,12 @@ components:
               description: The data typed
               type: string
               example: participant-resume
+              required: true
             attributes:
               description: A participant resume request attributes
               type: object
+              required:
+              - course_identifier
               properties:
                 course_identifier:
                   description: The type of course the participant is enrolled in
@@ -1405,6 +1415,8 @@ components:
     ParticipantDeferRequest:
       description: A participant defer request
       type: object
+      required:
+      - data
       properties:
         data:
           description: A participant defer request data
@@ -1416,10 +1428,14 @@ components:
             type:
               description: The data typed
               type: string
+              required: true
               example: participant-defer
             attributes:
               description: A participant defer request attributes
               type: object
+              required:
+              - course_identifier
+              - reason
               properties:
                 course_identifier:
                   description: The type of course the participant is enrolled in
@@ -1455,6 +1471,8 @@ components:
     ParticipantWithdrawRequest:
       description: A participant withdraw request
       type: object
+      required:
+      - data
       properties:
         data:
           description: A participant withdraw request data
@@ -1467,9 +1485,13 @@ components:
               description: The data typed
               type: string
               example: participant-withdraw
+              required: true
             attributes:
               description: A participant withdraw request attributes
               type: object
+              required:
+              - course_identifier
+              - reason
               properties:
                 course_identifier:
                   description: The type of course the participant is enrolled in
