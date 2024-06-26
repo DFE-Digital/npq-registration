@@ -48,8 +48,7 @@ RSpec.describe ContractForCohortAndCourseValidator do
 
         it "has a meaningfull error", :aggregate_failures do
           expect(subject).to be_invalid
-          expect(subject.errors.messages_for(:cohort))
-            .to eq(["You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance."])
+          expect(subject.errors.first).to have_attributes(attribute: :cohort, type: :missing_npq_contract_for_cohort_and_course)
         end
       end
     end

@@ -25,7 +25,7 @@ module API
       def create
         service = Declarations::Create.new(declaration_params)
 
-        if service.save
+        if service.create_declaration
           render json: to_json(service.declaration)
         else
           render json: API::Errors::Response.from(service), status: :unprocessable_entity

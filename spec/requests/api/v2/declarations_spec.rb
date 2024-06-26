@@ -64,6 +64,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:path) { api_v2_declarations_path }
 
     let(:service) { Declarations::Create }
+    let(:action) { :create_declaration }
     let(:lead_provider) { current_lead_provider }
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
@@ -76,9 +77,8 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:declaration_date) { (schedule.applies_from + 1.day).rfc3339 }
     let(:course_identifier) { course.identifier }
     let(:has_passed) { true }
-    let(:service_args) do
+    let(:attributes) do
       {
-        lead_provider:,
         participant_id:,
         declaration_type:,
         declaration_date:,
@@ -86,9 +86,13 @@ RSpec.describe "Declaration endpoints", type: :request do
         has_passed:,
       }
     end
+    let(:service_args) { { lead_provider: }.merge!(attributes) }
+    let(:resource) { build(:declaration, lead_provider:) }
+    let(:resource_id) { resource.ecf_id }
+    let(:resource_name) { :declaration }
 
     before { create(:contract, course:, cohort:, lead_provider:) }
 
-    it_behaves_like "an API create declaration endpoint"
+    it_behaves_like "an API create endpoint"
   end
 end

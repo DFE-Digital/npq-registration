@@ -35,25 +35,43 @@ RSpec.describe ParticipantNotWithdrawnValidator do
       it { is_expected.to be_valid }
     end
 
-    context "when participant withdrawn before declaration_date" do
-      let(:application) { create(:application, :withdrawn, lead_provider:) }
+    context "when participant was withdrawn before declaration_date" do
+      before do
+        travel_to declaration_date - 10.days do
+          application.application_states.create!(state: :withdrawn, lead_provider:)
+          application.withdrawn!
+        end
+      end
 
       it { is_expected.to be_invalid }
     end
 
-    context "when participant withdrawn after declaration_date" do
-      let(:declaration_date) { Time.zone.now - 1.day }
-      let(:application) { create(:application, :withdrawn, lead_provider:) }
+    context "when participant was withdrawn after declaration_date" do
+      before do
+        travel_to declaration_date + 10.days do
+          application.application_states.create!(state: :withdrawn, lead_provider:)
+          application.withdrawn!
+        end
+      end
 
       it { is_expected.to be_valid }
     end
 
-    context "when participant reinstated after being withdrawn" do
+    context "when participant was reinstated after being withdrawn" do
       let(:application) { create(:application, :withdrawn, lead_provider:) }
 
       before do
         application.application_states.create!(lead_provider:)
         application.active!
+      end
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when participant was withdrawn by another lead provider" do
+      before do
+        application.application_states.create!(state: :withdrawn, lead_provider: create(:lead_provider, name: "Another Lead Provider"))
+        application.withdrawn!
       end
 
       it { is_expected.to be_valid }

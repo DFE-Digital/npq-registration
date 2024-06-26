@@ -13,26 +13,28 @@ module Declarations
     attribute :has_passed
 
     validates :lead_provider, presence: true
-    validates :participant_id, presence: { message: I18n.t("declaration.missing_participant_id") }
+    validates :participant_id, presence: true
     validates :participant, participant_presence: true, participant_not_withdrawn: true
-    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS, message: I18n.t(:invalid_course) }, allow_blank: false, course_for_participant: true
-    validates :declaration_date, declaration_date: true, allow_blank: true
-    validates :declaration_date, presence: { message: I18n.t("declaration.missing_declaration_date") }
-    validates :declaration_type, presence: { message: I18n.t("declaration.missing_declaration_type") }
-    validates :cohort, contract_for_cohort_and_course: { message: I18n.t("declaration.missing_npq_contract_for_cohort_and_course") }
+    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false, course_for_participant: true
+    validates :declaration_date, declaration_date: true
+    validates :declaration_date, presence: true
+    validates :declaration_type, presence: true
+    # TODO we don't have NPQ Contract yet
+    validates :cohort, contract_for_cohort_and_course: true
 
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?
     validate :validate_schedule_exists
     validate :validates_billable_slot_available
 
-    attr_reader :raw_declaration_date
+    attr_reader :raw_declaration_date, :declaration
 
-    def save
+    def create_declaration
       return false unless valid?
 
       ApplicationRecord.transaction do
-        set_eligibility
+        find_or_create_declaration!
+        set_eligibility!
 
         statement_attacher.attach unless declaration.submitted_state?
       end
@@ -61,10 +63,6 @@ module Declarations
       end
     end
 
-    def declaration
-      @declaration ||= existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
-    end
-
   private
 
     attr_writer :raw_declaration_date
@@ -72,32 +70,12 @@ module Declarations
     delegate :schedule, to: :application, allow_nil: true
     delegate :cohort, to: :schedule
 
-    def statement_attacher
-      @statement_attacher ||= StatementAttacher.new(declaration:)
-    end
-
-    def output_fee_statement_available
-      return if errors.any?
-      return if application.blank?
-      return if existing_declaration&.submitted_state?
-      return if existing_declaration.nil? && !application.fundable?
-
-      errors.add(:cohort, I18n.t("statement.no_output_fee_statement", cohort: cohort.start_year)) if lead_provider.next_output_fee_statement(cohort).blank?
-    end
-
-    def set_eligibility
-      if declaration.duplicate_declarations.any?
-        declaration.update!(superseded_by: original_participant_declaration)
-        declaration.ineligible_state!
-      elsif application.fundable?
-        declaration.eligible_state!
-      end
-    end
-
-    def validate_schedule_exists
-      return if errors.any?
-
-      errors.add(:declaration_type, I18n.t("declaration.mismatch_declaration_type_for_schedule")) unless schedule&.allowed_declaration_types&.include?(declaration_type)
+    def declaration_parameters
+      {
+        declaration_date:,
+        declaration_type:,
+        lead_provider:,
+      }
     end
 
     def existing_declaration
@@ -114,12 +92,38 @@ module Declarations
         .find_by(declaration_parameters.merge(application: { courses: { identifier: course_identifier } }))
     end
 
-    def declaration_parameters
-      {
-        declaration_date:,
-        declaration_type:,
-        lead_provider:,
-      }
+    def find_or_create_declaration!
+      @declaration ||= existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
+    end
+
+    def statement_attacher
+      @statement_attacher ||= StatementAttacher.new(declaration:)
+    end
+
+    def output_fee_statement_available
+      return if errors.any?
+      return if application.blank?
+      return if existing_declaration&.submitted_state?
+      return if existing_declaration.nil? && !application.fundable?
+      return unless lead_provider.next_output_fee_statement(cohort).blank?
+
+      errors.add(:cohort, :no_output_fee_statement, cohort: cohort.start_year)
+    end
+
+    def set_eligibility!
+      if declaration.duplicate_declarations.any?
+        declaration.update!(superseded_by: original_declaration)
+        declaration.ineligible_state!
+      elsif application.fundable?
+        declaration.eligible_state!
+      end
+    end
+
+    def validate_schedule_exists
+      return if errors.any?
+      return if schedule&.allowed_declaration_types&.include?(declaration_type)
+
+      errors.add(:declaration_type, :mismatch_declaration_type_for_schedule)
     end
 
     def original_declaration
@@ -144,11 +148,9 @@ module Declarations
     def validate_has_passed_field
       self.has_passed = has_passed.to_s
 
-      if has_passed.blank?
-        errors.add(:has_passed, I18n.t("declaration.missing_has_passed"))
-      elsif !%w[true false].include?(has_passed)
-        errors.add(:has_passed, I18n.t("declaration.invalid_has_passed"))
-      end
+      return unless has_passed.blank? || !%w[true false].include?(has_passed)
+
+      errors.add(:has_passed, :invalid)
     end
 
     def validate_has_passed?

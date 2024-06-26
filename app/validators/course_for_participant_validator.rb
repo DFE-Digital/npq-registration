@@ -5,7 +5,7 @@ class CourseForParticipantValidator < ActiveModel::Validator
     return if record.errors.any?
     return if has_accepted_application_for_course_given_course_identifier?(record)
 
-    record.errors.add(:course_identifier, I18n.t(:invalid_course))
+    record.errors.add(:course_identifier, :invalid_course)
   end
 
 private

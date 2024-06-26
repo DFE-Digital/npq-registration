@@ -15,7 +15,7 @@ private
 
     record
       .errors
-      .add(:participant_id, I18n.t("declaration.declaration_must_be_before_withdrawal_date", withdrawal_date: latest_state.created_at.rfc3339))
+      .add(:participant_id, :declaration_must_be_before_withdrawal_date, withdrawal_date: latest_state.created_at.rfc3339)
   end
 
   def latest_participant_application_state(record)

@@ -25,16 +25,15 @@ RSpec.describe ParticipantPresenceValidator do
   describe "#validate" do
     subject { klass.new(participant:) }
 
-    let(:application) { create(:application, :accepted) }
-    let(:participant) { application.user }
+    let(:participant) { build(:user) }
 
-    context "with participant identity" do
+    context "with participant" do
       it "is valid" do
         expect(subject).to be_valid
       end
     end
 
-    context "with no participant identity" do
+    context "with no participant" do
       let(:participant) { nil }
 
       it "is invalid" do
@@ -43,7 +42,7 @@ RSpec.describe ParticipantPresenceValidator do
 
       it "has a meaningful error", :aggregate_failures do
         expect(subject).to be_invalid
-        expect(subject.errors.messages_for(:participant_id)).to include("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
+        expect(subject.errors.first).to have_attributes(attribute: :participant_id, type: :invalid_participant)
       end
     end
   end

@@ -126,8 +126,8 @@ RSpec.describe Declarations::Query do
   end
 
   describe "#declaration" do
-    let(:declaration) { create(:declaration) }
-    let(:lead_provider) { declaration.lead_provider }
+    let(:lead_provider) { create(:lead_provider, name: "Lead Provider") }
+    let(:declaration) { create(:declaration, lead_provider:) }
     let(:query) { Declarations::Query.new(lead_provider:) }
 
     it "returns a declaration by the given id" do
