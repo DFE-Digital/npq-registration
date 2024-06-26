@@ -69,6 +69,29 @@ RSpec.describe Statement, type: :model do
         expect(Statement.with_state("foo", "bar").to_sql).to include(%(WHERE "statements"."state" IN ('foo', 'bar')))
       end
     end
+
+    describe ".with_output_fee" do
+      it "selects only output fee statements" do
+        expect(Statement.with_output_fee.to_sql).to include(%(WHERE "statements"."output_fee" = TRUE))
+      end
+    end
+
+    describe ".next_output_fee_statements" do
+      let(:next_output_fee_statement_1) { create(:statement, :next_output_fee, deadline_date: 5.days.from_now) }
+      let(:next_output_fee_statement_2) { create(:statement, :next_output_fee, deadline_date: 1.day.from_now) }
+      let(:next_output_fee_statement_3) { create(:statement, :next_output_fee, deadline_date: 2.days.from_now) }
+
+      before do
+        # Not output fee
+        create(:statement, output_fee: false, deadline_date: 1.hour.from_now)
+        # In the past
+        create(:statement, output_fee: true, deadline_date: 1.day.ago)
+      end
+
+      subject { described_class.next_output_fee_statements }
+
+      it { is_expected.to eq([next_output_fee_statement_2, next_output_fee_statement_3, next_output_fee_statement_1]) }
+    end
   end
 
   describe "State transition" do

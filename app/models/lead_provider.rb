@@ -79,8 +79,13 @@ class LeadProvider < ApplicationRecord
   }.freeze
 
   has_many :applications
+  has_many :statements
 
   scope :alphabetical, -> { order(name: :asc) }
+
+  def next_output_fee_statement(cohort)
+    statements.next_output_fee_statements.where(cohort:).first
+  end
 
   def self.for(course:)
     course_specific_list = COURSE_TO_PROVIDER_MAPPING[course.identifier]

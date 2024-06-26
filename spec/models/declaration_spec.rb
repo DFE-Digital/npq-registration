@@ -126,6 +126,26 @@ RSpec.describe Declaration, type: :model do
     end
   end
 
+  describe "#voidable?" do
+    subject { build(:declaration, state:) }
+
+    described_class::VOIDABLE_STATES.each do |eligible_state|
+      context "when the state is #{eligible_state}" do
+        let(:state) { eligible_state }
+
+        it { is_expected.to be_voidable }
+      end
+    end
+
+    described_class.states.keys.excluding(described_class::VOIDABLE_STATES).each do |ineligible_state|
+      context "when the state is #{ineligible_state}" do
+        let(:state) { ineligible_state }
+
+        it { is_expected.not_to be_voidable }
+      end
+    end
+  end
+
   describe "#billable_statement" do
     let(:statement_item) { create(:statement_item, state: :payable) }
     let(:declaration) { statement_item.declaration }

@@ -12,6 +12,7 @@ class Declaration < ApplicationRecord
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
   ELIGIBLE_FOR_PAYMENT_STATES = %w[payable eligible].freeze
+  VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
 
   delegate :course, :user, to: :application
   delegate :identifier, to: :course, prefix: true
@@ -62,6 +63,10 @@ class Declaration < ApplicationRecord
 
   def eligible_for_payment?
     state.in?(ELIGIBLE_FOR_PAYMENT_STATES)
+  end
+
+  def voidable?
+    state.in?(VOIDABLE_STATES)
   end
 
   def ineligible_for_funding_reason
