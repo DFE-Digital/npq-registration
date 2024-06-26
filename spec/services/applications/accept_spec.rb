@@ -125,7 +125,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
     context "when accepting an application for a course that has already been accepted by another provider" do
       let(:other_lead_provider) { create(:lead_provider) }
 
-      context "when the other npq applicaton belongs to the same participant identity user" do
+      context "when the other npq applicaton belongs to the same participant" do
         let(:other_application) do
           create(:application,
                  user:,

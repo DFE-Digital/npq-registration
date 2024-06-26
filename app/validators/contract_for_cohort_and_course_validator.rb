@@ -5,7 +5,7 @@ class ContractForCohortAndCourseValidator < ActiveModel::Validator
     return if record.errors.any?
     return unless contract_for_cohort_and_course_missing?(record)
 
-    record.errors.add(:cohort, options[:message] || I18n.t(:missing_npq_contract_for_cohort_and_course))
+    record.errors.add(:cohort, options[:message] || :missing_npq_contract_for_cohort_and_course)
   end
 
 private

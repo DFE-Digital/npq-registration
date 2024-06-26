@@ -12,6 +12,6 @@ private
   def has_participant?(record)
     return if record.participant.present?
 
-    record.errors.add(:participant_id, I18n.t(:invalid_participant))
+    record.errors.add(:participant_id, :invalid_participant)
   end
 end
