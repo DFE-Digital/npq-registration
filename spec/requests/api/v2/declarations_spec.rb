@@ -6,23 +6,33 @@ RSpec.describe "Declaration endpoints", type: :request do
   let(:serializer) { API::DeclarationSerializer }
   let(:serializer_version) { :v2 }
 
+  def create_resource(**attrs)
+    if attrs[:user]
+      attrs[:application] = create(:application, user: attrs[:user])
+      attrs.delete(:user)
+    end
+
+    create(:declaration, **attrs)
+  end
+
   describe "GET /api/v2/participant-declarations" do
     let(:path) { api_v2_declarations_path }
     let(:resource_id_key) { :ecf_id }
-
-    def create_resource(**attrs)
-      if attrs[:user]
-        attrs[:application] = create(:application, user: attrs[:user])
-        attrs.delete(:user)
-      end
-
-      create(:declaration, **attrs)
-    end
 
     it_behaves_like "an API index endpoint"
     it_behaves_like "an API index endpoint with pagination"
     it_behaves_like "an API index endpoint with filter by updated_since"
     it_behaves_like "an API index endpoint with filter by participant_id"
+  end
+
+  describe "GET /api/v2/participant-declarations.csv" do
+    let(:serializer) { API::DeclarationsCsvSerializer }
+    let(:mock_serializer) { instance_double(API::DeclarationsCsvSerializer, serialize: nil) }
+    let(:path) { api_v2_declarations_path(format: :csv) }
+    let(:resource_id_key) { :ecf_id }
+    let(:csv_serializer_version) { :v2 }
+
+    it_behaves_like "an API index Csv endpoint", returns_headers_on_empty: false
   end
 
   describe "GET /api/v2/participant-declarations/:ecf_id" do

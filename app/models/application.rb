@@ -6,6 +6,10 @@ class Application < ApplicationRecord
   self.ignored_columns = %w[DEPRECATED_cohort]
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
+  INELIGIBLE_FOR_FUNDING_REASONS = %w[
+    previously-funded
+    establishment-ineligible
+  ].freeze
 
   has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
 

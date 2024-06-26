@@ -190,6 +190,26 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
+  "/api/v2/participant-declarations.csv":
+    get:
+      summary: Retrieve all Participant declarations in CSV format
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      responses:
+        '200':
+          description: A CSV file of Participant declarations
+          content:
+            text/csv:
+              schema:
+                "$ref": "#/components/schemas/DeclarationsCsvResponse"
+        '401':
+          description: Unauthorized
+          content:
+            text/csv:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v2/npq-enrolments.csv":
     get:
       summary: Retrieve all NPQ enrolments in CSV format
@@ -396,19 +416,19 @@ components:
               description: The NPQ course this NPQ application relates to
               type: string
               nullable: false
-              example: npq-leading-teaching
+              example: npq-senior-leadership
               enum:
-              - npq-leading-teaching
-              - npq-leading-behaviour-culture
-              - npq-leading-teaching-development
-              - npq-leading-literacy
               - npq-senior-leadership
               - npq-headship
               - npq-executive-leadership
               - npq-early-years-leadership
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-leading-primary-mathematics
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
-              - npq-leading-primary-mathematics
               - npq-senco
             email:
               description: The email address registered for this NPQ participant
@@ -441,7 +461,7 @@ components:
                 their training
               type: string
               nullable: true
-              example: trust
+              example: school
               enum:
               - school
               - trust
@@ -465,10 +485,10 @@ components:
                 DfE funding
               type: string
               nullable: true
-              example: establishment-ineligible
+              example: previously-funded
               enum:
-              - establishment-ineligible
               - previously-funded
+              - establishment-ineligible
             participant_id:
               description: The unique identifier of this NPQ participant
               type: string
@@ -676,25 +696,25 @@ components:
         course_identifier:
           description: The NPQ course the participant is enrolled in
           type: string
-          example: npq-leading-teaching
+          example: npq-senior-leadership
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
         schedule_identifier:
           description: The schedule currently applied to this enrolment
           nullable: true
           type: string
-          example: npq-leadership-spring
+          example: npq-aso-march
           enum:
           - npq-aso-march
           - npq-aso-june
@@ -740,6 +760,96 @@ components:
             NPQ participant is teaching
           type: string
           example: '106286'
+    DeclarationsCsvResponse:
+      description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
+      properties:
+        example:
+          type: array
+          items:
+            "$ref": "#/components/schemas/DeclarationCsv"
+      example: |
+        id,participant_id,declaration_type,course_identifier,declaration_date,updated_at,state,has_passed
+
+          4ccd9937-1a73-4b11-81e6-259f5bd3ca9d,eb8392d6-777e-4568-9c91-3fedb175c74c,started,npq-headship,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,TODO,false,false
+
+          0de68abf-3c43-421d-9f61-ae10b702e700,61ad2b52-de57-4f42-a5f2-0196ba543e8a,started,npq-early-headship-coaching-offer,2024-06-20T00:00:00+00:00,2024-06-20T12:14:37Z,submitted,true
+    DeclarationCsv:
+      description: Retrieve all participant declarations in CSV format
+      type: object
+      required:
+      - id
+      - participant_id
+      - declaration_type
+      - declaration_date
+      - course_identifier
+      - updated_at
+      - state
+      - has_passed
+      properties:
+        id:
+          description: The unique identifier of the participant declaration record
+          type: string
+          example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+          format: uuid
+        participant_id:
+          description: The unique identifier of the participant record the declaration
+            refers to
+          type: string
+          example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+          format: uuid
+        declaration_type:
+          description: The event declaration type
+          type: string
+          example: started
+          enum:
+          - started
+          - retained-1
+          - retained-2
+          - completed
+        course_identifier:
+          description: The NPQ course the participant is enrolled in
+          type: string
+          example: npq-senior-leadership
+          enum:
+          - npq-senior-leadership
+          - npq-headship
+          - npq-executive-leadership
+          - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
+          - npq-additional-support-offer
+          - npq-early-headship-coaching-offer
+          - npq-senco
+        declaration_date:
+          description: The event declaration date
+          type: string
+          format: date-time
+          example: '2021-05-31T02:22:32.000Z'
+        state:
+          description: Indicates the state of this payment declaration
+          type: string
+          example: submitted
+          enum:
+          - submitted
+          - eligible
+          - payable
+          - paid
+          - voided
+          - ineligible
+          - awaiting_clawback
+          - clawed_back
+        updated_at:
+          description: The date the declaration was last updated
+          type: string
+          format: date-time
+          example: '2021-05-31T02:22:32.000Z'
+        has_passed:
+          description: Whether the participant has failed or passed
+          type: boolean
+          example: true
     ApplicationsCsvResponse:
       description: A list of NPQ applications in the Comma Separated Value (CSV) format
       properties:
@@ -846,7 +956,7 @@ components:
             their training
           type: string
           nullable: true
-          example: trust
+          example: school
           enum:
           - school
           - trust
@@ -856,19 +966,19 @@ components:
         course_identifier:
           description: The NPQ course this NPQ application relates to
           type: string
-          example: npq-leading-teaching
+          example: npq-senior-leadership
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
         status:
           description: The current state of the NPQ application
@@ -920,10 +1030,10 @@ components:
             funding
           type: string
           nullable: true
-          example: establishment-ineligible
+          example: previously-funded
           enum:
-          - establishment-ineligible
           - previously-funded
+          - establishment-ineligible
         targeted_delivery_funding_eligibility:
           description: Whether or not this application is eligible for Targeted Delivery
             Funding uplift
@@ -995,8 +1105,6 @@ components:
           description: The data type
           type: string
           example: npq-participant
-          enum:
-          - npq-participant
         attributes:
           properties:
             email:
@@ -1037,25 +1145,25 @@ components:
                     description: The NPQ course this NPQ application relates to
                     type: string
                     nullable: false
-                    example: npq-leading-teaching
+                    example: npq-senior-leadership
                     enum:
-                    - npq-leading-teaching
-                    - npq-leading-behaviour-culture
-                    - npq-leading-teaching-development
-                    - npq-leading-literacy
                     - npq-senior-leadership
                     - npq-headship
                     - npq-executive-leadership
                     - npq-early-years-leadership
+                    - npq-leading-teaching
+                    - npq-leading-behaviour-culture
+                    - npq-leading-teaching-development
+                    - npq-leading-literacy
+                    - npq-leading-primary-mathematics
                     - npq-additional-support-offer
                     - npq-early-headship-coaching-offer
-                    - npq-leading-primary-mathematics
                     - npq-senco
                   schedule_identifier:
                     description: The new schedule of the participant
                     nullable: true
                     type: string
-                    example: npq-leadership-spring
+                    example: npq-aso-march
                     enum:
                     - npq-aso-march
                     - npq-aso-june
@@ -1094,8 +1202,7 @@ components:
                     example: db3a7848-7308-4879-942a-c4a70ced400a
                   training_status:
                     description: The training status of the NPQ participant
-                    type: string
-                    enum:
+                    type:
                     - active
                     - deferred
                     - withdrawn

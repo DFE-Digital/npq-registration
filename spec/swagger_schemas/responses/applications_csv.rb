@@ -21,5 +21,5 @@ APPLICATIONS_CSV_RESPONSE = {
             ",GBR,Test ITT Provider,false\n",
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
+  h[:v2] = h[:v1].deep_dup
 }.freeze

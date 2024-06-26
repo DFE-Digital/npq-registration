@@ -61,6 +61,8 @@ RSpec.configure do |config|
           ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
           EnrolmentsCsvResponse: ENROLMENTS_CSV_RESPONSE[version],
           EnrolmentCsv: ENROLMENT_CSV[version],
+          DeclarationsCsvResponse: DECLARATIONS_CSV_RESPONSE[version],
+          DeclarationCsv: DECLARATION_CSV[version],
           ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE[version],
           ApplicationCsv: APPLICATION_CSV[version],
           ParticipantResponse: PARTICIPANT_RESPONSE[version],

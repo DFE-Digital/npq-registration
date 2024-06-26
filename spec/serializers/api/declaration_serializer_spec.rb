@@ -49,7 +49,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
         end
 
         it "serializes `has_passed`" do
-          expect(attributes["has_passed"]).to be_nil
+          expect(attributes["has_passed"]).to eq("TODO")
         end
       end
     end

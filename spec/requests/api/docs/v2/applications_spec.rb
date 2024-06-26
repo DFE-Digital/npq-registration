@@ -29,8 +29,8 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
                   "/api/v2/npq-applications.csv",
                   "NPQ Applications",
                   "NPQ applications",
-                  "#/components/schemas/ListApplicationsFilter",
-                  "#/components/schemas/ApplicationsCsvResponse"
+                  "#/components/schemas/ApplicationsCsvResponse",
+                  "#/components/schemas/ListApplicationsFilter"
 
   it_behaves_like "an API show endpoint documentation",
                   "/api/v2/npq-applications/{id}",
