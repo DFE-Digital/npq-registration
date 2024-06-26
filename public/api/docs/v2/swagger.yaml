@@ -280,7 +280,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
 servers:
-- url: https://npq-registration-sandbox-web.teacherservices.cloud/
+- url: https://npq-registration-separation-web.teacherservices.cloud/
 components:
   securitySchemes:
     api_key:
