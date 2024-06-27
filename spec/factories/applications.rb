@@ -74,6 +74,7 @@ FactoryBot.define do
     trait :eligible_for_funded_place do
       accepted
       eligible_for_funding
+      funded_place { true }
 
       after(:create) do |application|
         application.cohort.update!(funding_cap: true)
