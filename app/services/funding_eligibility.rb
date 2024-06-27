@@ -145,14 +145,6 @@ class FundingEligibility
     course.only_pp50? && institution.is_a?(School)
   end
 
-  def targeted_funding
-    @targeted_funding ||= Eligibility::TargetedFunding.new(
-      institution:,
-      course:,
-      employment_role:,
-    ).call
-  end
-
   def previously_received_targeted_funding_support?
     # This makes an api call so limit usage
     ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
