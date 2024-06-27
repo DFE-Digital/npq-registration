@@ -25,7 +25,7 @@ RSpec.describe Declarations::Create, type: :model do
       has_passed:,
     }
   end
-  let!(:contract) { create(:contract, course:, cohort:, lead_provider:) }
+  let!(:statement) { create(:statement, cohort:, lead_provider:) }
 
   subject(:service) { described_class.new(**params) }
 
@@ -144,15 +144,6 @@ RSpec.describe Declarations::Create, type: :model do
           expect(service).to be_invalid
           expect(service.errors.first).to have_attributes(attribute: :has_passed, type: :invalid)
         end
-      end
-    end
-
-    context "when there is no contract for cohort & course" do
-      before { contract.update!(course: Course.all.excluding(course).sample) }
-
-      it "returns error" do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :cohort, type: :missing_npq_contract_for_cohort_and_course)
       end
     end
 
