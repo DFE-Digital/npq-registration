@@ -23,7 +23,6 @@ APPLICATION_CHANGE_FUNDED_PLACE_REQUEST = {
               description: "This field indicates whether the application is funded",
               nullable: false,
               type: :boolean,
-              required: true,
               example: true,
             },
           },

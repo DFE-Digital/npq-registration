@@ -16,30 +16,6 @@ RSpec.describe Declaration, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:declaration_type) }
     it { is_expected.to validate_presence_of(:declaration_date) }
-
-    describe "declaration_date" do
-      context "when the declaration_date is in the future" do
-        it "is not valid" do
-          subject.declaration_date = 1.day.from_now
-          expect(subject).to be_invalid
-          expect(subject.errors.first).to have_attributes(attribute: :declaration_date, type: :future_declaration_date)
-        end
-      end
-
-      context "when the declaration_date is today" do
-        it "is valid" do
-          subject.declaration_date = Time.zone.today
-          expect(subject).to be_valid
-        end
-      end
-
-      context "when the declaration_date is in the past" do
-        it "is valid" do
-          subject.declaration_date = 1.day.ago
-          expect(subject).to be_valid
-        end
-      end
-    end
   end
 
   describe "delegations" do
@@ -271,6 +247,42 @@ RSpec.describe Declaration, type: :model do
         it "returns no declarations" do
           expect(declaration.duplicate_declarations).to be_empty
         end
+      end
+    end
+
+    context "when a declaration has been superseded by another" do
+      before { create(:declaration, application:, superseded_by: declaration) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when a declaration has a different type" do
+      before { create(:declaration, application:, declaration_type: :completed) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when a declaration has a not billable/submitted state" do
+      before { create(:declaration, application:, state: :clawed_back) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when declarations have been made for a different course" do
+      before do
+        course = create(:course, :ehco, course_group:)
+        other_application = create(:application, :accepted, course:, cohort:, user: participant)
+        create(:declaration, application: other_application)
+      end
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
       end
     end
   end

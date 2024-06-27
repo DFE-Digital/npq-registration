@@ -79,6 +79,27 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
+    context "when the declaration_date is in the future" do
+      before { params[:declaration_date] = 1.day.from_now.rfc3339 }
+
+      it "has a meaningful error", :aggregate_failures do
+        expect(service).to be_invalid
+        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :future_declaration_date)
+      end
+    end
+
+    context "when the declaration_date is today" do
+      before { params[:declaration_date] = Time.zone.today.rfc3339 }
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when the declaration_date is in the past" do
+      before { params[:declaration_date] = 1.day.ago.rfc3339 }
+
+      it { is_expected.to be_valid }
+    end
+
     context "when a participant has been withdrawn" do
       before do
         travel_to(withdrawal_time) do
@@ -100,6 +121,12 @@ RSpec.describe Declarations::Create, type: :model do
 
     context "when an existing declaration already exists" do
       before { service.create_declaration }
+
+      it "has a meaningful error" do
+        expect(subject).to be_invalid
+
+        expect(service.errors.first).to have_attributes(attribute: :base, type: :declaration_already_exists)
+      end
 
       context "when the state submitted" do
         it "does not create duplicates" do

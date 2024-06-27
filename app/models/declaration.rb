@@ -46,7 +46,6 @@ class Declaration < ApplicationRecord
   }, _suffix: true
 
   validates :declaration_date, :declaration_type, presence: true
-  validate :declaration_date_not_in_the_future
 
   def billable_statement
     statement_items.find(&:billable?)&.statement
@@ -85,21 +84,16 @@ class Declaration < ApplicationRecord
   def duplicate_declarations
     self
       .class
+      .billable_or_changeable
       .joins(application: %i[user course])
       .where(user: { trn: application.user.trn })
       .where.not(user: { trn: nil })
+      .where.not(user: { id: application.user_id })
       .where.not(id:)
-      .where(state: %w[submitted eligible payable paid])
       .where(
         declaration_type:,
         superseded_by_id: nil,
         application: { course: application.course.rebranded_alternative_courses },
       )
-  end
-
-private
-
-  def declaration_date_not_in_the_future
-    errors.add(:declaration_date, :future_declaration_date) if declaration_date&.future?
   end
 end

@@ -5,8 +5,6 @@ en:
   bad_request: "Bad request"
   not_found: "Not found"
   invalid_date_filter: "The filter '#/%{attribute}' must be a valid ISO 8601 date"
-  invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
-  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
   schedule_invalid_for_course: Selected schedule is not valid for the course
@@ -31,9 +29,6 @@ en:
     cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
 
   declaration: &declaration
-    future_declaration_date: "The '#/declaration_date' value cannot be a future date. Check the date and try again."
-    declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
-    mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
     participant_id:
       blank: "The property '#/participant_id' must be present"
       declaration_must_be_before_withdrawal_date: "This participant withdrew from this course on %{withdrawal_date}. Enter a '#/declaration_date' that's on or before the withdrawal date."
@@ -41,14 +36,13 @@ en:
     declaration_date:
       blank: "Enter a '#/declaration_date'."
       invalid: "Enter a valid RCF3339 '#/declaration_date'."
-      declaration_before_milestone_start: "Enter a '#/declaration_date' that's on or after the milestone start."
-      declaration_after_milestone_cutoff: "Enter a '#/declaration_date' that's before the milestone end date."
+      declaration_before_schedule_start: "Enter a '#/declaration_date' that's on or after the schedule start."
+      future_declaration_date: "The '#/declaration_date' value cannot be a future date. Check the date and try again."
     declaration_type:
       blank: "Enter a '#/declaration_type'."
+      mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
     has_passed:
       invalid: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
-    course_identifier:
-      invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
 
   statement: &statement
     no_output_fee_statement: You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.
@@ -64,6 +58,7 @@ en:
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/course_identifier' value for this participant.
     inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
+    invalid: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
 
   participant_reason: &participant_reason
     blank: The property '#/reason' must be present
@@ -297,6 +292,7 @@ en:
             completion_date:
               future_date: The '#/%{attribute}' value cannot be a future date. Check the date and try again.
         declarations/create:
+          declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
           <<: *statement
           attributes:
             <<: *declaration

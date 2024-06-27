@@ -1139,13 +1139,11 @@ components:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
-                  required: false
                   example: true
                 schedule_identifier:
                   description: The new schedule of the participant
                   nullable: false
                   type: string
-                  required: false
                   example: npq-aso-march
                   enum:
                   - npq-aso-march
@@ -1188,7 +1186,6 @@ components:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
-                  required: true
                   example: true
     ParticipantResponse:
       description: A single NPQ participant

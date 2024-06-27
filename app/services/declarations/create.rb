@@ -26,6 +26,7 @@ module Declarations
     validate :validate_has_passed_field, if: :validate_has_passed?
     validate :validate_schedule_exists
     validate :validates_billable_slot_available
+    validate :declaration_date_not_in_the_future
 
     attr_reader :raw_declaration_date, :declaration
 
@@ -52,13 +53,13 @@ module Declarations
         &.applications
         &.accepted
         &.includes(:course)
-        &.find_by(lead_provider:, course: { identifier: course_identifier })
+        &.find_by(lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
     end
 
     def participant
       @participant ||= begin
         Participants::Query.new(lead_provider:).participant(ecf_id: participant_id)
-      rescue StandardError
+      rescue ActiveRecord::RecordNotFound
         nil
       end
     end
@@ -93,7 +94,7 @@ module Declarations
     end
 
     def find_or_create_declaration!
-      @declaration ||= existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
+      @declaration = existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
     end
 
     def statement_attacher
@@ -105,7 +106,7 @@ module Declarations
       return if application.blank?
       return if existing_declaration&.submitted_state?
       return if existing_declaration.nil? && !application.fundable?
-      return unless lead_provider.next_output_fee_statement(cohort).blank?
+      return if lead_provider.next_output_fee_statement(cohort).present?
 
       errors.add(:cohort, :no_output_fee_statement, cohort: cohort.start_year)
     end
@@ -135,14 +136,18 @@ module Declarations
       return unless participant
 
       return unless Declaration
+                      .billable_or_changeable
                       .joins(application: %i[user course])
                       .where(
                         application: { user: participant, courses: { identifier: course_identifier } },
                         declaration_type:,
-                        state: %w[submitted eligible payable paid],
                       ).exists?
 
-      errors.add(:base, I18n.t("declaration.declaration_already_exists"))
+      errors.add(:base, :declaration_already_exists)
+    end
+
+    def declaration_date_not_in_the_future
+      errors.add(:declaration_date, :future_declaration_date) if declaration_date&.future?
     end
 
     def validate_has_passed_field

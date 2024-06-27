@@ -46,7 +46,7 @@ RSpec.describe CourseForParticipantValidator do
 
       it "has a meaningfull error", :aggregate_failures do
         expect(subject).to be_invalid
-        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid_course)
+        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid)
       end
     end
 
@@ -61,7 +61,7 @@ RSpec.describe CourseForParticipantValidator do
 
       it "has a meaningfull error", :aggregate_failures do
         expect(subject).to be_invalid
-        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid_course)
+        expect(subject.errors.first).to have_attributes(attribute: :course_identifier, type: :invalid)
       end
     end
   end
