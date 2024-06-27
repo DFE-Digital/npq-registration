@@ -45,8 +45,6 @@ en:
       blank: "Enter a '#/declaration_type'."
     has_passed:
       invalid: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
-    cohort:
-      missing_npq_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
     course_identifier:
       invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
 
