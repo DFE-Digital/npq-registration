@@ -70,7 +70,7 @@ RSpec.describe ParticipantNotWithdrawnValidator do
 
     context "when participant was withdrawn by another lead provider" do
       before do
-        application.application_states.create!(state: :withdrawn, lead_provider: create(:lead_provider, name: "Another Lead Provider"))
+        application.application_states.create!(state: :withdrawn, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
         application.withdrawn!
       end
 

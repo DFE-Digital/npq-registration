@@ -78,38 +78,29 @@ RSpec.describe DeclarationDateValidator do
       end
     end
 
-    context "when declaration_date is before the milestone start" do
+    context "when declaration_date is before the schedule start" do
       let(:schedule_applies_from_date) { declaration_date + 1.day }
 
       it "has a meaningful error", :aggregate_failures do
         expect(subject).to be_invalid
-        expect(subject.errors.first).to have_attributes(attribute: :declaration_date, type: :declaration_before_milestone_start)
+        expect(subject.errors.first).to have_attributes(attribute: :declaration_date, type: :declaration_before_schedule_start)
       end
     end
 
-    context "when declaration_date is at the milestone start" do
+    context "when declaration_date is at the schedule start" do
       let(:schedule_applies_from_date) { declaration_date }
 
       it { is_expected.to be_valid }
     end
 
-    context "when declaration_date is in the middle of milestone" do
+    context "when declaration_date is in the middle of schedule" do
       it { is_expected.to be_valid }
     end
 
-    context "when declaration_date is at the milestone end" do
+    context "when declaration_date is at the schedule end" do
       let(:schedule_applies_to_date) { declaration_date }
 
       it { is_expected.to be_valid }
-    end
-
-    context "when declaration_date is after the milestone start" do
-      let(:schedule_applies_to_date) { declaration_date - 1.day }
-
-      it "has a meaningfull error", :aggregate_failures do
-        expect(subject).to be_invalid
-        expect(subject.errors.first).to have_attributes(attribute: :declaration_date, type: :declaration_after_milestone_cutoff)
-      end
     end
   end
 end

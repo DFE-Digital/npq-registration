@@ -101,6 +101,12 @@ RSpec.describe Declarations::Create, type: :model do
     context "when an existing declaration already exists" do
       before { service.create_declaration }
 
+      it "has a meaningful error" do
+        expect(subject).to be_invalid
+
+        expect(service.errors.first).to have_attributes(attribute: :base, type: :declaration_already_exists)
+      end
+
       context "when the state submitted" do
         it "does not create duplicates" do
           expect { service.create_declaration }.not_to change(Declaration, :count)
