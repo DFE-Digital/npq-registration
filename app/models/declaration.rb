@@ -85,11 +85,12 @@ class Declaration < ApplicationRecord
   def duplicate_declarations
     self
       .class
+      .billable_or_changeable
       .joins(application: %i[user course])
+      .includes(application: %i[user course])
       .where(user: { trn: application.user.trn })
-      .where.not(user: { trn: nil })
+      .where.not(user: { trn: nil, id: application.user_id })
       .where.not(id:)
-      .where(state: %w[submitted eligible payable paid])
       .where(
         declaration_type:,
         superseded_by_id: nil,

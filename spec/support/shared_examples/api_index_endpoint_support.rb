@@ -7,7 +7,7 @@ RSpec.shared_examples "an API index endpoint" do
       let!(:resource2) { create_resource(lead_provider: current_lead_provider) }
 
       before do
-        create_resource(lead_provider: create(:lead_provider, name: "Another lead provider"))
+        create_resource(lead_provider: LeadProvider.where.not(id: current_lead_provider.id).first)
       end
 
       it "returns 2 resources" do

@@ -30,7 +30,6 @@ en:
 
   declaration: &declaration
     future_declaration_date: "The '#/declaration_date' value cannot be a future date. Check the date and try again."
-    declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
     mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
     participant_id:
       blank: "The property '#/participant_id' must be present"
@@ -39,8 +38,8 @@ en:
     declaration_date:
       blank: "Enter a '#/declaration_date'."
       invalid: "Enter a valid RCF3339 '#/declaration_date'."
-      declaration_before_milestone_start: "Enter a '#/declaration_date' that's on or after the milestone start."
-      declaration_after_milestone_cutoff: "Enter a '#/declaration_date' that's before the milestone end date."
+      declaration_before_schedule_start: "Enter a '#/declaration_date' that's on or after the schedule start."
+      declaration_after_schedule_cutoff: "Enter a '#/declaration_date' that's before the schedule end date."
     declaration_type:
       blank: "Enter a '#/declaration_type'."
     has_passed:
@@ -290,19 +289,17 @@ en:
               already_voided: This declaration has already been voided.
               not_already_refunded: The declaration will or has been be refunded.
               must_be_paid: The declaration must be paid before it can be clawed back.
-<<<<<<< HEAD
         participant_outcomes:
           attributes:
             completion_date:
               future_date: The '#/%{attribute}' value cannot be a future date. Check the date and try again.
-=======
         declarations/create:
+          declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
           <<: *statement
           attributes:
             <<: *declaration
             course_identifier:
               <<: *participant_course_identifier
->>>>>>> f657d0a0 ([CPDLP-3094] Address PR comments)
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

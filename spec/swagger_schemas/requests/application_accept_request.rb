@@ -24,7 +24,6 @@ APPLICATION_ACCEPT_REQUEST = {
                 description: "This field indicates whether the application is funded",
                 nullable: false,
                 type: :boolean,
-                required: false,
                 example: true,
               },
             },
@@ -40,7 +39,6 @@ APPLICATION_ACCEPT_REQUEST = {
     description: "The new schedule of the participant",
     nullable: false,
     type: :string,
-    required: false,
     example: Schedule::IDENTIFIERS.first,
     enum: Schedule::IDENTIFIERS,
   }

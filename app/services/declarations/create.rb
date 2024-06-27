@@ -58,7 +58,7 @@ module Declarations
     def participant
       @participant ||= begin
         Participants::Query.new(lead_provider:).participant(ecf_id: participant_id)
-      rescue StandardError
+      rescue ActiveRecord::RecordNotFound
         nil
       end
     end
@@ -93,7 +93,7 @@ module Declarations
     end
 
     def find_or_create_declaration!
-      @declaration ||= existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
+      @declaration = existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
     end
 
     def statement_attacher
@@ -105,7 +105,7 @@ module Declarations
       return if application.blank?
       return if existing_declaration&.submitted_state?
       return if existing_declaration.nil? && !application.fundable?
-      return unless lead_provider.next_output_fee_statement(cohort).blank?
+      return if lead_provider.next_output_fee_statement(cohort).present?
 
       errors.add(:cohort, :no_output_fee_statement, cohort: cohort.start_year)
     end
@@ -135,14 +135,14 @@ module Declarations
       return unless participant
 
       return unless Declaration
+                      .billable_or_changeable
                       .joins(application: %i[user course])
                       .where(
                         application: { user: participant, courses: { identifier: course_identifier } },
                         declaration_type:,
-                        state: %w[submitted eligible payable paid],
                       ).exists?
 
-      errors.add(:base, I18n.t("declaration.declaration_already_exists"))
+      errors.add(:base, :declaration_already_exists)
     end
 
     def validate_has_passed_field

@@ -987,7 +987,6 @@ components:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
-                  required: false
                   example: true
     ApplicationChangeFundedPlaceRequest:
       description: A NPQ application change funded place request
@@ -1017,7 +1016,6 @@ components:
                   description: This field indicates whether the application is funded
                   nullable: false
                   type: boolean
-                  required: true
                   example: true
     EnrolmentsCsvResponse:
       description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
@@ -1560,7 +1558,8 @@ components:
                     example: db3a7848-7308-4879-942a-c4a70ced400a
                   training_status:
                     description: The training status of the NPQ participant
-                    type:
+                    type: string
+                    enum:
                     - active
                     - deferred
                     - withdrawn

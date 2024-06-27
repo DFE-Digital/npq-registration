@@ -27,11 +27,11 @@ private
     return unless record.schedule && record.declaration_date.present?
 
     if record.declaration_date < record.schedule.applies_from.beginning_of_day
-      record.errors.add(:declaration_date, :declaration_before_milestone_start)
+      record.errors.add(:declaration_date, :declaration_before_schedule_start)
     end
 
     if record.schedule.applies_to.end_of_day <= record.declaration_date
-      record.errors.add(:declaration_date, :declaration_after_milestone_cutoff)
+      record.errors.add(:declaration_date, :declaration_after_schedule_cutoff)
     end
   end
 end
