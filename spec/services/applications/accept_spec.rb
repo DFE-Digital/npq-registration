@@ -18,7 +18,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
     let(:user) { create(:user, :with_verified_trn) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
     let(:course) { create(:course, :sl, course_group:) }
-    let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current) }
     let(:cohort_next) { create(:cohort, :next) }
@@ -30,11 +29,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         course:,
         lead_provider:,
         cohort:,
-        schedule:,
       )
     end
-
-    before { schedule }
 
     describe "validations" do
       context "when the npq application is missing" do
@@ -68,7 +64,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
       end
 
       context "when the existing data is invalid" do
-        let(:application) { create(:application, cohort:, schedule:, course:) }
+        let(:application) { create(:application, cohort:, course:) }
 
         it "throws ActiveRecord::RecordInvalid" do
           application.lead_provider_id = nil
@@ -81,7 +77,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
       let(:other_course_group) { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
       let(:course) { create(:course, :aso, course_group: other_course_group) }
       let(:npq_ehco) { create(:course, :ehco, course_group: other_course_group) }
-      let!(:other_schedule) { create(:schedule, :npq_ehco_june, course_group: other_course_group, cohort:) }
 
       let(:other_application) do
         create(
@@ -90,7 +85,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
           course: npq_ehco,
           lead_provider:,
           cohort:,
-          schedule: other_schedule,
         )
       end
 
@@ -236,7 +230,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
     end
 
     context "when applying for 2022" do
-      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort: cohort_next) }
       let!(:application) do
         create(:application,
                user:,
@@ -322,7 +315,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
       let(:cohort) { create(:cohort, :current) }
       let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
       let(:course) { create(:course, :sl, course_group:) }
-      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
 
       let(:application) do
         create(
@@ -332,7 +324,6 @@ RSpec.describe Applications::Accept, :with_default_schedules do
           course:,
           lead_provider:,
           cohort:,
-          schedule:,
         )
       end
 
