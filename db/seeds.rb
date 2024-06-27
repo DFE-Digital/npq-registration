@@ -25,7 +25,6 @@ Rails.logger.info("Seeding database")
   "add_lead_providers.rb",
   "add_itt_providers.rb",
   "add_statements.rb",
-  "add_contracts.rb",
   "add_users.rb",
   "add_applications.rb",
   "add_settings.rb",

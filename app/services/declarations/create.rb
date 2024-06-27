@@ -19,8 +19,8 @@ module Declarations
     validates :declaration_date, declaration_date: true
     validates :declaration_date, presence: true
     validates :declaration_type, presence: true
-    # TODO we don't have NPQ Contract yet
-    validates :cohort, contract_for_cohort_and_course: true
+    # TODO: we don't have NPQ Contract yet
+    # validates :cohort, contract_for_cohort_and_course: true
 
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?

@@ -82,8 +82,6 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:resource_id) { resource.ecf_id }
     let(:resource_name) { :declaration }
 
-    before { create(:contract, course:, cohort:, lead_provider:) }
-
     it_behaves_like "an API create endpoint"
   end
 end
