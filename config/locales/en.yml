@@ -70,7 +70,7 @@ en:
         questionnaires/provider_check:
           attributes:
             chosen_provider:
-              blank: Select whether or not you have chosen an NPQ and provider
+              blank: Select ‘Yes’ or ‘No’ to tell us if you've chosen a NPQ and provider
         questionnaires/share_provider:
           attributes:
             can_share_choices:
@@ -90,32 +90,33 @@ en:
         questionnaires/qualified_teacher_check:
           attributes:
             trn:
-              blank: Teacher reference number can’t be blank
+              blank: Teacher reference number cannot be blank
               too_short: Teacher reference number is at least %{count} digits long
               too_long: Teacher reference number is at most %{count} digits long
               invalid: Teacher reference number must only contain numbers
               not_real: You must enter a valid teacher reference number (TRN)
             full_name:
-              blank: Full name can’t be blank
+              blank: Full name cannot be blank
             date_of_birth:
-              blank: Date of birth can’t be blank
+              blank: Date of birth cannot be blank
               in_future: Date of birth must be in the past
               invalid: Date of birth must be a valid date
             national_insurance_number:
               too_long: National Insurance number is too long (maximum is %{count} characters)
+              blank: National Insurance number cannot be blank
         questionnaires/choose_your_npq:
           attributes:
             course_identifier:
-              blank: Choose a national professional qualification
+              blank: Select a national professional qualification course
               invalid: Choose a valid national professional qualification
         questionnaires/maths_eligibility_teaching_for_mastery:
           attributes:
             maths_eligibility_teaching_for_mastery:
-              blank: Choose whether or not you took one year of the primary maths Teaching for Mastery programme
+              blank: Select ‘Yes’ if you took one year of the primary maths Teaching for Mastery programme
         questionnaires/maths_understanding_of_approach:
           attributes:
             maths_understanding_of_approach:
-              blank: Choose your understanding of mastery approaches to teaching maths.
+              blank: Select an option that tells us about your experience of mastery approaches to teaching maths.
         questionnaires/course_start_date:
           attributes:
             course_start_date:
@@ -156,7 +157,7 @@ en:
         questionnaires/find_childcare_provider:
           attributes:
             institution_location:
-              blank: Nursery location can’t be blank
+              blank: Enter the location of your workplace
         questionnaires/funding_your_npq:
           attributes:
             funding:
@@ -165,7 +166,7 @@ en:
         questionnaires/npqh_status:
           attributes:
             npqh_status:
-              blank: Information about NPQH can’t be blank
+              blank: Select what stage you are at with the Headship NPQ
         questionnaires/ehco_headteacher:
           attributes:
             ehco_headteacher:
@@ -182,7 +183,7 @@ en:
         questionnaires/ehco_new_headteacher:
           attributes:
             ehco_new_headteacher:
-              blank: Choose whether or not you are in your first 2 years of headship
+              blank: Select ‘Yes’ if you're in your first 5 years of headship
         questionnaires/kind_of_nursery:
           attributes:
             kind_of_nursery:
@@ -190,7 +191,7 @@ en:
         questionnaires/teacher_catchment:
           attributes:
             teacher_catchment:
-              blank: Choose where you work
+              blank: Select ‘Yes’ if you work in England
             teacher_catchment_country:
               blank: Select which country you work in
               inclusion: Select one of the listed countries
@@ -202,6 +203,10 @@ en:
               blank: Enter an email address
               invalid: This email is invalid
               taken: This email has already been registered for interest
+        questionnaires/work_setting:
+          attributes:
+            work_setting:
+              blank: Select the setting that you work in
         email_updates:
           attributes:
             email_updates_status:
@@ -209,11 +214,11 @@ en:
         questionnaires/senco_in_role:
           attributes:
             senco_in_role:
-              blank: Select an option to continue
+              blank: Select if you work as a SENCO or if you have any plans to become one
         questionnaires/senco_start_date:
           attributes:
             senco_start_date:
-              blank: Enter the date you became a SENCO to continue
+              blank: Enter the date you became a SENCO
               in_future: The date you became a SENCO must be in the past
               invalid: The date you became a SENCO must be a real date
         participants/resume:
@@ -463,7 +468,7 @@ en:
         npqh_status: "What stage are you at with the Headship NPQ?"
         trn_knowledge: "Do you have a TRN?"
         lead_provider_id: "Select your provider"
-        chosen_provider: "Have you chosen an NPQ and provider?"
+        chosen_provider: "Have you chosen a NPQ and provider?"
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
         qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"
