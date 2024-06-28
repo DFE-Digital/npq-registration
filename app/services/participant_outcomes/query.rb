@@ -34,7 +34,12 @@ module ParticipantOutcomes
     end
 
     def all_participant_outcomes
-      ParticipantOutcome.includes(declaration: :lead_provider)
+      ParticipantOutcome.includes(
+        declaration: {
+          lead_provider: {},
+          application: %i[course user],
+        },
+      )
     end
   end
 end
