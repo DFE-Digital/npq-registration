@@ -11,7 +11,7 @@ class LeadProvider < ApplicationRecord
     "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
 
-  NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS = [
+  NPQH_SL_LT_LTD_LBC_PROVIDERS = [
     "Ambition Institute",
     "Best Practice Network (home of Outstanding Leaders Partnership)",
     "Church of England",
@@ -20,6 +20,14 @@ class LeadProvider < ApplicationRecord
     "Teacher Development Trust",
     "Teach First",
     "UCL Institute of Education",
+  ].freeze
+
+  NPQH_EHCO_PROVIDERS = [
+    "Ambition Institute",
+    "Best Practice Network (home of Outstanding Leaders Partnership)",
+    "Church of England",
+    "National Institute of Teaching",
+    "Teach First",
   ].freeze
 
   EYL_LL_PROVIDERS = [
@@ -36,7 +44,6 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "LLSE",
     "National Institute of Teaching",
-    "Teacher Development Trust",
     "Teach First",
     "UCL Institute of Education",
   ].freeze
@@ -64,13 +71,13 @@ class LeadProvider < ApplicationRecord
   #       longterm having this handled in the DB so none of
   #       this data has to be hardcoded would be preferable.
   COURSE_TO_PROVIDER_MAPPING = {
-    "npq-headship" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-senior-leadership" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-leading-teaching" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-leading-teaching-development" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-leading-behaviour-culture" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-early-headship-coaching-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
-    "npq-additional-support-offer" => NPQH_SL_LT_LTD_LBC_EHCO_PROVIDERS,
+    "npq-headship" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
+    "npq-senior-leadership" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
+    "npq-leading-teaching" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
+    "npq-leading-teaching-development" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
+    "npq-leading-behaviour-culture" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
+    "npq-early-headship-coaching-offer" => NPQH_EHCO_PROVIDERS,
+    "npq-additional-support-offer" => NPQH_SL_LT_LTD_LBC_PROVIDERS,
     "npq-early-years-leadership" => EYL_LL_PROVIDERS,
     "npq-leading-literacy" => EYL_LL_PROVIDERS,
     "npq-executive-leadership" => EL_PROVIDERS,

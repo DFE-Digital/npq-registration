@@ -47,14 +47,14 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     npqel_code = %w[
       npq-executive-leadership
     ].freeze
-    npqh_sl_lt_ltd_lbc_ehco_codes = %w[
-      npq-headship
-      npq-senior-leadership
-      npq-leading-teaching
-      npq-leading-teaching-development
-      npq-leading-behaviour-culture
+    npqh_sl_lt_ltd_lbc_codes = %w[ npq-headship
+                                   npq-senior-leadership
+                                   npq-leading-teaching
+                                   npq-leading-teaching-development
+                                   npq-leading-behaviour-culture
+                                   npq-additional-support-offer].freeze
+    npqh_ehco_codes = %w[
       npq-early-headship-coaching-offer
-      npq-additional-support-offer
     ].freeze
     npqlpm_codes = %w[
       npq-leading-primary-mathematics
@@ -62,7 +62,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     senco_codes = %w[
       npq-senco
     ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes - senco_codes
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_codes - npqh_ehco_codes - npqlpm_codes - senco_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do
@@ -132,7 +132,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Church of England",
             "LLSE",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])
@@ -158,7 +157,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       end
     end
 
-    npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
+    npqh_sl_lt_ltd_lbc_codes.each do |course_code|
       context "when applying for #{course_code}" do
         let(:course) { Course.find_by!(identifier: course_code) }
         let(:valid_lead_providers) do
@@ -290,22 +289,24 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
     npqel_code = %w[
       npq-executive-leadership
     ].freeze
-    npqh_sl_lt_ltd_lbc_ehco_codes = %w[
+    npqh_sl_lt_ltd_lbc_codes = %w[
       npq-headship
       npq-senior-leadership
       npq-leading-teaching
       npq-leading-teaching-development
       npq-leading-behaviour-culture
-      npq-early-headship-coaching-offer
       npq-additional-support-offer
     ].freeze
     npqlpm_codes = %w[
       npq-leading-primary-mathematics
     ]
+    npqh_ehco_codes = %w[
+      npq-early-headship-coaching-offer
+    ].freeze
     senco_codes = %w[
       npq-senco
     ]
-    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_ehco_codes - npqlpm_codes - senco_codes
+    other_npq_codes = Course.pluck(:identifier) - npqeyl_and_npqll_codes - npqel_code - npqh_sl_lt_ltd_lbc_codes - npqlpm_codes - senco_codes - npqh_ehco_codes
 
     other_npq_codes.each do |course_code|
       context "when applying for #{course_code}" do
@@ -347,7 +348,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Church of England",
             "LLSE",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])
@@ -359,7 +359,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
       end
     end
 
-    npqh_sl_lt_ltd_lbc_ehco_codes.each do |course_code|
+    npqh_sl_lt_ltd_lbc_codes.each do |course_code|
       context "when applying for #{course_code}" do
         let(:course) { Course.find_by!(identifier: course_code) }
         let(:expected_providers) do
@@ -372,6 +372,25 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
+          ])
+        end
+
+        it "returns all options" do
+          expect(subject.map(&:value).sort).to eq(expected_providers.pluck(:id).sort)
+        end
+      end
+    end
+
+    npqh_ehco_codes.each do |course_code|
+      context "when applying for #{course_code}" do
+        let(:course) { Course.find_by!(identifier: course_code) }
+        let(:expected_providers) do
+          LeadProvider.where(name: [
+            "Ambition Institute",
+            "Best Practice Network (home of Outstanding Leaders Partnership)",
+            "Church of England",
+            "National Institute of Teaching",
+            "Teach First",
           ])
         end
 
