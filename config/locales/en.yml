@@ -274,7 +274,7 @@ en:
           attributes:
             completion_date:
               future_date: The '#/%{attribute}' value cannot be a future date. Check the date and try again.
-              
+
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

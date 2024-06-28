@@ -6,15 +6,20 @@ module Applications
     include ActiveModel::Attributes
 
     attribute :application
-    attribute :funded_place, :boolean
+    attribute :funded_place
     attribute :schedule_identifier, :string
 
     validates :application, presence: { message: I18n.t("application.missing_application") }
+    validates :funded_place,
+              inclusion: {
+                in: [true, false],
+                if: :validate_funded_place?,
+                message: I18n.t("application.funded_place_required"),
+              }
     validate :not_already_accepted
     validate :cannot_change_from_rejected
     validate :other_accepted_applications_with_same_course?
     validate :eligible_for_funded_place
-    validate :validate_funded_place
     validate :validate_permitted_schedule_for_course
 
     def accept
@@ -107,13 +112,8 @@ module Applications
       end
     end
 
-    def validate_funded_place
-      return if errors.any?
-      return unless cohort&.funding_cap?
-
-      if funded_place.nil?
-        errors.add(:application, I18n.t("application.funded_place_required"))
-      end
+    def validate_funded_place?
+      errors.blank? && cohort&.funding_cap?
     end
 
     def schedule

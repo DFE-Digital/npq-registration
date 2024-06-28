@@ -136,6 +136,44 @@ RSpec.describe Applications::ChangeFundedPlace do
             end
           end
         end
+
+        context "when funded_place is a string" do
+          context "when funded_place is `true`" do
+            before { params.merge!(funded_place: "true") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is `false`" do
+            before { params.merge!(funded_place: "false") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is `null`" do
+            before { params.merge!(funded_place: "null") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is an empty string" do
+            before { params.merge!(funded_place: "") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+        end
       end
 
       context "when funded_place is not present" do

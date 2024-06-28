@@ -296,7 +296,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         context "when funding_cap is true" do
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:application)).to include("Set '#/funded_place' to true or false.")
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
 
@@ -305,7 +305,45 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
           it "does not validate funded_place" do
             service.accept
-            expect(service.errors.messages_for(:application)).to be_empty
+            expect(service.errors.messages_for(:funded_place)).to be_empty
+          end
+        end
+      end
+
+      context "when funded_place is a string" do
+        context "when funded_place is `true`" do
+          let(:params) { { application:, funded_place: "true" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is `false`" do
+          let(:params) { { application:, funded_place: "false" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is `null`" do
+          let(:params) { { application:, funded_place: "null" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is an empty string" do
+          let(:params) { { application:, funded_place: "" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
       end

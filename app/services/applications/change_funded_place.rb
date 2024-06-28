@@ -6,7 +6,7 @@ module Applications
     include ActiveModel::Attributes
 
     attribute :application
-    attribute :funded_place, :boolean
+    attribute :funded_place
 
     validates :application, presence: { message: I18n.t("application.missing_application") }
     validates :funded_place,
