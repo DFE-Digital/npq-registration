@@ -5,3 +5,11 @@
     wizard: @wizard,
   )
 %>
+
+<%= govuk_details(summary_text: "My workplace is not listed") do %>
+  <p>
+    If your workplace is not listed, we will need to manually review your eligibility.
+    <%= mail_to "continuing-professional-development@digital.education.gov.uk", "Contact us", target: "_blank" %>
+    for support.
+  </p>
+<% end %>
