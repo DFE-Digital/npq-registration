@@ -11,9 +11,8 @@ RSpec.describe Applications::Reject do
       let(:application) { nil }
 
       it "is invalid and returns an error message" do
-        expect(subject).to be_invalid
-
-        expect(service.errors.messages_for(:application)).to include("The entered '#/application' is missing from your request. Check details and try again.")
+        expect(service).to be_invalid
+        expect(service.errors.first).to have_attributes(attribute: :application, type: :blank)
       end
     end
 
@@ -21,9 +20,8 @@ RSpec.describe Applications::Reject do
       let(:application) { create(:application, :rejected) }
 
       it "is invalid and returns an error message" do
-        expect(subject).to be_invalid
-
-        expect(service.errors.messages_for(:application)).to include("This NPQ application has already been rejected")
+        expect(service).to be_invalid
+        expect(service.errors.first).to have_attributes(attribute: :application, type: :has_already_been_rejected)
       end
     end
 
@@ -31,9 +29,8 @@ RSpec.describe Applications::Reject do
       let(:application) { create(:application, :accepted) }
 
       it "is invalid and returns an error message" do
-        expect(subject).to be_invalid
-
-        expect(service.errors.messages_for(:application)).to include("Once accepted an application cannot change state")
+        expect(service).to be_invalid
+        expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_from_accepted)
       end
     end
   end

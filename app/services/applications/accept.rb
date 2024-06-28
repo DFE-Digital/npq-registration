@@ -6,15 +6,19 @@ module Applications
     include ActiveModel::Attributes
 
     attribute :application
-    attribute :funded_place, :boolean
+    attribute :funded_place
     attribute :schedule_identifier, :string
 
-    validates :application, presence: { message: I18n.t("application.missing_application") }
+    validates :application, presence: true
+    validates :funded_place,
+              inclusion: {
+                in: [true, false],
+                if: :validate_funded_place?,
+              }
     validate :not_already_accepted
     validate :cannot_change_from_rejected
     validate :other_accepted_applications_with_same_course?
     validate :eligible_for_funded_place
-    validate :validate_funded_place
     validate :validate_permitted_schedule_for_course
 
     def accept
@@ -37,18 +41,22 @@ module Applications
 
     def not_already_accepted
       return if application.blank?
+      return unless application.accepted?
 
-      errors.add(:application, I18n.t("application.has_already_been_accepted")) if application.accepted?
+      errors.add(:application, :has_already_been_accepted)
     end
 
     def cannot_change_from_rejected
       return if application.blank?
+      return unless application.rejected?
 
-      errors.add(:application, I18n.t("application.cannot_change_from_rejected")) if application.rejected?
+      errors.add(:application, :cannot_change_from_rejected)
     end
 
     def other_accepted_applications_with_same_course?
-      errors.add(:application, I18n.t("application.has_another_accepted_application")) if other_accepted_applications_with_same_course.present?
+      return if other_accepted_applications_with_same_course.blank?
+
+      errors.add(:application, :has_another_accepted_application)
     end
 
     def accept_application!
@@ -101,19 +109,13 @@ module Applications
     def eligible_for_funded_place
       return if errors.any?
       return unless cohort&.funding_cap?
+      return unless funded_place && !application.eligible_for_funding
 
-      if funded_place && !application.eligible_for_funding
-        errors.add(:application, I18n.t("application.not_eligible_for_funded_place"))
-      end
+      errors.add(:application, :not_eligible_for_funded_place)
     end
 
-    def validate_funded_place
-      return if errors.any?
-      return unless cohort&.funding_cap?
-
-      if funded_place.nil?
-        errors.add(:application, I18n.t("application.funded_place_required"))
-      end
+    def validate_funded_place?
+      errors.blank? && cohort&.funding_cap?
     end
 
     def schedule
@@ -128,10 +130,9 @@ module Applications
       return if errors.any?
       return if schedule_identifier.blank?
       return unless schedule
+      return if schedule.course_group.courses.include?(course)
 
-      unless schedule.course_group.courses.include?(course)
-        errors.add(:schedule_identifier, I18n.t(:schedule_invalid_for_course))
-      end
+      errors.add(:schedule_identifier, :invalid)
     end
 
     def create_application_state!

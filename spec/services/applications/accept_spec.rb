@@ -37,9 +37,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         let(:application) {}
 
         it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("The entered '#/application' is missing from your request. Check details and try again.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :blank)
         end
       end
 
@@ -47,9 +46,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         let(:application) { create(:application, :accepted) }
 
         it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("This NPQ application has already been accepted")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :has_already_been_accepted)
         end
       end
 
@@ -57,9 +55,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         let(:application) { create(:application, :rejected) }
 
         it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("Once rejected an application cannot change state")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_from_rejected)
         end
       end
 
@@ -151,9 +148,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         end
 
         it "attaches errors to the object" do
-          service.accept
-
-          expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :has_another_accepted_application)
         end
       end
 
@@ -185,9 +181,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         end
 
         it "attaches errors to the object" do
-          service.accept
-
-          expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :has_another_accepted_application)
         end
       end
     end
@@ -275,8 +270,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         it "does not set funded place if eligible for funding is false" do
           application.update!(eligible_for_funding: false)
 
-          service.accept
-          expect(service.errors.messages_for(:application)).to include("The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :not_eligible_for_funded_place)
         end
       end
 
@@ -295,8 +290,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
         context "when funding_cap is true" do
           it "returns funding_place is required error" do
-            service.accept
-            expect(service.errors.messages_for(:application)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
           end
         end
 
@@ -304,8 +299,45 @@ RSpec.describe Applications::Accept, :with_default_schedules do
           let(:cohort) { create(:cohort, :current) }
 
           it "does not validate funded_place" do
-            service.accept
-            expect(service.errors.messages_for(:application)).to be_empty
+            expect(service).to be_valid
+          end
+        end
+      end
+
+      context "when funded_place is a string" do
+        context "when funded_place is `true`" do
+          let(:params) { { application:, funded_place: "true" } }
+
+          it "returns funding_place is required error" do
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+          end
+        end
+
+        context "when funded_place is `false`" do
+          let(:params) { { application:, funded_place: "false" } }
+
+          it "returns funding_place is required error" do
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+          end
+        end
+
+        context "when funded_place is `null`" do
+          let(:params) { { application:, funded_place: "null" } }
+
+          it "returns funding_place is required error" do
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+          end
+        end
+
+        context "when funded_place is an empty string" do
+          let(:params) { { application:, funded_place: "" } }
+
+          it "returns funding_place is required error" do
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
           end
         end
       end
@@ -355,8 +387,8 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group: new_course_group, cohort:) }
 
         it "returns validation error" do
-          expect(service.accept).to be_falsey
-          expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :schedule_identifier, type: :invalid)
         end
       end
     end

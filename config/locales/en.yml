@@ -7,24 +7,21 @@ en:
   invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
-  schedule_invalid_for_course: Selected schedule is not valid for the course
 
   errors:
     email:
       invalid: Enter a valid email address
 
-  application:
-    missing_application: "The entered '#/application' is missing from your request. Check details and try again."
+  application: &application
+    blank: "The entered '#/application' is missing from your request. Check details and try again."
     has_already_been_rejected: This NPQ application has already been rejected
     cannot_change_from_accepted: Once accepted an application cannot change state
     has_another_accepted_application: The participant has already had an application accepted for this course.
     has_already_been_accepted: This NPQ application has already been accepted
     cannot_change_from_rejected: Once rejected an application cannot change state
     not_eligible_for_funded_place: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
-    funded_place_required: "Set '#/funded_place' to true or false."
     cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting.
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
-    missing_funded_place: "The entered '#/funded_place' is missing from your request. Check details and try again."
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
     cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
 
@@ -46,6 +43,12 @@ en:
   participant_reason: &participant_reason
     blank: The property '#/reason' must be present
     inclusion: The property '#/reason' must be a valid reason
+
+  application_funded_place: &application_funded_place
+    inclusion: "Set '#/funded_place' to true or false."
+
+  application_schedule: &application_schedule
+    inclusion: Selected schedule is not valid for the course
 
   time:
     formats:
@@ -274,7 +277,25 @@ en:
           attributes:
             completion_date:
               future_date: The '#/%{attribute}' value cannot be a future date. Check the date and try again.
-              
+        applications/accept:
+          attributes:
+            funded_place:
+              inclusion: "Set '#/funded_place' to true or false."
+            schedule_identifier:
+              <<: *application_schedule
+            application:
+              <<: *application
+        applications/reject:
+          attributes:
+            application:
+              <<: *application
+        applications/change_funded_place:
+          attributes:
+            funded_place:
+              <<: *application_funded_place
+            application:
+              <<: *application
+
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 

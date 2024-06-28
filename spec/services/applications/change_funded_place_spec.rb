@@ -55,30 +55,30 @@ RSpec.describe Applications::ChangeFundedPlace do
         it "is invalid if the application has not been accepted" do
           application.update!(lead_provider_approval_status: "pending")
 
-          service.change
-          expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_funded_status_from_non_accepted)
         end
 
         it "is invalid if the application is not eligible for funding" do
           application.update!(eligible_for_funding: false)
 
-          service.change
-          expect(service.errors.messages_for(:application)).to include("This participant is not eligible for funding. Contact us if you think this is wrong.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_funded_status_non_eligible)
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to true" do
           cohort.update!(funding_cap: false)
 
-          service.change
-          expect(service.errors.messages_for(:application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :cohort_does_not_accept_capping)
         end
 
         it "is invalid if the cohort does not accept capping and we set a funded place to false" do
           params.merge!(funded_place: false)
           cohort.update!(funding_cap: false)
 
-          service.change
-          expect(service.errors.messages_for(:application)).to include("Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :application, type: :cohort_does_not_accept_capping)
         end
 
         context "when the application is not accepted" do
@@ -87,9 +87,8 @@ RSpec.describe Applications::ChangeFundedPlace do
           it "does not check for applicable declarations" do
             params.merge!(funded_place: false)
 
-            service.change
-
-            expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
+            expect(service).to be_invalid
+            expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_funded_status_from_non_accepted)
           end
         end
 
@@ -102,9 +101,8 @@ RSpec.describe Applications::ChangeFundedPlace do
             Declaration.states.each_key do |state|
               it "is valid if the application has #{state} declarations" do
                 create(:declaration, application:, state:)
-                service.change
 
-                expect(service.errors.messages_for(:application)).to be_empty
+                expect(service).to be_valid
               end
             end
           end
@@ -119,9 +117,8 @@ RSpec.describe Applications::ChangeFundedPlace do
               it "is invalid if the application has #{applicable_state} declarations" do
                 create(:declaration, application:, state: applicable_state)
 
-                service.change
-
-                expect(service.errors.messages_for(:application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
+                expect(service).to be_invalid
+                expect(service.errors.first).to have_attributes(attribute: :application, type: :cannot_change_funded_place)
               end
             end
 
@@ -129,10 +126,46 @@ RSpec.describe Applications::ChangeFundedPlace do
               it "is valid if the application has #{non_applicable_state} declarations" do
                 create(:declaration, application:, state: non_applicable_state)
 
-                service.change
-
-                expect(service.errors.messages_for(:application)).to be_empty
+                expect(service).to be_valid
               end
+            end
+          end
+        end
+
+        context "when funded_place is a string" do
+          context "when funded_place is `true`" do
+            before { params.merge!(funded_place: "true") }
+
+            it "returns funding_place is required error" do
+              expect(service).to be_invalid
+              expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+            end
+          end
+
+          context "when funded_place is `false`" do
+            before { params.merge!(funded_place: "false") }
+
+            it "returns funding_place is required error" do
+              expect(service).to be_invalid
+              expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+            end
+          end
+
+          context "when funded_place is `null`" do
+            before { params.merge!(funded_place: "null") }
+
+            it "returns funding_place is required error" do
+              expect(service).to be_invalid
+              expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
+            end
+          end
+
+          context "when funded_place is an empty string" do
+            before { params.merge!(funded_place: "") }
+
+            it "returns funding_place is required error" do
+              expect(service).to be_invalid
+              expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
             end
           end
         end
@@ -142,9 +175,8 @@ RSpec.describe Applications::ChangeFundedPlace do
         before { params.merge!(funded_place: nil) }
 
         it "is invalid if funded_place is `nil`" do
-          service.change
-
-          expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+          expect(service).to be_invalid
+          expect(service.errors.first).to have_attributes(attribute: :funded_place, type: :inclusion)
         end
       end
     end
