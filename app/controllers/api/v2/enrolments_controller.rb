@@ -1,7 +1,7 @@
 module API
   module V2
     class EnrolmentsController < BaseController
-      include ::API::Concerns::FilterByUpdatedSince
+      include ::API::Concerns::FilterByDate
 
       def index
         respond_to do |format|

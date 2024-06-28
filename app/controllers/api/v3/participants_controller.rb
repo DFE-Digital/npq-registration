@@ -2,7 +2,7 @@ module API
   module V3
     class ParticipantsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include ::API::Concerns::FilterByDate
 
       def index
         render json: to_json(paginate(participants_query.participants))

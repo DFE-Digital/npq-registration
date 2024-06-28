@@ -2,7 +2,7 @@ module API
   module V3
     class DeclarationsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include ::API::Concerns::FilterByDate
 
       def index
         render json: to_json(paginate(declarations_query.declarations))
