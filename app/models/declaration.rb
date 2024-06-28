@@ -6,7 +6,7 @@ class Declaration < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   belongs_to :superseded_by, class_name: "Declaration", optional: true
-  has_many :outcomes, dependent: :destroy
+  has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
 
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze

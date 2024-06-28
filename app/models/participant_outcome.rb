@@ -1,4 +1,4 @@
-class Outcome < ApplicationRecord
+class ParticipantOutcome < ApplicationRecord
   belongs_to :declaration
 
   validates :state, presence: true

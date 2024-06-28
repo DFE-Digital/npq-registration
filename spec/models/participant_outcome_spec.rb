@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Outcome, type: :model do
-  subject { build(:outcome) }
+RSpec.describe ParticipantOutcome, type: :model do
+  subject { build(:participant_outcome) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:state) }

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :outcome do
+  factory :participant_outcome do
     passed
     completion_date { Time.zone.today + 1.week }
 

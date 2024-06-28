@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_21_044020) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_073505) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -276,18 +276,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_044020) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
-  create_table "outcomes", force: :cascade do |t|
-    t.enum "state", null: false, enum_type: "outcome_states"
-    t.date "completion_date", null: false
-    t.bigint "declaration_id", null: false
-    t.boolean "qualified_teachers_api_request_successful"
-    t.datetime "sent_to_qualified_teachers_api_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["declaration_id", "created_at"], name: "index_outcomes_on_declaration_id_and_created_at"
-    t.index ["declaration_id"], name: "index_outcomes_on_declaration_id"
-  end
-
   create_table "participant_id_changes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "from_participant_id", null: false
@@ -297,6 +285,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_044020) do
     t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
     t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
+  create_table "participant_outcomes", force: :cascade do |t|
+    t.enum "state", null: false, enum_type: "outcome_states"
+    t.date "completion_date", null: false
+    t.bigint "declaration_id", null: false
+    t.boolean "qualified_teachers_api_request_successful"
+    t.datetime "sent_to_qualified_teachers_api_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["declaration_id", "created_at"], name: "index_participant_outcomes_on_declaration_id_and_created_at"
+    t.index ["declaration_id"], name: "index_participant_outcomes_on_declaration_id"
   end
 
   create_table "private_childcare_providers", force: :cascade do |t|
@@ -487,10 +487,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_21_044020) do
   add_foreign_key "declarations", "cohorts"
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
   add_foreign_key "declarations", "lead_providers"
-  add_foreign_key "outcomes", "declarations"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "participant_outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "declarations"
