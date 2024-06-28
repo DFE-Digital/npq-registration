@@ -28,6 +28,7 @@ Rails.logger.info("Seeding database")
   "add_applications.rb",
   "add_settings.rb",
   "add_statements.rb",
+  "add_declarations.rb",
   "add_api_tokens.rb",
   "add_feature_flags.rb",
 ].each do |seed_file|

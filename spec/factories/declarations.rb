@@ -9,6 +9,16 @@ FactoryBot.define do
 
     state { "submitted" }
 
+    trait :submitted_or_eligible do
+      state do
+        if application && application.eligible_for_funding && application.funded_place
+          :eligible
+        else
+          :submitted
+        end
+      end
+    end
+
     trait :paid do
       state { :paid }
     end
