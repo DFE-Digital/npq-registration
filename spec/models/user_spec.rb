@@ -49,7 +49,7 @@ RSpec.describe User do
         create(:participant_outcome, user:, course:, lead_provider:).declaration.update!(declaration_type: "retained-1")
 
         # Declaration on another provider.
-        create(:participant_outcome, user:, course:, lead_provider: create(:lead_provider, name: "Other lead provider"))
+        create(:participant_outcome, user:, course:, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
 
         # Declaration with different course.
         create(:participant_outcome, user:, course: create(:course, identifier: "other-course"), lead_provider:)

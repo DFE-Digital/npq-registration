@@ -4,6 +4,8 @@ class CourseGroup < ApplicationRecord
 
   validates :name, presence: { message: "Enter a unique course group name" }, uniqueness: { message: "Course name already exist, enter a unique name" }
 
+  scope :leadership_or_specialist, -> { where(name: %w[leadership specialist]) }
+
   def schedule_for(cohort:, schedule_date:)
     case name
     when "leadership"

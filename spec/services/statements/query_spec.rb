@@ -32,8 +32,7 @@ RSpec.describe Statements::Query do
         end
 
         it "does not return statements for other Lead Providers" do
-          other_lead_provider = create(:lead_provider)
-          create(:statement, lead_provider: other_lead_provider)
+          create(:statement, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
 
           query = Statements::Query.new(lead_provider:)
 

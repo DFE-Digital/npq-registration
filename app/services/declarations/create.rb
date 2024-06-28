@@ -38,6 +38,7 @@ module Declarations
         set_eligibility!
 
         statement_attacher.attach unless declaration.submitted_state?
+        create_participant_outcome!
       end
 
       true
@@ -165,7 +166,25 @@ module Declarations
     end
 
     def valid_course_identifier_for_participant_outcome?
-      CourseGroup.joins(:courses).where(name: %w[leadership specialist]).map(&:courses).flatten.uniq.map(&:identifier).include?(course_identifier)
+      CourseGroup.joins(:courses).leadership_or_specialist.where(courses: { identifier: course_identifier }).exists?
+    end
+
+    def create_participant_outcome!
+      return unless validate_has_passed?
+
+      service = ParticipantOutcomes::Create.new(
+        lead_provider:,
+        participant:,
+        course_identifier:,
+        state: has_passed.to_s == "true" ? "passed" : "failed",
+        completion_date: declaration_date.rfc3339,
+      )
+
+      if service.valid?
+        service.create_outcome
+      else
+        raise ArgumentError, I18n.t(:cannot_create_completed_declaration)
+      end
     end
   end
 end
