@@ -2,15 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe ValidTestDataGenerators::ApplicationsPopulater do
+RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_schedules do
   let(:lead_provider) { create(:lead_provider) }
-  let(:cohort) { create(:cohort) }
+  let(:cohort) { create(:cohort, :current) }
 
   before do
     allow(Rails).to receive(:env) { environment.inquiry }
-    FactoryBot.create(:schedule, :npq_specialist_autumn, cohort:)
-    FactoryBot.create(:schedule, :npq_leadership_autumn, cohort:)
-    FactoryBot.create(:schedule, :npq_aso_december, cohort:)
   end
 
   subject { described_class.new(lead_provider:, cohort:, number_of_participants: 30) }

@@ -141,7 +141,7 @@ RSpec.describe Declarations::Query do
     end
 
     it "raises an error if the declaration is not in the filtered query" do
-      other_declaration = create(:declaration)
+      other_declaration = create(:declaration, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
 
       expect { query.declaration(ecf_id: other_declaration.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect { query.declaration(id: other_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)
