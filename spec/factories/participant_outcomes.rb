@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :participant_outcome do
     passed
     completion_date { 1.week.ago }
+    ecf_id { SecureRandom.uuid }
 
     declaration { association :declaration }
 

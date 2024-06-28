@@ -4,6 +4,8 @@ RSpec.describe ParticipantOutcome, type: :model do
   subject(:instance) { build(:participant_outcome) }
 
   describe "validations" do
+    it { is_expected.to validate_presence_of(:ecf_id) }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive }
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:completion_date) }
 

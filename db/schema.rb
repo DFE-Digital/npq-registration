@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_28_073505) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_101251) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -295,8 +295,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_073505) do
     t.datetime "sent_to_qualified_teachers_api_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["declaration_id", "created_at"], name: "index_participant_outcomes_on_declaration_id_and_created_at"
     t.index ["declaration_id"], name: "index_participant_outcomes_on_declaration_id"
+    t.index ["ecf_id"], name: "index_participant_outcomes_on_ecf_id", unique: true
   end
 
   create_table "private_childcare_providers", force: :cascade do |t|
