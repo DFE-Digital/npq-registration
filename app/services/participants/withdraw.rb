@@ -2,7 +2,7 @@
 
 module Participants
   class Withdraw < Action
-    WITHDRAWL_REASONS = %w[
+    WITHDRAWAL_REASONS = %w[
       insufficient-capacity-to-undertake-programme
       personal-reason-health-or-pregnancy-related
       personal-reason-moving-school
@@ -24,7 +24,7 @@ module Participants
 
     attribute :reason
 
-    validates :reason, inclusion: { in: WITHDRAWL_REASONS }, allow_blank: false
+    validates :reason, inclusion: { in: WITHDRAWAL_REASONS }, allow_blank: false
     validate :not_withdrawn
     validate :has_started_declarations
 

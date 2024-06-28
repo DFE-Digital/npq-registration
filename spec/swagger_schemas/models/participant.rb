@@ -311,8 +311,8 @@ PARTICIPANT = {
                       description: "The reason a participant was withdrawn",
                       type: :string,
                       nullable: false,
-                      example: Participants::Withdraw::WITHDRAWL_REASONS.first,
-                      enum: Participants::Withdraw::WITHDRAWL_REASONS,
+                      example: Participants::Withdraw::WITHDRAWAL_REASONS.first,
+                      enum: Participants::Withdraw::WITHDRAWAL_REASONS,
                     },
                     date: {
                       description: "The date and time the participant was withdrawn",

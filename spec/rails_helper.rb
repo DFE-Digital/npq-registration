@@ -83,6 +83,7 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
+  config.include Helpers::SwaggerExampleParser, type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [

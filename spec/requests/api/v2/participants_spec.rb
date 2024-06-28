@@ -53,7 +53,7 @@ RSpec.describe "Participant endpoints", type: :request do
     let(:resource_id) { resource.ecf_id }
     let(:service) { Participants::Defer }
     let(:action) { :defer }
-    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:attributes) { { course_identifier: "course", reason: "reason", lead_provider: current_lead_provider } }
     let(:service_args) { { participant: resource }.merge!(attributes) }
 
     def path(id = nil)
@@ -69,7 +69,7 @@ RSpec.describe "Participant endpoints", type: :request do
     let(:resource_id) { resource.ecf_id }
     let(:service) { Participants::Withdraw }
     let(:action) { :withdraw }
-    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:attributes) { { course_identifier: "course", reason: "reason", lead_provider: current_lead_provider } }
     let(:service_args) { { participant: resource }.merge!(attributes) }
 
     def path(id = nil)

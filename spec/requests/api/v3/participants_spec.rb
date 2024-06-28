@@ -33,6 +33,54 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API show endpoint"
   end
 
+  describe "PUT /api/v3/participants/:ecf_id/resume" do
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Resume }
+    let(:action) { :resume }
+    let(:attributes) { { course_identifier: "course", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
+
+    def path(id = nil)
+      resume_api_v3_participant_path(ecf_id: id)
+    end
+
+    it_behaves_like "an API update endpoint"
+  end
+
+  describe "PUT /api/v3/participants/:ecf_id/defer" do
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Defer }
+    let(:action) { :defer }
+    let(:attributes) { { course_identifier: "course", reason: "reason", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
+
+    def path(id = nil)
+      defer_api_v3_participant_path(ecf_id: id)
+    end
+
+    it_behaves_like "an API update endpoint"
+  end
+
+  describe "PUT /api/v3/participants/:ecf_id/withdraw" do
+    let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::Withdraw }
+    let(:action) { :withdraw }
+    let(:attributes) { { course_identifier: "course", reason: "reason", lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
+
+    def path(id = nil)
+      withdraw_api_v3_participant_path(ecf_id: id)
+    end
+
+    it_behaves_like "an API update endpoint"
+  end
+
   describe("change_schedule") do
     before { api_put(change_schedule_api_v3_participant_path(123)) }
 
