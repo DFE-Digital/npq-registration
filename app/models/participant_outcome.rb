@@ -8,6 +8,6 @@ class ParticipantOutcome < ApplicationRecord
 private
 
   def completion_date_not_in_the_future
-    errors.add(:completion_date, "must be in the future") if completion_date && completion_date > Time.zone.today
+    errors.add(:completion_date, :future_date) if completion_date&.future?
   end
 end

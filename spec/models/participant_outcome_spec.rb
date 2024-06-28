@@ -1,38 +1,40 @@
 require "rails_helper"
 
 RSpec.describe ParticipantOutcome, type: :model do
-  subject { build(:participant_outcome) }
+  subject(:instance) { build(:participant_outcome) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to validate_presence_of(:completion_date) }
+
+    describe "completion_date" do
+      context "when the completion_date is in the future" do
+        before { instance.completion_date = 1.day.from_now }
+
+        it "is invalid" do
+          expect(instance).to be_invalid
+          expect(instance.errors.first).to have_attributes(attribute: :completion_date, type: :future_date)
+        end
+      end
+
+      context "when the completion_date is now" do
+        it "is valid" do
+          freeze_time do
+            instance.completion_date = Time.zone.today
+            expect(instance).to be_valid
+          end
+        end
+      end
+
+      context "when the completion_date is in the past" do
+        before { instance.completion_date = 1.day.ago }
+
+        it { is_expected.to be_valid }
+      end
+    end
   end
 
   describe "associations" do
     it { is_expected.to belong_to(:declaration) }
-  end
-
-  describe "completion_date" do
-    context "when the completion_date is in the future" do
-      it "is not valid" do
-        subject.completion_date = 1.day.from_now
-        expect(subject).not_to be_valid
-        expect(subject.errors[:completion_date]).to include("must be in the future")
-      end
-    end
-
-    context "when the completion_date is today" do
-      it "is valid" do
-        subject.completion_date = Time.zone.today
-        expect(subject).to be_valid
-      end
-    end
-
-    context "when the completion_date is in the past" do
-      it "is valid" do
-        subject.completion_date = 1.day.ago
-        expect(subject).to be_valid
-      end
-    end
   end
 end
