@@ -6,7 +6,7 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to belong_to(:lead_provider) }
     it { is_expected.to belong_to(:superseded_by).optional }
-    it { is_expected.to have_many(:outcomes).dependent(:destroy) }
+    it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
   end
 
