@@ -319,6 +319,138 @@ paths:
             text/csv:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v1/participant-declarations":
+    get:
+      summary: Retrieve multiple Participant Declarations
+      tags:
+      - Participant Declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of Participant Declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+    post:
+      summary: Declare a participant has reached a milestone
+      tags:
+      - Participant Declarations
+      security:
+      - api_key: []
+      parameters: []
+      responses:
+        '200':
+          description: The participant declaration being created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+  "/api/v1/participant-declarations/{id}":
+    get:
+      summary: Retrieve a single Participant Declarations
+      tags:
+      - Participant Declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single Participant Declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v1/participant-declarations/{id}/void":
+    put:
+      summary: Void a declaration
+      tags:
+      - Participant Declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The participant declaration being voided
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v1/participants/npq":
     get:
       summary: Retrieve multiple NPQ participants
@@ -574,6 +706,19 @@ components:
       description: Filter applications to return more specific results
       type: object
       properties:
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListParticipantDeclarationsFilter:
+      description: Filter applications to return more specific results
+      type: object
+      properties:
+        from_participant_id:
+          description: The unique id of the participant
+          type: string
+          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
@@ -1535,3 +1680,117 @@ components:
                   - started-in-error
                   - expected-commitment-unclear
                   - other
+    ParticipantDeclaration:
+      description: The details of a participant declaration
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+        attributes:
+          properties:
+            participant_id:
+              description: The unique identifier of this participant declaration record
+              type: string
+              format: uuid
+              nullable: false
+              example: db3a7848-7308-4879-942a-c4a70ced400a
+            declaration_type:
+              description: The event declaration type
+              type: string
+              nullable: false
+              example: started
+              enum:
+              - started
+              - retained-1
+              - retained-2
+              - retained-3
+              - retained-4
+              - completed
+              - extended-1
+              - extended-2
+              - extended-3
+            declaration_date:
+              description: The event declaration date
+              type: string
+              nullable: false
+              example: '2022-04-30'
+            course_identifier:
+              description: The NPQ course this NPQ application relates to
+              type: string
+              nullable: false
+              example: npq-leading-teaching
+              enum:
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-senior-leadership
+              - npq-headship
+              - npq-executive-leadership
+              - npq-early-years-leadership
+              - npq-additional-support-offer
+              - npq-early-headship-coaching-offer
+              - npq-leading-primary-mathematics
+              - npq-senco
+            eligible_for_payment:
+              description: "[Deprecated - use state instead] Indicates whether this
+                declaration would be eligible for funding from the DfE"
+              type: boolean
+              nullable: true
+              example: true
+            voided:
+              description: "[Deprecated - use state instead] Indicates whether this
+                declaration has been voided"
+              type: boolean
+              nullable: true
+              example: true
+            state:
+              description: Indicates the state of this payment declaration
+              type: string
+              nullable: false
+              example: submitted
+              enum:
+              - submitted
+              - eligible
+              - payable
+              - paid
+              - voided
+              - ineligible
+              - awaiting-clawback
+              - clawed-back
+            updated_at:
+              description: The date the application was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            has_passed:
+              description: The date the declaration was last updated
+              type: string
+              nullable: true
+              example: true
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"

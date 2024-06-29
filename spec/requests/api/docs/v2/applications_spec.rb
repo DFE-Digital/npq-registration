@@ -45,7 +45,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
       extract_swagger_example(schema: "#/components/schemas/ApplicationResponse", version: :v2)
     end
 
-    it_behaves_like "an API create on resource endpoint documentation",
+    it_behaves_like "an API create on existing resource endpoint documentation",
                     "/api/v2/npq-applications/{id}/accept",
                     "NPQ Applications",
                     "Accept an NPQ application",
@@ -63,7 +63,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
       end
     end
 
-    it_behaves_like "an API create on resource endpoint documentation",
+    it_behaves_like "an API create on existing resource endpoint documentation",
                     "/api/v2/npq-applications/{id}/reject",
                     "NPQ Applications",
                     "Reject an NPQ application",

@@ -677,6 +677,19 @@ components:
             and time (ISO 8601 date format).
           type: string
           example: '2021-05-13T11:21:55Z'
+    ListParticipantDeclarationsFilter:
+      description: Filter applications to return more specific results
+      type: object
+      properties:
+        from_participant_id:
+          description: The unique id of the participant
+          type: string
+          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
     UnauthorisedResponse:
       description: Authorization information is missing or invalid.
       type: object
@@ -1749,3 +1762,158 @@ components:
                   - started-in-error
                   - expected-commitment-unclear
                   - other
+    ParticipantDeclaration:
+      description: The details of an NPQ Participant
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+          example: npq-participant
+          enum:
+          - npq-participant
+        attributes:
+          properties:
+            email:
+              description: The email address registered for this NPQ participant
+              type: string
+              nullable: false
+              example: isabelle.macdonald2@some-school.example.com
+            full_name:
+              description: The full name of this NPQ participant
+              type: string
+              nullable: false
+              example: Isabelle MacDonald
+            teacher_reference_number:
+              description: The Teacher Reference Number (TRN) for this NPQ participant
+              type: string
+              example: '1234567'
+            updated_at:
+              description: The date the application was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            npq_enrolments:
+              description: Information about the course(s) the participant is enroled
+                in
+              type: array
+              items:
+                description: The details of an NPQ Participant enrolment
+                type: object
+                required:
+                - course_identifier
+                - npq_application_id
+                - eligible_for_funding
+                - training_status
+                - targeted_delivery_funding_eligibility
+                properties:
+                  course_identifier:
+                    description: The NPQ course this NPQ application relates to
+                    type: string
+                    nullable: false
+                    example: npq-leading-teaching
+                    enum:
+                    - npq-leading-teaching
+                    - npq-leading-behaviour-culture
+                    - npq-leading-teaching-development
+                    - npq-leading-literacy
+                    - npq-senior-leadership
+                    - npq-headship
+                    - npq-executive-leadership
+                    - npq-early-years-leadership
+                    - npq-additional-support-offer
+                    - npq-early-headship-coaching-offer
+                    - npq-leading-primary-mathematics
+                    - npq-senco
+                  schedule_identifier:
+                    description: The new schedule of the participant
+                    nullable: true
+                    type: string
+                    example: npq-leadership-spring
+                    enum:
+                    - npq-aso-march
+                    - npq-aso-june
+                    - npq-aso-november
+                    - npq-aso-december
+                    - npq-ehco-march
+                    - npq-ehco-june
+                    - npq-ehco-november
+                    - npq-ehco-december
+                    - npq-leadership-autumn
+                    - npq-leadership-spring
+                    - npq-specialist-autumn
+                    - npq-specialist-spring
+                  cohort:
+                    description: Indicates which call-off contract would fund this
+                      participant's training. 2021 indicates a participant that has
+                      started, or will start, their training in the 2021/22 academic
+                      year. Once a provider accepts an application, they may change
+                      a participant's cohort up until the point of submitting a started
+                      declaration.
+                    type: string
+                    nullable: true
+                    example: '2022'
+                  eligible_for_funding:
+                    description: Indicates whether this NPQ participant would be eligible
+                      for funding from the DfE
+                    type: boolean
+                    nullable: false
+                    example: true
+                  npq_application_id:
+                    description: The ID of the NPQ application that was accepted to
+                      create this enrolment
+                    type: string
+                    format: uuid
+                    nullable: false
+                    example: db3a7848-7308-4879-942a-c4a70ced400a
+                  training_status:
+                    description: The training status of the NPQ participant
+                    type: string
+                    enum:
+                    - active
+                    - deferred
+                    - withdrawn
+                    example: active
+                  school_urn:
+                    description: The Unique Reference Number (URN) of the school where
+                      this NPQ participant is employed
+                    type: string
+                    nullable: true
+                    example: '106286'
+                  targeted_delivery_funding_eligibility:
+                    description: Whether or not this application is eligible for Targeted
+                      Delivery Funding uplift
+                    nullable: false
+                    type: boolean
+                    example: true
+                  funded_place:
+                    description: Indicates whether this NPQ participant is funded
+                      by DfE
+                    nullable: true
+                    type: boolean
+                    example: true
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"
