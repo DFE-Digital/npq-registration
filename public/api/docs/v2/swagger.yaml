@@ -319,6 +319,159 @@ paths:
             text/csv:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participant-declarations":
+    get:
+      summary: Retrieve multiple Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+    post:
+      summary: Declare a participant has reached a milestone
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters: []
+      responses:
+        '200':
+          description: The participant declaration being created
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: npq-participant
+                      attributes:
+                        email: isabelle.macdonald2@some-school.example.com
+                        full_name: Isabelle MacDonald
+                        teacher_reference_number: '1234567'
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        npq_enrolments:
+                        - course_identifier: npq-leading-teaching
+                          schedule_identifier: npq-leadership-spring
+                          cohort: '2022'
+                          eligible_for_funding: true
+                          npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                          training_status: active
+                          school_urn: '106286'
+                          targeted_delivery_funding_eligibility: true
+                          funded_place: true
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+  "/api/v2/participant-declarations/{id}":
+    get:
+      summary: Retrieve a single Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v2/participant-declarations/{id}/void":
+    put:
+      summary: Void a declaration
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The participant declaration being voided
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v2/npq-enrolments.csv":
     get:
       summary: Retrieve all NPQ enrolments in CSV format
