@@ -54,6 +54,38 @@ RSpec.describe ParticipantOutcomes::Query do
           expect(described_class.new.scope.to_sql).not_to include(condition_string)
         end
       end
+
+      context "when filtering by participant_ids" do
+        it "filters by participant_ids" do
+          create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
+          outcome = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
+          query = ParticipantOutcomes::Query.new(participant_ids: outcome.user.ecf_id)
+
+          expect(query.participant_outcomes).to contain_exactly(outcome)
+        end
+
+        it "filters by multiple participant_ids" do
+          outcome2 = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
+          outcome1 = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
+          create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
+          query = ParticipantOutcomes::Query.new(participant_ids: [outcome1.user.ecf_id, outcome2.user.ecf_id].join(","))
+
+          expect(query.participant_outcomes).to contain_exactly(outcome1, outcome2)
+        end
+
+        it "returns no outcomes if no participants are found" do
+          query = ParticipantOutcomes::Query.new(participant_ids: SecureRandom.uuid)
+
+          expect(query.participant_outcomes).to be_empty
+        end
+
+        it "doesn't filter by participant_ids when none supplied" do
+          condition_string = %("user"."ecf_id" =)
+
+          expect(ParticipantOutcomes::Query.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
+          expect(ParticipantOutcomes::Query.new.scope.to_sql).not_to include(condition_string)
+        end
+      end
     end
   end
 end
