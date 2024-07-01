@@ -2,7 +2,7 @@ module API
   module V3
     class ApplicationsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByDate
+      include FilterByDate
 
       def index
         render json: to_json(paginate(applications_query.applications))

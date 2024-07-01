@@ -1,7 +1,7 @@
 require "rails_helper"
 
 class ControllerWithFilterByDate
-  include API::Concerns::FilterByDate
+  include API::FilterByDate
 
   public :updated_since, :created_since
 
@@ -22,7 +22,7 @@ private
   end
 end
 
-RSpec.describe API::Concerns::FilterByDate do
+RSpec.describe API::FilterByDate do
   let(:expected_updated_since) { Time.zone.local(2022, 2, 1, 10, 30) }
   let(:expected_created_since) { Time.zone.local(2023, 3, 2, 11, 45) }
 
