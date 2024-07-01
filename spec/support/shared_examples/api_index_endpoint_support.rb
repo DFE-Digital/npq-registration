@@ -51,6 +51,24 @@ RSpec.shared_examples "an API index endpoint" do
   end
 end
 
+RSpec.shared_examples "an API index endpoint on a parent resource" do |parent, child|
+  context "when 2 #{child.pluralize} exist for current_lead_provider" do
+    let!(:resource) { create_resource(lead_provider: current_lead_provider) }
+
+    before do
+      create_resource_with_different_parent(lead_provider: current_lead_provider)
+    end
+
+    it "only returns the #{child} nested on the requested #{parent}" do
+      api_get(path)
+
+      expect(response.status).to eq 200
+      expect(response.content_type).to eql("application/json")
+      expect(response_ids).to contain_exactly(resource[resource_id_key])
+    end
+  end
+end
+
 RSpec.shared_examples "an API index endpoint with pagination" do
   context "with pagination" do
     before do
