@@ -72,6 +72,6 @@ private
   end
 
   def applications
-    @applications = Application.includes(:user, :course, :lead_provider, :school)
+    @applications = Application.includes(:user, :course, :lead_provider, :school, :private_childcare_provider)
   end
 end
