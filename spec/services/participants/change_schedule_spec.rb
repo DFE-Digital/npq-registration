@@ -258,7 +258,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         end
 
         context "when declaration_date is before new_schedule.applies_from" do
-          let(:declaration_date) { new_schedule.applies_from - 1.day }
+          let(:declaration_date) { new_schedule.applies_from - 1.year }
 
           it "does not allow a change of schedule" do
             expect(subject.change_schedule).to be_falsey

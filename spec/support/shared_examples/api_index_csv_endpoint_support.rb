@@ -7,7 +7,7 @@ RSpec.shared_examples "an API index Csv endpoint" do |returns_headers_on_empty: 
       let!(:resource2) { create_resource(lead_provider: current_lead_provider) }
 
       before do
-        create_resource(lead_provider: create(:lead_provider, name: "Another lead provider"))
+        create_resource(lead_provider: LeadProvider.where.not(id: current_lead_provider.id).first)
       end
 
       it "returns a header row and 2 resources" do

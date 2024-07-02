@@ -30,7 +30,15 @@ module API
         end
       end
 
-      def create = head(:method_not_allowed)
+      def create
+        service = Declarations::Create.new(declaration_params)
+
+        if service.create_declaration
+          render json: to_json(service.declaration)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
 
     private
 
@@ -41,6 +49,18 @@ module API
 
       def declaration
         declarations_query.declaration(ecf_id: params[:ecf_id])
+      end
+
+      def declaration_params
+        params
+          .require(:data)
+          .require(:attributes)
+          .permit(:participant_id, :declaration_type, :declaration_date, :course_identifier, :has_passed)
+          .merge(
+            lead_provider: current_lead_provider,
+          )
+      rescue ActionController::ParameterMissing
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       end
 
       def participant_ids

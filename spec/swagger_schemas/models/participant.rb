@@ -174,7 +174,8 @@ PARTICIPANT = {
                 },
                 training_status: {
                   description: "The training status of the NPQ participant",
-                  type: Application.training_statuses.keys,
+                  type: :string,
+                  enum: Application.training_statuses.keys,
                   example: Application.training_statuses.keys.first,
                 },
                 school_urn: {
