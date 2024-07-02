@@ -2,6 +2,7 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
   has_many :applications, dependent: :destroy
+  has_many :declarations, through: :applications
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes, -> { order("created_at desc") }
   has_many :declarations, through: :applications

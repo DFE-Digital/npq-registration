@@ -180,31 +180,84 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "scopes" do
-    let(:declarations) { Declaration.states.keys.map { |state| create(:declaration, state:) } }
+    describe "declaration states" do
+      let(:declarations) { described_class.states.keys.map { |state| create(:declaration, state:) } }
 
-    describe ".billable" do
-      it "returns declarations with billable states" do
-        billable_declarations = declarations.select { |d| %w[eligible payable paid].include?(d.state) }
+      describe ".billable" do
+        it "returns declarations with billable states" do
+          billable_declarations = declarations.select { |d| %w[eligible payable paid].include?(d.state) }
 
-        expect(Declaration.billable).to match_array(billable_declarations)
+          expect(described_class.billable).to match_array(billable_declarations)
+        end
+      end
+
+      describe ".voidable" do
+        it "returns declarations with voidable states" do
+          voidable_declarations = declarations.select { |d| %w[submitted eligible payable ineligible].include?(d.state) }
+
+          expect(described_class.voidable).to match_array(voidable_declarations)
+        end
+      end
+
+      describe ".changeable" do
+        it "returns declarations with changeable states" do
+          changeable_declarations = declarations.select { |d| %w[eligible submitted].include?(d.state) }
+
+          expect(described_class.changeable).to match_array(changeable_declarations)
+        end
+      end
+
+      describe ".billable_or_changeable" do
+        it "returns declarations with either billable or changeable states" do
+          states = %w[submitted eligible payable paid]
+          billable_or_changeable = declarations.select { |d| states.include?(d.state) }
+
+          expect(described_class.billable_or_changeable).to match_array(billable_or_changeable)
+        end
+      end
+
+      describe ".billable_or_voidable" do
+        it "returns declarations with either billable or voidable states" do
+          states = %w[submitted eligible payable paid ineligible]
+          billable_or_voidable = declarations.select { |d| states.include?(d.state) }
+
+          expect(described_class.billable_or_voidable).to match_array(billable_or_voidable)
+        end
       end
     end
 
-    describe ".changeable" do
-      it "returns declarations with changeable states" do
-        changeable_declarations = declarations.select { |d| %w[eligible submitted].include?(d.state) }
+    describe ".with_lead_provider" do
+      let(:lead_provider) { declaration.lead_provider }
+      let(:declaration) { create(:declaration) }
 
-        expect(Declaration.changeable).to match_array(changeable_declarations)
-      end
+      before { create(:declaration, lead_provider: create(:lead_provider, name: "Other lead provider")) }
+
+      it { expect(described_class.with_lead_provider(lead_provider)).to contain_exactly(declaration) }
     end
 
-    describe ".billable_or_changeable" do
-      it "returns declarations with either billable or changeable states" do
-        states = %w[submitted eligible payable paid]
-        billable_or_changeable = declarations.select { |d| states.include?(d.state) }
+    describe ".completed" do
+      let(:completed_declaration) { create(:declaration, :completed) }
 
-        expect(Declaration.billable_or_changeable).to match_array(billable_or_changeable)
+      before do
+        described_class.declaration_types.keys.excluding("completed").each do |declaration_type|
+          create(:declaration, declaration_type:)
+        end
       end
+
+      it { expect(described_class.completed).to contain_exactly(completed_declaration) }
+    end
+
+    describe ".with_course_identifier" do
+      let(:course_identifier) { declaration.application.course.identifier }
+      let(:declaration) { create(:declaration) }
+
+      before do
+        Course::IDENTIFIERS.excluding(course_identifier).each do |identifier|
+          create(:declaration).application.update!(course: Course.find_by(identifier:))
+        end
+      end
+
+      it { expect(described_class.with_course_identifier(course_identifier)).to contain_exactly(declaration) }
     end
   end
 
