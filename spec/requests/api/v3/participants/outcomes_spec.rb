@@ -34,9 +34,22 @@ RSpec.describe "Participants outcome endpoints", type: :request do
     it_behaves_like "an API index endpoint with pagination"
   end
 
-  describe("create") do
-    before { api_post(api_v3_participants_outcomes_path(123)) }
+  describe "POST /api/v3/participants/npq/:participant_id/outcomes" do
+    let(:path) { api_v3_participants_outcomes_path(user.ecf_id) }
+    let(:attributes) do
+      {
+        state: ParticipantOutcomes::Create::STATES.sample,
+        completion_date: 1.day.ago.strftime("%Y-%m-%d"),
+        course_identifier: ParticipantOutcomes::Create::COURSE_IDENTIFIERS.sample,
+      }
+    end
+    let(:service) { ParticipantOutcomes::Create }
+    let(:action) { :create_outcome }
+    let(:service_args) { { lead_provider: current_lead_provider, participant: user }.merge!(attributes) }
+    let(:resource) { build(:participant_outcome) }
+    let(:resource_id) { resource.ecf_id }
+    let(:resource_name) { :created_outcome }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    it_behaves_like "an API create endpoint"
   end
 end
