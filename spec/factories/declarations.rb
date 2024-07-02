@@ -1,6 +1,10 @@
 FactoryBot.define do
   factory :declaration do
-    application
+    transient do
+      user { create(:user) }
+    end
+
+    application { create(:application, :accepted, user:) }
     lead_provider { application&.lead_provider || build(:lead_provider) }
     cohort { application&.cohort || build(:cohort, :current) }
 

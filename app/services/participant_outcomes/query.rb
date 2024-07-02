@@ -1,12 +1,14 @@
 module ParticipantOutcomes
   class Query
     include API::Concerns::Orderable
+    include Queries::ConditionFormats
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider: :ignore, created_since: :ignore)
+    def initialize(lead_provider: :ignore, participant_ids: :ignore, created_since: :ignore)
       @scope = all_participant_outcomes
 
+      where_participant_ids_in(participant_ids)
       where_lead_provider_is(lead_provider)
       where_created_since(created_since)
     end
@@ -21,6 +23,12 @@ module ParticipantOutcomes
       return if lead_provider == :ignore
 
       scope.merge!(ParticipantOutcome.where(declaration: { lead_provider: }))
+    end
+
+    def where_participant_ids_in(participant_ids)
+      return if participant_ids == :ignore
+
+      scope.merge!(ParticipantOutcome.where(user: { ecf_id: extract_conditions(participant_ids) }))
     end
 
     def where_created_since(created_since)
