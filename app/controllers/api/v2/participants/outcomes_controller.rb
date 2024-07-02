@@ -8,9 +8,30 @@ module API
           render json: to_json(paginate(outcomes_query.participant_outcomes))
         end
 
-        def create = head(:method_not_allowed)
+        def create
+          service = ParticipantOutcomes::Create.new(outcome_params)
+
+          if service.create_outcome
+            render json: to_json(service.created_outcome)
+          else
+            render json: API::Errors::Response.from(service), status: :unprocessable_entity
+          end
+        end
 
       private
+
+        def outcome_params
+          params
+            .require(:data)
+            .require(:attributes)
+            .permit(:course_identifier, :state, :completion_date)
+            .merge(
+              lead_provider: current_lead_provider,
+              participant:,
+            )
+        rescue ActionController::ParameterMissing
+          raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+        end
 
         def participants_query
           ::Participants::Query.new(lead_provider: current_lead_provider)
