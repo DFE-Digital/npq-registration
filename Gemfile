@@ -62,7 +62,7 @@ group :development, :test do
   gem "dotenv-rails"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 6.1.2"
+  gem "rspec-rails", "~> 6.1.3"
   gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
