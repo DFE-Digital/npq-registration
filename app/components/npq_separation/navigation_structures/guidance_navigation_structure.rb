@@ -13,13 +13,8 @@ module NpqSeparation
             prefix: "/api/guidance/get-started",
           ) => [],
           Node.new(
-            name: "API documentation latest version",
-            href: api_guidance_page_path(page: "what-you-can-do-in-the-api"),
-            prefix: "/api/guidance/what-you-can-do-in-the-api",
-          ) => [],
-          Node.new(
             name: "Test environments",
-            href: api_guidance_page_path(page: "test_environment"),
+            href: api_guidance_page_path(page: "test_environments"),
             prefix: "/api/guidance/test_environments",
           ) => [],
           Node.new(

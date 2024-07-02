@@ -15,4 +15,6 @@ We have test environments for each version of the API:
 * API v3: 
 [https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v3](https://sb.manage-training-for-early-career-teachers.education.gov.uk/api/v3)
 
-<div class="govuk-inset-text"> There are some custom API headers that can only be used in the test environment.</div>
+<div class="govuk-inset-text"> 
+There are some custom API headers that can only be used in the test environment.
+</div>

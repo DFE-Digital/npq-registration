@@ -1,6 +1,8 @@
 # View payments information 
 
-> The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
+<div class="govuk-inset-text">
+The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
+</div>
 
 Providers can view up to date payment cut-off dates, upcoming payment dates, and check to see whether output payments have been made by DfE.
 

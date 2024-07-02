@@ -1,6 +1,8 @@
 # View, accept or reject applications
 
-> Providers must accept or reject applications before participants start a course and inform applicants of the outcome regardless of whether the application has been accepted or rejected.
+<div class="govuk-inset-text">
+  Providers must accept or reject applications before participants start a course and inform applicants of the outcome regardless of whether the application has been accepted or rejected.
+</div>
 
 Providers can **view application data** to find out if NPQ applicants:
 
@@ -17,7 +19,9 @@ To prevent a participant being enrolled onto the same course with more than one 
 * **automatically update the** `status` to `rejected` **for all other applications**. If someone has made multiple applications with different providers (within a given cohort) and a provider accepts one, the API will update the `status` of all other applications with other providers to `rejected`
 * **return an error message for new applications**. If a participant has had an application accepted by a provider, but then makes a new application for the same course with a new provider, the API will return an error message if the new provider tries to accept the new application
 
-> While participants can enter different email addresses when applying for training courses, providers will only see the email address associated with a given course application or registration. DfE will share the relevant email address with the relevant course provider.
+<div class="govuk-inset-text">
+While participants can enter different email addresses when applying for training courses, providers will only see the email address associated with a given course application or registration. DfE will share the relevant email address with the relevant course provider.
+</div>
 
 ## View all applications
 
@@ -153,8 +157,9 @@ An optional request body allows lead providers to add a participant’s schedule
 ```
 
 Successful requests will return a response body including updates to the status attribute.
-
-> The API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message.
+<div class="govuk-inset-text">
+The API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message.
+</div>
 
 See the ```accept an NPQ application``` endpoint documentation [ADD LINK] for more information.
 
