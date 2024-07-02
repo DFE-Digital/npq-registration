@@ -14,7 +14,9 @@ Once a provider has accepted an application, they can **view and update data** t
 GET /api/v3/participants/npq
 ```
 
-> Providers can **filter results** by adding `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z`
+<div class="govuk-inset-text">
+Providers can **filter results** by adding `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z`
+</div>
 
 ### Check for participant ID changes
 
@@ -253,7 +255,9 @@ GET /api/v3/participants/npq/outcomes
 
 Participants can either pass or fail assessment at the end of their NPQ course. These outcomes are submitted by providers within ```completed``` declaration submissions.
 
-> Outcomes are sent to the Database of Qualified Teachers (DQT). They issue certificates to participants who've passed.
+<div class="govuk-inset-text">
+Outcomes are sent to the Database of Qualified Teachers (DQT). They issue certificates to participants who've passed.
+</div>
 
 Successful requests will return a response body including an outcome ```state``` value to signify:
 
@@ -291,7 +295,9 @@ GET /api/v3/participants/npq/{participant_id}/outcomes
 
 A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within ```completed``` declaration submissions.
 
-> Outcomes are sent to the Database of Qualified Teachers (DQT). They issue certificates to participants who've passed.
+<div class="govuk-inset-text">
+Outcomes are sent to the Database of Qualified Teachers (DQT). They issue certificates to participants who've passed.
+</div>
 
 Successful requests will return a response body including an outcome ```state``` value to signify:
 
