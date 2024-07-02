@@ -100,5 +100,25 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
         end
       end
     end
+
+    it_behaves_like "an API update endpoint documentation",
+                    "/api/v3/participants/npq/{id}/change-schedule",
+                    "NPQ Participants",
+                    "Notify that an NPQ participant is changing training schedule",
+                    "The NPQ participant changing schedule",
+                    "#/components/schemas/ParticipantResponse",
+                    "#/components/schemas/ParticipantChangeScheduleRequest" do
+      let(:resource) { participant }
+      let(:type) { "participant-change-schedule" }
+      let(:new_schedule) { create(:schedule, :npq_ehco_march, cohort:) }
+      let(:attributes) { { schedule_identifier: new_schedule.identifier, course_identifier: course.identifier, cohort: application.cohort.start_year } }
+      let(:invalid_attributes) { { schedule_identifier: "invalid", course_identifier: "invalid" } }
+      let(:response_example) do
+        base_response_example.tap do |example|
+          example[:data][:attributes][:npq_enrolments][0][:schedule_identifier] = new_schedule.identifier
+          example[:data][:attributes][:npq_enrolments][0][:course_identifier] = course.identifier
+        end
+      end
+    end
   end
 end
