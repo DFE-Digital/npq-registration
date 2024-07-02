@@ -1,0 +1,80 @@
+# frozen_string_literal: true
+
+module ParticipantOutcomes
+  class Create
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+
+    STATES = %w[passed failed].freeze
+    COURSE_IDENTIFIERS = %w[npq-early-headship-coaching-offer npq-additional-support-offer].freeze
+    COMPLETION_DATE_FORMAT = /\d{4}-\d{2}-\d{2}/
+
+    attr_reader :created_outcome
+
+    attribute :lead_provider
+    attribute :participant
+    attribute :course_identifier
+    attribute :state
+    attribute :completion_date
+
+    validates :lead_provider, presence: true
+    validates :participant, presence: true
+    validates :course_identifier, inclusion: { in: COURSE_IDENTIFIERS }
+    validates :state, inclusion: { in: STATES }
+    validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }
+    validate :participant_has_no_completed_declarations
+    validate :completion_date_not_in_the_future
+
+    def create_outcome
+      return false unless valid?
+
+      ApplicationRecord.transaction do
+        @created_outcome = if outcome_already_exists?
+                             latest_existing_outcome
+                           else
+                             build_outcome.tap(&:save!)
+                           end
+      end
+
+      true
+    end
+
+  private
+
+    def outcome_already_exists?
+      return unless latest_existing_outcome
+
+      latest_existing_outcome.slice(:state, :completion_date) == build_outcome.slice(:state, :completion_date)
+    end
+
+    def build_outcome
+      @build_outcome ||= ParticipantOutcome.new(declaration: latest_completed_declaration, state:, completion_date:)
+    end
+
+    def completed_declarations
+      return Declaration.none unless participant
+
+      @completed_declarations ||= participant.declarations
+        .completed
+        .with_lead_provider(lead_provider)
+        .with_course_identifier(course_identifier)
+        .billable_or_voidable
+    end
+
+    def latest_completed_declaration
+      @latest_completed_declaration ||= completed_declarations.order(created_at: :desc).first
+    end
+
+    def latest_existing_outcome
+      @latest_existing_outcome ||= latest_completed_declaration.participant_outcomes.order(created_at: :desc).first
+    end
+
+    def participant_has_no_completed_declarations
+      errors.add(:base, :no_completed_declarations) unless completed_declarations.exists?
+    end
+
+    def completion_date_not_in_the_future
+      errors.add(:completion_date, :future_date) if completion_date&.to_date&.future?
+    end
+  end
+end
