@@ -60,7 +60,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every April and October.")
       page.choose("Yes", visible: :all)
     end
 

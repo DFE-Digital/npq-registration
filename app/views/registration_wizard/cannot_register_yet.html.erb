@@ -9,7 +9,9 @@
 
   <p class="govuk-body">Registrations are currently only open for courses starting before <%= application_course_start_date %>.</p>
 
-  <p class="govuk-body">Registrations for courses starting later in the year usually open in the summer.</p>
-
-  <p class="govuk-body">You'll receive an email when registrations open.</p>
+  <p class="govuk-body">
+    Registrations for courses starting later in the year usually open in the spring.
+    <%= link_to "Request email updates to tell you when registration opens", new_email_update_path, class: "govuk-link" %>.
+    You can also tell us about your interest in the special educational needs coordinator (SENCO) NPQ course.
+  </p>
 <% end %>

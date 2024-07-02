@@ -19,7 +19,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).not_to have_content("Before you start")
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQ start dates are usually every February and October.")
+        expect(page).to have_text("NPQ start dates are usually every April and October.")
         expect(page).to have_text("Do you want to start a course before (please contact support for newest date)?")
       end
     end
@@ -43,7 +43,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).not_to have_content("Before you start")
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQ start dates are usually every February and October.")
+        expect(page).to have_text("NPQ start dates are usually every April and October.")
         expect(page).to have_text("Do you want to start a course before #{course_start_date.strftime("%B %Y")}?")
       end
     end
