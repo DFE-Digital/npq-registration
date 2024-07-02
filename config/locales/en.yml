@@ -4,7 +4,7 @@ en:
   unauthorized: "HTTP Token: Access denied"
   bad_request: "Bad request"
   not_found: "Not found"
-  invalid_updated_since_filter: "The filter '#/updated_since' must be a valid ISO 8601 date"
+  invalid_date_filter: "The filter '#/%{attribute}' must be a valid ISO 8601 date"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
   schedule_invalid_for_course: Selected schedule is not valid for the course

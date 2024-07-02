@@ -84,10 +84,4 @@ RSpec.describe "Participant endpoints", type: :request do
 
     specify { expect(response).to(be_method_not_allowed) }
   end
-
-  describe("outcomes") do
-    before { api_get(api_v1_participant_outcomes_path(123)) }
-
-    specify { expect(response).to(be_method_not_allowed) }
-  end
 end

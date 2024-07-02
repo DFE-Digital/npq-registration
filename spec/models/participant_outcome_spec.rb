@@ -36,6 +36,12 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
   end
 
+  describe "delegations" do
+    it { is_expected.to delegate_method(:user).to(:declaration) }
+    it { is_expected.to delegate_method(:lead_provider).to(:declaration) }
+    it { is_expected.to delegate_method(:course).to(:declaration) }
+  end
+
   describe "associations" do
     it { is_expected.to belong_to(:declaration) }
   end

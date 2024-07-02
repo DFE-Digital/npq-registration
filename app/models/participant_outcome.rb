@@ -6,6 +6,8 @@ class ParticipantOutcome < ApplicationRecord
   validates :completion_date, presence: true
   validate :completion_date_not_in_the_future
 
+  delegate :user, :lead_provider, :course, to: :declaration
+
 private
 
   def completion_date_not_in_the_future
