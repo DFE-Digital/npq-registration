@@ -6,7 +6,8 @@ module ParticipantOutcomes
     include ActiveModel::Attributes
 
     STATES = %w[passed failed].freeze
-    COURSE_IDENTIFIERS = %w[npq-early-headship-coaching-offer npq-additional-support-offer].freeze
+    UNSUPPORTED_COURSES = %w[npq-early-headship-coaching-offer npq-additional-support-offer].freeze
+    PERMITTED_COURSES = Course::IDENTIFIERS.excluding(UNSUPPORTED_COURSES).freeze
     COMPLETION_DATE_FORMAT = /\d{4}-\d{2}-\d{2}/
 
     attr_reader :created_outcome
@@ -19,7 +20,7 @@ module ParticipantOutcomes
 
     validates :lead_provider, presence: true
     validates :participant, presence: true
-    validates :course_identifier, inclusion: { in: COURSE_IDENTIFIERS }
+    validates :course_identifier, inclusion: { in: PERMITTED_COURSES }
     validates :state, inclusion: { in: STATES }
     validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }
     validate :participant_has_no_completed_declarations

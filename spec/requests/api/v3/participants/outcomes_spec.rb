@@ -40,7 +40,7 @@ RSpec.describe "Participants outcome endpoints", type: :request do
       {
         state: ParticipantOutcomes::Create::STATES.sample,
         completion_date: 1.day.ago.strftime("%Y-%m-%d"),
-        course_identifier: ParticipantOutcomes::Create::COURSE_IDENTIFIERS.sample,
+        course_identifier: ParticipantOutcomes::Create::PERMITTED_COURSES.sample,
       }
     end
     let(:service) { ParticipantOutcomes::Create }

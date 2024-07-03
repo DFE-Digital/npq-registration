@@ -5,7 +5,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:participant) { completed_declaration.user }
   let(:lead_provider) { completed_declaration.lead_provider }
   let(:completion_date) { 1.week.ago.strftime(date_format) }
-  let(:course_identifier) { described_class::COURSE_IDENTIFIERS.sample }
+  let(:course_identifier) { described_class::PERMITTED_COURSES.sample }
   let(:course) { Course.find_by(identifier: course_identifier) }
   let(:state) { described_class::STATES.sample }
   let(:completed_declaration) { create(:declaration, :completed, :payable, course:) }
@@ -18,7 +18,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
     it { is_expected.to validate_presence_of(:completion_date) }
     it { is_expected.to allow_values(1.day.ago.strftime(date_format)).for(:completion_date) }
     it { is_expected.not_to allow_values(nil, "", 1.day.from_now.strftime(date_format), 1.day.ago.strftime("%d-%m-%Y")).for(:completion_date) }
-    it { is_expected.to validate_inclusion_of(:course_identifier).in_array(described_class::COURSE_IDENTIFIERS) }
+    it { is_expected.to validate_inclusion_of(:course_identifier).in_array(described_class::PERMITTED_COURSES) }
     it { is_expected.to validate_inclusion_of(:state).in_array(described_class::STATES) }
 
     describe "completed declarations" do
@@ -41,7 +41,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
       end
 
       context "when the participant has completed declarations with a different course identifier" do
-        let(:other_course) { Course.find_by(identifier: described_class::COURSE_IDENTIFIERS.excluding(course_identifier).sample) }
+        let(:other_course) { Course.find_by(identifier: described_class::PERMITTED_COURSES.excluding(course_identifier).sample) }
 
         before { completed_declaration.application.update!(course: other_course) }
 
