@@ -52,8 +52,11 @@ en:
   statement: &statement
     no_output_fee_statement: You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.
 
+  lead_provider: &lead_provider
+    blank: Your update cannot be made as the '#/%{attribute}' is not recognised. Check lead provider details and try again.
+
   participant: &participant
-    blank: Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.
+    blank: Your update cannot be made as the '#/%{attribute}' is not recognised. Check participant details and try again.
     already_active: The participant is already active
     already_deferred: The participant is already deferred
     already_withdrawn: The participant is already withdrawn
@@ -314,6 +317,11 @@ en:
               invalid_course: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
             state:
               inclusion: "The attribute '#/%{attribute}' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration."
+            participant:
+              <<: *participant
+            lead_provider:
+              <<: *lead_provider
+            
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
