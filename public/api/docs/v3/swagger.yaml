@@ -280,6 +280,163 @@ paths:
             schema:
               "$ref": "#/components/schemas/ApplicationChangeFundedPlaceRequest"
         required: true
+  "/api/v3/participant-declarations":
+    get:
+      summary: Retrieve multiple Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      - name: sort
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/SortingOptions"
+      responses:
+        '200':
+          description: A list of Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+    post:
+      summary: Declare a participant has reached a milestone
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters: []
+      responses:
+        '200':
+          description: The participant declaration being created
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: participant-declaration
+                      attributes:
+                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        declaration_type: started
+                        declaration_date: '2021-05-31T02:21:32.000Z'
+                        course_identifier: npq-leading-teaching
+                        state: submitted
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        created_at: '2021-05-31T02:22:32.000Z'
+                        statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
+                        clawback_statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
+                        ineligible_for_funding_reason: duplicate_declaration
+                        uplift_paid: true
+                        has_passed: true
+                        lead_provider_name:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+  "/api/v3/participant-declarations/{id}":
+    get:
+      summary: Retrieve a single Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v3/participant-declarations/{id}/void":
+    put:
+      summary: Void a declaration
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The participant declaration being voided
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v3/participants/npq":
     get:
       summary: Retrieve multiple NPQ participants
@@ -810,6 +967,17 @@ components:
             and time (ISO 8601 date format).
           type: string
           example: '2021-05-13T11:21:55Z'
+        cohort:
+          description: Return participant declarations associated to the specified
+            cohort or cohorts. This is a comma delimited string of years.
+          type: string
+          example: '2021,2022'
+        delivery_partner_id:
+          description: Return participant declarations associated to the specified
+            delivery partner or delivery partners. This is a comma delimited string
+            of delivery partner IDs.
+          type: string
+          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object
@@ -1779,7 +1947,7 @@ components:
       - updated_at
       - "-updated_at"
     ParticipantDeclaration:
-      description: The details of an NPQ Participant
+      description: The data attributes associated with a participant declaration response
       type: object
       required:
       - id
@@ -1789,231 +1957,118 @@ components:
         id:
           "$ref": "#/components/schemas/IDAttribute"
         type:
-          description: The data type
           type: string
-          example: npq-participant
           enum:
-          - npq-participant
+          - participant-declaration
+          example: participant-declaration
         attributes:
+          required:
+          - participant_id
+          - declaration_type
+          - declaration_date
+          - course_identifier
+          - state
+          - updated_at
+          - lead_provider_name
           properties:
-            full_name:
-              description: The full name of this NPQ participant
+            participant_id:
+              description: The unique id of the participant
               type: string
-              nullable: false
-              example: Isabelle MacDonald
-            teacher_reference_number:
-              description: The Teacher Reference Number (TRN) for this NPQ participant
+              format: uuid
+              example: db3a7848-7308-4879-942a-c4a70ced400a
+            declaration_type:
+              description: The event declaration type
               type: string
-              example: '1234567'
+              enum:
+              - started
+              - retained-1
+              - retained-2
+              - retained-3
+              - retained-4
+              - completed
+              - extended-1
+              - extended-2
+              - extended-3
+              example: started
+            declaration_date:
+              description: The event declaration date
+              type: string
+              format: date-time
+              example: '2021-05-31T02:21:32.000Z'
+            course_identifier:
+              description: The type of course the participant is enrolled in
+              type: string
+              enum:
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-senior-leadership
+              - npq-headship
+              - npq-executive-leadership
+              - npq-early-years-leadership
+              - npq-additional-support-offer
+              - npq-early-headship-coaching-offer
+              - npq-leading-primary-mathematics
+              example: npq-leading-teaching
+            state:
+              description: Indicates the state of this payment declaration
+              type: string
+              enum:
+              - submitted
+              - eligible
+              - payable
+              - paid
+              - voided
+              - ineligible
+              - awaiting-clawback
+              - clawed-back
+              example: submitted
             updated_at:
-              description: The date the application was last updated
+              description: The date the declaration was last updated
               type: string
-              nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
-            npq_enrolments:
-              description: Information about the course(s) the participant is enroled
-                in
-              type: array
-              items:
-                description: The details of an NPQ Participant enrolment
-                type: object
-                required:
-                - email
-                - course_identifier
-                - npq_application_id
-                - eligible_for_funding
-                - training_status
-                - targeted_delivery_funding_eligibility
-                properties:
-                  email:
-                    description: The email address registered for this NPQ participant
-                    type: string
-                    nullable: false
-                    example: isabelle.macdonald2@some-school.example.com
-                  course_identifier:
-                    description: The NPQ course this NPQ application relates to
-                    type: string
-                    nullable: false
-                    example: npq-leading-teaching
-                    enum:
-                    - npq-leading-teaching
-                    - npq-leading-behaviour-culture
-                    - npq-leading-teaching-development
-                    - npq-leading-literacy
-                    - npq-senior-leadership
-                    - npq-headship
-                    - npq-executive-leadership
-                    - npq-early-years-leadership
-                    - npq-additional-support-offer
-                    - npq-early-headship-coaching-offer
-                    - npq-leading-primary-mathematics
-                    - npq-senco
-                  schedule_identifier:
-                    description: The new schedule of the participant
-                    nullable: true
-                    type: string
-                    example: npq-leadership-spring
-                    enum:
-                    - npq-aso-march
-                    - npq-aso-june
-                    - npq-aso-november
-                    - npq-aso-december
-                    - npq-ehco-march
-                    - npq-ehco-june
-                    - npq-ehco-november
-                    - npq-ehco-december
-                    - npq-leadership-autumn
-                    - npq-leadership-spring
-                    - npq-specialist-autumn
-                    - npq-specialist-spring
-                  cohort:
-                    description: Indicates which call-off contract would fund this
-                      participant's training. 2021 indicates a participant that has
-                      started, or will start, their training in the 2021/22 academic
-                      year. Once a provider accepts an application, they may change
-                      a participant's cohort up until the point of submitting a started
-                      declaration.
-                    type: string
-                    nullable: true
-                    example: '2022'
-                  eligible_for_funding:
-                    description: Indicates whether this NPQ participant would be eligible
-                      for funding from the DfE
-                    type: boolean
-                    nullable: false
-                    example: true
-                  npq_application_id:
-                    description: The ID of the NPQ application that was accepted to
-                      create this enrolment
-                    type: string
-                    format: uuid
-                    nullable: false
-                    example: db3a7848-7308-4879-942a-c4a70ced400a
-                  training_status:
-                    description: The training status of the NPQ participant
-                    type: string
-                    enum:
-                    - active
-                    - deferred
-                    - withdrawn
-                    example: active
-                  school_urn:
-                    description: The Unique Reference Number (URN) of the school where
-                      this NPQ participant is employed
-                    type: string
-                    nullable: true
-                    example: '106286'
-                  targeted_delivery_funding_eligibility:
-                    description: Whether or not this application is eligible for Targeted
-                      Delivery Funding uplift
-                    nullable: false
-                    type: boolean
-                    example: true
-                  withdrawal:
-                    description: The details of an NPQ Participant withdrawal
-                    type: object
-                    nullable: true
-                    required:
-                    - reason
-                    - date
-                    example:
-                    properties:
-                      reason:
-                        description: The reason a participant was withdrawn
-                        type: string
-                        nullable: false
-                        example: personal-reason-moving-school
-                        enum:
-                        - insufficient-capacity-to-undertake-programme
-                        - personal-reason-health-or-pregnancy-related
-                        - personal-reason-moving-school
-                        - personal-reason-other
-                        - insufficient-capacity
-                        - change-in-developmental-or-personal-priorities
-                        - change-in-school-circumstances
-                        - change-in-school-leadership
-                        - quality-of-programme-structure-not-suitable.
-                        - quality-of-programme-content-not-suitable
-                        - quality-of-programme-facilitation-not-effective
-                        - quality-of-programme-accessibility
-                        - quality-of-programme-other
-                        - programme-not-appropriate-for-role-and-cpd-needs
-                        - started-in-error
-                        - expected-commitment-unclear
-                        - other
-                      date:
-                        description: The date and time the participant was withdrawn
-                        type: string
-                        nullable: false
-                        format: date-time
-                        example: '2021-05-31T02:22:32.000Z'
-                  deferral:
-                    description: The details of an NPQ Participant deferral
-                    type: object
-                    nullable: true
-                    required:
-                    - reason
-                    - date
-                    example:
-                    properties:
-                      reason:
-                        description: The reason a participant was deferred
-                        type: string
-                        nullable: false
-                        example: career-break
-                        enum:
-                        - bereavement
-                        - long-term-sickness
-                        - parental-leave
-                        - career-break
-                        - other
-                      date:
-                        description: The date and time the participant was deferred
-                        type: string
-                        nullable: false
-                        format: date-time
-                        example: '2021-05-31T02:22:32.000Z'
-                  created_at:
-                    description: The date the application was created
-                    type: string
-                    nullable: false
-                    format: date-time
-                    example: '2021-05-31T02:21:32.000Z'
-                  funded_place:
-                    description: Indicates whether this NPQ participant is funded
-                      by DfE
-                    nullable: true
-                    type: boolean
-                    example: true
-            participant_id_changes:
-              description: Information about the Participant ID changes
-              type: array
-              items:
-                description: The details of an Participant ID change
-                type: object
-                required:
-                - from_participant_id
-                - to_participant_id
-                - changed_at
-                properties:
-                  from_participant_id:
-                    description: The unique identifier of the changed from participant
-                      training record.
-                    type: string
-                    format: uuid
-                    example: 23dd8d66-e11f-4139-9001-86b4f9abcb02
-                  to_participant_id:
-                    description: The unique identifier of the changed to participant
-                      training record.
-                    type: string
-                    format: uuid
-                    example: ac3d1243-7308-4879-942a-c4a70ced400a
-                  changed_at:
-                    description: The date and time the Participant ID change
-                    type: string
-                    format: date-time
-                    example: '2021-05-31T02:22:32.000Z'
+            created_at:
+              description: The date the declaration was created
+              type: string
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            statement_id:
+              description: Unique ID of the statement the declaration will be paid
+                as part of
+              type: string
+              format: uuid
+              example: cd3a12347-7308-4879-942a-c4a70ced400a
+              nullable: true
+            clawback_statement_id:
+              description: Unique id of the statement to which the declaration will
+                be clawed back on, if any
+              type: string
+              format: uuid
+              example: cd3a12347-7308-4879-942a-c4a70ced400a
+              nullable: true
+            ineligible_for_funding_reason:
+              description: If the declaration is ineligible, the reason why
+              type: string
+              enum:
+              - duplicate_declaration
+              nullable: true
+              example: duplicate_declaration
+            uplift_paid:
+              description: If participant is eligible for uplift, whether it has been
+                paid as part of this declaration
+              type: boolean
+              example: true
+            has_passed:
+              description: Whether the participant has failed or passed
+              type: string
+              example: true
+              nullable: true
+            lead_provider_name:
+              description: The name of the provider that submitted the declaration
+              type: string
+              nullable: false
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object

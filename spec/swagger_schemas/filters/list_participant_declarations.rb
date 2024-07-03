@@ -17,5 +17,17 @@ LIST_PARTICIPANT_DECLARATIONS_FILTER = {
   },
 }.tap { |h|
   h[:v2] = h[:v1]
-  h[:v3] = h[:v1]
+  h[:v3] = h[:v1].deep_dup
+  h[:v3][:properties].merge!({
+    cohort: {
+      description: "Return participant declarations associated to the specified cohort or cohorts. This is a comma delimited string of years.",
+      type: :string,
+      example: "2021,2022",
+    },
+    delivery_partner_id: {
+      description: "Return participant declarations associated to the specified delivery partner or delivery partners. This is a comma delimited string of delivery partner IDs.",
+      type: :string,
+      example: "7e5bcdbf-c818-4961-8da5-439cab1984e0",
+    },
+  })
 }.freeze
