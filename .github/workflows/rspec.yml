@@ -12,7 +12,7 @@ on:
         description: Node version
         type: string
         required: false
-        default: "16.20.2"
+        default: "20.15.0"
 
 jobs:
   rspec:

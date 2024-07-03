@@ -1,5 +1,5 @@
 terraform 1.5.4
 ruby 3.1.2
-nodejs 16.20.2
+nodejs 20.15.0
 yarn 1.22.18
 kubectl 1.29.0
