@@ -24,6 +24,7 @@ module ParticipantOutcomes
     validates :state, inclusion: { in: STATES }
     validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }
     validate :participant_has_no_completed_declarations
+    validate :completion_date_is_a_valid_date
     validate :completion_date_not_in_the_future
 
     def create_outcome
@@ -75,7 +76,17 @@ module ParticipantOutcomes
     end
 
     def completion_date_not_in_the_future
+      return if errors.key?(:completion_date)
+
       errors.add(:completion_date, :future_date) if completion_date&.to_date&.future?
+    end
+
+    def completion_date_is_a_valid_date
+      return unless completion_date
+
+      Date.parse(completion_date)
+    rescue ArgumentError
+      errors.add(:completion_date, :format)
     end
   end
 end

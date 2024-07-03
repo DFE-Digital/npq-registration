@@ -21,6 +21,15 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
     it { is_expected.to validate_inclusion_of(:course_identifier).in_array(described_class::PERMITTED_COURSES) }
     it { is_expected.to validate_inclusion_of(:state).in_array(described_class::STATES) }
 
+    context "when the completion date is a valid format but invalid date" do
+      let(:completion_date) { "2021-13-01" }
+
+      it "adds an error to the completion_date attribute" do
+        expect(instance).to be_invalid
+        expect(instance.errors.first).to have_attributes(attribute: :completion_date, type: :format)
+      end
+    end
+
     describe "completed declarations" do
       context "when the participant has no completed declarations" do
         before { completed_declaration.destroy! }
