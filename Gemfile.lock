@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/ruby/net-pop.git
+  revision: e8d0afe2773b9eb6a23c39e9e437f6fc0fc7c733
+  specs:
+    net-pop (0.1.2)
+      net-protocol
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -316,8 +323,6 @@ GEM
       uri
     net-imap (0.4.14)
       date
-      net-protocol
-    net-pop (0.1.2)
       net-protocol
     net-protocol (0.2.2)
       timeout
@@ -683,7 +688,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.10)
   mail-notify
   net-imap (~> 0.4.14)
-  net-pop
+  net-pop!
   net-smtp (~> 0.5.0)
   oj
   omniauth
@@ -726,7 +731,7 @@ DEPENDENCIES
   with_model (~> 2.1, >= 2.1.7)
 
 RUBY VERSION
-   ruby 3.1.2p20
+   ruby 3.3.3p89
 
 BUNDLED WITH
    2.3.17
