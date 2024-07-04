@@ -180,6 +180,49 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "scopes" do
+    describe ".latest_first" do
+      let!(:latest_declaration) { create(:declaration) }
+      let!(:older_declaration) { travel_to(1.day.ago) { create(:declaration) } }
+
+      it "returns the declarations with those created latest first" do
+        expect(described_class.latest_first).to eq([latest_declaration, older_declaration])
+      end
+    end
+
+    describe ".eligible_for_outcomes" do
+      subject { described_class.eligible_for_outcomes(lead_provider, course_identifier) }
+
+      let(:lead_provider) { completed_declaration.lead_provider }
+      let(:course_identifier) { completed_declaration.course_identifier }
+      let(:completed_declaration) { create(:declaration, :completed, :payable) }
+      let(:course) { completed_declaration.course }
+      let(:older_completed_declaration) { travel_to(1.day.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
+
+      before do
+        # Not a completed declaration.
+        completed_declaration.dup.update!(declaration_type: "retained-1")
+
+        # Declaration on another provider.
+        completed_declaration.dup.update!(lead_provider: create(:lead_provider, name: "Other lead provider"))
+
+        # Declaration with different course.
+        completed_declaration.dup.update!(application: create(:application, course: create(:course, identifier: "other-course")))
+
+        # Declarations that are not billable or voidable.
+        Declaration.states.keys.excluding(Declaration::BILLABLE_STATES + Declaration::VOIDABLE_STATES).each do |state|
+          completed_declaration.dup.update!(state:)
+        end
+      end
+
+      it { is_expected.to eq([completed_declaration, older_completed_declaration]) }
+
+      context "when there are no declarations" do
+        before { Declaration.destroy_all }
+
+        it { is_expected.to be_empty }
+      end
+    end
+
     describe "declaration states" do
       let(:declarations) { described_class.states.keys.map { |state| create(:declaration, state:) } }
 

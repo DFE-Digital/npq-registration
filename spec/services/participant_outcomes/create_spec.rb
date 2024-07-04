@@ -144,7 +144,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
           end
         end
 
-        context "when the matching outcome is not the latest latest" do
+        context "when the matching outcome is not the latest" do
           before { matching_outcome.update!(created_at: not_matching_outcome.created_at - 1.day) }
 
           it { is_expected.to be(true) }

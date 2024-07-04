@@ -56,19 +56,15 @@ module ParticipantOutcomes
     def completed_declarations
       return Declaration.none unless participant
 
-      @completed_declarations ||= participant.declarations
-        .completed
-        .with_lead_provider(lead_provider)
-        .with_course_identifier(course_identifier)
-        .billable_or_voidable
+      @completed_declarations ||= participant.declarations.eligible_for_outcomes(lead_provider, course_identifier)
     end
 
     def latest_completed_declaration
-      @latest_completed_declaration ||= completed_declarations.order(created_at: :desc).first
+      @latest_completed_declaration ||= completed_declarations.first
     end
 
     def latest_existing_outcome
-      @latest_existing_outcome ||= latest_completed_declaration.participant_outcomes.order(created_at: :desc).first
+      @latest_existing_outcome ||= participant&.latest_participant_outcome(lead_provider, course_identifier)
     end
 
     def participant_has_no_completed_declarations

@@ -26,6 +26,14 @@ class Declaration < ApplicationRecord
   scope :with_lead_provider, ->(lead_provider) { where(lead_provider:) }
   scope :completed, -> { where(declaration_type: "completed") }
   scope :with_course_identifier, ->(course_identifier) { joins(application: :course).where(course: { identifier: course_identifier }) }
+  scope :latest_first, -> { order(created_at: :desc) }
+  scope :eligible_for_outcomes, lambda { |lead_provider, course_identifier|
+    completed
+    .with_lead_provider(lead_provider)
+    .with_course_identifier(course_identifier)
+    .billable_or_voidable
+    .latest_first
+  }
 
   enum state: {
     submitted: "submitted",

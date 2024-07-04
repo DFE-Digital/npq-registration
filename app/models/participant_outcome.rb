@@ -8,6 +8,10 @@ class ParticipantOutcome < ApplicationRecord
 
   delegate :user, :lead_provider, :course, to: :declaration
 
+  def self.latest
+    order(created_at: :desc).first
+  end
+
 private
 
   def completion_date_not_in_the_future
