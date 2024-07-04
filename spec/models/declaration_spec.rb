@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Declaration, type: :model do
+  subject { build(:declaration) }
+
   describe "associations" do
     it { is_expected.to belong_to(:application) }
     it { is_expected.to belong_to(:cohort) }
@@ -8,6 +10,7 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to belong_to(:superseded_by).optional }
     it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
+    it { is_expected.to have_many(:statements).through(:statement_items) }
   end
 
   describe "validations" do
@@ -201,6 +204,85 @@ RSpec.describe Declaration, type: :model do
         billable_or_changeable = declarations.select { |d| states.include?(d.state) }
 
         expect(Declaration.billable_or_changeable).to match_array(billable_or_changeable)
+      end
+    end
+  end
+
+  describe "#duplicate_declarations" do
+    let(:cohort) { create(:cohort, :current) }
+    let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+    let(:course) { create(:course, :sl, course_group:) }
+    let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+    let(:application) { create(:application, :accepted, cohort:, course:) }
+    let(:participant) { application.user }
+    let!(:declaration) { create(:declaration, application:) }
+
+    context "when a user exists with the same TRN" do
+      let(:other_user) { create(:user, trn: participant.trn) }
+
+      context "when declarations have been made for a user with the same trn" do
+        context "when declarations have been made for the same course" do
+          let(:other_application) { create(:application, :accepted, cohort:, course:, user: other_user) }
+          let!(:other_declaration) { create(:declaration, application: other_application) }
+
+          it "returns those declarations" do
+            expect(declaration.duplicate_declarations).to eq([other_declaration])
+          end
+        end
+
+        context "when declarations have been made for a different course" do
+          before do
+            course = create(:course, :ehco, course_group:)
+            other_application = create(:application, :accepted, course:, cohort:, user: other_user)
+            create(:declaration, application: other_application)
+          end
+
+          it "returns no declarations" do
+            expect(declaration.duplicate_declarations).to be_empty
+          end
+        end
+      end
+
+      context "when no declaration has been made for a user with the same trn" do
+        it "returns no declarations" do
+          expect(declaration.duplicate_declarations).to be_empty
+        end
+      end
+    end
+
+    context "when a declaration has been superseded by another" do
+      before { create(:declaration, application:, superseded_by: declaration) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when a declaration has a different type" do
+      before { create(:declaration, application:, declaration_type: :completed) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when a declaration has a not billable/submitted state" do
+      before { create(:declaration, application:, state: :clawed_back) }
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
+      end
+    end
+
+    context "when declarations have been made for a different course" do
+      before do
+        course = create(:course, :ehco, course_group:)
+        other_application = create(:application, :accepted, course:, cohort:, user: participant)
+        create(:declaration, application: other_application)
+      end
+
+      it "returns no declarations" do
+        expect(declaration.duplicate_declarations).to be_empty
       end
     end
   end

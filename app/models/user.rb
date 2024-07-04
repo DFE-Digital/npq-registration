@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes, -> { order("created_at desc") }
+  has_many :declarations, through: :applications
 
   validates :full_name, presence: { message: "Enter a full name" }
 

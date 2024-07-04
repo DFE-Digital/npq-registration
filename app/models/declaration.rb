@@ -8,6 +8,7 @@ class Declaration < ApplicationRecord
   belongs_to :superseded_by, class_name: "Declaration", optional: true
   has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
+  has_many :statements, through: :statement_items
 
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
@@ -78,5 +79,21 @@ class Declaration < ApplicationRecord
     else
       state_reason
     end
+  end
+
+  def duplicate_declarations
+    self
+      .class
+      .billable_or_changeable
+      .joins(application: %i[user course])
+      .where(user: { trn: application.user.trn })
+      .where.not(user: { trn: nil })
+      .where.not(user: { id: application.user_id })
+      .where.not(id:)
+      .where(
+        declaration_type:,
+        superseded_by_id: nil,
+        application: { course: application.course.rebranded_alternative_courses },
+      )
   end
 end

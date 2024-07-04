@@ -28,6 +28,22 @@ en:
     cohort_does_not_accept_capping: "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards."
     cannot_change_funded_place: "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false"
 
+  declaration: &declaration
+    participant_id:
+      blank: "The property '#/participant_id' must be present"
+      declaration_must_be_before_withdrawal_date: "This participant withdrew from this course on %{withdrawal_date}. Enter a '#/declaration_date' that's on or before the withdrawal date."
+      invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
+    declaration_date:
+      blank: "Enter a '#/declaration_date'."
+      invalid: "Enter a valid RCF3339 '#/declaration_date'."
+      declaration_before_schedule_start: "Enter a '#/declaration_date' that's on or after the schedule start."
+      future_declaration_date: "The '#/declaration_date' value cannot be a future date. Check the date and try again."
+    declaration_type:
+      blank: "Enter a '#/declaration_type'."
+      mismatch_declaration_type_for_schedule: "The property '#/declaration_type' does not exist for this schedule."
+    has_passed:
+      invalid: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course."
+
   statement: &statement
     no_output_fee_statement: You cannot submit or void declarations for the %{cohort} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.
 
@@ -42,6 +58,7 @@ en:
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/course_identifier' value for this participant.
     inclusion: The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.
+    invalid: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again."
 
   participant_reason: &participant_reason
     blank: The property '#/reason' must be present
@@ -274,6 +291,13 @@ en:
           attributes:
             completion_date:
               future_date: The '#/%{attribute}' value cannot be a future date. Check the date and try again.
+        declarations/create:
+          declaration_already_exists: A declaration has already been submitted that will be, or has been, paid for this event
+          <<: *statement
+          attributes:
+            <<: *declaration
+            course_identifier:
+              <<: *participant_course_identifier
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
