@@ -39,6 +39,8 @@ RSpec.describe ReportService do
         course_name
         provider_name
         employment_type
+        senco_in_role
+        senco_start_date
       ]
 
       csv_headers = CSV.parse(subject.call).first

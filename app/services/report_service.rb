@@ -36,6 +36,8 @@ class ReportService
       course_name
       provider_name
       employment_type
+      senco_in_role
+      senco_start_date
     ]
   end
 
@@ -68,6 +70,8 @@ private
       a.course.name,
       a.lead_provider.name,
       a.employment_type,
+      a.raw_application_data["senco_in_role"],
+      a.raw_application_data["senco_start_date"],
     ]
   end
 
