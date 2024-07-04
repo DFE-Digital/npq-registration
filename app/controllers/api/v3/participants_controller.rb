@@ -2,7 +2,7 @@ module API
   module V3
     class ParticipantsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include FilterByDate
 
       def index
         render json: to_json(paginate(participants_query.participants))
@@ -43,7 +43,6 @@ module API
       end
 
       def change_schedule = head(:method_not_allowed)
-      def outcomes = head(:method_not_allowed)
 
     private
 

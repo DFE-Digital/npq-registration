@@ -2,7 +2,7 @@ module API
   module V2
     class ApplicationsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include FilterByDate
 
       def index
         respond_to do |format|
