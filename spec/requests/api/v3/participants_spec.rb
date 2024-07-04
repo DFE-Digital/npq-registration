@@ -81,9 +81,21 @@ RSpec.describe "Participant endpoints", type: :request do
     it_behaves_like "an API update endpoint"
   end
 
-  describe("change_schedule") do
-    before { api_put(change_schedule_api_v3_participant_path(123)) }
+  describe "PUT /api/v3/participants/:ecf_id/change-schedule" do
+    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
+    let(:schedule_identifier) { application.schedule.identifier }
+    let(:course_identifier) { application.course.identifier }
+    let(:resource) { application.user }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Participants::ChangeSchedule }
+    let(:action) { :change_schedule }
+    let(:attributes) { { schedule_identifier:, course_identifier:, lead_provider: current_lead_provider } }
+    let(:service_args) { { participant: resource }.merge!(attributes) }
 
-    specify { expect(response).to(be_method_not_allowed) }
+    def path(id = nil)
+      change_schedule_api_v3_participant_path(id)
+    end
+
+    it_behaves_like "an API update endpoint"
   end
 end

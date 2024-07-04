@@ -22,6 +22,7 @@ module Participants
       ActiveRecord::Base.transaction do
         update_funded_place!
         update_application!
+        participant.reload
       end
 
       true
