@@ -20,8 +20,8 @@ module ParticipantOutcomes
 
     validates :lead_provider, presence: true
     validates :participant, presence: true
-    validates :course_identifier, inclusion: { in: PERMITTED_COURSES }
-    validates :state, inclusion: { in: STATES }
+    validates :course_identifier, inclusion: { in: PERMITTED_COURSES }, presence: true
+    validates :state, inclusion: { in: STATES }, presence: true
     validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }
     validate :participant_has_no_completed_declarations
     validate :completion_date_is_a_valid_date

@@ -16,6 +16,8 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
     it { is_expected.to validate_presence_of(:lead_provider) }
     it { is_expected.to validate_presence_of(:participant) }
     it { is_expected.to validate_presence_of(:completion_date) }
+    it { is_expected.to validate_presence_of(:course_identifier) }
+    it { is_expected.to validate_presence_of(:state) }
     it { is_expected.to allow_values(1.day.ago.strftime(date_format)).for(:completion_date) }
     it { is_expected.not_to allow_values(nil, "", 1.day.from_now.strftime(date_format), 1.day.ago.strftime("%d-%m-%Y")).for(:completion_date) }
     it { is_expected.to validate_inclusion_of(:course_identifier).in_array(described_class::PERMITTED_COURSES) }
