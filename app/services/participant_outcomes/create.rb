@@ -82,7 +82,7 @@ module ParticipantOutcomes
 
       Date.parse(completion_date)
     rescue ArgumentError
-      errors.add(:completion_date, :format)
+      errors.add(:completion_date, :invalid)
     end
   end
 end
