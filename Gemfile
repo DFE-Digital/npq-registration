@@ -48,7 +48,6 @@ gem "sentry-rails"
 gem "sentry-ruby"
 gem "state_machines-activerecord"
 gem "stimulus-rails"
-gem "webpacker"
 gem "whenever"
 
 gem "net-imap", "~> 0.4.14", require: false
