@@ -8,8 +8,20 @@ class ParticipantOutcome < ApplicationRecord
 
   delegate :user, :lead_provider, :course, to: :declaration
 
+  enum state: {
+    passed: "passed",
+    failed: "failed",
+    voided: "voided",
+  }, _suffix: true
+
   def self.latest
     order(created_at: :desc).first
+  end
+
+  def has_passed?
+    return nil if voided_state?
+
+    passed_state?
   end
 
 private

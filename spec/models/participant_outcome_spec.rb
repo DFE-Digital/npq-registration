@@ -54,4 +54,26 @@ RSpec.describe ParticipantOutcome, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:declaration) }
   end
+
+  describe "#has_passed?" do
+    context "when the outcome is voided" do
+      before { instance.state = :voided }
+
+      it { expect(instance.has_passed?).to be_nil }
+    end
+
+    context "when the outcome is passed" do
+      before { instance.state = :passed }
+
+      it { is_expected.to be_has_passed }
+    end
+
+    described_class.states.keys.excluding("passed", "voided").each do |state|
+      context "when the outcome is #{state}" do
+        before { instance.state = state }
+
+        it { is_expected.not_to be_has_passed }
+      end
+    end
+  end
 end
