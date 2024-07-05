@@ -10,6 +10,14 @@ module.exports = {
   entry: {
     application: "./app/javascript/application.js"
   },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif|eot|woff2|woff|ttf|svg|ico)$/i,
+        use: 'file-loader',
+      },
+    ],
+  },
   output: {
     filename: "[name].js",
     sourceMapFilename: "[file].map",
