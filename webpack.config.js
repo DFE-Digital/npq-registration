@@ -16,6 +16,16 @@ module.exports = {
         test: /\.(png|jpe?g|gif|eot|woff2|woff|ttf|svg|ico)$/i,
         use: 'file-loader',
       },
+      {
+        test: /\.js$/,
+        exclude: /node_modules\/(?!(accessible-autocomplete)\/).*/, // Exclude all node_modules except accessible-autocomplete
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+          },
+        },
+      },
     ],
   },
   output: {
@@ -29,4 +39,4 @@ module.exports = {
       maxChunks: 1
     })
   ]
-}
+};
