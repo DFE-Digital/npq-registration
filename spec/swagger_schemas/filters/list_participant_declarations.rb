@@ -23,6 +23,6 @@ LIST_PARTICIPANT_DECLARATIONS_FILTER = {
       description: "Return participant declarations associated to the specified cohort or cohorts. This is a comma delimited string of years.",
       type: :string,
       example: "2021,2022",
-    }
+    },
   })
 }.freeze

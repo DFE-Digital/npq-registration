@@ -328,26 +328,6 @@ paths:
           description: The participant declaration being created
           content:
             application/json:
-              examples:
-                success:
-                  value:
-                    data:
-                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
-                      type: participant-declaration
-                      attributes:
-                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
-                        declaration_type: started
-                        declaration_date: '2021-05-31T02:21:32.000Z'
-                        course_identifier: npq-leading-teaching
-                        state: submitted
-                        updated_at: '2021-05-31T02:22:32.000Z'
-                        created_at: '2021-05-31T02:22:32.000Z'
-                        statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
-                        clawback_statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
-                        ineligible_for_funding_reason: duplicate_declaration
-                        uplift_paid: true
-                        has_passed: true
-                        lead_provider_name:
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
         '401':
@@ -972,12 +952,6 @@ components:
             cohort or cohorts. This is a comma delimited string of years.
           type: string
           example: '2021,2022'
-        delivery_partner_id:
-          description: Return participant declarations associated to the specified
-            delivery partner or delivery partners. This is a comma delimited string
-            of delivery partner IDs.
-          type: string
-          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0
     ListStatementsFilter:
       description: Filter statements to return more specific results
       type: object
