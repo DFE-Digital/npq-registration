@@ -40,9 +40,6 @@ RSpec.describe "Participant Declarations endpoint", type: :request, openapi_spec
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
     let(:declaration_date) { schedule.applies_from + 1.day }
-    let(:response_example) do
-      extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v3)
-    end
     let(:invalid_attributes) { { participant_id: "invalid" } }
     let(:attributes) do
       {
