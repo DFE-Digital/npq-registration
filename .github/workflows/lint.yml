@@ -6,12 +6,12 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.3.3"
+        default: "3.3.4"
       node-version:
         description: Node version
         type: string
         required: false
-        default: "18.17.x"
+        default: "20.15.1"
 
 jobs:
   ruby_linting:

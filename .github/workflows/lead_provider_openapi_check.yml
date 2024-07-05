@@ -7,12 +7,12 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.3.3"
+        default: "3.3.4"
       node-version:
         description: Node version
         type: string
         required: false
-        default: "16.20.2"
+        default: "20.15.1"
 
 jobs:
   rspec:
@@ -28,6 +28,7 @@ jobs:
       DB_PORT: 5432
       DATABASE_URL: postgres://postgres:postgres@localhost:5432
       SECRET_KEY_BASE: abc123
+      NODE_OPTIONS: --openssl-legacy-provider
 
     services:
       postgres:
@@ -62,7 +63,7 @@ jobs:
         run: npm install yarn -g
 
       - name: Install node.js dependencies
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Set up test database
         run: bin/rails db:setup
