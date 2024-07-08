@@ -88,7 +88,7 @@ PARTICIPANT_DECLARATION = {
         },
       },
     },
-  }
+  },
 }.tap { |h|
   h[:v2] = h[:v1].deep_dup
   h[:v2][:properties][:attributes][:required] = h[:v1][:properties][:attributes][:required].excluding(:voided, :eligible_for_payment)
@@ -112,8 +112,8 @@ PARTICIPANT_DECLARATION = {
     description: "If the declaration is ineligible, the reason why",
     type: "string",
     enum: %w[
-              duplicate_declaration
-            ],
+      duplicate_declaration
+    ],
     nullable: true,
     example: "duplicate_declaration",
   }
@@ -134,10 +134,10 @@ PARTICIPANT_DECLARATION = {
     nullable: false,
   }
   h[:v3][:properties][:attributes][:properties][:created_at] = {
-      description: "The date the application was created",
-      type: :string,
-      nullable: false,
-      format: :"date-time",
-      example: "2021-05-31T02:22:32.000Z",
+    description: "The date the application was created",
+    type: :string,
+    nullable: false,
+    format: :"date-time",
+    example: "2021-05-31T02:22:32.000Z",
   }
 }.freeze
