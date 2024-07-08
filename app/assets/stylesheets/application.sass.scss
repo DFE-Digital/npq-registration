@@ -1,21 +1,14 @@
-@function frontend-font-url($filename) {
-  @return url("~assets/fonts/" + $filename);
-}
+// Entry point for your Sass build
+$govuk-images-path: "";
+$govuk-fonts-path: "";
 
-@function frontend-image-url($filename) {
-  @return url("~assets/images/" + $filename);
-}
-
-$govuk-font-url-function: frontend-font-url;
-$govuk-image-url-function: frontend-image-url;
-
-@import "~govuk-frontend/dist/govuk/base";
-@import "~govuk-frontend/dist/govuk/core/index";
-@import "~govuk-frontend/dist/govuk/objects/index";
-@import "~govuk-frontend/dist/govuk/components/index";
-@import "~govuk-frontend/dist/govuk/utilities/index";
-@import "~govuk-frontend/dist/govuk/overrides/index";
-@import "accessible-autocomplete";
+@import "govuk-frontend/dist/govuk/base";
+@import "govuk-frontend/dist/govuk/core/index";
+@import "govuk-frontend/dist/govuk/objects/index";
+@import "govuk-frontend/dist/govuk/components/index";
+@import "govuk-frontend/dist/govuk/utilities/index";
+@import "govuk-frontend/dist/govuk/overrides/index";
+@import "accessible-autocomplete/src/autocomplete";
 @import "contents-list";
 @import "subnav";
 @import "big-number";

@@ -26,6 +26,14 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.scss$/, // Add this rule for SCSS files
+        use: [
+          'style-loader', // Injects styles into DOM
+          'css-loader', // Turns CSS into CommonJS
+          'sass-loader' // Compiles Sass to CSS
+        ],
+      },
     ],
   },
   output: {
