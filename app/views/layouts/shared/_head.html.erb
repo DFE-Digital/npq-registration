@@ -9,14 +9,14 @@
   <%= csp_meta_tag %>
   <%= canonical_tag %>
   <%= tag :meta, name: 'viewport', content: 'width=device-width, initial-scale=1' %>
-  <%= tag :meta, property: 'og:image', content: asset_pack_path('media/images/govuk-opengraph-image.png') %>
+  <%= tag :meta, property: 'og:image', content: image_path('govuk-opengraph-image.png') %>
   <%= tag :meta, name: 'theme-color', content: '#0b0c0c' %>
-  <%= favicon_link_tag asset_pack_path('media/images/favicon.ico') %>
-  <%= favicon_link_tag asset_pack_path('media/images/favicon.svg'), type: 'image/svg+xml' %>
-  <%= favicon_link_tag asset_pack_path('media/images/govuk-icon-mask.svg'), type: 'image/svg+xml' %>
-  <%= favicon_link_tag asset_pack_path('media/images/govuk-icon-180.png'), rel: 'apple-touch-icon', type: 'image/png' %>
-  <%= stylesheet_pack_tag 'application', media: 'all' %>
-  <%= javascript_pack_tag 'application', defer: true %>
+  <%= favicon_link_tag image_path('favicon.ico'), type: nil, sizes: "48x48" %>
+  <%= favicon_link_tag image_path('favicon.svg'), type: 'image/svg+xml', sizes: "any" %>
+  <%= favicon_link_tag image_path('govuk-icon-mask.svg'), type: 'image/svg+xml', rel: 'mask-icon', color: "#0b0c0c" %>
+  <%= favicon_link_tag image_path('govuk-icon-180.png'), rel: 'apple-touch-icon', type: 'image/png' %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= javascript_include_tag 'application', defer: true %>
 
   <%= render partial: "shared/analytics/google" %>
 
