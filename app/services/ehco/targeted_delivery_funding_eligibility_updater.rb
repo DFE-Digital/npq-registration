@@ -6,8 +6,7 @@ module Ehco
       delegate :run, to: :new
     end
 
-    def run
-      logger = Logger.new($stdout)
+    def run(logger: Logger.new($stdout))
       logger.info "Updating EHCO NPQ Applications, this may take a couple of minutes..."
 
       ehco_course = Course.ehco
