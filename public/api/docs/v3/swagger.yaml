@@ -2047,13 +2047,18 @@ components:
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
+      required:
+      - type
+      - attributes
       properties:
         type:
           type: string
+          required: true
           enum:
           - participant-declaration
           example: participant-declaration
         attributes:
+          required: true
           anyOf:
           - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
           - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
@@ -2085,21 +2090,25 @@ components:
           description: The unique id of the participant
           type: string
           format: uuid
+          required: true
           example: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type:
           description: The event declaration type
           type: string
+          required: true
           enum:
           - started
           example: started
         declaration_date:
           description: The event declaration date
           type: string
+          required: true
           format: date-time
           example: '2021-05-31T02:21:32.000Z'
         course_identifier:
           description: The type of course the participant is enrolled in
           type: string
+          required: true
           enum:
           - npq-leading-teaching
           - npq-leading-behaviour-culture

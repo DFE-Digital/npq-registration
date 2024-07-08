@@ -7,11 +7,13 @@ PARTICIPANT_DECLARATION_STARTED_REQUEST = {
       description: "The unique id of the participant",
       type: :string,
       format: :uuid,
+      required: true,
       example: "db3a7848-7308-4879-942a-c4a70ced400a",
     },
     declaration_type: {
       description: "The event declaration type",
       type: :string,
+      required: true,
       enum: %w[
         started
       ],
@@ -20,12 +22,14 @@ PARTICIPANT_DECLARATION_STARTED_REQUEST = {
     declaration_date: {
       description: "The event declaration date",
       type: :string,
+      required: true,
       format: "date-time",
       example: "2021-05-31T02:21:32.000Z",
     },
     course_identifier: {
       description: "The type of course the participant is enrolled in",
       type: :string,
+      required: true,
       enum: %w[
         npq-leading-teaching
         npq-leading-behaviour-culture
