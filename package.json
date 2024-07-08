@@ -13,12 +13,17 @@
     "isomorphic-fetch": "^3.0.0",
     "rails-ujs": "^5.2.8",
     "serialize-javascript": "^6.0.2",
-    "yarn": "^1.22.22",
-    "swagger-ui-dist": "^5.17.14"
+    "swagger-ui-dist": "^5.17.14",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5",
     "webpack-dev-server": "~3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  }
 }
