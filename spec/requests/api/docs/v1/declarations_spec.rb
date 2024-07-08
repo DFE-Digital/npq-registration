@@ -5,7 +5,7 @@ RSpec.describe "Declarations endpoints", type: :request, openapi_spec: "v1/swagg
   include_context "with authorization for api doc request"
 
   it_behaves_like "an API index Csv endpoint documentation",
-                  "/api/v2/participant-declarations.csv",
+                  "/api/v1/participant-declarations.csv",
                   "Participant declarations",
                   "Participant declarations",
                   "#/components/schemas/DeclarationsCsvResponse"
