@@ -3,4 +3,4 @@ plugin_gems: ['scss_lint-govuk']
 linters:
   QualifyingElement:
     exclude:
-      - 'app/webpacker/styles/application.scss'
+      - 'app/assets/stylesheets/application.scss'
