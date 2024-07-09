@@ -63,7 +63,7 @@ PARTICIPANT_DECLARATION = {
             description: "[Deprecated - use state instead] Indicates whether this declaration has been voided",
             type: :boolean,
             nullable: true,
-            example: true,
+            example: false,
           },
           state: {
             description: "Indicates the state of this payment declaration",
@@ -83,7 +83,7 @@ PARTICIPANT_DECLARATION = {
             description: "Whether the participant has failed or passed",
             type: :string,
             nullable: true,
-            example: true,
+            example: nil,
           },
         },
       },
@@ -125,12 +125,13 @@ PARTICIPANT_DECLARATION = {
   h[:v3][:properties][:attributes][:properties][:has_passed] = {
     description: "Whether the participant has failed or passed",
     type: "string", # Need update when completed
-    example: true,
+    example: nil,
     nullable: true,
   }
   h[:v3][:properties][:attributes][:properties][:lead_provider_name] = {
     description: "The name of the provider that submitted the declaration",
     type: "string",
+    example: "Example Institute",
     nullable: false,
   }
   h[:v3][:properties][:attributes][:properties][:created_at] = {

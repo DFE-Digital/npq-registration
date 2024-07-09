@@ -33,21 +33,8 @@ PARTICIPANT_DECLARATION_COMPLETED_REQUEST = {
     course_identifier: {
       description: "The type of course the participant is enrolled in",
       type: :string,
-      enum: %w[
-        npq-leading-teaching
-        npq-leading-behaviour-culture
-        npq-leading-teaching-development
-        npq-leading-literacy
-        npq-senior-leadership
-        npq-headship
-        npq-executive-leadership
-        npq-early-years-leadership
-        npq-additional-support-offer
-        npq-early-headship-coaching-offer
-        npq-leading-primary-mathematics
-        npq-senco
-      ],
-      example: "npq-headship",
+      enum: Course::IDENTIFIERS,
+      example: Course::IDENTIFIERS.first,
     },
     has_passed: {
       description: "Whether the participant has failed or passed",
@@ -60,7 +47,7 @@ PARTICIPANT_DECLARATION_COMPLETED_REQUEST = {
     participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
     declaration_type: "completed",
     declaration_date: "2021-05-31T02:21:32.000Z",
-    course_identifier: "npq-leading-teaching",
+    course_identifier: Course::IDENTIFIERS.first,
     has_passed: true,
   },
 }.freeze

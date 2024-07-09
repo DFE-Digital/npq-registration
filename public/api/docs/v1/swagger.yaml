@@ -374,10 +374,10 @@ paths:
                         declaration_date: '2022-04-30'
                         course_identifier: npq-senior-leadership
                         eligible_for_payment: true
-                        voided: true
+                        voided: false
                         state: submitted
                         updated_at: '2021-05-31T02:22:32.000Z'
-                        has_passed: true
+                        has_passed:
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
         '401':
@@ -453,6 +453,22 @@ paths:
           description: The participant declaration being voided
           content:
             application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: participant-declaration
+                      attributes:
+                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        declaration_type: started
+                        declaration_date: '2022-04-30'
+                        course_identifier: npq-senior-leadership
+                        eligible_for_payment: true
+                        voided: true
+                        state: voided
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        has_passed:
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
         '401':
@@ -1913,7 +1929,7 @@ components:
                 declaration has been voided"
               type: boolean
               nullable: true
-              example: true
+              example: false
             state:
               description: Indicates the state of this payment declaration
               type: string
@@ -1938,7 +1954,7 @@ components:
               description: Whether the participant has failed or passed
               type: string
               nullable: true
-              example: true
+              example:
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
@@ -2005,19 +2021,19 @@ components:
           type: string
           required: true
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
-          example: npq-headship
+          example: npq-senior-leadership
       required:
       - participant_id
       - declaration_type
@@ -2027,7 +2043,7 @@ components:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: started
         declaration_date: '2021-05-31T02:21:32.000Z'
-        course_identifier: npq-leading-teaching
+        course_identifier: npq-senior-leadership
     ParticipantDeclarationRetainedRequest:
       description: An NPQ participant retained declaration
       type: object
@@ -2054,19 +2070,19 @@ components:
           description: The type of course the participant is enrolled in
           type: string
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
-          example: npq-headship
+          example: npq-senior-leadership
       required:
       - participant_id
       - declaration_type
@@ -2076,7 +2092,7 @@ components:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: retained-1
         declaration_date: '2021-05-31T02:21:32.000Z'
-        course_identifier: npq-headship
+        course_identifier: npq-senior-leadership
     ParticipantDeclarationCompletedRequest:
       description: An NPQ completed participant declaration
       type: object
@@ -2108,19 +2124,19 @@ components:
           description: The type of course the participant is enrolled in
           type: string
           enum:
-          - npq-leading-teaching
-          - npq-leading-behaviour-culture
-          - npq-leading-teaching-development
-          - npq-leading-literacy
           - npq-senior-leadership
           - npq-headship
           - npq-executive-leadership
           - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
           - npq-additional-support-offer
           - npq-early-headship-coaching-offer
-          - npq-leading-primary-mathematics
           - npq-senco
-          example: npq-headship
+          example: npq-senior-leadership
         has_passed:
           description: Whether the participant has failed or passed
           type: boolean
@@ -2130,5 +2146,5 @@ components:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: completed
         declaration_date: '2021-05-31T02:21:32.000Z'
-        course_identifier: npq-leading-teaching
+        course_identifier: npq-senior-leadership
         has_passed: true

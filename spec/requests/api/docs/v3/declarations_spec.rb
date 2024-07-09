@@ -16,6 +16,9 @@ RSpec.describe "Participant Declarations endpoint", type: :request, openapi_spec
     let(:type) { "participant-declaration" } # check
     let(:application) { create(:application, :accepted, :with_declaration, lead_provider:) }
     let(:resource) { application.declarations.first }
+    let(:base_response_example) do
+      extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v3)
+    end
 
     it_behaves_like "an API show endpoint documentation",
                     "/api/v3/participant-declarations/{id}",
@@ -28,7 +31,14 @@ RSpec.describe "Participant Declarations endpoint", type: :request, openapi_spec
                     "Participant declarations",
                     "Void a declaration",
                     "The participant declaration being voided",
-                    "#/components/schemas/ParticipantDeclarationResponse"
+                    "#/components/schemas/ParticipantDeclarationResponse" do
+      let(:response_example) do
+        base_response_example.tap do |example|
+          example[:data][:attributes][:state] = "voided"
+          example[:data][:attributes][:has_passed] = nil
+        end
+      end
+    end
   end
 
   describe "create declarations" do
