@@ -2,10 +2,10 @@
 
 ## The application stage
 
-1. A person submits an application for a course using the [Register for a national professional qualification service](ADD LINK).
-2. Providers view NPQ application data via the API.
-3. Providers complete their own suitability and application processes.
-4. Providers accept or reject applications via the API and onboarding participants onto their systems. 
+1. Once someone has registered with us to do an NPQ, providers can view their application data via our API.   
+2. Providers complete their own suitability and application processes.
+3. Providers process applications via our API. This is where providers can confirm whether or not training will be DfE-funded.
+4. Process set successful applicants up on their training portals. 
 
 ## Training starts
 

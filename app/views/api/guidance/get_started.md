@@ -43,9 +43,9 @@ Providers can use API testing tools such as Postman to make test API calls. Prov
 
 The production environment is the live environment which processes real data: 
 
-* API v1 [ADD LINK]
-* API v2 [ADD LINK]
-* API v3 [ADD LINK]
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1">API version 1 production environment</a> 
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2">API version 2 production environment</a> 
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3">API version 3 production environment</a> 
 
 Do not perform testing in the production environment. Real participant and payment data may be affected if you do this. 
 
