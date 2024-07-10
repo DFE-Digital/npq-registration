@@ -3,6 +3,16 @@ require "rails_helper"
 RSpec.describe ParticipantOutcome, type: :model do
   subject(:instance) { build(:participant_outcome) }
 
+  describe "enums" do
+    it {
+      expect(subject).to define_enum_for(:state).with_values(
+        passed: "passed",
+        failed: "failed",
+        voided: "voided",
+      ).backed_by_column_of_type(:enum).with_suffix
+    }
+  end
+
   describe ".latest" do
     subject { described_class.latest }
 
