@@ -2,6 +2,7 @@ class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
   has_many :applications, dependent: :destroy
+  has_many :declarations, through: :applications
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes, -> { order("created_at desc") }
   has_many :declarations, through: :applications
@@ -32,6 +33,14 @@ class User < ApplicationRecord
   EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
 
   enum email_updates_status: EMAIL_UPDATES_ALL_STATES, _suffix: true
+
+  def latest_participant_outcome(lead_provider, course_identifier)
+    declarations.eligible_for_outcomes(lead_provider, course_identifier)
+      .first
+      &.participant_outcomes
+      &.latest
+  end
+
   def self.find_by_get_an_identity_id(get_an_identity_id)
     with_get_an_identity_id.find_by(uid: get_an_identity_id)
   end

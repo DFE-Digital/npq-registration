@@ -31,6 +31,45 @@ RSpec.describe User do
     it { expect(User.new).not_to be_null_user }
   end
 
+  describe ".latest_participant_outcome" do
+    let(:user) { create(:user) }
+    let(:lead_provider) { participant_outcome.lead_provider }
+    let(:course_identifier) { participant_outcome.course.identifier }
+    let(:participant_outcome) { create(:participant_outcome, user:) }
+    let(:course) { participant_outcome.course }
+
+    subject { user.latest_participant_outcome(lead_provider, course_identifier) }
+
+    before do
+      # Older participant outcome.
+      travel_to(1.day.ago) { create(:participant_outcome, user:, course:, lead_provider:) }
+
+      travel_to(1.day.from_now) do
+        # Not a completed declaration.
+        create(:participant_outcome, user:, course:, lead_provider:).declaration.update!(declaration_type: "retained-1")
+
+        # Declaration on another provider.
+        create(:participant_outcome, user:, course:, lead_provider: create(:lead_provider, name: "Other lead provider"))
+
+        # Declaration with different course.
+        create(:participant_outcome, user:, course: create(:course, identifier: "other-course"), lead_provider:)
+
+        # Declarations that are not billable or voidable.
+        Declaration.states.keys.excluding(Declaration::BILLABLE_STATES + Declaration::VOIDABLE_STATES).each do |state|
+          create(:participant_outcome, user:, course:, lead_provider:).declaration.update!(state:)
+        end
+      end
+    end
+
+    it { is_expected.to eq(participant_outcome) }
+
+    context "when there are no participant outcomes" do
+      before { ParticipantOutcome.destroy_all }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
   describe "#update_email_updates_status" do
     let(:user) { create(:user) }
     let(:form) { EmailUpdates.new(email_updates_status: :senco) }

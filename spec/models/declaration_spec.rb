@@ -180,31 +180,127 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "scopes" do
-    let(:declarations) { Declaration.states.keys.map { |state| create(:declaration, state:) } }
+    describe ".latest_first" do
+      let!(:latest_declaration) { create(:declaration) }
+      let!(:older_declaration) { travel_to(1.day.ago) { create(:declaration) } }
 
-    describe ".billable" do
-      it "returns declarations with billable states" do
-        billable_declarations = declarations.select { |d| %w[eligible payable paid].include?(d.state) }
-
-        expect(Declaration.billable).to match_array(billable_declarations)
+      it "returns the declarations with those created latest first" do
+        expect(described_class.latest_first).to eq([latest_declaration, older_declaration])
       end
     end
 
-    describe ".changeable" do
-      it "returns declarations with changeable states" do
-        changeable_declarations = declarations.select { |d| %w[eligible submitted].include?(d.state) }
+    describe ".eligible_for_outcomes" do
+      subject { described_class.eligible_for_outcomes(lead_provider, course_identifier) }
 
-        expect(Declaration.changeable).to match_array(changeable_declarations)
+      let(:lead_provider) { completed_declaration.lead_provider }
+      let(:course_identifier) { completed_declaration.course_identifier }
+      let(:completed_declaration) { create(:declaration, :completed, :payable) }
+      let(:course) { completed_declaration.course }
+      let(:older_completed_declaration) { travel_to(1.day.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
+
+      before do
+        # Not a completed declaration.
+        completed_declaration.dup.update!(declaration_type: "retained-1")
+
+        # Declaration on another provider.
+        completed_declaration.dup.update!(lead_provider: create(:lead_provider, name: "Other lead provider"))
+
+        # Declaration with different course.
+        completed_declaration.dup.update!(application: create(:application, course: create(:course, identifier: "other-course")))
+
+        # Declarations that are not billable or voidable.
+        Declaration.states.keys.excluding(Declaration::BILLABLE_STATES + Declaration::VOIDABLE_STATES).each do |state|
+          completed_declaration.dup.update!(state:)
+        end
+      end
+
+      it { is_expected.to eq([completed_declaration, older_completed_declaration]) }
+
+      context "when there are no declarations" do
+        before { Declaration.destroy_all }
+
+        it { is_expected.to be_empty }
       end
     end
 
-    describe ".billable_or_changeable" do
-      it "returns declarations with either billable or changeable states" do
-        states = %w[submitted eligible payable paid]
-        billable_or_changeable = declarations.select { |d| states.include?(d.state) }
+    describe "declaration states" do
+      let(:declarations) { described_class.states.keys.map { |state| create(:declaration, state:) } }
 
-        expect(Declaration.billable_or_changeable).to match_array(billable_or_changeable)
+      describe ".billable" do
+        it "returns declarations with billable states" do
+          billable_declarations = declarations.select { |d| %w[eligible payable paid].include?(d.state) }
+
+          expect(described_class.billable).to match_array(billable_declarations)
+        end
       end
+
+      describe ".voidable" do
+        it "returns declarations with voidable states" do
+          voidable_declarations = declarations.select { |d| %w[submitted eligible payable ineligible].include?(d.state) }
+
+          expect(described_class.voidable).to match_array(voidable_declarations)
+        end
+      end
+
+      describe ".changeable" do
+        it "returns declarations with changeable states" do
+          changeable_declarations = declarations.select { |d| %w[eligible submitted].include?(d.state) }
+
+          expect(described_class.changeable).to match_array(changeable_declarations)
+        end
+      end
+
+      describe ".billable_or_changeable" do
+        it "returns declarations with either billable or changeable states" do
+          states = %w[submitted eligible payable paid]
+          billable_or_changeable = declarations.select { |d| states.include?(d.state) }
+
+          expect(described_class.billable_or_changeable).to match_array(billable_or_changeable)
+        end
+      end
+
+      describe ".billable_or_voidable" do
+        it "returns declarations with either billable or voidable states" do
+          states = %w[submitted eligible payable paid ineligible]
+          billable_or_voidable = declarations.select { |d| states.include?(d.state) }
+
+          expect(described_class.billable_or_voidable).to match_array(billable_or_voidable)
+        end
+      end
+    end
+
+    describe ".with_lead_provider" do
+      let(:lead_provider) { declaration.lead_provider }
+      let(:declaration) { create(:declaration) }
+
+      before { create(:declaration, lead_provider: create(:lead_provider, name: "Other lead provider")) }
+
+      it { expect(described_class.with_lead_provider(lead_provider)).to contain_exactly(declaration) }
+    end
+
+    describe ".completed" do
+      let(:completed_declaration) { create(:declaration, :completed) }
+
+      before do
+        described_class.declaration_types.keys.excluding("completed").each do |declaration_type|
+          create(:declaration, declaration_type:)
+        end
+      end
+
+      it { expect(described_class.completed).to contain_exactly(completed_declaration) }
+    end
+
+    describe ".with_course_identifier" do
+      let(:course_identifier) { declaration.application.course.identifier }
+      let(:declaration) { create(:declaration) }
+
+      before do
+        Course::IDENTIFIERS.excluding(course_identifier).each do |identifier|
+          create(:declaration).application.update!(course: Course.find_by(identifier:))
+        end
+      end
+
+      it { expect(described_class.with_course_identifier(course_identifier)).to contain_exactly(declaration) }
     end
   end
 

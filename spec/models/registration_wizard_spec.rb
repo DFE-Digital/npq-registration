@@ -60,6 +60,7 @@ RSpec.describe RegistrationWizard do
           "course_identifier" => "npq-additional-support-offer",
           "lead_provider_id" => LeadProvider.all.sample.id,
           "funding" => "self",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
@@ -91,6 +92,7 @@ RSpec.describe RegistrationWizard do
           "verified_trn" => nil,
           "works_in_childcare" => "yes",
           "works_in_school" => "no",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
