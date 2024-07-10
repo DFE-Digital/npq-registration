@@ -38,6 +38,14 @@
       <th scope="row" class="govuk-table__header"><code>statement</code></th>
       <td class="govuk-table__cell">A record of output payments (based on declarations), service fees and any adjustments DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes</td>
     </tr>
+             <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>funded place</code></th>
+      <td class="govuk-table__cell">The way for DfE and providers to identify participants who are eligible for funding and for whom there is funding available</td>
+    </tr>
+         <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>funding cap</code></th>
+      <td class="govuk-table__cell">The maximum number of places each provider can offer per NPQ that DfE will pay for from the 2024/25 academic year onwards</td>
+    </tr>
   </tbody>
 </table>
 
