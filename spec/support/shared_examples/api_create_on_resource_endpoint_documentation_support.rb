@@ -28,6 +28,8 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
       end
 
       response "200", response_description do
+        let(:id) { resource&.ecf_id }
+
         schema({ "$ref": response_schema_ref })
 
         after do |example|
@@ -49,6 +51,7 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
       end
 
       response "401", "Unauthorized" do
+        let(:id) { resource&.ecf_id }
         let(:token) { "invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
@@ -58,6 +61,7 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
 
       if request_schema_ref
         response "400", "Bad request" do
+          let(:id) { resource&.ecf_id }
           let(:params) { { data: {} } }
 
           schema({ "$ref": "#/components/schemas/BadRequestResponse" })
@@ -66,9 +70,27 @@ RSpec.shared_examples "an API create on resource endpoint documentation" do |url
         end
 
         response "422", "Unprocessable entity" do
+          let(:id) { resource&.ecf_id }
           let(:attributes) { invalid_attributes }
 
           schema({ "$ref": "#/components/schemas/UnprocessableEntityResponse" })
+
+          run_test!
+        end
+      end
+
+      if url =~ /participants\/npq\/.*\/outcomes/
+        parameter name: :id,
+                  in: :path,
+                  required: true,
+                  schema: {
+                    "$ref": "#/components/schemas/IDAttribute",
+                  }
+
+        response "404", "Not found", exceptions_app: true do
+          let(:id) { SecureRandom.uuid }
+
+          schema({ "$ref": "#/components/schemas/NotFoundResponse" })
 
           run_test!
         end
