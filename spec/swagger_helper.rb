@@ -50,6 +50,7 @@ RSpec.configure do |config|
           ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
           ListEnrolmentsFilter: LIST_ENROLMENTS_FILTER[version],
           ListParticipantsFilter: LIST_PARTICIPANTS_FILTER[version],
+          ListParticipantDeclarationsFilter: LIST_PARTICIPANT_DECLARATIONS_FILTER[version],
           ListStatementsFilter: LIST_STATEMENTS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
@@ -78,6 +79,14 @@ RSpec.configure do |config|
           StatementsResponse: STATEMENTS_RESPONSE[version],
           Statement: STATEMENT[version],
           SortingOptions: SORTING_OPTIONS[version],
+
+          ParticipantDeclaration: PARTICIPANT_DECLARATION[version],
+          ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
+          ParticipantDeclarationResponse: PARTICIPANT_DECLARATION_RESPONSE[version],
+          ParticipantDeclarationsResponse: PARTICIPANT_DECLARATIONS_RESPONSE[version],
+          ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
+          ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+          ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
         }.compact,
       },
     }

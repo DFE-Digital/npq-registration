@@ -15,21 +15,23 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
                   "$ref": "#/components/schemas/IDAttribute",
                 }
 
-      parameter name: :params,
-                in: :body,
-                style: :deepObject,
-                required: true,
-                schema: {
-                  "$ref": request_schema_ref,
-                }
+      if request_schema_ref.present?
+        parameter name: :params,
+                  in: :body,
+                  style: :deepObject,
+                  required: true,
+                  schema: {
+                    "$ref": request_schema_ref,
+                  }
 
-      let(:params) do
-        {
-          data: {
-            type:,
-            attributes:,
-          },
-        }
+        let(:params) do
+          {
+            data: {
+              type:,
+              attributes:,
+            },
+          }
+        end
       end
 
       response "200", response_description do
@@ -64,22 +66,24 @@ RSpec.shared_examples "an API update endpoint documentation" do |url, tag, resou
         run_test!
       end
 
-      response "400", "Bad request" do
-        let(:id) { resource.ecf_id }
-        let(:params) { { data: {} } }
+      if request_schema_ref.present?
+        response "400", "Bad request" do
+          let(:id) { resource.ecf_id }
+          let(:params) { { data: {} } }
 
-        schema({ "$ref": "#/components/schemas/BadRequestResponse" })
+          schema({ "$ref": "#/components/schemas/BadRequestResponse" })
 
-        run_test!
-      end
+          run_test!
+        end
 
-      response "422", "Unprocessable entity" do
-        let(:id) { resource.ecf_id }
-        let(:attributes) { invalid_attributes }
+        response "422", "Unprocessable entity" do
+          let(:id) { resource.ecf_id }
+          let(:attributes) { invalid_attributes }
 
-        schema({ "$ref": "#/components/schemas/UnprocessableEntityResponse" })
+          schema({ "$ref": "#/components/schemas/UnprocessableEntityResponse" })
 
-        run_test!
+          run_test!
+        end
       end
 
       response "404", "Not found", exceptions_app: true do

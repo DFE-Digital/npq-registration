@@ -319,6 +319,166 @@ paths:
             text/csv:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participant-declarations":
+    get:
+      summary: Retrieve multiple Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationsResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+    post:
+      summary: Declare a participant has reached a milestone
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters: []
+      responses:
+        '200':
+          description: The participant declaration being created
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: participant-declaration
+                      attributes:
+                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        declaration_type: started
+                        declaration_date: '2022-04-30'
+                        course_identifier: npq-senior-leadership
+                        state: submitted
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        has_passed:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeclarationRequest"
+  "/api/v2/participant-declarations/{id}":
+    get:
+      summary: Retrieve a single Participant declarations
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A single Participant declarations
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v2/participant-declarations/{id}/void":
+    put:
+      summary: Void a declaration
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The participant declaration being voided
+          content:
+            application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: participant-declaration
+                      attributes:
+                        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+                        declaration_type: started
+                        declaration_date: '2022-04-30'
+                        course_identifier: npq-senior-leadership
+                        state: voided
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        has_passed:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
   "/api/v2/npq-enrolments.csv":
     get:
       summary: Retrieve all NPQ enrolments in CSV format
@@ -743,6 +903,19 @@ components:
       description: Filter applications to return more specific results
       type: object
       properties:
+        updated_since:
+          description: Return only records that have been updated since this date
+            and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListParticipantDeclarationsFilter:
+      description: Refine participant declarations to return.
+      type: object
+      properties:
+        participant_id:
+          description: The unique id of the participant
+          type: string
+          example: 7e5bcdbf-c818-4961-8da5-439cab1984e0
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
@@ -1893,3 +2066,284 @@ components:
                   nullable: true
                   type: string
                   example: '2023'
+    ParticipantDeclaration:
+      description: The details of a participant declaration
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          type: string
+          enum:
+          - participant-declaration
+          example: participant-declaration
+        attributes:
+          required:
+          - participant_id
+          - declaration_type
+          - declaration_date
+          - course_identifier
+          - state
+          - updated_at
+          properties:
+            participant_id:
+              description: The unique identifier of this participant declaration record
+              type: string
+              format: uuid
+              nullable: false
+              example: db3a7848-7308-4879-942a-c4a70ced400a
+            declaration_type:
+              description: The event declaration type
+              type: string
+              nullable: false
+              example: started
+              enum:
+              - started
+              - retained-1
+              - retained-2
+              - completed
+            declaration_date:
+              description: The event declaration date
+              type: string
+              nullable: false
+              example: '2022-04-30'
+            course_identifier:
+              description: The NPQ course this NPQ application relates to
+              type: string
+              nullable: false
+              example: npq-senior-leadership
+              enum:
+              - npq-senior-leadership
+              - npq-headship
+              - npq-executive-leadership
+              - npq-early-years-leadership
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-leading-primary-mathematics
+              - npq-additional-support-offer
+              - npq-early-headship-coaching-offer
+              - npq-senco
+            state:
+              description: Indicates the state of this payment declaration
+              type: string
+              nullable: false
+              example: submitted
+              enum:
+              - submitted
+              - eligible
+              - payable
+              - paid
+              - voided
+              - ineligible
+              - awaiting_clawback
+              - clawed_back
+            updated_at:
+              description: The date the application was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            has_passed:
+              description: Whether the participant has failed or passed
+              type: string
+              nullable: true
+              example:
+    ParticipantDeclarationRequest:
+      description: A participant declaration data request
+      type: object
+      required:
+      - type
+      - attributes
+      properties:
+        type:
+          type: string
+          required: true
+          enum:
+          - participant-declaration
+          example: participant-declaration
+        attributes:
+          required: true
+          anyOf:
+          - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
+          - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
+          - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationStartedRequest:
+      description: An NPQ started participant declaration
+      type: object
+      additionalProperties: false
+      properties:
+        participant_id:
+          description: The unique id of the participant
+          type: string
+          format: uuid
+          required: true
+          example: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type:
+          description: The event declaration type
+          type: string
+          required: true
+          enum:
+          - started
+          example: started
+        declaration_date:
+          description: The event declaration date
+          type: string
+          required: true
+          format: date-time
+          example: '2021-05-31T02:21:32.000Z'
+        course_identifier:
+          description: The type of course the participant is enrolled in
+          type: string
+          required: true
+          enum:
+          - npq-senior-leadership
+          - npq-headship
+          - npq-executive-leadership
+          - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
+          - npq-additional-support-offer
+          - npq-early-headship-coaching-offer
+          - npq-senco
+          example: npq-senior-leadership
+      required:
+      - participant_id
+      - declaration_type
+      - declaration_date
+      - course_identifier
+      example:
+        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type: started
+        declaration_date: '2021-05-31T02:21:32.000Z'
+        course_identifier: npq-senior-leadership
+    ParticipantDeclarationRetainedRequest:
+      description: An NPQ participant retained declaration
+      type: object
+      additionalProperties: false
+      properties:
+        participant_id:
+          description: The unique id of the participant
+          type: string
+          format: uuid
+          example: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type:
+          description: The event declaration type
+          type: string
+          enum:
+          - retained-1
+          - retained-2
+          example: retained-1
+        declaration_date:
+          description: The event declaration date
+          type: string
+          format: date-time
+          example: '2021-05-31T02:21:32.000Z'
+        course_identifier:
+          description: The type of course the participant is enrolled in
+          type: string
+          enum:
+          - npq-senior-leadership
+          - npq-headship
+          - npq-executive-leadership
+          - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
+          - npq-additional-support-offer
+          - npq-early-headship-coaching-offer
+          - npq-senco
+          example: npq-senior-leadership
+      required:
+      - participant_id
+      - declaration_type
+      - declaration_date
+      - course_identifier
+      example:
+        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type: retained-1
+        declaration_date: '2021-05-31T02:21:32.000Z'
+        course_identifier: npq-senior-leadership
+    ParticipantDeclarationCompletedRequest:
+      description: An NPQ completed participant declaration
+      type: object
+      required:
+      - participant_id
+      - declaration_type
+      - declaration_date
+      - course_identifier
+      - has_passed
+      additionalProperties: false
+      properties:
+        participant_id:
+          description: The unique id of the participant
+          type: string
+          format: uuid
+          example: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type:
+          description: The event declaration type
+          type: string
+          enum:
+          - completed
+          example: completed
+        declaration_date:
+          description: The event declaration date
+          type: string
+          format: date-time
+          example: '2021-05-31T02:21:32.000Z'
+        course_identifier:
+          description: The type of course the participant is enrolled in
+          type: string
+          enum:
+          - npq-senior-leadership
+          - npq-headship
+          - npq-executive-leadership
+          - npq-early-years-leadership
+          - npq-leading-teaching
+          - npq-leading-behaviour-culture
+          - npq-leading-teaching-development
+          - npq-leading-literacy
+          - npq-leading-primary-mathematics
+          - npq-additional-support-offer
+          - npq-early-headship-coaching-offer
+          - npq-senco
+          example: npq-senior-leadership
+        has_passed:
+          description: Whether the participant has failed or passed
+          type: boolean
+          example: true
+          nullable: true
+      example:
+        participant_id: db3a7848-7308-4879-942a-c4a70ced400a
+        declaration_type: completed
+        declaration_date: '2021-05-31T02:21:32.000Z'
+        course_identifier: npq-senior-leadership
+        has_passed: true
