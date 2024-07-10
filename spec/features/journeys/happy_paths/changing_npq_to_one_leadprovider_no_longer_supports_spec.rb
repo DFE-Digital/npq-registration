@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
+  before do
+    stub_const("PP50_SCHOOLS_URN_HASH", { "100000" => false })
+  end
+
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -76,8 +80,8 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("such as state funded schools")
-      expect(page).to have_text("not eligible for scholarship funding")
+      expect(page).to have_text("list of settings that are eligible")
+      expect(page).to have_text("leading primary mathematics")
 
       page.click_link("Continue")
     end
