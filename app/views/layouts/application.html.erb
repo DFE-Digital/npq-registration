@@ -6,7 +6,7 @@
     <%= render partial: "shared/analytics/google_noscript" %>
 
     <script>
-      document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+      document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
     </script>
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
