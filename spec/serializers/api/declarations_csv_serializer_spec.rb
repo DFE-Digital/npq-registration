@@ -9,13 +9,13 @@ RSpec.describe API::DeclarationsCsvSerializer, type: :serializer do
   describe "#serialize" do
     subject(:csv) { instance.serialize }
 
-    let(:declarations) { create_list(:declaration, 2) }
+    let(:declarations) { create_list(:declaration, 2, :started) }
     let(:rows) { CSV.parse(csv, headers: true) }
     let(:first_declaration) { declarations.first }
     let(:first_row) { rows.first.to_hash.symbolize_keys }
 
     it { expect(rows.count).to eq(declarations.count) }
-    it { expect(first_row.values).to all(be_present) }
+    it { expect(first_row.except(:has_passed).values).to all(be_present) }
 
     it "returns expected data", :aggregate_failures do
       expect(first_row).to include({
@@ -26,7 +26,7 @@ RSpec.describe API::DeclarationsCsvSerializer, type: :serializer do
         declaration_date: first_declaration.declaration_date.rfc3339,
         updated_at: first_declaration.updated_at.rfc3339,
         state: first_declaration.state,
-        has_passed: "TODO",
+        has_passed: nil,
         voided: first_declaration.voided_state?.to_s,
         eligible_for_payment: first_declaration.eligible_for_payment?.to_s,
       })
