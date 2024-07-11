@@ -1,6 +1,7 @@
 {
   "engines": {
-    "node": "20.15.1"
+    "node": "20.15.1",
+    "yarn": "^1.22.0"
   },
   "dependencies": {
     "@babel/core": "^7.24.7",
@@ -22,8 +23,7 @@
     "serialize-javascript": "^6.0.2",
     "swagger-ui-dist": "^5.17.14",
     "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4",
-    "yarn": "^1.22.22"
+    "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5"
