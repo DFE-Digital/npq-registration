@@ -1,13 +1,13 @@
 # Build compilation image
-FROM ruby:3.3.4-alpine as builder
+FROM ruby:3.3.4-alpine3.20 AS builder
 
 # The application runs from /app
 WORKDIR /app
 
 # Add the timezone as it's not configured by default in Alpine
 RUN apk add --update --no-cache tzdata && \
-  cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
-  echo "Europe/London" > /etc/timezone
+    cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
+    echo "Europe/London" > /etc/timezone
 
 # build-base: complication tools for bundle
 # yarn: node package manager
@@ -19,43 +19,47 @@ RUN apk add --no-cache build-base yarn postgresql-dev git
 RUN gem install bundler:2.5.15 --no-document
 
 # Install gems defined in Gemfile
-COPY .ruby-version Gemfile Gemfile.lock /app/
+COPY .ruby-version Gemfile Gemfile.lock ./
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
-RUN bundle config set without "development test"
-ARG BUNDLE_FLAGS="--jobs=4 --no-binstubs --no-cache"
-RUN bundle install ${BUNDLE_FLAGS}
+# Install gems and remove gem cache
+RUN bundler -v && \
+    bundle config set no-cache 'true' && \
+    bundle config set no-binstubs 'true' && \
+    bundle config set without 'development test' && \
+    bundle install --retry=5 --jobs=4 && \
+    rm -rf /usr/local/bundle/cache
 
 # Install node packages defined in package.json, including webpack
-COPY package.json yarn.lock /app/
-RUN yarn install --frozen-lockfile
+COPY package.json yarn.lock ./
+RUN yarn install --immutable
 
 # Copy all files to /app (except what is defined in .dockerignore)
-COPY . /app/
+COPY . .
 
-# Compile assets and run webpack
-RUN RAILS_ENV=production SECRET_KEY_BASE=key bundle exec rails assets:precompile
+# Precompile assets
+RUN RAILS_ENV=production SECRET_KEY_BASE=required-to-run-but-not-used \
+    bundle exec rails assets:precompile
 
 # Cleanup to save space in the production image
-RUN rm -rf node_modules log tmp && \
-      rm -rf /usr/local/bundle/cache && \
-      rm -rf .env && \
-      find /usr/local/bundle/gems -name "*.c" -delete && \
-      find /usr/local/bundle/gems -name "*.h" -delete && \
-      find /usr/local/bundle/gems -name "*.o" -delete && \
-      find /usr/local/bundle/gems -name "*.html" -delete
+RUN rm -rf node_modules log/* tmp/* /tmp && \
+    rm -rf /usr/local/bundle/cache && \
+    rm -rf .env && \
+    find /usr/local/bundle/gems -name "*.c" -delete && \
+    find /usr/local/bundle/gems -name "*.h" -delete && \
+    find /usr/local/bundle/gems -name "*.o" -delete && \
+    find /usr/local/bundle/gems -name "*.html" -delete
 
 # Build runtime image
-FROM ruby:3.3.4-alpine as production
+FROM ruby:3.3.4-alpine3.20 AS production
 
 # The application runs from /app
 WORKDIR /app
 
-# Add postgres driver library
 # Add the timezone as it's not configured by default in Alpine
 RUN apk add --update --no-cache libpq tzdata && \
-  cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
-  echo "Europe/London" > /etc/timezone
+    cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
+    echo "Europe/London" > /etc/timezone
 
 # Copy files generated in the builder image
 COPY --from=builder /app /app
