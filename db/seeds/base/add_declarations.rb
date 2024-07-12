@@ -72,12 +72,23 @@ LeadProvider.find_each do |lead_provider|
       cohort: Cohort.all.sample,
     )
     %w[started retained-1 retained-2 completed].each do |declaration_type|
-      FactoryBot.create(
+      declaration = FactoryBot.create(
         :declaration,
         :submitted_or_eligible,
         application: application4,
         declaration_type:,
       )
+
+      next unless declaration_type == "completed"
+
+      ParticipantOutcomes::Create::STATES.reverse.each do |state|
+        FactoryBot.create(:participant_outcome,
+                          declaration:,
+                          state:,
+                          completion_date: declaration.declaration_date.to_s)
+
+        break if Faker::Boolean.boolean(true_ratio: 0.3)
+      end
     end
   end
 end
