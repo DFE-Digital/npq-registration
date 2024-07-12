@@ -1,5 +1,5 @@
 import { createElement, render } from 'preact' /** @jsx createElement */
-import Autocomplete from 'accessible-autocomplete/src/autocomplete'
+import Autocomplete from 'accessible-autocomplete'
 import debounce from 'lodash.debounce'
 
 function institutionPicker (options) {
