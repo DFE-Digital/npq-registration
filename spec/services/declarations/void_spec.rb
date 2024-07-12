@@ -85,6 +85,17 @@ RSpec.describe Declarations::Void, type: :model do
             it { expect { void }.to change { statement_item.reload.state }.from(statement_item_state).to("voided") }
           end
         end
+
+        it "calls the void participant outcome service" do
+          service = instance_double(ParticipantOutcomes::Void)
+          allow(service).to receive(:void_outcome)
+          expect(service).to receive(:void_outcome)
+
+          allow(ParticipantOutcomes::Void).to receive(:new).with(declaration:).and_return(service)
+          expect(ParticipantOutcomes::Void).to receive(:new).with(declaration:)
+
+          void
+        end
       end
     end
 
@@ -97,6 +108,17 @@ RSpec.describe Declarations::Void, type: :model do
         expect { void }.to change { statement.reload.statement_items.count }.by(1)
         created_statement_item = statement.statement_items.last
         expect(created_statement_item).to have_attributes(declaration:, state: declaration.reload.state)
+      end
+
+      it "calls the void participant outcome service" do
+        service = instance_double(ParticipantOutcomes::Void)
+        allow(service).to receive(:void_outcome)
+        expect(service).to receive(:void_outcome)
+
+        allow(ParticipantOutcomes::Void).to receive(:new).with(declaration:).and_return(service)
+        expect(ParticipantOutcomes::Void).to receive(:new).with(declaration:)
+
+        void
       end
     end
 

@@ -22,6 +22,8 @@ module Declarations
 
       ApplicationRecord.transaction do
         clawing_back? ? clawback_declaration : void_declaration
+
+        void_participant_outcome
       end
 
       true
@@ -70,6 +72,10 @@ module Declarations
 
     def voiding?
       !clawing_back?
+    end
+
+    def void_participant_outcome
+      ParticipantOutcomes::Void.new(declaration:).void_outcome
     end
   end
 end
