@@ -45,6 +45,7 @@ module ValidTestDataGenerators
 
       accept_application(application)
       create_declarations(application)
+      create_outcomes(application)
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
@@ -104,6 +105,21 @@ module ValidTestDataGenerators
           application:,
           declaration_type:,
         )
+      end
+    end
+
+    def create_outcomes(application)
+      completed_declaration = application.declarations.eligible_for_outcomes(lead_provider, application.course.identifier).first
+      return unless completed_declaration
+
+      ParticipantOutcomes::Create::STATES.reverse.each do |state|
+        ParticipantOutcomes::Create.new(lead_provider:,
+                                        participant: application.user,
+                                        course_identifier: application.course.identifier,
+                                        state:,
+                                        completion_date: completed_declaration.declaration_date.to_s).create_outcome
+
+        break if Faker::Boolean.boolean(true_ratio: 0.3)
       end
     end
   end

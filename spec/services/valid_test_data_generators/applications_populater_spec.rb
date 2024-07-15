@@ -71,6 +71,14 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
           subject.populate
         }.to(change(Declaration, :count))
       end
+
+      it "creates outcomes" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(false)
+
+        expect {
+          subject.populate
+        }.to(change(ParticipantOutcome, :count))
+      end
     end
   end
 end
