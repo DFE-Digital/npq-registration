@@ -143,7 +143,7 @@ module ValidTestDataGenerators
       return unless completed_declaration
       return unless CourseGroup.joins(:courses).leadership_or_specialist.where(courses: { identifier: application.course.identifier }).exists?
 
-      %i[passed voided failed].each do |state_trait|
+      ParticipantOutcome.states.keys.sort.each do |state_trait|
         FactoryBot.create(
           :participant_outcome,
           state_trait,
