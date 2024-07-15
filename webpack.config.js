@@ -8,7 +8,8 @@ module.exports = {
     moduleIds: 'deterministic',
   },
   entry: {
-    application: "./app/javascript/application.js"
+    application: "./app/javascript/application.js",
+    "swagger-ui": "./app/javascript/swagger-ui.js",
   },
   module: {
     rules: [

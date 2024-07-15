@@ -32,6 +32,6 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
+    "build:css": "sass ./app/assets/stylesheets/swagger-ui.scss:./app/assets/builds/swagger-ui.css ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   }
 }
