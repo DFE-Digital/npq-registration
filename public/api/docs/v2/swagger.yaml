@@ -505,6 +505,127 @@ paths:
             text/csv:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participants/npq/outcomes":
+    get:
+      summary: Retrieve multiple NPQ Outcomes for all participants
+      tags:
+      - NPQ Participant Outcomes
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantOutcomesFilter"
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      responses:
+        '200':
+          description: A list of NPQ Outcomes for all participants
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantOutcomesResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+  "/api/v2/participants/npq/{id}/outcomes":
+    get:
+      summary: Retrieve multiple NPQ Outcomes for a single participant
+      tags:
+      - NPQ Participant Outcomes
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref":
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: A list of NPQ Outcomes for a single participant
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantOutcomesResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+    post:
+      summary: Submit a NPQ Outcome for a single participant
+      tags:
+      - NPQ Participant Outcomes
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The details of an NPQ Outcome
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantOutcomeResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantOutcomeCreateRequest"
   "/api/v2/participants/npq":
     get:
       summary: Retrieve multiple NPQ participants
@@ -919,6 +1040,15 @@ components:
         updated_since:
           description: Return only records that have been updated since this date
             and time (ISO 8601 date format).
+          type: string
+          example: '2021-05-13T11:21:55Z'
+    ListParticipantOutcomesFilter:
+      description: Filter NPQ outcomes to return more specific results
+      type: object
+      properties:
+        created_since:
+          description: Return only records that have been created since this date
+            and time (ISO 8601 date format)
           type: string
           example: '2021-05-13T11:21:55Z'
     UnauthorisedResponse:
@@ -2066,6 +2196,143 @@ components:
                   nullable: true
                   type: string
                   example: '2023'
+    ParticipantOutcome:
+      description: The details of an NPQ outcome
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+          example: participant-outcome
+          enum:
+          - participant-outcome
+        attributes:
+          properties:
+            participant_id:
+              description: The unique identifier of this NPQ participant
+              type: string
+              nullable: false
+              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+              format: uuid
+            course_identifier:
+              description: The NPQ course this NPQ application relates to
+              type: string
+              nullable: false
+              example: npq-senior-leadership
+              enum:
+              - npq-senior-leadership
+              - npq-headship
+              - npq-executive-leadership
+              - npq-early-years-leadership
+              - npq-leading-teaching
+              - npq-leading-behaviour-culture
+              - npq-leading-teaching-development
+              - npq-leading-literacy
+              - npq-leading-primary-mathematics
+              - npq-senco
+            state:
+              description: The state of the outcome (passed or failed)
+              nullable: false
+              type: string
+              example: passed
+              enum:
+              - passed
+              - failed
+            completion_date:
+              description: The date the participant received the assessment outcome
+                for this course
+              nullable: false
+              type: string
+              example: '2021-05-13'
+            created_at:
+              description: The date you created the participant-outcome record
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:21:32.000Z'
+    ParticipantOutcomeCreateRequest:
+      description: The NPQ outcome submission request
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          description: The NPQ outcome submission request attributes
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              description: The data typed
+              type: string
+              example: npq-outcome-confirmation
+              required: true
+            attributes:
+              description: The NPQ outcome submission request attributes
+              type: object
+              required:
+              - course_identifier
+              - state
+              - completion_date
+              properties:
+                course_identifier:
+                  description: The type of course the participant is enrolled in
+                  required: true
+                  nullable: false
+                  type: string
+                  example: npq-senior-leadership
+                  enum:
+                  - npq-senior-leadership
+                  - npq-headship
+                  - npq-executive-leadership
+                  - npq-early-years-leadership
+                  - npq-leading-teaching
+                  - npq-leading-behaviour-culture
+                  - npq-leading-teaching-development
+                  - npq-leading-literacy
+                  - npq-leading-primary-mathematics
+                  - npq-senco
+                state:
+                  description: The state of the outcome (passed or failed)
+                  required: true
+                  nullable: false
+                  type: string
+                  example: passed
+                  enum:
+                  - passed
+                  - failed
+                completion_date:
+                  description: The date the participant received the assessment outcome
+                    for this course
+                  required: true
+                  nullable: false
+                  type: string
+                  example: '2021-05-13'
+    ParticipantOutcomeResponse:
+      description: The details of an NPQ Outcome
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantOutcome"
+    ParticipantOutcomesResponse:
+      description: A list of participant outcomes
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantOutcome"
     ParticipantDeclaration:
       description: The details of a participant declaration
       type: object
