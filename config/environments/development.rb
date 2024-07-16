@@ -1,6 +1,16 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable                       = true
+    Bullet.alert                        = true
+    Bullet.bullet_logger                = true
+    Bullet.console                      = true
+    Bullet.rails_logger                 = true
+    Bullet.add_footer                   = true
+    Bullet.unused_eager_loading_enable  = false # Disabled due to the way our queries are structured
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time

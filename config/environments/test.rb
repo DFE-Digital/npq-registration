@@ -6,6 +6,19 @@ require "active_support/core_ext/integer/time"
 # and recreated between test runs. Don't rely on the data there!
 
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable                       = true
+    Bullet.bullet_logger                = true
+    Bullet.raise                        = true # Raise an error if n+1 query occurs
+    Bullet.unused_eager_loading_enable  = false # Disabled due to the way our queries are structured
+    Bullet.stacktrace_excludes          = [
+      "app/controllers/api", # Ignore as request spec factories cause false positives (excluding controllers as we use shared examples so can't target spec/requests/api here), see: https://github.com/flyerhzm/bullet/issues/435
+      "spec/features/admin", # Ignore until they are fixed
+      "spec/features/migration_spec.rb", # Ignore until they are fixed
+      "npq_separation/admin", # Ignore until they are fixed
+    ]
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   config.cache_classes = false
