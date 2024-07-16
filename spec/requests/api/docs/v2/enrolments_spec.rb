@@ -8,6 +8,6 @@ RSpec.describe "NPQ enrolments endpoint", type: :request, openapi_spec: "v2/swag
                   "/api/v2/npq-enrolments.csv",
                   "NPQ Enrolments",
                   "NPQ enrolments",
-                  "#/components/schemas/ListEnrolmentsFilter",
-                  "#/components/schemas/EnrolmentsCsvResponse"
+                  "#/components/schemas/EnrolmentsCsvResponse",
+                  "#/components/schemas/ListEnrolmentsFilter"
 end

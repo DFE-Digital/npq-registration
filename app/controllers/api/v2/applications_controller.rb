@@ -2,7 +2,7 @@ module API
   module V2
     class ApplicationsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include FilterByDate
 
       def index
         respond_to do |format|
@@ -83,7 +83,7 @@ module API
           .fetch(:data)
           .permit(:type, attributes: %i[funded_place])
 
-        return parameters unless parameters["attributes"].empty?
+        return parameters if parameters["attributes"].present?
 
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       rescue ActionController::ParameterMissing

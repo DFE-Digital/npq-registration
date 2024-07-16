@@ -39,11 +39,11 @@ review:
 test:
   primary:
     <<: *default_primary
-    database: npq_registration_test
+    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
   ecf:
     <<: *default_ecf
     <<: *default_primary # We share the database in the test environment
-    database: early_careers_framework_test
+    database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 staging:
   primary:

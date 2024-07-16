@@ -20,7 +20,7 @@ module Questionnaires
       case funding_eligiblity_status_code
       when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
         :ehco_possible_funding
-      when FundingEligibility::NO_INSTITUTION
+      when FundingEligibility::NO_INSTITUTION, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
         :possible_funding
       when FundingEligibility::PREVIOUSLY_FUNDED
         :ehco_previously_funded

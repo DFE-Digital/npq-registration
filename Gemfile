@@ -50,7 +50,7 @@ gem "stimulus-rails"
 gem "webpacker"
 gem "whenever"
 
-gem "net-imap", "~> 0.4.13", require: false
+gem "net-imap", "~> 0.4.14", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.0", require: false
 
@@ -60,9 +60,10 @@ group :development, :test do
   gem "capybara"
   gem "capybara-screenshot"
   gem "dotenv-rails"
+  gem "parallel_tests", "~> 4.7"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 6.1.2"
+  gem "rspec-rails", "~> 6.1.3"
   gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"

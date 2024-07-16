@@ -7,7 +7,7 @@ RSpec.shared_examples "an API index endpoint" do
       let!(:resource2) { create_resource(lead_provider: current_lead_provider) }
 
       before do
-        create_resource(lead_provider: create(:lead_provider, name: "Another lead provider"))
+        create_resource(lead_provider: LeadProvider.where.not(id: current_lead_provider.id).first)
       end
 
       it "returns 2 resources" do
@@ -47,6 +47,24 @@ RSpec.shared_examples "an API index endpoint" do
       expect(response.status).to eq 401
       expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
       expect(response.content_type).to eql("application/json")
+    end
+  end
+end
+
+RSpec.shared_examples "an API index endpoint on a parent resource" do |parent, child|
+  context "when 2 #{child.pluralize} exist for current_lead_provider" do
+    let!(:resource) { create_resource(lead_provider: current_lead_provider) }
+
+    before do
+      create_resource_with_different_parent(lead_provider: current_lead_provider)
+    end
+
+    it "only returns the #{child} nested on the requested #{parent}" do
+      api_get(path)
+
+      expect(response.status).to eq 200
+      expect(response.content_type).to eql("application/json")
+      expect(response_ids).to contain_exactly(resource[resource_id_key])
     end
   end
 end
@@ -138,6 +156,38 @@ RSpec.shared_examples "an API index endpoint with filter by updated_since" do
       expect(parsed_response["errors"]).to eq([
         {
           "detail" => "The filter '#/updated_since' must be a valid ISO 8601 date",
+          "title" => "Bad request",
+        },
+      ])
+    end
+  end
+end
+
+RSpec.shared_examples "an API index endpoint with filter by created_since" do
+  context "when fitlering by created_since" do
+    it "returns resources created since the specified date" do
+      travel_to(2.hours.ago) { create_resource(lead_provider: current_lead_provider) }
+      travel_to(1.minute.ago) { create_resource(lead_provider: current_lead_provider) }
+
+      api_get(path, params: { filter: { created_since: 1.hour.ago.iso8601 } })
+
+      expect(parsed_response["data"].size).to eq(1)
+    end
+
+    it "calls the correct query" do
+      created_since = 1.hour.ago.iso8601
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, created_since: Time.iso8601(created_since))).and_call_original
+
+      api_get(path, params: { filter: { created_since: } })
+    end
+
+    it "returns 400 - bad request for invalid created_since" do
+      api_get(path, params: { filter: { created_since: "invalid" } })
+
+      expect(response.status).to eq 400
+      expect(parsed_response["errors"]).to eq([
+        {
+          "detail" => "The filter '#/created_since' must be a valid ISO 8601 date",
           "title" => "Bad request",
         },
       ])

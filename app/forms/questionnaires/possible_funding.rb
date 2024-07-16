@@ -41,6 +41,7 @@ module Questionnaires
   private
 
     def is_funding_eligibility_unclear?
+      return true if referred_by_return_to_teaching_adviser?
       return true if works_in_other? && employment_type_local_authority_virtual_school?
       return true if works_in_other? && local_authority_supply_teacher?
       return false if works_in_other? &&

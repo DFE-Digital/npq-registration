@@ -28,13 +28,17 @@ RSpec.feature "Happy journeys",
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -46,10 +50,6 @@ RSpec.feature "Happy journeys",
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In a hospital school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
-      page.fill_in "What is your role?", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -87,8 +87,8 @@ RSpec.feature "Happy journeys",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Provider" => "Teach First",
-          "Role" => "Trainer",
           "Workplace in England" => "Yes",
+          "Referred by return to teaching adviser" => "No",
         },
       )
     end
@@ -120,7 +120,7 @@ RSpec.feature "Happy journeys",
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
-      "employment_role" => "Trainer",
+      "employment_role" => nil,
       "employment_type" => "hospital_school",
       "funded_place" => nil,
       "funding_choice" => nil,
@@ -134,6 +134,7 @@ RSpec.feature "Happy journeys",
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -159,11 +160,11 @@ RSpec.feature "Happy journeys",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "employer_name" => "Big company",
-        "employment_role" => "Trainer",
         "funding_amount" => nil,
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "no_institution",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

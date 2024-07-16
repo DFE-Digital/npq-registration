@@ -11,6 +11,11 @@ FactoryBot.define do
     ecf_id { SecureRandom.uuid }
     output_fee { true }
 
+    trait(:next_output_fee) do
+      deadline_date { 1.day.from_now }
+      output_fee { true }
+    end
+
     trait(:paid) do
       state { "paid" }
       marked_as_paid_at { 1.week.ago }

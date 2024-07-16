@@ -2,7 +2,7 @@ module API
   module V3
     class ApplicationsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include FilterByDate
 
       def index
         render json: to_json(paginate(applications_query.applications))
@@ -75,7 +75,7 @@ module API
           .fetch(:data)
           .permit(:type, attributes: %i[funded_place schedule_identifier])
 
-        return parameters unless parameters["attributes"].empty?
+        return parameters if parameters["attributes"].present?
 
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       rescue ActionController::ParameterMissing

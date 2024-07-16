@@ -92,6 +92,88 @@ RSpec.describe Applications::ChangeFundedPlace do
             expect(service.errors.messages_for(:application)).to include("You must accept the application before attempting to change the '#/funded_place' setting.")
           end
         end
+
+        context "with declarations" do
+          context "when funded_place is true" do
+            before do
+              params.merge!(funded_place: true)
+            end
+
+            Declaration.states.each_key do |state|
+              it "is valid if the application has #{state} declarations" do
+                create(:declaration, application:, state:)
+                service.change
+
+                expect(service.errors.messages_for(:application)).to be_empty
+              end
+            end
+          end
+
+          context "when funded_place is false" do
+            before do
+              params.merge!(funded_place: false)
+            end
+
+            applicable = %w[submitted eligible payable paid]
+            applicable.each do |applicable_state|
+              it "is invalid if the application has #{applicable_state} declarations" do
+                create(:declaration, application:, state: applicable_state)
+
+                service.change
+
+                expect(service.errors.messages_for(:application)).to include("You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
+              end
+            end
+
+            (Declaration.states.keys - applicable).each do |non_applicable_state|
+              it "is valid if the application has #{non_applicable_state} declarations" do
+                create(:declaration, application:, state: non_applicable_state)
+
+                service.change
+
+                expect(service.errors.messages_for(:application)).to be_empty
+              end
+            end
+          end
+        end
+
+        context "when funded_place is a string" do
+          context "when funded_place is `true`" do
+            before { params.merge!(funded_place: "true") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is `false`" do
+            before { params.merge!(funded_place: "false") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is `null`" do
+            before { params.merge!(funded_place: "null") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+
+          context "when funded_place is an empty string" do
+            before { params.merge!(funded_place: "") }
+
+            it "returns funding_place is required error" do
+              service.change
+              expect(service.errors.messages_for(:funded_place)).to include("The entered '#/funded_place' is missing from your request. Check details and try again.")
+            end
+          end
+        end
       end
 
       context "when funded_place is not present" do

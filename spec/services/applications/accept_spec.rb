@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Applications::Accept do
+RSpec.describe Applications::Accept, :with_default_schedules do
   let(:params) do
     {
       application:,
@@ -18,7 +18,6 @@ RSpec.describe Applications::Accept do
     let(:user) { create(:user, :with_verified_trn) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
     let(:course) { create(:course, :sl, course_group:) }
-    let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current) }
     let(:cohort_next) { create(:cohort, :next) }
@@ -30,11 +29,8 @@ RSpec.describe Applications::Accept do
         course:,
         lead_provider:,
         cohort:,
-        schedule:,
       )
     end
-
-    before { schedule }
 
     describe "validations" do
       context "when the npq application is missing" do
@@ -68,7 +64,7 @@ RSpec.describe Applications::Accept do
       end
 
       context "when the existing data is invalid" do
-        let(:application) { create(:application, cohort:, schedule:, course:) }
+        let(:application) { create(:application, cohort:, course:) }
 
         it "throws ActiveRecord::RecordInvalid" do
           application.lead_provider_id = nil
@@ -81,7 +77,6 @@ RSpec.describe Applications::Accept do
       let(:other_course_group) { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
       let(:course) { create(:course, :aso, course_group: other_course_group) }
       let(:npq_ehco) { create(:course, :ehco, course_group: other_course_group) }
-      let!(:other_schedule) { create(:schedule, :npq_ehco_june, course_group: other_course_group, cohort:) }
 
       let(:other_application) do
         create(
@@ -90,7 +85,6 @@ RSpec.describe Applications::Accept do
           course: npq_ehco,
           lead_provider:,
           cohort:,
-          schedule: other_schedule,
         )
       end
 
@@ -131,7 +125,7 @@ RSpec.describe Applications::Accept do
     context "when accepting an application for a course that has already been accepted by another provider" do
       let(:other_lead_provider) { create(:lead_provider) }
 
-      context "when the other npq applicaton belongs to the same participant identity user" do
+      context "when the other npq applicaton belongs to the same participant" do
         let(:other_application) do
           create(:application,
                  user:,
@@ -236,7 +230,6 @@ RSpec.describe Applications::Accept do
     end
 
     context "when applying for 2022" do
-      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort: cohort_next) }
       let!(:application) do
         create(:application,
                user:,
@@ -303,7 +296,7 @@ RSpec.describe Applications::Accept do
         context "when funding_cap is true" do
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:application)).to include("Set '#/funded_place' to true or false.")
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
 
@@ -312,7 +305,45 @@ RSpec.describe Applications::Accept do
 
           it "does not validate funded_place" do
             service.accept
-            expect(service.errors.messages_for(:application)).to be_empty
+            expect(service.errors.messages_for(:funded_place)).to be_empty
+          end
+        end
+      end
+
+      context "when funded_place is a string" do
+        context "when funded_place is `true`" do
+          let(:params) { { application:, funded_place: "true" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is `false`" do
+          let(:params) { { application:, funded_place: "false" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is `null`" do
+          let(:params) { { application:, funded_place: "null" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+          end
+        end
+
+        context "when funded_place is an empty string" do
+          let(:params) { { application:, funded_place: "" } }
+
+          it "returns funding_place is required error" do
+            service.accept
+            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
           end
         end
       end
@@ -322,7 +353,6 @@ RSpec.describe Applications::Accept do
       let(:cohort) { create(:cohort, :current) }
       let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
       let(:course) { create(:course, :sl, course_group:) }
-      let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
 
       let(:application) do
         create(
@@ -332,7 +362,6 @@ RSpec.describe Applications::Accept do
           course:,
           lead_provider:,
           cohort:,
-          schedule:,
         )
       end
 

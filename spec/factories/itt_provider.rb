@@ -3,5 +3,9 @@ FactoryBot.define do
     sequence(:legal_name) { |n| "amazing ITT provider #{n}" }
     operating_name { legal_name }
     sequence(:approved) { true }
+
+    initialize_with do
+      IttProvider.find_by(legal_name:) || new(**attributes)
+    end
   end
 end

@@ -1,7 +1,11 @@
 require "rails_helper"
 
 RSpec.describe "admin/applications/show.html.erb", type: :view do
-  let(:application) { create(:application, targeted_delivery_funding_eligibility: true, DEPRECATED_private_childcare_provider_urn: "EY98753") }
+  let(:application) do
+    create(:application,
+           targeted_delivery_funding_eligibility: true,
+           private_childcare_provider: build(:private_childcare_provider, provider_urn: "EY98753"))
+  end
 
   it "displays targeted_delivery_funding_eligibility" do
     assign(:application, application)
@@ -20,7 +24,7 @@ RSpec.describe "admin/applications/show.html.erb", type: :view do
     expect(rendered).to match(/Created at.*#{expected}/m)
   end
 
-  it "displays application DEPRECATED_private_childcare_provider_urn" do
+  it "displays application private_childcare_provider_urn" do
     assign(:application, application)
 
     render

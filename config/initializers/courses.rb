@@ -86,7 +86,7 @@ module Courses
       name: "NPQ for Senco (NPQSENCO)",
       ecf_id: "84b7ffd9-c726-4915-bcac-05901d9629b8",
       identifier: "npq-senco",
-      course_group_name: "specialist",
+      course_group_name: "leadership",
       display: true,
     },
     {

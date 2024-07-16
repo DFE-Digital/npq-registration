@@ -32,17 +32,37 @@ RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resour
       end
 
       response "200", "A list of #{resource_description}" do
+        let(:id) { resource&.ecf_id }
+
         schema({ "$ref": response_schema_ref })
 
         run_test!
       end
 
       response "401", "Unauthorized" do
+        let(:id) { resource&.ecf_id }
         let(:token) { "invalid" }
 
         schema({ "$ref": "#/components/schemas/UnauthorisedResponse" })
 
         run_test!
+      end
+
+      if url =~ /participants\/npq\/.*\/outcomes/
+        parameter name: :id,
+                  in: :path,
+                  required: true,
+                  schema: {
+                    "$ref": "#/components/schemas/IDAttribute",
+                  }
+
+        response "404", "Not found", exceptions_app: true do
+          let(:id) { SecureRandom.uuid }
+
+          schema({ "$ref": "#/components/schemas/NotFoundResponse" })
+
+          run_test!
+        end
       end
     end
   end

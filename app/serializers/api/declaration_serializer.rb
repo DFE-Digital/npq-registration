@@ -11,8 +11,7 @@ module API
       field(:course_identifier)
       field(:declaration_date)
       field(:state) { |declaration| declaration.state.dasherize }
-      # TODO: implement once we have outcomes
-      field(:has_passed) { nil }
+      field(:has_passed) { |declaration| declaration.participant_outcomes.latest&.has_passed? }
 
       view :v1 do
         field(:voided_state?, name: :voided)

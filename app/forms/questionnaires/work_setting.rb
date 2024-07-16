@@ -77,6 +77,10 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :work_setting,
           options:,
+          style_options: {
+            hint: { text: I18n.t("helpers.hint.registration_wizard.work_setting") },
+            width: "three-quarters",
+          },
         ),
       ]
     end

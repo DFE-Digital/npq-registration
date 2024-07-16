@@ -3,6 +3,13 @@
 
 require_relative "config/application"
 
+# Workaround for https://github.com/rswag/rswag/issues/359
+if defined? RSpec
+  RSpec.configure do |config|
+    config.rswag_dry_run = false
+  end
+end
+
 Rails.application.load_tasks
 
 task default: ["lint:ruby", "lint:scss", "spec"]

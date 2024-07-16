@@ -1,17 +1,39 @@
 class Declaration < ApplicationRecord
+  BILLABLE_STATES = %w[eligible payable paid].freeze
+  CHANGEABLE_STATES = %w[eligible submitted].freeze
+  UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
+  COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
+  ELIGIBLE_FOR_PAYMENT_STATES = %w[payable eligible].freeze
+  VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
+
   belongs_to :application
   belongs_to :cohort
   belongs_to :lead_provider
   belongs_to :superseded_by, class_name: "Declaration", optional: true
+  has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
-
-  UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
-  COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
-  ELIGIBLE_FOR_PAYMENT_STATES = %w[payable eligible].freeze
+  has_many :statements, through: :statement_items
 
   delegate :course, :user, to: :application
   delegate :identifier, to: :course, prefix: true
   delegate :name, to: :lead_provider, prefix: true
+
+  scope :billable, -> { where(state: BILLABLE_STATES) }
+  scope :changeable, -> { where(state: CHANGEABLE_STATES) }
+  scope :billable_or_changeable, -> { billable.or(changeable) }
+  scope :voidable, -> { where(state: VOIDABLE_STATES) }
+  scope :billable_or_voidable, -> { billable.or(voidable) }
+  scope :with_lead_provider, ->(lead_provider) { where(lead_provider:) }
+  scope :completed, -> { where(declaration_type: "completed") }
+  scope :with_course_identifier, ->(course_identifier) { joins(application: :course).where(course: { identifier: course_identifier }) }
+  scope :latest_first, -> { order(created_at: :desc) }
+  scope :eligible_for_outcomes, lambda { |lead_provider, course_identifier|
+    completed
+    .with_lead_provider(lead_provider)
+    .with_course_identifier(course_identifier)
+    .billable_or_voidable
+    .latest_first
+  }
 
   enum state: {
     submitted: "submitted",
@@ -56,6 +78,10 @@ class Declaration < ApplicationRecord
     state.in?(ELIGIBLE_FOR_PAYMENT_STATES)
   end
 
+  def voidable?
+    state.in?(VOIDABLE_STATES)
+  end
+
   def ineligible_for_funding_reason
     return unless ineligible_state?
 
@@ -63,7 +89,23 @@ class Declaration < ApplicationRecord
     when "duplicate"
       "duplicate_declaration"
     else
-      reason
+      state_reason
     end
+  end
+
+  def duplicate_declarations
+    self
+      .class
+      .billable_or_changeable
+      .joins(application: %i[user course])
+      .where(user: { trn: application.user.trn })
+      .where.not(user: { trn: nil })
+      .where.not(user: { id: application.user_id })
+      .where.not(id:)
+      .where(
+        declaration_type:,
+        superseded_by_id: nil,
+        application: { course: application.course.rebranded_alternative_courses },
+      )
   end
 end

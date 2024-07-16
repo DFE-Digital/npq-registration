@@ -2,6 +2,7 @@ APPLICATION_ACCEPT_REQUEST = {
   v1: {
     description: "A NPQ application acceptance request",
     type: :object,
+    required: %i[data],
     properties: {
       data: {
         description: "A NPQ application acceptance request data",
@@ -11,17 +12,18 @@ APPLICATION_ACCEPT_REQUEST = {
           type: {
             description: "The data typed",
             type: :string,
+            required: true,
             example: "npq-application-accept",
           },
           attributes: {
             description: "A NPQ application acceptance request attributes",
             type: :object,
+            required: false,
             properties: {
               funded_place: {
                 description: "This field indicates whether the application is funded",
                 nullable: false,
                 type: :boolean,
-                required: false,
                 example: true,
               },
             },
@@ -31,57 +33,13 @@ APPLICATION_ACCEPT_REQUEST = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
-  h[:v3] = {
-    description: "A NPQ application acceptance request",
-    type: :object,
-    properties: {
-      data: {
-        description: "A NPQ application acceptance request data",
-        type: :object,
-        required: %i[type attributes],
-        properties: {
-          type: {
-            description: "The data typed",
-            type: :string,
-            example: "npq-application-accept",
-          },
-          attributes: {
-            description: "A NPQ application acceptance request attributes",
-            type: :object,
-            properties: {
-              funded_place: {
-                description: "This field indicates whether the application is funded",
-                nullable: false,
-                type: :boolean,
-                required: false,
-                example: true,
-              },
-              schedule_identifier: {
-                description: "The new schedule of the participant",
-                nullable: false,
-                type: :string,
-                example: "npq-leadership-spring",
-                required: false,
-                enum: %w[
-                  npq-aso-march
-                  npq-aso-june
-                  npq-aso-november
-                  npq-aso-december
-                  npq-ehco-march
-                  npq-ehco-june
-                  npq-ehco-november
-                  npq-ehco-december
-                  npq-leadership-autumn
-                  npq-leadership-spring
-                  npq-specialist-autumn
-                  npq-specialist-spring
-                ],
-              },
-            },
-          },
-        },
-      },
-    },
+  h[:v2] = h[:v1].deep_dup
+  h[:v3] = h[:v2].deep_dup
+  h[:v3][:properties][:data][:properties][:attributes][:properties][:schedule_identifier] = {
+    description: "The new schedule of the participant",
+    nullable: false,
+    type: :string,
+    example: Schedule::IDENTIFIERS.first,
+    enum: Schedule::IDENTIFIERS,
   }
 }.freeze

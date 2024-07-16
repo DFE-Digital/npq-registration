@@ -79,7 +79,7 @@ FactoryBot.define do
     trait :senco do
       sequence(:name) { |n| "NPQ for Senco #{n}" }
       identifier { "npq-senco" }
-      course_group { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
+      course_group { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
     end
 
     factory :"npq-executive-leadership", traits: [:el]

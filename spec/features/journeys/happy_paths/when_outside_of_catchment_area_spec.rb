@@ -32,7 +32,7 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
@@ -125,6 +125,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "participant_outcome_state" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
+      "referred_by_return_to_teaching_adviser" => nil,
       "private_childcare_provider_id" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
@@ -153,7 +154,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding" => "self",
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_in_england",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",

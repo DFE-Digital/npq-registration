@@ -25,16 +25,17 @@ class HandleSubmissionForStore
         employer_name:,
         employment_role:,
         employment_type:,
-        targeted_delivery_funding_eligibility:,
+        targeted_delivery_funding_eligibility: false,
         primary_establishment:,
         number_of_pupils:,
-        tsf_primary_eligibility:,
-        tsf_primary_plus_eligibility:,
+        tsf_primary_eligibility: false,
+        tsf_primary_plus_eligibility: false,
         works_in_childcare: store["works_in_childcare"] == "yes",
         kind_of_nursery: store["kind_of_nursery"],
         work_setting: store["work_setting"],
         lead_mentor: lead_mentor?,
         itt_provider: itt_provider.present? && IttProvider.find_by(legal_name: itt_provider),
+        referred_by_return_to_teaching_adviser: store["referred_by_return_to_teaching_adviser"],
         raw_application_data: raw_application_data.except("current_user"),
       )
 
@@ -183,26 +184,9 @@ private
     EmailTemplateLookup.call(store["email_template"])
   end
 
-  def targeted_delivery_funding_eligibility
-    targeted_funding[:targeted_delivery_funding] && !previously_received_targeted_funding_support?
-  end
-
-  def tsf_primary_eligibility
-    targeted_funding[:tsf_primary_eligibility]
-  end
-
-  def tsf_primary_plus_eligibility
-    targeted_funding[:tsf_primary_plus_eligibility]
-  end
-
-  def targeted_funding
-    @targeted_funding ||= targeted_funding
-  end
-
   delegate :ineligible_institution_type?,
            :funding_eligiblity_status_code,
            :previously_received_targeted_funding_support?,
-           :targeted_funding,
            to: :funding_eligibility_service
 
   def new_headteacher?

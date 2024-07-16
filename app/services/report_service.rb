@@ -36,6 +36,8 @@ class ReportService
       course_name
       provider_name
       employment_type
+      senco_in_role
+      senco_start_date
     ]
   end
 
@@ -58,7 +60,7 @@ private
       a.targeted_delivery_funding_eligibility,
       a.works_in_childcare,
       a.kind_of_nursery,
-      a.DEPRECATED_private_childcare_provider_urn,
+      a.private_childcare_provider&.provider_urn,
       a.school_urn,
       a.school&.name,
       a.school&.establishment_type_name,
@@ -68,10 +70,12 @@ private
       a.course.name,
       a.lead_provider.name,
       a.employment_type,
+      a.raw_application_data["senco_in_role"],
+      a.raw_application_data["senco_start_date"],
     ]
   end
 
   def applications
-    @applications = Application.includes(:user, :course, :lead_provider, :school)
+    @applications = Application.includes(:user, :course, :lead_provider, :school, :private_childcare_provider)
   end
 end

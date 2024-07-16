@@ -130,6 +130,8 @@ Rails.application.routes.draw do
             end
           end
 
+          resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
           resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
             member do
               put :change_schedule, path: "change-schedule"
@@ -138,15 +140,15 @@ Rails.application.routes.draw do
               put :withdraw
 
               scope module: :participants do
-                resources :outcomes, only: %i[create index], as: :participant_outcomes
+                resources :outcomes, only: %i[create index], as: :participants_outcomes
               end
             end
           end
 
-          resources :outcomes, only: %i[index]
-
-          resources :declarations, only: %i[create show index], path: "participant-declarations" do
-            put :void, path: "void"
+          resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+            member do
+              put :void, path: "void"
+            end
           end
         end
       end
@@ -163,6 +165,8 @@ Rails.application.routes.draw do
 
       resources :enrolments, path: "npq-enrolments", only: %i[index]
 
+      resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
       resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
         member do
           put :change_schedule, path: "change-schedule"
@@ -171,15 +175,15 @@ Rails.application.routes.draw do
           put :withdraw
 
           scope module: :participants do
-            resources :outcomes, only: %i[create index], as: :participant_outcomes
+            resources :outcomes, only: %i[create index], as: :participants_outcomes
           end
         end
       end
 
-      resources :outcomes, only: %i[index]
-
-      resources :declarations, only: %i[create show index], path: "participant-declarations" do
-        put :void, path: "void"
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+        member do
+          put :void, path: "void"
+        end
       end
     end
 
@@ -192,6 +196,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
       resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
         member do
           put :change_schedule, path: "change-schedule"
@@ -200,15 +206,15 @@ Rails.application.routes.draw do
           put :withdraw
 
           scope module: :participants do
-            resources :outcomes, only: %i[create index], as: :participant_outcomes
+            resources :outcomes, only: %i[create index], as: :participants_outcomes
           end
         end
       end
 
-      resources :outcomes, only: %i[index]
-
-      resources :declarations, only: %i[create show index], path: "participant-declarations" do
-        put :void, path: "void"
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+        member do
+          put :void, path: "void"
+        end
       end
 
       resources :statements, only: %i[index show], param: :ecf_id

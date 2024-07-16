@@ -3,7 +3,12 @@
 require "rails_helper"
 
 RSpec.describe Participants::Defer, type: :model do
-  it_behaves_like "a participant action", :defer, %w[active], "deferred" do
+  it_behaves_like "a participant action" do
+    let(:reason) { described_class::DEFERRAL_REASONS.sample }
+    let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
+  end
+
+  it_behaves_like "a participant state transition", :defer, %w[active], "deferred" do
     let(:reason) { described_class::DEFERRAL_REASONS.sample }
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
 

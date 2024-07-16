@@ -37,9 +37,9 @@ module Questionnaires
     end
 
     def after_save
-      wizard.store["targeted_delivery_funding_eligibility"] = funding_eligibility_calculator.targeted_funding[:targeted_delivery_funding]
-      wizard.store["tsf_primary_plus_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_plus_eligibility]
-      wizard.store["tsf_primary_eligibility"] = funding_eligibility_calculator.targeted_funding[:tsf_primary_eligibility]
+      wizard.store["targeted_delivery_funding_eligibility"] = false
+      wizard.store["tsf_primary_plus_eligibility"] = false
+      wizard.store["tsf_primary_eligibility"] = false
       wizard.store["funding_eligiblity_status_code"] = funding_eligibility_calculator.funding_eligiblity_status_code
       wizard.store["lead_provider_id"] = store_lead_provider_id
     end
@@ -70,6 +70,8 @@ module Questionnaires
         :maths_eligibility_teaching_for_mastery
       elsif course.npqs?
         :senco_in_role
+      elsif referred_by_return_to_teaching_adviser?
+        :possible_funding
       elsif works_in_other?
         if employment_type_other?
           :ineligible_for_funding
@@ -92,16 +94,20 @@ module Questionnaires
     end
 
     def previous_step
-      if query_store.inside_catchment? && query_store.works_in_school?
+      if inside_catchment? && referred_by_return_to_teaching_adviser?
+        :referred_by_return_to_teaching_adviser
+      elsif inside_catchment? && works_in_school?
         :choose_school
-      elsif query_store.inside_catchment? && query_store.works_in_childcare?
-        if query_store.kind_of_nursery_public?
+      elsif inside_catchment? && works_in_childcare?
+        if kind_of_nursery_public?
           :choose_childcare_provider
-        elsif query_store.has_ofsted_urn?
+        elsif has_ofsted_urn?
           :choose_private_childcare_provider
         else
           :have_ofsted_urn
         end
+      elsif inside_catchment? && works_in_other?
+        :your_employment
       else
         :work_setting
       end
@@ -176,8 +182,9 @@ module Questionnaires
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_other?, :young_offender_institution?,
-             :employment_type_local_authority_virtual_school?, :employment_type_hospital_school?, :employment_type_other?, to: :query_store
+    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_other?, :works_in_school?, :young_offender_institution?,
+             :inside_catchment?, :referred_by_return_to_teaching_adviser?, :employment_type_local_authority_virtual_school?, :has_ofsted_urn?,
+             :employment_type_hospital_school?, :employment_type_other?, :works_in_childcare?, :kind_of_nursery_public?, to: :query_store
 
     def validate_course_exists
       if course.blank?

@@ -46,6 +46,8 @@ module Questionnaires
           else
             :ineligible_for_funding
           end
+        elsif referred_by_return_to_teaching_adviser?
+          :possible_funding
         else
           :ineligible_for_funding
         end
@@ -71,6 +73,6 @@ module Questionnaires
     end
 
     delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
-             :approved_itt_provider?, :get_an_identity_id, :works_in_other?, :trn, to: :query_store
+             :approved_itt_provider?, :get_an_identity_id, :works_in_other?, :referred_by_return_to_teaching_adviser?, :trn, to: :query_store
   end
 end

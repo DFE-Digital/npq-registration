@@ -35,13 +35,17 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -118,6 +122,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
           "Workplace in England" => "Yes",
           "Early years setting" => "Private nursery",
+          "Referred by return to teaching adviser" => "No",
         },
       )
     end
@@ -159,6 +164,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY487263").id,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -196,6 +202,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_name" => js ? "" : "EY487263",
         "kind_of_nursery" => "private_nursery",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

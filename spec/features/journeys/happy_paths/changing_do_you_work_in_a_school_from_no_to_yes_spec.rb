@@ -32,13 +32,17 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -50,10 +54,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
       page.choose("In a hospital school", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/your-role", submit_form: true) do
-      page.fill_in "What is your role?", with: "Trainer"
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -89,7 +89,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Provider" => "Teach First",
-          "Role" => "Trainer",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -149,6 +149,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -192,6 +193,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
@@ -219,7 +221,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "employer_name" => "Big company",
-        "employment_role" => "Trainer",
         "employment_type" => "hospital_school",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
@@ -229,6 +230,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

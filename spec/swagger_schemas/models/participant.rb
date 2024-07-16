@@ -42,21 +42,8 @@ PARTICIPANT = {
             items: {
               type: :string,
               nullable: false,
-              example: "npq-leading-teaching",
-              enum: %w[
-                npq-leading-teaching
-                npq-leading-behaviour-culture
-                npq-leading-teaching-development
-                npq-leading-literacy
-                npq-senior-leadership
-                npq-headship
-                npq-executive-leadership
-                npq-early-years-leadership
-                npq-additional-support-offer
-                npq-early-headship-coaching-offer
-                npq-leading-primary-mathematics
-                npq-senco
-              ],
+              example: Course::IDENTIFIERS.first,
+              enum: Course::IDENTIFIERS,
             },
           },
           funded_places: {
@@ -70,21 +57,8 @@ PARTICIPANT = {
                   description: "The type of course the participant is enrolled in",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
-                  enum: %w[
-                    npq-leading-teaching
-                    npq-leading-behaviour-culture
-                    npq-leading-teaching-development
-                    npq-leading-literacy
-                    npq-senior-leadership
-                    npq-headship
-                    npq-executive-leadership
-                    npq-early-years-leadership
-                    npq-additional-support-offer
-                    npq-early-headship-coaching-offer
-                    npq-leading-primary-mathematics
-                    npq-senco
-                  ],
+                  example: Course::IDENTIFIERS.first,
+                  enum: Course::IDENTIFIERS,
                 },
                 funded_place: {
                   description: "Indicates whether this NPQ participant is funded by DfE",
@@ -130,9 +104,6 @@ PARTICIPANT = {
         description: "The data type",
         type: :string,
         example: "npq-participant",
-        enum: %w[
-          npq-participant
-        ],
       },
       attributes: {
         properties: {
@@ -172,41 +143,15 @@ PARTICIPANT = {
                   description: "The NPQ course this NPQ application relates to",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
-                  enum: %w[
-                    npq-leading-teaching
-                    npq-leading-behaviour-culture
-                    npq-leading-teaching-development
-                    npq-leading-literacy
-                    npq-senior-leadership
-                    npq-headship
-                    npq-executive-leadership
-                    npq-early-years-leadership
-                    npq-additional-support-offer
-                    npq-early-headship-coaching-offer
-                    npq-leading-primary-mathematics
-                    npq-senco
-                  ],
+                  example: Course::IDENTIFIERS.first,
+                  enum: Course::IDENTIFIERS,
                 },
                 schedule_identifier: {
                   description: "The new schedule of the participant",
                   nullable: true,
                   type: :string,
-                  example: "npq-leadership-spring",
-                  enum: %w[
-                    npq-aso-march
-                    npq-aso-june
-                    npq-aso-november
-                    npq-aso-december
-                    npq-ehco-march
-                    npq-ehco-june
-                    npq-ehco-november
-                    npq-ehco-december
-                    npq-leadership-autumn
-                    npq-leadership-spring
-                    npq-specialist-autumn
-                    npq-specialist-spring
-                  ],
+                  example: Schedule::IDENTIFIERS.first,
+                  enum: Schedule::IDENTIFIERS,
                 },
                 cohort: {
                   description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
@@ -230,12 +175,8 @@ PARTICIPANT = {
                 training_status: {
                   description: "The training status of the NPQ participant",
                   type: :string,
-                  enum: %w[
-                    active
-                    deferred
-                    withdrawn
-                  ],
-                  example: "active",
+                  enum: Application.training_statuses.keys,
+                  example: Application.training_statuses.keys.first,
                 },
                 school_urn: {
                   description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
@@ -274,9 +215,6 @@ PARTICIPANT = {
         description: "The data type",
         type: :string,
         example: "npq-participant",
-        enum: %w[
-          npq-participant
-        ],
       },
       attributes: {
         properties: {
@@ -316,41 +254,15 @@ PARTICIPANT = {
                   description: "The NPQ course this NPQ application relates to",
                   type: :string,
                   nullable: false,
-                  example: "npq-leading-teaching",
-                  enum: %w[
-                    npq-leading-teaching
-                    npq-leading-behaviour-culture
-                    npq-leading-teaching-development
-                    npq-leading-literacy
-                    npq-senior-leadership
-                    npq-headship
-                    npq-executive-leadership
-                    npq-early-years-leadership
-                    npq-additional-support-offer
-                    npq-early-headship-coaching-offer
-                    npq-leading-primary-mathematics
-                    npq-senco
-                  ],
+                  example: Course::IDENTIFIERS.first,
+                  enum: Course::IDENTIFIERS,
                 },
                 schedule_identifier: {
                   description: "The new schedule of the participant",
                   nullable: true,
                   type: :string,
-                  example: "npq-leadership-spring",
-                  enum: %w[
-                    npq-aso-march
-                    npq-aso-june
-                    npq-aso-november
-                    npq-aso-december
-                    npq-ehco-march
-                    npq-ehco-june
-                    npq-ehco-november
-                    npq-ehco-december
-                    npq-leadership-autumn
-                    npq-leadership-spring
-                    npq-specialist-autumn
-                    npq-specialist-spring
-                  ],
+                  example: Schedule::IDENTIFIERS.first,
+                  enum: Schedule::IDENTIFIERS,
                 },
                 cohort: {
                   description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
@@ -374,12 +286,8 @@ PARTICIPANT = {
                 training_status: {
                   description: "The training status of the NPQ participant",
                   type: :string,
-                  enum: %w[
-                    active
-                    deferred
-                    withdrawn
-                  ],
-                  example: "active",
+                  enum: Application.training_statuses.keys,
+                  example: Application.training_statuses.keys.first,
                 },
                 school_urn: {
                   description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
@@ -404,26 +312,8 @@ PARTICIPANT = {
                       description: "The reason a participant was withdrawn",
                       type: :string,
                       nullable: false,
-                      example: "personal-reason-moving-school",
-                      enum: %w[
-                        insufficient-capacity-to-undertake-programme
-                        personal-reason-health-or-pregnancy-related
-                        personal-reason-moving-school
-                        personal-reason-other
-                        insufficient-capacity
-                        change-in-developmental-or-personal-priorities
-                        change-in-school-circumstances
-                        change-in-school-leadership
-                        quality-of-programme-structure-not-suitable.
-                        quality-of-programme-content-not-suitable
-                        quality-of-programme-facilitation-not-effective
-                        quality-of-programme-accessibility
-                        quality-of-programme-other
-                        programme-not-appropriate-for-role-and-cpd-needs
-                        started-in-error
-                        expected-commitment-unclear
-                        other
-                      ],
+                      example: Participants::Withdraw::WITHDRAWAL_REASONS.first,
+                      enum: Participants::Withdraw::WITHDRAWAL_REASONS,
                     },
                     date: {
                       description: "The date and time the participant was withdrawn",
@@ -445,14 +335,8 @@ PARTICIPANT = {
                       description: "The reason a participant was deferred",
                       type: :string,
                       nullable: false,
-                      example: "career-break",
-                      enum: %w[
-                        bereavement
-                        long-term-sickness
-                        parental-leave
-                        career-break
-                        other
-                      ],
+                      example: Participants::Defer::DEFERRAL_REASONS.first,
+                      enum: Participants::Defer::DEFERRAL_REASONS,
                     },
                     date: {
                       description: "The date and time the participant was deferred",

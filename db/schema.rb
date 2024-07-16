@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_101251) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
+  create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
@@ -107,6 +108,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
     t.boolean "funded_place"
     t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
     t.bigint "schedule_id"
+    t.string "referred_by_return_to_teaching_adviser"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
@@ -283,6 +285,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
     t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
     t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
+  create_table "participant_outcomes", force: :cascade do |t|
+    t.enum "state", null: false, enum_type: "outcome_states"
+    t.date "completion_date", null: false
+    t.bigint "declaration_id", null: false
+    t.boolean "qualified_teachers_api_request_successful"
+    t.datetime "sent_to_qualified_teachers_api_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["declaration_id", "created_at"], name: "index_participant_outcomes_on_declaration_id_and_created_at"
+    t.index ["declaration_id"], name: "index_participant_outcomes_on_declaration_id"
+    t.index ["ecf_id"], name: "index_participant_outcomes_on_ecf_id", unique: true
   end
 
   create_table "private_childcare_providers", force: :cascade do |t|
@@ -476,6 +492,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_14_091519) do
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "participant_outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "declarations"

@@ -2,7 +2,7 @@ module API
   module V1
     class ParticipantsController < BaseController
       include Pagination
-      include ::API::Concerns::FilterByUpdatedSince
+      include FilterByDate
 
       def index
         render json: to_json(paginate(participants_query.participants))
@@ -42,7 +42,16 @@ module API
         end
       end
 
-      def change_schedule = head(:method_not_allowed)
+      def change_schedule
+        service = ::Participants::ChangeSchedule.new(participant_action_params)
+
+        if service.change_schedule
+          render json: to_json(service.participant)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
       def outcomes = head(:method_not_allowed)
 
     private
@@ -61,7 +70,7 @@ module API
         params
           .require(:data)
           .require(:attributes)
-          .permit(:course_identifier, :reason)
+          .permit(:course_identifier, :reason, :schedule_identifier, :cohort)
           .merge(
             participant:,
             lead_provider: current_lead_provider,

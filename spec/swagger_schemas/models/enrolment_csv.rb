@@ -23,41 +23,15 @@ ENROLMENT_CSV = {
       course_identifier: {
         description: "The NPQ course the participant is enrolled in",
         type: :string,
-        example: "npq-leading-teaching",
-        enum: %w[
-          npq-leading-teaching
-          npq-leading-behaviour-culture
-          npq-leading-teaching-development
-          npq-leading-literacy
-          npq-senior-leadership
-          npq-headship
-          npq-executive-leadership
-          npq-early-years-leadership
-          npq-additional-support-offer
-          npq-early-headship-coaching-offer
-          npq-leading-primary-mathematics
-          npq-senco
-        ],
+        example: Course::IDENTIFIERS.first,
+        enum: Course::IDENTIFIERS,
       },
       schedule_identifier: {
         description: "The schedule currently applied to this enrolment",
         nullable: true,
         type: :string,
-        example: "npq-leadership-spring",
-        enum: %w[
-          npq-aso-march
-          npq-aso-june
-          npq-aso-november
-          npq-aso-december
-          npq-ehco-march
-          npq-ehco-june
-          npq-ehco-november
-          npq-ehco-december
-          npq-leadership-autumn
-          npq-leadership-spring
-          npq-specialist-autumn
-          npq-specialist-spring
-        ],
+        example: Schedule::IDENTIFIERS.first,
+        enum: Schedule::IDENTIFIERS,
       },
       cohort: {
         description: "The value indicates which call-off contract funds this participant’s training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Providers may change an NPQ participant’s cohort up until the point of submitting a started declaration.",
@@ -79,12 +53,8 @@ ENROLMENT_CSV = {
       training_status: {
         description: "The training status of the ECF participant",
         type: :string,
-        example: "active",
-        enum: %w[
-          active
-          deferred
-          withdrawn
-        ],
+        example: Application.training_statuses.keys.first,
+        enum: Application.training_statuses.keys,
       },
       school_urn: {
         description: "The Unique Reference Number (URN) of the school where this NPQ participant is teaching",

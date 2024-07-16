@@ -48,8 +48,34 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
           expect(attributes["state"]).to eq(declaration.state)
         end
 
-        it "serializes `has_passed`" do
-          expect(attributes["has_passed"]).to be_nil
+        context "when there is no participant outcome" do
+          it "serializes `has_passed`" do
+            expect(attributes["has_passed"]).to be_nil
+          end
+        end
+
+        context "when the latest outcome is voided" do
+          before { create(:participant_outcome, :voided, declaration:) }
+
+          it "serializes `has_passed`" do
+            expect(attributes["has_passed"]).to be_nil
+          end
+        end
+
+        context "when the latest outcome has passed" do
+          before { create(:participant_outcome, :passed, declaration:) }
+
+          it "serializes `has_passed`" do
+            expect(attributes["has_passed"]).to be(true)
+          end
+        end
+
+        context "when the latest outcome has failed" do
+          before { create(:participant_outcome, :failed, declaration:) }
+
+          it "serializes `has_passed`" do
+            expect(attributes["has_passed"]).to be(false)
+          end
         end
       end
     end

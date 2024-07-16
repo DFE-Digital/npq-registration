@@ -164,6 +164,34 @@ RSpec.describe Application do
     end
   end
 
+  describe "#eligible_for_dfe_funding?" do
+    let(:user) { create(:user) }
+
+    subject { application }
+
+    context "when application has been previously funded" do
+      let(:application) { create(:application, :previously_funded, user:, course: Course.ehco) }
+
+      it { is_expected.not_to be_eligible_for_dfe_funding }
+    end
+
+    context "when application has not been previously funded" do
+      let(:application) { create(:application, user:, course: Course.ehco) }
+
+      it "is not eligible for DfE funding if not eligible for funding" do
+        application.update!(eligible_for_funding: false)
+
+        expect(application).not_to be_eligible_for_dfe_funding
+      end
+
+      it "is eligible for DfE funding if the application is eligible for funding" do
+        application.update!(eligible_for_funding: true)
+
+        expect(application).to be_eligible_for_dfe_funding
+      end
+    end
+  end
+
   describe "#previously_funded?" do
     let(:user) { create(:user) }
     let(:application) { create(:application, :previously_funded, user:, course: Course.ehco) }
@@ -173,6 +201,24 @@ RSpec.describe Application do
 
     context "when the application has been previously funded" do
       it { is_expected.to be_previously_funded }
+
+      context "when funded place is `nil`" do
+        before { previous_application.update!(funded_place: nil) }
+
+        it { is_expected.to be_previously_funded }
+      end
+
+      context "when funded place is `false`" do
+        before { previous_application.update!(funded_place: false) }
+
+        it { is_expected.not_to be_previously_funded }
+      end
+
+      context "when funded place is `true`" do
+        before { previous_application.update!(funded_place: true) }
+
+        it { is_expected.to be_previously_funded }
+      end
     end
 
     context "when the application has not been previously funded (previous application not accepted)" do
@@ -269,6 +315,38 @@ RSpec.describe Application do
           expect(subject.ineligible_for_funding_reason).to eq("previously-funded")
         end
       end
+    end
+  end
+
+  describe "#fundable?" do
+    context "when it is eligible_for_funding" do
+      subject { create(:application, eligible_for_funding: true, funded_place: nil) }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding" do
+      subject { create(:application, eligible_for_funding: false, funded_place: nil) }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but has no funded place" do
+      subject { create(:application, eligible_for_funding: true, funded_place: false) }
+
+      it { is_expected.not_to be_fundable }
+    end
+
+    context "when it is eligible_for_funding but and has a funded place" do
+      subject { create(:application, eligible_for_funding: true, funded_place: true) }
+
+      it { is_expected.to be_fundable }
+    end
+
+    context "when it is not eligible_for_funding but and has a funded false" do
+      subject { create(:application, eligible_for_funding: false, funded_place: false) }
+
+      it { is_expected.not_to be_fundable }
     end
   end
 end

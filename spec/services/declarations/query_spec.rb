@@ -124,4 +124,31 @@ RSpec.describe Declarations::Query do
       end
     end
   end
+
+  describe "#declaration" do
+    let(:lead_provider) { create(:lead_provider, name: "Lead Provider") }
+    let(:declaration) { create(:declaration, lead_provider:) }
+    let(:query) { Declarations::Query.new(lead_provider:) }
+
+    it "returns a declaration by the given id" do
+      expect(query.declaration(ecf_id: declaration.ecf_id)).to eq(declaration)
+      expect(query.declaration(id: declaration.id)).to eq(declaration)
+    end
+
+    it "raises an error if the declaration does not exist" do
+      expect { query.declaration(ecf_id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.declaration(id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if the declaration is not in the filtered query" do
+      other_declaration = create(:declaration, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
+
+      expect { query.declaration(ecf_id: other_declaration.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.declaration(id: other_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "raises an error if neither an ecf_id or id is supplied" do
+      expect { query.declaration }.to raise_error(ArgumentError, "id or ecf_id needed")
+    end
+  end
 end

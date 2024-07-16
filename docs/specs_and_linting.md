@@ -24,6 +24,18 @@ To run just rspec:
 bundle exec rspec
 ```
 
+## Running specs in parallel
+
+### One time Setup
+```
+bundle exec rake parallel:setup
+```
+
+### Running specs thereafter
+```
+bundle exec rake parallel:spec
+```
+
 ## Running linting with auto correct
 
 To safely autocorrect offenses run:
