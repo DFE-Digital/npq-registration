@@ -27,5 +27,9 @@ FactoryBot.define do
     trait :paid do
       state { :paid }
     end
+
+    trait :completed do
+      declaration_type { :completed }
+    end
   end
 end

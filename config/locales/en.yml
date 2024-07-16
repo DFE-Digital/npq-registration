@@ -8,6 +8,7 @@ en:
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
   schedule_invalid_for_course: Selected schedule is not valid for the course
+  cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
 
   errors:
     email:
@@ -306,6 +307,8 @@ en:
             <<: *declaration
             course_identifier:
               <<: *participant_course_identifier
+            lead_provider:
+              <<: *lead_provider
         participant_outcomes/create:
           attributes:
             base:

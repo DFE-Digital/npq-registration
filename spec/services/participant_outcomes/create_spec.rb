@@ -38,7 +38,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
       end
 
       context "when the participant has completed declarations on another lead provider" do
-        let(:lead_provider) { create(:lead_provider, name: "Other lead provider") }
+        let(:lead_provider) { LeadProvider.where.not(id: lead_provider.id).first }
 
         it { is_expected.to have_error(:base, :no_completed_declarations, "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome.") }
       end

@@ -76,4 +76,17 @@ RSpec.describe CourseGroup, type: :model do
       end
     end
   end
+
+  describe "scopes" do
+    describe ".leadership_or_specialist" do
+      let!(:leadership_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+      let!(:specialist_group) { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
+
+      before { CourseGroup.find_by(name: "support") || create(:course_group, name: "support") }
+
+      it "returns leadership and specialist groups only" do
+        expect(described_class.leadership_or_specialist).to match_array([leadership_group, specialist_group])
+      end
+    end
+  end
 end

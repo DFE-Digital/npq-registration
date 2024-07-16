@@ -203,7 +203,7 @@ RSpec.describe Declaration, type: :model do
         completed_declaration.dup.update!(declaration_type: "retained-1")
 
         # Declaration on another provider.
-        completed_declaration.dup.update!(lead_provider: create(:lead_provider, name: "Other lead provider"))
+        completed_declaration.dup.update!(lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
 
         # Declaration with different course.
         completed_declaration.dup.update!(application: create(:application, course: create(:course, identifier: "other-course")))
@@ -273,7 +273,7 @@ RSpec.describe Declaration, type: :model do
       let(:lead_provider) { declaration.lead_provider }
       let(:declaration) { create(:declaration) }
 
-      before { create(:declaration, lead_provider: create(:lead_provider, name: "Other lead provider")) }
+      before { create(:declaration, lead_provider: LeadProvider.where.not(id: lead_provider.id).first) }
 
       it { expect(described_class.with_lead_provider(lead_provider)).to contain_exactly(declaration) }
     end
