@@ -6,12 +6,12 @@ on:
         description: Ruby version
         type: string
         required: false
-        default: "3.1.2"
+        default: "3.3.4"
       node-version:
         description: Node version
         type: string
         required: false
-        default: "18.17.x"
+        default: "20.15.1"
 
 jobs:
   ruby_linting:
@@ -25,7 +25,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.154.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
 
@@ -46,7 +46,7 @@ jobs:
         name: Checkout Code
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1.154.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
 

@@ -9,10 +9,10 @@
 ## Local development
 
 1. Install the prerequisites:
-- Ruby 3.1.2
+- Ruby 3.3.4
 - PostgreSQL
-- NodeJS 16.19.1
-- Yarn 1.12.x
+- NodeJS 20.15.1
+- Yarn 1.22.x
 1. Run `bundle install` to install the gem dependencies
 1. Run `yarn` to install node dependencies
 1. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
