@@ -8,10 +8,18 @@
         <dt class="govuk-summary-list__key">Workplace in England</dt>
         <dd class="govuk-summary-list__value"><%= boolean_tag(application.teacher_catchment == 'england') %></dd>
       </div>
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">Work setting</dt>
-        <dd class="govuk-summary-list__value"><%= I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") %></dd>
-      </div>
+      <% if application.referred_by_return_to_teaching_adviser.present? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Referred by return to teaching adviser</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.referred_by_return_to_teaching_adviser, scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options") %></dd>
+        </div>
+      <% end %>
+      <% if application.work_setting.present? %>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">Work setting</dt>
+          <dd class="govuk-summary-list__value"><%= I18n.t(application.work_setting, scope: "helpers.label.registration_wizard.work_setting_options") %></dd>
+        </div>
+      <% end %>
 
       <% if application.inside_catchment? && application.works_in_childcare %>
         <div class="govuk-summary-list__row">
@@ -57,10 +65,12 @@
         <% end %>
 
         <% unless application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">Role</dt>
-            <dd class="govuk-summary-list__value"><%= application.employment_role %></dd>
-          </div>
+          <% if application.employment_role.present? %>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Role</dt>
+              <dd class="govuk-summary-list__value"><%= application.employment_role %></dd>
+            </div>
+          <% end %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Employer</dt>
             <dd class="govuk-summary-list__value"><%= application.employer_name %></dd>
@@ -98,11 +108,11 @@
         </div>
       <% end %>
 
-      <% if application.course.senco? %>
+      <% if application.course.npqs? %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key"><%= I18n.t("npq-senco", scope: "course.name") %></dt>
           <% if application.raw_application_data["senco_in_role_status"] %>
-            <dd class="govuk-summary-list__value"><%= "Yes - since #{application.raw_application_data["senco_start_date"].to_date.strftime("%B %Y")}" %></dd>
+            <dd class="govuk-summary-list__value"><%= "Yes – since #{application.raw_application_data["senco_start_date"].to_date.strftime("%B %Y")}" %></dd>
           <% else %>
             <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options")%></dd>
           <% end %>

@@ -24,13 +24,14 @@ module API
       field(:lead_provider_approval_status, name: :status)
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }
-      field(:eligible_for_funding)
+      field(:eligible_for_dfe_funding?, name: :eligible_for_funding)
       field(:targeted_delivery_funding_eligibility)
       field(:inside_uk_catchment?, name: :teacher_catchment)
       field(:teacher_catchment_country)
       field(:teacher_catchment_iso_country_code)
       field(:itt_provider) { |a| a.itt_provider&.legal_name }
       field(:lead_mentor)
+      field(:funded_place)
       field(:created_at)
       field(:updated_at) do |a|
         [
@@ -40,8 +41,7 @@ module API
       end
 
       view :v3 do
-        # FIXME: When we migrate schedules we can test this fully.
-        field(:schedule_identifier) { nil }
+        field(:schedule_identifier) { |a| a.schedule&.identifier }
       end
     end
 

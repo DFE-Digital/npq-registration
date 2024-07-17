@@ -31,5 +31,21 @@ RSpec.describe "Schools::Query" do
         end
       end
     end
+
+    context "when an allowlist is provided" do
+      let(:allowlist) { %w[one three] }
+
+      it "returns an array containing only the allowed values when the input is a string" do
+        expect(object.extract_conditions("one", allowlist:)).to eql(%w[one])
+      end
+
+      it "returns an array containing only the allowed values when the input is an array" do
+        expect(object.extract_conditions(%w[one two three], allowlist:)).to eql(%w[one three])
+      end
+
+      it "returns the input when it is anything else if it is in the allowlist" do
+        expect(object.extract_conditions(123, allowlist: [123, 456])).to eq(123)
+      end
+    end
   end
 end

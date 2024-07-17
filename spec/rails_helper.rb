@@ -20,6 +20,7 @@ require "active_support/core_ext/time/conversions"
 require "view_component/test_helpers"
 require "view_component/system_test_helpers"
 require "capybara/rspec"
+require "paper_trail/frameworks/rspec"
 
 Capybara.register_driver :headless_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium
@@ -82,6 +83,7 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
+  config.include Helpers::SwaggerExampleParser, type: :request
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -160,3 +162,5 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+RSpec::Matchers.define_negated_matcher :not_change, :change

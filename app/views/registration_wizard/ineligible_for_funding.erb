@@ -11,3 +11,8 @@
   <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
 
 <% end %>
+
+<% if Rails.env.staging? || Rails.env.development? %>
+  "<%= @form.funding_eligiblity_status_code %>"
+  <br />
+<% end  %>

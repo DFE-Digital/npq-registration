@@ -1,40 +1,52 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API index Csv endpoint" do
+RSpec.shared_examples "an API index Csv endpoint" do |returns_headers_on_empty: true|
   context "when authorized" do
     context "when 2 resources exist for current_lead_provider" do
       let!(:resource1) { create_resource(lead_provider: current_lead_provider) }
       let!(:resource2) { create_resource(lead_provider: current_lead_provider) }
 
       before do
-        create_resource(lead_provider: create(:lead_provider, name: "Another lead provider"))
+        create_resource(lead_provider: LeadProvider.where.not(id: current_lead_provider.id).first)
       end
 
-      it "returns 2 resources" do
+      it "returns a header row and 2 resources" do
         api_get(path)
 
-        expect(response.status).to eq 200
+        expect(response.status).to eq(200)
         expect(response.content_type).to eql("text/csv")
-        expect(response_ids_from_csv).to contain_exactly(resource1[resource_id_key], resource2[resource_id_key])
+        expect(parsed_csv_response.count).to eq(3)
       end
 
       it "calls the correct query/serializer" do
-        allow(serializer).to receive(:new).with([resource1, resource2]).and_return(mock_serializer)
+        csv_serializer_params = {}
+        csv_serializer_params[:view] = csv_serializer_version if defined?(csv_serializer_version)
+
+        allow(serializer).to receive(:new).with([resource1, resource2], **csv_serializer_params).and_return(mock_serializer)
         expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider)).and_call_original
 
         api_get(path)
 
-        expect(mock_serializer).to have_received(:call)
+        expect(mock_serializer).to have_received(:serialize)
       end
     end
 
     context "when no resources exist" do
-      it "returns only the headers in csv" do
-        api_get(path)
+      if returns_headers_on_empty
+        it "returns only the headers in csv" do
+          api_get(path)
 
-        expect(response.status).to eq 200
-        expect(parsed_csv_response[0][0]).to eq("id")
-        expect(parsed_csv_response[1]).to be_nil
+          expect(response.status).to eq 200
+          expect(parsed_csv_response.count).to eq(1)
+          expect(parsed_csv_response.first).to eq(serializer::CSV_HEADERS)
+        end
+      else
+        it "returns an empty CSV" do
+          api_get(path)
+
+          expect(response.status).to eq 200
+          expect(response.body).to be_blank
+        end
       end
     end
   end

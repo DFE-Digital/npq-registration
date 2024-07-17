@@ -1,13 +1,22 @@
 module Queries
   module ConditionFormats
-    def extract_conditions(list)
-      case list
-      when String
-        list.split(",")
+    def extract_conditions(list, allowlist: nil)
+      conditions = case list
+                   when String
+                     list.split(",")
+                   when Array
+                     list.compact
+                   else
+                     list
+                   end
+
+      return conditions if allowlist.blank?
+
+      case conditions
       when Array
-        list.compact
+        conditions.intersection(allowlist)
       else
-        list
+        conditions.in?(allowlist) ? conditions : nil
       end
     end
   end

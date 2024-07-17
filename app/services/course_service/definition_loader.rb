@@ -16,6 +16,7 @@ module CourseService
       ::Courses::DEFINITIONS.each do |hash|
         Rails.logger.info("Loading Course with ecf_id #{hash[:ecf_id]}") unless silent
 
+        course_group = CourseGroup.find_by!(name: hash[:course_group_name])
         course = Course.find_or_initialize_by(ecf_id: hash[:ecf_id])
 
         course.update!(
@@ -24,6 +25,7 @@ module CourseService
           position: hash[:position],
           display: hash[:display],
           identifier: hash[:identifier],
+          course_group:,
         )
 
         unless silent

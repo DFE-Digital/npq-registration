@@ -19,7 +19,9 @@ module Questionnaires
     end
 
     def previous_step
-      if course.npqlpm?
+      if works_in_other? && employment_type_other?
+        :choose_your_npq
+      elsif course.npqlpm?
         if wizard.query_store.maths_understanding?
           :maths_eligibility_teaching_for_mastery
         else
@@ -54,19 +56,27 @@ module Questionnaires
                                  return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
+                               when FundingEligibility::NOT_ENTITLED_EY_INSTITUTION
+                                 return "not_entitled_ey_institution"
+                               when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
+                                 return "not_a_pp50_institution"
+                               when FundingEligibility::NOT_ENTITLED_CHILDMINDER
+                                 return "not_entitled_ey_institution"
                                when FundingEligibility::NO_INSTITUTION
-                                 if query_store.works_in_school?
-                                   return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
-                                 else
-                                   return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
-                                 end
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
     end
 
     def funding_eligiblity_status_code
-      @funding_eligiblity_status_code ||= FundingEligibility.new(
+      @funding_eligiblity_status_code ||= funding_eligibility.funding_eligiblity_status_code
+    end
+
+    def funding_eligibility
+      @funding_eligibility ||= FundingEligibility.new(
         course:,
         institution:,
         approved_itt_provider: approved_itt_provider?,
@@ -74,8 +84,9 @@ module Questionnaires
         new_headteacher: new_headteacher?,
         trn: wizard.query_store.trn,
         get_an_identity_id: wizard.query_store.get_an_identity_id,
-        lead_mentor_for_accredited_itt_provider: wizard.query_store.lead_mentor_for_accredited_itt_provider?,
-      ).funding_eligiblity_status_code
+        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
+        query_store: wizard.query_store,
+      )
     end
 
     def tsf_elgible?
@@ -94,6 +105,9 @@ module Questionnaires
              :new_headteacher?,
              :inside_catchment?,
              :approved_itt_provider?,
+             :lead_mentor_for_accredited_itt_provider?,
+             :works_in_other?,
+             :employment_type_other?,
              to: :query_store
   end
 end

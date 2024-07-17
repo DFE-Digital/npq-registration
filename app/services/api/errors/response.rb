@@ -21,6 +21,15 @@ module API
           detail: params,
         }]
       end
+
+      def self.from(service)
+        {
+          errors: service
+            .errors
+            .messages
+            .map { |error, detail| new(error:, params: detail.uniq).call }.flatten,
+        }
+      end
     end
   end
 end

@@ -3,18 +3,18 @@
     "node": "16.20.2"
   },
   "dependencies": {
-    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-react": "^7.24.7",
     "@hotwired/stimulus": "^3.2.2",
     "@rails/webpacker": "^5.4.4",
     "accessible-autocomplete": "^2.0.3",
     "es6-promise": "^4.2.8",
     "govuk-country-and-territory-autocomplete": "^1.0.2",
-    "govuk-frontend": "^5.3.1",
+    "govuk-frontend": "^5.4.0",
     "isomorphic-fetch": "^3.0.0",
     "rails-ujs": "^5.2.8",
     "serialize-javascript": "^6.0.2",
     "yarn": "^1.22.22",
-    "swagger-ui-dist": "^5.17.10"
+    "swagger-ui-dist": "^5.17.14"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5",

@@ -11,6 +11,7 @@ class RegistrationWizard
     start
     closed
     teacher_catchment
+    referred_by_return_to_teaching_adviser
     work_setting
     provider_check
     change_your_course_or_provider
@@ -149,9 +150,17 @@ class RegistrationWizard
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    array << OpenStruct.new(key: "Work setting",
-                            value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
-                            change_step: :work_setting)
+    if query_store.inside_catchment?
+      array << OpenStruct.new(key: "Referred by return to teaching adviser",
+                              value: I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
+                              change_step: :referred_by_return_to_teaching_adviser)
+    end
+
+    if store["work_setting"]
+      array << OpenStruct.new(key: "Work setting",
+                              value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
+                              change_step: :work_setting)
+    end
 
     if inside_catchment? && query_store.works_in_childcare?
       array << OpenStruct.new(key: "Early years setting",
@@ -193,11 +202,13 @@ class RegistrationWizard
                                 change_step: :itt_provider)
       end
 
-      unless query_store.lead_mentor_for_accredited_itt_provider?
+      unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_hospital_school? || query_store.young_offender_institution? || query_store.employment_type_other?
         array << OpenStruct.new(key: "Role",
                                 value: store["employment_role"],
                                 change_step: :your_role)
+      end
 
+      unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_other?
         array << OpenStruct.new(key: "Employer",
                                 value: store["employer_name"],
                                 change_step: :your_employer)
@@ -224,9 +235,9 @@ class RegistrationWizard
       end
     end
 
-    if course.senco?
+    if course.npqs?
       array << OpenStruct.new(key: "Special educational needs co-ordinator (SENCO)",
-                              value: store["senco_in_role_status"] ? "Yes - since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
+                              value: store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
                               change_step: :senco_in_role)
     end
 
@@ -244,11 +255,11 @@ class RegistrationWizard
     end
 
     unless eligible_for_funding?
-      if course.ehco?
+      if course.ehco? && store["ehco_funding_choice"]
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
                                 change_step: :funding_your_ehco)
-      elsif query_store.works_in_school? || query_store.works_in_childcare?
+      elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_other?)
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
                                 change_step: :funding_your_npq)
@@ -300,6 +311,7 @@ private
       new_headteacher: new_headteacher?,
       trn: query_store.trn,
       get_an_identity_id: query_store.get_an_identity_id,
+      query_store:,
     )
   end
 
@@ -308,8 +320,6 @@ private
   end
 
   def employer_data_gathered?
-    return false if eligible_for_funding?
-
     works_in_other? && inside_catchment?
   end
 

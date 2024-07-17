@@ -22,6 +22,16 @@ variable "azure_credentials_json" {
 variable "azure_resource_prefix" {
   description = "Standard resource prefix. Usually s189t01 (test) or s189p01 (production)"
 }
+
+variable "azure_maintenance_window" {
+  type = object({
+    day_of_week  = number
+    start_hour   = number
+    start_minute = number
+  })
+  default = null
+}
+
 variable "config_short" {
   description = "Short name of the environment configuration, e.g. dv, st, pd..."
 }
@@ -112,7 +122,7 @@ variable "postgres_enable_high_availability" {
   type = bool
   default = false
 }
-
+variable "enable_logit" { default = false }
 locals {
   azure_credentials = try(jsondecode(var.azure_credentials_json), null)
 

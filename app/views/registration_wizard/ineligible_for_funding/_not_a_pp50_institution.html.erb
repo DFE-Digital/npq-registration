@@ -1,0 +1,32 @@
+<h1 class="govuk-heading-xl">Funding</h1>
+
+<p class="govuk-body">
+  You’re not eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %> as your workplace is not in the <a class="govuk-link" href="https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024">list of settings that are eligible for funding</a>.
+</p>
+
+<p class="govuk-body">
+  This means that you would need to pay for the course another way.
+</p>
+<p class="govuk-body">
+  For example you could pay for the course fees yourself or ask your workplace or trust to:
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>cover the full cost of the NPQ</li>
+    <li>share the cost of the NPQ with you</li>
+  </ul>
+</p>
+
+<% # if the school is local authority/preschool or nursery, school or academy trust %>
+<% if @form.funding_eligibility.possible_funding_for_non_pp50_and_fe? %>
+
+  <p class="govuk-body">However, you may be eligible for scholarship funding for one of the following courses:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>leading primary mathematics</li>
+    <li>headship</li>
+    <li>special educational needs co-ordinator (SENCO)</li>
+    <li>early headship coaching offer</li>
+  </ul>
+
+  <p class="govuk-body">You can <a class="govuk-link" href="<%= registration_wizard_show_url(@wizard.previous_step_path) %>">go back and select one of these courses</a> instead to check if you're eligible.</p>
+<% end %>

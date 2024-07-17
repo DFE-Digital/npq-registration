@@ -53,14 +53,17 @@
         <% if application.raw_application_data["ehco_funding_choice"].present? %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Course funding</dt>
-            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options") %></dd>
+            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options") %>.</dd>
           </div>
         <% end %>
 
         <% if application.raw_application_data["funding"].present? %>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Course funding</dt>
-            <dd class="govuk-summary-list__value"><%= I18n.t(application.raw_application_data["funding"], scope: "helpers.label.registration_wizard.funding_options") %></dd>
+            <dd class="govuk-summary-list__value">
+              <%= I18n.t(application.raw_application_data["funding"], scope: "helpers.label.registration_wizard.funding_options") %>.
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">You may want to check the cost of the NPQ course with your provider.</p>
+            </dd>
           </div>
         <% end %>
       <% end %>

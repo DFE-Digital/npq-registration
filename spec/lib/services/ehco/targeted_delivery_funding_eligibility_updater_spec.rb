@@ -3,9 +3,10 @@
 require "rails_helper"
 
 RSpec.describe Ehco::TargetedDeliveryFundingEligibilityUpdater do
-  subject { described_class.run }
+  subject { described_class.run(logger:) }
 
   let(:ehco_course) { Course.ehco }
+  let(:logger) { object_double("logger", info: nil) }
 
   let(:applicable_application_hash) do
     {

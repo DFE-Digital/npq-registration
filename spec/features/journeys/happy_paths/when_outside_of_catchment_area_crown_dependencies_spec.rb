@@ -27,12 +27,12 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every April and October.")
       page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
@@ -113,9 +113,9 @@ RSpec.feature "Happy journeys", type: :feature do
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
-
       "employer_name" => nil,
       "employment_type" => nil,
       "employment_role" => nil,
@@ -132,12 +132,14 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
+      "referred_by_return_to_teaching_adviser" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "another",
       "teacher_catchment_country" => nil,
       "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
+      "training_status" => "active",
       "ukprn" => nil,
       "primary_establishment" => false,
       "number_of_pupils" => 0,
@@ -157,7 +159,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding" => "self",
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "not_in_england",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "another",

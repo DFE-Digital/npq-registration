@@ -3,11 +3,13 @@ class Feature
 
   REGISTRATION_OPEN = "Registration open".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
+  CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
 
   SENCO_ENABLED = "Senco enabled".freeze
 
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
+    CLOSED_REGISTRATION_ENABLED,
     SENCO_ENABLED,
   ].freeze
 

@@ -123,22 +123,32 @@ Rails.application.routes.draw do
       constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
         defaults format: :json do
           resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
-            post :reject, path: "reject"
-            post :accept, path: "accept"
+            member do
+              post :reject, path: "reject"
+              post :accept, path: "accept"
+              put :change_funded_place, path: "change-funded-place"
+            end
           end
 
-          resources :participants, only: %i[index show], path: "participants/npq" do
-            put :change_schedule, path: "change-schedule"
-            put :defer
-            put :resume
-            put :withdraw
-            get :outcomes
+          resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
+          resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+            member do
+              put :change_schedule, path: "change-schedule"
+              put :defer
+              put :resume
+              put :withdraw
+
+              scope module: :participants do
+                resources :outcomes, only: %i[create index], as: :participants_outcomes
+              end
+            end
           end
 
-          resources :outcomes, only: %i[index]
-
-          resources :declarations, only: %i[create show index] do
-            put :void, path: "void"
+          resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+            member do
+              put :void, path: "void"
+            end
           end
         end
       end
@@ -146,51 +156,65 @@ Rails.application.routes.draw do
 
     namespace :v2, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
-        post :reject, path: "reject"
-        post :accept, path: "accept"
+        member do
+          post :reject, path: "reject"
+          post :accept, path: "accept"
+          put :change_funded_place, path: "change-funded-place"
+        end
       end
 
       resources :enrolments, path: "npq-enrolments", only: %i[index]
 
-      resources :participants, only: %i[index show], path: "participants/npq" do
-        put :change_schedule, path: "change-schedule"
-        put :defer
-        put :resume
-        put :withdraw
+      resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
 
-        scope module: :participants do
-          resources :outcomes, only: %i[create index]
+      resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+        member do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw
+
+          scope module: :participants do
+            resources :outcomes, only: %i[create index], as: :participants_outcomes
+          end
         end
       end
 
-      resources :outcomes, only: %i[index]
-
-      resources :declarations, only: %i[create show index] do
-        put :void, path: "void"
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+        member do
+          put :void, path: "void"
+        end
       end
     end
 
     namespace :v3, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
-        post :reject, path: "reject"
-        post :accept, path: "accept"
-      end
-
-      resources :participants, only: %i[index show], path: "participants/npq" do
-        put :change_schedule, path: "change-schedule"
-        put :defer
-        put :resume
-        put :withdraw
-
-        scope module: :participants do
-          resources :outcomes, only: %i[create index]
+        member do
+          post :reject, path: "reject"
+          post :accept, path: "accept"
+          put :change_funded_place, path: "change-funded-place"
         end
       end
 
-      resources :outcomes, only: %i[index]
+      resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
 
-      resources :declarations, only: %i[create show index] do
-        put :void, path: "void"
+      resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+        member do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw
+
+          scope module: :participants do
+            resources :outcomes, only: %i[create index], as: :participants_outcomes
+          end
+        end
+      end
+
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+        member do
+          put :void, path: "void"
+        end
       end
 
       resources :statements, only: %i[index show], param: :ecf_id
@@ -240,4 +264,6 @@ Rails.application.routes.draw do
   authenticated :user, ->(user) { user.super_admin? } do
     mount DelayedJobWeb, at: "/delayed_job"
   end
+
+  get "/development_login", to: "registration_wizard#development_login"
 end

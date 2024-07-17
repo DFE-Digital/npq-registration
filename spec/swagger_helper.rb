@@ -33,7 +33,7 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: "https://npq-registration-sandbox-web.teacherservices.cloud/",
+          url: "https://npq-registration-separation-web.teacherservices.cloud/",
         },
       ],
       components: {
@@ -48,32 +48,53 @@ RSpec.configure do |config|
         schemas: {
           PaginationFilter: PAGINATION_FILTER,
           ListApplicationsFilter: LIST_APPLICATIONS_FILTER[version],
+          ListEnrolmentsFilter: LIST_ENROLMENTS_FILTER[version],
+          ListParticipantsFilter: LIST_PARTICIPANTS_FILTER[version],
+          ListParticipantDeclarationsFilter: LIST_PARTICIPANT_DECLARATIONS_FILTER[version],
+          ListParticipantOutcomesFilter: LIST_PARTICIPANT_OUTCOMES_FILTER,
+          ListStatementsFilter: LIST_STATEMENTS_FILTER[version],
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
+          BadRequestResponse: BAD_REQUEST_RESPONSE,
+          UnprocessableEntityResponse: UNPROCESSABLE_ENTITY_RESPONSE,
           IDAttribute: ID_ATTRIBUTE,
           ApplicationResponse: APPLICATION_RESPONSE[version],
           ApplicationsResponse: APPLICATIONS_RESPONSE[version],
           Application: APPLICATION[version],
-        },
+          ApplicationAcceptRequest: APPLICATION_ACCEPT_REQUEST[version],
+          ApplicationChangeFundedPlaceRequest: APPLICATION_CHANGE_FUNDED_PLACE_REQUEST,
+          EnrolmentsCsvResponse: ENROLMENTS_CSV_RESPONSE[version],
+          EnrolmentCsv: ENROLMENT_CSV[version],
+          DeclarationsCsvResponse: DECLARATIONS_CSV_RESPONSE[version],
+          DeclarationCsv: DECLARATION_CSV[version],
+          ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE[version],
+          ApplicationCsv: APPLICATION_CSV[version],
+          ParticipantResponse: PARTICIPANT_RESPONSE[version],
+          ParticipantsResponse: PARTICIPANTS_RESPONSE[version],
+          Participant: PARTICIPANT[version],
+          ParticipantResumeRequest: PARTICIPANT_RESUME_REQUEST,
+          ParticipantDeferRequest: PARTICIPANT_DEFER_REQUEST,
+          ParticipantWithdrawRequest: PARTICIPANT_WITHDRAW_REQUEST,
+          ParticipantChangeScheduleRequest: PARTICIPANT_CHANGE_SCHEDULE_REQUEST,
+          ParticipantOutcome: PARTICIPANT_OUTCOME[version],
+          ParticipantOutcomeCreateRequest: PARTICIPANT_OUTCOME_CREATE_REQUEST,
+          ParticipantOutcomeResponse: PARTICIPANT_OUTCOME_RESPONSE[version],
+          ParticipantOutcomesResponse: PARTICIPANT_OUTCOMES_RESPONSE[version],
+          StatementResponse: STATEMENT_RESPONSE[version],
+          StatementsResponse: STATEMENTS_RESPONSE[version],
+          Statement: STATEMENT[version],
+          SortingOptions: SORTING_OPTIONS[version],
+
+          ParticipantDeclaration: PARTICIPANT_DECLARATION[version],
+          ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
+          ParticipantDeclarationResponse: PARTICIPANT_DECLARATION_RESPONSE[version],
+          ParticipantDeclarationsResponse: PARTICIPANT_DECLARATIONS_RESPONSE[version],
+          ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
+          ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+          ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+        }.compact,
       },
-    }.tap do |h|
-      h[:components][:schemas].merge!(
-        if version == :v3
-          {
-            ListStatementsFilter: LIST_STATEMENTS_FILTER,
-            StatementResponse: STATEMENT_RESPONSE[version],
-            StatementsResponse: STATEMENTS_RESPONSE[version],
-            Statement: STATEMENT[version],
-            SortingOptions: SORTING_OPTIONS,
-          }
-        else
-          {
-            ApplicationsCsvResponse: APPLICATIONS_CSV_RESPONSE,
-            ApplicationCsv: APPLICATION_CSV,
-          }
-        end,
-      )
-    end
+    }
   end
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.

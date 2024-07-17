@@ -37,11 +37,14 @@ module Questionnaires
         elsif wizard.query_store.works_in_school? && !state_funded_school?
           :ineligible_for_funding
         elsif wizard.query_store.works_in_other?
-          if wizard.query_store.lead_mentor_for_accredited_itt_provider?
-            :ineligible_for_funding
-          else
+          case funding_eligibility_calculator.funding_eligiblity_status_code
+          when FundingEligibility::NO_INSTITUTION, FundingEligibility::FUNDED_ELIGIBILITY_RESULT, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
             :possible_funding
+          else
+            :ineligible_for_funding
           end
+        elsif wizard.query_store.referred_by_return_to_teaching_adviser?
+          :possible_funding
         else
           :funding_eligibility_maths
         end
@@ -57,6 +60,19 @@ module Questionnaires
 
   private
 
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= FundingEligibility.new(
+        course:,
+        institution: school,
+        approved_itt_provider: approved_itt_provider?,
+        lead_mentor: lead_mentor_for_accredited_itt_provider?,
+        inside_catchment: inside_catchment?,
+        trn:,
+        get_an_identity_id:,
+        query_store:,
+      )
+    end
+
     def state_funded_school?
       school.eligible_establishment?
     end
@@ -68,5 +84,8 @@ module Questionnaires
     def school
       institution(source: institution_identifier)
     end
+
+    delegate :inside_catchment?, :approved_itt_provider?, :lead_mentor_for_accredited_itt_provider?, :trn,
+             :get_an_identity_id, :course, to: :query_store
   end
 end

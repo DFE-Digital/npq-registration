@@ -34,6 +34,7 @@ class Statement < ApplicationRecord
   scope :with_state, ->(*state) { where(state:) }
   scope :unpaid, -> { with_state(%w[open payable]) }
   scope :paid, -> { with_state("paid") }
+  scope :next_output_fee_statements, -> { with_output_fee.order(:deadline_date).where("deadline_date >= ?", Date.current) }
 
   state_machine :state, initial: :open do
     state :open

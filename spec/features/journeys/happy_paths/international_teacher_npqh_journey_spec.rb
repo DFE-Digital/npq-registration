@@ -23,12 +23,12 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every April and October.")
       page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
@@ -121,6 +121,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
@@ -138,6 +139,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -145,6 +147,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "teacher_catchment_country" => nil,
       "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
+      "training_status" => "active",
       "ukprn" => nil,
       "primary_establishment" => false,
       "number_of_pupils" => 0,
@@ -156,7 +159,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
       "work_setting" => "a_school",
       "raw_application_data" => {
         "email_template" => "not_england_wrong_catchment",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",

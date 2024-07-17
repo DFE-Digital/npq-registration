@@ -27,18 +27,22 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every April and October.")
       page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -93,6 +97,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
           "Work setting" => "A school",
+          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -154,6 +159,7 @@ RSpec.feature "Happy journeys", type: :feature do
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => true,
       "employer_name" => nil,
@@ -171,18 +177,20 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => School.find_by(urn: "100000").id,
-      "targeted_delivery_funding_eligibility" => true,
+      "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
       "teacher_catchment_country" => nil,
       "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
+      "training_status" => "active",
       "ukprn" => nil,
       "primary_establishment" => true,
       "number_of_pupils" => 150,
-      "tsf_primary_eligibility" => true,
-      "tsf_primary_plus_eligibility" => true,
+      "tsf_primary_eligibility" => false,
+      "tsf_primary_plus_eligibility" => false,
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => true,
@@ -193,21 +201,22 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-headship",
         "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
-        "email_template" => "eligible_scholarship_funding",
+        "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
-        "lead_provider_id" => "9",
+        "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
-        "targeted_delivery_funding_eligibility" => true,
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "works_in_school" => "yes",
         "works_in_childcare" => "no",
-        "funding_amount" => 800,
-        "tsf_primary_eligibility" => true,
-        "tsf_primary_plus_eligibility" => true,
+        "funding_amount" => nil,
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
         "work_setting" => "a_school",
       },
     )

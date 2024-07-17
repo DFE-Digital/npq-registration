@@ -66,12 +66,20 @@ RSpec.feature "Service is closed", type: :feature do
 
       click_on("Start now")
 
+      expect(page).to have_content("Registration has closed temporarily")
+
+      Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
+
+      visit "/closed_registration_exception"
+      click_on("Start now")
+
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQ start dates are usually every February and October.")
+        expect(page).to have_text("NPQ start dates are usually every April and October.")
       end
     end
 
     scenario "When user is deleted" do
+      Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
       visit "/closed_registration_exception"
 
       click_on("Start now")
@@ -90,7 +98,7 @@ RSpec.feature "Service is closed", type: :feature do
       click_on("Start now")
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQ start dates are usually every February and October.")
+        expect(page).to have_text("NPQ start dates are usually every April and October.")
       end
 
       visit "/admin"

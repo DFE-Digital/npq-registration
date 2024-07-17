@@ -5,20 +5,40 @@
   Contact <%= application.lead_provider.name %> to check if they can offer you a scholarship funded space, if you have not done so already.
 </p>
 
-<%= govuk_details(summary_text: "What if no funded spaces are available with my chosen provider?") do %>
-  <p class="govuk-!-margin-bottom-2">You can:</p>
+<% if application.course.senco? %>
+  <%= govuk_details(summary_text: "What if my chosed provider cannot offer me a space on their NPQ course") do %>
+    <p class="govuk-!-margin-bottom-2">If you're a SENCO in a maintained school and need to complete the SENCO NPQ in October 2024 but have been told by your provider that you do not have one of the following:</p>
 
-  <ul class="govuk-list govuk-list--bullet">
-    <li>
-      register with this provider again at a later date (courses are run twice a year,
-      except for the Early headship coaching offer which varies by provider and is available year-round)
-    </li>
-    <li>
-      register with a different provider
-    </li>
-    <li>
-      explore other payment options, including paying for the course yourself or checking
-      if your workplace or trust can cover the cost
-    </li>
-  </ul>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        a space on their course
+      </li>
+      <li>
+        a scholarship funded space on their course
+      </li>
+    </ul>
+    <p class="govuk-body">
+      Contact the
+      <a href="mailto:continuing-professional-development@digital.education.gov.uk" class="govuk-link">CPD helpdesk</a>
+      for support if you have never started or completed the national award for SENCO (NASENCO) qualification before.'
+    </p>
+  <% end %>
+<% else %>
+  <%= govuk_details(summary_text: "What if no funded spaces are available with my chosen provider?") do %>
+    <p class="govuk-!-margin-bottom-2">You can:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        register with this provider again at a later date (courses are run twice a year,
+        except for the Early headship coaching offer which varies by provider and is available year-round)
+      </li>
+      <li>
+        register with a different provider
+      </li>
+      <li>
+        explore other payment options, including paying for the course yourself or checking
+        if your workplace or trust can cover the cost
+      </li>
+    </ul>
+  <% end %>
 <% end %>

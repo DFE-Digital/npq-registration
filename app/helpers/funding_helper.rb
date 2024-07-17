@@ -9,8 +9,14 @@ module FundingHelper
   end
 
   def scholarship_eligibility_in_review?(application)
-    application.work_setting == "other" && application.employment_type != "lead_mentor_for_accredited_itt_provider" &&
-      application.teacher_catchment == "england" && application.course.identifier != "npq-early-headship-coaching-offer"
+    return false if application.eligible_for_funding
+    return false if !application.eligible_for_funding && application.funding_choice.present?
+    return false if application.employment_type == "other"
+    return false unless application.inside_catchment?
+    return true if application.course.ehco? && new_headteacher?(application)
+    return true if application.referred_by_return_to_teaching_adviser == "yes"
+
+    application.work_setting == "other" && application.employment_type != "lead_mentor_for_accredited_itt_provider" && application.course.identifier != "npq-early-headship-coaching-offer"
   end
 
   def targeted_support_funding
@@ -29,7 +35,12 @@ private
       new_headteacher: new_headteacher?(application),
       trn: application.user.trn,
       get_an_identity_id: application.user.get_an_identity_id,
+      query_store: query_store(application),
     )
+  end
+
+  def query_store(application)
+    RegistrationQueryStore.new(store: application.raw_application_data)
   end
 
   def new_headteacher?(application)

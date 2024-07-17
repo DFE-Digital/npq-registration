@@ -2,6 +2,8 @@ module Questionnaires
   class QualifiedTeacherCheck < Base
     include ActiveRecord::AttributeAssignment
 
+    FORBIDDEN_TRNS = %w[0000000].freeze
+
     attr_accessor :trn, :full_name, :national_insurance_number
 
     attr_reader :date_of_birth
@@ -67,6 +69,9 @@ module Questionnaires
     end
 
     def validate_processed_trn
+      if FORBIDDEN_TRNS.include?(processed_trn)
+        errors.add(:trn, :not_real)
+      end
       if processed_trn !~ /\A\d+\z/
         errors.add(:trn, :invalid)
       elsif processed_trn.length < 7

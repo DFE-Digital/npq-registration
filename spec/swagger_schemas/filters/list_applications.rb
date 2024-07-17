@@ -16,8 +16,8 @@ LIST_APPLICATIONS_FILTER = {
     },
   },
 }.tap { |h|
-  h[:v2] = h[:v1]
-  h[:v3] = h[:v1].merge({
+  h[:v2] = h[:v1].deep_dup
+  h[:v3] = h[:v1].deep_dup.merge({
     properties: {
       cohort: {
         description: "Return only NPQ applications from the specified cohort or cohorts. This is a comma delimited string of years.",

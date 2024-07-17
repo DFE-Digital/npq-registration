@@ -93,6 +93,39 @@ RSpec.describe Applications::Query do
         end
       end
 
+      context "when filtering by lead_provider_approval_status" do
+        it "filters by lead_provider_approval_status" do
+          create(:application, :pending)
+          application = create(:application, :accepted)
+          query = Applications::Query.new(lead_provider_approval_status: "accepted")
+
+          expect(query.applications).to contain_exactly(application)
+        end
+
+        it "filters by multiple lead_provider_approval_status" do
+          application1 = create(:application, :accepted)
+          application2 = create(:application, :rejected)
+          create(:application, :pending)
+          query = Applications::Query.new(lead_provider_approval_status: "accepted,rejected")
+
+          expect(query.applications).to contain_exactly(application1, application2)
+        end
+
+        it "returns no applications if no lead_provider_approval_status are found" do
+          create(:application, :pending)
+          query = Applications::Query.new(lead_provider_approval_status: "unknown")
+
+          expect(query.applications).to be_empty
+        end
+
+        it "doesn't filter by lead_provider_approval_status when none supplied" do
+          condition_string = %("applications"."lead_provider_approval_status" =)
+
+          expect(Applications::Query.new(lead_provider_approval_status: "pending").scope.to_sql).to include(condition_string)
+          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+        end
+      end
+
       context "when filtering by participant_id" do
         it "filters by participant_id" do
           create(:application, user: create(:user))
@@ -235,6 +268,54 @@ RSpec.describe Applications::Query do
         end
 
         it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `nil`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: nil,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `true`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: true,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).to be_transient_previously_funded }
+      end
+
+      context "when there is a previous, accepted application that was eligible for funding and funded place is `false`" do
+        before do
+          create(
+            :application,
+            :accepted,
+            lead_provider:,
+            user_id: application.user_id,
+            eligible_for_funding: true,
+            funded_place: false,
+            course: application.course,
+          )
+        end
+
+        it { expect(returned_application).not_to be_transient_previously_funded }
       end
 
       context "when there is a previous, accepted application that was eligible for funding on a rebranded course" do

@@ -8,7 +8,7 @@ RSpec.describe HandleSubmissionForStore do
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
 
-  let(:courses) { Course.where.not(identifier: Course.ehco.identifier) }
+  let(:courses) { Course.where(identifier: "npq-leading-primary-mathematics") }
 
   let(:course) { courses.sample }
   let(:lead_provider) { LeadProvider.all.sample }
@@ -49,6 +49,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => "yes",
           "teacher_catchment" => "england",
           "work_setting" => "a_school",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
@@ -97,6 +98,7 @@ RSpec.describe HandleSubmissionForStore do
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({
           "course_id" => course.id,
+          "schedule_id" => nil,
           "ecf_id" => nil,
           "eligible_for_funding" => true,
           "employer_name" => nil,
@@ -124,6 +126,7 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment_country" => nil,
           "teacher_catchment_iso_country_code" => nil,
           "teacher_catchment_synced_to_ecf" => false,
+          "training_status" => "active",
           "ukprn" => school.ukprn,
           "number_of_pupils" => nil,
           "primary_establishment" => false,
@@ -135,6 +138,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => true,
           "work_setting" => "a_school",
           "raw_application_data" => store.except("current_user"),
+          "referred_by_return_to_teaching_adviser" => "no",
         })
       end
     end
@@ -152,6 +156,7 @@ RSpec.describe HandleSubmissionForStore do
           "kind_of_nursery" => "private_nursery",
           "teacher_catchment" => "england",
           "work_setting" => "early_years_or_childcare",
+          "referred_by_return_to_teaching_adviser" => "no",
         }
       end
 
@@ -200,6 +205,7 @@ RSpec.describe HandleSubmissionForStore do
         expect(user.applications.reload.count).to eq 1
         expect(stable_as_json(user.applications.last)).to match({
           "course_id" => course.id,
+          "schedule_id" => nil,
           "ecf_id" => nil,
           "eligible_for_funding" => false,
           "employer_name" => nil,
@@ -227,6 +233,7 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment_country" => nil,
           "teacher_catchment_iso_country_code" => nil,
           "teacher_catchment_synced_to_ecf" => false,
+          "training_status" => "active",
           "ukprn" => nil,
           "number_of_pupils" => 0,
           "primary_establishment" => false,
@@ -238,6 +245,7 @@ RSpec.describe HandleSubmissionForStore do
           "works_in_school" => false,
           "work_setting" => "early_years_or_childcare",
           "raw_application_data" => store.except("current_user"),
+          "referred_by_return_to_teaching_adviser" => "no",
         })
       end
     end

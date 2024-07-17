@@ -14,7 +14,7 @@ module Helpers
       headers["Authorization"] = "Bearer #{token}"
       headers["Content-Type"] = "application/json"
 
-      post url, params:, headers:
+      post url, params: params.to_json, headers:
     end
 
     def api_put(url, params: {}, headers: {}, token: nil)
@@ -23,7 +23,7 @@ module Helpers
       headers["Authorization"] = "Bearer #{token}"
       headers["Content-Type"] = "application/json"
 
-      put url, params:, headers:
+      put url, params: params.to_json, headers:
     end
 
     def parsed_response
@@ -36,10 +36,6 @@ module Helpers
 
     def parsed_csv_response
       CSV.parse(response.body)
-    end
-
-    def response_ids_from_csv
-      parsed_csv_response.transpose[0]&.drop(1)
     end
 
     def lead_provider_token

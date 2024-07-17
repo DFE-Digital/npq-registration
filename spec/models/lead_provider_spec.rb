@@ -3,6 +3,28 @@ require "rails_helper"
 RSpec.describe LeadProvider do
   describe "relationships" do
     it { is_expected.to have_many(:applications) }
+    it { is_expected.to have_many(:statements) }
+  end
+
+  describe "#next_output_fee_statement" do
+    let(:cohort) { create(:cohort, :current) }
+    let(:lead_provider) { next_output_fee_statement.lead_provider }
+    let(:next_output_fee_statement) { create(:statement, :next_output_fee, cohort:) }
+
+    before do
+      # Not output fee
+      create(:statement, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now)
+      # Deadline is later
+      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now)
+      # Wrong cohort
+      create(:statement, output_fee: true, cohort: create(:cohort, start_year: cohort.start_year + 1), lead_provider:, deadline_date: 1.hour.from_now)
+      # In the past
+      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 1.day.ago)
+    end
+
+    subject { lead_provider.next_output_fee_statement(cohort) }
+
+    it { is_expected.to eq(next_output_fee_statement) }
   end
 
   describe "#for" do
@@ -20,7 +42,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -38,7 +59,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -56,7 +76,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -74,7 +93,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -92,7 +110,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -110,12 +127,8 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
-          "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -128,7 +141,6 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
@@ -144,7 +156,6 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Education Development Trust",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
@@ -159,7 +170,6 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Education Development Trust",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
@@ -176,10 +186,8 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
-          "Education Development Trust",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "University College London (UCL) Institute of Education",
         ])

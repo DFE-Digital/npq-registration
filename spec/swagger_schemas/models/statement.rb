@@ -11,6 +11,9 @@ STATEMENT = {
         description: "The data type.",
         type: :string,
         example: "statement",
+        enum: %w[
+          statement
+        ],
       },
       attributes: {
         properties: {

@@ -16,16 +16,19 @@ end
 Rails.logger.info("Seeding database")
 
 [
+  "add_cohorts.rb",
   "add_childcare_providers.rb",
   "add_schools.rb",
+  "add_course_groups.rb",
   "add_courses.rb",
+  "add_schedules.rb",
   "add_lead_providers.rb",
   "add_itt_providers.rb",
   "add_users.rb",
   "add_applications.rb",
   "add_settings.rb",
-  "add_cohorts.rb",
   "add_statements.rb",
+  "add_declarations.rb",
   "add_api_tokens.rb",
   "add_feature_flags.rb",
 ].each do |seed_file|

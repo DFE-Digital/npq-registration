@@ -17,7 +17,7 @@ module Questionnaires
         QuestionTypes::RadioButtonGroup.new(
           name: :senco_in_role,
           options:,
-          style_options: { legend: { size: "m", tag: "h1" } },
+          style_options: { legend: { size: "xl", tag: "h1" } },
         ),
       ]
     end
@@ -34,10 +34,20 @@ module Questionnaires
       if senco_in_role == "yes"
         wizard.store["senco_in_role_status"] = true
         :senco_start_date
+      elsif funding_eligibility.funded?
+        wizard.store["senco_in_role_status"] = false
+        :funding_eligibility_senco
       else
         wizard.store["senco_in_role_status"] = false
-        if wizard.query_store.inside_catchment?
-          :funding_eligibility_senco
+
+        if works_in_other?
+          if funding_eligibility.funding_eligiblity_status_code == FundingEligibility::NO_INSTITUTION
+            :possible_funding
+          else
+            :ineligible_for_funding
+          end
+        elsif referred_by_return_to_teaching_adviser?
+          :possible_funding
         else
           :ineligible_for_funding
         end
@@ -47,5 +57,22 @@ module Questionnaires
     def previous_step
       :choose_your_npq
     end
+
+    def funding_eligibility
+      @funding_eligibility ||= FundingEligibility.new(
+        course:,
+        institution:,
+        approved_itt_provider: approved_itt_provider?,
+        lead_mentor_for_accredited_itt_provider: lead_mentor_for_accredited_itt_provider?,
+        inside_catchment: inside_catchment?,
+        new_headteacher: new_headteacher?,
+        trn:,
+        get_an_identity_id:,
+        query_store:,
+      )
+    end
+
+    delegate :course, :lead_mentor_for_accredited_itt_provider?, :new_headteacher?, :inside_catchment?,
+             :approved_itt_provider?, :get_an_identity_id, :works_in_other?, :referred_by_return_to_teaching_adviser?, :trn, to: :query_store
   end
 end

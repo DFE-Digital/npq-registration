@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_101251) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -19,9 +19,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "application_statuses", ["active", "deferred", "withdrawn"]
+  create_enum "declaration_state_reasons", ["duplicate"]
+  create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
+  create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
+  create_enum "outcome_states", ["passed", "failed", "voided"]
+  create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
 
@@ -43,6 +49,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.datetime "updated_at", null: false
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+  end
+
+  create_table "application_states", force: :cascade do |t|
+    t.bigint "application_id", null: false
+    t.bigint "lead_provider_id"
+    t.enum "state", default: "active", null: false, enum_type: "application_statuses"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_application_states_on_application_id"
+    t.index ["lead_provider_id"], name: "index_application_states_on_lead_provider_id"
   end
 
   create_table "applications", force: :cascade do |t|
@@ -89,11 +106,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.string "notes"
     t.bigint "cohort_id"
     t.boolean "funded_place"
+    t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
+    t.bigint "schedule_id"
+    t.string "referred_by_return_to_teaching_adviser"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
+    t.index ["schedule_id"], name: "index_applications_on_schedule_id"
     t.index ["school_id"], name: "index_applications_on_school_id"
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
@@ -113,6 +134,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
+  create_table "course_groups", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_course_groups_on_name", unique: true
+  end
+
   create_table "courses", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
@@ -122,6 +150,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.integer "position", default: 0
     t.boolean "display", default: true
     t.string "identifier"
+    t.bigint "course_group_id"
+    t.index ["course_group_id"], name: "index_courses_on_course_group_id"
+    t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
   create_table "data_migrations", force: :cascade do |t|
@@ -133,6 +164,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "total_count"
+  end
+
+  create_table "declarations", force: :cascade do |t|
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.bigint "application_id", null: false
+    t.bigint "superseded_by_id"
+    t.bigint "lead_provider_id", null: false
+    t.bigint "cohort_id", null: false
+    t.enum "declaration_type", enum_type: "declaration_types"
+    t.date "declaration_date"
+    t.enum "state", default: "submitted", null: false, enum_type: "declaration_states"
+    t.enum "state_reason", enum_type: "declaration_state_reasons"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_declarations_on_application_id"
+    t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
+    t.index ["ecf_id"], name: "index_declarations_on_ecf_id"
+    t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
+    t.index ["superseded_by_id"], name: "index_declarations_on_superseded_by_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -226,6 +276,31 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
   end
 
+  create_table "participant_id_changes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "from_participant_id", null: false
+    t.bigint "to_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
+    t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
+    t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
+  end
+
+  create_table "participant_outcomes", force: :cascade do |t|
+    t.enum "state", null: false, enum_type: "outcome_states"
+    t.date "completion_date", null: false
+    t.bigint "declaration_id", null: false
+    t.boolean "qualified_teachers_api_request_successful"
+    t.datetime "sent_to_qualified_teachers_api_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["declaration_id", "created_at"], name: "index_participant_outcomes_on_declaration_id_and_created_at"
+    t.index ["declaration_id"], name: "index_participant_outcomes_on_declaration_id"
+    t.index ["ecf_id"], name: "index_participant_outcomes_on_ecf_id", unique: true
+  end
+
   create_table "private_childcare_providers", force: :cascade do |t|
     t.text "provider_urn", null: false
     t.text "provider_name"
@@ -264,6 +339,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.text "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "schedules", force: :cascade do |t|
+    t.bigint "course_group_id", null: false
+    t.bigint "cohort_id", null: false
+    t.string "name", null: false
+    t.string "identifier", null: false
+    t.date "applies_from", null: false
+    t.date "applies_to", null: false
+    t.enum "allowed_declaration_types", default: ["started", "retained-1", "retained-2", "completed"], array: true, enum_type: "schedule_declaration_types"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
+    t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
+    t.index ["identifier", "cohort_id"], name: "index_schedules_on_identifier_and_cohort_id", unique: true
   end
 
   create_table "schools", force: :cascade do |t|
@@ -321,6 +411,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
     t.enum "state", default: "eligible", null: false, enum_type: "statement_item_states"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "declaration_id"
+    t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
     t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
 
@@ -382,13 +474,28 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_090646) do
   end
 
   add_foreign_key "api_tokens", "lead_providers"
+  add_foreign_key "application_states", "applications"
+  add_foreign_key "application_states", "lead_providers"
   add_foreign_key "applications", "cohorts"
   add_foreign_key "applications", "courses"
   add_foreign_key "applications", "itt_providers"
   add_foreign_key "applications", "lead_providers"
   add_foreign_key "applications", "private_childcare_providers"
+  add_foreign_key "applications", "schedules"
   add_foreign_key "applications", "schools"
   add_foreign_key "applications", "users"
+  add_foreign_key "courses", "course_groups"
+  add_foreign_key "declarations", "applications"
+  add_foreign_key "declarations", "cohorts"
+  add_foreign_key "declarations", "declarations", column: "superseded_by_id"
+  add_foreign_key "declarations", "lead_providers"
+  add_foreign_key "participant_id_changes", "users"
+  add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
+  add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "participant_outcomes", "declarations"
+  add_foreign_key "schedules", "cohorts"
+  add_foreign_key "schedules", "course_groups"
+  add_foreign_key "statement_items", "declarations"
   add_foreign_key "statement_items", "statements"
   add_foreign_key "statements", "cohorts"
   add_foreign_key "statements", "lead_providers"

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  subject(:statement) { build(:cohort) }
+  subject { build(:cohort) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
@@ -63,8 +63,12 @@ RSpec.describe Cohort, type: :model do
       expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
     end
 
-    it "raises an error when there is no cohort for the current year" do
-      expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
+    context "when there is no cohort for the current year" do
+      before { travel_to(10.years.ago) }
+
+      it "raises an error" do
+        expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end

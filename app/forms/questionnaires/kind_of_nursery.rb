@@ -6,6 +6,7 @@ module Questionnaires
     ].freeze
 
     KIND_OF_NURSERY_PRIVATE_OPTIONS = %w[
+      childminder
       private_nursery
       another_early_years_setting
     ].freeze
@@ -45,6 +46,7 @@ module Questionnaires
         build_option_struct(value: "local_authority_maintained_nursery", link_errors: true),
         build_option_struct(value: "preschool_class_as_part_of_school"),
         build_option_struct(value: "private_nursery"),
+        build_option_struct(value: "childminder"),
         build_option_struct(value: "another_early_years_setting", divider: true),
       ]
     end

@@ -27,18 +27,22 @@ RSpec.feature "Happy journeys", type: :feature do
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQ start dates are usually every February and October.")
+      expect(page).to have_text("NPQ start dates are usually every April and October.")
       page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/provider-check", submit_form: true) do
-      expect(page).to have_text("Have you chosen an NPQ and provider?")
+      expect(page).to have_text("Have you chosen a NPQ and provider?")
       page.choose("Yes", visible: :all)
     end
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
+    end
+
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
+      page.choose("No", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
@@ -109,6 +113,7 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "Early years or childcare",
           "Provider" => "Teach First",
           "Workplace" => "open manchester school – street 1, manchester",
+          "Referred by return to teaching adviser" => "No",
           "Early years setting" => public_kind_of_nursery,
           "Workplace in England" => "Yes",
         },
@@ -138,6 +143,7 @@ RSpec.feature "Happy journeys", type: :feature do
     deep_compare_application_data(
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
+      "schedule_id" => nil,
       "ecf_id" => nil,
       "eligible_for_funding" => false,
       "employer_name" => nil,
@@ -155,6 +161,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "no",
       "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -162,6 +169,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
+      "training_status" => "active",
       "ukprn" => nil,
       "primary_establishment" => false,
       "number_of_pupils" => nil,
@@ -186,6 +194,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "funding_amount" => nil,
         "kind_of_nursery" => public_kind_of_nursery_key,
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
+        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

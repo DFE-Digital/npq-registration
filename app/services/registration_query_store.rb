@@ -70,6 +70,22 @@ class RegistrationQueryStore
     store["employment_type"] == "other"
   end
 
+  def employment_type_local_authority_virtual_school?
+    store["employment_type"] == "local_authority_virtual_school"
+  end
+
+  def local_authority_supply_teacher?
+    store["employment_type"] == "local_authority_supply_teacher"
+  end
+
+  def employment_type_hospital_school?
+    store["employment_type"] == "hospital_school"
+  end
+
+  def young_offender_institution?
+    store["employment_type"] == "young_offender_institution"
+  end
+
   def teacher_catchment_england?
     store["teacher_catchment"] == "england"
   end
@@ -92,6 +108,10 @@ class RegistrationQueryStore
 
   def has_ofsted_urn?
     store["has_ofsted_urn"] == "yes"
+  end
+
+  def referred_by_return_to_teaching_adviser?
+    store["referred_by_return_to_teaching_adviser"] == "yes"
   end
 
   def kind_of_nursery_public?
@@ -136,5 +156,9 @@ class RegistrationQueryStore
 
   def senco_start_date
     store["senco_start_date"]
+  end
+
+  def childminder?
+    store["kind_of_nursery"] == "childminder"
   end
 end

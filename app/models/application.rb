@@ -6,6 +6,10 @@ class Application < ApplicationRecord
   self.ignored_columns = %w[DEPRECATED_cohort]
 
   UK_CATCHMENT_AREA = %w[jersey_guernsey_isle_of_man england northern_ireland scotland wales].freeze
+  INELIGIBLE_FOR_FUNDING_REASONS = %w[
+    previously-funded
+    establishment-ineligible
+  ].freeze
 
   has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
 
@@ -16,8 +20,12 @@ class Application < ApplicationRecord
   belongs_to :private_childcare_provider, optional: true
   belongs_to :itt_provider, optional: true
   belongs_to :cohort, optional: true
+  belongs_to :schedule, optional: true
 
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
+  has_many :participant_id_changes, through: :user
+  has_many :application_states
+  has_many :declarations
 
   scope :unsynced, -> { where(ecf_id: nil) }
   scope :expired_applications, -> { where(lead_provider_approval_status: "rejected").where("created_at < ?", cut_off_date_for_expired_applications) }
@@ -30,6 +38,7 @@ class Application < ApplicationRecord
     preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
     private_nursery: "private_nursery",
     another_early_years_setting: "another_early_years_setting",
+    childminder: "childminder",
   }
 
   enum headteacher_status: {
@@ -55,6 +64,25 @@ class Application < ApplicationRecord
     rejected: "rejected",
   }
 
+  enum training_status: {
+    active: "active",
+    deferred: "deferred",
+    withdrawn: "withdrawn",
+  }
+
+  # `eligible_for_dfe_funding?`  takes into consideration what we know
+  # about user eligibility plus if it has been previously funded. We need
+  # to keep this method in place to keep consistency during the split between
+  # ECF and NPQ. In the mid term we will perform this calculation on NPQ and
+  # store the value in the `eligible_for_funding` attribute.
+  def eligible_for_dfe_funding?(with_funded_place: false)
+    if previously_funded?
+      false
+    else
+      funding_eligibility(with_funded_place:)
+    end
+  end
+
   def previously_funded?
     # This is an optimization used by the API Applications::Query in order
     # to speed up the bulk-retrieval of Applications.
@@ -65,6 +93,7 @@ class Application < ApplicationRecord
       .where(course: course.rebranded_alternative_courses)
       .accepted
       .eligible_for_funding
+      .where(funded_place: [nil, true])
       .exists?
   end
 
@@ -134,5 +163,17 @@ class Application < ApplicationRecord
 
   def self.cut_off_date_for_expired_applications
     Time.zone.local(2024, 6, 30)
+  end
+
+  def fundable?
+    eligible_for_dfe_funding?(with_funded_place: true)
+  end
+
+private
+
+  def funding_eligibility(with_funded_place:)
+    return eligible_for_funding unless with_funded_place
+
+    eligible_for_funding && (funded_place.nil? || funded_place)
   end
 end
