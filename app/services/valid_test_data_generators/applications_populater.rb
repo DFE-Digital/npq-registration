@@ -18,6 +18,7 @@ module ValidTestDataGenerators
       logger.info "ApplicationsPopulater: Started!"
 
       ActiveRecord::Base.transaction do
+        prepare_cohort!
         create_participants!
       end
 
@@ -41,6 +42,13 @@ module ValidTestDataGenerators
         travel_to(rand(3.years.ago..Time.zone.now)) do
           create_participant(school: School.open.order("RANDOM()").first)
         end
+      end
+    end
+
+    def prepare_cohort!
+      cohort.tap do |c|
+        c.funding_cap = cohort.start_year >= 2024
+        c.save!
       end
     end
 
@@ -143,7 +151,7 @@ module ValidTestDataGenerators
       return unless completed_declaration
       return unless CourseGroup.joins(:courses).leadership_or_specialist.where(courses: { identifier: application.course.identifier }).exists?
 
-      ParticipantOutcome.states.keys.sort.each do |state_trait|
+      ParticipantOutcomes::Create::STATES.reverse.each do |state_trait|
         FactoryBot.create(
           :participant_outcome,
           state_trait,
@@ -151,7 +159,7 @@ module ValidTestDataGenerators
           completion_date: completed_declaration.declaration_date,
         )
 
-        break if Faker::Boolean.boolean(true_ratio: 0.3)
+        break if Faker::Boolean.boolean(true_ratio: 0.2)
       end
     end
   end

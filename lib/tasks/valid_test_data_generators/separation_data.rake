@@ -12,7 +12,7 @@ namespace :lead_providers do
     raise "Cohort not found: #{args[:cohort_start_year]}" if args[:cohort_start_year] && !cohort
 
     Array.wrap(lead_provider || LeadProvider.all).each do |lp|
-      Array.wrap(cohort || Cohort.all).each do |c|
+      Array.wrap(cohort || Cohort.where(start_year: ..Cohort.current.start_year)).each do |c|
         ValidTestDataGenerators::ApplicationsPopulater.populate(lead_provider: lp, cohort: c, number_of_participants: args[:number_of_participants]&.to_i || 100)
         ValidTestDataGenerators::StatementsPopulater.populate(lead_provider: lp, cohort: c)
       end
