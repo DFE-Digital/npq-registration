@@ -79,6 +79,14 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
           subject.populate
         }.to(change(ParticipantOutcome, :count))
       end
+
+      it "voids some declarations" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(false)
+
+        expect {
+          subject.populate
+        }.to(change(Declaration.voided_state, :count).and(change(ParticipantOutcome.voided_state, :count)))
+      end
     end
   end
 end

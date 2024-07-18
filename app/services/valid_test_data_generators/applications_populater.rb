@@ -47,7 +47,7 @@ module ValidTestDataGenerators
 
     def prepare_cohort!
       cohort.tap do |c|
-        c.funding_cap = cohort.start_year >= 2024
+        c.funding_cap = cohort.start_year >= Cohort.current.start_year
         c.save!
       end
     end
@@ -62,6 +62,7 @@ module ValidTestDataGenerators
       accept_application(application)
       create_declarations(application)
       create_outcomes(application)
+      void_completed_declaration_for(application)
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
@@ -161,6 +162,13 @@ module ValidTestDataGenerators
 
         break if Faker::Boolean.boolean(true_ratio: 0.2)
       end
+    end
+
+    def void_completed_declaration_for(application)
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+      completed_declaration = application.declarations.eligible_for_outcomes(lead_provider, application.course.identifier).first
+      Declarations::Void.new(declaration: completed_declaration).void
     end
   end
 end
