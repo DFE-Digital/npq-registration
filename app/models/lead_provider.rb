@@ -28,6 +28,9 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "National Institute of Teaching",
     "Teach First",
+    "LLSE",
+    "Teacher Development Trust",
+    "University College London (UCL) Institute of Education",
   ].freeze
 
   EYL_LL_PROVIDERS = [
