@@ -5,13 +5,16 @@ module API
       include FilterByDate
 
       def index
+        conditions = { updated_since:, participant_ids: }
+        declarations = declarations_query(conditions:).declarations
+
         respond_to do |format|
           format.json do
-            render json: to_json(paginate(declarations_query.declarations))
+            render json: to_json(paginate(declarations))
           end
 
           format.csv do
-            render body: to_csv(declarations_query.declarations)
+            render body: to_csv(declarations)
           end
         end
       end
@@ -42,10 +45,9 @@ module API
 
     private
 
-      def declarations_query
-        conditions = { lead_provider: current_lead_provider, updated_since:, participant_ids: }
-
-        ::Declarations::Query.new(**conditions.compact)
+      def declarations_query(conditions: {})
+        conditions.merge!(lead_provider: current_lead_provider)
+        Declarations::Query.new(**conditions.compact)
       end
 
       def declaration

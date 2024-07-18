@@ -5,7 +5,10 @@ module API
       include FilterByDate
 
       def index
-        render json: to_json(paginate(participants_query.participants))
+        conditions = { updated_since:, training_status:, from_participant_id: }
+        participants = participants_query(conditions:).participants
+
+        render json: to_json(paginate(participants))
       end
 
       def show
@@ -64,9 +67,8 @@ module API
         participant_params.dig(:filter, :from_participant_id)
       end
 
-      def participants_query
-        conditions = { lead_provider: current_lead_provider, updated_since:, training_status:, from_participant_id: }
-
+      def participants_query(conditions: {})
+        conditions.merge!(lead_provider: current_lead_provider)
         ::Participants::Query.new(**conditions.compact)
       end
 

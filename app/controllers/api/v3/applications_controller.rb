@@ -5,7 +5,10 @@ module API
       include FilterByDate
 
       def index
-        render json: to_json(paginate(applications_query.applications))
+        conditions = { cohort_start_years:, participant_ids:, updated_since: }
+        applications = applications_query(conditions:).applications
+
+        render json: to_json(paginate(applications))
       end
 
       def show
@@ -44,10 +47,9 @@ module API
 
     private
 
-      def applications_query
-        conditions = { lead_provider: current_lead_provider, cohort_start_years:, participant_ids:, updated_since: }
-
-        Applications::Query.new(**conditions.compact, sort: application_params[:sort])
+      def applications_query(conditions: {})
+        conditions.merge!(lead_provider: current_lead_provider)
+        Applications::Query.new(**conditions.compact)
       end
 
       def application
