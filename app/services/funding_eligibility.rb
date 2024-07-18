@@ -112,7 +112,6 @@ class FundingEligibility
       end
 
       return PREVIOUSLY_FUNDED if previously_funded?
-      return FUNDED_ELIGIBILITY_RESULT if eligible_urns.include?(institution.try(:urn))
 
       case institution.class.name
       when "School"
@@ -179,45 +178,6 @@ private
 
   def npqlpm_or_senco?
     course.npqlpm? || course.npqs?
-  end
-
-  def eligible_urns
-    %w[
-      146816
-      141030
-      131867
-      130416
-      145003
-      139730
-      143704
-      141940
-      147756
-      139363
-      130468
-      130457
-      144753
-      144886
-      130503
-      143689
-      144511
-      130452
-      130548
-      145002
-      144463
-      130458
-      130411
-      130422
-      130746
-      133608
-      144887
-      145230
-      139433
-      142673
-      147477
-      130580
-      133545
-      130504
-    ]
   end
 
   def ecf_api_funding_lookup
