@@ -56,6 +56,7 @@ gem "net-smtp", "~> 0.5.0", require: false
 
 group :development, :test do
   gem "amazing_print"
+  gem "bullet"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
   gem "capybara-screenshot"

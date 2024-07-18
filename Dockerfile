@@ -34,8 +34,7 @@ RUN yarn install --frozen-lockfile
 COPY . /app/
 
 # Compile assets and run webpack
-# Run in rails test environment to avoid loading development gems
-RUN RAILS_ENV=test bundle exec rails assets:precompile
+RUN RAILS_ENV=production SECRET_KEY_BASE=key bundle exec rails assets:precompile
 
 # Cleanup to save space in the production image
 RUN rm -rf node_modules log tmp && \
