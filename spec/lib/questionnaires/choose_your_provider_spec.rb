@@ -391,6 +391,9 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Church of England",
             "National Institute of Teaching",
             "Teach First",
+            "LLSE",
+            "Teacher Development Trust",
+            "University College London (UCL) Institute of Education",
           ])
         end
 
