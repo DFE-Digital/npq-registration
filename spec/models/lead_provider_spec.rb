@@ -40,13 +40,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -57,13 +57,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -74,13 +74,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -91,13 +91,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -108,13 +108,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -125,7 +125,7 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "National Institute of Teaching",
           "Teach First",
@@ -139,13 +139,13 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -159,7 +159,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -173,7 +173,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
@@ -184,12 +184,12 @@ RSpec.describe LeadProvider do
       it "returns expected lead providers" do
         expect(subject).to eq([
           "Ambition Institute",
-          "Best Practice Network (home of Outstanding Leaders Partnership)",
+          "Best Practice Network",
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
           "Teach First",
-          "UCL Institute of Education",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
