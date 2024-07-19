@@ -36,6 +36,9 @@ en:
   cohort: &cohort
     cannot_change: "You cannot change the '#/%{parameterized_attribute}' field"
 
+  schedule: &schedule
+    cohort_mismatch: The schedule cohort must match the application cohort
+
   funded_place: &funded_place
     inclusion: Set '#/%{parameterized_attribute}' to true or false.
 
@@ -99,6 +102,13 @@ en:
   time:
     formats:
       admin: "%R on %d/%m/%Y"
+  activerecord:
+    errors:
+      models:
+        application:
+          attributes:
+            schedule:
+              <<: *schedule
   activemodel:
     attributes:
       questionnaires/funding_your_npq:

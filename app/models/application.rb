@@ -33,6 +33,8 @@ class Application < ApplicationRecord
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
 
+  validate :schedule_cohort_matches
+
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
     preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
@@ -175,5 +177,9 @@ private
     return eligible_for_funding unless with_funded_place
 
     eligible_for_funding && (funded_place.nil? || funded_place)
+  end
+
+  def schedule_cohort_matches
+    errors.add(:schedule_identifier, :cohort_mismatch) if schedule && schedule.cohort != cohort
   end
 end
