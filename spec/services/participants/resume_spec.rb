@@ -15,10 +15,7 @@ RSpec.describe Participants::Resume, type: :model do
       context "when the application is already active" do
         let(:application) { create(:application, :accepted) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :already_active)
-        end
+        it { expect(instance).to have_error(:participant, :already_active, "The participant is already active") }
       end
     end
   end

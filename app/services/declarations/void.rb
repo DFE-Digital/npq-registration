@@ -55,7 +55,7 @@ module Declarations
     end
 
     def output_fee_statement_available
-      errors.add(:declaration, :no_output_fee_statement, cohort: declaration.cohort) unless statement_attacher.valid?
+      errors.add(:declaration, :no_output_fee_statement, cohort: declaration.cohort.start_year) unless statement_attacher.valid?
     end
 
     def declaration_is_paid

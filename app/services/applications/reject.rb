@@ -5,7 +5,7 @@ module Applications
 
     attribute :application
 
-    validates :application, presence: { message: I18n.t("application.missing_application") }
+    validates :application, presence: true
     validate :not_already_rejected
     validate :cannot_change_from_accepted
 
@@ -23,14 +23,14 @@ module Applications
       return unless application
       return unless application.rejected?
 
-      errors.add(:application, I18n.t("application.has_already_been_rejected"))
+      errors.add(:application, :has_already_been_rejected)
     end
 
     def cannot_change_from_accepted
       return unless application
       return unless application.accepted?
 
-      errors.add(:application, I18n.t("application.cannot_change_from_accepted"))
+      errors.add(:application, :cannot_change_from_accepted)
     end
   end
 end
