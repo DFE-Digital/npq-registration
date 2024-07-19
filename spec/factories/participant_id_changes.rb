@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :participant_id_change do
-    user { create(:user) }
-    from_participant { create(:user) }
-    to_participant { create(:user) }
+    user
+    association :from_participant, factory: :user
+    association :to_participant, factory: :user
   end
 end

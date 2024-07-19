@@ -2,7 +2,7 @@ require "securerandom"
 
 FactoryBot.define do
   factory :application do
-    application_for_school
+    with_school
 
     user
     course
@@ -18,8 +18,8 @@ FactoryBot.define do
     funding_choice { Application.funding_choices.keys.sample }
     lead_mentor { Faker::Boolean.boolean }
 
-    trait :application_for_school do
-      school { build(:school) }
+    trait :with_school do
+      school
       private_childcare_provider_id { nil }
       DEPRECATED_private_childcare_provider_urn { nil }
 
@@ -28,16 +28,16 @@ FactoryBot.define do
       kind_of_nursery { nil }
     end
 
-    trait :application_for_private_childcare_provider do
-      private_childcare_provider { build(:private_childcare_provider) }
+    trait :with_private_childcare_provider do
+      private_childcare_provider
 
       works_in_school { false }
       works_in_childcare { true }
       kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
     end
 
-    trait :application_for_public_childcare_provider do
-      school { build(:school) }
+    trait :with_public_childcare_provider do
+      school
       private_childcare_provider_id { nil }
       DEPRECATED_private_childcare_provider_urn { nil }
 
@@ -46,17 +46,17 @@ FactoryBot.define do
       kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
     end
 
-    trait :accepted do
-      lead_provider_approval_status { :accepted }
-      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, course_group: course.course_group, cohort:) }
-    end
-
     trait :with_declaration do
       accepted
 
       after(:create) do |application|
         create(:declaration, application:)
       end
+    end
+
+    trait :accepted do
+      lead_provider_approval_status { :accepted }
+      schedule { Schedule.where(cohort:, course_group: course.course_group).sample || create(:schedule, course_group: course.course_group, cohort:) }
     end
 
     trait :rejected do
@@ -98,10 +98,10 @@ FactoryBot.define do
     end
 
     trait :with_random_user do
-      user { FactoryBot.build(:user, :with_random_name) }
+      user { build(:user, :with_random_name) }
     end
 
-    trait :with_random_eligibility_for_funding do
+    trait :with_random_eligibile_for_funding do
       eligible_for_funding { Faker::Boolean.boolean }
     end
 
@@ -109,7 +109,7 @@ FactoryBot.define do
       after(:create) do |application|
         user = application.user
 
-        FactoryBot.create(:participant_id_change, to_participant: user, user:)
+        create(:participant_id_change, to_participant: user, user:)
       end
     end
 
@@ -117,11 +117,11 @@ FactoryBot.define do
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:withdrawn])
 
-        FactoryBot.create(:application_state,
-                          application:,
-                          lead_provider: application.lead_provider,
-                          state: ApplicationState.states[:withdrawn],
-                          reason: "other")
+        create(:application_state,
+               application:,
+               lead_provider: application.lead_provider,
+               state: ApplicationState.states[:withdrawn],
+               reason: "other")
       end
     end
 
@@ -129,11 +129,11 @@ FactoryBot.define do
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:deferred])
 
-        FactoryBot.create(:application_state,
-                          application:,
-                          lead_provider: application.lead_provider,
-                          state: ApplicationState.states[:deferred],
-                          reason: "other")
+        create(:application_state,
+               application:,
+               lead_provider: application.lead_provider,
+               state: ApplicationState.states[:deferred],
+               reason: "other")
       end
     end
   end
