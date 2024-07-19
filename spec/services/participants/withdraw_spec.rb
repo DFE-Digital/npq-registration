@@ -13,24 +13,18 @@ RSpec.describe Participants::Withdraw, type: :model do
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
 
     describe "validations" do
-      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::WITHDRAWAL_REASONS) }
+      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::WITHDRAWAL_REASONS).with_message("The property '#/reason' must be a valid reason") }
 
       context "when the application is already withdrawn" do
         let(:application) { create(:application, :accepted, :withdrawn) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :already_withdrawn)
-        end
+        it { expect(instance).to have_error(:participant, :already_withdrawn, "The participant is already withdrawn") }
       end
 
       context "when the application has no declarations" do
         let(:application) { create(:application, :accepted) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :no_started_declarations)
-        end
+        it { expect(instance).to have_error(:participant, :no_started_declarations, "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance") }
       end
 
       context "when the application has no started declarations" do
@@ -38,10 +32,7 @@ RSpec.describe Participants::Withdraw, type: :model do
 
         before { create(:declaration, application:, declaration_type: "retained-1") }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :no_started_declarations)
-        end
+        it { expect(instance).to have_error(:participant, :no_started_declarations, "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance") }
       end
     end
   end

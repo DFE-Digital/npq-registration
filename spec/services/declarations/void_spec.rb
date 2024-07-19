@@ -18,10 +18,7 @@ RSpec.describe Declarations::Void, type: :model do
           context "when the declaration is already voided" do
             before { declaration.update!(state: :voided) }
 
-            it "adds an error to the declaration attribute" do
-              expect(instance).to be_invalid
-              expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :already_voided)
-            end
+            it { expect(instance).to have_error(:declaration, :already_voided, "This declaration has already been voided.") }
           end
         end
       end
@@ -36,20 +33,14 @@ RSpec.describe Declarations::Void, type: :model do
             context "when the declaration already has a #{ineligible_state} statement item" do
               before { create(:statement_item, declaration:, state: ineligible_state) }
 
-              it "adds an error to the declaration attribute" do
-                expect(instance).to be_invalid
-                expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :not_already_refunded)
-              end
+              it { expect(instance).to have_error(:declaration, :not_already_refunded, "The declaration will or has been be refunded.") }
             end
           end
 
           context "when there is no output fee statement" do
             before { statement.update!(output_fee: false) }
 
-            it "adds an error to the declaration attribute" do
-              expect(instance).to be_invalid
-              expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :no_output_fee_statement)
-            end
+            it { expect(instance).to have_error(:declaration, :no_output_fee_statement, "You cannot submit or void declarations for the #{declaration.cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
           end
         end
       end
@@ -58,10 +49,7 @@ RSpec.describe Declarations::Void, type: :model do
         context "when the declaration is #{state}" do
           before { declaration.update!(state:) }
 
-          it "adds an error to the declaration attribute" do
-            expect(instance).to be_invalid
-            expect(instance.errors.first).to have_attributes(attribute: :declaration, type: :must_be_paid)
-          end
+          it { expect(instance).to have_error(:declaration, :must_be_paid, "The declaration must be paid before it can be clawed back.") }
         end
       end
     end

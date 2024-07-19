@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Applications::Accept, :with_default_schedules do
+RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
   let(:params) do
     {
       application:,
@@ -33,34 +33,18 @@ RSpec.describe Applications::Accept, :with_default_schedules do
     end
 
     describe "validations" do
-      context "when the npq application is missing" do
-        let(:application) {}
-
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("The entered '#/application' is missing from your request. Check details and try again.")
-        end
-      end
+      it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
 
       context "when the npq application is already accepted" do
         let(:application) { create(:application, :accepted) }
 
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("This NPQ application has already been accepted")
-        end
+        it { is_expected.to have_error(:application, :has_already_been_accepted, "This NPQ application has already been accepted") }
       end
 
       context "when the npq application is rejected" do
         let(:application) { create(:application, :rejected) }
 
-        it "is invalid and returns an error message" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.messages_for(:application)).to include("Once rejected an application cannot change state")
-        end
+        it { is_expected.to have_error(:application, :cannot_change_from_rejected, "Once rejected an application cannot change state") }
       end
 
       context "when the existing data is invalid" do
@@ -152,8 +136,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
         it "attaches errors to the object" do
           service.accept
-
-          expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
+          expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
         end
       end
 
@@ -186,8 +169,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
         it "attaches errors to the object" do
           service.accept
-
-          expect(service.errors.messages_for(:application)).to include("The participant has already had an application accepted for this course.")
+          expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
         end
       end
     end
@@ -225,7 +207,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
       it "cannot then be accepted" do
         service.accept
         expect(application.reload).to be_rejected
-        expect(service.errors.messages_for(:application)).to be_present
+        expect(service).to have_error(:application, :cannot_change_from_rejected, "Once rejected an application cannot change state")
       end
     end
 
@@ -274,9 +256,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
         it "does not set funded place if eligible for funding is false" do
           application.update!(eligible_for_funding: false)
-
-          service.accept
-          expect(service.errors.messages_for(:application)).to include("The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+          expect(service).to have_error(:application, :not_eligible_for_funded_place, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
         end
       end
 
@@ -296,7 +276,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
         context "when funding_cap is true" do
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
         end
 
@@ -316,7 +296,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
         end
 
@@ -325,7 +305,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
         end
 
@@ -334,7 +314,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
         end
 
@@ -343,7 +323,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
           it "returns funding_place is required error" do
             service.accept
-            expect(service.errors.messages_for(:funded_place)).to include("Set '#/funded_place' to true or false.")
+            expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
         end
       end
@@ -394,7 +374,7 @@ RSpec.describe Applications::Accept, :with_default_schedules do
 
         it "returns validation error" do
           expect(service.accept).to be_falsey
-          expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+          expect(service).to have_error(:schedule_identifier, :invalid_for_course, "Selected schedule is not valid for the course")
         end
       end
     end
