@@ -5,13 +5,11 @@ FactoryBot.define do
       course { create(:course) }
     end
 
-    application { create(:application, :accepted, user:, course:) }
+    application { association :application, :accepted, user:, course: }
     lead_provider { application&.lead_provider || build(:lead_provider) }
     cohort { application&.cohort || build(:cohort, :current) }
-
     declaration_type { "started" }
     declaration_date { Date.current }
-
     state { "submitted" }
 
     trait :submitted_or_eligible do

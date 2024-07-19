@@ -9,7 +9,6 @@ FactoryBot.define do
     passed
     completion_date { 1.week.ago }
     ecf_id { SecureRandom.uuid }
-
     declaration { association :declaration, :completed, :payable, lead_provider:, course:, user: }
 
     trait :passed do

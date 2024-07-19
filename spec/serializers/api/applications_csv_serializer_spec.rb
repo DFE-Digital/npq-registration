@@ -11,7 +11,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
     let(:applications) do
       create_list(:application, 2,
                   :accepted,
-                  :application_for_private_childcare_provider,
+                  :with_private_childcare_provider,
                   employer_name: "Employer Name",
                   employment_role: "Employment Role")
     end
