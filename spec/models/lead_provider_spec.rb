@@ -127,8 +127,11 @@ RSpec.describe LeadProvider do
           "Ambition Institute",
           "Best Practice Network",
           "Church of England",
+          "LLSE",
           "National Institute of Teaching",
+          "Teacher Development Trust",
           "Teach First",
+          "University College London (UCL) Institute of Education",
         ])
       end
     end
