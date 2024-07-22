@@ -9,68 +9,68 @@ FactoryBot.define do
       Course.find_by(identifier:) || new(**attributes)
     end
 
-    trait :ehco do
+    trait :early_headship_coaching_offer do
       sequence(:name) { |n| "NPQ Early Headship Coaching Offer Course #{n}" }
       identifier { "npq-early-headship-coaching-offer" }
       course_group { CourseGroup.find_or_create_by(name: "ehco") }
     end
 
-    trait :aso do
+    trait :additional_support_offer do
       sequence(:name) { |n| "NPQ Additional Support Offer Course #{n}" }
       identifier { "npq-additional-support-offer" }
       course_group { CourseGroup.find_or_create_by(name: "support") }
       display { false }
     end
 
-    trait :eyl do
+    trait :early_years_leadership do
       sequence(:name) { |n| "NPQ Early Years Leadership Course #{n}" }
       identifier { "npq-early-years-leadership" }
       course_group { CourseGroup.find_or_create_by(name: "leadership") }
     end
 
-    trait :sl do
+    trait :senior_leadership do
       sequence(:name) { |n| "NPQ Senior Leadership Course #{n}" }
       identifier { "npq-senior-leadership" }
       course_group { CourseGroup.find_or_create_by(name: "leadership") }
     end
 
-    trait :ll do
+    trait :leading_literacy do
       sequence(:name) { |n| "NPQ Leading Literacy Course #{n}" }
       identifier { "npq-leading-literacy" }
       course_group { CourseGroup.find_or_create_by(name: "specialist") }
     end
 
-    trait :ltd do
+    trait :leading_teaching_development do
       sequence(:name) { |n| "NPQ Leading Teaching Development Course #{n}" }
       identifier { "npq-leading-teaching-development" }
       course_group { CourseGroup.find_or_create_by(name: "specialist") }
     end
 
-    trait :lt do
+    trait :leading_teaching do
       sequence(:name) { |n| "NPQ Leading Teaching Course #{n}" }
       identifier { "npq-leading-teaching" }
       course_group { CourseGroup.find_or_create_by(name: "specialist") }
     end
 
-    trait :hs do
+    trait :headship do
       sequence(:name) { |n| "NPQ Headship Course #{n}" }
       identifier { "npq-headship" }
       course_group { CourseGroup.find_or_create_by(name: "leadership") }
     end
 
-    trait :el do
+    trait :executive_leadership do
       sequence(:name) { |n| "NPQ Executive Leadership Course #{n}" }
       identifier { "npq-executive-leadership" }
       course_group { CourseGroup.find_or_create_by(name: "leadership") }
     end
 
-    trait :lbc do
+    trait :leading_behaviour_culture do
       sequence(:name) { |n| "NPQ Leading Behaviour Culture Course #{n}" }
       identifier { "npq-leading-behaviour-culture" }
       course_group { CourseGroup.find_or_create_by(name: "specialist") }
     end
 
-    trait :lpm do
+    trait :leading_primary_mathmatics do
       sequence(:name) { |n| "NPQ Leading Primary Mathematics Course #{n}" }
       identifier { "npq-leading-primary-mathematics" }
       course_group { CourseGroup.find_or_create_by(name: "specialist") }
@@ -82,17 +82,17 @@ FactoryBot.define do
       course_group { CourseGroup.find_or_create_by(name: "leadership") }
     end
 
-    factory :"npq-executive-leadership", traits: [:el]
-    factory :"npq-leading-behaviour-culture", traits: [:lbc]
-    factory :"npq-headship", traits: [:hs]
-    factory :"npq-leading-teaching", traits: [:lt]
-    factory :"npq-leading-teaching-development", traits: [:ltd]
-    factory :"npq-leading-literacy", traits: [:ll]
-    factory :"npq-senior-leadership", traits: [:sl]
-    factory :"npq-early-years-leadership", traits: [:eyl]
-    factory :"npq-additional-support-offer", traits: [:aso]
-    factory :"npq-early-headship-coaching-offer", traits: [:ehco]
-    factory :"npq-leading-primary-mathematics", traits: [:lpm]
+    factory :"npq-executive-leadership", traits: [:executive_leadership]
+    factory :"npq-leading-behaviour-culture", traits: [:leading_behaviour_culture]
+    factory :"npq-headship", traits: [:headship]
+    factory :"npq-leading-teaching", traits: [:leading_teaching]
+    factory :"npq-leading-teaching-development", traits: [:leading_teaching_development]
+    factory :"npq-leading-literacy", traits: [:leading_literacy]
+    factory :"npq-senior-leadership", traits: [:senior_leadership]
+    factory :"npq-early-years-leadership", traits: [:early_years_leadership]
+    factory :"npq-additional-support-offer", traits: [:additional_support_offer]
+    factory :"npq-early-headship-coaching-offer", traits: [:early_headship_coaching_offer]
+    factory :"npq-leading-primary-mathematics", traits: [:leading_primary_mathmatics]
     factory :"npq-senco", traits: [:senco]
   end
 end

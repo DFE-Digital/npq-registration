@@ -52,7 +52,7 @@ RSpec.describe "Declarations endpoints", type: :request, openapi_spec: "v2/swagg
     let(:type) { "participant-declaration" } # check
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") }
-    let(:course) { create(:course, :sl, course_group:) }
+    let(:course) { create(:course, :senior_leadership, course_group:) }
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
     let(:declaration_date) { schedule.applies_from + 1.day }

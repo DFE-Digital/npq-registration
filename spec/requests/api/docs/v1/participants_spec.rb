@@ -4,7 +4,7 @@ require "swagger_helper"
 RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v1/swagger.yaml" do
   include_context "with authorization for api doc request"
 
-  let(:course) { create(:course, :ehco) }
+  let(:course) { create(:course, :early_headship_coaching_offer) }
   let(:cohort) { create(:cohort, :current) }
   let(:schedule) { create(:schedule, :npq_ehco_december, cohort:) }
   let(:application) do
