@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require "active_support/testing/time_helpers"
+
 module ValidTestDataGenerators
   class ApplicationsPopulater
+    include ActiveSupport::Testing::TimeHelpers
+
     class << self
       def populate(lead_provider:, cohort:, number_of_participants: 50)
         new(lead_provider:, cohort:, number_of_participants:).populate
@@ -14,6 +18,7 @@ module ValidTestDataGenerators
       logger.info "ApplicationsPopulater: Started!"
 
       ActiveRecord::Base.transaction do
+        prepare_cohort!
         create_participants!
       end
 
@@ -33,7 +38,18 @@ module ValidTestDataGenerators
     end
 
     def create_participants!
-      number_of_participants.times { create_participant(school: School.open.order("RANDOM()").first) }
+      number_of_participants.times do
+        travel_to(rand(3.years.ago..Time.zone.now)) do
+          create_participant(school: School.open.order("RANDOM()").first)
+        end
+      end
+    end
+
+    def prepare_cohort!
+      cohort.tap do |c|
+        c.funding_cap = cohort.start_year >= Cohort.current.start_year
+        c.save!
+      end
     end
 
     def create_participant(school:)
@@ -46,6 +62,15 @@ module ValidTestDataGenerators
       accept_application(application)
       create_declarations(application)
       create_outcomes(application)
+      void_completed_declaration_for(application)
+
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+      if Faker::Boolean.boolean(true_ratio: 0.5)
+        defer_application(application)
+      else
+        withdrawn_application(application)
+      end
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
@@ -95,13 +120,27 @@ module ValidTestDataGenerators
       application.reload
     end
 
+    def defer_application(application)
+      Participants::Defer.new(lead_provider:,
+                              participant: application.user,
+                              course_identifier: application.course.identifier,
+                              reason: Participants::Defer::DEFERRAL_REASONS.sample).defer
+    end
+
+    def withdrawn_application(application)
+      Participants::Withdraw.new(lead_provider:,
+                                 participant: application.user,
+                                 course_identifier: application.course.identifier,
+                                 reason: Participants::Withdraw::WITHDRAWAL_REASONS.sample).withdraw
+    end
+
     def create_declarations(application)
       %w[started retained-1 retained-2 completed].each do |declaration_type|
         break if Faker::Boolean.boolean(true_ratio: 0.5)
 
         FactoryBot.create(
           :declaration,
-          :submitted_or_eligible,
+          state: Declaration.states.keys.sample,
           application:,
           declaration_type:,
         )
@@ -111,16 +150,25 @@ module ValidTestDataGenerators
     def create_outcomes(application)
       completed_declaration = application.declarations.eligible_for_outcomes(lead_provider, application.course.identifier).first
       return unless completed_declaration
+      return unless CourseGroup.joins(:courses).leadership_or_specialist.where(courses: { identifier: application.course.identifier }).exists?
 
-      ParticipantOutcomes::Create::STATES.reverse.each do |state|
-        ParticipantOutcomes::Create.new(lead_provider:,
-                                        participant: application.user,
-                                        course_identifier: application.course.identifier,
-                                        state:,
-                                        completion_date: completed_declaration.declaration_date.to_s).create_outcome
+      ParticipantOutcomes::Create::STATES.reverse.each do |state_trait|
+        FactoryBot.create(
+          :participant_outcome,
+          state_trait,
+          declaration: completed_declaration,
+          completion_date: completed_declaration.declaration_date,
+        )
 
-        break if Faker::Boolean.boolean(true_ratio: 0.3)
+        break if Faker::Boolean.boolean(true_ratio: 0.2)
       end
+    end
+
+    def void_completed_declaration_for(application)
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+      completed_declaration = application.declarations.eligible_for_outcomes(lead_provider, application.course.identifier).first
+      Declarations::Void.new(declaration: completed_declaration).void
     end
   end
 end
