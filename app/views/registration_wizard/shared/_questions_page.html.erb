@@ -10,12 +10,13 @@
     <%= form_with model: form, url: registration_wizard_form_url(form), scope: 'registration_wizard', method: :patch do |f| %>
       <%= f.govuk_error_summary %>
 
-      <% form.questions.each do |question| %>
+      <% content_for :title do %>
+        Check your details
+        <%= form.errors.present? ? ", with validation errors." : nil %>
+      <% end %>
 
-        <% content_for :title do %>
-          <%= form.errors.present? ? "Error: " : nil %>
-          <%= question.question_text %>
-        <% end %>
+
+      <% form.questions.each do |question| %>
 
         <%=
           render(
