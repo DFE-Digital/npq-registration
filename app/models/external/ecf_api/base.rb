@@ -2,6 +2,8 @@ module External
   module EcfAPI
     class ConnectionWithAuthHeader < JsonApiClient::Connection
       def run(request_method, path, params: nil, headers: {}, body: nil)
+        raise JsonApiClient::Errors::ServiceUnavailable if Rails.application.config.npq_separation[:ecf_api_disabled]
+
         super(
           request_method,
           path,

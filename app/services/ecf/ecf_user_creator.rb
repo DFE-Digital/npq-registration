@@ -7,6 +7,8 @@ module Ecf
     end
 
     def call
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       remote = External::EcfAPI::Npq::User.new(
         email: user.email,
         get_an_identity_id: user.get_an_identity_id,

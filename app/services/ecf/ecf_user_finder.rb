@@ -7,6 +7,8 @@ module Ecf
     end
 
     def call
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       External::EcfAPI::User.where(email: user.email).first
     end
   end

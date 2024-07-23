@@ -1,6 +1,8 @@
 module Ecf
   class EcfApplicationSynchronization
     def call
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       uri = build_uri
       request = build_http_get_request(uri)
       response = send_http_request(uri, request)

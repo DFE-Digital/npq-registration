@@ -6,6 +6,8 @@ module Ecf
     end
 
     def call
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       applications.find_each.with_index do |application, i|
         sleep(0.1) # Ensure that ECF API is not overloaded
 

@@ -9,5 +9,6 @@ Rails.application.configure do
     admin_portal_enabled: true,
     api_enabled: true,
     migration_enabled: true,
+    ecf_api_disabled: false,
   }
 end

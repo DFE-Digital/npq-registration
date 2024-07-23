@@ -7,6 +7,8 @@ module Ecf
     end
 
     def call
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       profile = External::EcfAPI::NpqProfile.find(application.ecf_id).first
       profile.eligible_for_funding = application.eligible_for_funding
       profile.funding_eligiblity_status_code = application.funding_eligiblity_status_code
@@ -16,6 +18,8 @@ module Ecf
     end
 
     def tsf_data_field_update
+      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
       profile = External::EcfAPI::NpqProfile.find(application.ecf_id).first
       profile.primary_establishment = application.primary_establishment
       profile.number_of_pupils = application.number_of_pupils
