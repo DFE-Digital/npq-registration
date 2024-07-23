@@ -10,7 +10,7 @@ FactoryBot.define do
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
-    cohort
+    cohort { create(:cohort, :current) }
     teacher_catchment { "england" }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
@@ -57,6 +57,7 @@ FactoryBot.define do
     trait :accepted do
       lead_provider_approval_status { :accepted }
       schedule { Schedule.find_by(cohort:, course_group: course.course_group) || create(:schedule, course_group: course.course_group, cohort:) }
+      funded_place { !!eligible_for_funding }
     end
 
     trait :rejected do
@@ -74,7 +75,6 @@ FactoryBot.define do
     trait :eligible_for_funded_place do
       accepted
       eligible_for_funding
-      funded_place { true }
 
       after(:create) do |application|
         application.cohort.update!(funding_cap: true)
