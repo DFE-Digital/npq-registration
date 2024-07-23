@@ -34,7 +34,7 @@ module ValidTestDataGenerators
       @cohort = cohort
       @number_of_participants = number_of_participants
       @logger = logger
-      @courses = Course.all.reject { |c| c.identifier == "npq-early-headship-coaching-offer" }
+      @courses = Course.all.reject { |c| c.identifier == "npq-additional-support-offer" }
     end
 
     def create_participants!
