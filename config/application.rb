@@ -34,5 +34,9 @@ module NpqRegistration
     config.action_mailer.notify_settings = {
       api_key: ENV["GOVUK_NOTIFY_API_KEY"]
     }
+
+    # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
+    require "middleware/time_traveler"
+    config.middleware.use Middleware::TimeTraveler
   end
 end
