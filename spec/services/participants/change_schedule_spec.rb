@@ -223,6 +223,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
       context "when existing declarations is not valid for new_schedule" do
         before do
+          schedule.update!(applies_from: declaration_date.prev_week)
           create(
             :declaration,
             application:,

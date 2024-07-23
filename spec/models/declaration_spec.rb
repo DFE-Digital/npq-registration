@@ -16,6 +16,39 @@ RSpec.describe Declaration, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:declaration_type) }
     it { is_expected.to validate_presence_of(:declaration_date) }
+
+    context "when the declaration_date is in the future" do
+      before { subject.declaration_date = 1.day.from_now }
+
+      it "has an error on create" do
+        expect(subject.save).to be_falsey
+        expect(subject).to have_error(:declaration_date, :future_declaration_date, "The '#/declaration_date' value cannot be a future date. Check the date and try again.")
+      end
+
+      it "has an error on update" do
+        subject.declaration_date = 1.day.ago
+        expect(subject.save).to be_truthy
+
+        subject.declaration_date = 1.day.from_now
+        expect(subject.save).to be_falsey
+        expect(subject).to have_error(:declaration_date, :future_declaration_date, "The '#/declaration_date' value cannot be a future date. Check the date and try again.")
+      end
+    end
+
+    context "when declaration_date is before the schedule start" do
+      before { subject.declaration_date = subject.application.schedule.applies_from.prev_week }
+
+      it "has a meaningful error" do
+        expect(subject).to be_invalid
+        expect(subject).to have_error(:declaration_date, :declaration_before_schedule_start, "Enter a '#/declaration_date' that's on or after the schedule start.")
+      end
+    end
+
+    context "when declaration_date is at the schedule start" do
+      let(:schedule_applies_from_date) { declaration_date }
+
+      it { is_expected.to be_valid }
+    end
   end
 
   describe "delegations" do

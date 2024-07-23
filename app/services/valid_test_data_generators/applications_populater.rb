@@ -39,9 +39,7 @@ module ValidTestDataGenerators
 
     def create_participants!
       number_of_participants.times do
-        travel_to(rand(3.years.ago..Time.zone.now)) do
-          create_participant(school: School.open.order("RANDOM()").first)
-        end
+        create_participant(school: School.open.order("RANDOM()").first)
       end
     end
 
@@ -55,32 +53,37 @@ module ValidTestDataGenerators
     def create_participant(school:)
       course = courses.sample
       user = create_user
-      application = create_application(user, school, course)
+      schedule = Schedule.where(cohort:, course_group: course.course_group).sample
+      application = create_application(user, school, course, schedule)
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
-      accept_application(application)
-      create_participant_id_change(application)
-      create_declarations(application)
-      create_outcomes(application)
-      void_completed_declaration_for(application)
+      current_date = schedule.applies_from + rand(1..100)
 
-      return if Faker::Boolean.boolean(true_ratio: 0.3)
+      travel_to(current_date) do
+        accept_application(application)
+        create_participant_id_change(application)
+        create_declarations(application)
+        create_outcomes(application)
+        void_completed_declaration_for(application)
 
-      if Faker::Boolean.boolean(true_ratio: 0.5)
-        defer_application(application)
-      else
-        withdrawn_application(application)
+        return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+        if Faker::Boolean.boolean(true_ratio: 0.5)
+          defer_application(application)
+        else
+          withdrawn_application(application)
+        end
+
+        return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+        course = courses.reject { |c| c.identifier == course.identifier }.sample
+        application = create_application(user, school, course, schedule)
+
+        return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+        reject_application(application)
       end
-
-      return if Faker::Boolean.boolean(true_ratio: 0.3)
-
-      course = courses.reject { |c| c.identifier == course.identifier }.sample
-      application = create_application(user, school, course)
-
-      return if Faker::Boolean.boolean(true_ratio: 0.3)
-
-      reject_application(application)
     end
 
     def create_participant_id_change(application)
@@ -100,7 +103,7 @@ module ValidTestDataGenerators
                         trn_auto_verified: true)
     end
 
-    def create_application(user, school, course)
+    def create_application(user, school, course, schedule)
       FactoryBot.create(:application,
                         :pending,
                         :with_random_work_setting,
@@ -109,6 +112,7 @@ module ValidTestDataGenerators
                         user:,
                         cohort:,
                         course:,
+                        schedule:,
                         headteacher_status: Application.headteacher_statuses.keys.sample,
                         eligible_for_funding: Faker::Boolean.boolean,
                         itt_provider: IttProvider.currently_approved.order("RANDOM()").first)
@@ -119,7 +123,11 @@ module ValidTestDataGenerators
                        application.eligible_for_funding? ? Faker::Boolean.boolean(true_ratio: 0.7) : false
                      end
 
-      Applications::Accept.new(application:, funded_place:).accept
+      Applications::Accept.new(
+        application:,
+        funded_place:,
+        schedule_identifier: application.schedule.identifier,
+      ).accept
       application.reload
     end
 
