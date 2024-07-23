@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :schedule do
     course_group
-    cohort
+    cohort { create(:cohort, :current) }
 
     sequence(:name) { |n| "Schedule #{n}" }
     sequence(:identifier) { |n| "schedule-#{n}" }

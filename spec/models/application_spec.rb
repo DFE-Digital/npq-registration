@@ -26,6 +26,25 @@ RSpec.describe Application do
 
       it { is_expected.to have_error(:schedule, :cohort_mismatch, "The schedule cohort must match the application cohort") }
     end
+
+    context "when accepted and funding_cap" do
+      subject { build(:application, :accepted, cohort: create(:cohort, :current, :with_funding_cap)) }
+
+      it "validates funded_place boolean" do
+        subject.funded_place = nil
+
+        expect(subject).to be_invalid
+        expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
+      end
+
+      it "validates funded_place eligibility" do
+        subject.funded_place = true
+        subject.eligible_for_funding = false
+
+        expect(subject).to be_invalid
+        expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+      end
+    end
   end
 
   describe "enums" do
