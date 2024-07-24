@@ -45,7 +45,7 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when declaration_date is at the schedule start" do
-      let(:schedule_applies_from_date) { declaration_date }
+      before { subject.declaration_date = subject.application.schedule.applies_from }
 
       it { is_expected.to be_valid }
     end
@@ -329,7 +329,7 @@ RSpec.describe Declaration, type: :model do
 
       before do
         Course::IDENTIFIERS.excluding(course_identifier).each do |identifier|
-          create(:declaration).application.update!(course: Course.find_by(identifier:))
+          create(:declaration, course: Course.find_by(identifier:))
         end
       end
 

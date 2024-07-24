@@ -5,7 +5,7 @@ FactoryBot.define do
     application_for_school
 
     user
-    course
+    course { create(Course::IDENTIFIERS.sample.to_sym) }
     lead_provider { LeadProvider.all.sample }
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }

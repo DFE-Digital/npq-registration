@@ -38,6 +38,7 @@ en:
 
   schedule: &schedule
     cohort_mismatch: The schedule cohort must match the application cohort
+    invalid_for_course: Selected schedule is not valid for the course
 
   funded_place: &funded_place
     inclusion: Set '#/%{parameterized_attribute}' to true or false.
