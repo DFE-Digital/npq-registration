@@ -25,6 +25,10 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
       let(:environment) { "separation" }
 
       it "creates users # given in the params" do
+        # Prevents participant id changes from being created and their
+        # respective users being counted as part of this test.
+        allow(Faker::Boolean).to receive(:boolean).and_return(true)
+
         expect {
           subject.populate
         }.to change(User, :count).by(30)
@@ -52,6 +56,14 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
         expect {
           subject.populate
         }.to(change { Application.accepted.count })
+      end
+
+      it "creates participant id changes" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(false)
+
+        expect {
+          subject.populate
+        }.to(change(ParticipantIdChange, :count))
       end
 
       it "creates rejected applications" do

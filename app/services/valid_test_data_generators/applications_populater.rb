@@ -60,6 +60,7 @@ module ValidTestDataGenerators
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
       accept_application(application)
+      create_participant_id_change(application)
       create_declarations(application)
       create_outcomes(application)
       void_completed_declaration_for(application)
@@ -80,6 +81,13 @@ module ValidTestDataGenerators
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
       reject_application(application)
+    end
+
+    def create_participant_id_change(application)
+      return if Faker::Boolean.boolean(true_ratio: 0.3)
+
+      user = application.user
+      FactoryBot.create(:participant_id_change, to_participant: user, user:)
     end
 
     def create_user
