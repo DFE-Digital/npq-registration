@@ -54,27 +54,33 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
           end
         end
 
-        context "when the latest outcome is voided" do
-          before { create(:participant_outcome, :voided, declaration:) }
+        context "when there are participant outcomes" do
+          let!(:voided_outcome) { create(:participant_outcome, :voided, declaration:) }
+          let!(:passed_outcome) { create(:participant_outcome, :passed, declaration:) }
+          let!(:failed_outcome) { create(:participant_outcome, :failed, declaration:) }
 
-          it "serializes `has_passed`" do
-            expect(attributes["has_passed"]).to be_nil
+          context "when the latest outcome is voided" do
+            before { voided_outcome.update!(created_at: 1.day.from_now) }
+
+            it "serializes `has_passed`" do
+              expect(attributes["has_passed"]).to be_nil
+            end
           end
-        end
 
-        context "when the latest outcome has passed" do
-          before { create(:participant_outcome, :passed, declaration:) }
+          context "when the latest outcome has passed" do
+            before { passed_outcome.update!(created_at: 1.day.from_now) }
 
-          it "serializes `has_passed`" do
-            expect(attributes["has_passed"]).to be(true)
+            it "serializes `has_passed`" do
+              expect(attributes["has_passed"]).to be(true)
+            end
           end
-        end
 
-        context "when the latest outcome has failed" do
-          before { create(:participant_outcome, :failed, declaration:) }
+          context "when the latest outcome has failed" do
+            before { failed_outcome.update!(created_at: 1.day.from_now) }
 
-          it "serializes `has_passed`" do
-            expect(attributes["has_passed"]).to be(false)
+            it "serializes `has_passed`" do
+              expect(attributes["has_passed"]).to be(false)
+            end
           end
         end
       end
