@@ -6,8 +6,8 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :sl, course_group:) }
-  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
+  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
   let(:application) do
     create(
       :application,
@@ -79,7 +79,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
                   "The NPQ application after changing the funded place",
                   "#/components/schemas/ApplicationResponse",
                   "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
-    let(:application) { create(:application, :eligible_for_funded_place, lead_provider:, schedule:) }
+    let(:application) { create(:application, :eligible_for_funded_place, lead_provider:, schedule:, cohort:) }
     let(:resource) { application }
     let(:type) { "npq-application-change-funded-place" }
     let(:attributes) { { funded_place: true } }
