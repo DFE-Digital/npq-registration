@@ -56,6 +56,7 @@ module Declarations
         .includes(
           :cohort,
           :lead_provider,
+          :participant_outcomes,
           application: %i[
             user
             course

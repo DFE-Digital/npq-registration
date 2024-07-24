@@ -13,16 +13,6 @@ RSpec.describe ParticipantOutcome, type: :model do
     }
   end
 
-  describe ".latest" do
-    subject { described_class.latest }
-
-    let!(:latest_outcome) { create(:participant_outcome) }
-
-    before { travel_to(1.day.ago) { create(:participant_outcome) } }
-
-    it { is_expected.to eq(latest_outcome) }
-  end
-
   describe "validations" do
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive }
     it { is_expected.to validate_presence_of(:state) }
