@@ -180,6 +180,6 @@ private
   end
 
   def schedule_cohort_matches
-    errors.add(:schedule_identifier, :cohort_mismatch) if schedule && schedule.cohort != cohort
+    errors.add(:schedule, :cohort_mismatch) if schedule && schedule.cohort != cohort
   end
 end
