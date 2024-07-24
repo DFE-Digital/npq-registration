@@ -46,7 +46,10 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
       context "when the participant has completed declarations with a different course identifier" do
         let(:other_course) { Course.find_by(identifier: described_class::PERMITTED_COURSES.excluding(course_identifier).sample) }
 
-        before { completed_declaration.application.update!(course: other_course) }
+        before do
+          other_course.update!(course_group: course.course_group)
+          completed_declaration.application.update!(course: other_course)
+        end
 
         it { is_expected.to have_error(:base, :no_completed_declarations, "The participant has not had a 'completed' declaration submitted for them. Therefore you cannot update their outcome.") }
       end

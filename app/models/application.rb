@@ -76,6 +76,7 @@ class Application < ApplicationRecord
             inclusion: { in: [true, false] },
             if: :validate_funded_place?
   validate :eligible_for_funded_place
+  validate :validate_permitted_schedule_for_course
 
   # `eligible_for_dfe_funding?`  takes into consideration what we know
   # about user eligibility plus if it has been previously funded. We need
@@ -198,6 +199,15 @@ private
 
     if funded_place && !eligible_for_funding
       errors.add(:funded_place, :not_eligible)
+    end
+  end
+
+  def validate_permitted_schedule_for_course
+    return if errors.any?
+    return unless accepted? && schedule && course
+
+    unless schedule.course_group.courses.include?(course)
+      errors.add(:schedule, :invalid_for_course)
     end
   end
 end
