@@ -47,7 +47,8 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
                     "#/components/schemas/ApplicationAcceptRequest" do
       let(:resource) { application }
       let(:type) { "npq-application-accept" }
-      let(:attributes) { { funded_place: false, schedule_identifier: "npq-leadership-spring" } }
+      let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
+      let(:attributes) { { funded_place: false, schedule_identifier: new_schedule.identifier } }
       let(:invalid_attributes) { { funded_place: nil } }
       let(:response_example) do
         base_response_example.tap do |example|

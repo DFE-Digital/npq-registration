@@ -347,10 +347,8 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
       let(:params) { { application:, schedule_identifier: new_schedule.identifier } }
 
-      before { new_schedule }
-
       context "when changing to correct schedule" do
-        let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
+        let!(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
 
         it "changes schedule successfully" do
           expect(ApplicationState.count).to be(0)
@@ -371,6 +369,17 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         let(:new_course_group) { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
         let(:new_course) { create(:course, :senior_leadership, course_group: new_course_group) }
         let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group: new_course_group, cohort:) }
+
+        before { new_schedule }
+
+        it "returns validation error" do
+          expect(service.accept).to be_falsey
+          expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
+        end
+      end
+
+      context "when a new schedule is not found given a wrong identifier" do
+        let(:params) { { application:, schedule_identifier: "any-schedule" } }
 
         it "returns validation error" do
           expect(service.accept).to be_falsey
