@@ -11,7 +11,12 @@ module API
       field(:course_identifier)
       field(:declaration_date)
       field(:state) { |declaration| declaration.state.dasherize }
-      field(:has_passed) { |declaration| declaration.participant_outcomes.latest&.has_passed? }
+      field(:has_passed) do |declaration|
+        declaration
+          .participant_outcomes
+          .max_by(&:created_at)
+          &.has_passed?
+      end
 
       view :v1 do
         field(:voided_state?, name: :voided)
