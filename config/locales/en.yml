@@ -116,7 +116,14 @@ en:
               <<: *funded_place
         declaration:
           attributes:
-            <<: *declaration
+            declaration_date:
+              *declaration_date
+            declaration_type:
+              *declaration_type
+        participant_outcome:
+          attributes:
+            completion_date:
+              *completion_date
 
   activemodel:
     attributes:
