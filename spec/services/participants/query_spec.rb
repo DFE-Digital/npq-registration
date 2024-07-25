@@ -47,9 +47,19 @@ RSpec.describe Participants::Query do
           end
         end
 
+        context "when lead provider is blank" do
+          let(:params) { { lead_provider: " " } }
+
+          it "does not filter by lead provider" do
+            condition_string = %("lead_provider_id")
+
+            expect(query.scope.to_sql).not_to include(condition_string)
+          end
+        end
+
         context "when a lead provider is not supplied" do
           it "does not filter by lead provider" do
-            condition_string = %("applications"."lead_provider_id" =)
+            condition_string = %("lead_provider_id")
 
             expect(query.scope.to_sql).not_to include(condition_string)
           end
@@ -67,9 +77,19 @@ RSpec.describe Participants::Query do
           end
         end
 
+        context "when updated since is blank" do
+          let(:params) { { updated_since: " " } }
+
+          it "does not filter by updated since" do
+            condition_string = %("updated_at")
+
+            expect(query.scope.to_sql).not_to include(condition_string)
+          end
+        end
+
         context "when a updated since is not supplied" do
           it "does not filter by updated since" do
-            condition_string = %("applications"."updated_at" >=)
+            condition_string = %("updated_at")
 
             expect(query.scope.to_sql).not_to include(condition_string)
           end
@@ -89,7 +109,17 @@ RSpec.describe Participants::Query do
 
         context "when a training status is not supplied" do
           it "does not filter by training status" do
-            condition_string = %("applications"."training_status" =)
+            condition_string = %("training_status")
+
+            expect(query.scope.to_sql).not_to include(condition_string)
+          end
+        end
+
+        context "when training status is blank" do
+          let(:params) { { training_status: " " } }
+
+          it "does not filter by from training status" do
+            condition_string = %("training_status")
 
             expect(query.scope.to_sql).not_to include(condition_string)
           end
@@ -99,7 +129,7 @@ RSpec.describe Participants::Query do
           let(:params) { { training_status: "any" } }
 
           it "does not filter by training status" do
-            condition_string = %("applications"."training_status" =)
+            condition_string = %("training_status")
 
             expect(query.scope.to_sql).not_to include(condition_string)
           end
@@ -120,7 +150,17 @@ RSpec.describe Participants::Query do
 
         context "when a from participant id is not supplied" do
           it "does not filter by from participant id" do
-            condition_string = %("participant_id_changes"."from_participant_id" =)
+            condition_string = %("from_participant_id")
+
+            expect(query.scope.to_sql).not_to include(condition_string)
+          end
+        end
+
+        context "when a from participant id is blank" do
+          let(:params) { { from_participant_id: " " } }
+
+          it "does not filter by from participant id" do
+            condition_string = %("from_participant_id")
 
             expect(query.scope.to_sql).not_to include(condition_string)
           end

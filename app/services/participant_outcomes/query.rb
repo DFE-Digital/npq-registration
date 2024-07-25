@@ -2,6 +2,7 @@ module ParticipantOutcomes
   class Query
     include API::Concerns::Orderable
     include Queries::ConditionFormats
+    include API::Concerns::FilterIgnorable
 
     attr_reader :scope, :sort
 
@@ -20,19 +21,19 @@ module ParticipantOutcomes
   private
 
     def where_lead_provider_is(lead_provider)
-      return if lead_provider == :ignore
+      return if ignore?(filter: lead_provider)
 
       scope.merge!(ParticipantOutcome.where(declaration: { lead_provider: }))
     end
 
     def where_participant_ids_in(participant_ids)
-      return if participant_ids == :ignore
+      return if ignore?(filter: participant_ids)
 
       scope.merge!(ParticipantOutcome.where(user: { ecf_id: extract_conditions(participant_ids) }))
     end
 
     def where_created_since(created_since)
-      return if created_since == :ignore
+      return if ignore?(filter: created_since)
 
       scope.merge!(ParticipantOutcome.where(created_at: created_since..))
     end

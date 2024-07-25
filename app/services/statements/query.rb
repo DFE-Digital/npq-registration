@@ -1,6 +1,7 @@
 module Statements
   class Query
     include Queries::ConditionFormats
+    include API::Concerns::FilterIgnorable
 
     attr_reader :scope
 
@@ -28,31 +29,31 @@ module Statements
   private
 
     def where_lead_provider_is(lead_provider)
-      return if lead_provider == :ignore
+      return if ignore?(filter: lead_provider)
 
       scope.merge!(Statement.where(lead_provider:))
     end
 
     def where_cohort_start_year_in(cohort_start_years)
-      return if cohort_start_years == :ignore
+      return if ignore?(filter: cohort_start_years)
 
       scope.merge!(Statement.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
     end
 
     def where_updated_since(updated_since)
-      return if updated_since == :ignore
+      return if ignore?(filter: updated_since)
 
       scope.merge!(Statement.where(updated_at: updated_since..))
     end
 
     def where_state_is(state)
-      return if state == :ignore
+      return if ignore?(filter: state)
 
       scope.merge!(Statement.with_state(extract_conditions(state)))
     end
 
     def where_output_fee_is(output_fee)
-      return if output_fee == :ignore
+      return if ignore?(filter: output_fee)
 
       scope.merge!(Statement.with_output_fee(output_fee:))
     end

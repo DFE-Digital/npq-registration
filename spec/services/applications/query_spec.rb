@@ -8,7 +8,7 @@ RSpec.describe Applications::Query do
       application1 = create(:application, lead_provider:)
       application2 = create(:application, lead_provider:)
 
-      query = Applications::Query.new
+      query = described_class.new
       expect(query.applications).to contain_exactly(application1, application2)
     end
 
@@ -17,7 +17,7 @@ RSpec.describe Applications::Query do
       application2 = travel_to(1.hour.ago) { create(:application, lead_provider:) }
       application3 = travel_to(1.minute.ago) { create(:application, lead_provider:) }
 
-      query = Applications::Query.new
+      query = described_class.new
       expect(query.applications).to eq([application2, application3, application1])
     end
 
@@ -27,15 +27,29 @@ RSpec.describe Applications::Query do
           application = create(:application, lead_provider:)
           create(:application, lead_provider: create(:lead_provider))
 
-          query = Applications::Query.new(lead_provider:)
+          query = described_class.new(lead_provider:)
           expect(query.applications).to contain_exactly(application)
         end
 
         it "doesn't filter by lead provider when none supplied" do
-          condition_string = %("applications"."lead_provider_id" =)
+          condition_string = %("applications"."lead_provider_id")
 
-          expect(Applications::Query.new(lead_provider:).scope.to_sql).to include(condition_string)
-          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(lead_provider:).scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by lead provider if none is supplied" do
+          condition_string = %("lead_provider_id")
+          query = described_class.new
+
+          expect(query.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by lead provider if an empty string is supplied" do
+          condition_string = %("lead_provider_id")
+          query = described_class.new(lead_provider: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -44,7 +58,7 @@ RSpec.describe Applications::Query do
           create(:application, lead_provider:, updated_at: 2.days.ago)
           application = create(:application, lead_provider:, updated_at: Time.zone.now)
 
-          query = Applications::Query.new(lead_provider:, updated_since: 1.day.ago)
+          query = described_class.new(lead_provider:, updated_since: 1.day.ago)
 
           expect(query.applications).to contain_exactly(application)
         end
@@ -52,8 +66,15 @@ RSpec.describe Applications::Query do
         it "doesn't filter by lead provider when none supplied" do
           condition_string = %("applications"."updated_at" >=)
 
-          expect(Applications::Query.new(updated_since: 2.days.ago).scope.to_sql).to include(condition_string)
-          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(updated_since: 2.days.ago).scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by updated_since if blank" do
+          condition_string = %("updated_at")
+          query = described_class.new(updated_since: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -65,7 +86,7 @@ RSpec.describe Applications::Query do
         it "filters by cohort" do
           create(:application, cohort: cohort_2023)
           application = create(:application, cohort: cohort_2024)
-          query = Applications::Query.new(cohort_start_years: "2024")
+          query = described_class.new(cohort_start_years: "2024")
 
           expect(query.applications).to contain_exactly(application)
         end
@@ -74,22 +95,29 @@ RSpec.describe Applications::Query do
           application1 = create(:application, cohort: cohort_2023)
           application2 = create(:application, cohort: cohort_2024)
           create(:application, cohort: cohort_2025)
-          query = Applications::Query.new(cohort_start_years: "2023,2024")
+          query = described_class.new(cohort_start_years: "2023,2024")
 
           expect(query.applications).to contain_exactly(application1, application2)
         end
 
         it "returns no applications if no cohorts are found" do
-          query = Applications::Query.new(cohort_start_years: "0000")
+          query = described_class.new(cohort_start_years: "0000")
 
           expect(query.applications).to be_empty
         end
 
         it "doesn't filter by cohort when none supplied" do
-          condition_string = %("cohort"."start_year" =)
+          condition_string = %("cohort"."start_year")
 
-          expect(Applications::Query.new(cohort_start_years: 2021).scope.to_sql).to include(condition_string)
-          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(cohort_start_years: 2021).scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by cohort if blank" do
+          condition_string = %("start_year")
+          query = described_class.new(cohort_start_years: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -97,7 +125,7 @@ RSpec.describe Applications::Query do
         it "filters by lead_provider_approval_status" do
           create(:application, :pending)
           application = create(:application, :accepted)
-          query = Applications::Query.new(lead_provider_approval_status: "accepted")
+          query = described_class.new(lead_provider_approval_status: "accepted")
 
           expect(query.applications).to contain_exactly(application)
         end
@@ -106,23 +134,30 @@ RSpec.describe Applications::Query do
           application1 = create(:application, :accepted)
           application2 = create(:application, :rejected)
           create(:application, :pending)
-          query = Applications::Query.new(lead_provider_approval_status: "accepted,rejected")
+          query = described_class.new(lead_provider_approval_status: "accepted,rejected")
 
           expect(query.applications).to contain_exactly(application1, application2)
         end
 
         it "returns no applications if no lead_provider_approval_status are found" do
           create(:application, :pending)
-          query = Applications::Query.new(lead_provider_approval_status: "unknown")
+          query = described_class.new(lead_provider_approval_status: "unknown")
 
           expect(query.applications).to be_empty
         end
 
         it "doesn't filter by lead_provider_approval_status when none supplied" do
-          condition_string = %("applications"."lead_provider_approval_status" =)
+          condition_string = %("lead_provider_approval_status")
 
-          expect(Applications::Query.new(lead_provider_approval_status: "pending").scope.to_sql).to include(condition_string)
-          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(lead_provider_approval_status: "pending").scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by lead_provider_approval_status if blank" do
+          condition_string = %("lead_provider_approval_status")
+          query = described_class.new(lead_provider_approval_status: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -130,7 +165,7 @@ RSpec.describe Applications::Query do
         it "filters by participant_id" do
           create(:application, user: create(:user))
           application = create(:application, user: create(:user))
-          query = Applications::Query.new(participant_ids: application.user.ecf_id)
+          query = described_class.new(participant_ids: application.user.ecf_id)
 
           expect(query.applications).to contain_exactly(application)
         end
@@ -139,22 +174,29 @@ RSpec.describe Applications::Query do
           application1 = create(:application, user: create(:user))
           application2 = create(:application, user: create(:user))
           create(:application, user: create(:user))
-          query = Applications::Query.new(participant_ids: [application1.user.ecf_id, application2.user.ecf_id].join(","))
+          query = described_class.new(participant_ids: [application1.user.ecf_id, application2.user.ecf_id].join(","))
 
           expect(query.applications).to contain_exactly(application1, application2)
         end
 
         it "returns no applications if no participants are found" do
-          query = Applications::Query.new(participant_ids: SecureRandom.uuid)
+          query = described_class.new(participant_ids: SecureRandom.uuid)
 
           expect(query.applications).to be_empty
         end
 
         it "doesn't filter by participant_ids when none supplied" do
-          condition_string = %("user"."ecf_id" =)
+          condition_string = %("ecf_id")
 
-          expect(Applications::Query.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
-          expect(Applications::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by participant_ids if blank" do
+          condition_string = %("ecf_id")
+          query = described_class.new(participant_ids: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
     end
@@ -165,7 +207,7 @@ RSpec.describe Applications::Query do
       let(:application3) { create(:application) }
       let(:sort) { nil }
 
-      subject(:applications) { Applications::Query.new(sort:).applications }
+      subject(:applications) { described_class.new(sort:).applications }
 
       it { is_expected.to eq([application1, application2, application3]) }
 
@@ -205,7 +247,7 @@ RSpec.describe Applications::Query do
     describe "transient_previously_funded" do
       let(:course) { create(:course, :sl) }
       let!(:application) { create(:application, lead_provider:, course:) }
-      let(:query_applications) { Applications::Query.new(lead_provider:).applications }
+      let(:query_applications) { described_class.new(lead_provider:).applications }
       let(:returned_application) { query_applications.find(application.id) }
 
       it { expect(returned_application).not_to be_transient_previously_funded }
@@ -341,33 +383,33 @@ RSpec.describe Applications::Query do
     let(:lead_provider) { create(:lead_provider) }
 
     it "raises an error if no `id` or `ecf_id` is provided" do
-      query = Applications::Query.new
+      query = described_class.new
       expect { query.application }.to raise_error(ArgumentError).with_message("id or ecf_id needed")
     end
 
     it "returns the application using the `id`" do
       application = create(:application, lead_provider:)
 
-      query = Applications::Query.new
+      query = described_class.new
       expect(query.application(id: application.id)).to eq(application)
     end
 
     it "returns the application using the `ecf_id`" do
       application = create(:application, lead_provider:)
 
-      query = Applications::Query.new
+      query = described_class.new
       expect(query.application(ecf_id: application.ecf_id)).to eq(application)
     end
 
     it "returns the application for a `lead_provider`" do
       application = create(:application, lead_provider:)
 
-      query = Applications::Query.new(lead_provider:)
+      query = described_class.new(lead_provider:)
       expect(query.application(id: application.id)).to eq(application)
     end
 
     it "raises an error if the application does not exist" do
-      query = Applications::Query.new
+      query = described_class.new
       expect { query.application(id: "XXX123") }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -375,7 +417,7 @@ RSpec.describe Applications::Query do
       other_lead_provider = create(:lead_provider)
       other_application = create(:application, lead_provider: other_lead_provider)
 
-      query = Applications::Query.new(lead_provider:)
+      query = described_class.new(lead_provider:)
       expect { query.application(id: other_application.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
