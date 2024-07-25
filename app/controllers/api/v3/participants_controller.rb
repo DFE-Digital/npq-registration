@@ -5,7 +5,7 @@ module API
       include FilterByDate
 
       def index
-        conditions = { updated_since:, training_status:, from_participant_id: }
+        conditions = { updated_since:, training_status:, from_participant_id:, sort: }
         participants = participants_query(conditions:).participants
 
         render json: to_json(paginate(participants))
@@ -72,8 +72,12 @@ module API
         ::Participants::Query.new(**conditions.compact)
       end
 
+      def sort
+        participant_params[:sort]
+      end
+
       def participant_params
-        params.permit(:ecf_id, filter: %i[training_status from_participant_id])
+        params.permit(:ecf_id, :sort, filter: %i[training_status from_participant_id])
       end
 
       def participant_action_params

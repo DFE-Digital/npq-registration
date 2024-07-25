@@ -5,7 +5,7 @@ module API
       include FilterByDate
 
       def index
-        conditions = { cohort_start_years:, participant_ids:, updated_since: }
+        conditions = { cohort_start_years:, participant_ids:, updated_since:, sort: }
         applications = applications_query(conditions:).applications
 
         render json: to_json(paginate(applications))
@@ -66,6 +66,10 @@ module API
 
       def application_params
         params.permit(:ecf_id, :sort, filter: %i[cohort updated_since participant_id])
+      end
+
+      def sort
+        application_params[:sort]
       end
 
       def to_json(obj)
