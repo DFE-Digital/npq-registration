@@ -24,7 +24,8 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
     it { expect(first_row.values).to all(be_present) }
 
     it "returns expected data", :aggregate_failures do
-      expect(first_row).to include({
+      expect(first_row).to eq({
+        id: first_application.ecf_id,
         course_identifier: first_application.course.identifier,
         email: first_application.user.email,
         email_validated: "true",
@@ -50,6 +51,9 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         teacher_catchment_iso_country_code: "GBR",
         itt_provider: first_application.itt_provider.legal_name,
         lead_mentor: first_application.lead_mentor.to_s,
+        cohort: first_application.cohort.start_year.to_s,
+        created_at: first_application.created_at.rfc3339,
+        updated_at: first_application.updated_at.rfc3339,
       })
     end
 
@@ -76,6 +80,23 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         end
 
         it { expect(parsed_updated_at_attribute).to be_within(1.second).of(first_application.user.updated_at) }
+      end
+    end
+
+    describe "created_at serialization" do
+      let(:parsed_created_at_attribute) { Time.zone.parse(first_row[:created_at]) }
+
+      it { expect(parsed_created_at_attribute).to be_within(1.second).of(first_application.created_at) }
+
+      context "when the application has been accepted" do
+        before do
+          ActiveRecord::Base.no_touching do
+            first_application.update!(created_at: 5.days.ago)
+            first_application.update!(accepted_at: 1.day.ago)
+          end
+        end
+
+        it { expect(parsed_created_at_attribute).to be_within(1.second).of(first_application.accepted_at) }
       end
     end
   end

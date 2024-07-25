@@ -79,7 +79,7 @@ module Applications
     end
 
     def order_by
-      sort_order(sort:, model: Application, default: { created_at: :asc })
+      sort_order(sort:, model: Application, default: Arel.sql("COALESCE(applications.accepted_at, applications.created_at) ASC"))
     end
 
     def alternative_courses

@@ -71,7 +71,7 @@ module API
               targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
               withdrawal: withdrawal(application:, lead_provider: options[:lead_provider]),
               deferral: deferral(application:, lead_provider: options[:lead_provider]),
-              created_at: application.created_at.rfc3339,
+              created_at: [application.accepted_at, application.created_at].compact.max.rfc3339,
               funded_place: application.funded_place,
             }
           end

@@ -21,6 +21,17 @@ RSpec.describe Applications::Query do
       expect(query.applications).to eq([application2, application3, application1])
     end
 
+    context "when one of the applications has been accepted" do
+      it "orders applications by accepted_at in ascending order" do
+        application1 = create(:application, lead_provider:)
+        application2 = travel_to(1.hour.ago) { create(:application, lead_provider:) }
+        application3 = travel_to(1.minute.ago) { create(:application, lead_provider:) }
+
+        query = Applications::Query.new
+        expect(query.applications).to eq([application2, application3, application1])
+      end
+    end
+
     describe "filtering" do
       describe "lead provider" do
         it "filters by lead provider" do

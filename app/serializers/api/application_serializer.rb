@@ -32,7 +32,12 @@ module API
       field(:itt_provider) { |a| a.itt_provider&.legal_name }
       field(:lead_mentor)
       field(:funded_place)
-      field(:created_at)
+      field(:created_at) do |a|
+        [
+          a.accepted_at,
+          a.created_at,
+        ].compact.max
+      end
       field(:updated_at) do |a|
         [
           a.user.updated_at,

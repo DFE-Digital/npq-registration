@@ -102,6 +102,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       it "rejects other_application" do
         service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
+        expect(application.reload.accepted_at).not_to be_nil
         expect(other_application.reload.lead_provider_approval_status).to eql("rejected")
       end
     end
@@ -194,6 +195,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       it "does not reject the other course" do
         service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
+        expect(application.reload.accepted_at).not_to be_nil
         expect(other_application.reload.lead_provider_approval_status).to eql("pending")
       end
     end
@@ -357,6 +359,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           expect(service.accept).to be_truthy
           expect(service.application.lead_provider_approval_status).to eql("accepted")
           expect(service.application.schedule).to eql(new_schedule)
+          expect(service.application.accepted_at).not_to be_nil
 
           application_state = ApplicationState.first
           expect(application_state.lead_provider).to eql(lead_provider)
