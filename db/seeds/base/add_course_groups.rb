@@ -4,5 +4,5 @@
   support
   ehco
 ].each do |name|
-  create(:course_group, name:)
+  FactoryBot.create(:course_group, name:)
 end
