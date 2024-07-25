@@ -17,7 +17,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user, :with_verified_trn) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
-    let(:course) { create(:course, :sl, course_group:) }
+    let(:course) { create(:course, :senior_leadership, course_group:) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current) }
     let(:cohort_next) { create(:cohort, :next) }
@@ -59,8 +59,8 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
     context "when user applies for EHCO but has accepted ASO" do
       let(:other_course_group) { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
-      let(:course) { create(:course, :aso, course_group: other_course_group) }
-      let(:npq_ehco) { create(:course, :ehco, course_group: other_course_group) }
+      let(:course) { create(:course, :additional_support_offer, course_group: other_course_group) }
+      let(:npq_ehco) { create(:course, :early_headship_coaching_offer, course_group: other_course_group) }
 
       let(:other_application) do
         create(
@@ -176,7 +176,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
     context "when user has applied for different course" do
       let(:other_lead_provider) { create(:lead_provider) }
-      let(:other_course) { create(:course, :eyl) }
+      let(:other_course) { create(:course, :early_years_leadership) }
 
       let(:other_application) do
         create(:application,
@@ -332,7 +332,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     describe "changing schedule on accept" do
       let(:cohort) { create(:cohort, :current) }
       let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
-      let(:course) { create(:course, :sl, course_group:) }
+      let(:course) { create(:course, :senior_leadership, course_group:) }
 
       let(:application) do
         create(
@@ -369,7 +369,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
       context "when changing to wrong schedule" do
         let(:new_course_group) { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
-        let(:new_course) { create(:course, :sl, course_group: new_course_group) }
+        let(:new_course) { create(:course, :senior_leadership, course_group: new_course_group) }
         let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group: new_course_group, cohort:) }
 
         it "returns validation error" do

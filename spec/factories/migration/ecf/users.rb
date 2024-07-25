@@ -7,7 +7,7 @@ FactoryBot.define do
 
     trait :npq do
       after(:create) do |user|
-        user.teacher_profile = create(:ecf_migration_teacher_profile, user:, participant_profiles: [create(:ecf_migration_npq_participant_profile, :with_accepted_npq_application, user:)])
+        user.teacher_profile = create(:ecf_migration_teacher_profile, user:, participant_profiles: [create(:ecf_migration_npq_participant_profile, user:)])
       end
     end
 

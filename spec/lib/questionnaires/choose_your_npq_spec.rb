@@ -2,12 +2,12 @@ require "rails_helper"
 
 RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   describe "validations" do
-    let(:valid_course_identifier) { create(:course, :ehco).identifier }
+    let(:valid_course_identifier) { create(:course, :early_headship_coaching_offer).identifier }
 
     it { is_expected.to validate_presence_of(:course_identifier) }
 
     it "course for course_id must be available to applicant" do
-      subject.course_identifier = create(:course, :aso).identifier
+      subject.course_identifier = create(:course, :additional_support_offer).identifier
       subject.valid?
       expect(subject.errors[:course_identifier]).to be_present
 
@@ -22,7 +22,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       described_class.new(course_identifier:)
     end
 
-    let(:course_identifier) { create(:course, :lbc).identifier }
+    let(:course_identifier) { create(:course, :leading_behaviour_culture).identifier }
 
     context "when changing answers" do
       before do
@@ -30,7 +30,7 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       end
 
       context "nothing was actually changed" do
-        let(:course) { create(:course, :ehco) }
+        let(:course) { create(:course, :early_headship_coaching_offer) }
         let(:lead_provider) { LeadProvider.for(course:).first }
         let(:store) do
           {
@@ -55,9 +55,9 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
       end
 
       context "when changing to something other than headship" do
-        let(:course) { create(:course, :lt) }
+        let(:course) { create(:course, :leading_teaching) }
         let(:school) { create(:school) }
-        let(:previous_course) { create(:course, :hs) }
+        let(:previous_course) { create(:course, :headship) }
         let(:lead_providers) { LeadProvider.for(course:) }
         let(:lead_provider) { lead_providers.first }
         let(:store) do

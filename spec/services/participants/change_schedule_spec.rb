@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create(:lead_provider) }
-  let(:course) { create(:course, :sl) }
+  let(:course) { create(:course, :senior_leadership) }
   let(:course_identifier) { course.identifier }
   let(:schedule) { create(:schedule, :npq_leadership_spring, cohort:) }
   let!(:application) { create(:application, :accepted, cohort:, lead_provider:, course:, schedule:) }

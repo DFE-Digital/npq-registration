@@ -22,7 +22,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
              lead_provider:,
              cohort:)
     end
-    let(:course) { create(:course, :sl) }
+    let(:course) { create(:course, :senior_leadership) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 

@@ -9,7 +9,7 @@ RSpec.describe RegistrationWizard do
   let(:user) { create(:user) }
   let(:current_step) { "share_provider" }
 
-  before { create(:course, :aso) }
+  before { create(:course, :additional_support_offer) }
 
   describe "#current_step" do
     it "returns current step" do

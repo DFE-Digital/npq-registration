@@ -59,7 +59,7 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:lead_provider) { current_lead_provider }
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
-    let(:course) { create(:course, :sl, course_group:) }
+    let(:course) { create(:course, :senior_leadership, course_group:) }
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
     let(:participant) { application.user }
