@@ -136,6 +136,10 @@ en:
           one : nil # workaround
     errors:
       models:
+        questionnaires/teacher_reference_number:
+          attributes:
+            trn_knowledge:
+              blank: Please select an answer
         questionnaires/chosen_start_date:
           attributes:
             chosen_start_date:
@@ -160,6 +164,10 @@ en:
           attributes:
             employer_name:
               blank: Enter the name of your employer
+        questionnaires/referred_by_return_to_teaching_adviser:
+          attributes:
+            referred_by_return_to_teaching_adviser:
+              blank: Select 'Yes' or 'No'
         questionnaires/qualified_teacher_check:
           attributes:
             trn:
@@ -181,11 +189,8 @@ en:
           attributes:
             course_identifier:
               blank: Select a national professional qualification course
-              invalid: Choose a valid national professional qualification
-        questionnaires/maths_eligibility_teaching_for_mastery:
-          attributes:
-            maths_eligibility_teaching_for_mastery:
-              blank: Select ‘Yes’ if you took one year of the primary maths Teaching for Mastery programme
+              maths_eligibility_teaching_for_mastery:
+                blank: Select ‘Yes’ if you took one year of the primary maths Teaching for Mastery programme
         questionnaires/maths_understanding_of_approach:
           attributes:
             maths_understanding_of_approach:
@@ -570,6 +575,7 @@ en:
         trn: "Teacher reference number (TRN)"
         full_name: "Full name"
         national_insurance_number: "National Insurance number"
+        national_insurance_number_optional: "National Insurance number (optional)"
         change_your_course_or_provider: "Change your course or provider"
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"

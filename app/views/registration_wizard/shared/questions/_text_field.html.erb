@@ -1,4 +1,5 @@
 <%=
+
   form.govuk_text_field(
     question.name,
     width: "full",
@@ -7,6 +8,7 @@
 %>
 
 <% if question.additional_info %>
+  foo
   <%=
   render(
     "registration_wizard/shared/additional_info",
