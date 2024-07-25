@@ -59,6 +59,7 @@ module Questionnaires
 
         QuestionTypes::TextField.new(
           name: :national_insurance_number,
+          locale_name: nin_locale,
         ),
       ]
     end
@@ -239,6 +240,10 @@ module Questionnaires
 
     def strip_title_prefixes
       full_name&.sub!(/^Mr\.* |^Mrs\.* |^Miss\.* |^Ms\.* /i, "")
+    end
+
+    def nin_locale
+      ni_number_required? ? :national_insurance_number : :national_insurance_number_optional
     end
   end
 end

@@ -11,8 +11,8 @@
       <%= f.govuk_error_summary %>
 
       <% content_for :title do %>
-        Check your details
-        <%= form.errors.present? ? ", with validation errors." : nil %>
+        <%= form.errors.present? ? "Form invalid: " : nil %>
+        <%= form.class.name.split('::').last.titleize %>
       <% end %>
 
 
