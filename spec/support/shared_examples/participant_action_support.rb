@@ -11,35 +11,26 @@ RSpec.shared_examples "a participant action" do
   it { expect(instance).to be_valid }
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:lead_provider) }
-    it { is_expected.to validate_presence_of(:participant) }
-    it { is_expected.to validate_inclusion_of(:course_identifier).in_array(Course::IDENTIFIERS) }
+    it { is_expected.to validate_presence_of(:lead_provider).with_message("Your update cannot be made as the '#/lead_provider' is not recognised. Check lead provider details and try again.") }
+    it { is_expected.to validate_presence_of(:participant).with_message("Your update cannot be made as the '#/participant' is not recognised. Check participant details and try again.") }
+    it { is_expected.to validate_inclusion_of(:course_identifier).in_array(Course::IDENTIFIERS).with_message("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
 
     context "when a matching application does not exist (different course identifier)" do
       let(:course_identifier) { Course::IDENTIFIERS.excluding(application.course.identifier).sample }
 
-      it "adds an error to the participant attribute" do
-        expect(instance).to be_invalid
-        expect(instance.errors.first).to have_attributes(attribute: :participant, type: :blank)
-      end
+      it { is_expected.to have_error(:participant, :blank, "Your update cannot be made as the '#/participant' is not recognised. Check participant details and try again.") }
     end
 
     context "when a matching application does not exist (different lead provider)" do
       let(:lead_provider) { create(:lead_provider, name: "Different to #{application.lead_provider.name}") }
 
-      it "adds an error to the participant attribute" do
-        expect(instance).to be_invalid
-        expect(instance.errors.first).to have_attributes(attribute: :participant, type: :blank)
-      end
+      it { is_expected.to have_error(:participant, :blank, "Your update cannot be made as the '#/participant' is not recognised. Check participant details and try again.") }
     end
 
     context "when there is a matching application, but it is not accepted" do
       let(:application) { create(:application) }
 
-      it "adds an error to the participant attribute" do
-        expect(instance).to be_invalid
-        expect(instance.errors.first).to have_attributes(attribute: :participant, type: :blank)
-      end
+      it { is_expected.to have_error(:participant, :blank, "Your update cannot be made as the '#/participant' is not recognised. Check participant details and try again.") }
     end
   end
 end

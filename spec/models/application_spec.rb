@@ -16,6 +16,18 @@ RSpec.describe Application do
     it { is_expected.to have_many(:declarations) }
   end
 
+  describe "validations" do
+    context "when the schedule cohort does not match the application cohort" do
+      subject do
+        build(:application).tap do |application|
+          application.schedule = build(:schedule, cohort: build(:cohort, start_year: application.cohort.start_year + 1))
+        end
+      end
+
+      it { is_expected.to have_error(:schedule, :cohort_mismatch, "The schedule cohort must match the application cohort") }
+    end
+  end
+
   describe "enums" do
     it {
       expect(subject).to define_enum_for(:kind_of_nursery).with_values(

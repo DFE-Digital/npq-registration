@@ -13,33 +13,24 @@ RSpec.describe Participants::Defer, type: :model do
     let(:instance) { described_class.new(lead_provider:, participant:, course_identifier:, reason:) }
 
     describe "validations" do
-      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::DEFERRAL_REASONS) }
+      it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::DEFERRAL_REASONS).with_message("The property '#/reason' must be a valid reason") }
 
       context "when the application is already deferred" do
         let(:application) { create(:application, :with_declaration, :deferred) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :already_deferred)
-        end
+        it { expect(instance).to have_error(:participant, :already_deferred, "The participant is already deferred") }
       end
 
       context "when the application is withdrawn" do
         let(:application) { create(:application, :with_declaration, :withdrawn) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :already_withdrawn)
-        end
+        it { expect(instance).to have_error(:participant, :already_withdrawn, "The participant is already withdrawn") }
       end
 
       context "when the application has no declarations" do
         let(:application) { create(:application, :accepted) }
 
-        it "adds an error to the participant attribute" do
-          expect(instance).to be_invalid
-          expect(instance.errors.first).to have_attributes(attribute: :participant, type: :no_declarations)
-        end
+        it { expect(instance).to have_error(:participant, :no_declarations, "You cannot defer an NPQ participant that has no declarations") }
       end
     end
   end

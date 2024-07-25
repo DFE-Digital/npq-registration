@@ -33,59 +33,36 @@ RSpec.describe Declarations::Create, type: :model do
     it { is_expected.to validate_presence_of(:lead_provider).with_message("Your update cannot be made as the '#/lead_provider' is not recognised. Check lead provider details and try again.") }
     it { is_expected.to validate_presence_of(:participant_id).with_message("The property '#/participant_id' must be present") }
     it { is_expected.to validate_presence_of(:declaration_type).with_message("Enter a '#/declaration_type'.") }
+    it { is_expected.to validate_presence_of(:declaration_date).with_message("Enter a '#/declaration_date'.") }
 
     context "when lead providers don't match" do
       before { params[:lead_provider] = create(:lead_provider) }
 
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :participant_id, type: :invalid_participant, message: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.")
-      end
+      it { expect(subject).to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
     end
 
     context "when the course is invalid" do
       let(:course_identifier) { "any-course-identifier" }
 
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :course_identifier, type: :inclusion, message: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.")
-      end
-    end
-
-    context "when declaration date is missing" do
-      before { params[:declaration_date] = nil }
-
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :blank, message: "Enter a '#/declaration_date'.")
-      end
+      it { is_expected.to have_error(:course_identifier, :inclusion, "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
     end
 
     context "when declaration date is invalid" do
       before { params[:declaration_date] = "2023-19-01T11:21:55Z" }
 
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :invalid, message: "Enter a valid RCF3339 '#/declaration_date'.")
-      end
+      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RCF3339 '#/declaration_date'.") }
     end
 
     context "when declaration time is invalid" do
       before { params[:declaration_date] = "2023-19-01T29:21:55Z" }
 
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :invalid, message: "Enter a valid RCF3339 '#/declaration_date'.")
-      end
+      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RCF3339 '#/declaration_date'.") }
     end
 
     context "when the declaration_date is in the future" do
       before { params[:declaration_date] = 1.day.from_now.rfc3339 }
 
-      it "has a meaningful error", :aggregate_failures do
-        expect(service).to be_invalid
-        expect(service.errors.first).to have_attributes(attribute: :declaration_date, type: :future_declaration_date, message: "The '#/declaration_date' value cannot be a future date. Check the date and try again.")
-      end
+      it { is_expected.to have_error(:declaration_date, :future_declaration_date, "The '#/declaration_date' value cannot be a future date. Check the date and try again.") }
     end
 
     context "when the declaration_date is today" do
@@ -111,22 +88,14 @@ RSpec.describe Declarations::Create, type: :model do
       context "when the declaration is made after the participant has been withdrawn" do
         let(:withdrawal_time) { declaration_date - 1.day }
 
-        it "has a meaningful error" do
-          expect(subject).to be_invalid
-
-          expect(service.errors.first).to have_attributes(attribute: :participant_id, type: :declaration_must_be_before_withdrawal_date, options: { withdrawal_date: application.application_states.last.created_at.rfc3339 }, message: "This participant withdrew from this course on #{application.application_states.last.created_at.rfc3339}. Enter a '#/declaration_date' that's on or before the withdrawal date.")
-        end
+        it { is_expected.to have_error(:participant_id, :declaration_must_be_before_withdrawal_date, "This participant withdrew from this course on #{application.application_states.last.created_at.rfc3339}. Enter a '#/declaration_date' that's on or before the withdrawal date.") }
       end
     end
 
     context "when an existing declaration already exists" do
       before { service.create_declaration }
 
-      it "has a meaningful error" do
-        expect(subject).to be_invalid
-
-        expect(service.errors.first).to have_attributes(attribute: :base, type: :declaration_already_exists, message: "A declaration has already been submitted that will be, or has been, paid for this event")
-      end
+      it { is_expected.to have_error(:base, :declaration_already_exists, "A declaration has already been submitted that will be, or has been, paid for this event") }
 
       context "when the state submitted" do
         it "does not create duplicates" do
@@ -158,19 +127,13 @@ RSpec.describe Declarations::Create, type: :model do
       context "when has_passed is nil" do
         let(:has_passed) { nil }
 
-        it "returns error" do
-          expect(service).to be_invalid
-          expect(service.errors.first).to have_attributes(attribute: :has_passed, type: :invalid, message: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course.")
-        end
+        it { is_expected.to have_error(:has_passed, :invalid, "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course.") }
       end
 
       context "when has_passed is invalid text" do
         let(:has_passed) { "no_supported" }
 
-        it "returns error" do
-          expect(service).to be_invalid
-          expect(service.errors.first).to have_attributes(attribute: :has_passed, type: :invalid, message: "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course.")
-        end
+        it { is_expected.to have_error(:has_passed, :invalid, "Enter 'true' or 'false' in the '#/has_passed' field to indicate whether this participant has passed or failed their course.") }
       end
 
       context "when has_passed is true" do
@@ -278,19 +241,13 @@ RSpec.describe Declarations::Create, type: :model do
       context "when the declaration is eligible" do
         let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
 
-        it "returns an error" do
-          expect(service).to be_invalid
-          expect(service.errors.first).to have_attributes(attribute: :cohort, type: :no_output_fee_statement, options: { cohort: cohort.start_year }, message: "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.")
-        end
+        it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
       end
 
       context "when there is an existing billable declaration" do
         before { create(:declaration, :paid, application:, declaration_date:) }
 
-        it "returns an error" do
-          expect(service).to be_invalid
-          expect(service.errors.first).to have_attributes(attribute: :cohort, type: :no_output_fee_statement, options: { cohort: cohort.start_year }, message: "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.")
-        end
+        it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
       end
     end
   end

@@ -47,12 +47,12 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         let(:application) { create(:application, :accepted, cohort:, course:, schedule:) }
       end
 
-      it { is_expected.to validate_presence_of(:schedule_identifier).with_message(:blank) }
+      it { is_expected.to validate_presence_of(:schedule_identifier).with_message(:blank).with_message("The property '#/schedule_identifier' must be present") }
 
       context "when the schedule is invalid" do
         let(:new_schedule_identifier) { "invalid" }
 
-        it { is_expected.to validate_presence_of(:schedule_identifier).with_message(:invalid_schedule) }
+        it { is_expected.to have_error(:schedule_identifier, :invalid_schedule, "The property '#/schedule_identifier' must be present and correspond to a valid schedule") }
       end
 
       context "when the schedule identifier change of the same type again" do
@@ -62,9 +62,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
         it "is invalid and returns an error message" do
           expect(subject.change_schedule).to be_truthy
-          expect(subject).to be_invalid
-
-          expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :already_on_the_profile)
+          expect(subject).to have_error(:schedule_identifier, :already_on_the_profile, "Selected schedule is already on the profile")
         end
       end
     end
@@ -76,11 +74,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         application
       end
 
-      it "is invalid and returns an error message" do
-        expect(subject).to be_invalid
-
-        expect(subject.errors.group_by_attribute[:participant].first).to have_attributes(attribute: :participant, type: :already_withdrawn)
-      end
+      it { is_expected.to have_error(:participant, :already_withdrawn, "The participant is already withdrawn") }
     end
 
     context "when the cohort is changing" do
@@ -139,8 +133,8 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
             schedule_identifier: schedule.identifier,
             cohort: cohort.start_year,
           }))
-          expect(second_change_of_schedule).to be_invalid
-          expect(second_change_of_schedule.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
+
+          expect(second_change_of_schedule).to have_error(:cohort, :cannot_change, "You cannot change the '#/cohort' field")
         end
       end
 
@@ -158,11 +152,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
           end
 
           context "when changing to another cohort" do
-            it "is invalid and returns an error message" do
-              expect(subject).to be_invalid
-
-              expect(subject.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
-            end
+            it { is_expected.to have_error(:cohort, :cannot_change, "You cannot change the '#/cohort' field") }
           end
         end
       end
@@ -227,7 +217,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         it "does not change the application to the new cohort" do
           expect(subject.change_schedule).to be_falsey
 
-          expect(subject.errors.group_by_attribute[:cohort].first).to have_attributes(attribute: :cohort, type: :cannot_change)
+          expect(subject).to have_error(:cohort, :cannot_change, "You cannot change the '#/cohort' field")
         end
       end
 
@@ -253,7 +243,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           it "does not allow a change of schedule" do
             expect(subject.change_schedule).to be_falsey
-            expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalidates_declaration)
+            expect(subject).to have_error(:schedule_identifier, :invalidates_declaration, "Changing schedule would invalidate existing declarations. Please void them first.")
           end
         end
 
@@ -262,7 +252,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
           it "does not allow a change of schedule" do
             expect(subject.change_schedule).to be_falsey
-            expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalidates_declaration)
+            expect(subject).to have_error(:schedule_identifier, :invalidates_declaration, "Changing schedule would invalidate existing declarations. Please void them first.")
           end
         end
       end
@@ -276,7 +266,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
 
         it "does not allow a change of schedule" do
           expect(subject.change_schedule).to be_falsey
-          expect(subject.errors.group_by_attribute[:schedule_identifier].first).to have_attributes(attribute: :schedule_identifier, type: :invalid_for_course)
+          expect(subject).to have_error(:schedule_identifier, :invalid_for_course, "Selected schedule is not valid for the course")
         end
       end
     end
