@@ -5,13 +5,16 @@ module API
       include FilterByDate
 
       def index
+        conditions = { cohort_start_years:, updated_since: }
+        applications = applications_query(conditions:).applications
+
         respond_to do |format|
           format.json do
-            render json: to_json(paginate(applications_query.applications))
+            render json: to_json(paginate(applications))
           end
 
           format.csv do
-            render body: to_csv(applications_query.applications)
+            render body: to_csv(applications)
           end
         end
       end
@@ -52,9 +55,8 @@ module API
 
     private
 
-      def applications_query
-        conditions = { lead_provider: current_lead_provider, cohort_start_years:, updated_since: }
-
+      def applications_query(conditions: {})
+        conditions.merge!(lead_provider: current_lead_provider)
         Applications::Query.new(**conditions.compact)
       end
 

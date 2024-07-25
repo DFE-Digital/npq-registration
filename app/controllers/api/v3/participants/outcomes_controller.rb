@@ -5,7 +5,10 @@ module API
         include Pagination
 
         def index
-          render json: to_json(paginate(outcomes_query.participant_outcomes))
+          conditions = { participant_ids: participant.ecf_id }
+          outcomes = outcomes_query(conditions:).participant_outcomes
+
+          render json: to_json(paginate(outcomes))
         end
 
         def create
@@ -41,9 +44,9 @@ module API
           participants_query.participant(ecf_id: params[:ecf_id])
         end
 
-        def outcomes_query
-          conditions = { lead_provider: current_lead_provider, participant_ids: participant.ecf_id }
-          ::ParticipantOutcomes::Query.new(**conditions.compact)
+        def outcomes_query(conditions: {})
+          conditions.merge!(lead_provider: current_lead_provider)
+          ParticipantOutcomes::Query.new(**conditions.compact)
         end
 
         def to_json(obj)

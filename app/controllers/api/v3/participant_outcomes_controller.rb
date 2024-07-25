@@ -5,14 +5,17 @@ module API
       include FilterByDate
 
       def index
-        render json: to_json(paginate(outcomes_query.participant_outcomes))
+        conditions = { created_since: }
+        outcomes = outcomes_query(conditions:).participant_outcomes
+
+        render json: to_json(paginate(outcomes))
       end
 
     private
 
-      def outcomes_query
-        conditions = { lead_provider: current_lead_provider, created_since: }
-        ::ParticipantOutcomes::Query.new(**conditions.compact)
+      def outcomes_query(conditions: {})
+        conditions.merge!(lead_provider: current_lead_provider)
+        ParticipantOutcomes::Query.new(**conditions.compact)
       end
 
       def to_json(obj)
