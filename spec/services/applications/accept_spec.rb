@@ -16,7 +16,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
   describe "#accept" do
     let(:trn) { rand(1_000_000..9_999_999).to_s }
     let(:user) { create(:user, :with_verified_trn) }
-    let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+    let(:course_group) { create(:course_group, name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current) }
@@ -58,7 +58,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     end
 
     context "when user applies for EHCO but has accepted ASO" do
-      let(:other_course_group) { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
+      let(:other_course_group) { create(:course_group, name: "ehco") }
       let(:course) { create(:course, :additional_support_offer, course_group: other_course_group) }
       let(:npq_ehco) { create(:course, :early_headship_coaching_offer, course_group: other_course_group) }
 
@@ -331,7 +331,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
     describe "changing schedule on accept" do
       let(:cohort) { create(:cohort, :current) }
-      let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
+      let(:course_group) { create(:course_group, name: "leadership") }
       let(:course) { create(:course, :senior_leadership, course_group:) }
 
       let(:application) do
@@ -365,15 +365,12 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         end
       end
 
-      context "when changing to wrong schedule" do
-        let(:new_course_group) { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
-        let(:new_course) { create(:course, :senior_leadership, course_group: new_course_group) }
-        let(:new_schedule) { create(:schedule, :npq_leadership_spring, course_group: new_course_group, cohort:) }
-
-        before { new_schedule }
+      context "when changing to a schedule that's not correct for the application course" do
+        let!(:new_schedule) { create(:schedule, :npq_ehco_november, cohort:) }
 
         it "returns validation error" do
           expect(service.accept).to be_falsey
+          expect(service.application.schedule).not_to eql(new_schedule)
           expect(service.errors.messages_for(:schedule_identifier)).to include("Selected schedule is not valid for the course")
         end
       end
