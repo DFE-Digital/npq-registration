@@ -1,5 +1,5 @@
 module Ecf
-  class NpqProfileUpdater
+  class NpqProfileUpdater < Base
     attr_reader :application
 
     def initialize(application:)
@@ -7,8 +7,6 @@ module Ecf
     end
 
     def call
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
-
       profile = External::EcfAPI::NpqProfile.find(application.ecf_id).first
       profile.eligible_for_funding = application.eligible_for_funding
       profile.funding_eligiblity_status_code = application.funding_eligiblity_status_code

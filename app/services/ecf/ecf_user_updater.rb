@@ -1,5 +1,5 @@
 module Ecf
-  class EcfUserUpdater
+  class EcfUserUpdater < Base
     def self.call(user:)
       new(user:).call
     end
@@ -11,8 +11,6 @@ module Ecf
     end
 
     def call
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
-
       remote = user.ecf_user
 
       # JsonApiClient::Resource uses errors for flow control, so failed saves

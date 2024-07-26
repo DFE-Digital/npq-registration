@@ -1,5 +1,5 @@
 module Ecf
-  class NpqProfileCreator
+  class NpqProfileCreator < Base
     attr_reader :application
 
     def initialize(application:)
@@ -7,8 +7,6 @@ module Ecf
     end
 
     def call
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
-
       profile = External::EcfAPI::NpqProfile.new(
         teacher_reference_number: user.trn,
         teacher_reference_number_verified: user.trn_verified,

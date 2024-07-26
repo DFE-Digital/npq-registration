@@ -1,13 +1,11 @@
 module Ecf
-  class NpqProfileMassUpdater
+  class NpqProfileMassUpdater < Base
     def initialize(applications:, &after_save)
       @applications = applications
       @after_save = after_save
     end
 
     def call
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
-
       applications.find_each.with_index do |application, i|
         sleep(0.1) # Ensure that ECF API is not overloaded
 
