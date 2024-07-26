@@ -13,7 +13,8 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
                   :accepted,
                   :with_private_childcare_provider,
                   employer_name: "Employer Name",
-                  employment_role: "Employment Role")
+                  employment_role: "Employment Role",
+                  funded_place: true)
     end
     let(:rows) { CSV.parse(csv, headers: true) }
     let(:first_application) { applications.first }
@@ -30,6 +31,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         employer_name: first_application.employer_name,
         employment_role: first_application.employment_role,
         full_name: first_application.user.full_name,
+        funded_place: first_application.funded_place.to_s,
         funding_choice: first_application.funding_choice,
         headteacher_status: first_application.headteacher_status,
         ineligible_for_funding_reason: first_application.ineligible_for_funding_reason,

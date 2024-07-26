@@ -19,6 +19,7 @@ module API
       private_childcare_provider_urn
       headteacher_status
       eligible_for_funding
+      funded_place
       funding_choice
       course_identifier
       status
@@ -67,6 +68,7 @@ module API
         application.private_childcare_provider&.provider_urn,
         application.headteacher_status,
         application.eligible_for_funding,
+        application.funded_place,
         application.funding_choice,
         application.course.identifier,
         application.lead_provider_approval_status,
