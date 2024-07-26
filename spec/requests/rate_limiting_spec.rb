@@ -18,6 +18,27 @@ RSpec.describe "Rate limiting" do
     end
   end
 
+  [
+    "/api/guidance",
+    "/api/docs/v1",
+    "/api/docs/v2",
+    "/api/docs/v3",
+  ].each do |public_api_path|
+    context "when requesting the public API path #{public_api_path}" do
+      let(:path) { public_api_path }
+
+      it_behaves_like "a rate limited endpoint", "general requests by ip" do
+        def perform_request
+          get path
+        end
+
+        def change_condition
+          set_request_ip(other_ip)
+        end
+      end
+    end
+  end
+
   Rack::Attack::PROTECTED_ROUTES.each do |protected_path|
     it_behaves_like "a rate limited endpoint", "protected routes (hitting external services)" do
       let(:path) { protected_path }
@@ -35,6 +56,21 @@ RSpec.describe "Rate limiting" do
   it_behaves_like "a rate limited endpoint", "csp_reports req/ip" do
     def perform_request
       post csp_reports_path, params: {}.to_json
+    end
+
+    def change_condition
+      set_request_ip(other_ip)
+    end
+  end
+
+  it_behaves_like "a rate limited endpoint", "API get an identity webhook message requests by ip" do
+    before do
+      default_headers["X-Hub-Signature-256"] = "signature"
+      allow(GetAnIdentityService::Webhooks::SignatureVerifier).to receive(:call).with(anything).and_return(true)
+    end
+
+    def perform_request
+      post api_v1_get_an_identity_webhook_messages_path
     end
 
     def change_condition
