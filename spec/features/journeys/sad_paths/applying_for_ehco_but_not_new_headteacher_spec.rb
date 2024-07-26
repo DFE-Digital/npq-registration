@@ -148,6 +148,7 @@ RSpec.feature "Sad journeys", type: :feature do
     )
 
     deep_compare_application_data(
+      "accepted_at" => nil,
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "schedule_id" => nil,
