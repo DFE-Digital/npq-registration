@@ -62,7 +62,7 @@ module Participants
     def validate_new_schedule_found
       return if schedule_identifier.present? && new_schedule
 
-      errors.add(:schedule_identifier, :invalid_schedule)
+      errors.add(:schedule_identifier, :blank)
     end
 
     def validate_not_withdrawn
