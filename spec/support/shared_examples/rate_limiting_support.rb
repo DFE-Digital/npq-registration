@@ -1,33 +1,52 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an IP-based rate limited endpoint" do |desc, limit, period|
+RSpec.shared_examples "a rate limited endpoint", rack_attack: true do |desc|
   describe desc do
-    subject { response.status }
+    let(:limit) { 2 }
+    let(:throttle) { Rack::Attack.throttles[desc] }
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+    subject { response }
 
     before do
+      memory_store = ActiveSupport::Cache.lookup_store(:memory_store)
       allow(Rack::Attack.cache).to receive(:store) { memory_store }
+
+      allow(throttle).to receive(:limit) { limit }
+
+      allow(Rails.logger).to receive(:warn)
+
+      freeze_time
+
       request_count.times { perform_request }
     end
 
     context "when fewer than rate limit" do
       let(:request_count) { limit - 1 }
 
-      it { is_expected.not_to eq(429) }
+      it { is_expected.to have_http_status(:success) }
     end
 
     context "when more than rate limit" do
       let(:request_count) { limit + 1 }
 
-      it { is_expected.to eq(429) }
+      it { is_expected.to have_http_status(:too_many_requests) }
 
-      context "when time restriction has passed" do
-        it "allows another request" do
-          travel period + 1.second
-          perform_request
-          expect(response.status).not_to eq(429)
-        end
+      it "logs a warning" do
+        expect(Rails.logger).to have_received(:warn).with(
+          %r{\[rack-attack\] Throttled request [a-zA-Z0-9]{20} from #{Regexp.escape(request.remote_ip)} to '#{request.path}'},
+        )
+      end
+
+      it "allows another request when the time restriction has passed" do
+        travel(throttle.period + 10.seconds)
+        perform_request
+        expect(subject).to have_http_status(:success)
+      end
+
+      it "allows another request if the condition changes" do
+        change_condition
+        perform_request
+        expect(subject).to have_http_status(:success)
       end
     end
   end
