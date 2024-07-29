@@ -30,7 +30,7 @@ module API
             .permit(:course_identifier, :state, :completion_date)
             .merge(
               lead_provider: current_lead_provider,
-              participant:,
+              participant_id: participant.id,
             )
         rescue ActionController::ParameterMissing
           raise ActionController::BadRequest, I18n.t(:invalid_data_structure)

@@ -67,7 +67,7 @@ module Participants
 
     def validate_not_withdrawn
       if application&.withdrawn?
-        errors.add(:participant, :already_withdrawn)
+        errors.add(:participant_id, :already_withdrawn)
       end
     end
 

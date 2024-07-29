@@ -6,13 +6,20 @@ module Participants
     include ActiveModel::Attributes
 
     attribute :lead_provider
-    attribute :participant
+    attribute :participant_id
     attribute :course_identifier
 
     validates :lead_provider, presence: true
-    validates :participant, presence: true
+    validates :participant_id, presence: true
     validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false
     validate :application_exists
+    validate :participant_exists
+
+    def participant
+      @participant ||= Query.new(lead_provider:).participant(id: participant_id)
+    rescue ActiveRecord::RecordNotFound, ArgumentError
+      nil
+    end
 
   private
 
@@ -29,7 +36,11 @@ module Participants
     end
 
     def application_exists
-      errors.add(:participant, :blank) if application.blank?
+      errors.add(:participant_id, :invalid_participant) if application.blank?
+    end
+
+    def participant_exists
+      errors.add(:participant_id, :invalid_participant) if participant.blank?
     end
   end
 end

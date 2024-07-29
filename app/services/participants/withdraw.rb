@@ -43,11 +43,11 @@ module Participants
   private
 
     def not_withdrawn
-      errors.add(:participant, :already_withdrawn) if application&.withdrawn?
+      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn?
     end
 
     def has_started_declarations
-      errors.add(:participant, :no_started_declarations) unless application&.declarations&.any?(&:started_declaration_type?)
+      errors.add(:participant_id, :no_started_declarations) unless application&.declarations&.any?(&:started_declaration_type?)
     end
   end
 end

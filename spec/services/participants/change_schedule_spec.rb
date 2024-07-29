@@ -11,7 +11,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
   let!(:application) { create(:application, :accepted, cohort:, lead_provider:, course:, schedule:) }
 
   let(:participant) { application.user }
-  let(:participant_id) { participant.ecf_id }
+  let(:participant_id) { participant.id }
 
   let(:new_cohort) { create(:cohort, :next) }
   let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
@@ -20,7 +20,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:params) do
     {
       lead_provider:,
-      participant:,
+      participant_id:,
       course_identifier:,
 
       schedule_identifier: new_schedule_identifier,
@@ -36,7 +36,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         let(:params) do
           {
             lead_provider:,
-            participant:,
+            participant_id:,
             course_identifier:,
 
             schedule_identifier: new_schedule_identifier,
@@ -74,14 +74,14 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         application
       end
 
-      it { is_expected.to have_error(:participant, :already_withdrawn, "The participant is already withdrawn") }
+      it { is_expected.to have_error(:participant_id, :already_withdrawn, "The participant is already withdrawn") }
     end
 
     context "when the cohort is changing" do
       let(:params) do
         {
           lead_provider:,
-          participant:,
+          participant_id:,
           course_identifier:,
 
           schedule_identifier: new_schedule_identifier,
@@ -335,7 +335,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       let(:params) do
         {
           lead_provider:,
-          participant:,
+          participant_id:,
           course_identifier:,
 
           schedule_identifier: new_schedule_identifier,

@@ -2,19 +2,19 @@ require "rails_helper"
 
 RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:date_format) { "%Y-%m-%d" }
-  let(:participant) { completed_declaration.user }
+  let(:participant_id) { completed_declaration.user.id }
   let(:lead_provider) { completed_declaration.lead_provider }
   let(:completion_date) { 1.week.ago.strftime(date_format) }
   let(:course_identifier) { described_class::PERMITTED_COURSES.sample }
   let(:course) { Course.find_by(identifier: course_identifier) }
   let(:state) { described_class::STATES.sample }
   let(:completed_declaration) { create(:declaration, :completed, :payable, course:) }
-  let(:instance) { described_class.new(lead_provider:, participant:, completion_date:, state:, course_identifier:) }
+  let(:instance) { described_class.new(lead_provider:, participant_id:, completion_date:, state:, course_identifier:) }
 
   describe "validations" do
     it { expect(instance).to be_valid }
     it { is_expected.to validate_presence_of(:lead_provider).with_message("Your update cannot be made as the '#/lead_provider' is not recognised. Check lead provider details and try again.") }
-    it { is_expected.to validate_presence_of(:participant).with_message("Your update cannot be made as the '#/participant' is not recognised. Check participant details and try again.") }
+    it { is_expected.to validate_presence_of(:participant_id).with_message("Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
     it { is_expected.to validate_presence_of(:completion_date).with_message("The '#/completion_date' is missing from your request. Please include a completion_date value and try again.") }
     it { is_expected.to validate_presence_of(:course_identifier).with_message("Enter a '#/course_identifier' value for this participant.") }
     it { is_expected.to validate_presence_of(:state).with_message("The '#/state' is missing from your request. Please include a 'passed' or 'failed' value and try again.") }
