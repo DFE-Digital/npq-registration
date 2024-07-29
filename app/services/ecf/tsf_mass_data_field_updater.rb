@@ -1,5 +1,7 @@
 module Ecf
-  class TsfMassDataFieldUpdater < Base
+  class TsfMassDataFieldUpdater
+    prepend Base
+
     def initialize(applications:, &after_save)
       @applications = applications
       @after_save = after_save

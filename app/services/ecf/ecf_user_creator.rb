@@ -1,5 +1,7 @@
 module Ecf
-  class EcfUserCreator < Base
+  class EcfUserCreator
+    prepend Base
+
     attr_reader :user
 
     def initialize(user:)

@@ -166,5 +166,16 @@ RSpec.describe Ecf::EcfUserCreator do
         )
       end
     end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      let(:response_code) { 201 }
+      let(:response_body) { "anything" }
+
+      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+
+      it "returns nil" do
+        expect(subject.call).to be_nil
+      end
+    end
   end
 end

@@ -9,6 +9,8 @@ class ParticipantValidator
   end
 
   def call
+    return if Rails.application.config.npq_separation[:ecf_api_disabled]
+
     request = Net::HTTP::Post.new(uri)
     request["Authorization"] = "Bearer #{config.bearer_token}"
     request.set_form_data(payload)

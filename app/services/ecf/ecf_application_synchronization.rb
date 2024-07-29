@@ -1,5 +1,7 @@
 module Ecf
-  class EcfApplicationSynchronization < Base
+  class EcfApplicationSynchronization
+    prepend Base
+
     def call
       uri = build_uri
       request = build_http_get_request(uri)

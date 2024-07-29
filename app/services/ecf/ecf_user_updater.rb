@@ -1,5 +1,7 @@
 module Ecf
-  class EcfUserUpdater < Base
+  class EcfUserUpdater
+    prepend Base
+
     def self.call(user:)
       new(user:).call
     end

@@ -22,4 +22,12 @@ RSpec.describe Ecf::NpqProfileMassUpdater do
 
     subject.call
   end
+
+  context "when ecf_api_disabled flag is toggled on" do
+    before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+
+    it "returns nil" do
+      expect(subject.call).to be_nil
+    end
+  end
 end
