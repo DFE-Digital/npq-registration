@@ -126,12 +126,10 @@ RSpec.describe Participants::Query do
         end
 
         context "when an invalid training status is supplied" do
-          let(:params) { { training_status: "any" } }
+          let(:params) { { training_status: "not_valid_status" } }
 
-          it "does not filter by training status" do
-            condition_string = %("training_status")
-
-            expect(query.scope.to_sql).not_to include(condition_string)
+          it "raises an error" do
+            expect { query.scope.to_sql }.to raise_error(API::Errors::FilterValidationError).with_message(%(The filter '#/training_status' must be ["active", "deferred", "withdrawn"]))
           end
         end
       end

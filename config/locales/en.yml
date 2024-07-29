@@ -5,6 +5,7 @@ en:
   bad_request: "Bad request"
   not_found: "Not found"
   invalid_date_filter: "The filter '#/%{parameterized_attribute}' must be a valid ISO 8601 date"
+  invalid_training_status: "The filter '#/training_status' must be %{valid_training_status}"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
   cannot_create_completed_declaration: "Could not create completed declaration. Contact the DfE for support."
