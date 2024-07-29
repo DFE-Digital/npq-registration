@@ -190,10 +190,12 @@ private
   end
 
   def validate_funded_place?
-    accepted? && errors.blank? && cohort&.funding_cap?
+    npq_separation_api_enabled? &&
+      accepted? && errors.blank? && cohort&.funding_cap?
   end
 
   def eligible_for_funded_place
+    return unless npq_separation_api_enabled?
     return if errors.any?
     return unless cohort&.funding_cap?
 
@@ -203,11 +205,18 @@ private
   end
 
   def validate_permitted_schedule_for_course
+    return unless npq_separation_api_enabled?
     return if errors.any?
     return unless accepted? && schedule && course
 
     unless schedule.course_group.courses.include?(course)
       errors.add(:schedule, :invalid_for_course)
     end
+  end
+
+  def npq_separation_api_enabled?
+    return false unless Rails.application.config.respond_to?(:npq_separation)
+
+    !!(Rails.application.config.npq_separation || {})[:api_enabled]
   end
 end

@@ -30,6 +30,8 @@ RSpec.describe Application do
     context "when accepted" do
       let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
+      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ api_enabled: true }) }
+
       context "when funding_cap" do
         subject { build(:application, :accepted, cohort:) }
 
