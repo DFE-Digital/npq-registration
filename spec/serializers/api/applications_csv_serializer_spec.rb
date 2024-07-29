@@ -82,22 +82,5 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         it { expect(parsed_updated_at_attribute).to be_within(1.second).of(first_application.user.updated_at) }
       end
     end
-
-    describe "created_at serialization" do
-      let(:parsed_created_at_attribute) { Time.zone.parse(first_row[:created_at]) }
-
-      it { expect(parsed_created_at_attribute).to be_within(1.second).of(first_application.created_at) }
-
-      context "when the application has been accepted" do
-        before do
-          ActiveRecord::Base.no_touching do
-            first_application.update!(created_at: 5.days.ago)
-            first_application.update!(accepted_at: 1.day.ago)
-          end
-        end
-
-        it { expect(parsed_created_at_attribute).to be_within(1.second).of(first_application.accepted_at) }
-      end
-    end
   end
 end

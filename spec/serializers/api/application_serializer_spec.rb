@@ -195,15 +195,6 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         expect(attributes["created_at"]).to eq("2023-07-01T12:00:00Z")
       end
 
-      context "when the application has been accepted" do
-        it "serializes the `created_at` as the applications's accepted_at" do
-          application.created_at = Time.utc(2023, 7, 2, 12, 0, 0)
-          application.accepted_at = Time.utc(2024, 7, 2, 12, 0, 0)
-
-          expect(attributes["created_at"]).to eq("2024-07-02T12:00:00Z")
-        end
-      end
-
       it "serializes the `updated_at`" do
         application.updated_at = Time.utc(2023, 7, 2, 12, 0, 0)
 

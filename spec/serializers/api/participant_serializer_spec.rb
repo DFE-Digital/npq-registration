@@ -129,7 +129,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
             withdrawal: nil,
             deferral: nil,
-            created_at: application.created_at.rfc3339,
+            created_at: application.accepted_at.rfc3339,
             funded_place: application.funded_place,
           }.stringify_keys,
         ])
@@ -155,7 +155,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
                 date: application.application_states.last.created_at.rfc3339,
               },
               deferral: nil,
-              created_at: application.created_at.rfc3339,
+              created_at: application.accepted_at.rfc3339,
               funded_place: application.funded_place,
             }.deep_stringify_keys,
           ])
@@ -182,7 +182,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
                 reason: application.application_states.last.reason,
                 date: application.application_states.last.created_at.rfc3339,
               },
-              created_at: application.created_at.rfc3339,
+              created_at: application.accepted_at.rfc3339,
               funded_place: application.funded_place,
             }.deep_stringify_keys,
           ])
@@ -197,30 +197,6 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             changed_at: participant.participant_id_changes.last.created_at.rfc3339,
           }.stringify_keys,
         ])
-      end
-
-      context "when application has been accepted" do
-        let(:application) { create(:application, :accepted, lead_provider:) }
-
-        it "serializes the `npq_enrolments`" do
-          expect(attributes["npq_enrolments"]).to eq([
-            {
-              email: participant.email,
-              course_identifier: application.course.identifier,
-              schedule_identifier: application.schedule.identifier,
-              cohort: application.cohort.start_year.to_s,
-              npq_application_id: application.ecf_id,
-              eligible_for_funding: application.eligible_for_funding,
-              training_status: application.training_status,
-              school_urn: application.school.urn,
-              targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
-              withdrawal: nil,
-              deferral: nil,
-              created_at: application.accepted_at.rfc3339,
-              funded_place: application.funded_place,
-            }.deep_stringify_keys,
-          ])
-        end
       end
     end
   end

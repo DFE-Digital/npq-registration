@@ -75,7 +75,7 @@ module API
         application.works_in_school,
         application.employer_name,
         application.employment_role,
-        created_at(application),
+        application.created_at.rfc3339,
         updated_at(application),
         application.cohort&.start_year&.to_s,
         application.ineligible_for_funding_reason,
@@ -96,13 +96,6 @@ module API
       [
         application.user.updated_at,
         application.updated_at,
-      ].compact.max.rfc3339
-    end
-
-    def created_at(application)
-      [
-        application.accepted_at,
-        application.created_at,
       ].compact.max.rfc3339
     end
   end
