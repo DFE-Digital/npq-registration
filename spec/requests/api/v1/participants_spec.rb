@@ -45,7 +45,9 @@ RSpec.describe "Participant endpoints", type: :request do
       resume_api_v1_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API update endpoint"
+    it_behaves_like "an API update endpoint" do
+      let(:params) { { data: { attributes: attributes.merge(reason: "test") } } }
+    end
   end
 
   describe "PUT /api/v1/participants/:ecf_id/defer" do
@@ -62,7 +64,9 @@ RSpec.describe "Participant endpoints", type: :request do
       defer_api_v1_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API update endpoint"
+    it_behaves_like "an API update endpoint" do
+      let(:params) { { data: { attributes: attributes.merge(schedule_identifier: "test") } } }
+    end
   end
 
   describe "PUT /api/v1/participants/:ecf_id/withdraw" do
@@ -79,7 +83,9 @@ RSpec.describe "Participant endpoints", type: :request do
       withdraw_api_v1_participant_path(ecf_id: id)
     end
 
-    it_behaves_like "an API update endpoint"
+    it_behaves_like "an API update endpoint" do
+      let(:params) { { data: { attributes: attributes.merge(schedule_identifier: "test") } } }
+    end
   end
 
   describe "PUT /api/v1/participants/:ecf_id/change-schedule" do
@@ -98,6 +104,8 @@ RSpec.describe "Participant endpoints", type: :request do
       change_schedule_api_v1_participant_path(id)
     end
 
-    it_behaves_like "an API update endpoint"
+    it_behaves_like "an API update endpoint" do
+      let(:params) { { data: { attributes: attributes.merge(reason: "test") } } }
+    end
   end
 end
