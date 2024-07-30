@@ -50,6 +50,13 @@ RSpec.describe Declarations::Void, type: :model do
           before { declaration.update!(state:) }
 
           it { expect(instance).to have_error(:declaration, :must_be_paid, "The declaration must be paid before it can be clawed back.") }
+
+          context "when there are other declaration errors" do
+            before { create(:statement_item, declaration:, state: StatementItem::REFUNDABLE_STATES.sample) }
+
+            it { expect(instance).to have_error(:declaration) }
+            it { expect(instance).not_to have_error(:declaration, :must_be_paid) }
+          end
         end
       end
     end

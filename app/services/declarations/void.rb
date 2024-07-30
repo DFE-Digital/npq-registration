@@ -59,6 +59,8 @@ module Declarations
     end
 
     def declaration_is_paid
+      return if errors[:declaration].any?
+
       errors.add(:declaration, :must_be_paid) unless declaration&.paid_state?
     end
 

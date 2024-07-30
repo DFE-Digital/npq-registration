@@ -15,7 +15,7 @@ module Declarations
     validates :lead_provider, presence: true
     validates :participant_id, presence: true
     validates :participant, participant_presence: true, participant_not_withdrawn: true
-    validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false, course_for_participant: true
+    validates :course_identifier, course_for_participant: true
     validates :declaration_date, declaration_date: true
     validates :declaration_date, presence: true
     validates :declaration_type, presence: true

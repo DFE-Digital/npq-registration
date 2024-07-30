@@ -42,9 +42,24 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when the course is invalid" do
-      let(:course_identifier) { "any-course-identifier" }
+      let(:course_identifier) { "invalid" }
 
-      it { is_expected.to have_error(:course_identifier, :inclusion, "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
+      it { is_expected.to have_error(:course_identifier, :invalid, "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
+
+      context "when there are other errors" do
+        let(:participant_id) { "not-found" }
+
+        it "omits the course_identifier error" do
+          expect(subject).to have_error(:participant_id)
+          expect(subject).not_to have_error(:course_identifier)
+        end
+      end
+    end
+
+    context "when the course is nil" do
+      let(:course_identifier) { nil }
+
+      it { expect(subject).to have_error(:course_identifier, :invalid, "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
     end
 
     context "when declaration date is invalid" do
