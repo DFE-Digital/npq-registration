@@ -30,24 +30,20 @@ RSpec.describe Application do
     context "when accepted" do
       let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
-      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ api_enabled: true }) }
-
       context "when funding_cap" do
         subject { build(:application, :accepted, cohort:) }
 
         it "validates funded_place boolean" do
           subject.funded_place = nil
 
-          expect(subject).to be_invalid
-          expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
+          expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.", :npq_separation)
         end
 
         it "validates funded_place eligibility" do
           subject.funded_place = true
           subject.eligible_for_funding = false
 
-          expect(subject).to be_invalid
-          expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.")
+          expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.", :npq_separation)
         end
       end
 
@@ -59,8 +55,7 @@ RSpec.describe Application do
         it "returns validation error" do
           subject.schedule = new_schedule
 
-          expect(subject).to be_invalid
-          expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course")
+          expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course", :npq_separation)
         end
       end
     end
