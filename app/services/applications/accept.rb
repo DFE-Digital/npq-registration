@@ -111,20 +111,23 @@ module Applications
       errors.blank? && cohort&.funding_cap?
     end
 
-    def schedule
-      @schedule ||= Schedule.where(identifier: schedule_identifier, cohort:).first || fallback_schedule
+    def new_schedule
+      Schedule.where(identifier: schedule_identifier, cohort:).first
     end
 
     def fallback_schedule
       course.schedule_for(cohort:)
     end
 
+    def schedule
+      @schedule ||= schedule_identifier.present? ? new_schedule : fallback_schedule
+    end
+
     def validate_permitted_schedule_for_course
       return if errors.any?
       return if schedule_identifier.blank?
-      return unless schedule
 
-      unless schedule.course_group.courses.include?(course)
+      unless schedule && schedule.course_group.courses.include?(course)
         errors.add(:schedule_identifier, :invalid_for_course)
       end
     end
