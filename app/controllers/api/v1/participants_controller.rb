@@ -16,7 +16,7 @@ module API
       end
 
       def resume
-        service = ::Participants::Resume.new(participant_action_params.slice(*::Participants::Resume.attribute_names))
+        service = ::Participants::Resume.new_filtering_attributes(participant_action_params)
 
         if service.resume
           render json: to_json(service.participant)
@@ -26,7 +26,7 @@ module API
       end
 
       def defer
-        service = ::Participants::Defer.new(participant_action_params.slice(*::Participants::Defer.attribute_names))
+        service = ::Participants::Defer.new_filtering_attributes(participant_action_params)
 
         if service.defer
           render json: to_json(service.participant)
@@ -36,7 +36,7 @@ module API
       end
 
       def withdraw
-        service = ::Participants::Withdraw.new(participant_action_params.slice(*::Participants::Withdraw.attribute_names))
+        service = ::Participants::Withdraw.new_filtering_attributes(participant_action_params)
 
         if service.withdraw
           render json: to_json(service.participant)
@@ -46,7 +46,7 @@ module API
       end
 
       def change_schedule
-        service = ::Participants::ChangeSchedule.new(participant_action_params.slice(*::Participants::ChangeSchedule.attribute_names))
+        service = ::Participants::ChangeSchedule.new_filtering_attributes(participant_action_params)
 
         if service.change_schedule
           render json: to_json(service.participant)
