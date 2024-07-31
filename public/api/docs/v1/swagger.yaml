@@ -2078,6 +2078,7 @@ components:
               enum:
               - passed
               - failed
+              - voided
             completion_date:
               description: The date the participant received the assessment outcome
                 for this course
