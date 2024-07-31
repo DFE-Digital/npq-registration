@@ -342,6 +342,12 @@ paths:
       - Participant declarations
       security:
       - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
       responses:
         '200':
           description: A CSV file of Participant declarations
