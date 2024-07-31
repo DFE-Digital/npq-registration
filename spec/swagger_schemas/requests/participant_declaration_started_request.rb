@@ -8,12 +8,14 @@ PARTICIPANT_DECLARATION_STARTED_REQUEST = {
       type: :string,
       format: :uuid,
       required: true,
+      nullable: false,
       example: "db3a7848-7308-4879-942a-c4a70ced400a",
     },
     declaration_type: {
       description: "The event declaration type",
       type: :string,
       required: true,
+      nullable: false,
       enum: %w[
         started
       ],
@@ -23,6 +25,7 @@ PARTICIPANT_DECLARATION_STARTED_REQUEST = {
       description: "The event declaration date",
       type: :string,
       required: true,
+      nullable: false,
       format: "date-time",
       example: "2021-05-31T02:21:32.000Z",
     },
@@ -30,6 +33,7 @@ PARTICIPANT_DECLARATION_STARTED_REQUEST = {
       description: "The type of course the participant is enrolled in",
       type: :string,
       required: true,
+      nullable: false,
       enum: Course::IDENTIFIERS,
       example: Course::IDENTIFIERS.first,
     },
