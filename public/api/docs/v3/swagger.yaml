@@ -335,11 +335,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       responses:
         '200':
           description: A list of Participant declarations
@@ -492,11 +487,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       responses:
         '200':
           description: A list of NPQ Outcomes for all participants
@@ -528,11 +518,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       - name: id
         in: path
         required: true

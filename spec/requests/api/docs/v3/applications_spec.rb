@@ -23,7 +23,8 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
                   "NPQ Applications",
                   "NPQ applications",
                   "#/components/schemas/ListApplicationsFilter",
-                  "#/components/schemas/ApplicationsResponse"
+                  "#/components/schemas/ApplicationsResponse",
+                  true
 
   it_behaves_like "an API show endpoint documentation",
                   "/api/v3/npq-applications/{id}",

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resource_description, filter_schema_ref, response_schema_ref|
+RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resource_description, filter_schema_ref, response_schema_ref, sortable|
   path url do
     get "Retrieve multiple #{resource_description}" do
       tags tag
@@ -22,7 +22,7 @@ RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resour
                   "$ref": "#/components/schemas/PaginationFilter",
                 }
 
-      if url =~ /v3/
+      if sortable
         parameter name: :sort,
                   in: :query,
                   required: false,
