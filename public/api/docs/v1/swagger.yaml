@@ -2267,21 +2267,27 @@ components:
       description: A participant declaration data request
       type: object
       required:
-      - type
-      - attributes
+      - data
       properties:
-        type:
-          type: string
-          required: true
-          enum:
-          - participant-declaration
-          example: participant-declaration
-        attributes:
-          required: true
-          anyOf:
-          - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
-          - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
-          - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
+        data:
+          description: A participant declaration data request
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              type: string
+              required: true
+              enum:
+              - participant-declaration
+              example: participant-declaration
+            attributes:
+              required: true
+              anyOf:
+              - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
+              - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
+              - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
     ParticipantDeclarationResponse:
       description: A single participant declaration.
       type: object
