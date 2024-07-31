@@ -1734,7 +1734,7 @@ components:
                 - npq-senco
             funded_places:
               description: Information about the funded place(s) the participant is
-                enroled in
+                enrolled in
               type: array
               items:
                 type: object

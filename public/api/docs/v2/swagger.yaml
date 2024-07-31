@@ -1904,7 +1904,7 @@ components:
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
             npq_enrolments:
-              description: Information about the course(s) the participant is enroled
+              description: Information about the course(s) the participant is enrolled
                 in
               type: array
               items:

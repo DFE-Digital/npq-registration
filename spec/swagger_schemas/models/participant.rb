@@ -47,7 +47,7 @@ PARTICIPANT = {
             },
           },
           funded_places: {
-            description: "Information about the funded place(s) the participant is enroled in",
+            description: "Information about the funded place(s) the participant is enrolled in",
             type: :array,
             items: {
               type: :object,
@@ -132,7 +132,7 @@ PARTICIPANT = {
             example: "2021-05-31T02:22:32.000Z",
           },
           npq_enrolments: {
-            description: "Information about the course(s) the participant is enroled in",
+            description: "Information about the course(s) the participant is enrolled in",
             type: :array,
             items: {
               description: "The details of an NPQ Participant enrolment",
@@ -237,7 +237,7 @@ PARTICIPANT = {
             example: "2021-05-31T02:22:32.000Z",
           },
           npq_enrolments: {
-            description: "Information about the course(s) the participant is enroled in",
+            description: "Information about the course(s) the participant is enrolled in",
             type: :array,
             items: {
               description: "The details of an NPQ Participant enrolment",
