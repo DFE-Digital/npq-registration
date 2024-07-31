@@ -508,11 +508,6 @@ paths:
       security:
       - api_key: []
       parameters:
-      - name: filter
-        in: query
-        required: false
-        schema:
-          "$ref":
       - name: page
         in: query
         required: false

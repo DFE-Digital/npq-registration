@@ -8,12 +8,14 @@ RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resour
       produces "application/json"
       security [api_key: []]
 
-      parameter name: :filter,
-                in: :query,
-                required: false,
-                schema: {
-                  "$ref": filter_schema_ref,
-                }
+      if filter_schema_ref
+        parameter name: :filter,
+                  in: :query,
+                  required: false,
+                  schema: {
+                    "$ref": filter_schema_ref,
+                  }
+      end
 
       parameter name: :page,
                 in: :query,
