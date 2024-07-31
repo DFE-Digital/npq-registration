@@ -450,7 +450,7 @@ paths:
                         updated_at: '2021-05-31T02:22:32.000Z'
                         has_passed:
                         statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
-                        clawback_statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
+                        clawback_statement_id:
                         ineligible_for_funding_reason: duplicate_declaration
                         uplift_paid: true
                         lead_provider_name: Example Institute

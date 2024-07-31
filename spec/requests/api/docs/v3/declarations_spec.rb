@@ -36,6 +36,7 @@ RSpec.describe "Participant Declarations endpoint", type: :request, openapi_spec
         base_response_example.tap do |example|
           example[:data][:attributes][:state] = "voided"
           example[:data][:attributes][:has_passed] = nil
+          example[:data][:attributes][:clawback_statement_id] = nil
         end
       end
     end
