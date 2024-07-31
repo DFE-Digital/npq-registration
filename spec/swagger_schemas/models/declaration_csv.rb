@@ -6,13 +6,13 @@ DECLARATION_CSV = {
       id
       participant_id
       declaration_type
-      declaration_date
       course_identifier
-      updated_at
+      declaration_date
       state
       has_passed
-      eligible_for_payment
       voided
+      eligible_for_payment
+      updated_at
     ],
     properties: {
       id: {
@@ -51,12 +51,6 @@ DECLARATION_CSV = {
         example: Declaration.states.keys.first,
         enum: Declaration.states.keys,
       },
-      updated_at: {
-        description: "The date the declaration was last updated",
-        type: :string,
-        format: :"date-time",
-        example: "2021-05-31T02:22:32.000Z",
-      },
       has_passed: {
         description: "Whether the participant has failed or passed",
         type: :boolean,
@@ -71,6 +65,12 @@ DECLARATION_CSV = {
         description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
         type: :boolean,
         example: true,
+      },
+      updated_at: {
+        description: "The date the declaration was last updated",
+        type: :string,
+        format: :"date-time",
+        example: "2021-05-31T02:22:32.000Z",
       },
     },
   },

@@ -17,20 +17,6 @@ PARTICIPANT_OUTCOME = {
       },
       attributes: {
         properties: {
-          participant_id: {
-            description: "The unique identifier of this NPQ participant",
-            type: :string,
-            nullable: false,
-            example: "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
-            format: "uuid",
-          },
-          course_identifier: {
-            description: "The NPQ course this NPQ application relates to",
-            type: :string,
-            nullable: false,
-            example: ParticipantOutcomes::Create::PERMITTED_COURSES.first,
-            enum: ParticipantOutcomes::Create::PERMITTED_COURSES,
-          },
           state: {
             description: "The state of the outcome (passed or failed)",
             nullable: false,
@@ -43,6 +29,20 @@ PARTICIPANT_OUTCOME = {
             nullable: false,
             type: :string,
             example: "2021-05-31T00:00:00+00:00",
+          },
+          course_identifier: {
+            description: "The NPQ course this NPQ application relates to",
+            type: :string,
+            nullable: false,
+            example: ParticipantOutcomes::Create::PERMITTED_COURSES.first,
+            enum: ParticipantOutcomes::Create::PERMITTED_COURSES,
+          },
+          participant_id: {
+            description: "The unique identifier of this NPQ participant",
+            type: :string,
+            nullable: false,
+            example: "7a8fef46-3c43-42c0-b3d5-1ba5904ba562",
+            format: "uuid",
           },
           created_at: {
             description: "The date you created the participant-outcome record",

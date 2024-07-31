@@ -159,18 +159,18 @@ PARTICIPANT = {
                   nullable: true,
                   example: "2022",
                 },
-                eligible_for_funding: {
-                  description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
-                  type: :boolean,
-                  nullable: false,
-                  example: true,
-                },
                 npq_application_id: {
                   description: "The ID of the NPQ application that was accepted to create this enrolment",
                   type: :string,
                   format: :uuid,
                   nullable: false,
                   example: "db3a7848-7308-4879-942a-c4a70ced400a",
+                },
+                eligible_for_funding: {
+                  description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+                  type: :boolean,
+                  nullable: false,
+                  example: true,
                 },
                 training_status: {
                   description: "The training status of the NPQ participant",
@@ -270,18 +270,18 @@ PARTICIPANT = {
                   nullable: true,
                   example: "2022",
                 },
-                eligible_for_funding: {
-                  description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
-                  type: :boolean,
-                  nullable: false,
-                  example: true,
-                },
                 npq_application_id: {
                   description: "The ID of the NPQ application that was accepted to create this enrolment",
                   type: :string,
                   format: :uuid,
                   nullable: false,
                   example: "db3a7848-7308-4879-942a-c4a70ced400a",
+                },
+                eligible_for_funding: {
+                  description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
+                  type: :boolean,
+                  nullable: false,
+                  example: true,
                 },
                 training_status: {
                   description: "The training status of the NPQ participant",
