@@ -24,7 +24,6 @@ module Applications
         accept_application!
         create_application_state!
         reject_other_applications_in_same_cohort!
-        set_funded_place_on_npq_application!
       end
 
       true
@@ -52,10 +51,16 @@ module Applications
     end
 
     def accept_application!
-      application.update!(
+      opts = {
         lead_provider_approval_status: "accepted",
         schedule:,
-      )
+      }
+
+      if cohort&.funding_cap?
+        opts[:funded_place] = funded_place
+      end
+
+      application.update!(opts)
     end
 
     def reject_other_applications_in_same_cohort!
@@ -90,12 +95,6 @@ module Applications
       @same_trn_users ||= User
                          .where(trn:)
                          .where.not(id: user.id)
-    end
-
-    def set_funded_place_on_npq_application!
-      return unless cohort&.funding_cap?
-
-      application.update!(funded_place:)
     end
 
     def eligible_for_funded_place

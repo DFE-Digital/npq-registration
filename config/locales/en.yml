@@ -38,9 +38,11 @@ en:
 
   schedule: &schedule
     cohort_mismatch: The schedule cohort must match the application cohort
+    invalid_for_course: Selected schedule is not valid for the course
 
   funded_place: &funded_place
     inclusion: Set '#/%{parameterized_attribute}' to true or false.
+    not_eligible: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
 
   participant_id: &participant_id
     blank: "The property '#/participant_id' must be present"
@@ -102,6 +104,7 @@ en:
   time:
     formats:
       admin: "%R on %d/%m/%Y"
+
   activerecord:
     errors:
       models:
@@ -109,6 +112,19 @@ en:
           attributes:
             schedule:
               <<: *schedule
+            funded_place:
+              <<: *funded_place
+        declaration:
+          attributes:
+            declaration_date:
+              *declaration_date
+            declaration_type:
+              *declaration_type
+        participant_outcome:
+          attributes:
+            completion_date:
+              *completion_date
+
   activemodel:
     attributes:
       questionnaires/funding_your_npq:

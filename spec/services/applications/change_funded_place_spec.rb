@@ -63,7 +63,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
         end
 
         it "is invalid if the application is not eligible for funding" do
-          application.update!(eligible_for_funding: false)
+          application.update!(eligible_for_funding: false, funded_place: false)
 
           service.change
 

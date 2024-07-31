@@ -72,6 +72,13 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }
 
+  validates :funded_place,
+            inclusion: { in: [true, false] },
+            if: :validate_funded_place?,
+            on: :npq_separation
+  validate :eligible_for_funded_place, on: :npq_separation
+  validate :validate_permitted_schedule_for_course, on: :npq_separation
+
   # `eligible_for_dfe_funding?`  takes into consideration what we know
   # about user eligibility plus if it has been previously funded. We need
   # to keep this method in place to keep consistency during the split between
@@ -181,5 +188,27 @@ private
 
   def schedule_cohort_matches
     errors.add(:schedule, :cohort_mismatch) if schedule && schedule.cohort != cohort
+  end
+
+  def validate_funded_place?
+    accepted? && errors.blank? && cohort&.funding_cap?
+  end
+
+  def eligible_for_funded_place
+    return if errors.any?
+    return unless cohort&.funding_cap?
+
+    if funded_place && !eligible_for_funding
+      errors.add(:funded_place, :not_eligible)
+    end
+  end
+
+  def validate_permitted_schedule_for_course
+    return if errors.any?
+    return unless accepted? && schedule && course
+
+    unless schedule.course_group.courses.include?(course)
+      errors.add(:schedule, :invalid_for_course)
+    end
   end
 end

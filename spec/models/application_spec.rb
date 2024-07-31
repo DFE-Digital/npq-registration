@@ -26,6 +26,39 @@ RSpec.describe Application do
 
       it { is_expected.to have_error(:schedule, :cohort_mismatch, "The schedule cohort must match the application cohort") }
     end
+
+    context "when accepted" do
+      let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+
+      context "when funding_cap" do
+        subject { build(:application, :accepted, cohort:) }
+
+        it "validates funded_place boolean" do
+          subject.funded_place = nil
+
+          expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.", :npq_separation)
+        end
+
+        it "validates funded_place eligibility" do
+          subject.funded_place = true
+          subject.eligible_for_funding = false
+
+          expect(subject).to have_error(:funded_place, :not_eligible, "The participant is not eligible for funding, so '#/funded_place' cannot be set to true.", :npq_separation)
+        end
+      end
+
+      context "when changing to wrong schedule" do
+        let(:new_schedule) { create(:schedule, cohort:) }
+
+        subject { create(:application, :accepted, cohort:) }
+
+        it "returns validation error" do
+          subject.schedule = new_schedule
+
+          expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course", :npq_separation)
+        end
+      end
+    end
   end
 
   describe "enums" do
@@ -240,7 +273,10 @@ RSpec.describe Application do
     end
 
     context "when the application has not been previously funded (previous application is not for a rebranded alternative course)" do
-      before { previous_application.update!(course: Course.npqeyl) }
+      before do
+        previous_application.schedule.course_group.courses << Course.npqeyl
+        previous_application.update!(course: Course.npqeyl)
+      end
 
       it { is_expected.not_to be_previously_funded }
     end
