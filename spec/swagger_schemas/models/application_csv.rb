@@ -82,7 +82,7 @@ APPLICATION_CSV = {
         example: true,
       },
       funded_place: {
-        description: "This field indicates whether the application is funded",
+        description: "Indicates whether this NPQ participant is funded by DfE",
         nullable: true,
         type: :boolean,
         example: true,

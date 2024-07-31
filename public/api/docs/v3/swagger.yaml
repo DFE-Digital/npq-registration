@@ -128,7 +128,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place: true
+                        funded_place:
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -214,7 +214,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place: true
+                        funded_place:
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -1405,10 +1405,11 @@ components:
               type: boolean
               example: true
             funded_place:
-              description: This field indicates whether the application is funded
+              description: Indicates whether or not this participant’s training is
+                being funded by DfE
               nullable: true
               type: boolean
-              example: true
+              example:
             schedule_identifier:
               description: The new schedule of the participant
               nullable: true
@@ -1451,7 +1452,7 @@ components:
               required: false
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1498,7 +1499,7 @@ components:
               - funded_place
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1721,8 +1722,8 @@ components:
                     format: date-time
                     example: '2021-05-31T02:21:32.000Z'
                   funded_place:
-                    description: Indicates whether this NPQ participant is funded
-                      by DfE
+                    description: Indicates whether or not this participant’s training
+                      is being funded by DfE
                     nullable: true
                     type: boolean
                     example: true

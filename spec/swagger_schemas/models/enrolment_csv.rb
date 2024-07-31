@@ -50,6 +50,12 @@ ENROLMENT_CSV = {
         type: :boolean,
         example: true,
       },
+      funded_place: {
+        description: "Indicates whether this NPQ participant is funded by DfE",
+        type: :boolean,
+        example: true,
+        required: true,
+      },
       training_status: {
         description: "The training status of the ECF participant",
         type: :string,

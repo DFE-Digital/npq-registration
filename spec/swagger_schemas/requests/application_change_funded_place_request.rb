@@ -20,7 +20,7 @@ APPLICATION_CHANGE_FUNDED_PLACE_REQUEST = {
           required: %i[funded_place],
           properties: {
             funded_place: {
-              description: "This field indicates whether the application is funded",
+              description: "Whether the participant has a funded place",
               nullable: false,
               type: :boolean,
               example: true,

@@ -149,7 +149,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place: true
+                        funded_place:
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -234,7 +234,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place: true
+                        funded_place:
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -1330,10 +1330,11 @@ components:
               type: boolean
               example: true
             funded_place:
-              description: This field indicates whether the application is funded
+              description: Indicates whether or not this participant’s training is
+                being funded by DfE
               nullable: true
               type: boolean
-              example: true
+              example:
     ApplicationAcceptRequest:
       description: A NPQ application acceptance request
       type: object
@@ -1358,7 +1359,7 @@ components:
               required: false
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1387,7 +1388,7 @@ components:
               - funded_place
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1477,6 +1478,11 @@ components:
             funding from the DfE
           type: boolean
           example: true
+        funded_place:
+          description: Indicates whether this NPQ participant is funded by DfE
+          type: boolean
+          example: true
+          required: true
         training_status:
           description: The training status of the ECF participant
           type: string
@@ -1682,7 +1688,7 @@ components:
           type: boolean
           example: true
         funded_place:
-          description: This field indicates whether the application is funded
+          description: Indicates whether this NPQ participant is funded by DfE
           nullable: true
           type: boolean
           example: true
@@ -1956,8 +1962,8 @@ components:
                     type: boolean
                     example: true
                   funded_place:
-                    description: Indicates whether this NPQ participant is funded
-                      by DfE
+                    description: Indicates whether or not this participant’s training
+                      is being funded by DfE
                     nullable: true
                     type: boolean
                     example: true

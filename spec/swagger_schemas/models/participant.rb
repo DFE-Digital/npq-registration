@@ -61,7 +61,7 @@ PARTICIPANT = {
                   enum: Course::IDENTIFIERS,
                 },
                 funded_place: {
-                  description: "Indicates whether this NPQ participant is funded by DfE",
+                  description: "Indicates whether or not this participant’s training is being funded by DfE",
                   type: :boolean,
                   example: true,
                   nullable: true,
@@ -191,7 +191,7 @@ PARTICIPANT = {
                   example: true,
                 },
                 funded_place: {
-                  description: "Indicates whether this NPQ participant is funded by DfE",
+                  description: "Indicates whether or not this participant’s training is being funded by DfE",
                   nullable: true,
                   type: :boolean,
                   example: true,
@@ -355,7 +355,7 @@ PARTICIPANT = {
                   example: "2021-05-31T02:21:32.000Z",
                 },
                 funded_place: {
-                  description: "Indicates whether this NPQ participant is funded by DfE",
+                  description: "Indicates whether or not this participant’s training is being funded by DfE",
                   nullable: true,
                   type: :boolean,
                   example: true,
