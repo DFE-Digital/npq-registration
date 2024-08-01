@@ -107,6 +107,10 @@
       <td class="govuk-table__cell">[Definition needs to be written]</td>
     </tr>
           <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Seed data</th>
+      <td class="govuk-table__cell">[Definition needs to be written]</td>
+    </tr>
+          <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Start date</th>
       <td class="govuk-table__cell">[Definition needs to be written]</td>
     </tr>

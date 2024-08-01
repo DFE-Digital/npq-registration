@@ -55,11 +55,11 @@ This API uses a `state` model to reflect the NPQ participant journey, meet contr
 
 Application states are defined by the `status` attribute.
 
-A application’s status value will determine whether a provider can:
+An application’s status value will determine whether a provider can:
 
-* [accept or reject applications](ADD LINK)
+* accept or reject applications
 
-* [submit a declaration](ADD LINK). For example, notifying DfE that a participant has started their training
+* submit a declaration. For example, notifying DfE that a participant has started their training
 
 <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">Application status values</caption>
@@ -89,17 +89,15 @@ A application’s status value will determine whether a provider can:
   </tbody>
 </table>
 
-[View more detailed specifications for the NPQ application schema](ADD LINK)
-
 ## Participant data states
 
 Participant states are defined by the `training_status` attribute.
 
 A participant’s `training_status` value will determine whether a provider can:
 
-* [update their details](ADD LINK). For example, notifying DfE that a participant has withdrawn from the course
+* update their details. For example, notifying DfE that a participant has withdrawn from the course
 
-* [submit a declaration](ADD LINK). For example, notifying DfE that a participant has started their training
+* submit a declaration. For example, notifying DfE that a participant has started their training
 
 <table class="govuk-table">
 <caption class="govuk-table__caption govuk-table__caption--m">Training status values</caption>
@@ -129,13 +127,11 @@ A participant’s `training_status` value will determine whether a provider can:
   </tbody>
 </table>
 
-[View more detailed specifications for the NPQ participant schema](ADD LINK)
-
 ## Declaration data states
 
 Declaration states are defined by the `state` attribute.
 
-Providers must [submit declarations](ADD LINK) to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
+Providers must submit declarations to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
 
 <table class="govuk-table">
 <caption class="govuk-table__caption govuk-table__caption--m">Declaration status values</caption>
@@ -189,5 +185,3 @@ Providers must [submit declarations](ADD LINK) to confirm a participant has enga
     </tr>
   </tbody>
 </table>
-
-[View more detailed specifications for the declaration schema](ADD LINK)

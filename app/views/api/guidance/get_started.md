@@ -8,7 +8,7 @@ Providers integrate their local CRM systems by connecting to this API's producti
 
 Providers need to use a unique authentication token to connect to the API. 
 
-Emails us [INSERT EMAIL LINK]if you do not already have this token. We'll send it via secure email. 
+Emails us [INSERT EMAIL LINK] if you do not already have this token. We'll send it via secure email. 
 
 The tokens do not expire. 
 
@@ -33,19 +33,19 @@ Unauthenticated requests will receive an <code>UnauthorizedResponse</code> with 
 
 Provider development teams can also access the OpenAPI spec in YAML formats: 
 
-* view the OpenAPI v1.0.0. spec [ADD LINK]
-* view the OpenAPI v2.0.0. spec [ADD LINK]
-* view the OpenAPI v3.0.0. spec [ADD LINK]
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1/swagger.yaml">view the OpenAPI version 1 spec</a>
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2/swagger.yaml">view the OpenAPI version 2 spec</a>
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3/swagger.yaml">view the OpenAPI version 3 spec</a>
 
-Providers can use API testing tools such as Postman to make test API calls. Providers can import the API as a collection by using Postman’s [ADD LINK] import feature and copying in the YAML URL of the API spec. 
+Providers can use API testing tools such as Postman to make test API calls. Providers can import the API as a collection by using <a href="https://www.postman.com/">Postman’s</a> import feature and copying in the YAML URL of the API spec. 
 
 ## Production environment
 
 The production environment is the live environment which processes real data: 
 
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1">API version 1 production environment</a> 
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2">API version 2 production environment</a> 
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3">API version 3 production environment</a> 
+* <a href="https://npq-registration-web.teacherservices.cloud/api/v1">API version 1 production environment [LINK NOT YET LIVE]</a> 
+* <a href="https://npq-registration-web.teacherservices.cloud/api/v2">API version 2 production environment [LINK NOT YET LIVE]</a> 
+* <a href="https://npq-registration-web.teacherservices.cloud/api/v3">API version 3 production environment [LINK NOT YET LIVE]</a> 
 
 Do not perform testing in the production environment. Real participant and payment data may be affected if you do this. 
 

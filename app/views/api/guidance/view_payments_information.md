@@ -1,20 +1,20 @@
 # View payments information 
 
 <div class="govuk-inset-text">
-The following endpoints are only available for systems integrated with API v3 onwards. They will not return data for API v1 or v2.
+The following endpoints are only available for systems integrated with version 3 of the API onwards. They will not return data for versions 1 or 2.
 </div>
 
 Providers can view up to date payment cut-off dates, upcoming payment dates, and check to see whether output payments have been made by DfE.
 
-## View all statement payment dates
+## Retrieve financial statements
 
 ```
 GET /api/v3/statements
 ```
 
-For more detailed information, see the ```view all statements``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/Statements/get_api_v3_statements">'Retrieve financial statements' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -38,7 +38,7 @@ For more detailed information, see the ```view all statements``` endpoint docume
 }
 ```
 
-## View specific statement payment dates
+## Retrieve a specific financial statement
 
 ```
 GET /api/v3/statements/{id}
@@ -46,9 +46,9 @@ GET /api/v3/statements/{id}
 
 Providers can find statement IDs within previously submitted declaration response bodies.
 
-For more detailed information see, the ```view a specific statement``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/Statements/get_api_v3_statements__id_">'Retrieve a specific financial statement' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {

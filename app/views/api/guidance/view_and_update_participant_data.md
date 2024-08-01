@@ -2,33 +2,33 @@
 
 Once a provider has accepted an application, they can **view and update data** to notify DfE that a participant has:
 
-* deferred their course [Add link to 'deferred' section]
-* resumed their course [Add link to 'resumed' section]
-* withdrawn from their course [Add link to 'withdrawn' section]
-* changed their course schedule [Add link to 'changed course schedule' section]
-* an updated course outcome [Add link to 'updated course outcome' section]
+* deferred their course
+* resumed their course
+* withdrawn from their course
+* changed their course schedule
+* an updated course outcome
 
-## View all participant data
+## Retrieve multiple participants
 
 ```
 GET /api/v3/participants/npq
 ```
 
 <div class="govuk-inset-text">
-Providers can **filter results** by adding `updated_since` filters to the parameter. For example: `GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z`
+Providers can filter results by adding updated_since filters to the parameter. For example: GET /api/v{n}/participants/ecf?filter[updated_since]=2020-11-13T11:21:55Z
 </div>
 
 ### Check for participant ID changes
 
-Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the NPQEnrolment [ADD LINK], which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value.
+Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the `NPQEnrolment`, which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value.
 
 ### Duplicate IDs 
 
-We've previously advised [ADD LINK] of the possibility that participants may be registered as duplicates with multiple participant IDs. Where we identify duplicates, we'll fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
+We've <a href="https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/release-notes.html#15-march-2023">previously advised</a> of the possibility that participants may be registered as duplicates with multiple participant IDs. Where we identify duplicates, we'll fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID.
 
-For more detailed information, see the ```view multiple NPQ participants``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/get_api_v3_participants_npq">'Retrieve multiple participants' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -70,7 +70,7 @@ For more detailed information, see the ```view multiple NPQ participants``` endp
 }
 ```
 
-## View a single participant’s data
+## Retrieve a single participant’s data
 
 ```
 GET /api/v3/participants/npq/{id}
@@ -78,19 +78,19 @@ GET /api/v3/participants/npq/{id}
 
 ### Check for participant ID changes
 
-Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the NPQEnrolment [AD LINK], which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value.
+Providers can check if an NPQ participant’s ID has changed using the `participant_id_changes` nested structure in the `NPQEnrolment`, which contains a `from_participant_id` and a `to_participant_id` string fields, as well a `changed_at` date value.
 
 ### Duplicate IDs 
 
-We've previously advised [ADD LINK] of the possibility that participants may be registered as duplicates with multiple participant IDs. 
+We've <a href="https://manage-training-for-early-career-teachers.education.gov.uk/api-reference/release-notes.html#15-march-2023">previously advised</a> of the possibility that participants may be registered as duplicates with multiple participant IDs. Where we identify duplicates, we'll fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID. 
 
 Where we identify duplicates, we'll fix the error by ‘retiring’ one of the participant IDs, then associating all records and data under the remaining ID. 
 
 To date, when this has occurred, we’ve informed providers of changes via CSVs
 
-For more detailed information, see the ```view multiple NPQ participants``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/get_api_v3_participants_npq__id_">'Retrieve a single participant' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -132,19 +132,19 @@ For more detailed information, see the ```view multiple NPQ participants``` endp
 }
 ```
 
-## Notify DfE a participant has deferred their training
+## Defer a particpant
 
 ```
-PUT /api/v{n}/participants/npq/{id}/defer
+PUT /api/v3/participants/npq/{id}/defer
 ```
 
 A participant can choose to **defer** their course at any time if they plan to resume training at a later date. Providers must notify DfE of this via the API.
 
 Successful requests will return a response body including updates to the ```training_status``` attribute.
 
-For more detailed information, see the ```notify DfE that an NPQ participant is taking a break from their course``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/put_api_v3_participants_npq__id__defer">'Defer a participant' endpoint documentation</a>.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
@@ -158,7 +158,7 @@ For more detailed information, see the ```notify DfE that an NPQ participant is 
 }
 ```
 
-## Notify DfE a participant has resumed training
+## Resume a participant
 
 ```
 PUT /api/v3/participants/npq/{id}/resume
@@ -168,9 +168,9 @@ A participant can **resume** their course at any time if they've previously defe
 
 Successful requests will return a response body including updates to the ```training_status``` attribute.
 
-For more detailed information, see the ```notify DfE that an NPQ participant has resumed training``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/put_api_v3_participants_npq__id__resume">'Resume a participant' endpoint documentation</a>.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
@@ -183,7 +183,7 @@ For more detailed information, see the ```notify DfE that an NPQ participant has
 }
 ```
 
-## Notify DfE a participant has withdrawn from training
+## Withdraw a participant
 
 ```
 PUT /api/v3/participants/npq/{id}/withdraw
@@ -200,9 +200,9 @@ Providers should note that:
 * if a participant is withdrawn later in their course, we'll pay providers for any declarations submitted where the ```declaration_date``` is before the withdrawal date
 * the amount we'll pay depends on which milestones have been reached with declarations submitted before withdrawal
 
-For more detailed information, see the ```notify DfE that an NPQ participant has withdrawn from training``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/put_api_v3_participants_npq__id__withdraw">'Withdraw a participant' endpoint documentation</a>.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
@@ -216,7 +216,7 @@ For more detailed information, see the ```notify DfE that an NPQ participant has
 }
 ```
 
-## Notify DfE a participant has changed their training schedule
+## Notify that a participant is changing training schedule
 
 ```
 PUT /api/v3/participants/npq/{id}/change-schedule
@@ -232,9 +232,9 @@ The API will reject a schedule change if any submitted, eligible, payable or pai
 
 For example, a participant is in the 2023 cohort on an ```npq-specialist-autumn``` schedule. Their provider has submitted a started declaration dated 1 October 2023. The provider tries to change the schedule to ```npq-specialist-spring```. The API will reject the change because a spring schedule does not start until January, which is after the declaration date. The API returns an error message with instructions to void existing declarations first.
 
-For more detailed information, see the ```notify that an NPQ participant has changed their training schedule``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/put_api_v3_participants_npq__id__change_schedule">'Notify that a participant is changing training schedule' endpoint documentation</a>.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
@@ -249,7 +249,7 @@ For more detailed information, see the ```notify that an NPQ participant has cha
 }
 ```
 
-## View all participant outcomes
+## Retrieve multiple NPQ outcomes for all participants
 
 ```
 GET /api/v3/participants/npq/outcomes
@@ -266,9 +266,9 @@ Successful requests will return a response body including an outcome ```state```
 * outcomes submitted (```passed``` or ```failed```)
 * if ```completed``` declarations have been voided and the outcome retracted (```voided```)
 
-For more detailed information, see the ```view NPQ outcomes``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participant%20Outcomes/get_api_v3_participants_npq_outcomes">'Retrieve multiple NPQ outcomes for all participants' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -289,10 +289,10 @@ For more detailed information, see the ```view NPQ outcomes``` endpoint document
 }
 ```
 
-## View a specific participant’s outcome
+## Retrieve multiple outcomes for a single participant
 
 ```
-GET /api/v3/participants/npq/{participant_id}/outcomes
+GET /api/v3/participants/npq/{id}/outcomes
 ```
 
 A participant can either pass or fail assessment at the end of their NPQ course. Their outcome will be submitted by providers within ```completed``` declaration submissions.
@@ -306,9 +306,9 @@ Successful requests will return a response body including an outcome ```state```
 * the outcome submitted (```passed``` or ```failed```)
 * if the ```completed``` declaration has been ```voided``` and the outcome retracted (```voided```)
 
-For more detailed information, see the ```view NPQ outcome for a specific participant``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participant%20Outcomes/get_api_v3_participants_npq__id__outcomes">'Retrieve multiple NPQ outcomes for a single participant' endpoint documentation</a>.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -329,10 +329,10 @@ For more detailed information, see the ```view NPQ outcome for a specific partic
 }
 ```
 
-## Update a participant’s outcomes
+## Submit an NPQ outcome for single participant
 
 ```
-POST /api/v1/participant/npq/{participant_id}/outcomes
+POST /api/v3/participants/npq/{id}/outcomes
 ```
 
 Outcomes may need to be updated if previously submitted data was inaccurate. For example, a provider should update a participant’s outcome if:
@@ -345,9 +345,9 @@ Request bodies must include a new value for the outcome ```state``` and ```compl
 
 Successful requests will return a response body with updates included.
 
-For more detailed information, see the ```update an NPQ outcome``` endpoint documentation [ADD LINK].
+For more detailed information, see the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Participant%20Outcomes/post_api_v3_participants_npq__id__outcomes">'Submit an NPQ outcome for a single participant' endpoint documentation</a>.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
