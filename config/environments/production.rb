@@ -78,11 +78,9 @@ Rails.application.configure do
   config.log_level = :info
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
-    config.rails_semantic_logger.add_file_appender = false
-
     $stdout.sync = true
-
-    config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
+    config.rails_semantic_logger.add_file_appender = false
+    config.semantic_logger.add_appender(io: $stdout, formatter: :json)
   end
 
   # Do not dump schema after migrations.

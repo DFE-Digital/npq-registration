@@ -10,6 +10,20 @@ module API
     rescue_from ArgumentError, with: :bad_request_response
     rescue_from API::Errors::FilterValidationError, with: :filter_validation_error_response
 
+    def append_info_to_payload(payload)
+      super
+      payload[:current_user_class] = current_lead_provider&.class&.name
+      payload[:current_user_id] = current_lead_provider&.id
+      payload[:current_user_name] = current_lead_provider&.name
+
+      # payload[:request_headers] = request.env.transform_values(&:to_s).to_json
+
+      # if response.status != 200
+      #   payload[:response_body] = response.body
+      # end
+      # payload[:response_headers] = response.headers.to_json
+    end
+
   private
 
     def remove_charset
