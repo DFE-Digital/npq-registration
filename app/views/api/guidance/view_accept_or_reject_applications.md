@@ -25,7 +25,7 @@ While participants can enter different email addresses when applying for trainin
 </div>
 
 
-## View all applications
+## Retrieve multiple applications
 
 ```
 GET /api/v3/npq-applications
@@ -35,9 +35,9 @@ Providers can filter results to see more specific or up to date data by adding `
 
 For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
-See the ```view multiple NPQ applications``` endpoint documentation [ADD LINK] for more information.
+See the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications">'Retrieve multiple applications' endpoint documentation</a> for more information.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -80,15 +80,15 @@ See the ```view multiple NPQ applications``` endpoint documentation [ADD LINK] f
 }
 ```
 
-## View a specific application
+## Retrieve a single application
 
 ```
 GET /api/v3/npq-applications/{id}
 ```
 
-See the ```view a specific NPQ application``` endpoint documentation [ADD LINK] for more information.
+See the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications__id_">'Retrieve a single application' endpoint documentation</a> for more information.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -166,9 +166,9 @@ Successful requests will return a response body including updates to the status 
 The API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message.
 </div>
 
-See the ```accept an NPQ application``` endpoint documentation [ADD LINK] for more information.
+See the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__accept">'Accept an application' endpoint documentation</a> for more information.
 
-### Example ```response``` body
+### Example response body
 
 ```
 {
@@ -232,9 +232,9 @@ The request parameter must include the `id` of the corresponding NPQ application
 
 Successful requests will return a response body including updates to the `status` attribute.
 
-See the ```accept an NPQ application``` endpoint documentation [ADD LINK] for more information.
+See the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__reject">'Reject an application' endpoint documentation</a> for more information.
 
-### Example ```request``` body
+### Example request body
 
 ```
 {
@@ -276,19 +276,19 @@ See the ```accept an NPQ application``` endpoint documentation [ADD LINK] for mo
 }
 ```
 
-## Change whether or not a participant’s training will be funded
-
-Providers can update a participant’s funding information after an application has been accepted.
-
-It’s not possible to change this information if the application has not been accepted.
+## Change funded place value of an application
 
 ```
 PUT/api/v3/npq-applications/{id}/change-funded-place 
 ```
 
-For more detailed information, see the specifications for this change funded place endpoint.
+Providers can update a participant’s funding information after an application has been accepted.
 
-### Example ```request``` body:
+It’s not possible to change this information if the application has not been accepted.
+
+See the <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/put_api_v3_npq_applications__id__change_funded_place">'Change funded place value of an application' endpoint documentation</a> for more information.
+
+### Example request body:
 
 ```
 { 
@@ -357,7 +357,7 @@ There are several reasons why there might be a change in circumstance for an NPQ
 Where there has been a change in circumstance, providers should:
 
 * reject the application if the application `status` is `pending`
-* contact DfE if the application `status` is `accepted`. 
+* contact DfE if the application `status` is `accepted` 
 
 For example, if a participant registers for an NPQ course but then decides to change to another course, the provider should:
 
