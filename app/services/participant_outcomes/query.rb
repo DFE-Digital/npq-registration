@@ -1,10 +1,9 @@
 module ParticipantOutcomes
   class Query
-    include API::Concerns::Orderable
     include Queries::ConditionFormats
     include API::Concerns::FilterIgnorable
 
-    attr_reader :scope, :sort
+    attr_reader :scope
 
     def initialize(lead_provider: :ignore, participant_ids: :ignore, created_since: :ignore)
       @scope = all_participant_outcomes
@@ -15,7 +14,7 @@ module ParticipantOutcomes
     end
 
     def participant_outcomes
-      scope.order(order_by)
+      scope.order(:created_at)
     end
 
   private
@@ -36,10 +35,6 @@ module ParticipantOutcomes
       return if ignore?(filter: created_since)
 
       scope.merge!(ParticipantOutcome.where(created_at: created_since..))
-    end
-
-    def order_by
-      sort_order(sort:, model: ParticipantOutcome, default: { created_at: :asc })
     end
 
     def all_participant_outcomes
