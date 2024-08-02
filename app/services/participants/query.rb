@@ -1,6 +1,7 @@
 module Participants
   class Query
     include API::Concerns::Orderable
+    include API::Concerns::FilterIgnorable
 
     attr_reader :scope, :sort
 
@@ -28,25 +29,26 @@ module Participants
   private
 
     def where_lead_provider_is(lead_provider)
-      return if lead_provider == :ignore
+      return if ignore?(filter: lead_provider)
 
       scope.merge!(Application.where(lead_provider:))
     end
 
     def where_updated_since(updated_since)
-      return if updated_since == :ignore
+      return if ignore?(filter: updated_since)
 
       scope.merge!(User.where(updated_at: updated_since..))
     end
 
     def where_training_status_is(training_status)
+      return if ignore?(filter: training_status)
       return unless Application.training_statuses[training_status]
 
       scope.merge!(Application.where(training_status:))
     end
 
     def where_from_participant_id_is(from_participant_id)
-      return if from_participant_id == :ignore
+      return if ignore?(filter: from_participant_id)
 
       scope.merge!(scope.joins(:participant_id_changes).merge(ParticipantIdChange.where(from_participant: User.where(ecf_id: from_participant_id))))
     end

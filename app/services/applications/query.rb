@@ -2,6 +2,7 @@ module Applications
   class Query
     include API::Concerns::Orderable
     include Queries::ConditionFormats
+    include API::Concerns::FilterIgnorable
 
     attr_reader :scope, :sort
 
@@ -48,31 +49,31 @@ module Applications
   private
 
     def where_lead_provider_approval_status_in(lead_provider_approval_status)
-      return if lead_provider_approval_status == :ignore
+      return if ignore?(filter: lead_provider_approval_status)
 
       scope.merge!(Application.where(lead_provider_approval_status: extract_conditions(lead_provider_approval_status, allowlist: Application.lead_provider_approval_statuses.values)))
     end
 
     def where_lead_provider_is(lead_provider)
-      return if lead_provider == :ignore
+      return if ignore?(filter: lead_provider)
 
       scope.merge!(Application.where(lead_provider:))
     end
 
     def where_cohort_start_year_in(cohort_start_years)
-      return if cohort_start_years == :ignore
+      return if ignore?(filter: cohort_start_years)
 
       scope.merge!(Application.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
     end
 
     def where_updated_since(updated_since)
-      return if updated_since == :ignore
+      return if ignore?(filter: updated_since)
 
       scope.merge!(Application.where(updated_at: updated_since..))
     end
 
     def where_participant_ids_in(participant_ids)
-      return if participant_ids == :ignore
+      return if ignore?(filter: participant_ids)
 
       scope.merge!(Application.where(user: { ecf_id: extract_conditions(participant_ids) }))
     end

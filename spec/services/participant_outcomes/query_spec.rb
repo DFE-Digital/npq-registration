@@ -30,10 +30,17 @@ RSpec.describe ParticipantOutcomes::Query do
         end
 
         it "doesn't filter by lead provider when none supplied" do
-          condition_string = %("lead_provider_id" =)
+          condition_string = %("lead_provider_id")
 
           expect(described_class.new(lead_provider: create(:lead_provider)).scope.to_sql).to include(condition_string)
           expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by lead provider if an empty string is supplied" do
+          condition_string = %("lead_provider_id")
+          query = described_class.new(lead_provider: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -48,10 +55,17 @@ RSpec.describe ParticipantOutcomes::Query do
         end
 
         it "doesn't filter by created since when none supplied" do
-          condition_string = %("participant_outcomes"."created_at" >=)
+          condition_string = %("created_at")
 
           expect(described_class.new(created_since: 2.days.ago).scope.to_sql).to include(condition_string)
           expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by created since if an empty string is supplied" do
+          condition_string = %("created_at")
+          query = described_class.new(created_since: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
 
@@ -59,7 +73,7 @@ RSpec.describe ParticipantOutcomes::Query do
         it "filters by participant_ids" do
           create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
           outcome = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
-          query = ParticipantOutcomes::Query.new(participant_ids: outcome.user.ecf_id)
+          query = described_class.new(participant_ids: outcome.user.ecf_id)
 
           expect(query.participant_outcomes).to contain_exactly(outcome)
         end
@@ -68,22 +82,29 @@ RSpec.describe ParticipantOutcomes::Query do
           outcome2 = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
           outcome1 = create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
           create(:participant_outcome, declaration: create(:declaration, user: create(:user)))
-          query = ParticipantOutcomes::Query.new(participant_ids: [outcome1.user.ecf_id, outcome2.user.ecf_id].join(","))
+          query = described_class.new(participant_ids: [outcome1.user.ecf_id, outcome2.user.ecf_id].join(","))
 
           expect(query.participant_outcomes).to contain_exactly(outcome1, outcome2)
         end
 
         it "returns no outcomes if no participants are found" do
-          query = ParticipantOutcomes::Query.new(participant_ids: SecureRandom.uuid)
+          query = described_class.new(participant_ids: SecureRandom.uuid)
 
           expect(query.participant_outcomes).to be_empty
         end
 
         it "doesn't filter by participant_ids when none supplied" do
-          condition_string = %("user"."ecf_id" =)
+          condition_string = %("ecf_id")
 
-          expect(ParticipantOutcomes::Query.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
-          expect(ParticipantOutcomes::Query.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
+          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+        end
+
+        it "does not filter by participant_ids if an empty string is supplied" do
+          condition_string = %("ecf_id")
+          query = described_class.new(participant_ids: " ")
+
+          expect(query.scope.to_sql).not_to include(condition_string)
         end
       end
     end
