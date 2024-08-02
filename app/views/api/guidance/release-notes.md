@@ -2,38 +2,210 @@
 
 If you have any questions or comments about these notes, contact DfE via Slack or email.
 
-## 1 July 2024
-Registration has opened for the 2024/25 intake of NPQ participant applications, so we’ve added the following to the production environment:
+## 16 August 2024
 
-* the 2024/25 NPQ data and schedules
-* functionality which enables providers to set whether NPQ applicants are going to have their training funded by DfE
-* the new special education needs coordinator (SENCO) NPQ
+We’ve launched a new standalone API for providers to view, submit and update NPQ-based training data.  
 
-See the 14 June release note for more details about the funded training functionality and SENCO NPQ.
+### Get started in the production and testing environments 
 
-## 14 June 2024
+We’ve sent the bearer token for the NPQs API individually to providers. 
 
-We’ve added the new special educational needs coordinator (SENCO) NPQ to the test (sandbox) environment for the 2024 cohort.
+We serve NPQ data from an API using the following base URLs for our production environments: 
 
-The new course’s identifier is ```npq-senco```.
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v1/">NPQ API production environment, version 1</a>
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v2/">NPQ API production environment, version 2</a>
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v3/">NPQ API production environment, version 3</a>
 
-Providers can access this within the sandbox environment for testing. Functionality will be the same as the other existing NPQ courses.
+Providers can access our test environments using the following URLs:  
 
-We’ll notify providers when this new NPQ is available in the production environment.
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/v1">NPQ API test environment, version 1</a>
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/v2">NPQ API test environment, version 2</a>
+* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/v3">NPQ API test environment, version 3</a> 
 
-We’re trialing new functionality in the API test (sandbox) environment which will enable providers to set whether NPQ applicants are going to have their training funded by DfE.
+We've also created ECF-only test environments for providers that offer both ECF and NPQ training to undertake regression testing:  
 
-This is because from the 2024/25 academic year onwards there’ll be a set maximum number of places each provider can offer per NPQ that DfE will pay for.
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v1">ECF API v1 test environment, version 1</a>
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v2">ECF API v2 test environment, version 2</a>
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v3">ECF API v3 test environment, version 3</a>
 
-Providers using all versions of the API can set the new ```funded_place``` field in the ‘Accept an application’ request body to ```true``` or ```false```. They will also see the ```funded_place``` field in the following endpoint response bodies:
+### Standalone NPQ API endpoints  
 
-* ‘View all applications’
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Applications</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Request type</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Endpoint</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/npq-applications</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve multiple applications</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/npq-applications/{id}</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve a single application</td>
+    </tr>
+       <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>POST</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/npq-applications/{id}/accept</td>
+      <td class="govuk-table__cell govuk-table__cell">Accept an application</td>
+    </tr>
+           <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>POST</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/npq-applications/{id}/reject</td>
+      <td class="govuk-table__cell govuk-table__cell">Reject an application</td>
+    </tr>
+            <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/npq-applications/{id}/change-funded-place</td>
+      <td class="govuk-table__cell govuk-table__cell">Change funded place value of an application</td>
+    </tr>
+  </tbody>
+</table>
 
-* ‘View a specific application’
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Participant declarations</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Request type</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Endpoint</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>POST</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participant-declarations</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve multiple participant declarations</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>POST</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participant-declarations</td>
+      <td class="govuk-table__cell govuk-table__cell">Declare a participant has reached a milestone  </td>
+    </tr>
+       <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participant-declarations/{id}</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve a single participant’s declarations</td>
+    </tr>
+           <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participant-declarations/{id}/void</td>
+      <td class="govuk-table__cell govuk-table__cell">Void a declaration</td>
+    </tr>
+  </tbody>
+</table>
 
-* ‘View all participant data’
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Participant outcomes</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Request type</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Endpoint</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/outcomes</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve multiple NPQ outcomes for all participants</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/outcomes</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve multiple NPQ outcomes for a single participant</td>
+    </tr>
+       <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>POST</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/outcomes</td>
+      <td class="govuk-table__cell govuk-table__cell">Submit an NPQ outcome for a single participant</td>
+    </tr>
+  </tbody>
+</table>
 
-* ‘View a single participant’s data’
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Participants</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Request type</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Endpoint</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve multiple participants</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve a single participant</td>
+    </tr>
+       <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/resume</td>
+      <td class="govuk-table__cell govuk-table__cell">Resume a participant</td>
+    </tr>
+     <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/defer</td>
+      <td class="govuk-table__cell govuk-table__cell">Defer a participant</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/withdraw</td>
+      <td class="govuk-table__cell govuk-table__cell">Withdraw a participant</td>
+    </tr>
+       <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>PUT</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/participants/npq/{id}/change-schedule</td>
+      <td class="govuk-table__cell govuk-table__cell">Notify that a participant is changing training schedule</td>
+    </tr>
+  </tbody>
+</table>
 
-Providers who need to update a participant’s funding information after an application has been accepted can do so via the ‘Change funded place’ endpoint.
+<table class="govuk-table">
+<caption class="govuk-table__caption govuk-table__caption--m">Statements</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Request type</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Endpoint</th>
+      <th scope="col" class="govuk-table__header govuk-table__header">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/statements</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve financial statements</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header"><code>GET</code></th>
+      <td class="govuk-table__cell govuk-table__cell">/api/v3/statements/{id}</td>
+      <td class="govuk-table__cell govuk-table__cell">Retrieve a specific financial statement</td>
+    </tr>
+  </tbody>
+</table>
 
+### Seed data
+
+We’ll be generating seed data which cover scenarios where users have:  
+
+* one application 
+* multiple applications 
+* accepted applications 
+* rejected applications  
+ 
+### Provider tech support 
+
+Contact us via the engagement and policy leads if you want to discuss your integration and technical plans in more detail. 
+
+Our team are happy to host technical workshops with providers to ensure this integration runs smoothly. 
