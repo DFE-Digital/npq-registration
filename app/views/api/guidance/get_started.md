@@ -8,7 +8,7 @@ Providers integrate their local CRM systems by connecting to this API's producti
 
 Providers need to use a unique authentication token to connect to the API. 
 
-Emails us [INSERT EMAIL LINK] if you do not already have this token. We'll send it via secure email. 
+<a href="continuing-professional-development@digital.education.gov.uk">Email us</a> if you do not already have this token. We'll send it via secure email. 
 
 The tokens do not expire. 
 
@@ -43,9 +43,9 @@ Providers can use API testing tools such as Postman to make test API calls. Prov
 
 The production environment is the live environment which processes real data: 
 
-* <a href="https://npq-registration-web.teacherservices.cloud/api/v1">API version 1 production environment [LINK NOT YET LIVE]</a> 
-* <a href="https://npq-registration-web.teacherservices.cloud/api/v2">API version 2 production environment [LINK NOT YET LIVE]</a> 
-* <a href="https://npq-registration-web.teacherservices.cloud/api/v3">API version 3 production environment [LINK NOT YET LIVE]</a> 
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v1">API version 1 production environment</a> 
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v2">API version 2 production environment</a> 
+* <a href="https://register-national-professional-qualifications.education.gov.uk/api/v3">API version 3 production environment</a> 
 
 Do not perform testing in the production environment. Real participant and payment data may be affected if you do this. 
 

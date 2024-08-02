@@ -24,9 +24,9 @@ Providers can access our test environments using the following URLs:
 
 We've also created ECF-only test environments for providers that offer both ECF and NPQ training to undertake regression testing:  
 
-* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v1">ECF API v1 test environment, version 1</a>
-* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v2">ECF API v2 test environment, version 2</a>
-* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api/v3">ECF API v3 test environment, version 3</a>
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v1.html">ECF API v1 test environment, version 1</a> 
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v2.html">ECF API v2 test environment, version 2</a>
+* <a href="https://sp.manage-training-for-early-career-teachers.education.gov.uk/api-reference/reference-v3.html">ECF API v3 test environment, version 3</a>
 
 ### Standalone NPQ API endpoints  
 
