@@ -1514,11 +1514,6 @@ components:
             funding from the DfE
           type: boolean
           example: true
-        funded_place:
-          description: Indicates whether this NPQ participant is funded by DfE
-          type: boolean
-          example: true
-          required: true
         training_status:
           description: The training status of the ECF participant
           type: string
@@ -1532,6 +1527,11 @@ components:
             NPQ participant is teaching
           type: string
           example: '106286'
+        funded_place:
+          description: Indicates whether this NPQ participant is funded by DfE
+          type: boolean
+          example: true
+          required: true
     DeclarationsCsvResponse:
       description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
       properties:

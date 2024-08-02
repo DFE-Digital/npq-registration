@@ -50,12 +50,6 @@ ENROLMENT_CSV = {
         type: :boolean,
         example: true,
       },
-      funded_place: {
-        description: "Indicates whether this NPQ participant is funded by DfE",
-        type: :boolean,
-        example: true,
-        required: true,
-      },
       training_status: {
         description: "The training status of the ECF participant",
         type: :string,
@@ -66,6 +60,12 @@ ENROLMENT_CSV = {
         description: "The Unique Reference Number (URN) of the school where this NPQ participant is teaching",
         type: :string,
         example: "106286",
+      },
+      funded_place: {
+        description: "Indicates whether this NPQ participant is funded by DfE",
+        type: :boolean,
+        example: true,
+        required: true,
       },
     },
   },
