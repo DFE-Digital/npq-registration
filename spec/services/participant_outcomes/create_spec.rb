@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:date_format) { "%Y-%m-%d" }
-  let(:participant_id) { completed_declaration.user.id }
+  let(:participant_id) { completed_declaration.user.ecf_id }
   let(:lead_provider) { completed_declaration.lead_provider }
   let(:completion_date) { 1.week.ago.strftime(date_format) }
   let(:course_identifier) { described_class::PERMITTED_COURSES.sample }

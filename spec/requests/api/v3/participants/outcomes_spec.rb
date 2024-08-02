@@ -45,7 +45,7 @@ RSpec.describe "Participants outcome endpoints", type: :request do
     end
     let(:service) { ParticipantOutcomes::Create }
     let(:action) { :create_outcome }
-    let(:service_args) { { lead_provider: current_lead_provider, participant_id: user.id }.merge!(attributes) }
+    let(:service_args) { { lead_provider: current_lead_provider, participant_id: user.ecf_id }.merge!(attributes) }
     let(:service_methods) { { participant: user } }
     let(:resource) { build(:participant_outcome) }
     let(:resource_id) { resource.ecf_id }

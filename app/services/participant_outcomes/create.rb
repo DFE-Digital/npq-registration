@@ -43,7 +43,7 @@ module ParticipantOutcomes
     end
 
     def participant
-      @participant ||= Participants::Query.new(lead_provider:).participant(id: participant_id)
+      @participant ||= Participants::Query.new(lead_provider:).participant(ecf_id: participant_id)
     rescue ActiveRecord::RecordNotFound, ArgumentError
       nil
     end

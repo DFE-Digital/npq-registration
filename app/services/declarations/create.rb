@@ -174,7 +174,7 @@ module Declarations
 
       service = ParticipantOutcomes::Create.new(
         lead_provider:,
-        participant_id: participant.id,
+        participant_id: participant.ecf_id,
         course_identifier:,
         state: has_passed.to_s == "true" ? "passed" : "failed",
         completion_date: declaration_date.rfc3339,

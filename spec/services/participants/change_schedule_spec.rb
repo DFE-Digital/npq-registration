@@ -11,7 +11,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
   let!(:application) { create(:application, :accepted, cohort:, lead_provider:, course:, schedule:) }
 
   let(:participant) { application.user }
-  let(:participant_id) { participant.id }
+  let(:participant_id) { participant.ecf_id }
 
   let(:new_cohort) { create(:cohort, :next) }
   let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }

@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.shared_examples "a participant action" do
   let(:lead_provider) { application.lead_provider }
-  let(:participant_id) { application.user.id }
+  let(:participant_id) { application.user.ecf_id }
   let(:application) { create(:application, :accepted, :with_declaration) }
   let(:course_identifier) { application.course.identifier }
 
@@ -37,7 +37,7 @@ end
 
 RSpec.shared_examples "a participant state transition" do |action, from_states, to_state|
   let(:lead_provider) { application.lead_provider }
-  let(:participant_id) { application.user.id }
+  let(:participant_id) { application.user.ecf_id }
   let(:application) { create(:application, :accepted, :with_declaration, training_status: from_states.sample) }
   let(:course_identifier) { application.course.identifier }
 

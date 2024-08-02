@@ -82,7 +82,7 @@ module API
           .require(:attributes)
           .permit(:course_identifier, :reason, :schedule_identifier, :cohort)
           .merge(
-            participant_id: participant.id,
+            participant_id: participant.ecf_id,
             lead_provider: current_lead_provider,
           )
       rescue ActionController::ParameterMissing
