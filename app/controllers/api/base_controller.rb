@@ -55,7 +55,7 @@ module API
       ).transform_values(&:to_s).to_json
       payload[:request_body] = request.raw_post
 
-      payload[:response_headers] = response.headers
+      payload[:response_headers] = response.headers.transform_values(&:to_s).to_json
       if response.status != 200
         payload[:response_body] = response.body
       end
