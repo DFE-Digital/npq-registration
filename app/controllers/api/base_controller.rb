@@ -16,12 +16,49 @@ module API
       payload[:current_user_id] = current_lead_provider&.id
       payload[:current_user_name] = current_lead_provider&.name
 
-      # payload[:request_headers] = request.env.transform_values(&:to_s).to_json
+      payload[:request_headers] = request.env.slice(
+        "CONTENT_TYPE",
+        "GATEWAY_INTERFACE",
+        "HTTP_ACCEPT",
+        "HTTP_ACCEPT_ENCODING",
+        "HTTP_AUTHORIZATION",
+        "HTTP_CONNECTION",
+        "HTTP_HOST",
+        "HTTP_USER_AGENT",
+        "HTTP_VERSION",
+        "ORIGINAL_FULLPATH",
+        "ORIGINAL_SCRIPT_NAME",
+        "PATH_INFO",
+        "QUERY_STRING",
+        "REMOTE_ADDR",
+        "REQUEST_METHOD",
+        "REQUEST_PATH",
+        "REQUEST_URI",
+        "ROUTES_9080_SCRIPT_NAME",
+        "SCRIPT_NAME",
+        "SERVER_NAME",
+        "SERVER_PORT",
+        "SERVER_PROTOCOL",
+        "SERVER_SOFTWARE",
+        "puma.request_body_wait",
+        "rack.after_reply",
+        "rack.attack.called",
+        "rack.attack.throttle_data",
+        "rack.hijack?",
+        "rack.multiprocess",
+        "rack.multithread",
+        "rack.request.query_hash",
+        "rack.request.query_string",
+        "rack.run_once",
+        "rack.url_scheme",
+        "rack.version",
+      )
+      payload[:request_body] = request.raw_post
 
-      # if response.status != 200
-      #   payload[:response_body] = response.body
-      # end
-      # payload[:response_headers] = response.headers.to_json
+      payload[:response_headers] = response.headers
+      if response.status != 200
+        payload[:response_body] = response.body
+      end
     end
 
   private
