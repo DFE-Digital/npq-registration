@@ -52,7 +52,7 @@ module API
         "rack.run_once",
         "rack.url_scheme",
         "rack.version",
-      )
+      ).transform_values(&:to_s).to_json
       payload[:request_body] = request.raw_post
 
       payload[:response_headers] = response.headers
