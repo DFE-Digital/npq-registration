@@ -69,7 +69,10 @@ module Applications
     def where_updated_since(updated_since)
       return if ignore?(filter: updated_since)
 
-      scope.merge!(Application.where(updated_at: updated_since..))
+      query1 = Application.where(updated_at: updated_since..)
+      query2 = Application.where(user: { updated_at: updated_since.. })
+      query = query1.or(query2)
+      scope.merge!(query)
     end
 
     def where_participant_ids_in(participant_ids)

@@ -55,7 +55,9 @@ RSpec.describe Applications::Query do
 
       describe "updated since" do
         it "filters by updated since" do
-          create(:application, lead_provider:, updated_at: 2.days.ago)
+          travel_to(2.days.ago) do
+            create(:application, lead_provider:, updated_at: Time.zone.now)
+          end
           application = create(:application, lead_provider:, updated_at: Time.zone.now)
 
           query = described_class.new(lead_provider:, updated_since: 1.day.ago)
@@ -75,6 +77,27 @@ RSpec.describe Applications::Query do
           query = described_class.new(updated_since: " ")
 
           expect(query.scope.to_sql).not_to include(condition_string)
+        end
+
+        context "when user was updated recently" do
+          let(:user) { create(:user) }
+
+          it "filters by user.updated_at" do
+            application1 = travel_to(10.days.ago) do
+              create(:application, lead_provider:)
+            end
+            application2 = travel_to(5.days.ago) do
+              create(:application, lead_provider:)
+            end
+
+            query = described_class.new(lead_provider:, updated_since: 7.days.ago)
+            expect(query.applications).to contain_exactly(application2)
+
+            application1.user.update!(updated_at: 1.days.ago)
+
+            query = described_class.new(lead_provider:, updated_since: 2.day.ago)
+            expect(query.applications).to contain_exactly(application1)
+          end
         end
       end
 
