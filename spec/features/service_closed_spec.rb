@@ -12,13 +12,13 @@ RSpec.feature "Service is closed", type: :feature do
 
     visit "/"
     expect(page).to have_content("Registration has closed temporarily")
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
 
     page.click_button("Request email updates")
     # Due to mocking GAI, we need to manually follow the path
     visit new_email_update_path
     expect(page).to have_content("Request email updates about registration opening")
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
   end
 
   scenario "Services closes while registration in progress" do
