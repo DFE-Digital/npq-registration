@@ -9,11 +9,11 @@ UNPROCESSABLE_ENTITY_RESPONSE = {
         properties: {
           title: {
             type: :string,
-            example: "course_identifier",
+            example: "example_attribute",
           },
           detail: {
             type: :string,
-            example: "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.",
+            example: "An '#/example_attribute' must be specified.",
           },
         },
       },

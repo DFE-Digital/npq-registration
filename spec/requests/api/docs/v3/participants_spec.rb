@@ -26,7 +26,8 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
                   "NPQ Participants",
                   "NPQ participants",
                   "#/components/schemas/ListParticipantsFilter",
-                  "#/components/schemas/ParticipantsResponse"
+                  "#/components/schemas/ParticipantsResponse",
+                  true
 
   it_behaves_like "an API show endpoint documentation",
                   "/api/v3/participants/npq/{id}",

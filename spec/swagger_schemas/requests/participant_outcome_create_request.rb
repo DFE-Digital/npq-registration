@@ -40,7 +40,7 @@ PARTICIPANT_OUTCOME_CREATE_REQUEST = {
               required: true,
               nullable: false,
               type: :string,
-              example: "2021-05-13",
+              example: "2021-05-31T00:00:00+00:00",
             },
           },
         },

@@ -8,7 +8,8 @@ RSpec.describe "Declarations endpoints", type: :request, openapi_spec: "v2/swagg
                   "/api/v2/participant-declarations.csv",
                   "Participant declarations",
                   "Participant declarations",
-                  "#/components/schemas/DeclarationsCsvResponse"
+                  "#/components/schemas/DeclarationsCsvResponse",
+                  "#/components/schemas/ListParticipantDeclarationsFilter"
 
   it_behaves_like "an API index endpoint documentation",
                   "/api/v2/participant-declarations",

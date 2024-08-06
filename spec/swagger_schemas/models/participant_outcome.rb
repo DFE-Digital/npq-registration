@@ -35,14 +35,14 @@ PARTICIPANT_OUTCOME = {
             description: "The state of the outcome (passed or failed)",
             nullable: false,
             type: :string,
-            example: ParticipantOutcomes::Create::STATES.first,
-            enum: ParticipantOutcomes::Create::STATES,
+            example: ParticipantOutcome.states.keys.first,
+            enum: ParticipantOutcome.states.keys,
           },
           completion_date: {
             description: "The date the participant received the assessment outcome for this course",
             nullable: false,
             type: :string,
-            example: "2021-05-13",
+            example: "2021-05-31T00:00:00+00:00",
           },
           created_at: {
             description: "The date you created the participant-outcome record",

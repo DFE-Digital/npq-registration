@@ -214,7 +214,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place: true
+                        funded_place:
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -248,6 +248,43 @@ paths:
           description: The NPQ application after changing the funded place
           content:
             application/json:
+              examples:
+                success:
+                  value:
+                    data:
+                      id: d0b4a32e-a272-489e-b30a-cb17131457fc
+                      type: npq_application
+                      attributes:
+                        course_identifier: npq-senior-leadership
+                        email: isabelle.macdonald2@some-school.example.com
+                        email_validated: true
+                        employer_name: Some Company Ltd
+                        employment_role: Director
+                        full_name: Isabelle MacDonald
+                        funding_choice: school
+                        headteacher_status: 'no'
+                        ineligible_for_funding_reason: previously-funded
+                        participant_id: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+                        private_childcare_provider_urn: EY944860
+                        teacher_reference_number: '1234567'
+                        teacher_reference_number_validated: true
+                        school_urn: '106286'
+                        school_ukprn: '10079319'
+                        status: accepted
+                        works_in_school: true
+                        created_at: '2021-05-31T02:21:32.000Z'
+                        updated_at: '2021-05-31T02:22:32.000Z'
+                        cohort: '2022'
+                        eligible_for_funding: true
+                        targeted_delivery_funding_eligibility: true
+                        teacher_catchment: true
+                        teacher_catchment_country: United Kingdom of Great Britain
+                          and Northern Ireland
+                        teacher_catchment_iso_country_code: GBR
+                        itt_provider: University of Southampton
+                        lead_mentor: true
+                        funded_place: true
+                        schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':
@@ -298,11 +335,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       responses:
         '200':
           description: A list of Participant declarations
@@ -418,7 +450,7 @@ paths:
                         updated_at: '2021-05-31T02:22:32.000Z'
                         has_passed:
                         statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
-                        clawback_statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
+                        clawback_statement_id:
                         ineligible_for_funding_reason: duplicate_declaration
                         uplift_paid: true
                         lead_provider_name: Example Institute
@@ -455,11 +487,6 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       responses:
         '200':
           description: A list of NPQ Outcomes for all participants
@@ -481,21 +508,11 @@ paths:
       security:
       - api_key: []
       parameters:
-      - name: filter
-        in: query
-        required: false
-        schema:
-          "$ref":
       - name: page
         in: query
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
-      - name: sort
-        in: query
-        required: false
-        schema:
-          "$ref": "#/components/schemas/SortingOptions"
       - name: id
         in: path
         required: true
@@ -1168,11 +1185,10 @@ components:
             properties:
               title:
                 type: string
-                example: course_identifier
+                example: example_attribute
               detail:
                 type: string
-                example: The entered '#/course_identifier' is not recognised for the
-                  given participant. Check details and try again.
+                example: An '#/example_attribute' must be specified.
     IDAttribute:
       description: The unique ID of the resource.
       type: string
@@ -1405,10 +1421,11 @@ components:
               type: boolean
               example: true
             funded_place:
-              description: This field indicates whether the application is funded
+              description: Indicates whether or not this participant’s training is
+                being funded by DfE
               nullable: true
               type: boolean
-              example: true
+              example:
             schedule_identifier:
               description: The new schedule of the participant
               nullable: true
@@ -1451,7 +1468,7 @@ components:
               required: false
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1498,7 +1515,7 @@ components:
               - funded_place
               properties:
                 funded_place:
-                  description: This field indicates whether the application is funded
+                  description: Whether the participant has a funded place
                   nullable: false
                   type: boolean
                   example: true
@@ -1552,7 +1569,7 @@ components:
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
             npq_enrolments:
-              description: Information about the course(s) the participant is enroled
+              description: Information about the course(s) the participant is enrolled
                 in
               type: array
               items:
@@ -1721,8 +1738,8 @@ components:
                     format: date-time
                     example: '2021-05-31T02:21:32.000Z'
                   funded_place:
-                    description: Indicates whether this NPQ participant is funded
-                      by DfE
+                    description: Indicates whether or not this participant’s training
+                      is being funded by DfE
                     nullable: true
                     type: boolean
                     example: true
@@ -2042,12 +2059,13 @@ components:
               enum:
               - passed
               - failed
+              - voided
             completion_date:
               description: The date the participant received the assessment outcome
                 for this course
               nullable: false
               type: string
-              example: '2021-05-13'
+              example: '2021-05-31T00:00:00+00:00'
             created_at:
               description: The date you created the participant-outcome record
               type: string
@@ -2119,7 +2137,7 @@ components:
                   required: true
                   nullable: false
                   type: string
-                  example: '2021-05-13'
+                  example: '2021-05-31T00:00:00+00:00'
     ParticipantOutcomeResponse:
       description: The details of an NPQ Outcome
       type: object
@@ -2353,21 +2371,27 @@ components:
       description: A participant declaration data request
       type: object
       required:
-      - type
-      - attributes
+      - data
       properties:
-        type:
-          type: string
-          required: true
-          enum:
-          - participant-declaration
-          example: participant-declaration
-        attributes:
-          required: true
-          anyOf:
-          - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
-          - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
-          - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
+        data:
+          description: A participant declaration data request
+          type: object
+          required:
+          - type
+          - attributes
+          properties:
+            type:
+              type: string
+              required: true
+              enum:
+              - participant-declaration
+              example: participant-declaration
+            attributes:
+              required: true
+              anyOf:
+              - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
+              - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
+              - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
     ParticipantDeclarationResponse:
       description: A single participant declaration.
       type: object

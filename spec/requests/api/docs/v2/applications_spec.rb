@@ -40,7 +40,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
     let(:resource) { application }
   end
 
-  describe "accept/reject actions" do
+  describe "accept/reject/change-funded-place actions" do
     let(:base_response_example) do
       extract_swagger_example(schema: "#/components/schemas/ApplicationResponse", version: :v2)
     end
@@ -59,6 +59,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:status] = "accepted"
+          example[:data][:attributes][:funded_place] = true
         end
       end
     end
@@ -77,19 +78,25 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v2/sw
         end
       end
     end
-  end
 
-  it_behaves_like "an API update endpoint documentation",
-                  "/api/v2/npq-applications/{id}/change-funded-place",
-                  "NPQ Applications",
-                  "Change funded place value of an NPQ application",
-                  "The NPQ application after changing the funded place",
-                  "#/components/schemas/ApplicationResponse",
-                  "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
-    let(:application) { create(:application, :eligible_for_funded_place, lead_provider:) }
-    let(:resource) { application }
-    let(:type) { "npq-application-change-funded-place" }
-    let(:attributes) { { funded_place: true } }
-    let(:invalid_attributes) { { funded_place: nil } }
+    it_behaves_like "an API update endpoint documentation",
+                    "/api/v2/npq-applications/{id}/change-funded-place",
+                    "NPQ Applications",
+                    "Change funded place value of an NPQ application",
+                    "The NPQ application after changing the funded place",
+                    "#/components/schemas/ApplicationResponse",
+                    "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
+      let(:application) { create(:application, :eligible_for_funded_place, lead_provider:) }
+      let(:resource) { application }
+      let(:type) { "npq-application-change-funded-place" }
+      let(:attributes) { { funded_place: true } }
+      let(:invalid_attributes) { { funded_place: nil } }
+      let(:response_example) do
+        base_response_example.tap do |example|
+          example[:data][:attributes][:status] = "accepted"
+          example[:data][:attributes][:funded_place] = true
+        end
+      end
+    end
   end
 end

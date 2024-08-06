@@ -181,10 +181,10 @@ APPLICATION = {
             example: true,
           },
           funded_place: {
-            description: "This field indicates whether the application is funded",
+            description: "Indicates whether or not this participant’s training is being funded by DfE",
             nullable: true,
             type: :boolean,
-            example: true,
+            example: nil,
           },
         },
       },

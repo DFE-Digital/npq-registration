@@ -21,7 +21,7 @@ APPLICATION_ACCEPT_REQUEST = {
             required: false,
             properties: {
               funded_place: {
-                description: "This field indicates whether the application is funded",
+                description: "Whether the participant has a funded place",
                 nullable: false,
                 type: :boolean,
                 example: true,

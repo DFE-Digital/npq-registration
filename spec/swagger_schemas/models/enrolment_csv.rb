@@ -61,6 +61,12 @@ ENROLMENT_CSV = {
         type: :string,
         example: "106286",
       },
+      funded_place: {
+        description: "Indicates whether this NPQ participant is funded by DfE",
+        type: :boolean,
+        example: true,
+        required: true,
+      },
     },
   },
 }.freeze
