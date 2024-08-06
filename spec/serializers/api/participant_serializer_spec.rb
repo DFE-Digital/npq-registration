@@ -62,6 +62,34 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
       it "serializes the `updated_at`" do
         expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
       end
+
+      context "when application is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns application's `updated_at`" do
+          application.update!(updated_at: latest_datetime)
+          participant_id_change.update!(updated_at: old_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
+      end
+
+      context "when participant_id_change is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns participant_id_change's `updated_at`" do
+          application.update!(updated_at: old_datetime)
+          participant_id_change.update!(updated_at: latest_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
+      end
     end
 
     context "when serializing the `v2` view" do
@@ -81,6 +109,34 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
 
       it "serializes the `updated_at`" do
         expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
+      end
+
+      context "when application is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns application's `updated_at`" do
+          application.update!(updated_at: latest_datetime)
+          participant_id_change.update!(updated_at: old_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
+      end
+
+      context "when participant_id_change is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns participant_id_change's `updated_at`" do
+          application.update!(updated_at: old_datetime)
+          participant_id_change.update!(updated_at: latest_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
       end
 
       it "serializes the `npq_enrolments`" do
@@ -113,6 +169,34 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
 
       it "serializes the `updated_at`" do
         expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
+      end
+
+      context "when application is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns application's `updated_at`" do
+          application.update!(updated_at: latest_datetime)
+          participant_id_change.update!(updated_at: old_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
+      end
+
+      context "when participant_id_change is the latest" do
+        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
+        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        it "returns participant_id_change's `updated_at`" do
+          application.update!(updated_at: old_datetime)
+          participant_id_change.update!(updated_at: latest_datetime)
+          participant.update!(updated_at: old_datetime)
+
+          participant.reload
+          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+        end
       end
 
       it "serializes the `npq_enrolments`" do

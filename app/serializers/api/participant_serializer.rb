@@ -26,14 +26,18 @@ module API
         end
 
         field(:trn, name: :teacher_reference_number)
-        field(:updated_at)
+        field(:updated_at) do |object, options|
+          updated_at(object)
+        end
       end
 
       view :v2 do
         field(:email)
         field(:full_name)
         field(:trn, name: :teacher_reference_number)
-        field(:updated_at)
+        field(:updated_at) do |object, options|
+          updated_at(object)
+        end
 
         field(:npq_enrolments) do |object, options|
           applications(object, options).map do |application|
@@ -55,7 +59,9 @@ module API
       view :v3 do
         field(:full_name)
         field(:trn, name: :teacher_reference_number)
-        field(:updated_at)
+        field(:updated_at) do |object, options|
+          updated_at(object)
+        end
 
         field(:npq_enrolments) do |object, options|
           applications(object, options).map do |application|
@@ -127,6 +133,14 @@ module API
               }
             end
           end
+        end
+
+        def updated_at(user)
+          (
+            (user.participant_id_changes || []).map(&:updated_at) +
+            (user.applications || []).map(&:updated_at) +
+            [ user.updated_at ]
+          ).compact.max
         end
       end
     end
