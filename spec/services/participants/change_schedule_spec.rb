@@ -20,7 +20,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:params) do
     {
       lead_provider:,
-      participant:,
+      participant_id:,
       course_identifier:,
 
       schedule_identifier: new_schedule_identifier,
@@ -36,7 +36,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         let(:params) do
           {
             lead_provider:,
-            participant:,
+            participant_id:,
             course_identifier:,
 
             schedule_identifier: new_schedule_identifier,
@@ -52,7 +52,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       context "when the schedule is invalid" do
         let(:new_schedule_identifier) { "invalid" }
 
-        it { is_expected.to have_error(:schedule_identifier, :invalid_schedule, "The property '#/schedule_identifier' must be present and correspond to a valid schedule") }
+        it { is_expected.to have_error(:schedule_identifier, :blank, "The property '#/schedule_identifier' must be present") }
       end
 
       context "when the schedule identifier change of the same type again" do
@@ -74,14 +74,14 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         application
       end
 
-      it { is_expected.to have_error(:participant, :already_withdrawn, "The participant is already withdrawn") }
+      it { is_expected.to have_error(:participant_id, :already_withdrawn, "The participant is already withdrawn") }
     end
 
     context "when the cohort is changing" do
       let(:params) do
         {
           lead_provider:,
-          participant:,
+          participant_id:,
           course_identifier:,
 
           schedule_identifier: new_schedule_identifier,
@@ -336,7 +336,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       let(:params) do
         {
           lead_provider:,
-          participant:,
+          participant_id:,
           course_identifier:,
 
           schedule_identifier: new_schedule_identifier,

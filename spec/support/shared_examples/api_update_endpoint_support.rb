@@ -3,7 +3,7 @@
 RSpec.shared_examples "an API update endpoint" do
   let(:params) { defined?(attributes) ? { data: { attributes: } } : nil }
   let(:stub_service) do
-    service_double = instance_double(service, "#{action}": true, **service_args)
+    service_double = instance_double(service, "#{action}": true, **service_args.merge(defined?(service_methods) ? service_methods : {}))
     allow(service).to receive(:new) { |args|
       expect(args.to_hash.symbolize_keys).to eq(service_args)
     }.and_return(service_double)

@@ -13,19 +13,20 @@ module ParticipantOutcomes
     attr_reader :created_outcome
 
     attribute :lead_provider
-    attribute :participant
+    attribute :participant_id
     attribute :course_identifier
     attribute :state
     attribute :completion_date
 
     validates :lead_provider, presence: true
-    validates :participant, presence: true
+    validates :participant_id, presence: true
     validates :course_identifier, inclusion: { in: PERMITTED_COURSES }, presence: true
     validates :state, inclusion: { in: STATES }, presence: true
     validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }
     validate :participant_has_no_completed_declarations
     validate :completion_date_is_a_valid_date
     validate :completion_date_not_in_the_future
+    validate :participant_exists
 
     def create_outcome
       return false unless valid?
@@ -39,6 +40,12 @@ module ParticipantOutcomes
       end
 
       true
+    end
+
+    def participant
+      @participant ||= Participants::Query.new(lead_provider:).participant(ecf_id: participant_id)
+    rescue ActiveRecord::RecordNotFound, ArgumentError
+      nil
     end
 
   private
@@ -75,6 +82,10 @@ module ParticipantOutcomes
       return if errors.key?(:completion_date)
 
       errors.add(:completion_date, :future_date) if completion_date&.to_date&.future?
+    end
+
+    def participant_exists
+      errors.add(:participant_id, :invalid_participant) if participant.blank?
     end
 
     def completion_date_is_a_valid_date

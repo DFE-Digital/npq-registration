@@ -138,14 +138,14 @@ module ValidTestDataGenerators
 
     def defer_application(application)
       Participants::Defer.new(lead_provider:,
-                              participant: application.user,
+                              participant_id: application.user.ecf_id,
                               course_identifier: application.course.identifier,
                               reason: Participants::Defer::DEFERRAL_REASONS.sample).defer
     end
 
     def withdrawn_application(application)
       Participants::Withdraw.new(lead_provider:,
-                                 participant: application.user,
+                                 participant_id: application.user.ecf_id,
                                  course_identifier: application.course.identifier,
                                  reason: Participants::Withdraw::WITHDRAWAL_REASONS.sample).withdraw
     end

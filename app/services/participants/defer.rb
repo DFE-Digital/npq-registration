@@ -32,15 +32,15 @@ module Participants
   private
 
     def not_withdrawn
-      errors.add(:participant, :already_withdrawn) if application&.withdrawn?
+      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn?
     end
 
     def not_already_deferred
-      errors.add(:participant, :already_deferred) if application&.deferred?
+      errors.add(:participant_id, :already_deferred) if application&.deferred?
     end
 
     def has_declarations
-      errors.add(:participant, :no_declarations) if application&.declarations&.none?
+      errors.add(:participant_id, :no_declarations) if application&.declarations&.none?
     end
   end
 end

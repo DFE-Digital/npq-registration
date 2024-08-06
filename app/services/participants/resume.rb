@@ -19,7 +19,7 @@ module Participants
   private
 
     def not_already_active
-      errors.add(:participant, :already_active) if application&.active?
+      errors.add(:participant_id, :already_active) if application&.active?
     end
   end
 end
