@@ -7,7 +7,7 @@ RSpec.feature "Cookies", type: :feature do
     visit "/"
     click_link("View cookies")
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).to have_content("Cookies are small files saved on your phone, tablet or computer when you visit a website.")
   end
 
@@ -16,26 +16,26 @@ RSpec.feature "Cookies", type: :feature do
     expect(page).to have_content("We use some essential cookies to make this service work.")
     click_button("Reject additional cookies")
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).to have_content("You’ve rejected additional cookies")
     click_button("Hide this message")
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).not_to have_content("You’ve rejected additional cookies")
   end
 
   scenario "when accepting cookies" do
     visit "/"
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).to have_content("We use some essential cookies to make this service work.")
     click_button("Accept additional cookies")
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).to have_content("You’ve accepted additional cookies")
     click_button("Hide this message")
 
-    expect(page).to be_axe_clean
+    expect(page).to be_accessible
     expect(page).not_to have_content("You’ve accepted additional cookies")
   end
 end
