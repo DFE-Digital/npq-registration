@@ -42,7 +42,10 @@ module Participants
 
     def where_training_status_is(training_status)
       return if ignore?(filter: training_status)
-      return unless Application.training_statuses[training_status]
+
+      unless Application.training_statuses[training_status]
+        raise API::Errors::FilterValidationError, I18n.t(:invalid_training_status, valid_training_status: Application.training_statuses.keys)
+      end
 
       scope.merge!(Application.where(training_status:))
     end
