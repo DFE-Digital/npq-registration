@@ -406,4 +406,43 @@ RSpec.describe Application do
       it { is_expected.not_to be_fundable }
     end
   end
+
+  describe "touch user when application updated" do
+    let!(:old_datetime) { 6.months.ago }
+    let(:user) { create(:user, updated_at: old_datetime) }
+
+    context "when application is created" do
+      it "touch updates field user.updated_at" do
+        freeze_time do
+          expect(user.updated_at).to eq(old_datetime)
+
+          create(:application, user:)
+          expect(user.updated_at).to eq(Time.zone.now)
+        end
+      end
+    end
+
+    context "when application is updated" do
+      let(:application) { create(:application, :pending, user:) }
+
+      before do
+        travel_to(old_datetime) do
+          user
+          application
+        end
+      end
+
+      it "touch updates field user.updated_at" do
+        freeze_time do
+          expect(user.updated_at.rfc3339).to eq(old_datetime.rfc3339)
+          expect(application.updated_at.rfc3339).to eq(old_datetime.rfc3339)
+
+          application.rejected!
+
+          expect(user.updated_at).to eq(Time.zone.now)
+          expect(application.updated_at).to eq(Time.zone.now)
+        end
+      end
+    end
+  end
 end
