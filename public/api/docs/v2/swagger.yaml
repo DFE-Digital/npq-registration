@@ -149,7 +149,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place:
+                        funded_place: true
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
         '401':

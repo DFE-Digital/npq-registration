@@ -54,6 +54,7 @@ RSpec.describe "NPQ Applications endpoint", type: :request, openapi_spec: "v3/sw
       let(:response_example) do
         base_response_example.tap do |example|
           example[:data][:attributes][:status] = "accepted"
+          example[:data][:attributes][:funded_place] = true
         end
       end
     end
