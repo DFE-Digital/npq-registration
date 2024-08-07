@@ -95,7 +95,6 @@ class FundingEligibility
       return NOT_IN_ENGLAND unless inside_catchment?
 
       unless institution
-
         if query_store
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
@@ -117,9 +116,13 @@ class FundingEligibility
       when "School"
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !course.eyl?
-        return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
+        unless course.eyl?
+          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
+          return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
+          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?)
+          return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment?
+        end
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
