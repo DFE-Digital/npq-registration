@@ -281,6 +281,8 @@ GEM
       rack (>= 0.2)
     jwt (2.8.2)
       base64
+    knapsack (4.0.0)
+      rake
     language_server-protocol (3.17.0.3)
     launchy (2.5.2)
       addressable (~> 2.8)
@@ -333,6 +335,8 @@ GEM
     nokogiri (1.16.6-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.6-x86_64-linux)
       racc (~> 1.4)
     notifications-ruby-client (5.4.0)
       jwt (>= 1.5, < 3)
@@ -688,6 +692,7 @@ DEPENDENCIES
   i18n-debug
   iconv
   json_api_client (>= 1.21.1)
+  knapsack
   listen (>= 3.0.5, < 3.10)
   mail-notify
   net-imap (~> 0.4.14)

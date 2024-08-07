@@ -61,6 +61,7 @@ group :development, :test do
   gem "capybara"
   gem "capybara-screenshot"
   gem "dotenv-rails"
+  gem "knapsack"
   gem "parallel_tests", "~> 4.7"
   gem "pry-byebug"
   gem "pry-rails"

@@ -13,3 +13,5 @@ end
 Rails.application.load_tasks
 
 task default: ["lint:ruby", "lint:scss", "spec"]
+
+Knapsack.load_tasks if defined?(Knapsack)
