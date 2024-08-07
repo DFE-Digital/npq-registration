@@ -21,7 +21,6 @@ module API
         "GATEWAY_INTERFACE",
         "HTTP_ACCEPT",
         "HTTP_ACCEPT_ENCODING",
-        "HTTP_AUTHORIZATION",
         "HTTP_CONNECTION",
         "HTTP_HOST",
         "HTTP_USER_AGENT",
