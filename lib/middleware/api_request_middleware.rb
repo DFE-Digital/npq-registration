@@ -68,7 +68,7 @@ module Middleware
     end
 
     def trace_request?
-      Rails.env.in?(%w[migration review separation staging production]) && vendor_api_path?
+      Rails.application.config.npq_separation[:api_enabled] && Rails.env.in?(%w[migration review sandbox separation staging production]) && vendor_api_path?
     end
 
     def vendor_api_path?

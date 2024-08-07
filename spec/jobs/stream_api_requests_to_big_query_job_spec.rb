@@ -81,6 +81,31 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
             created_at:,
           }.stringify_keys], ignore_unknown: true)
         end
+
+        context "when there is no `response_body`" do
+          let(:response_data) do
+            {
+              "headers" => { "Content-Type" => "application/json" },
+              "body" => nil,
+            }
+          end
+
+          it "sends correct data to BigQuery with no `response_body`" do
+            job
+
+            expect(table).to have_received(:insert).with([{
+              request_path: request_data["path"],
+              status_code:,
+              request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
+              request_method: request_data["method"],
+              request_body: { "foo" => "bar" }.to_json,
+              response_body: "{}",
+              response_headers: response_data["headers"].to_json,
+              lead_provider: lead_provider.name,
+              created_at:,
+            }.stringify_keys], ignore_unknown: true)
+          end
+        end
       end
 
       context "when API Request response is not success" do
@@ -112,6 +137,116 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
                 "detail" => "This NPQ application has already been accepted",
               }],
             }.to_json,
+            response_headers: response_data["headers"].to_json,
+            lead_provider: lead_provider.name,
+            created_at:,
+          }.stringify_keys], ignore_unknown: true)
+        end
+      end
+
+      context "when no `auth_token`` has been used in the request" do
+        let(:request_data) do
+          {
+            "path" => "/api/v3/participants/npq",
+            "params" => {},
+            "body" => { "foo" => "bar" }.to_json,
+            "headers" => {
+              "HTTP_VERSION" => "HTTP/1.1",
+              "HTTP_HOST" => "localhost:3000",
+              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+              "HTTP_ACCEPT" => "*/*",
+              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+              "HTTP_CONNECTION" => "keep-alive",
+              "QUERY_STRING" => "",
+            },
+            "method" => "GET",
+          }
+        end
+
+        it "sends correct data to BigQuery" do
+          job
+
+          expect(table).to have_received(:insert).with([{
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"].to_json,
+            request_method: request_data["method"],
+            request_body: { "foo" => "bar" }.to_json,
+            response_body: "{}",
+            response_headers: response_data["headers"].to_json,
+            lead_provider: nil,
+            created_at:,
+          }.stringify_keys], ignore_unknown: true)
+        end
+      end
+
+      context "when there is no `request_body`" do
+        let(:request_data) do
+          {
+            "path" => "/api/v3/participants/npq",
+            "params" => { "data" => { "attributes" => { "course_identifier" => "test-course" } } },
+            "body" => nil,
+            "headers" => {
+              "HTTP_VERSION" => "HTTP/1.1",
+              "HTTP_HOST" => "localhost:3000",
+              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+              "HTTP_ACCEPT" => "*/*",
+              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+              "HTTP_AUTHORIZATION" => "Bearer ambition-token",
+              "HTTP_CONNECTION" => "keep-alive",
+              "QUERY_STRING" => "",
+            },
+            "method" => "GET",
+          }
+        end
+
+        it "sends correct data to BigQuery" do
+          job
+
+          expect(table).to have_received(:insert).with([{
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
+            request_method: request_data["method"],
+            request_body: { "data" => { "attributes" => { "course_identifier" => "test-course" } } }.to_json,
+            response_body: "{}",
+            response_headers: response_data["headers"].to_json,
+            lead_provider: lead_provider.name,
+            created_at:,
+          }.stringify_keys], ignore_unknown: true)
+        end
+      end
+
+      context "when `request_body` is invalid" do
+        let(:request_data) do
+          {
+            "path" => "/api/v3/participants/npq",
+            "params" => {},
+            "body" => "invalid-body",
+            "headers" => {
+              "HTTP_VERSION" => "HTTP/1.1",
+              "HTTP_HOST" => "localhost:3000",
+              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+              "HTTP_ACCEPT" => "*/*",
+              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+              "HTTP_AUTHORIZATION" => "Bearer ambition-token",
+              "HTTP_CONNECTION" => "keep-alive",
+              "QUERY_STRING" => "",
+            },
+            "method" => "GET",
+          }
+        end
+
+        it "sends correct data to BigQuery with a error message in `request_body`" do
+          job
+
+          expect(table).to have_received(:insert).with([{
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
+            request_method: request_data["method"],
+            request_body: { "error" => "request data did not contain valid JSON" }.to_json,
+            response_body: "{}",
             response_headers: response_data["headers"].to_json,
             lead_provider: lead_provider.name,
             created_at:,

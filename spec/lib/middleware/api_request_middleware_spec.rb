@@ -24,10 +24,20 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
   context "when running in other environments other than the allowed ones" do
     let(:environment) { "test" }
 
-    it "does not fire StreamAPIRequestsToBigQueryJob" do
-      request.get "/"
+    describe "#call on a non-API path" do
+      it "does not fire StreamAPIRequestsToBigQueryJob" do
+        request.get "/"
 
-      expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
+    end
+
+    describe "#call on an API path" do
+      it "does not fire StreamAPIRequestsToBigQueryJob" do
+        request.get "/api/v1/participants/npq", params: { foo: "bar" }
+
+        expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
+      end
     end
   end
 
@@ -44,20 +54,20 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
 
     describe "#call on an API path" do
       it "fires an StreamAPIRequestsToBigQueryJob" do
-        request.get "/api/v1/participants/ecf", params: { foo: "bar" }
+        request.get "/api/v1/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+          hash_including("path" => "/api/v1/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
         )
       end
     end
 
     describe "#call on a different version API path" do
       it "fires an StreamAPIRequestsToBigQueryJob" do
-        request.get "/api/v3/participants/ecf", params: { foo: "bar" }
+        request.get "/api/v3/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v3/participants/ecf", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+          hash_including("path" => "/api/v3/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
         )
       end
     end
@@ -77,10 +87,20 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
         allow(Rails.logger).to receive(:warn)
         allow(StreamAPIRequestsToBigQueryJob).to receive(:perform_later).and_raise(StandardError)
 
-        request.get "/api/v1/participants/ecf"
+        request.get "/api/v1/participants/npq"
 
         expect(Rails.logger).to have_received(:warn)
       end
+    end
+  end
+
+  context "when `api_enabled` flag is false" do
+    before { allow(Rails.application.config).to receive(:npq_separation).and_return({ api_enabled: false }) }
+
+    it "does not fire StreamAPIRequestsToBigQueryJob" do
+      request.get "/api/v1/participants/npq", params: { foo: "bar" }
+
+      expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
     end
   end
 end
