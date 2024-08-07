@@ -33,7 +33,7 @@ class School < ApplicationRecord
     "43" => "Academy alternative provision sponsor led",
     "44" => "Academy special converter",
     "45" => "Academy 16-19 converter",
-    "46" => "Academy 16 to 19 sponsor led"
+    "46" => "Academy 16 to 19 sponsor led",
   }.freeze
 
   pg_search_scope :search_by_name,
