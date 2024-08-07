@@ -40,6 +40,12 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [10]
+        ci_node_index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,5 +80,9 @@ jobs:
       - name: Precompile assets
         run: bundle exec rake assets:precompile
 
-      - name: Run tests
-        run: bundle exec rspec
+      - name: Run Specs
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: |-
+          bundle exec rake knapsack:rspec
