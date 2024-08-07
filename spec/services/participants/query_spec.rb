@@ -98,11 +98,11 @@ RSpec.describe Participants::Query do
         end
 
         context "when application was updated recently" do
-          let!(:participant1) { travel_to(1.days.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant1) { travel_to(1.day.ago) { create(:user, :with_application, lead_provider:) } }
           let!(:participant2) { travel_to(2.days.ago) { create(:user, :with_application, lead_provider:) } }
           let!(:participant3) { travel_to(5.days.ago) { create(:user, :with_application, lead_provider:) } }
 
-          let(:params) { { updated_since: 3.day.ago } }
+          let(:params) { { updated_since: 3.days.ago } }
 
           it "filters by applications.updated_at" do
             expect(query.participants).to contain_exactly(participant2, participant1)
@@ -113,11 +113,11 @@ RSpec.describe Participants::Query do
         end
 
         context "when participant_id_change was updated recently" do
-          let!(:participant1) { travel_to(1.days.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant1) { travel_to(1.day.ago) { create(:user, :with_application, lead_provider:) } }
           let!(:participant2) { travel_to(2.days.ago) { create(:user, :with_application, lead_provider:) } }
           let!(:participant3) { travel_to(5.days.ago) { create(:user, :with_application, lead_provider:) } }
 
-          let(:params) { { updated_since: 3.day.ago } }
+          let(:params) { { updated_since: 3.days.ago } }
 
           it "filters by participant_id_change.updated_at" do
             expect(query.participants).to contain_exactly(participant2, participant1)

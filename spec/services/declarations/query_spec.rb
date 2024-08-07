@@ -70,7 +70,7 @@ RSpec.describe Declarations::Query do
 
         context "when participant_outcome was updated recently" do
           let!(:declaration1) do
-            travel_to(1.days.ago) do
+            travel_to(1.day.ago) do
               dec = create(:declaration)
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
@@ -95,7 +95,7 @@ RSpec.describe Declarations::Query do
           end
 
           it "filters by participant_outcome.updated_at" do
-            query = described_class.new(updated_since: 3.day.ago)
+            query = described_class.new(updated_since: 3.days.ago)
 
             expect(query.declarations).to contain_exactly(declaration2, declaration1)
 
@@ -106,7 +106,7 @@ RSpec.describe Declarations::Query do
 
         context "when statement_item was updated recently" do
           let!(:declaration1) do
-            travel_to(1.days.ago) do
+            travel_to(1.day.ago) do
               dec = create(:declaration)
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
@@ -131,7 +131,7 @@ RSpec.describe Declarations::Query do
           end
 
           it "filters by statement_item.updated_at" do
-            query = described_class.new(updated_since: 3.day.ago)
+            query = described_class.new(updated_since: 3.days.ago)
 
             expect(query.declarations).to contain_exactly(declaration2, declaration1)
 

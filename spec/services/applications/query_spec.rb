@@ -93,9 +93,9 @@ RSpec.describe Applications::Query do
             query = described_class.new(lead_provider:, updated_since: 7.days.ago)
             expect(query.applications).to contain_exactly(application2)
 
-            application1.user.update!(updated_at: 1.days.ago)
+            application1.user.update!(updated_at: 1.day.ago)
 
-            query = described_class.new(lead_provider:, updated_since: 2.day.ago)
+            query = described_class.new(lead_provider:, updated_since: 2.days.ago)
             expect(query.applications).to contain_exactly(application1)
           end
         end

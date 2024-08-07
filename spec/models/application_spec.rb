@@ -407,14 +407,14 @@ RSpec.describe Application do
     end
   end
 
-  describe "touch user when application updated" do
+  describe "touch user when application changed" do
     let!(:old_datetime) { 6.months.ago }
     let(:user) { create(:user, updated_at: old_datetime) }
 
     context "when application is created" do
       it "touch updates field user.updated_at" do
         freeze_time do
-          expect(user.updated_at).to eq(old_datetime)
+          expect(user.updated_at.rfc3339).to eq(old_datetime.rfc3339)
 
           create(:application, user:)
           expect(user.updated_at).to eq(Time.zone.now)
