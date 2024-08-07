@@ -22,6 +22,7 @@ APPLICATION_CHANGE_FUNDED_PLACE_REQUEST = {
             funded_place: {
               description: "Whether the participant has a funded place",
               nullable: false,
+              required: true,
               type: :boolean,
               example: true,
             },
