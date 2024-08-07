@@ -133,6 +133,52 @@ RSpec.describe FundingEligibility do
           end
         end
       end
+
+      context "when school is LA nursery" do
+        context "when LA disadvantaged nursery" do
+          before do
+            allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
+          end
+
+          {
+            senco: true,
+            leading_primary_mathmatics: true,
+            headship: true,
+            senior_leadership: true,
+            leading_literacy: true,
+          }.each do |course, eligible|
+            context "when user has selected the #{course} course" do
+              let(:course) { create(:course, course) }
+
+              it "returns #{eligible}" do
+                expect(subject.funded?).to eq eligible
+              end
+            end
+          end
+        end
+
+        context "when not LA disadvantaged nursery" do
+          before do
+            allow(institution).to receive(:la_disadvantaged_nursery?).and_return(false)
+          end
+
+          {
+            senco: true,
+            leading_primary_mathmatics: true,
+            headship: true,
+            senior_leadership: false,
+            leading_literacy: false,
+          }.each do |course, eligible|
+            context "when user has selected the #{course} course" do
+              let(:course) { create(:course, course) }
+
+              it "returns #{eligible}" do
+                expect(subject.funded?).to eq eligible
+              end
+            end
+          end
+        end
+      end
     end
 
     context "when there is no institution with at an approved ITT provider and they are a lead mentor" do
