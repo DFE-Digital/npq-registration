@@ -37,7 +37,13 @@ module Declarations
     def where_updated_since(updated_since)
       return if ignore?(filter: updated_since)
 
-      scope.merge!(Declaration.where(updated_at: updated_since..))
+      query1 = Declaration.where(updated_at: updated_since..)
+      query2 = Declaration.where(participant_outcomes: { updated_at: updated_since.. })
+      query3 = Declaration.where(statement_items: { updated_at: updated_since.. })
+
+      query = query1.or(query2).or(query3)
+
+      scope.merge!(query)
     end
 
     def where_participant_ids_in(participant_ids)
