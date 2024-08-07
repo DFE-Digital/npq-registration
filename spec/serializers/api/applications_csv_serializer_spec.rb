@@ -24,7 +24,8 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
     it { expect(first_row.values).to all(be_present) }
 
     it "returns expected data", :aggregate_failures do
-      expect(first_row).to include({
+      expect(first_row).to eq({
+        id: first_application.ecf_id,
         course_identifier: first_application.course.identifier,
         email: first_application.user.email,
         email_validated: "true",
@@ -50,6 +51,9 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         teacher_catchment_iso_country_code: "GBR",
         itt_provider: first_application.itt_provider.legal_name,
         lead_mentor: first_application.lead_mentor.to_s,
+        cohort: first_application.cohort.start_year.to_s,
+        created_at: first_application.created_at.rfc3339,
+        updated_at: first_application.updated_at.rfc3339,
       })
     end
 

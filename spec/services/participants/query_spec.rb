@@ -15,7 +15,7 @@ RSpec.describe Participants::Query do
       expect(query.participants).to contain_exactly(participant1, participant2)
     end
 
-    it "orders participants by created_at in ascending order" do
+    it "orders participants by accepted_at in ascending order" do
       participant3 = travel_to(1.minute.ago) { create(:user, :with_application, lead_provider:) }
 
       expect(query.participants).to eq([participant3, participant1, participant2])
@@ -183,7 +183,15 @@ RSpec.describe Participants::Query do
 
       subject(:participants) { query.participants }
 
-      it { is_expected.to eq([participant1, participant2, participant3]) }
+      before do
+        participant1.applications.first.update!(accepted_at: 1.day.ago)
+        participant2.applications.first.update!(accepted_at: 10.days.ago)
+        participant3.applications.first.update!(accepted_at: 2.days.ago)
+      end
+
+      it "orders applications by accepted_at in ascending order" do
+        expect(query.participants).to eq([participant2, participant3, participant1])
+      end
 
       context "when sorting by created at, descending" do
         let(:sort) { "-created_at" }

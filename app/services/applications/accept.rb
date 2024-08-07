@@ -54,6 +54,7 @@ module Applications
       opts = {
         lead_provider_approval_status: "accepted",
         schedule:,
+        accepted_at: Time.zone.now,
       }
 
       if cohort&.funding_cap?

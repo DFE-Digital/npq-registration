@@ -135,6 +135,7 @@ RSpec.feature "Happy journeys", type: :feature, rack_test_driver: true do
     )
 
     deep_compare_application_data(
+      "accepted_at" => nil,
       "cohort_id" => nil,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,

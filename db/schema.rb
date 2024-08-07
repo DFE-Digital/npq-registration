@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_18_091502) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_25_102353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_18_091502) do
     t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
     t.bigint "schedule_id"
     t.string "referred_by_return_to_teaching_adviser"
+    t.datetime "accepted_at"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"

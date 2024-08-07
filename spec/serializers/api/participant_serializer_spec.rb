@@ -129,7 +129,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             targeted_delivery_funding_eligibility: application.targeted_delivery_funding_eligibility,
             withdrawal: nil,
             deferral: nil,
-            created_at: application.created_at.rfc3339,
+            created_at: application.accepted_at.rfc3339,
             funded_place: application.funded_place,
           }.stringify_keys,
         ])
@@ -155,7 +155,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
                 date: application.application_states.last.created_at.rfc3339,
               },
               deferral: nil,
-              created_at: application.created_at.rfc3339,
+              created_at: application.accepted_at.rfc3339,
               funded_place: application.funded_place,
             }.deep_stringify_keys,
           ])
@@ -182,7 +182,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
                 reason: application.application_states.last.reason,
                 date: application.application_states.last.created_at.rfc3339,
               },
-              created_at: application.created_at.rfc3339,
+              created_at: application.accepted_at.rfc3339,
               funded_place: application.funded_place,
             }.deep_stringify_keys,
           ])
