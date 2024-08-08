@@ -16,41 +16,13 @@ module API
       payload[:current_user_id] = current_lead_provider&.id
       payload[:current_user_name] = current_lead_provider&.name
 
+      payload[:query_params] = request.query_parameters.to_json
       payload[:request_headers] = request.env.slice(
-        "CONTENT_TYPE",
-        "GATEWAY_INTERFACE",
-        "HTTP_ACCEPT",
-        "HTTP_ACCEPT_ENCODING",
-        "HTTP_CONNECTION",
         "HTTP_HOST",
-        "HTTP_USER_AGENT",
+        "HTTP_ACCEPT",
         "HTTP_VERSION",
-        "ORIGINAL_FULLPATH",
-        "ORIGINAL_SCRIPT_NAME",
-        "PATH_INFO",
         "QUERY_STRING",
-        "REMOTE_ADDR",
-        "REQUEST_METHOD",
-        "REQUEST_PATH",
-        "REQUEST_URI",
-        "ROUTES_9080_SCRIPT_NAME",
-        "SCRIPT_NAME",
-        "SERVER_NAME",
-        "SERVER_PORT",
-        "SERVER_PROTOCOL",
-        "SERVER_SOFTWARE",
-        "puma.request_body_wait",
-        "rack.after_reply",
-        "rack.attack.called",
-        "rack.attack.throttle_data",
-        "rack.hijack?",
-        "rack.multiprocess",
-        "rack.multithread",
-        "rack.request.query_hash",
-        "rack.request.query_string",
-        "rack.run_once",
-        "rack.url_scheme",
-        "rack.version",
+        "HTTP_USER_AGENT",
       ).transform_values(&:to_s).to_json
       payload[:request_body] = request.raw_post
 
