@@ -41,26 +41,26 @@ class ControllerWithLoggerPayload
     )
   end
 
-  def append_info_to_payload(payload)
-  end
+  def append_info_to_payload(payload); end
 end
 
 RSpec.describe API::LoggerPayload do
   subject { ControllerWithLoggerPayload.new(response_status) }
-  let(:payload) { Hash.new }
+
+  let(:payload) { {} }
 
   describe "#append_info_to_payload" do
     context "when response status 200" do
       let(:response_status) { 200 }
 
-      it "should append payload data" do
+      it "appends payload data" do
         subject.append_info_to_payload(payload)
 
         expect(payload[:current_user_class]).to eq("LeadProvider")
         expect(payload[:current_user_id]).to eq(9999)
         expect(payload[:current_user_name]).to eq("Best Provider")
 
-        expect(payload[:query_params]).to eq({page: 5}.to_json)
+        expect(payload[:query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
           "HTTP_HOST" => "HOST_123",
@@ -83,14 +83,14 @@ RSpec.describe API::LoggerPayload do
     context "when response status 400" do
       let(:response_status) { 400 }
 
-      it "should include response_body" do
+      it "includes response_body" do
         subject.append_info_to_payload(payload)
 
         expect(payload[:current_user_class]).to eq("LeadProvider")
         expect(payload[:current_user_id]).to eq(9999)
         expect(payload[:current_user_name]).to eq("Best Provider")
 
-        expect(payload[:query_params]).to eq({page: 5}.to_json)
+        expect(payload[:query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
           "HTTP_HOST" => "HOST_123",
