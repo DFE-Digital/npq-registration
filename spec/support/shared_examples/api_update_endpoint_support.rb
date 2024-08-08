@@ -64,6 +64,18 @@ RSpec.shared_examples "an API update endpoint" do
         expect(response.status).to eq(422)
       end
     end
+
+    context "when extra params are sent" do
+      let(:params) { defined?(attributes) ? { data: { attributes: attributes.reverse_merge(reason: "test", schedule_identifier: "test") } } : nil }
+
+      it "calls the correct service" do
+        service_double = stub_service
+
+        api_put(path(resource_id), params:)
+
+        expect(service_double).to have_received(action)
+      end
+    end
   end
 
   context "when unauthorized" do

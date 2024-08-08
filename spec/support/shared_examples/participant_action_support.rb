@@ -33,6 +33,16 @@ RSpec.shared_examples "a participant action" do
       it { is_expected.to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
     end
   end
+
+  describe ".new_filtering_attributes" do
+    context "when extra params are sent to the action service" do
+      subject { described_class.new_filtering_attributes(lead_provider:, participant_id:, course_identifier:, reason: "test", schedule_identifier: "any") }
+
+      it "does not raise any exception" do
+        expect { subject }.not_to raise_error
+      end
+    end
+  end
 end
 
 RSpec.shared_examples "a participant state transition" do |action, from_states, to_state|

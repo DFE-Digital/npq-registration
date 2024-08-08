@@ -21,6 +21,11 @@ module Participants
       nil
     end
 
+    def self.new_filtering_attributes(attributes = {})
+      filtered_attributes = attributes.slice(*attribute_names)
+      new(filtered_attributes)
+    end
+
   private
 
     def application
