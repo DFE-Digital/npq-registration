@@ -8,11 +8,14 @@ module API
 
       payload[:query_params] = request.query_parameters.to_json
       payload[:request_headers] = request.env.slice(
-        "HTTP_HOST",
-        "HTTP_ACCEPT",
         "HTTP_VERSION",
-        "QUERY_STRING",
+        "HTTP_HOST",
         "HTTP_USER_AGENT",
+        "HTTP_ACCEPT",
+        "HTTP_ACCEPT_ENCODING",
+        "HTTP_CONNECTION",
+        "HTTP_CACHE_CONTROL",
+        "QUERY_STRING",
       ).transform_values(&:to_s).to_json
       payload[:request_body] = request.raw_post
 

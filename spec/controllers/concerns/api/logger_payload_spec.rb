@@ -19,11 +19,15 @@ class ControllerWithLoggerPayload
     OpenStruct.new(
       query_parameters: { page: 5 },
       env: {
-        "HTTP_HOST" => "HOST_123",
-        "HTTP_ACCEPT" => "ACCEPT_123",
         "HTTP_VERSION" => "VERSION_123",
-        "QUERY_STRING" => "STRING_123",
+        "HTTP_HOST" => "HOST_123",
         "HTTP_USER_AGENT" => "AGENT_123",
+        "HTTP_ACCEPT" => "ACCEPT_123",
+        "HTTP_ACCEPT_ENCODING" => "ENCODING_123",
+        "HTTP_CONNECTION" => "CONN_123",
+        "HTTP_CACHE_CONTROL" => "CACHE_123",
+        "QUERY_STRING" => "STRING_123",
+
         "SOMETHING_ELSE" => "XXX123",
       },
       raw_post: "RAW_POST",
@@ -63,11 +67,14 @@ RSpec.describe API::LoggerPayload do
         expect(payload[:query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
-          "HTTP_HOST" => "HOST_123",
-          "HTTP_ACCEPT" => "ACCEPT_123",
           "HTTP_VERSION" => "VERSION_123",
-          "QUERY_STRING" => "STRING_123",
+          "HTTP_HOST" => "HOST_123",
           "HTTP_USER_AGENT" => "AGENT_123",
+          "HTTP_ACCEPT" => "ACCEPT_123",
+          "HTTP_ACCEPT_ENCODING" => "ENCODING_123",
+          "HTTP_CONNECTION" => "CONN_123",
+          "HTTP_CACHE_CONTROL" => "CACHE_123",
+          "QUERY_STRING" => "STRING_123",
         }.to_json)
         expect(payload[:request_body]).to eq("RAW_POST")
 
@@ -93,11 +100,14 @@ RSpec.describe API::LoggerPayload do
         expect(payload[:query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
-          "HTTP_HOST" => "HOST_123",
-          "HTTP_ACCEPT" => "ACCEPT_123",
           "HTTP_VERSION" => "VERSION_123",
-          "QUERY_STRING" => "STRING_123",
+          "HTTP_HOST" => "HOST_123",
           "HTTP_USER_AGENT" => "AGENT_123",
+          "HTTP_ACCEPT" => "ACCEPT_123",
+          "HTTP_ACCEPT_ENCODING" => "ENCODING_123",
+          "HTTP_CONNECTION" => "CONN_123",
+          "HTTP_CACHE_CONTROL" => "CACHE_123",
+          "QUERY_STRING" => "STRING_123",
         }.to_json)
         expect(payload[:request_body]).to eq("RAW_POST")
 
