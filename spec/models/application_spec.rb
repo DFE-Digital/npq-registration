@@ -134,6 +134,15 @@ RSpec.describe Application do
         expect(described_class.eligible_for_funding).to contain_exactly(application_eligible_for_funding)
       end
     end
+
+    describe ".with_targeted_delivery_funding_eligibility" do
+      it "returns applications with targeted delivery funding eligibility" do
+        application_with_targeted_delivery_funding_eligibility = create(:application, targeted_delivery_funding_eligibility: true)
+        create(:application, targeted_delivery_funding_eligibility: false)
+
+        expect(described_class.with_targeted_delivery_funding_eligibility).to contain_exactly(application_with_targeted_delivery_funding_eligibility)
+      end
+    end
   end
 
   describe "#inside_catchment?" do

@@ -1,5 +1,7 @@
 module Ecf
   class NpqProfileCreator
+    prepend Base
+
     attr_reader :application
 
     def initialize(application:)

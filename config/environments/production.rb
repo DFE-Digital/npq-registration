@@ -116,5 +116,6 @@ Rails.application.configure do
     admin_portal_enabled: false,
     api_enabled: false,
     migration_enabled: false,
+    ecf_api_disabled: false,
   }
 end

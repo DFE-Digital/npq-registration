@@ -1,5 +1,7 @@
 module Ecf
   class EcfUserFinder
+    prepend Base
+
     attr_reader :user
 
     def initialize(user:)

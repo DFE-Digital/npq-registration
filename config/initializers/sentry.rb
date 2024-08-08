@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
-  config.dsn = Rails.env.production? ? ENV["SENTRY_DSN"] : "disabled"
-  config.release = ENV["GIT_COMMIT_SHA"]
-
+  config.enabled_environments = %w[production separation]
+  config.dsn = config.enabled_environments.include?(Rails.env) ? ENV["SENTRY_DSN"] : "disabled"
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
+  config.release = ENV["GIT_COMMIT_SHA"]
 
   filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
   config.before_send = lambda do |event, _hint|

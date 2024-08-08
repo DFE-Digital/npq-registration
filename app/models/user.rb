@@ -114,7 +114,7 @@ class User < ApplicationRecord
   end
 
   def ecf_user
-    return if ecf_id.blank?
+    return if ecf_id.blank? || Rails.application.config.npq_separation[:ecf_api_disabled]
 
     External::EcfAPI::Npq::User.find(ecf_id).first
   end

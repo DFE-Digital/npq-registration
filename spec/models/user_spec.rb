@@ -119,4 +119,32 @@ RSpec.describe User do
       }.to change { user.reload.email_updates_unsubscribe_key }.from("432").to(nil)
     end
   end
+
+  describe "#ecf_user" do
+    subject(:user) { build(:user) }
+
+    before { allow(External::EcfAPI::Npq::User).to receive(:find).and_return(%w[anything]) }
+
+    it "calls the correct ECF API service" do
+      expect(External::EcfAPI::Npq::User).to receive(:find).with(user.ecf_id)
+
+      user.ecf_user
+    end
+
+    context "when ecf_id is nil" do
+      before { user.update!(ecf_id: nil) }
+
+      it "returns nil" do
+        expect(user.ecf_user).to be_nil
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+
+      it "returns nil" do
+        expect(user.ecf_user).to be_nil
+      end
+    end
+  end
 end

@@ -145,8 +145,9 @@ class FundingEligibility
   end
 
   def previously_received_targeted_funding_support?
-    # This makes an api call so limit usage
-    ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
+    return ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true unless Rails.application.config.npq_separation[:ecf_api_disabled]
+
+    accepted_applications.with_targeted_delivery_funding_eligibility.any?
   end
 
   def ineligible_institution_type?
@@ -188,8 +189,41 @@ private
     )
   end
 
+  def users
+    get_an_identity_id_users.or(trn_users).distinct
+  end
+
+  def get_an_identity_id_users
+    return User.none if get_an_identity_id.blank?
+
+    User.with_get_an_identity_id.where(uid: get_an_identity_id)
+  end
+
+  def trn_users
+    return User.none if trn.blank?
+
+    User.where(trn:)
+  end
+
   def previously_funded?
-    ecf_api_funding_lookup["previously_funded"] == true
+    return ecf_api_funding_lookup["previously_funded"] == true unless Rails.application.config.npq_separation[:ecf_api_disabled]
+
+    accepted_applications.any?
+  end
+
+  def accepted_applications
+    @accepted_applications ||= begin
+      application_ids = users.flat_map do |user|
+        user.applications
+            .where(course: course.rebranded_alternative_courses)
+            .accepted
+            .eligible_for_funding
+            .where(funded_place: [nil, true])
+            .pluck(:id)
+      end
+
+      Application.where(id: application_ids)
+    end
   end
 
   def not_england_ehco?

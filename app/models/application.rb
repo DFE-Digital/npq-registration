@@ -32,6 +32,7 @@ class Application < ApplicationRecord
   scope :active_applications, -> { where.not(id: expired_applications) }
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
+  scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
 
   validate :schedule_cohort_matches
 
