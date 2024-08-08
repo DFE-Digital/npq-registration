@@ -135,6 +135,8 @@ RSpec.describe FundingEligibility do
       end
 
       context "when school is LA nursery" do
+        let(:institution) { build(:school, establishment_type_code: "15") }
+
         context "when LA disadvantaged nursery" do
           before do
             allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
