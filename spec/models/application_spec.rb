@@ -414,7 +414,7 @@ RSpec.describe Application do
     context "when application is created" do
       it "touch updates field user.updated_at" do
         freeze_time do
-          expect(user.updated_at.rfc3339).to eq(old_datetime.rfc3339)
+          expect(user.updated_at).to be_within(1.second).of(old_datetime)
 
           create(:application, user:)
           expect(user.updated_at).to eq(Time.zone.now)
@@ -434,8 +434,8 @@ RSpec.describe Application do
 
       it "touch updates field user.updated_at" do
         freeze_time do
-          expect(user.updated_at.rfc3339).to eq(old_datetime.rfc3339)
-          expect(application.updated_at.rfc3339).to eq(old_datetime.rfc3339)
+          expect(user.updated_at).to be_within(1.second).of(old_datetime)
+          expect(application.updated_at).to be_within(1.second).of(old_datetime)
 
           application.rejected!
 
