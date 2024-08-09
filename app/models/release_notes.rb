@@ -23,7 +23,7 @@ private
   end
 
   def file_content
-    File.read(Rails.root.join("release-notes.md"))
+    File.read(Rails.root.join("app/views/api/guidance/release-notes.md"))
   end
 
   ReleaseNote = Struct.new(:date, :content, keyword_init: true)
