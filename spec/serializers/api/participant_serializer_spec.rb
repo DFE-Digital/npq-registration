@@ -59,13 +59,19 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["teacher_reference_number"]).to eq(participant.trn)
       end
 
-      it "serializes the `updated_at`" do
-        expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
-      end
-
-      context "when participant.updated_at is not the latest" do
+      context "when serializing `updated_at`" do
         let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
         let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+
+        context "when participant is the latest" do
+          it "serializes the `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: latest_datetime)
+
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
+        end
 
         context "when application is the latest" do
           it "returns application's `updated_at`" do
@@ -73,7 +79,6 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             participant_id_change.update!(updated_at: old_datetime)
             participant.update!(updated_at: old_datetime)
 
-            participant.reload
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
         end
@@ -84,7 +89,6 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             participant_id_change.update!(updated_at: latest_datetime)
             participant.update!(updated_at: old_datetime)
 
-            participant.reload
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
         end
@@ -106,35 +110,38 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["teacher_reference_number"]).to eq(participant.trn)
       end
 
-      it "serializes the `updated_at`" do
-        expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
-      end
-
-      context "when application is the latest" do
+      context "when serializing `updated_at`" do
         let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
         let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
 
-        it "returns application's `updated_at`" do
-          application.update!(updated_at: latest_datetime)
-          participant_id_change.update!(updated_at: old_datetime)
-          participant.update!(updated_at: old_datetime)
+        context "when participant is the latest" do
+          it "serializes the `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: latest_datetime)
 
-          participant.reload
-          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
-      end
 
-      context "when participant_id_change is the latest" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+        context "when application is the latest" do
+          it "returns application's `updated_at`" do
+            application.update!(updated_at: latest_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: old_datetime)
 
-        it "returns participant_id_change's `updated_at`" do
-          application.update!(updated_at: old_datetime)
-          participant_id_change.update!(updated_at: latest_datetime)
-          participant.update!(updated_at: old_datetime)
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
+        end
 
-          participant.reload
-          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+        context "when participant_id_change is the latest" do
+          it "returns participant_id_change's `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: latest_datetime)
+            participant.update!(updated_at: old_datetime)
+
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
       end
 
@@ -166,35 +173,38 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["teacher_reference_number"]).to eq(participant.trn)
       end
 
-      it "serializes the `updated_at`" do
-        expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
-      end
-
-      context "when application is the latest" do
+      context "when serializing `updated_at`" do
         let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
         let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
 
-        it "returns application's `updated_at`" do
-          application.update!(updated_at: latest_datetime)
-          participant_id_change.update!(updated_at: old_datetime)
-          participant.update!(updated_at: old_datetime)
+        context "when participant is the latest" do
+          it "serializes the `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: latest_datetime)
 
-          participant.reload
-          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
-      end
 
-      context "when participant_id_change is the latest" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+        context "when application is the latest" do
+          it "returns application's `updated_at`" do
+            application.update!(updated_at: latest_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: old_datetime)
 
-        it "returns participant_id_change's `updated_at`" do
-          application.update!(updated_at: old_datetime)
-          participant_id_change.update!(updated_at: latest_datetime)
-          participant.update!(updated_at: old_datetime)
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
+        end
 
-          participant.reload
-          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+        context "when participant_id_change is the latest" do
+          it "returns participant_id_change's `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: latest_datetime)
+            participant.update!(updated_at: old_datetime)
+
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
       end
 
