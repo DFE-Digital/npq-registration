@@ -59,7 +59,6 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
           context "when participant_outcome is the latest" do
             before do
               declaration.participant_outcomes.first.update!(updated_at: latest_datetime)
-              declaration.reload
             end
 
             it "returns participant_outcome's `updated_at`" do
@@ -70,7 +69,6 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
           context "when statement_item is the latest" do
             before do
               declaration.statement_items.first.update!(updated_at: latest_datetime)
-              declaration.reload
             end
 
             it "returns statement_item's `updated_at`" do
