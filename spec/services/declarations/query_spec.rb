@@ -67,6 +67,78 @@ RSpec.describe Declarations::Query do
 
           expect(query.scope.to_sql).not_to include(condition_string)
         end
+
+        context "when participant_outcome was updated recently" do
+          let!(:declaration1) do
+            travel_to(1.day.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+          let!(:declaration2) do
+            travel_to(2.days.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+          let!(:declaration3) do
+            travel_to(5.days.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+
+          it "filters by participant_outcome.updated_at" do
+            query = described_class.new(updated_since: 3.days.ago)
+
+            expect(query.declarations).to contain_exactly(declaration2, declaration1)
+
+            declaration3.participant_outcomes.first.update!(updated_at: Time.zone.now)
+            expect(query.declarations).to contain_exactly(declaration2, declaration1, declaration3)
+          end
+        end
+
+        context "when statement_item was updated recently" do
+          let!(:declaration1) do
+            travel_to(1.day.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+          let!(:declaration2) do
+            travel_to(2.days.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+          let!(:declaration3) do
+            travel_to(5.days.ago) do
+              dec = create(:declaration)
+              create(:participant_outcome, declaration: dec)
+              create(:statement_item, declaration: dec)
+              dec
+            end
+          end
+
+          it "filters by statement_item.updated_at" do
+            query = described_class.new(updated_since: 3.days.ago)
+
+            expect(query.declarations).to contain_exactly(declaration2, declaration1)
+
+            declaration3.statement_items.first.update!(updated_at: Time.zone.now)
+            expect(query.declarations).to contain_exactly(declaration2, declaration1, declaration3)
+          end
+        end
       end
 
       context "when filtering by cohort" do

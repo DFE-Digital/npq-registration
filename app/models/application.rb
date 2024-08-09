@@ -36,6 +36,8 @@ class Application < ApplicationRecord
 
   validate :schedule_cohort_matches
 
+  after_commit :touch_user_if_changed
+
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
     preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
@@ -211,5 +213,11 @@ private
     unless schedule.course_group.courses.include?(course)
       errors.add(:schedule, :invalid_for_course)
     end
+  end
+
+  def touch_user_if_changed
+    return unless saved_change_to_lead_provider_approval_status?
+
+    user.touch(time: updated_at)
   end
 end
