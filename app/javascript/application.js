@@ -1,9 +1,8 @@
+// Entry point for the build script in your package.json
 require.context('govuk-frontend/dist/govuk/assets');
 
-import '../styles/application.scss';
-import '../controllers';
+import './controllers';
 import Rails from 'rails-ujs';
-import { initAll } from 'govuk-frontend';
 import accessibleAutocomplete from 'accessible-autocomplete';
 
 import institutionPicker from "./institution-picker";
@@ -11,7 +10,15 @@ import countryPicker from "./country-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
 
 Rails.start();
-initAll();
+import * as GOVUKFrontend from 'govuk-frontend'
+
+
+window.GOVUKFrontend = GOVUKFrontend;
+
+window.onload = function init() {
+  window.GOVUKFrontend.initAll();
+};
+
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')

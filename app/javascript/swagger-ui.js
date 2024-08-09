@@ -1,5 +1,4 @@
 import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-bundle'
-import 'swagger-ui-dist/swagger-ui.css'
 
 const version = document.getElementById('swagger-ui').dataset.version
 
