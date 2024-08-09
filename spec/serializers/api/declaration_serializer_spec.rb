@@ -59,7 +59,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
 
           it "returns participant_outcome's `updated_at`" do
             declaration.reload
-            expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
         end
 
@@ -78,7 +78,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
 
           it "returns statement_item's `updated_at`" do
             declaration.reload
-            expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
         end
 
