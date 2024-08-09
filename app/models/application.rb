@@ -218,6 +218,6 @@ private
   def touch_user_if_changed
     return unless saved_change_to_lead_provider_approval_status?
 
-    user.touch
+    user.touch(time: updated_at)
   end
 end
