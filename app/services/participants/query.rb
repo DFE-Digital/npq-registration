@@ -37,13 +37,10 @@ module Participants
     def where_updated_since(updated_since)
       return if ignore?(filter: updated_since)
 
-      query1 = User.where(updated_at: updated_since..)
-      query2 = User.where(applications: { updated_at: updated_since.. })
-      query3 = User.where(participant_id_changes: { updated_at: updated_since.. })
-
-      query = query1.or(query2).or(query3)
-
-      scope.merge!(query)
+      users_updated_since = User.where(updated_at: updated_since..)
+      applications_updated_since = User.where(applications: { updated_at: updated_since.. })
+      participant_id_changes_updated_since = User.where(participant_id_changes: { updated_at: updated_since.. })
+      scope.merge!(users_updated_since.or(applications_updated_since).or(participant_id_changes_updated_since))
     end
 
     def where_training_status_is(training_status)
