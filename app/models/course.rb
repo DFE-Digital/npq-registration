@@ -43,6 +43,12 @@ class Course < ApplicationRecord
     npq-early-years-leadership
   ].freeze
 
+  LA_NURSERY_APPROVED = %w[
+    npq-senco
+    npq-leading-primary-mathematics
+    npq-headship
+  ].freeze
+
   def schedule_for(cohort: Cohort.current, schedule_date: Date.current)
     course_group.schedule_for(cohort:, schedule_date:)
   end
@@ -91,6 +97,10 @@ class Course < ApplicationRecord
 
   def only_pp50?
     ONLY_PP50.include?(identifier)
+  end
+
+  def la_nursery_approved?
+    LA_NURSERY_APPROVED.include?(identifier)
   end
 
   def rebranded_alternative_courses
