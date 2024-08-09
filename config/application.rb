@@ -8,11 +8,7 @@ require "active_record/railtie"
 require "active_storage/engine"
 require "action_controller/railtie"
 require "action_mailer/railtie"
-# require "action_mailbox/engine"
-# require "action_text/engine"
 require "action_view/railtie"
-# require "action_cable/engine"
-# require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -38,5 +34,9 @@ module NpqRegistration
     # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
     require "middleware/time_traveler"
     config.middleware.use Middleware::TimeTraveler
+
+    # Used to stream API requests to BigQuery
+    require "middleware/api_request_middleware"
+    config.middleware.use Middleware::ApiRequestMiddleware
   end
 end
