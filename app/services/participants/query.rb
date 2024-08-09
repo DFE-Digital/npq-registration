@@ -67,7 +67,7 @@ module Participants
       User
         .joins(:applications).merge(Application.accepted)
         .includes(
-          :participant_id_changes,
+          participant_id_changes: %i[from_participant to_participant],
           applications: %i[
             course
             school
