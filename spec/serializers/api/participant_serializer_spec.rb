@@ -63,31 +63,30 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["updated_at"]).to eq(participant.updated_at.rfc3339)
       end
 
-      context "when application is the latest" do
+      context "when participant.updated_at is not the latest" do
         let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
         let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
 
-        it "returns application's `updated_at`" do
-          application.update!(updated_at: latest_datetime)
-          participant_id_change.update!(updated_at: old_datetime)
-          participant.update!(updated_at: old_datetime)
+        context "when application is the latest" do
+          it "returns application's `updated_at`" do
+            application.update!(updated_at: latest_datetime)
+            participant_id_change.update!(updated_at: old_datetime)
+            participant.update!(updated_at: old_datetime)
 
-          participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+            participant.reload
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
-      end
 
-      context "when participant_id_change is the latest" do
-        let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-        let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
+        context "when participant_id_change is the latest" do
+          it "returns participant_id_change's `updated_at`" do
+            application.update!(updated_at: old_datetime)
+            participant_id_change.update!(updated_at: latest_datetime)
+            participant.update!(updated_at: old_datetime)
 
-        it "returns participant_id_change's `updated_at`" do
-          application.update!(updated_at: old_datetime)
-          participant_id_change.update!(updated_at: latest_datetime)
-          participant.update!(updated_at: old_datetime)
-
-          participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+            participant.reload
+            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          end
         end
       end
     end

@@ -44,7 +44,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
           expect(attributes["updated_at"]).to eq(declaration.updated_at.rfc3339)
         end
 
-        context "when participant_outcome is the latest" do
+        context "when declaration.updated_at is not the latest" do
           let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
           let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
 
@@ -54,31 +54,28 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
               create(:participant_outcome, declaration:)
               create(:statement_item, declaration:)
             end
-            declaration.participant_outcomes.first.update!(updated_at: latest_datetime)
           end
 
-          it "returns participant_outcome's `updated_at`" do
-            declaration.reload
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-          end
-        end
-
-        context "when statement_item is the latest" do
-          let(:old_datetime) { Time.utc(2023, 5, 5, 5, 0, 0) }
-          let(:latest_datetime) { Time.utc(2024, 8, 8, 8, 0, 0) }
-
-          before do
-            travel_to(old_datetime) do
-              declaration
-              create(:participant_outcome, declaration:)
-              create(:statement_item, declaration:)
+          context "when participant_outcome is the latest" do
+            before do
+              declaration.participant_outcomes.first.update!(updated_at: latest_datetime)
+              declaration.reload
             end
-            declaration.statement_items.first.update!(updated_at: latest_datetime)
+
+            it "returns participant_outcome's `updated_at`" do
+              expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+            end
           end
 
-          it "returns statement_item's `updated_at`" do
-            declaration.reload
-            expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+          context "when statement_item is the latest" do
+            before do
+              declaration.statement_items.first.update!(updated_at: latest_datetime)
+              declaration.reload
+            end
+
+            it "returns statement_item's `updated_at`" do
+              expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
+            end
           end
         end
 
