@@ -120,7 +120,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           participant.update!(updated_at: old_datetime)
 
           participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
 
@@ -134,7 +134,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           participant.update!(updated_at: old_datetime)
 
           participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
 
@@ -180,7 +180,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           participant.update!(updated_at: old_datetime)
 
           participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
 
@@ -194,7 +194,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           participant.update!(updated_at: old_datetime)
 
           participant.reload
-          expect(attributes["updated_at"]).to eq("2024-08-08T08:00:00Z")
+          expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
         end
       end
 
