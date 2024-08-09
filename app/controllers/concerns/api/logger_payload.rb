@@ -8,7 +8,7 @@ module API
       params[:current_user_id] = current_lead_provider&.id
       params[:current_user_name] = current_lead_provider&.name
 
-      params[:query_params] = request.query_parameters
+      params[:request_query_params] = request.query_parameters&.to_hash
       params[:request_headers] = request.env.slice(
         "HTTP_VERSION",
         "HTTP_HOST",

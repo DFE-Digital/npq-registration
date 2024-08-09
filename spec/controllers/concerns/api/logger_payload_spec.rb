@@ -65,7 +65,7 @@ RSpec.describe API::LoggerPayload do
         expect(payload[:current_user_id]).to eq(9999)
         expect(payload[:current_user_name]).to eq("Best Provider")
 
-        expect(payload[:query_params]).to eq({ page: 5 }.to_json)
+        expect(payload[:request_query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
           "HTTP_VERSION" => "VERSION_123",
@@ -98,7 +98,7 @@ RSpec.describe API::LoggerPayload do
         expect(payload[:current_user_id]).to eq(9999)
         expect(payload[:current_user_name]).to eq("Best Provider")
 
-        expect(payload[:query_params]).to eq({ page: 5 }.to_json)
+        expect(payload[:request_query_params]).to eq({ page: 5 }.to_json)
 
         expect(payload[:request_headers]).to eq({
           "HTTP_VERSION" => "VERSION_123",
@@ -121,13 +121,13 @@ RSpec.describe API::LoggerPayload do
       end
     end
 
-    context "when query_params is empty {}" do
+    context "when request_query_params is empty {}" do
       subject { ControllerWithLoggerPayload.new(query_parameters: {}) }
 
-      it "query_params should be nil instead of '{}'" do
+      it "request_query_params should be nil instead of '{}'" do
         subject.append_info_to_payload(payload)
 
-        expect(payload[:query_params]).to be_nil
+        expect(payload[:request_query_params]).to be_nil
       end
     end
   end
