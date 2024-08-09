@@ -40,12 +40,6 @@ PARTICIPANT_DECLARATION = {
             example: "started",
             enum: Schedule::DECLARATION_TYPES,
           },
-          declaration_date: {
-            description: "The event declaration date",
-            type: :string,
-            nullable: false,
-            example: "2022-04-30",
-          },
           course_identifier: {
             description: "The NPQ course this NPQ application relates to",
             type: :string,
@@ -53,17 +47,11 @@ PARTICIPANT_DECLARATION = {
             example: Course::IDENTIFIERS.first,
             enum: Course::IDENTIFIERS,
           },
-          eligible_for_payment: {
-            description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
-            type: :boolean,
-            nullable: true,
-            example: true,
-          },
-          voided: {
-            description: "[Deprecated - use state instead] Indicates whether this declaration has been voided",
-            type: :boolean,
-            nullable: true,
-            example: false,
+          declaration_date: {
+            description: "The event declaration date",
+            type: :string,
+            nullable: false,
+            example: "2022-04-30",
           },
           state: {
             description: "Indicates the state of this payment declaration",
@@ -72,18 +60,30 @@ PARTICIPANT_DECLARATION = {
             example: "submitted",
             enum: Declaration.states.keys,
           },
+          has_passed: {
+            description: "Whether the participant has failed or passed",
+            type: :string,
+            nullable: true,
+            example: nil,
+          },
+          voided: {
+            description: "[Deprecated - use state instead] Indicates whether this declaration has been voided",
+            type: :boolean,
+            nullable: true,
+            example: false,
+          },
+          eligible_for_payment: {
+            description: "[Deprecated - use state instead] Indicates whether this declaration would be eligible for funding from the DfE",
+            type: :boolean,
+            nullable: true,
+            example: true,
+          },
           updated_at: {
             description: "The date the application was last updated",
             type: :string,
             nullable: false,
             format: :"date-time",
             example: "2021-05-31T02:22:32.000Z",
-          },
-          has_passed: {
-            description: "Whether the participant has failed or passed",
-            type: :string,
-            nullable: true,
-            example: nil,
           },
         },
       },
@@ -108,15 +108,6 @@ PARTICIPANT_DECLARATION = {
     example: "cd3a12347-7308-4879-942a-c4a70ced400a",
     nullable: true,
   }
-  h[:v3][:properties][:attributes][:properties][:ineligible_for_funding_reason] = {
-    description: "If the declaration is ineligible, the reason why",
-    type: "string",
-    enum: %w[
-      duplicate_declaration
-    ],
-    nullable: true,
-    example: "duplicate_declaration",
-  }
   h[:v3][:properties][:attributes][:properties][:uplift_paid] = {
     description: "If participant is eligible for uplift, whether it has been paid as part of this declaration",
     type: "boolean",
@@ -134,6 +125,15 @@ PARTICIPANT_DECLARATION = {
     example: "Example Institute",
     nullable: false,
   }
+  h[:v3][:properties][:attributes][:properties][:ineligible_for_funding_reason] = {
+    description: "If the declaration is ineligible, the reason why",
+    type: "string",
+    enum: %w[
+      duplicate_declaration
+    ],
+    nullable: true,
+    example: "duplicate_declaration",
+  }
   h[:v3][:properties][:attributes][:properties][:created_at] = {
     description: "The date the application was created",
     type: :string,
@@ -141,4 +141,7 @@ PARTICIPANT_DECLARATION = {
     format: :"date-time",
     example: "2021-05-31T02:22:32.000Z",
   }
+  # Re-add updated_at to fix ordering
+  updated_at = h[:v3][:properties][:attributes][:properties].delete(:updated_at)
+  h[:v3][:properties][:attributes][:properties][:updated_at] = updated_at
 }.freeze

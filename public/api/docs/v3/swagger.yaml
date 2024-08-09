@@ -117,8 +117,6 @@ paths:
                         school_ukprn: '10079319'
                         status: accepted
                         works_in_school: true
-                        created_at: '2021-05-31T02:21:32.000Z'
-                        updated_at: '2021-05-31T02:22:32.000Z'
                         cohort: '2022'
                         eligible_for_funding: true
                         targeted_delivery_funding_eligibility: true
@@ -129,6 +127,8 @@ paths:
                         itt_provider: University of Southampton
                         lead_mentor: true
                         funded_place: true
+                        created_at: '2021-05-31T02:21:32.000Z'
+                        updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -203,8 +203,6 @@ paths:
                         school_ukprn: '10079319'
                         status: rejected
                         works_in_school: true
-                        created_at: '2021-05-31T02:21:32.000Z'
-                        updated_at: '2021-05-31T02:22:32.000Z'
                         cohort: '2022'
                         eligible_for_funding: true
                         targeted_delivery_funding_eligibility: true
@@ -215,6 +213,8 @@ paths:
                         itt_provider: University of Southampton
                         lead_mentor: true
                         funded_place:
+                        created_at: '2021-05-31T02:21:32.000Z'
+                        updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -272,8 +272,6 @@ paths:
                         school_ukprn: '10079319'
                         status: accepted
                         works_in_school: true
-                        created_at: '2021-05-31T02:21:32.000Z'
-                        updated_at: '2021-05-31T02:22:32.000Z'
                         cohort: '2022'
                         eligible_for_funding: true
                         targeted_delivery_funding_eligibility: true
@@ -284,6 +282,8 @@ paths:
                         itt_provider: University of Southampton
                         lead_mentor: true
                         funded_place: true
+                        created_at: '2021-05-31T02:21:32.000Z'
+                        updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
               schema:
                 "$ref": "#/components/schemas/ApplicationResponse"
@@ -444,17 +444,17 @@ paths:
                       attributes:
                         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
                         declaration_type: started
-                        declaration_date: '2022-04-30'
                         course_identifier: npq-senior-leadership
+                        declaration_date: '2022-04-30'
                         state: voided
-                        updated_at: '2021-05-31T02:22:32.000Z'
                         has_passed:
                         statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
                         clawback_statement_id:
-                        ineligible_for_funding_reason: duplicate_declaration
                         uplift_paid: true
                         lead_provider_name: Example Institute
+                        ineligible_for_funding_reason: duplicate_declaration
                         created_at: '2021-05-31T02:22:32.000Z'
+                        updated_at: '2021-05-31T02:22:32.000Z'
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
         '401':
@@ -686,8 +686,8 @@ paths:
                           course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
-                          eligible_for_funding: true
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                          eligible_for_funding: true
                           training_status: active
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
@@ -764,8 +764,8 @@ paths:
                           course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
-                          eligible_for_funding: true
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                          eligible_for_funding: true
                           training_status: deferred
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
@@ -844,8 +844,8 @@ paths:
                           course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
-                          eligible_for_funding: true
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                          eligible_for_funding: true
                           training_status: withdrawn
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
@@ -924,8 +924,8 @@ paths:
                           course_identifier: npq-early-headship-coaching-offer
                           schedule_identifier: npq-ehco-march
                           cohort: '2022'
-                          eligible_for_funding: true
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
+                          eligible_for_funding: true
                           training_status: active
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
@@ -1353,18 +1353,6 @@ components:
                 by school
               type: boolean
               example: true
-            created_at:
-              description: The date the application was created
-              type: string
-              nullable: false
-              format: date-time
-              example: '2021-05-31T02:21:32.000Z'
-            updated_at:
-              description: The date the application was last updated
-              type: string
-              nullable: false
-              format: date-time
-              example: '2021-05-31T02:22:32.000Z'
             cohort:
               description: Indicates which call-off contract would fund this participant's
                 training. 2021 indicates a participant that has started, or will start,
@@ -1426,6 +1414,18 @@ components:
               nullable: true
               type: boolean
               example:
+            created_at:
+              description: The date the application was created
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:21:32.000Z'
+            updated_at:
+              description: The date the application was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
             schedule_identifier:
               description: The new schedule of the participant
               nullable: true
@@ -1635,12 +1635,6 @@ components:
                     type: string
                     nullable: true
                     example: '2022'
-                  eligible_for_funding:
-                    description: Indicates whether this NPQ participant would be eligible
-                      for funding from the DfE
-                    type: boolean
-                    nullable: false
-                    example: true
                   npq_application_id:
                     description: The ID of the NPQ application that was accepted to
                       create this enrolment
@@ -1648,6 +1642,12 @@ components:
                     format: uuid
                     nullable: false
                     example: db3a7848-7308-4879-942a-c4a70ced400a
+                  eligible_for_funding:
+                    description: Indicates whether this NPQ participant would be eligible
+                      for funding from the DfE
+                    type: boolean
+                    nullable: false
+                    example: true
                   training_status:
                     description: The training status of the NPQ participant
                     type: string
@@ -2030,12 +2030,21 @@ components:
           - participant-outcome
         attributes:
           properties:
-            participant_id:
-              description: The unique identifier of this NPQ participant
-              type: string
+            state:
+              description: The state of the outcome (passed or failed)
               nullable: false
-              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
-              format: uuid
+              type: string
+              example: passed
+              enum:
+              - passed
+              - failed
+              - voided
+            completion_date:
+              description: The date the participant received the assessment outcome
+                for this course
+              nullable: false
+              type: string
+              example: '2021-05-31T00:00:00+00:00'
             course_identifier:
               description: The NPQ course this NPQ application relates to
               type: string
@@ -2052,21 +2061,12 @@ components:
               - npq-leading-literacy
               - npq-leading-primary-mathematics
               - npq-senco
-            state:
-              description: The state of the outcome (passed or failed)
-              nullable: false
+            participant_id:
+              description: The unique identifier of this NPQ participant
               type: string
-              example: passed
-              enum:
-              - passed
-              - failed
-              - voided
-            completion_date:
-              description: The date the participant received the assessment outcome
-                for this course
               nullable: false
-              type: string
-              example: '2021-05-31T00:00:00+00:00'
+              example: 7a8fef46-3c43-42c0-b3d5-1ba5904ba562
+              format: uuid
             created_at:
               description: The date you created the participant-outcome record
               type: string
@@ -2283,11 +2283,6 @@ components:
               - retained-1
               - retained-2
               - completed
-            declaration_date:
-              description: The event declaration date
-              type: string
-              nullable: false
-              example: '2022-04-30'
             course_identifier:
               description: The NPQ course this NPQ application relates to
               type: string
@@ -2306,6 +2301,11 @@ components:
               - npq-additional-support-offer
               - npq-early-headship-coaching-offer
               - npq-senco
+            declaration_date:
+              description: The event declaration date
+              type: string
+              nullable: false
+              example: '2022-04-30'
             state:
               description: Indicates the state of this payment declaration
               type: string
@@ -2320,12 +2320,6 @@ components:
               - ineligible
               - awaiting_clawback
               - clawed_back
-            updated_at:
-              description: The date the application was last updated
-              type: string
-              nullable: false
-              format: date-time
-              example: '2021-05-31T02:22:32.000Z'
             has_passed:
               description: Whether the participant has failed or passed
               type: string
@@ -2345,13 +2339,6 @@ components:
               format: uuid
               example: cd3a12347-7308-4879-942a-c4a70ced400a
               nullable: true
-            ineligible_for_funding_reason:
-              description: If the declaration is ineligible, the reason why
-              type: string
-              enum:
-              - duplicate_declaration
-              nullable: true
-              example: duplicate_declaration
             uplift_paid:
               description: If participant is eligible for uplift, whether it has been
                 paid as part of this declaration
@@ -2362,8 +2349,21 @@ components:
               type: string
               example: Example Institute
               nullable: false
+            ineligible_for_funding_reason:
+              description: If the declaration is ineligible, the reason why
+              type: string
+              enum:
+              - duplicate_declaration
+              nullable: true
+              example: duplicate_declaration
             created_at:
               description: The date the application was created
+              type: string
+              nullable: false
+              format: date-time
+              example: '2021-05-31T02:22:32.000Z'
+            updated_at:
+              description: The date the application was last updated
               type: string
               nullable: false
               format: date-time
