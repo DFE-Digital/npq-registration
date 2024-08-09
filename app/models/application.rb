@@ -13,7 +13,7 @@ class Application < ApplicationRecord
 
   has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
 
-  belongs_to :user, touch: true
+  belongs_to :user
   belongs_to :course
   belongs_to :lead_provider
   belongs_to :school, optional: true
@@ -35,6 +35,8 @@ class Application < ApplicationRecord
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
 
   validate :schedule_cohort_matches
+
+  after_commit :touch_user_if_changed
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
@@ -211,5 +213,11 @@ private
     unless schedule.course_group.courses.include?(course)
       errors.add(:schedule, :invalid_for_course)
     end
+  end
+
+  def touch_user_if_changed
+    return unless saved_change_to_lead_provider_approval_status?
+
+    user.touch
   end
 end
