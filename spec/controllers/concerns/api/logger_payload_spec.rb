@@ -3,8 +3,9 @@ require "rails_helper"
 class ControllerWithLoggerPayload
   prepend API::LoggerPayload
 
-  def initialize(s = 200)
-    @response_status = s
+  def initialize(response_status: 200, query_parameters: { page: 5 })
+    @response_status = response_status
+    @query_parameters = query_parameters
   end
 
   def current_lead_provider
@@ -17,7 +18,7 @@ class ControllerWithLoggerPayload
 
   def request
     OpenStruct.new(
-      query_parameters: { page: 5 },
+      query_parameters: @query_parameters,
       env: {
         "HTTP_VERSION" => "VERSION_123",
         "HTTP_HOST" => "HOST_123",
@@ -49,7 +50,7 @@ class ControllerWithLoggerPayload
 end
 
 RSpec.describe API::LoggerPayload do
-  subject { ControllerWithLoggerPayload.new(response_status) }
+  subject { ControllerWithLoggerPayload.new(response_status:) }
 
   let(:payload) { {} }
 
@@ -117,6 +118,16 @@ RSpec.describe API::LoggerPayload do
         }.to_json)
 
         expect(payload[:response_body]).to eq("RAW_BODY")
+      end
+    end
+
+    context "when query_params is empty {}" do
+      subject { ControllerWithLoggerPayload.new(query_parameters: {}) }
+
+      it "query_params should be nil instead of '{}'" do
+        subject.append_info_to_payload(payload)
+
+        expect(payload[:query_params]).to be_nil
       end
     end
   end
