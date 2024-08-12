@@ -5,7 +5,7 @@
 1. Once someone has registered with us to do an NPQ, providers can view their application data via our API.   
 2. Providers complete their own suitability and application processes.
 3. Providers process applications via our API. This is where providers can confirm whether or not training will be DfE-funded.
-4. Process set successful applicants up on their training portals. 
+4. Providers set successful applicants up on their training portals.
 
 ## Training starts
 

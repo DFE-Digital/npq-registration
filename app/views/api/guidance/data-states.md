@@ -20,7 +20,7 @@
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>schedule</code></th>
-      <td class="govuk-table__cell">The expected timeframe in which a participant will complete their NPQ course. Schedules include defined [milestone dates](ADD LINK) against which DfE validates the declarations submitted by providers</td>
+      <td class="govuk-table__cell">The expected timeframe in which a participant will complete their NPQ course. Schedules include defined [milestone dates](/api/guidance/schedules-and-milestone-dates) against which DfE validates the declarations submitted by providers</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>course_identifier</code></th>
@@ -117,7 +117,7 @@ A participant’s `training_status` value will determine whether a provider can:
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>deferred</code></th>
       <td class="govuk-table__cell govuk-table__cell">Participants who've deferred training</td>
-      <td class="govuk-table__cell govuk-table__cell">Notify DfE when the participant [resumes training](ADD LINK)</td>
+      <td class="govuk-table__cell govuk-table__cell">Notify DfE when the participant [resumes training](https://npq-registration-review-1388-web.test.teacherservices.cloud/api/docs/v3#/NPQ%20Participants/put_api_v3_participants_npq__id__resume)</td>
     </tr>
     <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>withdrawn</code></th>
