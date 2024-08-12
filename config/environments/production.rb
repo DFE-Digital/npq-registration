@@ -40,10 +40,6 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :warn
-
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
 
@@ -78,10 +74,8 @@ Rails.application.configure do
   config.log_level = :info
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
-    config.rails_semantic_logger.add_file_appender = false
-
     $stdout.sync = true
-
+    config.rails_semantic_logger.add_file_appender = false
     config.semantic_logger.add_appender(io: $stdout, level: Rails.application.config.log_level, formatter: :json)
   end
 

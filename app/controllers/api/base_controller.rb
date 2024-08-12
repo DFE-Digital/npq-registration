@@ -4,6 +4,7 @@ module API
 
     include API::TokenAuthenticatable
     include ActionController::MimeResponds
+    include API::LoggerPayload
 
     rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
     rescue_from ActionController::BadRequest, with: :bad_request_response
