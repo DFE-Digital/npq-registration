@@ -24,39 +24,21 @@ RSpec.feature "Guidance", type: :feature do
     end
   end
 
-  describe "GET /api/guidance/what-you-can-do-in-the-api.md" do
+  describe "GET /api/guidance/test-environments" do
     it "renders the .html page" do
-      visit "/api/guidance/what-you-can-do-in-the-api"
+      visit "/api/guidance/test-environments"
 
-      expect(page).not_to have_content("#What you can do in the API")
-      expect(page).to have_content("What you can do in the API")
+      expect(page).not_to have_content("#What are the test environments")
+      expect(page).to have_content("What are the test environments")
     end
   end
 
-  describe "GET /api/guidance/definitions" do
+  describe "GET /api/guidance/release-notes" do
     it "renders the .html page" do
-      visit "/api/guidance/definitions"
+      visit "/api/guidance/release-notes"
 
-      expect(page).not_to have_content("#Definitions")
-      expect(page).to have_content("Definitions")
-    end
-  end
-
-  describe "GET /api/guidance/api-latest-version" do
-    it "renders the .html page" do
-      visit "/api/guidance/api-latest-version"
-
-      expect(page).not_to have_content("#API latest version")
-      expect(page).to have_content("API latest version")
-    end
-  end
-
-  describe "GET /api/guidance/test-environment" do
-    it "renders the .html page" do
-      visit "/api/guidance/test-environment"
-
-      expect(page).not_to have_content("#Test environment")
-      expect(page).to have_content("Test environment")
+      expect(page).not_to have_content("#What's new'")
+      expect(page).to have_content("What's new")
     end
   end
 
