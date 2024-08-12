@@ -18,9 +18,9 @@ Providers can add the required API version and endpoint depending on what they w
 
 To see the standalone API endpoints documentation, go to:
 
-- [version 1 endpoints documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1)
-- [version 2 endpoints documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2)
-- [version 3 endpoints documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3)
+- [version 1 endpoints documentation](/api/docs/v1)
+- [version 2 endpoints documentation](/api/docs/v2)
+- [version 3 endpoints documentation](/api/docs/v3)
 
 We've also created ECF-only test environments so providers who offer both ECF and NPQ training can undertake regression testing. The base URL is:
 

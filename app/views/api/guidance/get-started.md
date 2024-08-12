@@ -58,9 +58,9 @@ Providers can also create ‘dummy’ applications in the separation environment
 
 Provider development teams can also access the OpenAPI spec in YAML formats:
 
-* [view the OpenAPI version 1 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1/swagger.yaml)
-* [view the OpenAPI version 2 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2/swagger.yaml)
-* [view the OpenAPI version 3 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3/swagger.yaml)
+* [view the OpenAPI version 1 spec](/api/docs/v1/swagger.yaml)
+* [view the OpenAPI version 2 spec](/api/docs/v2/swagger.yaml)
+* [view the OpenAPI version 3 spec](/api/docs/v3/swagger.yaml)
 
 Providers can use API testing tools such as Postman to make test API calls. Providers can import the API as a collection by using [Postman’s](https://www.postman.com/) import feature and copying in the YAML URL of the API spec.
 
