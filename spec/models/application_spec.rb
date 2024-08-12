@@ -406,4 +406,58 @@ RSpec.describe Application do
       it { is_expected.not_to be_fundable }
     end
   end
+
+  describe "touch user when application changes" do
+    let!(:old_datetime) { 6.months.ago }
+    let(:user) { create(:user, updated_at: old_datetime) }
+    let(:application) { create(:application, :pending, user:) }
+
+    context "when application is created" do
+      it "updates user.updated_at" do
+        freeze_time do
+          expect(user.updated_at).to be_within(1.second).of(old_datetime)
+
+          create(:application, user:)
+          expect(user.updated_at).to eq(Time.zone.now)
+        end
+      end
+    end
+
+    context "when application is updated" do
+      before do
+        travel_to(old_datetime) do
+          user
+          application
+        end
+      end
+
+      context "when lead_provider_approval_status is changed" do
+        it "updates user.updated_at" do
+          freeze_time do
+            expect(user.updated_at).to be_within(1.second).of(old_datetime)
+            expect(application.updated_at).to be_within(1.second).of(old_datetime)
+
+            application.rejected!
+
+            expect(application.updated_at).to eq(Time.zone.now)
+            expect(user.updated_at).to eq(Time.zone.now)
+          end
+        end
+      end
+
+      context "when lead_provider_approval_status is not changed" do
+        it "does not update user.updated_at" do
+          freeze_time do
+            expect(user.updated_at).to be_within(1.second).of(old_datetime)
+            expect(application.updated_at).to be_within(1.second).of(old_datetime)
+
+            application.update!(employer_name: "Test name")
+
+            expect(application.updated_at).to eq(Time.zone.now)
+            expect(user.updated_at).to be_within(1.second).of(old_datetime)
+          end
+        end
+      end
+    end
+  end
 end

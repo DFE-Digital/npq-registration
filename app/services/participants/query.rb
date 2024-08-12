@@ -37,7 +37,10 @@ module Participants
     def where_updated_since(updated_since)
       return if ignore?(filter: updated_since)
 
-      scope.merge!(User.where(updated_at: updated_since..))
+      users_updated_since = User.where(updated_at: updated_since..)
+      applications_updated_since = User.where(applications: { updated_at: updated_since.. })
+      participant_id_changes_updated_since = User.where(participant_id_changes: { updated_at: updated_since.. })
+      scope.merge!(users_updated_since.or(applications_updated_since).or(participant_id_changes_updated_since))
     end
 
     def where_training_status_is(training_status)
@@ -64,7 +67,7 @@ module Participants
       User
         .joins(:applications).merge(Application.accepted)
         .includes(
-          :participant_id_changes,
+          participant_id_changes: %i[from_participant to_participant],
           applications: %i[
             course
             school

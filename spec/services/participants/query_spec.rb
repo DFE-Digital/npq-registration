@@ -71,7 +71,9 @@ RSpec.describe Participants::Query do
           let(:params) { { updated_since: 1.day.ago } }
 
           it "filters by updated since" do
-            create(:user, :with_application, lead_provider:, updated_at: 2.days.ago)
+            travel_to(2.days.ago) do
+              create(:user, :with_application, lead_provider:)
+            end
 
             expect(query.participants).to contain_exactly(participant1, participant2)
           end
@@ -92,6 +94,37 @@ RSpec.describe Participants::Query do
             condition_string = %("updated_at")
 
             expect(query.scope.to_sql).not_to include(condition_string)
+          end
+        end
+
+        context "when application was updated recently" do
+          let!(:participant1) { travel_to(1.day.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant2) { travel_to(2.days.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant3) { travel_to(5.days.ago) { create(:user, :with_application, lead_provider:) } }
+
+          let(:params) { { updated_since: 3.days.ago } }
+
+          it "filters by applications.updated_at" do
+            expect(query.participants).to contain_exactly(participant2, participant1)
+
+            participant3.applications.first.update!(updated_at: Time.zone.now)
+            participant3.update!(updated_at: 5.days.ago) # to account for touch model changes
+            expect(query.participants).to contain_exactly(participant2, participant1, participant3)
+          end
+        end
+
+        context "when participant_id_change was updated recently" do
+          let!(:participant1) { travel_to(1.day.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant2) { travel_to(2.days.ago) { create(:user, :with_application, lead_provider:) } }
+          let!(:participant3) { travel_to(5.days.ago) { create(:user, :with_application, lead_provider:) } }
+
+          let(:params) { { updated_since: 3.days.ago } }
+
+          it "filters by participant_id_change.updated_at" do
+            expect(query.participants).to contain_exactly(participant2, participant1)
+
+            create(:participant_id_change, user: participant3)
+            expect(query.participants).to contain_exactly(participant2, participant1, participant3)
           end
         end
       end
