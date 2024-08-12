@@ -1552,6 +1552,8 @@ components:
           description: The data type
           type: string
           example: npq-participant
+          enum:
+          - npq-participant
         attributes:
           properties:
             full_name:
