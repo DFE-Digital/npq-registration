@@ -35,11 +35,11 @@ Providers can filter results to see more specific or up to date data by adding `
 
 For example: `GET /api/v3/npq-applications?filter[cohort]=2021&filter[participant_id]=7e5bcdbf-c818-4961-8da5-439cab1984e0&filter[updated_since]=2020-11-13T11:21:55Z`
 
-See the ['Retrieve multiple applications' endpoint documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications) for more information.
+See the ['Retrieve multiple applications' endpoint documentation](/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications) for more information.
 
 ### Example response body
 
-```
+```json
 {
   "data": [
     {
@@ -87,11 +87,11 @@ See the ['Retrieve multiple applications' endpoint documentation](https://npq-re
 GET /api/v3/npq-applications/{id}
 ```
 
-See the ['Retrieve a single application' endpoint documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications__id_) for more information.
+See the ['Retrieve a single application' endpoint documentation](/api/docs/v3#/NPQ%20Applications/get_api_v3_npq_applications__id_) for more information.
 
 ### Example response body
 
-```
+```json
 {
   "data": {
     "id": "d0b4a32e-a272-489e-b30a-cb17131457fc",
@@ -151,7 +151,7 @@ An optional request body allows lead providers to add a participant’s schedule
 
 ### Example request body
 
-```
+```json
 {
   "data": {
     "type": "npq-application-accept",
@@ -168,11 +168,11 @@ Successful requests will return a response body including updates to the status 
 The API will prevent more than one provider accepting applications for the same course by automatically updating the application status or returning an error message.
 </div>
 
-See the ['Accept an application' endpoint documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__accept) for more information.
+See the ['Accept an application' endpoint documentation](/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__accept) for more information.
 
 ### Example response body
 
-```
+```json
 {
   "data": {
     "id": "d0b4a32e-a272-489e-b30a-cb17131457fc",
@@ -234,11 +234,11 @@ The request parameter must include the `id` of the corresponding NPQ application
 
 Successful requests will return a response body including updates to the `status` attribute.
 
-See the ['Reject an application' endpoint documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__reject) for more information.
+See the ['Reject an application' endpoint documentation](/api/docs/v3#/NPQ%20Applications/post_api_v3_npq_applications__id__reject) for more information.
 
 ### Example request body
 
-```
+```json
 {
   "data": {
     "id": "d0b4a32e-a272-489e-b30a-cb17131457fc",
@@ -288,11 +288,11 @@ Providers can update a participant’s funding information after an application 
 
 It’s not possible to change this information if the application has not been accepted.
 
-See the ['Change funded place value of an application' endpoint documentation](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3#/NPQ%20Applications/put_api_v3_npq_applications__id__change_funded_place) for more information.
+See the ['Change funded place value of an application' endpoint documentation](/api/docs/v3#/NPQ%20Applications/put_api_v3_npq_applications__id__change_funded_place) for more information.
 
 ### Example request body:
 
-```
+```json
 { 
   "data": { 
     "type": "npq-application-change-funded-place", 
@@ -307,7 +307,7 @@ Successful requests will return a response body including updates to the ```fund
 
 ### Example response body:
 
-```
+```json
 {
   "data": {
     "id": "d0b4a32e-a272-489e-b30a-cb17131457fc",
