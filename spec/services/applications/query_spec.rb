@@ -55,10 +55,10 @@ RSpec.describe Applications::Query do
 
       describe "updated since" do
         it "filters by updated since" do
-          travel_to(2.days.ago) do
-            create(:application, lead_provider:, updated_at: Time.zone.now)
-          end
+          travel_to(2.days.ago) { create(:application, lead_provider:) }
+
           application = create(:application, lead_provider:, updated_at: Time.zone.now)
+          application.user.update!(updated_at: 2.days.ago)
 
           query = described_class.new(lead_provider:, updated_since: 1.day.ago)
 
