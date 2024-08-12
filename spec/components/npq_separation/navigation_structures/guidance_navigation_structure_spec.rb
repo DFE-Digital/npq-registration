@@ -5,11 +5,9 @@ RSpec.describe NpqSeparation::NavigationStructures::GuidanceNavigationStructure,
     subject { NpqSeparation::NavigationStructures::GuidanceNavigationStructure.new.primary_structure }
 
     {
-      "Get Started" => "/api/guidance/get_started",
-      "What you can do in the API" => "/api/guidance/what_you_can_do_in_the_api",
-      "Definitions" => "/api/guidance/definitions",
-      "API latest version" => "/api/guidance/api-latest-version",
-      "Test environment" => "/api/guidance/test-environment",
+      "Get started" => "/api/guidance/get-started",
+      "Test environments" => "/api/guidance/test-environments",
+      "What's new" => "/api/guidance/release-notes",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
         expect(subject[i].name).to eql(name)
