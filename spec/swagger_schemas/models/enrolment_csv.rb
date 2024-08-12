@@ -11,7 +11,6 @@ ENROLMENT_CSV = {
       eligible_for_funding
       training_status
       school_urn
-      funded_place
     ],
     properties: {
       participant_id: {
@@ -63,9 +62,9 @@ ENROLMENT_CSV = {
       },
       funded_place: {
         description: "Indicates whether this NPQ participant is funded by DfE",
+        nullable: true,
         type: :boolean,
         example: true,
-        required: true,
       },
     },
   },
