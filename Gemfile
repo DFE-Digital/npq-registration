@@ -82,7 +82,7 @@ group :test do
   gem "axe-core-capybara", "~> 4.6"
   gem "axe-core-rspec", "~> 4.9"
   gem "rspec-default_http_header"
-  gem "shoulda-matchers", "~> 6.2"
+  gem "shoulda-matchers", "~> 6.3"
   gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
