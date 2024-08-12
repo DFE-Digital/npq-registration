@@ -27,11 +27,9 @@
         <h2 class="govuk-heading-m">
           What's new
         </h2>
-
         <p class="govuk-body">
           <%= @latest_release_note.date %>: <%= @latest_release_note.content %>
         </p>
-
         <p class="govuk-body">
           <%= govuk_link_to("Browse our latest release notes", api_guidance_page_path(page: "release-notes")) %>
         </p>
@@ -57,99 +55,97 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full-from-desktop">
-        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-        <div class="govuk-grid-column-two-thirds ">
-          <h2 class="govuk-heading-l">What data we use</h2>
-          <p class="govuk-body">Take a look at the data model we use to help manage participant applications and training progress.</p>
-          <p class="govuk-body"><%= govuk_link_to "View our data states", api_guidance_page_path("data-states"), class: "govuk-!-font-weight-bold" %></p>
-          </div>
-        </div>
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">What data we use</h2>
+        <p class="govuk-body">Take a look at the data model we use to help manage participant applications and training progress.</p>
+        <p class="govuk-body"><%= govuk_link_to "View our data states", api_guidance_page_path("data-states"), class: "govuk-!-font-weight-bold" %></p>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="govuk-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full-from-desktop">
-          <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-          <div class="govuk-grid-column-two-thirds ">
-            <h2 class="govuk-heading-l">Schedules and milestone dates</h2>
-            <p class="govuk-body">Details of the contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention.</p>
-            <p class="govuk-body">
-              <ul class="govuk-list">
-                <li><%= govuk_link_to("View NPQ, early headship coaching offer and addtional support offer schedules", api_guidance_page_path(page: "schedules-and-milestone-dates"), class: "govuk-!-font-weight-bold") %></li>
-              </ul>
-            </div>
-          </div>
-        </div>
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">Schedules and milestone dates</h2>
+        <p class="govuk-body">Details of the contractual retention periods during which providers must submit relevant declarations evidencing training delivery and participant retention.</p>
+        <ul class="govuk-list">
+          <li><%= govuk_link_to("View NPQ, early headship coaching offer and addtional support offer schedules", api_guidance_page_path(page: "schedules-and-milestone-dates"), class: "govuk-!-font-weight-bold") %></li>
+        </ul>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="govuk-width-container">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full-from-desktop">
-            <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-            <div class="govuk-grid-column-two-thirds ">
-              <h2 class="govuk-heading-l">API latest version</h2>
-              <p class="govuk-body">Access version 3 of the NPQs data management API documentation for lead providers.</p>
-              <p class="govuk-body">
-                <ul class="govuk-list">
-                  <li><%= govuk_link_to("View API version 3", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3", class: "govuk-!-font-weight-bold") %></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">API latest version</h2>
+        <p class="govuk-body">Access version 3 of the NPQs data management API documentation for lead providers.</p>
+        <ul class="govuk-list">
+          <li><%= govuk_link_to("View API version 3", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3", class: "govuk-!-font-weight-bold") %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="govuk-width-container">
-          <div class="govuk-grid-row">
-            <div class="govuk-grid-column-full-from-desktop">
-              <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-              <div class="govuk-grid-column-two-thirds ">
-                <h2 class="govuk-heading-l">API previous versions</h2>
-                <p class="govuk-body">Access the first and second versions of the NPQs data management API documentation for lead providers.</p>
-                <p class="govuk-body">
-                  <ul class="govuk-list">
-                    <li><%= govuk_link_to("View API version 2", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2", class: "govuk-!-font-weight-bold") %></li>
-                    <li><%= govuk_link_to("View API version 1", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1", class: "govuk-!-font-weight-bold") %></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">API previous versions</h2>
+        <p class="govuk-body">Access the first and second versions of the NPQs data management API documentation for lead providers.</p>
+        <ul class="govuk-list">
+          <li><%= govuk_link_to("View API version 2", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2", class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View API version 1", "https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1", class: "govuk-!-font-weight-bold") %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <div class="govuk-width-container">
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-full-from-desktop">
-                <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-                <div class="govuk-grid-column-two-thirds ">
-                  <h2 class="govuk-heading-l">Test environments</h2>
-                  <p class="govuk-body">
-                    We've got test environments that can be used to test API integrations without affecting real data.
-                  </p>
-                  <p class="govuk-body">
-                    <%= govuk_link_to("Use the test environments", api_guidance_page_path(page: "test-environments"), class: "govuk-!-font-weight-bold") %>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">Test environments</h2>
+        <p class="govuk-body">
+          We've got test environments that can be used to test API integrations without affecting real data.
+        </p>
+        <p class="govuk-body">
+          <%= govuk_link_to("Use the test environments", api_guidance_page_path(page: "test-environments"), class: "govuk-!-font-weight-bold") %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-          <div class="govuk-width-container">
-            <div class="govuk-grid-row">
-              <div class="govuk-grid-column-full-from-desktop">
-                <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-                <div class="govuk-grid-column-two-thirds ">
-                  <h2 class="govuk-heading-l">Community</h2>
-                  <p class="govuk-body">
-                    We're always working to improve this API so it meets the needs of lead providers. You can help us by sharing
-                    your ideas with us on our dedicated <a href="#" class="govuk-link">Slack channel</a>.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">Community</h2>
+        <p class="govuk-body">
+          We're always working to improve this API so it meets the needs of lead providers. You can help us by sharing
+          your ideas with us on our dedicated <a href="#" class="govuk-link">Slack channel</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+  <hr class="govuk-section-break govuk-section-break--l">
+</div>
 
