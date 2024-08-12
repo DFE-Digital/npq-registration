@@ -10,14 +10,11 @@ module API
 
       params[:request_query_params] = request.query_parameters&.to_hash
       params[:request_headers] = request.env.slice(
-        "HTTP_VERSION",
         "HTTP_HOST",
-        "HTTP_USER_AGENT",
         "HTTP_ACCEPT",
         "HTTP_ACCEPT_ENCODING",
         "HTTP_CONNECTION",
         "HTTP_CACHE_CONTROL",
-        "QUERY_STRING",
       ).transform_values(&:to_s)
       params[:request_body] = request.raw_post
 
