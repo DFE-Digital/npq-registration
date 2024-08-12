@@ -10,7 +10,7 @@ We'll add information about connecting to the production environments when they 
 
 Providers need to use a unique authentication (bearer) token to connect to the API.
 
-<a href="continuing-professional-development@digital.education.gov.uk">Email us</a> if you do not already have this token. We'll send it via secure email.
+[Email us](mailto:continuing-professional-development@digital.education.gov.uk) if you do not already have this token. We'll send it via secure email.
 
 The tokens do not expire.
 
@@ -26,10 +26,11 @@ The tokens do not expire.
 
 Include an authentication token in all requests to the API by adding an `Authorization` request header (not as part of the URL) in the following format:
 
-<pre class="highlight plaintext" tabindex="0"><code>Authorization: Bearer {token}
-</code></pre>
+```
+Authorization: Bearer {token}
+```
 
-Unauthenticated requests will receive an <code>UnauthorizedResponse</code> with a <code>401</code> error code.
+Unauthenticated requests will receive an `UnauthorizedResponse` with a `401` error code.
 
 ## Test environments
 
@@ -42,9 +43,9 @@ The test environments feature all the NPQ API request endpoints and have been po
 
 The base URL for the API's test environments is:
 
-* <a href="https://npq-registration-separation-web.teacherservices.cloud">https://npq-registration-separation-web.teacherservices.cloud</a>
+* [https://npq-registration-separation-web.teacherservices.cloud](https://npq-registration-separation-web.teacherservices.cloud)
 
-Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add <code>/api/v3/npq-applications</code> to the test environment URL if they want to retrieve multiple applications.
+Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add `/api/v3/npq-applications` to the test environment URL if they want to retrieve multiple applications.
 
 Providers can also create ‘dummy’ applications in the separation environment. This enables them to:
 
@@ -57,11 +58,11 @@ Providers can also create ‘dummy’ applications in the separation environment
 
 Provider development teams can also access the OpenAPI spec in YAML formats:
 
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1/swagger.yaml">view the OpenAPI version 1 spec</a>
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2/swagger.yaml">view the OpenAPI version 2 spec</a>
-* <a href="https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3/swagger.yaml">view the OpenAPI version 3 spec</a>
+* [view the OpenAPI version 1 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v1/swagger.yaml)
+* [view the OpenAPI version 2 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v2/swagger.yaml)
+* [view the OpenAPI version 3 spec](https://npq-registration-separation-web.teacherservices.cloud/api/docs/v3/swagger.yaml)
 
-Providers can use API testing tools such as Postman to make test API calls. Providers can import the API as a collection by using <a href="https://www.postman.com/">Postman’s</a> import feature and copying in the YAML URL of the API spec.
+Providers can use API testing tools such as Postman to make test API calls. Providers can import the API as a collection by using [Postman’s](https://www.postman.com/) import feature and copying in the YAML URL of the API spec.
 
 ### Rate limits
 
