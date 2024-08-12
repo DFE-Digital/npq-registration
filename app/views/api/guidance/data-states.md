@@ -38,11 +38,11 @@
       <th scope="row" class="govuk-table__header"><code>statement</code></th>
       <td class="govuk-table__cell">A record of output payments (based on declarations), service fees and any adjustments DfE may pay lead providers at the end of a contractually agreed payment period. Statements sent to providers by DfE at the end of milestone periods can be used for invoicing purposes</td>
     </tr>
-             <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>funded place</code></th>
       <td class="govuk-table__cell">The way for DfE and providers to identify participants who are eligible for funding and for whom there is funding available</td>
     </tr>
-         <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>funding cap</code></th>
       <td class="govuk-table__cell">The maximum number of places each provider can offer per NPQ that DfE will pay for from the 2024/25 academic year onwards</td>
     </tr>
@@ -100,7 +100,7 @@ A participant’s `training_status` value will determine whether a provider can:
 * submit a declaration. For example, notifying DfE that a participant has started their training
 
 <table class="govuk-table">
-<caption class="govuk-table__caption govuk-table__caption--m">Training status values</caption>
+  <caption class="govuk-table__caption govuk-table__caption--m">Training status values</caption>
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">Training status</th>
@@ -134,7 +134,7 @@ Declaration states are defined by the `state` attribute.
 Providers must submit declarations to confirm a participant has engaged in training within a given milestone period. A declaration’s `state` value will reflect if and when DfE will pay providers for the training delivered.
 
 <table class="govuk-table">
-<caption class="govuk-table__caption govuk-table__caption--m">Declaration status values</caption>
+  <caption class="govuk-table__caption govuk-table__caption--m">Declaration status values</caption>
   <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header">State</th>
@@ -163,22 +163,22 @@ Providers must submit declarations to confirm a participant has engaged in train
       <td class="govuk-table__cell govuk-table__cell">A declaration that has been approved and is ready for payment by DfE</td>
       <td class="govuk-table__cell govuk-table__cell">View and void</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>voided</code></th>
       <td class="govuk-table__cell govuk-table__cell">A declaration that has been retracted by a provider</td>
       <td class="govuk-table__cell govuk-table__cell">View</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>paid</code></th>
       <td class="govuk-table__cell govuk-table__cell">A declaration that has been paid for by DfE</td>
       <td class="govuk-table__cell govuk-table__cell">View and void</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>awaiting_clawback</code></th>
       <td class="govuk-table__cell govuk-table__cell">A <code>paid</code> declaration that has since been voided by a provider</td>
       <td class="govuk-table__cell govuk-table__cell">View</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header"><code>clawed_back</code></th>
       <td class="govuk-table__cell govuk-table__cell">An <code>awaiting_clawback</code> declaration that has since had its value deducted from payment by DfE to a provider</td>
       <td class="govuk-table__cell govuk-table__cell">View</td>

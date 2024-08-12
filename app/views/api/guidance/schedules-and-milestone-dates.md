@@ -21,7 +21,7 @@ The API does not apply milestone validation to those on NPQ schedules. The API w
 For example, if a participant is on an `npq-leadership-autumn` schedule, the API will accept any type of declaration (including `started`, `retention-{x}` or `completed`) after the schedule start date.
 
 <div class="govuk-inset-text">
-We advise providers to keep schedule data independent from any experience logic in their systems.
+  We advise providers to keep schedule data independent from any experience logic in their systems.
 </div>
 
 ## Concepts and definitions
@@ -46,19 +46,19 @@ We advise providers to keep schedule data independent from any experience logic 
       <th scope="row" class="govuk-table__header">Milestone dates</th>
       <td class="govuk-table__cell">The deadline date a valid declaration can be made for a given milestone in order for DfE to be liable to make a payment the following month. Milestone dates are dependent on the participant’s schedule</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Milestone period</th>
       <td class="govuk-table__cell">The period of time between the milestone start date and deadline date</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Output payment</th>
       <td class="govuk-table__cell">The sum of money paid by DfE to providers per valid declaration</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Payment date</th>
       <td class="govuk-table__cell">The date DfE will make payment for valid declarations submitted by providers for a given milestone</td>
     </tr>
-     <tr class="govuk-table__row">
+    <tr class="govuk-table__row">
       <th scope="row" class="govuk-table__header">Milestone validation</th>
       <td class="govuk-table__cell">The API’s process to validate declarations submitted by providers for participants in standard training schedules</td>
     </tr>
