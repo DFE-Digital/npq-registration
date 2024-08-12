@@ -4,6 +4,7 @@ require "tempfile"
 RSpec.describe Importers::ManualValidation do
   let(:school) { create(:school) }
   let(:user) { create(:user) }
+  let(:trn) { "7654321" }
   let(:application) { create(:application, user:, school:) }
   let(:file) { Tempfile.new("test.csv") }
 
@@ -27,7 +28,7 @@ RSpec.describe Importers::ManualValidation do
         file.write("\n")
         file.write("123,7654321")
         file.write("\n")
-        file.write("#{application.ecf_id},7654321")
+        file.write("#{application.ecf_id},#{trn}")
         file.rewind
       end
 
@@ -41,6 +42,16 @@ RSpec.describe Importers::ManualValidation do
         expect {
           subject.call
         }.to change { user.reload.trn_verified }.to(true)
+      end
+
+      context "when application trn is less than 7 digits" do
+        let(:trn) { "123456" }
+
+        it "adds leading zero" do
+          expect {
+            subject.call
+          }.to change { user.reload.trn }.to("0123456")
+        end
       end
     end
 
