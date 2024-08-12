@@ -34,7 +34,7 @@ RUN bundler -v && \
 COPY package.json yarn.lock ./
 RUN yarn install --immutable
 
-# Copy all files to /app (except what is defined in .dockerignore)
+# Copy all files to / inside image (except what is defined in .dockerignore)
 COPY . .
 
 # Precompile assets
