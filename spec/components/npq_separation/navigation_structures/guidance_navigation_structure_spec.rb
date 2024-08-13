@@ -5,8 +5,8 @@ RSpec.describe NpqSeparation::NavigationStructures::GuidanceNavigationStructure,
     subject { NpqSeparation::NavigationStructures::GuidanceNavigationStructure.new.primary_structure }
 
     {
-      "Get Started" => "/api/guidance/get-started",
-      "What you can do in the API" => "/api/guidance/what-you-can-do-in-the-api",
+      "Get Started" => "/api/guidance/get_started",
+      "What you can do in the API" => "/api/guidance/what_you_can_do_in_the_api",
       "Definitions" => "/api/guidance/definitions",
       "API latest version" => "/api/guidance/api-latest-version",
       "Test environment" => "/api/guidance/test-environment",
