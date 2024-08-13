@@ -7,7 +7,8 @@
 <html lang="en" class="govuk-template govuk-template--wide">
   <%= render partial: "layouts/shared/head" %>
 
-  <body class="govuk-template__body">
+  <body class="govuk-template__body js-enabled <%= yield :body_class %>">
+    <%= render partial: "layouts/shared/govuk_javascript" %>
     <%= render partial: "shared/analytics/google_noscript" %>
 
     <script>
