@@ -160,6 +160,15 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           }.stringify_keys,
         ])
       end
+
+      context "when there're multiple application with different lead provider approval states" do
+        before { create(:application, lead_provider:, user: participant) }
+
+        it "serializes only accepted `npq_enrolments`" do
+          expect(attributes["npq_enrolments"].size).to eq(1)
+          expect(attributes["npq_enrolments"][0]["npq_application_id"]).to eq(application.ecf_id)
+        end
+      end
     end
 
     context "when serializing the `v3` view" do
@@ -290,6 +299,15 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
             changed_at: participant.participant_id_changes.last.created_at.rfc3339,
           }.stringify_keys,
         ])
+      end
+
+      context "when there're multiple application with different lead provider approval states" do
+        before { create(:application, lead_provider:, user: participant) }
+
+        it "serializes only accepted `npq_enrolments`" do
+          expect(attributes["npq_enrolments"].size).to eq(1)
+          expect(attributes["npq_enrolments"][0]["npq_application_id"]).to eq(application.ecf_id)
+        end
       end
     end
   end
