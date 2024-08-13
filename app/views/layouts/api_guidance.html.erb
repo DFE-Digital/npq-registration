@@ -3,9 +3,7 @@
 <%= render partial: "layouts/shared/head" %>
 
 <body class="govuk-template__body js-enabled <%= yield :body_class %>">
-  <script nonce="<%= request.content_security_policy_nonce %>">
-    document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-  </script>
+  <%= render partial: "layouts/shared/govuk_javascript" %>
 
 <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 

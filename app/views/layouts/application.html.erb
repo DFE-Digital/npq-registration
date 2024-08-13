@@ -4,10 +4,7 @@
 
   <body class="govuk-template__body ">
     <%= render partial: "shared/analytics/google_noscript" %>
-
-    <script>
-      document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
-    </script>
+    <%= render partial: "layouts/shared/govuk_javascript" %>
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
