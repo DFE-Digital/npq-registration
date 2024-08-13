@@ -43,7 +43,7 @@ DECLARATION_CSV = {
         description: "The event declaration date",
         type: :string,
         format: :"date-time",
-        example: "2021-05-31T02:22:32.000Z",
+        example: "2021-05-31T02:22:32Z",
       },
       state: {
         description: "Indicates the state of this payment declaration",
