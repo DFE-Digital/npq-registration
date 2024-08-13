@@ -141,7 +141,7 @@ Leadersip NPQs will be assigned to one of the following schedule identifiers:
   </tbody>
 </table>
 
-## Early headship coaching offer (EHCO) and addtional support offer (ASO) schedules
+## Early headship coaching offer (EHCO) and additional support offer (ASO) schedules
 
 EHCO and ASO participant schedules must reflect the month the participant starts their course.
 

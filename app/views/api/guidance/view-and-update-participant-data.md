@@ -132,7 +132,7 @@ For more detailed information, see the ['Retrieve a single participant' endpoint
 }
 ```
 
-## Defer a particpant
+## Defer a participant
 
 ```
 PUT /api/v3/participants/npq/{id}/defer
