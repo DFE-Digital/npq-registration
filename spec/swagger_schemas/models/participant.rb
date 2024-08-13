@@ -164,133 +164,68 @@ PARTICIPANT = {
 
   h[:v3] = h[:v2].deep_dup
   h[:v3][:properties][:attributes][:properties].except!(:email)
-  h[:v3][:properties][:attributes][:properties][:npq_enrolments] = {
-    description: "Information about the course(s) the participant is enrolled in",
-    type: :array,
-    items: {
-      description: "The details of an NPQ Participant enrolment",
+  h[:v3][:properties][:attributes][:properties][:npq_enrolments][:items][:required] << :email
+  h[:v3][:properties][:attributes][:properties][:npq_enrolments][:items][:properties].merge!({
+    email: {
+      description: "The email address registered for this NPQ participant",
+      type: :string,
+      nullable: false,
+      example: "isabelle.macdonald2@some-school.example.com",
+    },
+    withdrawal: {
+      description: "The details of an NPQ Participant withdrawal",
       type: :object,
-      required: %i[email course_identifier npq_application_id eligible_for_funding training_status targeted_delivery_funding_eligibility],
+      nullable: true,
+      required: %i[reason date],
+      example: nil,
       properties: {
-        email: {
-          description: "The email address registered for this NPQ participant",
+        reason: {
+          description: "The reason a participant was withdrawn",
           type: :string,
           nullable: false,
-          example: "isabelle.macdonald2@some-school.example.com",
+          example: Participants::Withdraw::WITHDRAWAL_REASONS.first,
+          enum: Participants::Withdraw::WITHDRAWAL_REASONS,
         },
-        course_identifier: {
-          description: "The NPQ course this NPQ application relates to",
-          type: :string,
-          nullable: false,
-          example: Course::IDENTIFIERS.first,
-          enum: Course::IDENTIFIERS,
-        },
-        schedule_identifier: {
-          description: "The new schedule of the participant",
-          nullable: true,
-          type: :string,
-          example: Schedule::IDENTIFIERS.first,
-          enum: Schedule::IDENTIFIERS,
-        },
-        cohort: {
-          description: "Indicates which call-off contract would fund this participant's training. 2021 indicates a participant that has started, or will start, their training in the 2021/22 academic year. Once a provider accepts an application, they may change a participant's cohort up until the point of submitting a started declaration.",
-          type: :string,
-          nullable: true,
-          example: "2022",
-        },
-        npq_application_id: {
-          description: "The ID of the NPQ application that was accepted to create this enrolment",
-          type: :string,
-          format: :uuid,
-          nullable: false,
-          example: "db3a7848-7308-4879-942a-c4a70ced400a",
-        },
-        eligible_for_funding: {
-          description: "Indicates whether this NPQ participant would be eligible for funding from the DfE",
-          type: :boolean,
-          nullable: false,
-          example: true,
-        },
-        training_status: {
-          description: "The training status of the NPQ participant",
-          type: :string,
-          enum: Application.training_statuses.keys,
-          example: Application.training_statuses.keys.first,
-        },
-        school_urn: {
-          description: "The Unique Reference Number (URN) of the school where this NPQ participant is employed",
-          type: :string,
-          nullable: true,
-          example: "106286",
-        },
-        targeted_delivery_funding_eligibility: {
-          description: "Whether or not this application is eligible for Targeted Delivery Funding uplift",
-          nullable: false,
-          type: :boolean,
-          example: true,
-        },
-        withdrawal: {
-          description: "The details of an NPQ Participant withdrawal",
-          type: :object,
-          nullable: true,
-          required: %i[reason date],
-          example: nil,
-          properties: {
-            reason: {
-              description: "The reason a participant was withdrawn",
-              type: :string,
-              nullable: false,
-              example: Participants::Withdraw::WITHDRAWAL_REASONS.first,
-              enum: Participants::Withdraw::WITHDRAWAL_REASONS,
-            },
-            date: {
-              description: "The date and time the participant was withdrawn",
-              type: :string,
-              nullable: false,
-              format: :"date-time",
-              example: "2021-05-31T02:22:32.000Z",
-            },
-          },
-        },
-        deferral: {
-          description: "The details of an NPQ Participant deferral",
-          type: :object,
-          nullable: true,
-          required: %i[reason date],
-          example: nil,
-          properties: {
-            reason: {
-              description: "The reason a participant was deferred",
-              type: :string,
-              nullable: false,
-              example: Participants::Defer::DEFERRAL_REASONS.first,
-              enum: Participants::Defer::DEFERRAL_REASONS,
-            },
-            date: {
-              description: "The date and time the participant was deferred",
-              type: :string,
-              nullable: false,
-              format: :"date-time",
-              example: "2021-05-31T02:22:32.000Z",
-            },
-          },
-        },
-        created_at: {
-          description: "The date the application was created",
+        date: {
+          description: "The date and time the participant was withdrawn",
           type: :string,
           nullable: false,
           format: :"date-time",
-          example: "2021-05-31T02:21:32.000Z",
-        },
-        funded_place: {
-          description: "Indicates whether or not this participant’s training is being funded by DfE",
-          nullable: true,
-          type: :boolean,
-          example: true,
+          example: "2021-05-31T02:22:32.000Z",
         },
       },
     },
-  }
+    deferral: {
+      description: "The details of an NPQ Participant deferral",
+      type: :object,
+      nullable: true,
+      required: %i[reason date],
+      example: nil,
+      properties: {
+        reason: {
+          description: "The reason a participant was deferred",
+          type: :string,
+          nullable: false,
+          example: Participants::Defer::DEFERRAL_REASONS.first,
+          enum: Participants::Defer::DEFERRAL_REASONS,
+        },
+        date: {
+          description: "The date and time the participant was deferred",
+          type: :string,
+          nullable: false,
+          format: :"date-time",
+          example: "2021-05-31T02:22:32.000Z",
+        },
+      },
+    },
+    created_at: {
+      description: "The date the application was created",
+      type: :string,
+      nullable: false,
+      format: :"date-time",
+      example: "2021-05-31T02:21:32.000Z",
+    },
+  })
   h[:v3][:properties][:attributes][:properties][:participant_id_changes] = {
     description: "Information about the Participant ID changes",
     type: :array,

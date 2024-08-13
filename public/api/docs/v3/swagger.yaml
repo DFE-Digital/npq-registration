@@ -682,8 +682,7 @@ paths:
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
-                        - email: isabelle.macdonald2@some-school.example.com
-                          course_identifier: npq-senior-leadership
+                        - course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
@@ -691,10 +690,11 @@ paths:
                           training_status: active
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
+                          funded_place: true
+                          email: isabelle.macdonald2@some-school.example.com
                           withdrawal:
                           deferral:
                           created_at: '2021-05-31T02:21:32.000Z'
-                          funded_place: true
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
                           to_participant_id: ac3d1243-7308-4879-942a-c4a70ced400a
@@ -760,8 +760,7 @@ paths:
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
-                        - email: isabelle.macdonald2@some-school.example.com
-                          course_identifier: npq-senior-leadership
+                        - course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
@@ -769,12 +768,13 @@ paths:
                           training_status: deferred
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
+                          funded_place: true
+                          email: isabelle.macdonald2@some-school.example.com
                           withdrawal:
                           deferral:
                             reason: bereavement
                             date: '2021-05-31T02:22:32.000Z'
                           created_at: '2021-05-31T02:21:32.000Z'
-                          funded_place: true
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
                           to_participant_id: ac3d1243-7308-4879-942a-c4a70ced400a
@@ -840,8 +840,7 @@ paths:
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
-                        - email: isabelle.macdonald2@some-school.example.com
-                          course_identifier: npq-senior-leadership
+                        - course_identifier: npq-senior-leadership
                           schedule_identifier: npq-aso-march
                           cohort: '2022'
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
@@ -849,12 +848,13 @@ paths:
                           training_status: withdrawn
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
+                          funded_place: true
+                          email: isabelle.macdonald2@some-school.example.com
                           withdrawal:
                             reason: insufficient-capacity-to-undertake-programme
                             date: '2021-05-31T02:22:32.000Z'
                           deferral:
                           created_at: '2021-05-31T02:21:32.000Z'
-                          funded_place: true
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
                           to_participant_id: ac3d1243-7308-4879-942a-c4a70ced400a
@@ -920,8 +920,7 @@ paths:
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
-                        - email: isabelle.macdonald2@some-school.example.com
-                          course_identifier: npq-early-headship-coaching-offer
+                        - course_identifier: npq-early-headship-coaching-offer
                           schedule_identifier: npq-ehco-march
                           cohort: '2022'
                           npq_application_id: db3a7848-7308-4879-942a-c4a70ced400a
@@ -929,6 +928,8 @@ paths:
                           training_status: active
                           school_urn: '106286'
                           targeted_delivery_funding_eligibility: true
+                          funded_place: true
+                          email: isabelle.macdonald2@some-school.example.com
                           withdrawal:
                             reason: insufficient-capacity-to-undertake-programme
                             date: '2021-05-31T02:22:32.000Z'
@@ -936,7 +937,6 @@ paths:
                             reason: bereavement
                             date: '2021-05-31T02:22:32.000Z'
                           created_at: '2021-05-31T02:21:32.000Z'
-                          funded_place: true
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
                           to_participant_id: ac3d1243-7308-4879-942a-c4a70ced400a
@@ -1579,18 +1579,13 @@ components:
                 description: The details of an NPQ Participant enrolment
                 type: object
                 required:
-                - email
                 - course_identifier
                 - npq_application_id
                 - eligible_for_funding
                 - training_status
                 - targeted_delivery_funding_eligibility
+                - email
                 properties:
-                  email:
-                    description: The email address registered for this NPQ participant
-                    type: string
-                    nullable: false
-                    example: isabelle.macdonald2@some-school.example.com
                   course_identifier:
                     description: The NPQ course this NPQ application relates to
                     type: string
@@ -1670,6 +1665,17 @@ components:
                     nullable: false
                     type: boolean
                     example: true
+                  funded_place:
+                    description: Indicates whether or not this participant’s training
+                      is being funded by DfE
+                    nullable: true
+                    type: boolean
+                    example: true
+                  email:
+                    description: The email address registered for this NPQ participant
+                    type: string
+                    nullable: false
+                    example: isabelle.macdonald2@some-school.example.com
                   withdrawal:
                     description: The details of an NPQ Participant withdrawal
                     type: object
@@ -1740,12 +1746,6 @@ components:
                     nullable: false
                     format: date-time
                     example: '2021-05-31T02:21:32.000Z'
-                  funded_place:
-                    description: Indicates whether or not this participant’s training
-                      is being funded by DfE
-                    nullable: true
-                    type: boolean
-                    example: true
             participant_id_changes:
               description: Information about the Participant ID changes
               type: array
