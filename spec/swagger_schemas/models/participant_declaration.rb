@@ -51,7 +51,7 @@ PARTICIPANT_DECLARATION = {
             description: "The event declaration date",
             type: :string,
             nullable: false,
-            example: "2022-04-30",
+            example: "2021-05-31T02:22:32Z",
           },
           state: {
             description: "Indicates the state of this payment declaration",

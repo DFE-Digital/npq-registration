@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_25_102353) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_12_095216) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -174,7 +174,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_25_102353) do
     t.bigint "lead_provider_id", null: false
     t.bigint "cohort_id", null: false
     t.enum "declaration_type", enum_type: "declaration_types"
-    t.date "declaration_date"
+    t.datetime "declaration_date", precision: nil
     t.enum "state", default: "submitted", null: false, enum_type: "declaration_states"
     t.enum "state_reason", enum_type: "declaration_state_reasons"
     t.datetime "created_at", null: false

@@ -445,7 +445,7 @@ paths:
                         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
                         declaration_type: started
                         course_identifier: npq-senior-leadership
-                        declaration_date: '2022-04-30'
+                        declaration_date: '2021-05-31T02:22:32Z'
                         state: voided
                         has_passed:
                         statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
@@ -2305,7 +2305,7 @@ components:
               description: The event declaration date
               type: string
               nullable: false
-              example: '2022-04-30'
+              example: '2021-05-31T02:22:32Z'
             state:
               description: Indicates the state of this payment declaration
               type: string
@@ -2437,7 +2437,7 @@ components:
           required: true
           nullable: false
           format: date-time
-          example: '2021-05-31T02:21:32.000Z'
+          example: '2021-05-31T02:21:32Z'
         course_identifier:
           description: The type of course the participant is enrolled in
           type: string
@@ -2465,7 +2465,7 @@ components:
       example:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: started
-        declaration_date: '2021-05-31T02:21:32.000Z'
+        declaration_date: '2021-05-31T02:21:32Z'
         course_identifier: npq-senior-leadership
     ParticipantDeclarationRetainedRequest:
       description: An NPQ participant retained declaration
@@ -2494,7 +2494,7 @@ components:
           required: true
           nullable: false
           format: date-time
-          example: '2021-05-31T02:21:32.000Z'
+          example: '2021-05-31T02:21:32Z'
         course_identifier:
           description: The type of course the participant is enrolled in
           type: string
@@ -2522,7 +2522,7 @@ components:
       example:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: retained-1
-        declaration_date: '2021-05-31T02:21:32.000Z'
+        declaration_date: '2021-05-31T02:21:32Z'
         course_identifier: npq-senior-leadership
     ParticipantDeclarationCompletedRequest:
       description: An NPQ completed participant declaration
@@ -2556,7 +2556,7 @@ components:
           required: true
           nullable: false
           format: date-time
-          example: '2021-05-31T02:21:32.000Z'
+          example: '2021-05-31T02:21:32Z'
         course_identifier:
           description: The type of course the participant is enrolled in
           type: string
@@ -2585,6 +2585,6 @@ components:
       example:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: completed
-        declaration_date: '2021-05-31T02:21:32.000Z'
+        declaration_date: '2021-05-31T02:21:32Z'
         course_identifier: npq-senior-leadership
         has_passed: true

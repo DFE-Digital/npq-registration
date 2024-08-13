@@ -28,7 +28,7 @@ PARTICIPANT_DECLARATION_RETAINED_REQUEST = {
       required: true,
       nullable: false,
       format: "date-time",
-      example: "2021-05-31T02:21:32.000Z",
+      example: "2021-05-31T02:21:32Z",
     },
     course_identifier: {
       description: "The type of course the participant is enrolled in",
@@ -48,7 +48,7 @@ PARTICIPANT_DECLARATION_RETAINED_REQUEST = {
   example: {
     participant_id: "db3a7848-7308-4879-942a-c4a70ced400a",
     declaration_type: "retained-1",
-    declaration_date: "2021-05-31T02:21:32.000Z",
+    declaration_date: "2021-05-31T02:21:32Z",
     course_identifier: Course::IDENTIFIERS.first,
   },
 }.freeze
