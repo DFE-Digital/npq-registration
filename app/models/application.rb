@@ -44,7 +44,7 @@ class Application < ApplicationRecord
     private_nursery: "private_nursery",
     another_early_years_setting: "another_early_years_setting",
     childminder: "childminder",
-  }
+  }, _suffix: true
 
   enum headteacher_status: {
     no: "no",
@@ -53,7 +53,7 @@ class Application < ApplicationRecord
     yes_over_two_years: "yes_over_two_years",
     yes_in_first_five_years: "yes_in_first_five_years",
     yes_over_five_years: "yes_over_five_years",
-  }
+  }, _suffix: true
 
   enum funding_choice: {
     school: "school",
@@ -61,19 +61,19 @@ class Application < ApplicationRecord
     self: "self",
     another: "another",
     employer: "employer",
-  }
+  }, _suffix: true
 
   enum lead_provider_approval_status: {
     pending: "pending",
     accepted: "accepted",
     rejected: "rejected",
-  }
+  }, _suffix: true
 
   enum training_status: {
     active: "active",
     deferred: "deferred",
     withdrawn: "withdrawn",
-  }
+  }, _suffix: true
 
   validates :funded_place,
             inclusion: { in: [true, false] },
@@ -194,7 +194,7 @@ private
   end
 
   def validate_funded_place?
-    accepted? && errors.blank? && cohort&.funding_cap?
+    accepted_lead_provider_approval_status? && errors.blank? && cohort&.funding_cap?
   end
 
   def eligible_for_funded_place
@@ -208,7 +208,7 @@ private
 
   def validate_permitted_schedule_for_course
     return if errors.any?
-    return unless accepted? && schedule && course
+    return unless accepted_lead_provider_approval_status? && schedule && course
 
     unless schedule.course_group.courses.include?(course)
       errors.add(:schedule, :invalid_for_course)

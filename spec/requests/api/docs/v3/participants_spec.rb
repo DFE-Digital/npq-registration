@@ -49,7 +49,7 @@ RSpec.describe "NPQ Participants endpoint", type: :request, openapi_spec: "v3/sw
                     "The NPQ participant being resumed",
                     "#/components/schemas/ParticipantResponse",
                     "#/components/schemas/ParticipantResumeRequest" do
-      before { application.withdrawn! }
+      before { application.withdrawn_training_status! }
 
       let(:resource) { participant }
       let(:type) { "participant-resume" }

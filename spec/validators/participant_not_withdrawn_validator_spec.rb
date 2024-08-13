@@ -39,7 +39,7 @@ RSpec.describe ParticipantNotWithdrawnValidator do
       before do
         travel_to declaration_date - 10.days do
           application.application_states.create!(state: :withdrawn, lead_provider:)
-          application.withdrawn!
+          application.withdrawn_training_status!
         end
       end
 
@@ -50,7 +50,7 @@ RSpec.describe ParticipantNotWithdrawnValidator do
       before do
         travel_to declaration_date + 10.days do
           application.application_states.create!(state: :withdrawn, lead_provider:)
-          application.withdrawn!
+          application.withdrawn_training_status!
         end
       end
 
@@ -62,7 +62,7 @@ RSpec.describe ParticipantNotWithdrawnValidator do
 
       before do
         application.application_states.create!(lead_provider:)
-        application.active!
+        application.active_training_status!
       end
 
       it { is_expected.to be_valid }
@@ -71,7 +71,7 @@ RSpec.describe ParticipantNotWithdrawnValidator do
     context "when participant was withdrawn by another lead provider" do
       before do
         application.application_states.create!(state: :withdrawn, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
-        application.withdrawn!
+        application.withdrawn_training_status!
       end
 
       it { is_expected.to be_valid }

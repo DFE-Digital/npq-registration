@@ -26,6 +26,16 @@ RSpec.describe User do
     end
   end
 
+  describe "enums" do
+    it {
+      expect(subject).to define_enum_for(:email_updates_status).with_values(
+        empty: 0,
+        senco: 1,
+        other_npq: 2,
+      ).backed_by_column_of_type(:integer).with_suffix
+    }
+  end
+
   describe "methods" do
     it { expect(User.new).to be_actual_user }
     it { expect(User.new).not_to be_null_user }

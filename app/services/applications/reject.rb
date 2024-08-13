@@ -21,14 +21,14 @@ module Applications
 
     def not_already_rejected
       return unless application
-      return unless application.rejected?
+      return unless application.rejected_lead_provider_approval_status?
 
       errors.add(:application, :has_already_been_rejected)
     end
 
     def cannot_change_from_accepted
       return unless application
-      return unless application.accepted?
+      return unless application.accepted_lead_provider_approval_status?
 
       errors.add(:application, :cannot_change_from_accepted)
     end

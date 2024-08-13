@@ -58,6 +58,36 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to delegate_method(:name).to(:lead_provider).with_prefix(true) }
   end
 
+  describe "enums" do
+    it {
+      expect(subject).to define_enum_for(:state).with_values(
+        submitted: "submitted",
+        eligible: "eligible",
+        payable: "payable",
+        paid: "paid",
+        voided: "voided",
+        ineligible: "ineligible",
+        awaiting_clawback: "awaiting_clawback",
+        clawed_back: "clawed_back",
+      ).backed_by_column_of_type(:enum).with_suffix
+    }
+
+    it {
+      expect(subject).to define_enum_for(:declaration_type).with_values(
+        started: "started",
+        "retained-1": "retained-1",
+        "retained-2": "retained-2",
+        completed: "completed",
+      ).backed_by_column_of_type(:enum).with_suffix
+    }
+
+    it {
+      expect(subject).to define_enum_for(:state_reason).with_values(
+        duplicate: "duplicate",
+      ).backed_by_column_of_type(:enum).with_suffix
+    }
+  end
+
   describe "#uplift_paid?" do
     let(:declaration_type) { :started }
     let(:targeted_delivery_funding_eligibility) { true }

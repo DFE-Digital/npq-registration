@@ -102,7 +102,7 @@ module API
         end
 
         def withdrawal(application:, lead_provider:)
-          if application.withdrawn?
+          if application.withdrawn_training_status?
             # We are doing this in memory to avoid running those as queries on each request
             latest_application_state = application
               .application_states.sort_by(&:created_at)
@@ -119,7 +119,7 @@ module API
         end
 
         def deferral(application:, lead_provider:)
-          if application.deferred?
+          if application.deferred_training_status?
             # We are doing this in memory to avoid running those as queries on each request
             latest_application_state = application
               .application_states.sort_by(&:created_at)

@@ -22,7 +22,7 @@ module Participants
 
       ActiveRecord::Base.transaction do
         create_application_state!(state: :deferred, reason:)
-        application.deferred!
+        application.deferred_training_status!
         participant.reload
       end
 
@@ -32,11 +32,11 @@ module Participants
   private
 
     def not_withdrawn
-      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn?
+      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn_training_status?
     end
 
     def not_already_deferred
-      errors.add(:participant_id, :already_deferred) if application&.deferred?
+      errors.add(:participant_id, :already_deferred) if application&.deferred_training_status?
     end
 
     def has_declarations

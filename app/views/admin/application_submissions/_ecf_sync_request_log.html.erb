@@ -25,7 +25,7 @@
         <td class="govuk-table__cell"><%= t(".sync_type.#{log.sync_type}") %></td>
         <td class="govuk-table__cell"><%= log.created_at.to_formatted_s(:govuk_short) %></td>
         <td class="govuk-table__cell">
-          <%= boolean_red_green_tag(log.success?, t(".#{log.status}")) %>
+          <%= boolean_red_green_tag(log.success_status?, t(".#{log.status}")) %>
         </td>
         <td class="govuk-table__cell">
           <%=

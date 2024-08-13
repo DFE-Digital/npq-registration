@@ -96,7 +96,7 @@ RSpec.describe Declarations::Create, type: :model do
       before do
         travel_to(withdrawal_time) do
           ApplicationState.create!(application:, lead_provider:, state: :withdrawn)
-          application.withdrawn!
+          application.withdrawn_training_status!
         end
       end
 

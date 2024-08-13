@@ -5,7 +5,7 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
     processed: "processed",
     failed: "failed",
     unhandled_message_type: "unhandled_message_type",
-  }
+  }, _suffix: true
 
   def processor_klass
     case message_type
@@ -26,7 +26,7 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
   end
 
   def retryable?
-    failed? || unhandled_message_type?
+    failed_status? || unhandled_message_type_status?
   end
 
   def processed!
