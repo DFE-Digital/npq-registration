@@ -117,9 +117,14 @@ class FundingEligibility
       when "School"
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
-        return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if (course.only_pp50? && !institution.pp50_institution?) && !course.eyl?
-        return INELIGIBLE_ESTABLISHMENT_TYPE if !institution.eligible_establishment? && !course.eyl?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
+
+        unless course.eyl?
+          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
+          return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
+          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?
+          return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
+        end
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
