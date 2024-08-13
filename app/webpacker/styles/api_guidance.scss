@@ -21,41 +21,48 @@
   .highlight {
     background-color: $light-grey;
     padding: 0.2em 0.5em;
+    margin-bottom: 30px;
 
-    pre > code {
-      color: $text;
+    pre {
+      margin: 0.5em 0;
+      word-break: normal;
 
-      .s, .s1, .s2, .vi, .sx {
-        color: $pink;
-      }
+      code {
+        color: $text;
+        font-size: 1em;
+        line-height: 1.5em;
 
-      .nt, .nf, .nc {
-        color: $orange;
-      }
+        .s, .s1, .s2, .vi, .sx {
+          color: $pink;
+        }
 
-      .n, .p, .k, .mi, .n, .o, .na, .ss {
-        color: $dark-blue;
-      }
+        .nt, .nf, .nc {
+          color: $orange;
+        }
 
-      .k {
-        font-weight: 600;
-      }
+        .n, .p, .k, .mi, .n, .o, .na, .ss {
+          color: $dark-blue;
+        }
 
-      .no {
-        color: #0e5e5e;
-      }
+        .k {
+          font-weight: 600;
+        }
 
-      .kp {
-        color: $green;
-      }
+        .no {
+          color: #0e5e5e;
+        }
 
-      // comments
-      .c,
-      .c1 {
-        color: $dark-green;
-        font-style: italic;
+        .kp {
+          color: $green;
+        }
+
+        // comments
+        .c,
+        .c1 {
+          color: $dark-green;
+          font-style: italic;
+        }
       }
     }
   }
 }
-

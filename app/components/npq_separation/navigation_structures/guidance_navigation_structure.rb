@@ -8,29 +8,19 @@ module NpqSeparation
       def structure
         {
           Node.new(
-            name: "Get Started",
+            name: "Get started",
             href: api_guidance_page_path(page: "get-started"),
             prefix: "/api/guidance/get-started",
           ) => [],
           Node.new(
-            name: "What you can do in the API",
-            href: api_guidance_page_path(page: "what-you-can-do-in-the-api"),
-            prefix: "/api/guidance/what-you-can-do-in-the-api",
+            name: "Test environments",
+            href: api_guidance_page_path(page: "test-environments"),
+            prefix: "/api/guidance/test-environments",
           ) => [],
           Node.new(
-            name: "Definitions",
-            href: api_guidance_page_path(page: "definitions"),
-            prefix: "/api/guidance/definitions",
-          ) => [],
-          Node.new(
-            name: "API latest version",
-            href: api_guidance_page_path(page: "api-latest-version"),
-            prefix: "/api/guidance/api-latest-version",
-          ) => [],
-          Node.new(
-            name: "Test environment",
-            href: api_guidance_page_path(page: "test-environment"),
-            prefix: "/api/guidance/test-environment",
+            name: "What's new",
+            href: api_guidance_page_path(page: "release-notes"),
+            prefix: "/api/guidance/release-notes",
           ) => [],
         }
       end
