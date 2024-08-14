@@ -32,7 +32,7 @@ RUN bundler -v && \
 
 # Install node packages defined in package.json, including webpack
 COPY package.json yarn.lock ./
-RUN yarn install --immutable
+RUN yarn install --immutable --ignore-scripts
 
 # Copy all files to / inside image (except what is defined in .dockerignore)
 COPY . .
