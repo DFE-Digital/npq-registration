@@ -88,6 +88,134 @@ RSpec.describe Declaration, type: :model do
     }
   end
 
+  describe "state transition" do
+    let(:declaration) { create(:declaration, state:) }
+
+    describe ".mark_eligible" do
+      let(:state) { :submitted }
+
+      it { expect { declaration.mark_eligible }.to change(declaration, :state).from("submitted").to("eligible") }
+
+      context "when not submitted" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_eligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_payable" do
+      let(:state) { :eligible }
+
+      it { expect { declaration.mark_payable }.to change(declaration, :state).from("eligible").to("payable") }
+
+      context "when not eligible" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_payable! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_paid" do
+      let(:state) { :payable }
+
+      it { expect { declaration.mark_paid }.to change(declaration, :state).from("payable").to("paid") }
+
+      context "when not payable" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_payable! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_ineligible" do
+      context "when submitted" do
+        let(:state) { :submitted }
+
+        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("submitted").to("ineligible") }
+      end
+
+      context "when eligible" do
+        let(:state) { :eligible }
+
+        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("eligible").to("ineligible") }
+      end
+
+      context "when payable" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("payable").to("ineligible") }
+      end
+
+      context "when paid" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("paid").to("ineligible") }
+      end
+
+      context "when not submitted/eligible/payable/paid" do
+        let(:state) { :voided }
+
+        it { expect { declaration.mark_ineligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_awaiting_clawback" do
+      let(:state) { :paid }
+
+      it { expect { declaration.mark_awaiting_clawback }.to change(declaration, :state).from("paid").to("awaiting_clawback") }
+
+      context "when not paid" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_awaiting_clawback! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_clawed_back" do
+      let(:state) { :awaiting_clawback }
+
+      it { expect { declaration.mark_clawed_back }.to change(declaration, :state).from("awaiting_clawback").to("clawed_back") }
+
+      context "when not awaiting_clawback" do
+        let(:state) { :clawed_back }
+
+        it { expect { declaration.mark_clawed_back! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_voided" do
+      context "when submitted" do
+        let(:state) { :submitted }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("submitted").to("voided") }
+      end
+
+      context "when eligible" do
+        let(:state) { :eligible }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("eligible").to("voided") }
+      end
+
+      context "when payable" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("payable").to("voided") }
+      end
+
+      context "when ineligible" do
+        let(:state) { :ineligible }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("ineligible").to("voided") }
+      end
+
+      context "when not submitted/eligible/payable/ineligible" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_voided! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+  end
+
   describe "#uplift_paid?" do
     let(:declaration_type) { :started }
     let(:targeted_delivery_funding_eligibility) { true }

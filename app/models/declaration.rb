@@ -46,6 +46,36 @@ class Declaration < ApplicationRecord
     clawed_back: "clawed_back",
   }, _suffix: true
 
+  state_machine :state, initial: :submitted do
+    event :mark_eligible do
+      transition [:submitted] => :eligible
+    end
+
+    event :mark_payable do
+      transition [:eligible] => :payable
+    end
+
+    event :mark_paid do
+      transition [:payable] => :paid
+    end
+
+    event :mark_ineligible do
+      transition %i[submitted eligible payable paid] => :ineligible
+    end
+
+    event :mark_awaiting_clawback do
+      transition %i[paid] => :awaiting_clawback
+    end
+
+    event :mark_clawed_back do
+      transition %i[awaiting_clawback] => :clawed_back
+    end
+
+    event :mark_voided do
+      transition %i[submitted eligible payable ineligible] => :voided
+    end
+  end
+
   enum declaration_type: {
     started: "started",
     "retained-1": "retained-1",
