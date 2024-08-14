@@ -14,6 +14,10 @@ on:
         required: false
         default: "20.15.1"
 
+env:
+  code-coverage-artifact-name: code_coverage_${{github.run_number}}_${{github.run_attempt}}
+  unit-tests-artifact-name: unit_tests_${{github.run_number}}_${{github.run_attempt}}
+
 jobs:
   rspec:
     name: Run Rspec
@@ -85,4 +89,18 @@ jobs:
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
         run: |-
-          bundle exec rake knapsack:rspec
+          bundle exec rake 'knapsack:rspec[--format RspecSonarqubeFormatter --out ./test-report/test-report-${{ matrix.ci_node_index }}.xml --format progress]' spec
+  
+      - name:  Keep Code Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.code-coverage-artifact-name }}_${{ matrix.ci_node_index }}
+          path: ./coverage
+
+      - name:  Keep Unit Tests Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.unit-tests-artifact-name }}_${{ matrix.ci_node_index }}
+          path: ./test-report/*
