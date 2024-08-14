@@ -751,8 +751,8 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq-participant
                       attributes:
-                        email: isabelle.macdonald2@some-school.example.com
                         full_name: Isabelle MacDonald
+                        email: isabelle.macdonald2@some-school.example.com
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
@@ -822,8 +822,8 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq-participant
                       attributes:
-                        email: isabelle.macdonald2@some-school.example.com
                         full_name: Isabelle MacDonald
+                        email: isabelle.macdonald2@some-school.example.com
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
@@ -893,8 +893,8 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq-participant
                       attributes:
-                        email: isabelle.macdonald2@some-school.example.com
                         full_name: Isabelle MacDonald
+                        email: isabelle.macdonald2@some-school.example.com
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
@@ -964,8 +964,8 @@ paths:
                       id: d0b4a32e-a272-489e-b30a-cb17131457fc
                       type: npq-participant
                       attributes:
-                        email: isabelle.macdonald2@some-school.example.com
                         full_name: Isabelle MacDonald
+                        email: isabelle.macdonald2@some-school.example.com
                         teacher_reference_number: '1234567'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         npq_enrolments:
@@ -1454,7 +1454,6 @@ components:
       - eligible_for_funding
       - training_status
       - school_urn
-      - funded_place
       properties:
         participant_id:
           description: The unique identifier of this NPQ participant
@@ -1530,9 +1529,9 @@ components:
           example: '106286'
         funded_place:
           description: Indicates whether this NPQ participant is funded by DfE
+          nullable: true
           type: boolean
           example: true
-          required: true
     DeclarationsCsvResponse:
       description: 'A list of NPQ enrolments in the Comma Separated Value (CSV) format  '
       properties:
@@ -1883,18 +1882,20 @@ components:
           description: The data type
           type: string
           example: npq-participant
+          enum:
+          - npq-participant
         attributes:
           properties:
-            email:
-              description: The email address registered for this NPQ participant
-              type: string
-              nullable: false
-              example: isabelle.macdonald2@some-school.example.com
             full_name:
               description: The full name of this NPQ participant
               type: string
               nullable: false
               example: Isabelle MacDonald
+            email:
+              description: The email address registered for this NPQ participant
+              type: string
+              nullable: false
+              example: isabelle.macdonald2@some-school.example.com
             teacher_reference_number:
               description: The Teacher Reference Number (TRN) for this NPQ participant
               type: string
