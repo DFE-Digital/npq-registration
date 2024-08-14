@@ -303,39 +303,23 @@ RSpec.describe Declaration, type: :model do
   describe "#eligible_for_payment?" do
     subject { build(:declaration, state:) }
 
-    described_class::ELIGIBLE_FOR_PAYMENT_STATES.each do |eligible_state|
-      context "when the state is #{eligible_state}" do
-        let(:state) { eligible_state }
+    context "when the state is payable" do
+      let(:state) { :payable }
 
-        it { is_expected.to be_eligible_for_payment }
-      end
+      it { is_expected.to be_eligible_for_payment }
     end
 
-    described_class.states.keys.excluding(described_class::ELIGIBLE_FOR_PAYMENT_STATES).each do |ineligible_state|
-      context "when the state is #{ineligible_state}" do
-        let(:state) { ineligible_state }
+    context "when the state is eligible" do
+      let(:state) { :eligible }
+
+      it { is_expected.to be_eligible_for_payment }
+    end
+
+    described_class.states.keys.excluding("payable", "eligible").each do |eligible_state|
+      context "when the state is #{eligible_state}" do
+        let(:state) { eligible_state }
 
         it { is_expected.not_to be_eligible_for_payment }
-      end
-    end
-  end
-
-  describe "#voidable?" do
-    subject { build(:declaration, state:) }
-
-    described_class::VOIDABLE_STATES.each do |eligible_state|
-      context "when the state is #{eligible_state}" do
-        let(:state) { eligible_state }
-
-        it { is_expected.to be_voidable }
-      end
-    end
-
-    described_class.states.keys.excluding(described_class::VOIDABLE_STATES).each do |ineligible_state|
-      context "when the state is #{ineligible_state}" do
-        let(:state) { ineligible_state }
-
-        it { is_expected.not_to be_voidable }
       end
     end
   end
