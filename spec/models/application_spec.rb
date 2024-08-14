@@ -69,7 +69,7 @@ RSpec.describe Application do
         private_nursery: "private_nursery",
         another_early_years_setting: "another_early_years_setting",
         childminder: "childminder",
-      ).backed_by_column_of_type(:text).with_suffix
+      ).backed_by_column_of_type(:enum).with_suffix
     }
 
     it {
