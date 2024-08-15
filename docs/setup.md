@@ -17,8 +17,7 @@
 1. Run `yarn` to install node dependencies
 1. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
 1. Copy `.env.example` to `.env` and fill in the values (Get an identity secret can be acquired from members of the TRA team)
-1. Run `bundle exec rails server` to launch the app on http://localhost:3000
-1. Run `./bin/webpack-dev-server` in a separate shell for faster compilation of assets
+1. Run `./bin/dev` to launch the app on http://localhost:3000 and auto-compile assets
 
 ## Codespaces
 

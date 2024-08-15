@@ -48,7 +48,7 @@ To autocorrect all offenses, safe and unsafe, run:
 bundle exec rubocop -A
 ```
 
-To lint the webpacker styles run:
+To lint the stylesheets run:
 ```bash
-bundle exec scss-lint app/webpacker/styles
+bundle exec scss-lint app/assets/stylesheets
 ```

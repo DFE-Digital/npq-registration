@@ -95,4 +95,7 @@ Rails.application.configure do
   if ENV["CODESPACES"].present?
     config.action_controller.forgery_protection_origin_check = false
   end
+
+  # Suppress logger output for asset requests.
+  config.assets.quiet = true
 end

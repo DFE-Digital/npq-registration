@@ -9,6 +9,6 @@ namespace :lint do
   desc "Lint SCSS with scss_lint"
   task scss: :environment do
     puts "Linting scss..."
-    system "bundle exec scss-lint app/webpacker/styles"
+    system "bundle exec scss-lint app/assets/stylesheets"
   end
 end
