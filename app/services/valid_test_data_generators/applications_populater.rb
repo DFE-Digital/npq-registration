@@ -39,7 +39,8 @@ module ValidTestDataGenerators
 
     def create_participants!
       number_of_participants.times do
-        create_participant(school: School.open.order("RANDOM()").first)
+        user = create_user
+        create_participant(user:, school: School.open.order("RANDOM()").first)
       end
     end
 
@@ -50,9 +51,8 @@ module ValidTestDataGenerators
       end
     end
 
-    def create_participant(school:)
+    def create_participant(user:, school:)
       course = courses.sample
-      user = create_user
       schedule = Schedule.where(cohort:, course_group: course.course_group).sample
       application = create_application(user, school, course, schedule)
 
