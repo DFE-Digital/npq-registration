@@ -11,7 +11,7 @@ private
 
   def validate_withdrawals(record)
     return unless record.application.present? && (latest_state = latest_participant_application_state(record))
-    return unless latest_state.withdrawn? && latest_state.created_at <= record.declaration_date
+    return unless latest_state.withdrawn_state? && latest_state.created_at <= record.declaration_date
 
     record
       .errors

@@ -24,7 +24,7 @@ module GetAnIdentityService
 
         if user.update(update_params)
           sync_user_changes_to_ecf
-          webhook_message.processed!
+          webhook_message.processed_status!
         else
           record_error(user.errors.full_messages.join(", "))
         end

@@ -33,7 +33,7 @@ module Participants
 
       ActiveRecord::Base.transaction do
         create_application_state!(state: :withdrawn, reason:)
-        application.withdrawn!
+        application.withdrawn_training_status!
         participant.reload
       end
 
@@ -43,7 +43,7 @@ module Participants
   private
 
     def not_withdrawn
-      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn?
+      errors.add(:participant_id, :already_withdrawn) if application&.withdrawn_training_status?
     end
 
     def has_started_declarations

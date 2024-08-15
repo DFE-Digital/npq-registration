@@ -9,7 +9,7 @@ module Participants
 
       ActiveRecord::Base.transaction do
         create_application_state!
-        application.active!
+        application.active_training_status!
         participant.reload
       end
 
@@ -19,7 +19,7 @@ module Participants
   private
 
     def not_already_active
-      errors.add(:participant_id, :already_active) if application&.active?
+      errors.add(:participant_id, :already_active) if application&.active_training_status?
     end
   end
 end

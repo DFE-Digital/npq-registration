@@ -37,13 +37,13 @@ module Applications
     def not_already_accepted
       return if application.blank?
 
-      errors.add(:application, :has_already_been_accepted) if application.accepted?
+      errors.add(:application, :has_already_been_accepted) if application.accepted_lead_provider_approval_status?
     end
 
     def cannot_change_from_rejected
       return if application.blank?
 
-      errors.add(:application, :cannot_change_from_rejected) if application.rejected?
+      errors.add(:application, :cannot_change_from_rejected) if application.rejected_lead_provider_approval_status?
     end
 
     def other_accepted_applications_with_same_course?

@@ -208,7 +208,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
       it "cannot then be accepted" do
         service.accept
-        expect(application.reload).to be_rejected
+        expect(application.reload).to be_rejected_lead_provider_approval_status
         expect(service).to have_error(:application, :cannot_change_from_rejected, "Once rejected an application cannot change state")
       end
     end
@@ -364,7 +364,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           application_state = ApplicationState.first
           expect(application_state.lead_provider).to eql(lead_provider)
           expect(application_state.application).to eql(application)
-          expect(application_state).to be_active
+          expect(application_state).to be_active_state
         end
       end
 

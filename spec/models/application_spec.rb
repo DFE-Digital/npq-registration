@@ -69,7 +69,7 @@ RSpec.describe Application do
         private_nursery: "private_nursery",
         another_early_years_setting: "another_early_years_setting",
         childminder: "childminder",
-      ).backed_by_column_of_type(:text)
+      ).backed_by_column_of_type(:text).with_suffix
     }
 
     it {
@@ -80,7 +80,7 @@ RSpec.describe Application do
         yes_over_two_years: "yes_over_two_years",
         yes_in_first_five_years: "yes_in_first_five_years",
         yes_over_five_years: "yes_over_five_years",
-      ).backed_by_column_of_type(:enum)
+      ).backed_by_column_of_type(:enum).with_suffix
     }
 
     it {
@@ -90,7 +90,7 @@ RSpec.describe Application do
         self: "self",
         another: "another",
         employer: "employer",
-      ).backed_by_column_of_type(:enum)
+      ).backed_by_column_of_type(:enum).with_suffix
     }
 
     it {
@@ -98,7 +98,7 @@ RSpec.describe Application do
         pending: "pending",
         accepted: "accepted",
         rejected: "rejected",
-      ).backed_by_column_of_type(:enum)
+      ).backed_by_column_of_type(:enum).with_suffix
     }
 
     it {
@@ -106,7 +106,7 @@ RSpec.describe Application do
         active: "active",
         deferred: "deferred",
         withdrawn: "withdrawn",
-      ).backed_by_column_of_type(:enum)
+      ).backed_by_column_of_type(:enum).with_suffix
     }
   end
 
@@ -437,7 +437,7 @@ RSpec.describe Application do
             expect(user.updated_at).to be_within(1.second).of(old_datetime)
             expect(application.updated_at).to be_within(1.second).of(old_datetime)
 
-            application.rejected!
+            application.rejected_lead_provider_approval_status!
 
             expect(application.updated_at).to eq(Time.zone.now)
             expect(user.updated_at).to eq(Time.zone.now)

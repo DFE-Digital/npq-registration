@@ -26,7 +26,7 @@ module Applications
     delegate :cohort, to: :application
 
     def accepted_application
-      return if application&.accepted?
+      return if application&.accepted_lead_provider_approval_status?
 
       errors.add(:application, :cannot_change_funded_status_from_non_accepted)
     end

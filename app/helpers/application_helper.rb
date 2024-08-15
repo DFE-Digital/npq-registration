@@ -33,15 +33,15 @@ module ApplicationHelper
   end
 
   def accepted?(application)
-    application.lead_provider_approval_status&.capitalize == "Accepted"
+    application.accepted_lead_provider_approval_status?
   end
 
   def pending?(application)
-    application.lead_provider_approval_status&.capitalize == "Pending"
+    application.pending_lead_provider_approval_status?
   end
 
   def rejected?(application)
-    application.lead_provider_approval_status&.capitalize == "Rejected"
+    application.rejected_lead_provider_approval_status?
   end
 
   def application_course_start_date
