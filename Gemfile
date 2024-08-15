@@ -73,6 +73,7 @@ group :development, :test do
   gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
+  gem "simplecov", require: false
 end
 
 group :development do
@@ -87,7 +88,6 @@ group :test do
   gem "axe-core-rspec", "~> 4.9"
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 6.4"
-  gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
   gem "webmock", "~> 3.23"
