@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Migration::FailureManager, in_memory_rails_cache: true do
+RSpec.describe Migration::FailureManager, :in_memory_rails_cache do
   let(:instance) { described_class.new(data_migration:) }
 
   describe "#record_failure" do

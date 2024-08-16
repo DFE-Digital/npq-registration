@@ -6,7 +6,7 @@ RSpec.describe Users::Find do
   describe "#all" do
     subject { Users::Find.new.all }
 
-    it { is_expected.to contain_exactly(*User.all) }
+    it { is_expected.to match_array(User.all) }
   end
 
   describe "#by_id" do

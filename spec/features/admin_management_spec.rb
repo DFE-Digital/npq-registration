@@ -19,7 +19,7 @@ RSpec.feature "admin management", type: :feature do
   end
 
   # this doesn't exist currently, no ability to change admins
-  xscenario "editing an admin" do
+  scenario "editing an admin", skip: "this doesn't exist currently, no ability to change admins" do
     given_the_following_admin_exists(full_name: "Joey Joe", email: "joey-joe@shabadoo.org")
     visit(admin_admins_path)
     and_i_select_them_from_the_list_of_admins(email: "joey-joe@shabadoo.org")

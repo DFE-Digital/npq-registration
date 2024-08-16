@@ -65,7 +65,7 @@ RSpec.describe Statements::Query do
             statement2 = FactoryBot.create(:statement, cohort: cohort_2024)
             statement3 = FactoryBot.create(:statement, cohort: cohort_2025)
 
-            expect(described_class.new.statements).to match_array([statement1, statement2, statement3])
+            expect(described_class.new.statements).to contain_exactly(statement1, statement2, statement3)
           end
 
           it "doesn't reference the cohort's start_year in the query" do
@@ -90,10 +90,10 @@ RSpec.describe Statements::Query do
           statement3 = create(:statement, cohort: cohort_2025)
 
           query1 = described_class.new(cohort_start_years: "2023,2024")
-          expect(query1.statements).to match_array([statement1, statement2])
+          expect(query1.statements).to contain_exactly(statement1, statement2)
 
           query2 = described_class.new(cohort_start_years: %w[2024 2025])
-          expect(query2.statements).to match_array([statement2, statement3])
+          expect(query2.statements).to contain_exactly(statement2, statement3)
         end
 
         it "returns no statements if no cohorts are found" do
@@ -127,7 +127,7 @@ RSpec.describe Statements::Query do
             statement1 = FactoryBot.create(:statement, updated_at: 1.week.ago)
             statement2 = FactoryBot.create(:statement, updated_at: 2.weeks.ago)
 
-            expect(described_class.new.statements).to match_array([statement1, statement2])
+            expect(described_class.new.statements).to contain_exactly(statement1, statement2)
           end
 
           it "doesn't reference updated_at in the query" do
@@ -158,20 +158,20 @@ RSpec.describe Statements::Query do
         end
 
         it "filters by multiple states with a comma separated list" do
-          expect(described_class.new(state: "open,paid").statements).to match_array([open_statement, paid_statement])
+          expect(described_class.new(state: "open,paid").statements).to contain_exactly(open_statement, paid_statement)
         end
 
         it "filters by multiple states with an array" do
-          expect(described_class.new(state: %w[open paid]).statements).to match_array([open_statement, paid_statement])
+          expect(described_class.new(state: %w[open paid]).statements).to contain_exactly(open_statement, paid_statement)
         end
 
-        xit "raises when invalid states queried" do
+        it "raises when invalid states queried", pending: "needs implementation" do
           expect { described_class.new(state: "error").statements }.to raise_error(ArgumentError)
         end
 
         context "when state param omitted" do
           it "returns all statements" do
-            expect(described_class.new.statements).to match_array([open_statement, payable_statement, paid_statement])
+            expect(described_class.new.statements).to contain_exactly(open_statement, payable_statement, paid_statement)
           end
 
           it "doesn't reference the state in the query" do
@@ -214,7 +214,7 @@ RSpec.describe Statements::Query do
             statement1 = FactoryBot.create(:statement, output_fee: true)
             statement2 = FactoryBot.create(:statement, output_fee: false)
 
-            expect(described_class.new(output_fee: :ignore).statements).to match_array([statement1, statement2])
+            expect(described_class.new(output_fee: :ignore).statements).to contain_exactly(statement1, statement2)
           end
 
           it "doesn't reference the output_fee in the query" do

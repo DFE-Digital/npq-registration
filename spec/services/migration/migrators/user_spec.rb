@@ -59,7 +59,7 @@ RSpec.describe Migration::Migrators::User do
         create(:user, :with_random_name, uid: "123456")
       end
 
-      it "increments the failure count " do
+      it "increments the failure count" do
         subject
 
         expect(Migration::DataMigration.find_by(model: :user).processed_count).to eq(3)
@@ -80,7 +80,7 @@ RSpec.describe Migration::Migrators::User do
         create(:ecf_migration_npq_application, teacher_reference_number: "123456", participant_identity: ecf_migration_user.participant_identities.first)
       end
 
-      it "increments the failure count " do
+      it "increments the failure count" do
         subject
 
         expect(Migration::DataMigration.find_by(model: :user).processed_count).to eq(3)

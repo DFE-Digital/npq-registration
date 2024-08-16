@@ -23,7 +23,7 @@ RSpec.shared_examples "an API show endpoint" do
       end
     end
 
-    context "when the resource does not exist", exceptions_app: true do
+    context "when the resource does not exist", :exceptions_app do
       it "returns not found" do
         api_get(path("123XXX"))
 

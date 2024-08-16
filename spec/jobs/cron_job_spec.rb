@@ -17,7 +17,7 @@ RSpec.describe CronJob, type: :job do
 
       expect {
         described_class.schedule
-      }.to change(Delayed::Job, :count).by(0)
+      }.not_to change(Delayed::Job, :count)
     end
   end
 end

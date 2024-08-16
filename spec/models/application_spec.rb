@@ -199,7 +199,7 @@ RSpec.describe Application do
     end
   end
 
-  describe "versioning", versioning: true do
+  describe "versioning", :versioning do
     context "when changing versioned fields" do
       let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
 
@@ -213,7 +213,7 @@ RSpec.describe Application do
         expect(application.participant_outcome_state).to eq("passed")
 
         expect(previous_application.lead_provider_approval_status).to eq("pending")
-        expect(previous_application.participant_outcome_state).to eq(nil)
+        expect(previous_application.participant_outcome_state).to be_nil
       end
     end
   end

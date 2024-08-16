@@ -24,7 +24,7 @@ RSpec.describe NpqSeparation::Admin::SchoolsController, type: :request do
 
     it { is_expected.to have_http_status(:ok) }
 
-    context "when the school cannot be found", exceptions_app: true do
+    context "when the school cannot be found", :exceptions_app do
       let(:school_id) { -1 }
 
       it { is_expected.to have_http_status(:not_found) }

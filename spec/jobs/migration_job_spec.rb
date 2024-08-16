@@ -6,7 +6,7 @@ RSpec.describe MigrationJob do
   describe "#perform" do
     subject(:perform_migration) { instance.perform }
 
-    let(:migrator_double) { instance_double("Migration::Migrator", migrate!: nil) }
+    let(:migrator_double) { instance_double(Migration::Migrator, migrate!: nil) }
 
     before { allow(Migration::Migrator).to receive(:new).and_return(migrator_double) }
 

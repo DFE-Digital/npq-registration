@@ -43,7 +43,7 @@ RSpec.shared_examples "an API update endpoint" do
       end
     end
 
-    context "when the resource does not exist", exceptions_app: true do
+    context "when the resource does not exist", :exceptions_app do
       it "returns not found" do
         api_put(path("123XXX"), params:)
 
@@ -51,9 +51,9 @@ RSpec.shared_examples "an API update endpoint" do
       end
     end
 
-    context "when the service has errors", exceptions_app: true do
+    context "when the service has errors", :exceptions_app do
       it "returns 422 - unprocessable entity" do
-        errors = instance_double("errors", messages: { attr: %w[error] })
+        errors = instance_double(ActiveModel::Errors, messages: { attr: %w[error] })
         service_double = instance_double(service, "#{action}": false, errors:)
         allow(service).to receive(:new) { |args|
           expect(args.to_hash.symbolize_keys).to eq(service_args)
