@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_12_095216) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_14_095351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_12_095216) do
   create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
+  create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
   create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
@@ -82,7 +83,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_12_095216) do
     t.text "DEPRECATED_private_childcare_provider_urn"
     t.boolean "works_in_nursery"
     t.boolean "works_in_childcare"
-    t.text "kind_of_nursery"
+    t.enum "kind_of_nursery", enum_type: "kind_of_nurseries"
     t.integer "DEPRECATED_cohort"
     t.boolean "targeted_delivery_funding_eligibility", default: false
     t.string "funding_eligiblity_status_code"
