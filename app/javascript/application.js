@@ -8,6 +8,7 @@ import accessibleAutocomplete from 'accessible-autocomplete';
 import institutionPicker from "./institution-picker";
 import countryPicker from "./country-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
+import cookieBanner from "./cookie-banner";
 
 Rails.start();
 import * as GOVUKFrontend from 'govuk-frontend'
