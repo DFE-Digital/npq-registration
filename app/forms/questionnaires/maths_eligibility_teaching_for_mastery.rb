@@ -36,7 +36,7 @@ module Questionnaires
           :ineligible_for_funding
         elsif wizard.query_store.works_in_school? && !state_funded_school?
           :ineligible_for_funding
-        elsif wizard.query_store.works_in_other?
+        elsif wizard.query_store.works_in_another_setting?
           case funding_eligibility_calculator.funding_eligiblity_status_code
           when FundingEligibility::NO_INSTITUTION, FundingEligibility::FUNDED_ELIGIBILITY_RESULT, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
             :possible_funding

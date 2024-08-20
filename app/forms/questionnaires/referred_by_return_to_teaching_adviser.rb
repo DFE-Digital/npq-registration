@@ -9,16 +9,15 @@ module Questionnaires
     end
 
     def next_step
-      case referred_by_return_to_teaching_adviser
-      when "yes"
-        :choose_your_npq
-      when "no"
-        :work_setting
-      end
+      :choose_your_npq
     end
 
     def previous_step
       :teacher_catchment
+    end
+
+    def after_save
+      wizard.store["employer_name"] = "Return to teaching adviser referral" if referred_by_return_to_teaching_adviser == "yes"
     end
 
     def questions

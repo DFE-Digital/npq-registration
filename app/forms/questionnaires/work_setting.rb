@@ -10,11 +10,15 @@ module Questionnaires
       early_years_or_childcare
     ].freeze
 
+    ANOTHER_SETTING_SETTINGS = %w[
+      another_setting
+    ].freeze
+
     OTHER_SETTINGS = %w[
       other
     ].freeze
 
-    ALL_SETTINGS = [SCHOOL_SETTINGS, CHILDCARE_SETTINGS, OTHER_SETTINGS].flatten
+    ALL_SETTINGS = [SCHOOL_SETTINGS, CHILDCARE_SETTINGS, ANOTHER_SETTING_SETTINGS, OTHER_SETTINGS].flatten
 
     attr_accessor :work_setting
 
@@ -37,6 +41,9 @@ module Questionnaires
       when *CHILDCARE_SETTINGS
         wizard.store["works_in_childcare"] = "yes"
         wizard.store["works_in_school"] = "no"
+      when *ANOTHER_SETTING_SETTINGS
+        wizard.store["works_in_school"] = "no"
+        wizard.store["works_in_childcare"] = "no"
       when *OTHER_SETTINGS
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
@@ -61,6 +68,7 @@ module Questionnaires
       if wizard.query_store.inside_catchment?
         return :find_school if works_in_school?
         return :kind_of_nursery if works_in_childcare?
+        return :referred_by_return_to_teaching_adviser if works_in_other?
 
         return :your_employment
       end
@@ -91,6 +99,7 @@ module Questionnaires
         build_option_struct(value: "a_school"),
         build_option_struct(value: "an_academy_trust"),
         build_option_struct(value: "a_16_to_19_educational_setting"),
+        build_option_struct(value: "another_setting"),
         build_option_struct(value: "other", divider: true),
       ]
     end
@@ -103,6 +112,10 @@ module Questionnaires
 
     def works_in_childcare?
       CHILDCARE_SETTINGS.include?(work_setting)
+    end
+
+    def works_in_another_setting?
+      ANOTHER_SETTING_SETTINGS.include?(work_setting)
     end
 
     def works_in_other?

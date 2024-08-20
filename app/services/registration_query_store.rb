@@ -102,6 +102,10 @@ class RegistrationQueryStore
     store["works_in_childcare"] == "yes"
   end
 
+  def works_in_another_setting?
+    store["work_setting"] == "another_setting"
+  end
+
   def works_in_other?
     store["work_setting"] == "other"
   end

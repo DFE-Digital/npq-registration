@@ -34,7 +34,7 @@ module Questionnaires
       if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private? || wizard.query_store.lead_mentor_for_accredited_itt_provider? ||
           wizard.query_store.employment_type_other?
         :ineligible_for_funding
-      elsif wizard.query_store.works_in_other? && maths_understanding_of_approach != "cannot_show" ||
+      elsif wizard.query_store.works_in_another_setting? && maths_understanding_of_approach != "cannot_show" ||
           wizard.query_store.referred_by_return_to_teaching_adviser?
         :possible_funding
       elsif wizard.query_store.works_in_school? && !state_funded_school?

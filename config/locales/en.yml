@@ -614,7 +614,8 @@ en:
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           a_school: "This includes local authority maintained schools."
-          other: "For example a virtual school, initial teacher training (ITT) provider (for ITT lead mentors), hospital school, young offender institution or other local authority setting."
+          another_setting: "For example a virtual school, initial teacher training (ITT) provider (for ITT lead mentors), hospital school, young offender institution or other local authority setting."
+          other: "For example you are any of the following: self employed, not currently working in an educational setting or were referred to this service by the Return To Teaching Adviser (RTTA) support service."
         employment_type_options:
           local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
@@ -655,6 +656,7 @@ en:
           a_school: "A school"
           an_academy_trust: "An academy trust"
           a_16_to_19_educational_setting: "A 16 to 19 educational setting"
+          another_setting: "Another setting"
           other: "Other"
 
         maths_eligibility_teaching_for_mastery_options:
