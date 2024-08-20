@@ -4,7 +4,7 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   before do
-    allow(Migration::Migrator).to receive(:prepare_for_migration)
+    allow(Migration::Coordinator).to receive(:prepare_for_migration)
     allow(MigrationJob).to receive(:perform_later)
     sign_in_as_admin(super_admin:)
   end
@@ -53,20 +53,26 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
 
       it "triggers a migration" do
         expect(response).to redirect_to(npq_separation_migration_migrations_path)
-        expect(Migration::Migrator).to have_received(:prepare_for_migration)
+        expect(Migration::Coordinator).to have_received(:prepare_for_migration)
         expect(MigrationJob).to have_received(:perform_later)
       end
     end
   end
 
   describe("download_report") do
-    let(:data_migration) { create(:data_migration) }
-    let(:make_request) { get(download_report_npq_separation_migration_migrations_path(data_migration.id)) }
-    let(:failure_manager_double) { instance_double(Migration::FailureManager) }
+    let(:data_migration1) { create(:data_migration, :completed, model: :model) }
+    let(:data_migration2) { create(:data_migration, :completed, model: :model) }
+    let(:make_request) { get(download_report_npq_separation_migration_migrations_path(:model)) }
+    let(:failure_manager_double1) { instance_double(Migration::FailureManager) }
+    let(:failure_manager_double2) { instance_double(Migration::FailureManager) }
+    let!(:incomplete_data_migration) { create(:data_migration, model: :model) }
 
     before do
-      allow(Migration::FailureManager).to receive(:new).with(data_migration:).and_return(failure_manager_double)
-      allow(failure_manager_double).to receive(:all_failures).and_return({ "Test failure 1" => %w[123456], "Test failure 2" => %w[789010] }.to_yaml)
+      allow(Migration::FailureManager).to receive(:new).with(data_migration: data_migration1).and_return(failure_manager_double1)
+      allow(failure_manager_double1).to receive(:all_failures).and_return({ "Test failure 1" => %w[123456], "Test failure 2" => %w[789010] }.to_yaml)
+
+      allow(Migration::FailureManager).to receive(:new).with(data_migration: data_migration2).and_return(failure_manager_double2)
+      allow(failure_manager_double2).to receive(:all_failures).and_return({ "Test failure 1" => %w[789123], "Test failure 3" => %w[456756] }.to_yaml)
 
       make_request
     end
@@ -90,8 +96,13 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
 
         yaml = YAML.load(response.body)
 
-        expect(yaml["Test failure 1"].first).to eq("123456")
-        expect(yaml["Test failure 2"].first).to eq("789010")
+        expect(yaml["Test failure 1"]).to eq(%w[123456 789123])
+        expect(yaml["Test failure 2"]).to eq(%w[789010])
+        expect(yaml["Test failure 3"]).to eq(%w[456756])
+      end
+
+      it "ignores incomplete data migrations" do
+        expect(Migration::FailureManager).not_to have_received(:new).with(data_migration: incomplete_data_migration)
       end
     end
   end

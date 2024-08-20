@@ -10,5 +10,9 @@ FactoryBot.define do
     initialize_with do
       Migration::Ecf::Cohort.find_by(start_year:) || new(**attributes)
     end
+
+    trait :with_sequential_start_year do
+      sequence(:start_year) { |n| 2021 + (n % 9) }
+    end
   end
 end

@@ -1,36 +1,125 @@
 module Migration::Migrators
   class Base
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+
+    attribute :worker
+
     class << self
-      def call(**args)
+      def call(args = {})
         new(**args).call
+      end
+
+      def queue
+        Migration::DataMigration.where(model:).update!(queued_at: Time.zone.now)
+
+        number_of_workers.times do |worker|
+          MigratorJob.perform_later(migrator: self, worker:)
+        end
       end
 
       def prepare!
         model = name.gsub(/^.*::/, "").underscore.to_sym
-
-        Migration::DataMigration.create!(model:)
+        number_of_workers.times { |worker| Migration::DataMigration.create!(model:, worker:) }
       end
+
+      def runnable?
+        Migration::DataMigration.incomplete.where(model: dependencies).none? &&
+          Migration::DataMigration.queued.where(model:).none?
+      end
+
+      def model_count
+        raise NotImplementedError
+      end
+
+      def model
+        raise NotImplementedError
+      end
+
+      def dependencies
+        []
+      end
+
+      def number_of_workers
+        [1, (model_count / models_per_worker.to_f).ceil].max
+      end
+
+      def models_per_worker
+        1_000
+      end
+    end
+
+  protected
+
+    def migrate(items)
+      items = items.order(:id).offset(offset).limit(limit)
+
+      start_migration!(items.count)
+
+      # As we're using offset/limit, we can't use find_each!
+      items.each do |item|
+        yield(item)
+        Migration::DataMigration.update_counters(data_migration.id, processed_count: 1)
+      rescue ActiveRecord::ActiveRecordError => e
+        Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
+        failure_manager.record_failure(item, e.message)
+      end
+
+      finalise_migration!
+    end
+
+    def run_once
+      yield if worker.zero?
+    end
+
+    def failure_manager
+      @failure_manager ||= Migration::FailureManager.new(data_migration:)
+    end
+
+    def data_migration
+      @data_migration ||= Migration::DataMigration.find_by(model: self.class.model, worker:)
     end
 
   private
 
-    def migrate(items, model, group: false)
-      data_migration = Migration::DataMigration.find_by(model:)
-      data_migration.update!(started_at: Time.zone.now, total_count: items.count)
+    def offset
+      worker * self.class.models_per_worker
+    end
 
-      failure_manager = Migration::FailureManager.new(data_migration:)
+    def limit
+      self.class.models_per_worker
+    end
 
-      items.in_batches.each_record do |item|
-        data_migration.increment!(:processed_count)
-        begin
-          yield(item)
-        rescue ActiveRecord::ActiveRecordError => e
-          data_migration.increment!(:failure_count)
-          failure_manager.record_failure(item, e.message)
-        end
-      end
+    def start_migration!(total_count)
+      # We reset the processed/failure counts in case this is a retry.
+      data_migration.update!(
+        started_at: Time.zone.now,
+        total_count:,
+        processed_count: 0,
+        failure_count: 0,
+      )
+      log_info("Migration started")
+    end
 
-      data_migration.update!(completed_at: Time.zone.now) unless group
+    def log_info(message)
+      migration_details = data_migration.reload.attributes.slice(
+        "model",
+        "worker",
+        "processed_count",
+        "total_count",
+      ).symbolize_keys
+      Rails.logger.info(message, migration_details)
+    end
+
+    def finalise_migration!
+      data_migration.update!(completed_at: 1.second.from_now)
+      log_info("Migration completed")
+
+      return unless Migration::DataMigration.incomplete.where(model: self.class.model).none?
+
+      # Queue a follow up migration to migrate any
+      # dependent models.
+      MigrationJob.perform_later
     end
   end
 end

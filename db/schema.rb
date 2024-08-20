@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_20_153944) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_22_131123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -165,6 +165,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_20_153944) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "total_count"
+    t.datetime "queued_at"
+    t.integer "worker"
   end
 
   create_table "declarations", force: :cascade do |t|
