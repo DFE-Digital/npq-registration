@@ -48,7 +48,7 @@ module Questionnaires
         (employment_type_hospital_school? || young_offender_institution?) &&
         (course.ehco? || course.npqh? || course.npqs? || course.npqlpm?)
 
-        works_in_another_setting? && (employment_type_other? || valid_employent_type_for_england?)
+      works_in_another_setting? && (employment_type_other? || valid_employent_type_for_england?)
     end
 
     delegate_missing_to :query_store
