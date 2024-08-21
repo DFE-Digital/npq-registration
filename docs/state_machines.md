@@ -58,9 +58,6 @@ stateDiagram-v2
     eligible --> payable: mark_payable
     payable --> paid: mark_paid
     submitted --> ineligible: mark_ineligible
-    eligible --> ineligible: mark_ineligible
-    payable --> ineligible: mark_ineligible
-    paid --> ineligible: mark_ineligible
     paid --> awaiting_clawback: mark_awaiting_clawback
     awaiting_clawback --> clawed_back: mark_clawed_back
     submitted --> voided: mark_voided

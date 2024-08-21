@@ -59,7 +59,7 @@ class Declaration < ApplicationRecord
     end
 
     event :mark_ineligible do
-      transition %i[submitted eligible payable paid] => :ineligible
+      transition %i[submitted] => :ineligible
     end
 
     event :mark_awaiting_clawback do

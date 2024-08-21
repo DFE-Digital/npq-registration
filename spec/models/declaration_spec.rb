@@ -134,24 +134,6 @@ RSpec.describe Declaration, type: :model do
         it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("submitted").to("ineligible") }
       end
 
-      context "when eligible" do
-        let(:state) { :eligible }
-
-        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("eligible").to("ineligible") }
-      end
-
-      context "when payable" do
-        let(:state) { :payable }
-
-        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("payable").to("ineligible") }
-      end
-
-      context "when paid" do
-        let(:state) { :paid }
-
-        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("paid").to("ineligible") }
-      end
-
       context "when not submitted/eligible/payable/paid" do
         let(:state) { :voided }
 
