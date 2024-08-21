@@ -115,9 +115,9 @@ module Declarations
     def set_eligibility!
       if declaration.duplicate_declarations.any?
         declaration.update!(superseded_by: original_declaration)
-        declaration.ineligible_state!
+        declaration.mark_ineligible!
       elsif application.fundable?
-        declaration.eligible_state!
+        declaration.mark_eligible!
       end
     end
 

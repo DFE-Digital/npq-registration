@@ -3,7 +3,6 @@ class Declaration < ApplicationRecord
   CHANGEABLE_STATES = %w[eligible submitted].freeze
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
-  ELIGIBLE_FOR_PAYMENT_STATES = %w[payable eligible].freeze
   VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
 
   belongs_to :application
@@ -46,6 +45,36 @@ class Declaration < ApplicationRecord
     clawed_back: "clawed_back",
   }, _suffix: true
 
+  state_machine :state, initial: :submitted do
+    event :mark_eligible do
+      transition [:submitted] => :eligible
+    end
+
+    event :mark_payable do
+      transition [:eligible] => :payable
+    end
+
+    event :mark_paid do
+      transition [:payable] => :paid
+    end
+
+    event :mark_ineligible do
+      transition %i[submitted] => :ineligible
+    end
+
+    event :mark_awaiting_clawback do
+      transition %i[paid] => :awaiting_clawback
+    end
+
+    event :mark_clawed_back do
+      transition %i[awaiting_clawback] => :clawed_back
+    end
+
+    event :mark_voided do
+      transition %i[submitted eligible payable ineligible] => :voided
+    end
+  end
+
   enum declaration_type: {
     started: "started",
     "retained-1": "retained-1",
@@ -77,11 +106,7 @@ class Declaration < ApplicationRecord
   end
 
   def eligible_for_payment?
-    state.in?(ELIGIBLE_FOR_PAYMENT_STATES)
-  end
-
-  def voidable?
-    state.in?(VOIDABLE_STATES)
+    can_mark_paid? || can_mark_payable?
   end
 
   def ineligible_for_funding_reason
