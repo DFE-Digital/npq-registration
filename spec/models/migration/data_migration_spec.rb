@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Migration::DataMigration, type: :model, in_memory_rails_cache: true do
+RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
   subject(:instance) { described_class.new(model: :any) }
 
   describe "validations" do

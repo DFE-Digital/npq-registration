@@ -136,11 +136,11 @@ RSpec.describe AdminService::DashboardStats do
       end
 
       it "returns 0 for get_an_identity_applications_created_percentage" do
-        expect(subject.get_an_identity_applications_created_percentage).to eq(nil)
+        expect(subject.get_an_identity_applications_created_percentage).to be_nil
       end
 
       it "returns 0 for non_get_an_identity_applications_created_percentage" do
-        expect(subject.non_get_an_identity_applications_created_percentage).to eq(nil)
+        expect(subject.non_get_an_identity_applications_created_percentage).to be_nil
       end
     end
   end
