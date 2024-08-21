@@ -67,7 +67,7 @@ RSpec.describe ApprovedIttProviders::Update do
 
         expect(IttProvider.all.count).to eq(7)
         expect(IttProvider.currently_approved.count).to eq(6)
-        expect(IttProvider.find_by(legal_name: unapproved_provider_name).approved).to be_falsey
+        expect(IttProvider.find_by(legal_name: unapproved_provider_name).approved).to be(false)
       end
     end
   end

@@ -30,7 +30,7 @@ RSpec.describe Ecf::EcfApplicationSynchronization do
         allow(URI).to receive(:parse).with("https://ecf-app.gov.uk/api/v1/npq/application_synchronizations").and_return(uri)
         allow(http).to receive(:request).with(request).and_return(success_response)
 
-        expect(service.call).to be_truthy
+        expect(service.call).to be(true)
       end
 
       it "updates the statuses in relevant applications" do
@@ -42,7 +42,7 @@ RSpec.describe Ecf::EcfApplicationSynchronization do
           participant_outcome_state: "passed",
         )
 
-        expect(service.call).to be_truthy
+        expect(service.call).to be(true)
       end
     end
 

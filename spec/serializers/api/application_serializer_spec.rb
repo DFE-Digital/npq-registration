@@ -56,7 +56,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     end
 
     it "serializes the `email_validated`" do
-      expect(attributes["email_validated"]).to be_truthy
+      expect(attributes["email_validated"]).to be(true)
     end
 
     it "serializes the `status`" do
@@ -73,12 +73,12 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       application.eligible_for_funding = true
       allow(application).to receive(:previously_funded?).and_return(true)
 
-      expect(attributes["eligible_for_funding"]).to be_falsey
+      expect(attributes["eligible_for_funding"]).to be(false)
     end
 
     it "serializes the `teacher_catchment`" do
       application.teacher_catchment = "england"
-      expect(attributes["teacher_catchment"]).to be_truthy
+      expect(attributes["teacher_catchment"]).to be(true)
     end
 
     it "serializes the `teacher_catchment_country`" do

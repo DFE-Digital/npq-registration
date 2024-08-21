@@ -123,8 +123,8 @@ RSpec.feature "Sad journeys", type: :feature do
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
-        expect(application.eligible_for_funding).to be_falsey
-        expect(application.targeted_delivery_funding_eligibility).to be_falsey
+        expect(application.eligible_for_funding).to be(false)
+        expect(application.targeted_delivery_funding_eligibility).to be(false)
         expect(application.work_setting).to eql("other")
         expect(application.raw_application_data["employment_type"])
           .to eql("lead_mentor_for_accredited_itt_provider")

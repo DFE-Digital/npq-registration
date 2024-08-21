@@ -141,7 +141,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
-        expect(application.eligible_for_funding).to be_truthy
+        expect(application.eligible_for_funding).to be(true)
       end
     end
 

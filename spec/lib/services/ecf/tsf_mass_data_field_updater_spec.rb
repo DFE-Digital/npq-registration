@@ -20,7 +20,7 @@ RSpec.describe Ecf::TsfMassDataFieldUpdater do
       allow(provided_proc).to receive(:call).with(application)
     end
 
-    expect(subject.call).to be_truthy
+    expect(subject.call).to be(true)
   end
 
   context "when ecf_api_disabled flag is toggled on" do
