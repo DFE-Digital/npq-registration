@@ -11,7 +11,7 @@ module ValidTestDataGenerators
     end
 
     def populate
-      return unless Rails.env.in?(%w[development review separation])
+      return unless Rails.env.in?(%w[development review separation sandbox])
 
       logger.info "SeparationSharedData: Started!"
 
@@ -28,6 +28,7 @@ module ValidTestDataGenerators
       @lead_provider = lead_provider
       @cohort = cohort
       @logger = logger
+      # Ignoring ASO course, is an old course which we shouldn't create data
       @courses = Course.all.reject { |c| c.identifier == "npq-additional-support-offer" }
     end
 

@@ -34,6 +34,7 @@ module ValidTestDataGenerators
       @cohort = cohort
       @number_of_participants = number_of_participants
       @logger = logger
+      # Ignoring ASO course, is an old course which we shouldn't create data
       @courses = Course.all.reject { |c| c.identifier == "npq-additional-support-offer" }
     end
 
