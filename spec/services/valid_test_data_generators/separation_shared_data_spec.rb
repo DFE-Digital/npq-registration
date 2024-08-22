@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_schedules do
-  let(:lead_provider) { create(:lead_provider, name: described_class::SHARED_USERS.keys.sample) }
-  let(:user_params) { described_class::SHARED_USERS[lead_provider.name] }
+  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/seeds/separation_shared_data.yml")) }
+  let(:lead_provider) { create(:lead_provider, name: shared_users_data.keys.sample) }
+  let(:user_params) { shared_users_data[lead_provider.name] }
   let(:cohort) { create(:cohort, :current) }
 
   before do
@@ -86,7 +87,7 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       it "creates rejected applications" do
         expect {
           subject.populate
-        }.to(change { Application.rejected.count })
+        }.to(change { Application.where(lead_provider_approval_status: "rejected").count })
       end
 
       it "creates eligible for funding applications" do
