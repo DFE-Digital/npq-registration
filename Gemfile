@@ -69,9 +69,11 @@ group :development, :test do
   gem "pry-byebug"
   gem "pry-rails"
   gem "rspec-rails", "~> 6.1.4"
+  gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
+  gem "simplecov", require: false
 end
 
 group :development do
@@ -86,7 +88,6 @@ group :test do
   gem "axe-core-rspec", "~> 4.9"
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 6.4"
-  gem "simplecov", require: false
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
   gem "webmock", "~> 3.23"
