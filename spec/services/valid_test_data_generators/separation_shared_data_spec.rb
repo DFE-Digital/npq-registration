@@ -61,7 +61,7 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       it "creates applications for the given cohort" do
         subject.populate
 
-        expect(Application.all.map(&:cohort).uniq.first).to eq(cohort)
+        expect(Application.pluck(:cohort_id)).to all(eq(cohort.id))
       end
 
       it "creates applications for the given lead provider" do
