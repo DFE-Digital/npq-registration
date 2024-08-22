@@ -220,5 +220,5 @@ jobs:
             ${{github.workspace}}/${{env.unit-tests-artifact-name}}_3/test-report-3.xml,\
             ${{github.workspace}}/${{env.unit-tests-artifact-name}}_4/test-report-4.xml,\
             ${{github.workspace}}/${{env.unit-tests-artifact-name}}_5/test-report-5.xml
-           -Dsonar.ruby.coverage.reportPaths=${{github.workspace}}/code_coverage/coverage.json
+           -Dsonar.ruby.coverage.reportPaths=${{github.workspace}}/coverage/coverage.json
            -Dsonar.ruby.rubocop.reportPaths=${{github.workspace}}/${{env.rubocop-artifact-name}}/rubocop-result.json
