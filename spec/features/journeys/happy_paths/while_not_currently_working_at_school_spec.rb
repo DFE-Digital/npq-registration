@@ -37,12 +37,8 @@ RSpec.feature "Happy journeys",
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Other", visible: :all)
+      page.choose("Another setting", visible: :all)
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -83,12 +79,11 @@ RSpec.feature "Happy journeys",
         {
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
-          "Work setting" => "Other",
+          "Work setting" => "Another setting",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Provider" => "Teach First",
           "Workplace in England" => "Yes",
-          "Referred by return to teaching adviser" => "No",
         },
       )
     end
@@ -135,7 +130,7 @@ RSpec.feature "Happy journeys",
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "private_childcare_provider_id" => nil,
-      "referred_by_return_to_teaching_adviser" => "no",
+      "referred_by_return_to_teaching_adviser" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -152,7 +147,7 @@ RSpec.feature "Happy journeys",
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => false,
-      "work_setting" => "other",
+      "work_setting" => "another_setting",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
@@ -165,14 +160,13 @@ RSpec.feature "Happy journeys",
         "employment_type" => "hospital_school",
         "funding_eligiblity_status_code" => "no_institution",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
-        "work_setting" => "other",
+        "work_setting" => "another_setting",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
       },

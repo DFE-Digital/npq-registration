@@ -150,7 +150,7 @@ class RegistrationWizard
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    if query_store.inside_catchment?
+    if store["referred_by_return_to_teaching_adviser"]
       array << OpenStruct.new(key: "Referred by return to teaching adviser",
                               value: I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
                               change_step: :referred_by_return_to_teaching_adviser)

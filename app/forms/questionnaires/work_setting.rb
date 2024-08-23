@@ -41,10 +41,7 @@ module Questionnaires
       when *CHILDCARE_SETTINGS
         wizard.store["works_in_childcare"] = "yes"
         wizard.store["works_in_school"] = "no"
-      when *ANOTHER_SETTING_SETTINGS
-        wizard.store["works_in_school"] = "no"
-        wizard.store["works_in_childcare"] = "no"
-      when *OTHER_SETTINGS
+      when *OTHER_SETTINGS, *ANOTHER_SETTING_SETTINGS
         wizard.store["works_in_school"] = "no"
         wizard.store["works_in_childcare"] = "no"
 

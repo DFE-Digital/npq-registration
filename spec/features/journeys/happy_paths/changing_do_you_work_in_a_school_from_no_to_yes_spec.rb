@@ -41,12 +41,8 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Other", visible: :all)
+      page.choose("Another setting", visible: :all)
     end
 
     School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
@@ -85,11 +81,10 @@ RSpec.feature "Happy journeys", type: :feature do
         {
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
-          "Work setting" => "Other",
           "Employment type" => "In a hospital school",
           "Employer" => "Big company",
           "Provider" => "Teach First",
-          "Referred by return to teaching adviser" => "No",
+          "Work setting" => "Another setting",
           "Workplace in England" => "Yes",
         },
       )
@@ -149,7 +144,6 @@ RSpec.feature "Happy journeys", type: :feature do
           "Work setting" => "A school",
           "Workplace" => "open manchester school – street 1, manchester",
           "Provider" => "Teach First",
-          "Referred by return to teaching adviser" => "No",
           "Workplace in England" => "Yes",
         },
       )
@@ -194,7 +188,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "referred_by_return_to_teaching_adviser" => "no",
+      "referred_by_return_to_teaching_adviser" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
@@ -231,7 +225,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
-        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

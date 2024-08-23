@@ -47,12 +47,8 @@ RSpec.feature "Sad journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Other", visible: :all)
+      page.choose("Another setting", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
@@ -102,8 +98,7 @@ RSpec.feature "Sad journeys", type: :feature do
           "Employment type" => "As a lead mentor for an accredited initial teacher training (ITT) provider",
           "ITT provider" => approved_itt_provider_legal_name,
           "Provider" => "Church of England",
-          "Referred by return to teaching adviser" => "No",
-          "Work setting" => "Other",
+          "Work setting" => "Another setting",
           "Workplace in England" => "Yes",
           "Course funding" => "I am paying",
         },
@@ -125,7 +120,7 @@ RSpec.feature "Sad journeys", type: :feature do
       user.applications.first.tap do |application|
         expect(application.eligible_for_funding).to eq(false)
         expect(application.targeted_delivery_funding_eligibility).to eq(false)
-        expect(application.work_setting).to eql("other")
+        expect(application.work_setting).to eql("another_setting")
         expect(application.raw_application_data["employment_type"])
           .to eql("lead_mentor_for_accredited_itt_provider")
       end
@@ -185,7 +180,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "headteacher_status" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Church of England").id,
       "private_childcare_provider_id" => nil,
-      "referred_by_return_to_teaching_adviser" => "no",
+      "referred_by_return_to_teaching_adviser" => nil,
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -202,7 +197,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => false,
-      "work_setting" => "other",
+      "work_setting" => "another_setting",
       "lead_mentor" => true,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
@@ -220,14 +215,13 @@ RSpec.feature "Sad journeys", type: :feature do
         "funding_eligiblity_status_code" => "not_lead_mentor_course",
         "itt_provider" => approved_itt_provider_legal_name,
         "lead_provider_id" => "3",
-        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
         "tsf_primary_eligibility" => false,
         "tsf_primary_plus_eligibility" => false,
-        "work_setting" => "other",
+        "work_setting" => "another_setting",
         "works_in_childcare" => "no",
         "works_in_school" => "no",
       },
