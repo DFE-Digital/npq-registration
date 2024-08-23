@@ -44,6 +44,7 @@ jobs:
         with:
           docker-repository: ghcr.io/dfe-digital/npq-registration
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
 
   deploy_review:
     name: Deploy review
