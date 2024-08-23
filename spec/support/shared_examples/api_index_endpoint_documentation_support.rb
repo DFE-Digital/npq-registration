@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resource_description, filter_schema_ref, response_schema_ref, sortable|
+RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do |url, tag, resource_description, filter_schema_ref, response_schema_ref, sortable|
   path url do
     get "Retrieve multiple #{resource_description}" do
       tags tag
@@ -58,7 +58,7 @@ RSpec.shared_examples "an API index endpoint documentation" do |url, tag, resour
                     "$ref": "#/components/schemas/IDAttribute",
                   }
 
-        response "404", "Not found", exceptions_app: true do
+        response "404", "Not found" do
           let(:id) { SecureRandom.uuid }
 
           schema({ "$ref": "#/components/schemas/NotFoundResponse" })

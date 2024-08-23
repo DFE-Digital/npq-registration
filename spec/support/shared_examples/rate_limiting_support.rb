@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a rate limited endpoint", rack_attack: true do |desc|
+RSpec.shared_examples "a rate limited endpoint", :rack_attack do |desc|
   describe desc do
     let(:limit) { 2 }
     let(:throttle) { Rack::Attack.throttles[desc] }

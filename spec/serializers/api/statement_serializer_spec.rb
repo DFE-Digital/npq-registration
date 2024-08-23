@@ -57,13 +57,13 @@ RSpec.describe API::StatementSerializer, type: :serializer do
       it "returns `true` when state is `paid`" do
         statement.state = :paid
 
-        expect(attributes["paid"]).to eq(true)
+        expect(attributes["paid"]).to be(true)
       end
 
       it "returns `false` when `state` is not `paid`" do
         statement.state = :open
 
-        expect(attributes["paid"]).to eq(false)
+        expect(attributes["paid"]).to be(false)
       end
     end
 

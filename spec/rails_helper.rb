@@ -126,7 +126,7 @@ RSpec.configure do |config|
     Flipper.enable(Feature::REGISTRATION_OPEN)
   end
 
-  config.before(:each, exceptions_app: true) do
+  config.before(:each, :exceptions_app) do
     # Make the app behave how it does in non dev/test environments and use the
     # ErrorsController via config.exceptions_app = routes in config/application.rb
     method = Rails.application.method(:env_config)
@@ -144,13 +144,13 @@ RSpec.configure do |config|
     stub_env_variables_for_gai
   end
 
-  config.around(:each, in_memory_rails_cache: true) do |example|
+  config.around(:each, :in_memory_rails_cache) do |example|
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
     example.run
     Rails.cache.clear
   end
 
-  config.around(:each, rack_test_driver: true) do |example|
+  config.around(:each, :rack_test_driver) do |example|
     Capybara.current_driver = :rack_test
     example.run
     Capybara.current_driver = Capybara.default_driver

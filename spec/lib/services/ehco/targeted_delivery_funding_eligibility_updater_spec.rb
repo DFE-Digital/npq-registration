@@ -6,7 +6,7 @@ RSpec.describe Ehco::TargetedDeliveryFundingEligibilityUpdater do
   subject { described_class.run(logger:) }
 
   let(:ehco_course) { Course.ehco }
-  let(:logger) { object_double("logger", info: nil) }
+  let(:logger) { object_double(ActiveSupport::Logger.new, info: nil) }
 
   let(:applicable_application_hash) do
     {

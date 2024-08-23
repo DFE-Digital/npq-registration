@@ -27,7 +27,7 @@ RSpec.describe CourseGroup, type: :model do
         allow(CourseGroups::Leadership).to receive(:new).with(course_group: subject, cohort:, schedule_date:).and_return(service)
         expect(CourseGroups::Leadership).to receive(:new).with(course_group: subject, cohort:, schedule_date:)
 
-        expect(subject.schedule_for(cohort:, schedule_date:)).to eq(true)
+        expect(subject.schedule_for(cohort:, schedule_date:)).to be(true)
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe CourseGroup, type: :model do
         allow(CourseGroups::Specialist).to receive(:new).with(course_group: subject, cohort:, schedule_date:).and_return(service)
         expect(CourseGroups::Specialist).to receive(:new).with(course_group: subject, cohort:, schedule_date:)
 
-        expect(subject.schedule_for(cohort:, schedule_date:)).to eq(true)
+        expect(subject.schedule_for(cohort:, schedule_date:)).to be(true)
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe CourseGroup, type: :model do
         allow(CourseGroups::Support).to receive(:new).with(course_group: subject, cohort:).and_return(service)
         expect(CourseGroups::Support).to receive(:new).with(course_group: subject, cohort:)
 
-        expect(subject.schedule_for(cohort:, schedule_date:)).to eq(true)
+        expect(subject.schedule_for(cohort:, schedule_date:)).to be(true)
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe CourseGroup, type: :model do
         allow(CourseGroups::Ehco).to receive(:new).with(course_group: subject, cohort:, schedule_date:).and_return(service)
         expect(CourseGroups::Ehco).to receive(:new).with(course_group: subject, cohort:, schedule_date:)
 
-        expect(subject.schedule_for(cohort:, schedule_date:)).to eq(true)
+        expect(subject.schedule_for(cohort:, schedule_date:)).to be(true)
       end
     end
   end
@@ -85,7 +85,7 @@ RSpec.describe CourseGroup, type: :model do
       before { CourseGroup.find_by(name: "support") || create(:course_group, name: "support") }
 
       it "returns leadership and specialist groups only" do
-        expect(described_class.leadership_or_specialist).to match_array([leadership_group, specialist_group])
+        expect(described_class.leadership_or_specialist).to contain_exactly(leadership_group, specialist_group)
       end
     end
   end

@@ -19,7 +19,7 @@ gem "flipper", "~> 1.2.2"
 gem "flipper-active_record", "~> 1.2.2"
 gem "flipper-ui", "~> 1.2.2"
 gem "google-cloud-bigquery"
-gem "govuk-components", "~> 5.4.1"
+gem "govuk-components", "~> 5.5.0"
 gem "govuk_design_system_formbuilder", "~> 5.4.0"
 gem "govuk_markdown"
 gem "httparty", "~> 0.22"
@@ -68,10 +68,12 @@ group :development, :test do
   gem "parallel_tests", "~> 4.7"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 6.1.3"
+  gem "rspec-rails", "~> 6.1.4"
+  gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
   gem "scss_lint-govuk"
+  gem "simplecov", require: false
 end
 
 group :development do
@@ -85,8 +87,7 @@ group :test do
   gem "axe-core-capybara", "~> 4.6"
   gem "axe-core-rspec", "~> 4.9"
   gem "rspec-default_http_header"
-  gem "shoulda-matchers", "~> 6.3"
-  gem "simplecov", require: false
+  gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.0"
   gem "webdrivers"
   gem "webmock", "~> 3.23"

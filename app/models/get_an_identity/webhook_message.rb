@@ -29,7 +29,7 @@ class GetAnIdentity::WebhookMessage < ApplicationRecord
     failed_status? || unhandled_message_type_status?
   end
 
-  def processed!
+  def make_processed!
     update!(status: :processed, processed_at: Time.zone.now)
   end
 end

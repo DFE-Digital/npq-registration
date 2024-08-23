@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API show endpoint documentation" do |url, tag, resource_description, response_schema_ref|
+RSpec.shared_examples "an API show endpoint documentation", :exceptions_app do |url, tag, resource_description, response_schema_ref|
   path url do
     get "Retrieve a single #{resource_description}" do
       tags tag
@@ -32,7 +32,7 @@ RSpec.shared_examples "an API show endpoint documentation" do |url, tag, resourc
         run_test!
       end
 
-      response "404", "Not found", exceptions_app: true do
+      response "404", "Not found" do
         let(:id) { SecureRandom.uuid }
 
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })

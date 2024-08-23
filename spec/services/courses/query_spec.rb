@@ -6,7 +6,7 @@ RSpec.describe Courses::Query do
       query = Courses::Query.new
 
       expect(query.courses).not_to be_empty
-      expect(query.courses).to contain_exactly(*Course.all)
+      expect(query.courses).to match_array(Course.all)
     end
 
     it "orders courses by name in ascending order" do

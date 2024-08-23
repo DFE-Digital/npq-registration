@@ -9,8 +9,6 @@ module Helpers
     end
 
     def sign_in_as(admin_account)
-      Rack::Attack.enabled = false
-
       visit("/admin")
       expect(page).to have_current_path(sign_in_path)
 
@@ -24,8 +22,6 @@ module Helpers
       page.click_button "Sign in"
 
       expect(page).to have_current_path("/admin")
-
-      Rack::Attack.enabled = true
     end
   end
 end

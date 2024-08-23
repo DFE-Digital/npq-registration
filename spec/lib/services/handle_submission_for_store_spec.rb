@@ -266,7 +266,7 @@ RSpec.describe HandleSubmissionForStore do
 
         it "clears the funding choice to nil on the application" do
           subject.call
-          expect(user.applications.first.reload.funding_choice).to eq nil
+          expect(user.applications.first.reload.funding_choice).to be_nil
         end
       end
 

@@ -17,7 +17,7 @@ SecureHeaders::Configuration.default do |config|
   config.csp_report_only = {
     default_src: %w['none'],
     base_uri: %w['self'],
-    block_all_mixed_content: true, # see http://www.w3.org/TR/mixed-content/
+    upgrade_insecure_requests: true,
     child_src: %w['self'],
     connect_src: %W['self'] + google_analytics,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],

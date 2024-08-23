@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "admin", type: :feature, rack_test_driver: true do
+RSpec.feature "admin", :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -61,7 +61,7 @@ RSpec.feature "admin", type: :feature, rack_test_driver: true do
     expect(page).to have_link("Settings", href: "/admin/settings")
   end
 
-  xscenario "when logged in as a super admin, it allows management of admins" do
+  scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
     sign_in_as_super_admin
 
     page.click_link("Admin")

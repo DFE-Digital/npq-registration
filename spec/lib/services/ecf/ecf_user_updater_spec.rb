@@ -130,7 +130,7 @@ RSpec.describe Ecf::EcfUserUpdater do
           }.to raise_error(JsonApiClient::Errors::ClientError)
         end
 
-        it "does not set application.ecf_id " do
+        it "does not set application.ecf_id" do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
           }.not_to change(user, :ecf_id)
@@ -167,7 +167,7 @@ RSpec.describe Ecf::EcfUserUpdater do
           }.to raise_error(JsonApiClient::Errors::NotFound)
         end
 
-        it "does not set application.ecf_id " do
+        it "does not set application.ecf_id" do
           expect {
             begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
           }.not_to change(user, :ecf_id)
@@ -208,7 +208,7 @@ RSpec.describe Ecf::EcfUserUpdater do
         }.to raise_error(JsonApiClient::Errors::ClientError)
       end
 
-      it "does not set application.ecf_id " do
+      it "does not set application.ecf_id" do
         expect {
           begin; subject.call; rescue StandardError; end # rubocop:disable Lint/SuppressedException
         }.not_to change(user, :ecf_id)

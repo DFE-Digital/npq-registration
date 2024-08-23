@@ -8,7 +8,7 @@ RSpec.describe Feature do
       end
 
       it "returns true" do
-        expect(described_class.registration_closed?(nil)).to eq false
+        expect(described_class.registration_closed?(nil)).to be false
       end
     end
 
@@ -18,7 +18,7 @@ RSpec.describe Feature do
       end
 
       it "returns false" do
-        expect(described_class.registration_closed?(nil)).to eq true
+        expect(described_class.registration_closed?(nil)).to be true
       end
     end
   end

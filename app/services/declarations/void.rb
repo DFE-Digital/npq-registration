@@ -32,12 +32,12 @@ module Declarations
   private
 
     def clawback_declaration
-      declaration.awaiting_clawback_state!
+      declaration.mark_awaiting_clawback!
       statement_attacher.attach
     end
 
     def void_declaration
-      declaration.voided_state!
+      declaration.mark_voided!
       declaration.statement_items.with_state(:eligible, :payable).first&.mark_voided!
     end
 

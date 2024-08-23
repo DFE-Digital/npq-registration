@@ -88,6 +88,116 @@ RSpec.describe Declaration, type: :model do
     }
   end
 
+  describe "state transition" do
+    let(:declaration) { create(:declaration, state:) }
+
+    describe ".mark_eligible" do
+      let(:state) { :submitted }
+
+      it { expect { declaration.mark_eligible }.to change(declaration, :state).from("submitted").to("eligible") }
+
+      context "when not submitted" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_eligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_payable" do
+      let(:state) { :eligible }
+
+      it { expect { declaration.mark_payable }.to change(declaration, :state).from("eligible").to("payable") }
+
+      context "when not eligible" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_payable! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_paid" do
+      let(:state) { :payable }
+
+      it { expect { declaration.mark_paid }.to change(declaration, :state).from("payable").to("paid") }
+
+      context "when not payable" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_payable! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_ineligible" do
+      context "when submitted" do
+        let(:state) { :submitted }
+
+        it { expect { declaration.mark_ineligible }.to change(declaration, :state).from("submitted").to("ineligible") }
+      end
+
+      context "when not submitted/eligible/payable/paid" do
+        let(:state) { :voided }
+
+        it { expect { declaration.mark_ineligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_awaiting_clawback" do
+      let(:state) { :paid }
+
+      it { expect { declaration.mark_awaiting_clawback }.to change(declaration, :state).from("paid").to("awaiting_clawback") }
+
+      context "when not paid" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_awaiting_clawback! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_clawed_back" do
+      let(:state) { :awaiting_clawback }
+
+      it { expect { declaration.mark_clawed_back }.to change(declaration, :state).from("awaiting_clawback").to("clawed_back") }
+
+      context "when not awaiting_clawback" do
+        let(:state) { :clawed_back }
+
+        it { expect { declaration.mark_clawed_back! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+
+    describe ".mark_voided" do
+      context "when submitted" do
+        let(:state) { :submitted }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("submitted").to("voided") }
+      end
+
+      context "when eligible" do
+        let(:state) { :eligible }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("eligible").to("voided") }
+      end
+
+      context "when payable" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("payable").to("voided") }
+      end
+
+      context "when ineligible" do
+        let(:state) { :ineligible }
+
+        it { expect { declaration.mark_voided }.to change(declaration, :state).from("ineligible").to("voided") }
+      end
+
+      context "when not submitted/eligible/payable/ineligible" do
+        let(:state) { :paid }
+
+        it { expect { declaration.mark_voided! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
+  end
+
   describe "#uplift_paid?" do
     let(:declaration_type) { :started }
     let(:targeted_delivery_funding_eligibility) { true }
@@ -175,39 +285,23 @@ RSpec.describe Declaration, type: :model do
   describe "#eligible_for_payment?" do
     subject { build(:declaration, state:) }
 
-    described_class::ELIGIBLE_FOR_PAYMENT_STATES.each do |eligible_state|
-      context "when the state is #{eligible_state}" do
-        let(:state) { eligible_state }
+    context "when the state is payable" do
+      let(:state) { :payable }
 
-        it { is_expected.to be_eligible_for_payment }
-      end
+      it { is_expected.to be_eligible_for_payment }
     end
 
-    described_class.states.keys.excluding(described_class::ELIGIBLE_FOR_PAYMENT_STATES).each do |ineligible_state|
-      context "when the state is #{ineligible_state}" do
-        let(:state) { ineligible_state }
+    context "when the state is eligible" do
+      let(:state) { :eligible }
+
+      it { is_expected.to be_eligible_for_payment }
+    end
+
+    described_class.states.keys.excluding("payable", "eligible").each do |eligible_state|
+      context "when the state is #{eligible_state}" do
+        let(:state) { eligible_state }
 
         it { is_expected.not_to be_eligible_for_payment }
-      end
-    end
-  end
-
-  describe "#voidable?" do
-    subject { build(:declaration, state:) }
-
-    described_class::VOIDABLE_STATES.each do |eligible_state|
-      context "when the state is #{eligible_state}" do
-        let(:state) { eligible_state }
-
-        it { is_expected.to be_voidable }
-      end
-    end
-
-    described_class.states.keys.excluding(described_class::VOIDABLE_STATES).each do |ineligible_state|
-      context "when the state is #{ineligible_state}" do
-        let(:state) { ineligible_state }
-
-        it { is_expected.not_to be_voidable }
       end
     end
   end

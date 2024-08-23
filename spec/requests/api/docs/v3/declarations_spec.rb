@@ -1,7 +1,7 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "Participant Declarations endpoint", type: :request, openapi_spec: "v3/swagger.yaml" do
+RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   it_behaves_like "an API index endpoint documentation",

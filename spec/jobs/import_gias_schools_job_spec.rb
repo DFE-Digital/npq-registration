@@ -11,7 +11,7 @@ RSpec.describe ImportGiasSchoolsJob, type: :job do
 
   describe "#perform_now" do
     it "calls ImportGiasSchools#call" do
-      mock = instance_double("ImportGiasSchools", call: nil)
+      mock = instance_double(ImportGiasSchools, call: nil)
 
       allow(ImportGiasSchools).to receive(:new).and_return(mock)
       described_class.perform_now

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_14_095351) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_14_120004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -28,7 +28,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_095351) do
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
-  create_enum "schedule_declaration_types", ["started", "retained-1", "retained-2", "completed"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
 
@@ -350,7 +349,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_14_095351) do
     t.string "identifier", null: false
     t.date "applies_from", null: false
     t.date "applies_to", null: false
-    t.enum "allowed_declaration_types", default: ["started", "retained-1", "retained-2", "completed"], array: true, enum_type: "schedule_declaration_types"
+    t.enum "allowed_declaration_types", default: ["started", "retained-1", "retained-2", "completed"], array: true, enum_type: "declaration_types"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"

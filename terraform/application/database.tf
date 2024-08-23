@@ -43,7 +43,7 @@ module "postgres" {
 }
 
 module "postgres-snapshot" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/postgres?ref=testing"
+  source = "./vendor/modules/aks//aks/postgres"
 
   count                 = var.deploy_snapshot_database ? 1 : 0
   name                  = "snapshot"

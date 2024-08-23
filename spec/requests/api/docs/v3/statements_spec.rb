@@ -1,7 +1,7 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.yaml" do
+RSpec.describe "Statements endpoint", :exceptions_app, openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:statement) { create(:statement, lead_provider:) }
@@ -63,7 +63,7 @@ RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.
         run_test!
       end
 
-      response "404", "Not found", exceptions_app: true do
+      response "404", "Not found" do
         let(:id) { SecureRandom.uuid }
 
         schema({ "$ref": "#/components/schemas/NotFoundResponse" })

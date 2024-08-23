@@ -5,9 +5,9 @@ require "rails_helper"
 RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
   subject(:job) { described_class.perform_now(request_data, response_data, status_code, created_at) }
 
-  let(:bigquery) { instance_double("bigquery") }
-  let(:dataset)  { instance_double("dataset") }
-  let(:table)    { instance_double("table", insert: nil) }
+  let(:bigquery) { instance_double(Google::Cloud::Bigquery::Project) }
+  let(:dataset)  { instance_double(Google::Cloud::Bigquery::Dataset) }
+  let(:table)    { instance_double(Google::Cloud::Bigquery::Table, insert: nil) }
   let(:status_code) { 200 }
   let(:created_at) { Time.zone.now.to_s }
   let(:lead_provider) { LeadProvider.find_by(name: "Ambition Institute") }
