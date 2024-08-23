@@ -51,7 +51,7 @@
       <% end %>
 
 
-      <% if application.employer_name.present? || application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
+      <% if application.employer_name.present? && application.employment_type.present? || application.employment_type == "lead_mentor_for_accredited_itt_provider" %>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key">Employment type</dt>
           <dd class="govuk-summary-list__value"><%= I18n.t(application.employment_type, scope: "helpers.label.registration_wizard.employment_type_options") %></dd>

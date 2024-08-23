@@ -106,8 +106,8 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(user.applications.count).to be(1)
 
       user.applications.first.tap do |application|
-        expect(application.eligible_for_funding).to eq(true)
-        expect(application.targeted_delivery_funding_eligibility).to eq(false)
+        expect(application.eligible_for_funding).to be(true)
+        expect(application.targeted_delivery_funding_eligibility).to be(false)
         expect(application.work_setting).to eql("another_setting")
         expect(application.raw_application_data["employment_type"])
           .to eql("lead_mentor_for_accredited_itt_provider")
