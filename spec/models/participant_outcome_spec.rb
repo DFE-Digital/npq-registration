@@ -63,6 +63,7 @@ RSpec.describe ParticipantOutcome, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:declaration) }
+    it { is_expected.to have_many(:participant_outcome_api_requests) }
   end
 
   describe "#has_passed?" do

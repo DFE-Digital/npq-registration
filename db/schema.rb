@@ -288,6 +288,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_23_120904) do
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
   end
 
+  create_table "participant_outcome_api_requests", force: :cascade do |t|
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.bigint "participant_outcome_id", null: false
+    t.string "request_path"
+    t.integer "status_code"
+    t.jsonb "request_headers"
+    t.jsonb "request_body"
+    t.jsonb "response_body"
+    t.jsonb "response_headers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ecf_id"], name: "index_participant_outcome_api_requests_on_ecf_id", unique: true
+    t.index ["participant_outcome_id"], name: "index_participant_outcome_api_requests_on_participant_outcome"
+  end
+
   create_table "participant_outcomes", force: :cascade do |t|
     t.enum "state", null: false, enum_type: "outcome_states"
     t.date "completion_date", null: false
@@ -493,6 +508,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_23_120904) do
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
   add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
+  add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
