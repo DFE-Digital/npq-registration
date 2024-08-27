@@ -515,7 +515,7 @@ en:
       "npq-early-years-leadership": "NPQEYL"
       "npq-leading-literacy": "NPQLL"
       "npq-leading-primary-mathematics": "NPQLPM"
-      "npq-senco": "NPQS"
+      "npq-senco": "NPQSENCO"
     name:
       "npq-leading-teaching": "Leading teaching"
       "npq-leading-behaviour-culture": "Leading behaviour and culture"

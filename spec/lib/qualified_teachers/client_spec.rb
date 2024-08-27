@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "qualified_teachers"
 
 RSpec.describe QualifiedTeachers::Client do
   let(:user) { create(:user, trn: "1234567") }
@@ -71,8 +72,8 @@ RSpec.describe QualifiedTeachers::Client do
   let(:incorrect_trn) { "1001009" }
   let(:request_body) do
     {
-      completionDate: participant_outcome.completion_date.to_s,
-      qualificationType: participant_outcome.declaration.qualification_type,
+      completionDate: "2023-02-20",
+      qualificationType: "NPQSL",
     }
   end
   let(:params) do
@@ -122,6 +123,16 @@ RSpec.describe QualifiedTeachers::Client do
 
           expect(record.response.code).to eq("400")
         end
+      end
+    end
+
+    context "when API key is not present" do
+      before do
+        allow(ENV).to receive(:[]).with("QUALIFIED_TEACHERS_API_KEY").and_return(nil)
+      end
+
+      it "raises an exception" do
+        expect { subject.send_record(trn:, request_body:) }.to raise_error(RuntimeError, "Qualified Teachers API Key is not present")
       end
     end
   end

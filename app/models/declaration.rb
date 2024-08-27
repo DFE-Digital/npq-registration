@@ -4,18 +4,6 @@ class Declaration < ApplicationRecord
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
   VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
-  QUALIFICATION_TYPES = {
-    "npq-leading-teaching" => "NPQLT",
-    "npq-leading-behaviour-culture" => "NPQLBC",
-    "npq-leading-teaching-development" => "NPQLTD",
-    "npq-leading-literacy" => "NPQLL",
-    "npq-senior-leadership" => "NPQSL",
-    "npq-headship" => "NPQH",
-    "npq-executive-leadership" => "NPQEL",
-    "npq-early-years-leadership" => "NPQEYL",
-    "npq-leading-primary-mathematics" => "NPQLPM",
-    "npq-senco" => "NPQSENCO",
-  }.freeze
 
   belongs_to :application
   belongs_to :cohort
@@ -146,15 +134,6 @@ class Declaration < ApplicationRecord
         superseded_by_id: nil,
         application: { course: application.course.rebranded_alternative_courses },
       )
-  end
-
-  def qualification_type
-    QUALIFICATION_TYPES.fetch(course_identifier)
-  rescue KeyError => e
-    Rails.logger.warn("A NPQ Qualification types mapping is missing: #{e.message}")
-    Sentry.capture_exception(e)
-
-    nil
   end
 
 private

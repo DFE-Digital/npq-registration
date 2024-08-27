@@ -539,28 +539,4 @@ RSpec.describe Declaration, type: :model do
       end
     end
   end
-
-  describe "#qualification_type" do
-    let(:course) { create(:course, :senior_leadership) }
-    let(:declaration) { create(:declaration, course:) }
-
-    it "returns the formatted qualification type" do
-      expect(declaration.qualification_type).to eq("NPQSL")
-    end
-
-    context "when a NPQ qualification type is missing from the mapping" do
-      let(:course) { create(:course, identifier: "npq-anything") }
-
-      it "logs an error" do
-        expect(Rails.logger).to receive(:warn)
-        expect(Sentry).to receive(:capture_exception)
-
-        declaration.qualification_type
-      end
-
-      it "returns nil" do
-        expect(declaration.qualification_type).to be_nil
-      end
-    end
-  end
 end

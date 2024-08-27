@@ -1,6 +1,9 @@
+require "qualified_teachers"
+
 class QualifiedTeachersAPISender
   include ActiveModel::Model
   include ActiveModel::Attributes
+  include CourseHelper
 
   SUCCESS_CODES = %w[204].freeze
 
@@ -47,6 +50,7 @@ private
       request_body: request_body.stringify_keys,
       response_headers: api_response.response.each_header.to_h,
       response_body: response_body(api_response.response.body),
+      ecf_id: SecureRandom.uuid,
     )
   rescue StandardError => e
     Rails.logger.warn(e.message)
@@ -66,7 +70,7 @@ private
   def request_body
     @request_body ||= {
       completionDate: completion_date,
-      qualificationType: participant_outcome.declaration.qualification_type,
+      qualificationType: course_short_code(participant_outcome.declaration.course),
     }
   end
 

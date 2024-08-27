@@ -41,12 +41,12 @@ RSpec.describe QualifiedTeachersAPISender do
     end
   end
 
-  describe "#send" do
+  describe "#send_record" do
     let(:trn) { participant_outcome.declaration.user.trn }
     let(:request_body) do
       {
-        completionDate: participant_outcome.completion_date.to_s,
-        qualificationType: participant_outcome.declaration.qualification_type,
+        completionDate: "2023-02-20",
+        qualificationType: "NPQSL",
       }
     end
 
@@ -82,7 +82,7 @@ RSpec.describe QualifiedTeachersAPISender do
         let(:request_body) do
           {
             completionDate: nil,
-            qualificationType: participant_outcome.declaration.qualification_type,
+            qualificationType: "NPQSL",
           }
         end
 
@@ -96,7 +96,7 @@ RSpec.describe QualifiedTeachersAPISender do
         let(:request_body) do
           {
             completionDate: nil,
-            qualificationType: participant_outcome.declaration.qualification_type,
+            qualificationType: "NPQSL",
           }
         end
 
@@ -113,6 +113,22 @@ RSpec.describe QualifiedTeachersAPISender do
         expect(Sentry).to receive(:capture_exception)
 
         expect { service.send_record }.to raise_error(StandardError)
+      end
+    end
+
+    describe "when the client returns an invalid response body" do
+      before do
+        stub_request(:put, "https://qualified-teachers-api.example.com/v2/npq-qualifications?trn=1234567")
+          .with(
+            body: request_body,
+          )
+          .to_return(status: 200, body: "invalid JSON", headers: {})
+      end
+
+      it "creates a new participant outcome api request with invalid response" do
+        service.send_record
+
+        expect(participant_outcome.reload.participant_outcome_api_requests.first.response_body).to eq({ "error" => "response data did not contain valid JSON" })
       end
     end
   end
