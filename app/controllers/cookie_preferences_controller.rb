@@ -7,24 +7,24 @@ class CookiePreferencesController < ApplicationController
         value: cookie_preferences_params[:consent],
         expires: 1.year.from_now,
       }
-      cookies["hide-cookies-banner"] = {
-        value: "0",
-        expires: 1.year.from_now,
-      }
 
-      redirect_back(fallback_location: "/")
+      respond_to do |format|
+        format.json do
+          render json: {
+            status: "ok",
+            message: %(You’ve #{cookie_preferences_params[:consent] == 'accept' ? 'accepted' : 'rejected'} analytics cookies.),
+          }
+        end
+
+        format.html do
+          flash[:success] = "You’ve set your cookie preferences."
+          redirect_to "/cookies"
+        end
+      end
+
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def hide
-    cookies["hide-cookies-banner"] = {
-      value: "1",
-      expires: 1.year.from_now,
-    }
-
-    redirect_back(fallback_location: "/")
   end
 
 private

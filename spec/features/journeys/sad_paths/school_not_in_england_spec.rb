@@ -38,7 +38,7 @@ RSpec.feature "Sad journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    # expect(page).to be_axe_clean
+    # expect(page).to be_accessible
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
       page.choose("Yes", visible: :all)
