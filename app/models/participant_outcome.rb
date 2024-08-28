@@ -15,8 +15,42 @@ class ParticipantOutcome < ApplicationRecord
     voided: "voided",
   }, _suffix: true
 
-  def self.latest
-    order(created_at: :desc).first
+  class << self
+    def latest
+      order(created_at: :desc).first
+    end
+
+    def to_send_to_qualified_teachers_api
+      eligible_outcomes = not_sent_to_qualified_teachers_api
+        .where(id: latest_per_declaration.map(&:id))
+
+      eligible_outcomes.passed_state
+        .or(
+          eligible_outcomes
+            .not_passed_state
+            .where(declaration_id: declarations_where_outcome_passed_and_sent),
+        )
+    end
+
+    def latest_per_declaration
+      select("DISTINCT ON(declaration_id) *")
+        .order(:declaration_id, created_at: :desc)
+    end
+
+    def declarations_where_outcome_passed_and_sent
+      latest_per_declaration
+        .passed_state
+        .sent_to_qualified_teachers_api
+        .map(&:declaration_id)
+    end
+
+    def sent_to_qualified_teachers_api
+      where.not(sent_to_qualified_teachers_api_at: nil)
+    end
+
+    def not_sent_to_qualified_teachers_api
+      where(sent_to_qualified_teachers_api_at: nil)
+    end
   end
 
   def has_passed?

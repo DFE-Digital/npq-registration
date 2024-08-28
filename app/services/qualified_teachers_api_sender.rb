@@ -3,7 +3,6 @@ require "qualified_teachers"
 class QualifiedTeachersAPISender
   include ActiveModel::Model
   include ActiveModel::Attributes
-  include CourseHelper
 
   SUCCESS_CODES = %w[204].freeze
 
