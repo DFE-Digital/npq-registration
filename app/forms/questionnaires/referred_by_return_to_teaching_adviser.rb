@@ -13,7 +13,7 @@ module Questionnaires
     end
 
     def previous_step
-      :teacher_catchment
+      :work_setting
     end
 
     def after_save
