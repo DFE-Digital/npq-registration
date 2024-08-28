@@ -70,7 +70,7 @@ private
   def request_body
     @request_body ||= {
       completionDate: completion_date,
-      qualificationType: course_short_code(participant_outcome.declaration.course),
+      qualificationType: participant_outcome.declaration.course.short_code,
     }
   end
 
