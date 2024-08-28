@@ -151,6 +151,7 @@ class FundingEligibility
   end
 
   def previously_received_targeted_funding_support?
+    return false
     return ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true unless Rails.application.config.npq_separation[:ecf_api_disabled]
 
     accepted_applications.with_targeted_delivery_funding_eligibility.any?
@@ -212,6 +213,7 @@ private
   end
 
   def previously_funded?
+    return false
     return ecf_api_funding_lookup["previously_funded"] == true unless Rails.application.config.npq_separation[:ecf_api_disabled]
 
     accepted_applications.any?
