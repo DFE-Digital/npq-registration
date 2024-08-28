@@ -28,7 +28,7 @@ module Migration::Migrators
           Migration::DataMigration.queued.where(model:).none?
       end
 
-      def model_count
+      def record_count
         raise NotImplementedError
       end
 
@@ -41,10 +41,10 @@ module Migration::Migrators
       end
 
       def number_of_workers
-        [1, (model_count / models_per_worker.to_f).ceil].max
+        [1, (record_count / records_per_worker.to_f).ceil].max
       end
 
-      def models_per_worker
+      def records_per_worker
         1_000
       end
     end
@@ -83,11 +83,11 @@ module Migration::Migrators
   private
 
     def offset
-      worker * self.class.models_per_worker
+      worker * self.class.records_per_worker
     end
 
     def limit
-      self.class.models_per_worker
+      self.class.records_per_worker
     end
 
     def start_migration!(total_count)

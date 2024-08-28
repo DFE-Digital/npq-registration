@@ -16,15 +16,7 @@ class NpqSeparation::Migration::MigrationsController < ApplicationController
 
   def download_report
     data_migrations = Migration::DataMigration.complete.where(model: params[:model])
-    failures = data_migrations
-      .map { |data_migration| YAML.load(Migration::FailureManager.new(data_migration:).all_failures) }
-      .each_with_object({}) { |failure_hash, hash|
-        failure_hash.each do |failure_key, failure_values|
-          hash[failure_key] ||= []
-          hash[failure_key] += failure_values
-        end
-      }
-      .to_yaml
+    failures = Migration::FailureManager.combine_failures(data_migrations)
 
     send_data(failures, filename: "migration_failures_#{params[:model]}_.yaml", type: "text/yaml", disposition: "attachment")
   end

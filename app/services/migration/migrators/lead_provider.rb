@@ -1,7 +1,7 @@
 module Migration::Migrators
   class LeadProvider < Base
     class << self
-      def model_count
+      def record_count
         ecf_npq_lead_providers.count
       end
 

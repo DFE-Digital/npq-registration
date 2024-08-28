@@ -9,14 +9,14 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   let(:failure_manager) { instance_double(Migration::FailureManager, record_failure: nil) }
   let(:ecf_resource1) { create_ecf_resource }
   let(:ecf_resource2) { create_ecf_resource }
-  let(:models_per_worker) { 3 }
+  let(:records_per_worker) { 3 }
   let(:model_name) { model.to_s }
 
   before do
     create_npq_resource(ecf_resource1)
     create_npq_resource(ecf_resource2)
 
-    allow(described_class).to receive(:models_per_worker).and_return(models_per_worker)
+    allow(described_class).to receive(:records_per_worker).and_return(records_per_worker)
     allow(Migration::FailureManager).to receive(:new).with(data_migration:) { failure_manager }
   end
 
@@ -29,7 +29,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
     end
 
     context "when there are enough models for two workers" do
-      before { allow(described_class).to receive(:model_count).and_return(models_per_worker + 1) }
+      before { allow(described_class).to receive(:record_count).and_return(records_per_worker + 1) }
 
       it "creates two pending data migrations" do
         expect { prepare! }.to change(Migration::DataMigration, :count).by(2)
@@ -38,16 +38,16 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
     end
   end
 
-  describe ".model_count" do
-    subject { described_class.model_count }
+  describe ".record_count" do
+    subject { described_class.record_count }
 
     it { is_expected.to eq(2) }
   end
 
-  describe ".models_per_worker" do
-    subject { described_class.models_per_worker }
+  describe ".records_per_worker" do
+    subject { described_class.records_per_worker }
 
-    it { is_expected.to eq(models_per_worker) }
+    it { is_expected.to eq(records_per_worker) }
   end
 
   describe ".number_of_workers" do
@@ -56,13 +56,13 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
     it { is_expected.to eq(1) }
 
     context "when there are enough models for two workers" do
-      before { allow(described_class).to receive(:model_count).and_return(models_per_worker + 1) }
+      before { allow(described_class).to receive(:record_count).and_return(records_per_worker + 1) }
 
       it { is_expected.to eq(2) }
     end
 
     context "when there are no models" do
-      before { allow(described_class).to receive(:model_count).and_return(0) }
+      before { allow(described_class).to receive(:record_count).and_return(0) }
 
       it { is_expected.to eq(1) }
     end
@@ -124,7 +124,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
     end
 
     context "when there are models across multiple workers" do
-      let(:models_per_worker) { 1 }
+      let(:records_per_worker) { 1 }
 
       before { create(:data_migration, model:, worker: 1) }
 
@@ -186,7 +186,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
     end
 
     context "when there are models across multiple workers" do
-      let(:models_per_worker) { 1 }
+      let(:records_per_worker) { 1 }
 
       before { create(:data_migration, model:, worker: 1) }
 

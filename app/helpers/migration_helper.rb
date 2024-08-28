@@ -50,7 +50,7 @@ module MigrationHelper
                "green"
              end
 
-    govuk_tag(text: "#{avg_percentage.round}%", colour:)
+    govuk_tag(text: "#{avg_percentage.floor}%", colour:)
   end
 
   def data_migration_download_failures_report_link(data_migrations)

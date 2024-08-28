@@ -22,7 +22,7 @@ module Migration::Migrators
     ].freeze
 
     class << self
-      def model_count
+      def record_count
         ecf_npq_applications.count
       end
 

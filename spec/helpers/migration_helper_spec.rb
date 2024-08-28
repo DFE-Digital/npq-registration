@@ -169,6 +169,17 @@ RSpec.describe MigrationHelper, type: :helper do
 
         it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "75%") }
       end
+
+      context "when the percentage would round up to 100" do
+        let(:data_migrations) do
+          [
+            create(:data_migration, :in_progress, processed_count: 100, failure_count: 1),
+            create(:data_migration, :in_progress, processed_count: 100, failure_count: 0),
+          ]
+        end
+
+        it { is_expected.to have_css("strong.govuk-tag.govuk-tag--yellow", text: "99%") }
+      end
     end
 
     describe "#data_migration_download_failures_report_link" do

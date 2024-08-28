@@ -1,7 +1,7 @@
 module Migration::Migrators
   class Statement < Base
     class << self
-      def model_count
+      def record_count
         ecf_statements.count
       end
 

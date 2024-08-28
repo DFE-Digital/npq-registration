@@ -1,7 +1,7 @@
 module Migration::Migrators
   class Cohort < Base
     class << self
-      def model_count
+      def record_count
         ecf_cohorts.count
       end
 

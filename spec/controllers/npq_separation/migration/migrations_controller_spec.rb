@@ -69,10 +69,10 @@ RSpec.describe NpqSeparation::Migration::MigrationsController, type: :request do
 
     before do
       allow(Migration::FailureManager).to receive(:new).with(data_migration: data_migration1).and_return(failure_manager_double1)
-      allow(failure_manager_double1).to receive(:all_failures).and_return({ "Test failure 1" => %w[123456], "Test failure 2" => %w[789010] }.to_yaml)
+      allow(failure_manager_double1).to receive(:all_failures_hash).and_return({ "Test failure 1" => %w[123456], "Test failure 2" => %w[789010] })
 
       allow(Migration::FailureManager).to receive(:new).with(data_migration: data_migration2).and_return(failure_manager_double2)
-      allow(failure_manager_double2).to receive(:all_failures).and_return({ "Test failure 1" => %w[789123], "Test failure 3" => %w[456756] }.to_yaml)
+      allow(failure_manager_double2).to receive(:all_failures_hash).and_return({ "Test failure 1" => %w[789123], "Test failure 3" => %w[456756] })
 
       make_request
     end

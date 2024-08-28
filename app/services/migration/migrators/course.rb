@@ -1,7 +1,7 @@
 module Migration::Migrators
   class Course < Base
     class << self
-      def model_count
+      def record_count
         ecf_npq_courses.count
       end
 
