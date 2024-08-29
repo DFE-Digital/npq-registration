@@ -22,7 +22,7 @@ RSpec.describe "NPQ separation routes" do
   it { expect(get(npq_separation_migration_migrations_path)).to route_to("npq_separation/migration/migrations#index") }
   it { expect(get(api_guidance_path)).to route_to("api/guidance#index") }
   it { expect(get(api_guidance_page_path(page: "the-page"))).to route_to("api/guidance#show", page: "the-page") }
-  it { expect(get(download_report_npq_separation_migration_migrations_path(1))).to route_to("npq_separation/migration/migrations#download_report", id: "1") }
+  it { expect(get(download_report_npq_separation_migration_migrations_path("model"))).to route_to("npq_separation/migration/migrations#download_report", model: "model") }
 
   context "when api_enabled is false" do
     let(:api_enabled) { false }

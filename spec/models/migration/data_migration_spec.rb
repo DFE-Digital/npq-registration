@@ -1,13 +1,14 @@
 require "rails_helper"
 
 RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
-  subject(:instance) { described_class.new(model: :any) }
+  subject(:instance) { create(:data_migration) }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:model) }
     it { is_expected.to validate_presence_of(:processed_count) }
     it { is_expected.to validate_presence_of(:failure_count) }
     it { is_expected.not_to validate_presence_of(:completed_at) }
+    it { is_expected.to validate_presence_of(:worker) }
     it { is_expected.not_to validate_presence_of(:total_count) }
 
     context "when started_at is present" do
@@ -27,17 +28,22 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
     before do
       travel_to(1.day.ago) { create(:data_migration) }
       travel_to(3.days.ago) { create(:data_migration, :completed) }
+      travel_to(5.days.ago) { create(:data_migration, :queued) }
       create(:data_migration)
     end
 
     it { expect(described_class.all).to eq(described_class.all.order(created_at: :asc)) }
 
-    describe ".pending" do
-      it { expect(described_class.pending).to eq(described_class.where(started_at: nil)) }
+    describe ".incomplete" do
+      it { expect(described_class.incomplete).to eq(described_class.where(completed_at: nil)) }
     end
 
-    describe ".not_pending" do
-      it { expect(described_class.not_pending).to eq(described_class.where.not(started_at: nil)) }
+    describe ".complete" do
+      it { expect(described_class.complete).to eq(described_class.where.not(completed_at: nil)) }
+    end
+
+    describe ".queued" do
+      it { expect(described_class.queued).to eq(described_class.where.not(queued_at: nil)) }
     end
   end
 
@@ -86,10 +92,20 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
   describe "#pending?" do
     it { is_expected.to be_pending }
 
-    context "when started_at is present" do
-      before { instance.started_at = 1.day.ago }
+    context "when queued_at is present" do
+      before { instance.queued_at = 1.day.ago }
 
       it { is_expected.not_to be_pending }
+    end
+  end
+
+  describe "#queued?" do
+    it { is_expected.not_to be_queued }
+
+    context "when queued_at is present" do
+      before { instance.queued_at = 1.day.ago }
+
+      it { is_expected.to be_queued }
     end
   end
 
@@ -111,5 +127,11 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
 
       it { is_expected.to be_complete }
     end
+  end
+
+  describe "#name" do
+    subject { instance.name }
+
+    it { is_expected.to eq("Model - Worker 1") }
   end
 end

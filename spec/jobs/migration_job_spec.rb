@@ -6,13 +6,13 @@ RSpec.describe MigrationJob do
   describe "#perform" do
     subject(:perform_migration) { instance.perform }
 
-    let(:migrator_double) { instance_double(Migration::Migrator, migrate!: nil) }
+    let(:coordinator_double) { instance_double(Migration::Coordinator, migrate!: nil) }
 
-    before { allow(Migration::Migrator).to receive(:new).and_return(migrator_double) }
+    before { allow(Migration::Coordinator).to receive(:new).and_return(coordinator_double) }
 
     it "triggers a migration" do
       perform_migration
-      expect(migrator_double).to have_received(:migrate!).once
+      expect(coordinator_double).to have_received(:migrate!).once
     end
   end
 end

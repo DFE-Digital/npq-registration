@@ -87,7 +87,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
 
           data_migration = Migration::DataMigration.find_by(model: :lead_provider)
-          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
         end
       end
     end
@@ -127,7 +127,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
 
           data_migration = Migration::DataMigration.find_by(model: :cohort)
-          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
         end
       end
     end
@@ -170,7 +170,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
           expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
 
           data_migration = Migration::DataMigration.find_by(model: :statement)
-          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.id))
+          expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
         end
       end
     end

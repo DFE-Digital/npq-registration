@@ -1,6 +1,8 @@
 class MigrationJob < ApplicationJob
+  queue_as :high_priority
+
   def perform
-    migrator = Migration::Migrator.new
+    migrator = Migration::Coordinator.new
     migrator.migrate!
   end
 end

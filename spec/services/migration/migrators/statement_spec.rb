@@ -1,66 +1,33 @@
 require "rails_helper"
 
 RSpec.describe Migration::Migrators::Statement do
-  let(:instance) { described_class.new }
-
-  subject { instance.call }
-
-  describe "#call" do
-    before do
-      ecf_statement1 = create(:ecf_migration_statement, name: "July 2026")
-      ecf_statement2 = create(:ecf_migration_statement, name: "January 2030")
-
-      lead_provider1 = create(:lead_provider, ecf_id: ecf_statement1.npq_lead_provider.id)
-      lead_provider2 = create(:lead_provider, ecf_id: ecf_statement2.npq_lead_provider.id)
-
-      cohort1 = create(:cohort, start_year: ecf_statement1.cohort.start_year)
-      cohort2 = create(:cohort, start_year: ecf_statement2.cohort.start_year)
-
-      create(:statement, month: 7, year: 2026, lead_provider: lead_provider1, cohort: cohort1)
-      create(:statement, month: 1, year: 2030, lead_provider: lead_provider2, cohort: cohort2)
-
-      create(:data_migration, model: :statement)
+  it_behaves_like "a migrator", :statement, %i[cohort lead_provider] do
+    def create_ecf_resource
+      create(:ecf_migration_statement, name: "March 2023")
     end
 
-    it "migrates the statements" do
-      subject
-
-      expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(2)
+    def create_npq_resource(ecf_resource)
+      lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider.id)
+      cohort = create(:cohort, start_year: ecf_resource.cohort.start_year)
+      create(:statement, lead_provider:, cohort:)
     end
 
-    context "when a statement is not correctly created" do
-      let!(:ecf_migration_statement) { create(:ecf_migration_statement, output_fee: nil) }
-
-      before { create(:lead_provider, ecf_id: ecf_migration_statement.npq_lead_provider.id) }
-
-      it "increments the failure count" do
-        subject
-
-        expect(Migration::DataMigration.find_by(model: :statement).processed_count).to eq(3)
-        expect(Migration::DataMigration.find_by(model: :statement).failure_count).to eq(1)
-      end
-
-      it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_statement, "Validation failed: Output fee Choose yes or no for output fee").and_call_original
-
-        subject
-      end
+    def setup_failure_state
+      # Statement in ECF with no output_fee.
+      ecf_statement = create(:ecf_migration_statement, output_fee: nil)
+      create(:lead_provider, ecf_id: ecf_statement.npq_lead_provider.id)
     end
 
-    context "with multiple statements with same month and year" do
-      before do
-        create(:ecf_migration_statement, name: "July 2026")
-        create(:ecf_migration_statement, name: "January 2030")
-      end
-
-      it "migrates all ecf_statements" do
-        expect(Migration::Ecf::Finance::Statement.count).to be(4)
-        expect(Statement.count).to be(2)
-
-        subject
-
-        expect(Migration::Ecf::Finance::Statement.count).to be(4)
-        expect(Statement.count).to be(4)
+    describe "#call" do
+      it "sets the created Statement attributes correctly" do
+        instance.call
+        statement = Statement.find_by(ecf_id: ecf_resource1.id)
+        expect(statement).to have_attributes(ecf_resource1.attributes.slice(:deadline_date, :payment_date, :output_fee, :marked_as_paid_at, :reconcile_amount))
+        expect(statement.month).to eq(3)
+        expect(statement.year).to eq(2023)
+        expect(statement.cohort.start_year).to eq(ecf_resource1.cohort.start_year)
+        expect(statement.lead_provider.ecf_id).to eq(ecf_resource1.cpd_lead_provider.npq_lead_provider.id)
+        expect(statement.state).to eq("open")
       end
     end
   end
