@@ -1,7 +1,7 @@
 module Migration::Migrators
   class ParticipantIdChange < Base
     class << self
-      def model_count
+      def record_count
         ecf_participant_id_changes.count
       end
 
@@ -29,7 +29,9 @@ module Migration::Migrators
           user_id: user_id_by_ecf_id[ecf_participant_id_change.user_id],
           from_participant_id: user_id_by_ecf_id[ecf_participant_id_change.from_participant_id],
           to_participant_id: user_id_by_ecf_id[ecf_participant_id_change.to_participant_id],
-        )
+        ).tap do |participant_id_change|
+          participant_id_change.update!(created_at: ecf_participant_id_change.created_at)
+        end
       end
     end
   end

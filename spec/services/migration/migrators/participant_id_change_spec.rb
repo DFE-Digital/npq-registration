@@ -30,6 +30,7 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
           user_id: User.find_by(ecf_id: ecf_resource1.user_id).id,
           from_participant_id: User.find_by(ecf_id: ecf_resource1.from_participant_id).id,
           to_participant_id: User.find_by(ecf_id: ecf_resource1.to_participant_id).id,
+          created_at: ecf_resource1.created_at,
         })
       end
     end
