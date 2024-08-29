@@ -33,7 +33,7 @@ module ValidTestDataGenerators
     end
 
     def create_participants!
-      shared_users_data[lead_provider.name].each do |user_params|
+      (shared_users_data[lead_provider.name] || []).each do |user_params|
         school = School.open.order("RANDOM()").first
         user = shared_participant_identity(user_params)
 
@@ -48,6 +48,7 @@ module ValidTestDataGenerators
                User.find_or_initialize_by(email: params[:email])
              end
 
+      user.ecf_id = SecureRandom.uuid if user.ecf_id.blank?
       user.update!(
         full_name: params[:name],
         email: params[:email],
