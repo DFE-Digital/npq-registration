@@ -5,6 +5,7 @@ RSpec.describe Migration::Ecf::User, type: :model do
     it { is_expected.to have_many(:participant_identities) }
     it { is_expected.to have_one(:teacher_profile) }
     it { is_expected.to have_many(:npq_profiles).through(:teacher_profile) }
+    it { is_expected.to have_many(:participant_id_changes) }
   end
 
   describe "instance methods" do

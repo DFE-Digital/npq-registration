@@ -16,41 +16,48 @@ module MigrationHelper
   end
 
   def data_migration_status_tag(data_migration)
-    return govuk_tag(text: "Pending", colour: "grey") if data_migration.pending?
-    return govuk_tag(text: "In progress - #{data_migration.percentage_migrated}%", colour: "blue") if data_migration.in_progress?
+    return govuk_tag(text: "Completed", colour: "green") if data_migration.complete?
+    return govuk_tag(text: "In progress - #{data_migration.percentage_migrated}%", colour: "yellow") if data_migration.in_progress?
+    return govuk_tag(text: "Queued", colour: "blue") if data_migration.queued?
 
-    govuk_tag(text: "Completed", colour: "green")
+    govuk_tag(text: "Pending", colour: "grey")
   end
 
-  def data_migration_failure_count_tag(data_migration)
-    return if data_migration.failure_count.zero?
+  def data_migration_failure_count_tag(data_migrations)
+    failure_count = data_migrations.sum(&:failure_count)
 
-    govuk_tag(text: number_with_delimiter(data_migration.failure_count), colour: "red")
+    return if failure_count.zero?
+
+    govuk_tag(text: number_with_delimiter(failure_count), colour: "red")
   end
 
-  def data_migration_total_count_tag(data_migration)
-    return unless data_migration.total_count&.positive?
+  def data_migration_total_count_tag(data_migrations)
+    total_count = data_migrations.sum(&:total_count)
 
-    govuk_tag(text: number_with_delimiter(data_migration.total_count), colour: "blue")
+    return unless total_count&.positive?
+
+    govuk_tag(text: number_with_delimiter(total_count), colour: "blue")
   end
 
-  def data_migration_percentage_migrated_successfully_tag(data_migration)
-    percentage = data_migration.percentage_migrated_successfully
+  def data_migration_percentage_migrated_successfully_tag(data_migrations)
+    avg_percentage = data_migrations.sum(&:percentage_migrated_successfully).fdiv(data_migrations.count)
 
-    colour = if percentage < 80
+    colour = if avg_percentage < 80
                "red"
-             elsif percentage < 100
+             elsif avg_percentage < 100
                "yellow"
              else
                "green"
              end
 
-    govuk_tag(text: "#{percentage}%", colour:)
+    govuk_tag(text: "#{avg_percentage.floor}%", colour:)
   end
 
-  def data_migration_download_failures_report_link(data_migration)
-    return unless data_migration.failure_count.positive?
+  def data_migration_download_failures_report_link(data_migrations)
+    failure_count = data_migrations.sum(&:failure_count)
 
-    govuk_link_to("Failures report", download_report_npq_separation_migration_migrations_path(data_migration))
+    return unless failure_count.positive?
+
+    govuk_link_to("Failures report", download_report_npq_separation_migration_migrations_path(data_migrations.sample.model))
   end
 end

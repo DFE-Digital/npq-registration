@@ -250,7 +250,7 @@ Rails.application.routes.draw do
 
     namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
       resources :migrations, only: %i[index create] do
-        get "download_report/:id", on: :collection, action: :download_report, as: :download_report
+        get "download_report/:model", on: :collection, action: :download_report, as: :download_report
       end
     end
   end
@@ -261,7 +261,7 @@ Rails.application.routes.draw do
   get "/422", to: "errors#unprocessable_entity", via: :all
   get "/500", to: "errors#internal_server_error", via: :all
 
-  authenticated :user, ->(user) { user.super_admin? } do
+  constraints(->(request) { Admin.find_by(id: request.session[:admin_id])&.super_admin? }) do
     mount DelayedJobWeb, at: "/delayed_job"
   end
 

@@ -324,7 +324,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.14)
+    net-imap (0.4.15)
       date
       net-protocol
     net-pop (0.1.2)
@@ -450,9 +450,9 @@ GEM
     rdoc (6.7.0)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
-    redis (5.2.0)
+    redis (5.3.0)
       redis-client (>= 0.22.0)
-    redis-client (0.22.0)
+    redis-client (0.22.2)
       connection_pool
     regexp_parser (2.9.2)
     reline (0.5.9)
@@ -704,7 +704,7 @@ DEPENDENCIES
   knapsack
   listen (>= 3.0.5, < 3.10)
   mail-notify
-  net-imap (~> 0.4.14)
+  net-imap (~> 0.4.15)
   net-pop
   net-smtp (~> 0.5.0)
   oj

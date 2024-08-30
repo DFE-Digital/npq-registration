@@ -1,80 +1,38 @@
 require "rails_helper"
 
 RSpec.describe Migration::Migrators::Application do
-  let(:instance) { described_class.new }
-
-  subject { instance.call }
-
-  describe "#call" do
-    let(:ecf_npq_application1) { create(:ecf_migration_npq_application) }
-    let(:ecf_npq_application2) { create(:ecf_migration_npq_application) }
-
-    before do
-      create(:application, ecf_id: ecf_npq_application1.id, **ecf_npq_application1.slice(described_class::ATTRIBUTES_TO_COMPARE))
-      create(:application, ecf_id: ecf_npq_application2.id, **ecf_npq_application2.slice(described_class::ATTRIBUTES_TO_COMPARE))
-
-      create(:data_migration, model: :application)
+  it_behaves_like "a migrator", :application, [] do
+    def create_ecf_resource
+      create(:ecf_migration_npq_application)
     end
 
-    context "when all attributes values of interest matches" do
-      it "migrates the applications" do
-        subject
-
-        expect(Migration::DataMigration.find_by(model: :application).processed_count).to eq(2)
-        expect(Migration::DataMigration.find_by(model: :application).failure_count).to eq(0)
-      end
+    def create_npq_resource(ecf_resource)
+      create(:application, ecf_id: ecf_resource.id, **ecf_resource.slice(described_class::ATTRIBUTES_TO_COMPARE))
     end
 
-    context "when any attributes values do not match" do
-      before do
-        ecf_npq_application1.update!(teacher_catchment: "any")
-      end
-
-      it "increments the failure count" do
-        subject
-
-        expect(Migration::DataMigration.find_by(model: :application).processed_count).to eq(2)
-        expect(Migration::DataMigration.find_by(model: :application).failure_count).to eq(1)
-      end
-
-      it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_npq_application1, "Validation failed: There are some discrepancies in one or more attributes values").and_call_original
-
-        subject
-      end
+    def setup_failure_state
+      # NPQApplication in ECF with no match in NPQ reg.
+      create(:ecf_migration_npq_application)
     end
 
-    context "when an application exists in ECF but cannot be matched to an application in NPQ registration" do
-      let!(:ecf_migration_npq_application) { create(:ecf_migration_npq_application) }
-
-      it "increments the failure count" do
-        subject
-
-        expect(Migration::DataMigration.find_by(model: :application).processed_count).to eq(3)
-        expect(Migration::DataMigration.find_by(model: :application).failure_count).to eq(1)
+    describe "#call" do
+      it "records a failure when the attribute values do not match" do
+        ecf_resource1.update!(teacher_catchment: "any")
+        instance.call
+        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Validation failed/)
       end
 
-      it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(ecf_migration_npq_application, "Couldn't find Application with [WHERE \"applications\".\"ecf_id\" = $1]").and_call_original
+      it "records a failure if applications exist in NPQ reg but not in ECF, but only on the first run" do
+        orphan_application1 = create(:application)
+        orphan_application2 = create(:application)
 
-        subject
-      end
-    end
+        described_class.new(worker: 0).call
 
-    context "when an application exists in NPQ registration but cannot be matched to an application in ECF" do
-      let!(:npq_application) { create(:application) }
+        create(:data_migration, model: :application, worker: 1)
+        described_class.new(worker: 1).call
 
-      it "increments the failure count" do
-        subject
-
-        expect(Migration::DataMigration.find_by(model: :application).processed_count).to eq(3)
-        expect(Migration::DataMigration.find_by(model: :application).failure_count).to eq(1)
-      end
-
-      it "calls FailureManager with correct params" do
-        expect_any_instance_of(Migration::FailureManager).to receive(:record_failure).with(npq_application, "Couldn't find Migration::Ecf::NpqApplication with [WHERE \"npq_applications\".\"id\" = $1]").and_call_original
-
-        subject
+        expect(failure_manager).to have_received(:record_failure).once.with(orphan_application1, /NPQApplication not found in ECF/)
+        expect(failure_manager).to have_received(:record_failure).once.with(orphan_application2, /NPQApplication not found in ECF/)
       end
     end
   end

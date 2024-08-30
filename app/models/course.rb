@@ -20,12 +20,10 @@ class Course < ApplicationRecord
     npq-headship
     npq-executive-leadership
     npq-early-years-leadership
-
     npq-leading-teaching
     npq-leading-behaviour-culture
     npq-leading-teaching-development
     npq-leading-literacy
-
     npq-leading-primary-mathematics
     npq-additional-support-offer
     npq-early-headship-coaching-offer
@@ -37,7 +35,6 @@ class Course < ApplicationRecord
     npq-leading-behaviour-culture
     npq-leading-teaching-development
     npq-leading-teaching
-
     npq-senior-leadership
     npq-executive-leadership
     npq-early-years-leadership
@@ -48,6 +45,19 @@ class Course < ApplicationRecord
     npq-leading-primary-mathematics
     npq-headship
   ].freeze
+
+  SHORT_CODES = {
+    "npq-leading-teaching" => "NPQLT",
+    "npq-leading-behaviour-culture" => "NPQLBC",
+    "npq-leading-teaching-development" => "NPQLTD",
+    "npq-leading-literacy" => "NPQLL",
+    "npq-senior-leadership" => "NPQSL",
+    "npq-headship" => "NPQH",
+    "npq-executive-leadership" => "NPQEL",
+    "npq-early-years-leadership" => "NPQEYL",
+    "npq-leading-primary-mathematics" => "NPQLPM",
+    "npq-senco" => "NPQSENCO",
+  }.freeze
 
   def schedule_for(cohort: Cohort.current, schedule_date: Date.current)
     course_group.schedule_for(cohort:, schedule_date:)
@@ -116,5 +126,14 @@ class Course < ApplicationRecord
 
   def npqs?
     identifier == NPQ_SENCO
+  end
+
+  def short_code
+    SHORT_CODES.fetch(identifier)
+  rescue KeyError => e
+    Rails.logger.warn("A NPQ Qualification types mapping is missing: #{e.message}")
+    Sentry.capture_exception(e)
+
+    nil
   end
 end

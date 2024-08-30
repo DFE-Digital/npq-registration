@@ -165,6 +165,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_23_120904) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "total_count"
+    t.datetime "queued_at"
+    t.integer "worker"
   end
 
   create_table "declarations", force: :cascade do |t|

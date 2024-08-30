@@ -14,7 +14,6 @@ Rails.application.configure do
     Bullet.stacktrace_excludes          = [
       "app/controllers/api", # Ignore as request spec factories cause false positives (excluding controllers as we use shared examples so can't target spec/requests/api here), see: https://github.com/flyerhzm/bullet/issues/435
       "spec/features/admin", # Ignore until they are fixed
-      "spec/features/migration_spec.rb", # Ignore until they are fixed
       "npq_separation/admin", # Ignore until they are fixed
     ]
   end

@@ -1,5 +1,19 @@
 module Migration
   class FailureManager
+    class << self
+      def combine_failures(data_migrations)
+        data_migrations
+        .map { |data_migration| new(data_migration:).all_failures_hash }
+        .each_with_object({}) { |failure_hash, hash|
+          failure_hash.each do |failure_key, failure_values|
+            hash[failure_key] ||= []
+            hash[failure_key] += failure_values
+          end
+        }
+        .to_yaml
+      end
+    end
+
     def record_failure(item, failure_message)
       return if item.blank?
 
@@ -8,6 +22,10 @@ module Migration
 
     def all_failures
       failures
+    end
+
+    def all_failures_hash
+      YAML.load(failures.to_s) || {}
     end
 
   private
@@ -28,12 +46,8 @@ module Migration
       Rails.cache.read(migration_failure_key)
     end
 
-    def parsed_failures
-      YAML.load(failures.to_s) || {}
-    end
-
     def write_failure(item, failure_message)
-      failures_hash = parsed_failures
+      failures_hash = all_failures_hash
       failures_hash[failure_message.to_s] ||= []
       failures_hash[failure_message.to_s].push(*item.id)
 
