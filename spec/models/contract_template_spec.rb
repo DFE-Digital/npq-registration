@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe ContractTemplate, type: :model do
   subject { build(:contract_template) }
 
-  # describe "relationships" do
-  #   it { is_expected.to have_many(:contracts) }
-  # end
+  describe "relationships" do
+    it { is_expected.to have_many(:contracts) }
+  end
 
   describe "validations" do
     it { is_expected.to validate_numericality_of(:number_of_payment_periods).only_integer.is_greater_than_or_equal_to(0).with_message("Must be an integer greater than or equal to zero") }

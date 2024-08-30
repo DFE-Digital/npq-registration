@@ -1,5 +1,5 @@
 class ContractTemplate < ApplicationRecord
-  # has_many :contracts
+  has_many :contracts
 
   validates :number_of_payment_periods,
             :output_payment_percentage,
