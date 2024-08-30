@@ -4,6 +4,7 @@ RSpec.describe Migration::Ecf::Finance::Schedule, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to have_many(:participant_profiles) }
+    it { is_expected.to have_many(:milestones) }
   end
 
   describe "scopes" do
