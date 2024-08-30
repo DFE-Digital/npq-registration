@@ -20,10 +20,10 @@ module ValidTestDataGenerators
 
   private
 
-    def create_participant(school:)
+    def create_participant(school:, user:)
       course = courses.sample
       schedule = Schedule.where(cohort:, course_group: course.course_group).sample
-      create_application(create_user, school, course, schedule)
+      create_application(user, school, course, schedule)
     end
   end
 end
