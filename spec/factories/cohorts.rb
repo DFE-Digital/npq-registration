@@ -8,11 +8,11 @@ FactoryBot.define do
     end
 
     trait :current do
-      start_year { Date.current.month < 9 ? Date.current.year.pred : Date.current.year }
+      start_year { Date.current.month < 10 ? Date.current.year.pred : Date.current.year }
     end
 
     trait :next do
-      start_year { Date.current.month < 9 ? Date.current.year : Date.current.year.succ }
+      start_year { Date.current.month < 10 ? Date.current.year : Date.current.year.succ }
     end
 
     trait :with_funding_cap do
