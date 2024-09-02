@@ -21,6 +21,7 @@
 1. [BigQuery Reports](docs/bigquery_reports.md)
 1. [Migration Environment](docs/migration_environment.md)
 1. [Sending emails from application](docs/emails.md)
+1. [NPQ Contracts](docs/npq_contracts.md)
 
 ## Content Editors
 
