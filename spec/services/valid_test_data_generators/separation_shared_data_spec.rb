@@ -85,6 +85,8 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       end
 
       it "creates rejected applications" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(false)
+
         expect {
           subject.populate
         }.to(change { Application.where(lead_provider_approval_status: "rejected").count })
