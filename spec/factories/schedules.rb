@@ -6,7 +6,7 @@ FactoryBot.define do
     sequence(:name) { |n| "Schedule #{n}" }
     sequence(:identifier) { |n| "schedule-#{n}" }
 
-    applies_from { Date.new(cohort.start_year, 10, 1) }
+    applies_from { Date.new(cohort.start_year, 9, 1) }
     applies_to { Date.new(cohort.start_year, 11, 1) }
 
     allowed_declaration_types { %w[started retained-1 retained-2 completed] }
