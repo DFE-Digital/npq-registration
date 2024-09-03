@@ -1,5 +1,6 @@
 @import "./api_guidance/_masthead";
 @import "./api_guidance/_header";
+@import "./api_guidance/_section";
 
 .api-guidance {
   $orange: darken(#f47738, 20%);
@@ -72,17 +73,17 @@
     background-color: govuk-colour("light-grey");
     white-space : pre-wrap;
     font-size: 0.8em;
-  
+
     .govuk-panel--confirmation & {
       background-color: transparent;
     }
-  
+
     a {
       text-decoration: none;
     }
-  
+
     a:hover {
       text-decoration: underline;
     }
-  }  
+  }
 }

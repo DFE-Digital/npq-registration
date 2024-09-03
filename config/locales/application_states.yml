@@ -1,0 +1,19 @@
+en:
+  statement_states:
+    open:
+      name: Open
+      description: The statement is open.
+    payable:
+      name: Payable
+      description: The statement is payable.
+    paid:
+      name: Paid
+      description: The statement is paid.
+
+  events:
+    open-mark_payable:
+      name: Statement is marked payable
+      description: The statement is in a payable state.
+    payable-mark_paid:
+      name: Statement is marked paid
+      description: The statement is in a paid state.

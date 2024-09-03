@@ -1,0 +1,23 @@
+<%= govuk_details(summary_text: 'View diagram of Statements flow') do %>
+  <span class="govuk-visually-hidden">(accessible example presented after diagram)</span>
+  <div class="app-diagram">
+    <% Statement.state_machine.states.each do |state| %>
+      <% state_name = state.name.to_s %>
+      <% human_state_name = I18n.t!("statement_states.#{state_name}.name") %>
+      <% section_classes = state_name == 'open' ? 'app-section' : 'app-section app-section--with-top-border' %>
+
+      <% next unless Statement.state_machine.events.transitions_for(Statement.new, from: state.name).any? %>
+
+      <section class="<%= section_classes %>">
+        <h2 class="govuk-heading-m" id="<%= state_name %>"><%= human_state_name %></h2>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <div class="app-diagram" aria-hidden="true">
+              <%= StateDiagram.svg(only_from_state: state_name, machine: Statement.state_machine) %>
+            </div>
+          </div>
+        </div>
+      </section>
+    <% end %>
+  </div>
+<% end %>

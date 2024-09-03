@@ -22,6 +22,11 @@ module NpqSeparation
             href: api_guidance_page_path(page: "release-notes"),
             prefix: "/api/guidance/release-notes",
           ) => [],
+          Node.new(
+            name: "Process Maps",
+            href: api_guidance_page_path(page: "process-maps"),
+            prefix: "/api/guidance/process-maps",
+          ) => [],
         }
       end
     end

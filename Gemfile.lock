@@ -532,6 +532,8 @@ GEM
       rubocop (~> 1.0)
     rubocop-rspec (3.0.1)
       rubocop (~> 1.61)
+    ruby-graphviz (1.2.5)
+      rexml
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -606,6 +608,9 @@ GEM
     state_machines-activerecord (0.9.0)
       activerecord (>= 6.0)
       state_machines-activemodel (>= 0.9.0)
+    state_machines-graphviz (0.0.2)
+      ruby-graphviz
+      state_machines
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.1)
@@ -742,6 +747,7 @@ DEPENDENCIES
   sprockets (~> 4.2.0)
   sprockets-rails
   state_machines-activerecord
+  state_machines-graphviz
   stimulus-rails
   tzinfo-data
   web-console (>= 3.3.0)
