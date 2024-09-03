@@ -16,6 +16,6 @@ class NpqSeparation::Migration::MigrationsController < SuperAdminController
     data_migrations = Migration::DataMigration.complete.where(model: params[:model])
     failures = Migration::FailureManager.combine_failures(data_migrations)
 
-    send_data(failures, filename: "migration_failures_#{params[:model]}_.yaml", type: "text/yaml", disposition: "attachment")
+    send_data(failures, filename: "migration_failures_#{params[:model]}.yaml", type: "text/yaml", disposition: "attachment")
   end
 end

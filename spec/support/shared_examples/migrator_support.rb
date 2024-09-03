@@ -9,6 +9,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   let(:failure_manager) { instance_double(Migration::FailureManager, record_failure: nil) }
   let(:ecf_resource1) { create_ecf_resource }
   let(:ecf_resource2) { create_ecf_resource }
+  let(:ecf_class) { ecf_resource1.class }
   let(:records_per_worker) { 3 }
   let(:model_name) { model.to_s }
 
@@ -181,7 +182,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
 
       it "increments the failure/processed counts and logs the failure" do
         expect { call }.to change { data_migration.reload.failure_count }.by(1).and(change(data_migration, :processed_count).by(3))
-        expect(failure_manager).to have_received(:record_failure).with(be_a(ecf_resource1.class), be_a(String))
+        expect(failure_manager).to have_received(:record_failure).with(be_a(ecf_class), be_a(String))
       end
     end
 

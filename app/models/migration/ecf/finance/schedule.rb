@@ -4,6 +4,8 @@ module Migration::Ecf::Finance
 
     belongs_to :cohort
     has_many :participant_profiles
+    has_many :schedule_milestones, class_name: "Migration::Ecf::Finance::ScheduleMilestone"
+    has_many :milestones
 
     default_scope { where("schedules.type ilike ?", "Finance::Schedule::NPQ%") }
   end
