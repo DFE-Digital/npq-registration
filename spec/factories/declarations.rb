@@ -26,6 +26,10 @@ FactoryBot.define do
       state { :paid }
     end
 
+    trait :ineligible do
+      state { :ineligible }
+    end
+
     trait :completed do
       declaration_type { :completed }
     end
