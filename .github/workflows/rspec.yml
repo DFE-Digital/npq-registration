@@ -47,6 +47,7 @@ jobs:
         with:
           name: ${{ env.rubocop-artifact-name }}
           path: ${{ github.workspace }}/out/rubocop-result.json
+          include-hidden-files: true
 
   scss_linting:
     name: "Lint SCSS"
@@ -148,6 +149,7 @@ jobs:
         with:
           name: ${{ env.code-coverage-artifact-name }}_${{ matrix.ci_node_index }}
           path: ./coverage
+          include-hidden-files: true
 
       - name:  Keep Unit Tests Results
         if: always()
@@ -155,6 +157,7 @@ jobs:
         with:
           name: ${{ env.unit-tests-artifact-name }}_${{ matrix.ci_node_index }}
           path: ./test-report/*
+          include-hidden-files: true
 
   sonar-scanner:
     name: Sonar Scanner
