@@ -173,8 +173,7 @@ RSpec.describe MigrationHelper, type: :helper do
       context "when the percentage would round up to 100" do
         let(:data_migrations) do
           [
-            create(:data_migration, :in_progress, processed_count: 100, failure_count: 1),
-            create(:data_migration, :in_progress, processed_count: 100, failure_count: 0),
+            create(:data_migration, :in_progress, processed_count: 100_000, failure_count: 1),
           ]
         end
 

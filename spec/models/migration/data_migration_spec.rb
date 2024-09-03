@@ -62,6 +62,12 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
 
         it { is_expected.to be(73) }
       end
+
+      context "when the percentage would round up to 100%" do
+        before { instance.assign_attributes(processed_count: 10_000, failure_count: 1) }
+
+        it { is_expected.to be(99) }
+      end
     end
   end
 
@@ -74,6 +80,12 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
       before { instance.assign_attributes(total_count: 96, processed_count: 27) }
 
       it { is_expected.to be(28) }
+    end
+
+    context "when the percentage would round up to 100%" do
+      before { instance.assign_attributes(total_count: 10_000, processed_count: 9_999) }
+
+      it { is_expected.to be(99) }
     end
   end
 

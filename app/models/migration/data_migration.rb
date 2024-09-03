@@ -16,13 +16,13 @@ module Migration
     def percentage_migrated_successfully
       return 0 unless processed_count&.positive?
 
-      ((processed_count - failure_count) / processed_count.to_f * 100).round
+      ((processed_count - failure_count) / processed_count.to_f * 100).floor
     end
 
     def percentage_migrated
       return 0 unless total_count&.positive?
 
-      (processed_count / total_count.to_f * 100).round
+      (processed_count / total_count.to_f * 100).floor
     end
 
     def duration_in_seconds
