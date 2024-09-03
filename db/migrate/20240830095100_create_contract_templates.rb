@@ -12,7 +12,7 @@ class CreateContractTemplates < ActiveRecord::Migration[7.1]
       t.boolean :special_course, null: false, default: false
 
       # NPQContract.id from ecf app
-      t.uuid :ecf_id, index: true
+      t.uuid :ecf_id, default: "gen_random_uuid()", null: false, index: { unique: true }
 
       t.timestamps
     end
