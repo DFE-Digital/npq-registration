@@ -11,7 +11,10 @@ module Migration::Migrators
 
       def ecf_statements
         Migration::Ecf::Finance::Statement
-          .includes(:cohort, cpd_lead_provider: :npq_lead_provider)
+          .includes(
+            :cohort,
+            cpd_lead_provider: :npq_lead_provider,
+          )
       end
 
       def dependencies

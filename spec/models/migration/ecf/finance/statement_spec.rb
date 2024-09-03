@@ -5,6 +5,7 @@ RSpec.describe Migration::Ecf::Finance::Statement, type: :model do
     it { is_expected.to belong_to(:cohort) }
     it { is_expected.to belong_to(:cpd_lead_provider) }
     it { is_expected.to have_one(:npq_lead_provider).through(:cpd_lead_provider) }
+    it { is_expected.to have_many(:statement_line_items).class_name("Migration::Ecf::Finance::StatementLineItem") }
   end
 
   describe "scopes" do
