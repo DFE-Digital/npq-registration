@@ -64,6 +64,11 @@ A `Statement` has many `Contract`, one for each `Course`.
 `Contract` belongs to a `ContractTemplate`, which holds contract values
 for statement calculation.
 
+Contract values span across time periods, can change depending on the month.
+Financial statements are generated dynamically when the page is visited.
+We need to avoid changing existing `ContractTemplate` as that will change previous financial statements.
+To make changes, create a new `ContractTemplate` with new values, and attach it to the `Contract`.
+
 ## Updating Contract Values
 
 The following code snippet is used to update contract values for a specific cohort and lead provider within a given month and year:
