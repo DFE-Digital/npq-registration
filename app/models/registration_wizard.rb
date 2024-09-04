@@ -150,7 +150,7 @@ class RegistrationWizard
                             value: query_store.teacher_catchment_humanized,
                             change_step: :teacher_catchment)
 
-    if query_store.inside_catchment?
+    if store["referred_by_return_to_teaching_adviser"]
       array << OpenStruct.new(key: "Referred by return to teaching adviser",
                               value: I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
                               change_step: :referred_by_return_to_teaching_adviser)
@@ -259,7 +259,7 @@ class RegistrationWizard
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
                                 change_step: :funding_your_ehco)
-      elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_other?)
+      elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_another_setting? || works_in_other?)
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
                                 change_step: :funding_your_npq)
@@ -320,12 +320,12 @@ private
   end
 
   def employer_data_gathered?
-    works_in_other? && inside_catchment?
+    works_in_another_setting? && inside_catchment?
   end
 
   delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :course, :approved_itt_provider?, to: :query_store
+  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :works_in_another_setting?, :course, :approved_itt_provider?, to: :query_store
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))

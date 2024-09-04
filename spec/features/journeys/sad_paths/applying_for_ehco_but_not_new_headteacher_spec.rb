@@ -45,10 +45,6 @@ RSpec.feature "Sad journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
@@ -120,7 +116,6 @@ RSpec.feature "Sad journeys", type: :feature do
           "Course funding" => "I am paying",
           "Workplace" => "open manchester school – street 1, manchester",
           "Headteacher" => "Yes",
-          "Referred by return to teaching adviser" => "No",
           "First 5 years of headship" => "No",
           "Headship NPQ stage" => "I’ve completed it",
         },
@@ -169,7 +164,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
-      "referred_by_return_to_teaching_adviser" => "no",
+      "referred_by_return_to_teaching_adviser" => nil,
       "school_id" => School.find_by(urn: "100000").id,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -204,7 +199,6 @@ RSpec.feature "Sad journeys", type: :feature do
         "institution_name" => js ? "" : "open",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "npqh_status" => "completed_npqh",
-        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

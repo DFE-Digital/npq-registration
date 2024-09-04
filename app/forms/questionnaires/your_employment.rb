@@ -26,7 +26,6 @@ module Questionnaires
         build_option_struct(value: "young_offender_institution"),
         build_option_struct(value: "local_authority_supply_teacher"),
         build_option_struct(value: "lead_mentor_for_accredited_itt_provider"),
-        build_option_struct(value: "other", divider: true),
       ].freeze
     end
 
@@ -36,8 +35,6 @@ module Questionnaires
         :itt_provider
       when "hospital_school", "young_offender_institution"
         :your_employer
-      when "other"
-        :choose_your_npq
       else
         :your_role
       end

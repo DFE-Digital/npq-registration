@@ -61,7 +61,11 @@ private
   def store_employer_data?
     return false if eligible_for_funding?
 
-    ineligible_institution_type? && inside_catchment?
+    (ineligible_institution_type? && inside_catchment?) || referred_by_return_to_teaching_adviser?
+  end
+
+  def referred_by_return_to_teaching_adviser?
+    store["referred_by_return_to_teaching_adviser"] == "yes"
   end
 
   def lead_mentor?

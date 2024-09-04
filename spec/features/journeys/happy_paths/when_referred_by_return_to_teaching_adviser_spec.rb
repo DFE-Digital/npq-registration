@@ -2,24 +2,16 @@ require "rails_helper"
 
 RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyAssertionHelper
-  include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
-  context "when JavaScript is enabled", :js do
-    scenario("registration journey while working at private nursery (with JS)") { run_scenario(js: true) }
+  context "when JavaScript is enabled or disabled" do
+    scenario("registration journey while working in other", :js, :no_js) { run_scenario(js: true) }
   end
 
-  context "when JavaScript is disabled", :no_js do
-    scenario("registration journey while working at private nursery (without JS)") { run_scenario(js: false) }
-  end
-
-  def run_scenario(js:)
+  def run_scenario(*)
     stub_participant_validation_request
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
@@ -45,53 +37,21 @@ RSpec.feature "Happy journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
-      page.choose("Early years or childcare", visible: :all)
+      page.choose("Other", visible: :all)
     end
 
-    School.create!(urn: 100_000, name: "open manchester school", address_1: "street 1", town: "manchester", establishment_status_code: "1")
-
-    expect_page_to_have(path: "/registration/kind-of-nursery", submit_form: true) do
-      expect(page).to have_text("Which early years setting do you work in?")
-      page.choose("Private nursery", visible: :all)
-    end
-
-    expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
-      expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
+    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
       page.choose("Yes", visible: :all)
-    end
-
-    choose_a_private_childcare_provider(js:, urn: "EY487263", name: "searchable childcare provider")
-
-    eyl_course = ["Early years leadership"]
-    ehco_course = ["Early headship coaching offer"]
-    npqlpm_course = ["Leading primary mathematics"]
-
-    ineligible_courses_list = Questionnaires::ChooseYourNpq.new.options.map(&:value)
-
-    ineligible_courses = ineligible_courses_list.map { |name|
-      I18n.t("course.name.#{name}")
-    } - eyl_course - ehco_course - npqlpm_course
-
-    ineligible_courses.each do |course|
-      expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
-        expect(page).to have_text("Which NPQ do you want to do?")
-        page.choose(course, visible: :all)
-      end
-
-      expect(page).to have_text("You can go back and select the Early years leadership") unless course.in?(["Leading primary mathematics", "Special educational needs co-ordinator (SENCO)"])
-      expect(page).to have_text("Before you can take this NPQ, your training provider needs to check your understanding of mastery approaches to teaching maths.") if course == "Leading primary mathematics"
-      expect(page).to have_text("Do you work as a special educational needs co-ordinator (SENCO)?") if course == "Special educational needs co-ordinator (SENCO)"
-      page.click_link("Back")
     end
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
-      page.choose("Early years leadership", visible: :all)
+      page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: true) do
+    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("eligible for scholarship funding")
+      page.click_button("Continue")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -106,15 +66,14 @@ RSpec.feature "Happy journeys", type: :feature do
 
     allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
-    expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
+    expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "Before #{application_course_start_date}",
-          "Course" => "Early years leadership",
-          "Work setting" => "Early years or childcare",
+          "Course" => "Senior leadership",
+          "Work setting" => "Other",
+          "Referred by return to teaching adviser" => "Yes",
           "Provider" => "Teach First",
-          "Ofsted unique reference number (URN)" => "EY487263 – searchable childcare provider – street 1, manchester",
-          "Early years setting" => "Private nursery",
           "Workplace in England" => "Yes",
         },
       )
@@ -143,25 +102,26 @@ RSpec.feature "Happy journeys", type: :feature do
     deep_compare_application_data(
       "accepted_at" => nil,
       "cohort_id" => nil,
-      "course_id" => Course.find_by(identifier: "npq-early-years-leadership").id,
+      "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
       "ecf_id" => nil,
-      "eligible_for_funding" => true,
-      "employer_name" => nil,
+      "eligible_for_funding" => false,
+      "employer_name" => "Return to teaching adviser referral",
       "employment_type" => nil,
-      "employment_role" => nil,
       "funded_place" => nil,
       "funding_choice" => nil,
-      "funding_eligiblity_status_code" => "funded",
-      "headteacher_status" => nil,
+      "funding_eligiblity_status_code" => "referred_by_return_to_teaching_adviser",
+      "employment_role" => nil,
+      "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "kind_of_nursery" => "private_nursery",
+      "headteacher_status" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
-      "private_childcare_provider_id" => PrivateChildcareProvider.find_by(provider_urn: "EY487263").id,
+      "private_childcare_provider_id" => nil,
+      "referred_by_return_to_teaching_adviser" => "yes",
       "school_id" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
@@ -172,37 +132,34 @@ RSpec.feature "Happy journeys", type: :feature do
       "training_status" => "active",
       "ukprn" => nil,
       "primary_establishment" => false,
-      "referred_by_return_to_teaching_adviser" => nil,
       "number_of_pupils" => 0,
       "tsf_primary_eligibility" => false,
       "tsf_primary_plus_eligibility" => false,
-      "works_in_childcare" => true,
+      "works_in_childcare" => false,
       "works_in_nursery" => nil,
       "works_in_school" => false,
-      "work_setting" => "early_years_or_childcare",
+      "work_setting" => "other",
       "raw_application_data" => {
-        "targeted_delivery_funding_eligibility" => false,
-        "email_template" => "eligible_scholarship_funding_not_tsf",
-        "funding_eligiblity_status_code" => "funded",
-        "tsf_primary_eligibility" => false,
-        "tsf_primary_plus_eligibility" => false,
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
         "course_start" => "Before #{application_course_start_date}",
         "course_start_date" => "yes",
-        "course_identifier" => "npq-early-years-leadership",
-        "has_ofsted_urn" => "yes",
-        "funding_amount" => nil,
-        "institution_identifier" => "PrivateChildcareProvider-EY487263",
-        "institution_name" => js ? "" : "EY487263",
-        "kind_of_nursery" => "private_nursery",
+        "course_identifier" => "npq-senior-leadership",
+        "email_template" => "not_eligible_scholarship_funding_not_tsf",
+        "employer_name" => "Return to teaching adviser referral",
+        "funding_eligiblity_status_code" => "referred_by_return_to_teaching_adviser",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
+        "funding_amount" => nil,
+        "referred_by_return_to_teaching_adviser" => "yes",
+        "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",
         "teacher_catchment_country" => nil,
-        "works_in_childcare" => "yes",
+        "tsf_primary_eligibility" => false,
+        "tsf_primary_plus_eligibility" => false,
+        "work_setting" => "other",
+        "works_in_childcare" => "no",
         "works_in_school" => "no",
-        "work_setting" => "early_years_or_childcare",
       },
     )
   end

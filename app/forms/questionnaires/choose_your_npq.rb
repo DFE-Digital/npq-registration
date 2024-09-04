@@ -56,7 +56,7 @@ module Questionnaires
         elsif course.ehco?
           :npqh_status
         elsif previously_eligible_for_funding? && !eligible_for_funding?
-          if wizard.query_store.works_in_other?
+          if wizard.query_store.works_in_another_setting?
             :choose_your_provider
           else
             :ineligible_for_funding
@@ -72,7 +72,7 @@ module Questionnaires
         :senco_in_role
       elsif referred_by_return_to_teaching_adviser?
         :possible_funding
-      elsif works_in_other?
+      elsif works_in_another_setting?
         if employment_type_other?
           :ineligible_for_funding
         elsif lead_mentor?
@@ -106,7 +106,7 @@ module Questionnaires
         else
           :have_ofsted_urn
         end
-      elsif inside_catchment? && works_in_other?
+      elsif inside_catchment? && works_in_another_setting?
         :your_employment
       else
         :work_setting
@@ -182,7 +182,7 @@ module Questionnaires
     end
 
     delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_other?, :works_in_school?, :young_offender_institution?,
+    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_another_setting?, :works_in_school?, :young_offender_institution?,
              :inside_catchment?, :referred_by_return_to_teaching_adviser?, :employment_type_local_authority_virtual_school?, :has_ofsted_urn?,
              :employment_type_hospital_school?, :employment_type_other?, :works_in_childcare?, :kind_of_nursery_public?, to: :query_store
 

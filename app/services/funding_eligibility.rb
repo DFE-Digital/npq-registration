@@ -95,7 +95,6 @@ class FundingEligibility
       return NOT_IN_ENGLAND unless inside_catchment?
 
       unless institution
-
         if query_store
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
@@ -105,6 +104,8 @@ class FundingEligibility
             return FUNDED_ELIGIBILITY_RESULT if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
 
             return NO_INSTITUTION
+          elsif query_store.works_in_other?
+            return INELIGIBLE_INSTITUTION_TYPE
           end
         else
           return NO_INSTITUTION

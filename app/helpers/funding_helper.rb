@@ -16,7 +16,7 @@ module FundingHelper
     return true if application.course.ehco? && new_headteacher?(application)
     return true if application.referred_by_return_to_teaching_adviser == "yes"
 
-    application.work_setting == "other" && application.employment_type != "lead_mentor_for_accredited_itt_provider" && application.course.identifier != "npq-early-headship-coaching-offer"
+    application.work_setting == "another_setting" && application.employment_type != "lead_mentor_for_accredited_itt_provider" && application.course.identifier != "npq-early-headship-coaching-offer"
   end
 
   def targeted_support_funding

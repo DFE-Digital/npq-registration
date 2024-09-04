@@ -22,15 +22,9 @@ module Questionnaires
     end
 
     def next_step
-      if changing_answer?
-        if answers_will_change?
-          next_step_path
-        else
-          :check_answers
-        end
-      else
-        next_step_path
-      end
+      return :check_answers if changing_answer? && !answers_will_change?
+
+      :work_setting
     end
 
     def previous_step
@@ -51,17 +45,6 @@ module Questionnaires
         build_option_struct(value: "england", label: "Yes", link_errors: true),
         build_option_struct(value: "another", label: "No"),
       ]
-    end
-
-  private
-
-    def next_step_path
-      case teacher_catchment
-      when "england"
-        :referred_by_return_to_teaching_adviser
-      when "another"
-        :work_setting
-      end
     end
   end
 end

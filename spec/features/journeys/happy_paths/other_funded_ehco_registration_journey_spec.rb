@@ -42,10 +42,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/referred-by-return-to-teaching-adviser", submit_form: true) do
-      page.choose("No", visible: :all)
-    end
-
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
       page.choose("A school", visible: :all)
     end
@@ -114,7 +110,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
           "Workplace" => "open manchester school – street 1, manchester",
           "Headteacher" => "No",
           "Headship NPQ stage" => "I’ve completed it",
-          "Referred by return to teaching adviser" => "No",
           "Course funding" => "I am paying",
         },
       )
@@ -178,7 +173,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "lead_mentor" => false,
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
-      "referred_by_return_to_teaching_adviser" => "no",
+      "referred_by_return_to_teaching_adviser" => nil,
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
@@ -211,7 +206,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "funding_amount" => nil,
         "npqh_status" => "completed_npqh",
-        "referred_by_return_to_teaching_adviser" => "no",
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

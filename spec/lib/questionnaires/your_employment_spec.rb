@@ -17,8 +17,6 @@ RSpec.describe Questionnaires::YourEmployment, type: :model do
       :itt_provider
     when "hospital_school", "young_offender_institution"
       :your_employer
-    when "other"
-      :choose_your_npq
     else
       :your_role
     end
@@ -45,7 +43,15 @@ RSpec.describe Questionnaires::YourEmployment, type: :model do
       let(:employment_type) { "other" }
 
       it "returns your_employer" do
-        expect(subject.next_step).to be(:choose_your_npq)
+        expect(subject.next_step).to be(:your_role)
+      end
+    end
+
+    context "when an employment type is another_setting" do
+      let(:employment_type) { "another_setting" }
+
+      it "returns your_employer" do
+        expect(subject.next_step).to be(:your_role)
       end
     end
 
