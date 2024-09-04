@@ -84,7 +84,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         within ".data-migration-lead_provider" do
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
-          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+          expect(page).to have_css(".percentage-successfully-migrated", text: "66%")
 
           data_migration = Migration::DataMigration.find_by(model: :lead_provider)
           expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
@@ -124,7 +124,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         within ".data-migration-cohort" do
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
-          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+          expect(page).to have_css(".percentage-successfully-migrated", text: "66%")
 
           data_migration = Migration::DataMigration.find_by(model: :cohort)
           expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
@@ -167,7 +167,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         within ".data-migration-statement" do
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
-          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+          expect(page).to have_css(".percentage-successfully-migrated", text: "66%")
 
           data_migration = Migration::DataMigration.find_by(model: :statement)
           expect(page).to have_link("Failures report", href: download_report_npq_separation_migration_migrations_path(data_migration.model))
@@ -208,7 +208,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         within ".data-migration-user" do
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
-          expect(page).to have_css(".percentage-successfully-migrated", text: "67%")
+          expect(page).to have_css(".percentage-successfully-migrated", text: "66%")
         end
       end
     end

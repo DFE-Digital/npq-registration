@@ -12,6 +12,14 @@ module Migration
         }
         .to_yaml
       end
+
+      def purge_failures!(data_migration)
+        Rails.cache.delete(migration_failure_key(data_migration))
+      end
+
+      def migration_failure_key(data_migration)
+        "migration_failure_#{data_migration.model}_#{data_migration.id}"
+      end
     end
 
     def record_failure(item, failure_message)
@@ -30,20 +38,17 @@ module Migration
 
   private
 
-    attr_reader :data_migration
+    attr_reader :data_migration, :key
 
     def initialize(data_migration:)
       raise ArgumentError, "Missing data_migration" unless data_migration
 
       @data_migration = data_migration
-    end
-
-    def migration_failure_key
-      @migration_failure_key ||= "migration_failure_#{data_migration.model}_#{data_migration.id}"
+      @key = self.class.migration_failure_key(data_migration)
     end
 
     def failures
-      Rails.cache.read(migration_failure_key)
+      Rails.cache.read(key)
     end
 
     def write_failure(item, failure_message)
@@ -52,7 +57,7 @@ module Migration
       failures_hash[failure_message.to_s].push(*item.id)
 
       failures_yaml = failures_hash.to_yaml
-      Rails.cache.write(migration_failure_key.to_s, failures_yaml, expires_in: 1.month)
+      Rails.cache.write(key, failures_yaml, expires_in: 1.month)
       failures_yaml
     end
   end
