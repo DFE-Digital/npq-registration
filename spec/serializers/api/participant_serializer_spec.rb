@@ -55,8 +55,20 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         ])
       end
 
-      it "serializes the `teacher_reference_number`" do
-        expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+      context "when serializing `teacher_reference_number`" do
+        context "when trn is verified" do
+          before { participant.update!(trn_verified: true) }
+
+          it "serializes the `teacher_reference_number`" do
+            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+          end
+        end
+
+        context "when trn is not verified" do
+          it "serializes nil" do
+            expect(attributes["teacher_reference_number"]).to be_nil
+          end
+        end
       end
 
       context "when serializing `updated_at`" do
@@ -106,8 +118,20 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["full_name"]).to eq(participant.full_name)
       end
 
-      it "serializes the `teacher_reference_number`" do
-        expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+      context "when serializing `teacher_reference_number`" do
+        context "when trn is verified" do
+          before { participant.update!(trn_verified: true) }
+
+          it "serializes the `teacher_reference_number`" do
+            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+          end
+        end
+
+        context "when trn is not verified" do
+          it "serializes nil" do
+            expect(attributes["teacher_reference_number"]).to be_nil
+          end
+        end
       end
 
       context "when serializing `updated_at`" do
@@ -178,8 +202,20 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
         expect(attributes["full_name"]).to eq(participant.full_name)
       end
 
-      it "serializes the `teacher_reference_number`" do
-        expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+      context "when serializing `teacher_reference_number`" do
+        context "when trn is verified" do
+          before { participant.update!(trn_verified: true) }
+
+          it "serializes the `teacher_reference_number`" do
+            expect(attributes["teacher_reference_number"]).to eq(participant.trn)
+          end
+        end
+
+        context "when trn is not verified" do
+          it "serializes nil" do
+            expect(attributes["teacher_reference_number"]).to be_nil
+          end
+        end
       end
 
       context "when serializing `updated_at`" do
