@@ -10,6 +10,7 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
 
   before do
     allow(Rails).to receive(:env) { environment.inquiry }
+    allow(Faker::Boolean).to receive(:boolean).and_return(false)
   end
 
   subject { described_class.new(lead_provider:, cohort:) }
@@ -77,22 +78,20 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       end
 
       it "creates participant id changes" do
-        allow(Faker::Boolean).to receive(:boolean).and_return(false)
-
         expect {
           subject.populate
         }.to(change(ParticipantIdChange, :count))
       end
 
       it "creates rejected applications" do
-        allow(Faker::Boolean).to receive(:boolean).and_return(false)
-
         expect {
           subject.populate
         }.to(change { Application.where(lead_provider_approval_status: "rejected").count })
       end
 
       it "creates eligible for funding applications" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(true)
+
         expect {
           subject.populate
         }.to(change { Application.eligible_for_funding.count })
@@ -105,16 +104,12 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       end
 
       it "creates outcomes" do
-        allow(Faker::Boolean).to receive(:boolean).and_return(false)
-
         expect {
           subject.populate
         }.to(change(ParticipantOutcome, :count))
       end
 
       it "voids some declarations" do
-        allow(Faker::Boolean).to receive(:boolean).and_return(false)
-
         expect {
           subject.populate
         }.to(change(Declaration.voided_state, :count).and(change(ParticipantOutcome.voided_state, :count)))
