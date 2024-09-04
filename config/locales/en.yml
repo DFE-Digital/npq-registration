@@ -122,6 +122,29 @@ en:
           attributes:
             completion_date:
               *completion_date
+        contract_template:
+          attributes:
+            number_of_payment_periods: &integer_greater_than_or_equal_to_zero
+              not_a_number: "Must be an integer greater than or equal to zero"
+              not_an_integer: "Must be an integer greater than or equal to zero"
+              greater_than_or_equal_to: "Must be an integer greater than or equal to zero"
+            output_payment_percentage:
+              <<: *integer_greater_than_or_equal_to_zero
+            service_fee_installments:
+              <<: *integer_greater_than_or_equal_to_zero
+            service_fee_percentage:
+              <<: *integer_greater_than_or_equal_to_zero
+            per_participant:
+              not_a_number: "Must be greater than zero"
+              greater_than: "Must be greater than zero"
+            recruitment_target:
+              not_a_number: "Must be an integer greater than zero"
+              not_an_integer: "Must be an integer greater than zero"
+              greater_than: "Must be an integer greater than zero"
+        contract:
+          attributes:
+            course_id:
+              taken: "Can only have one contract for statement and course"
 
   activemodel:
     attributes:
