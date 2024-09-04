@@ -20,7 +20,10 @@ module Migration::Migrators
 
       def prepare!
         model = name.gsub(/^.*::/, "").underscore.to_sym
-        number_of_workers.times { |worker| Migration::DataMigration.create!(model:, worker:) }
+        number_of_workers.times do |worker|
+          data_migration = Migration::DataMigration.create!(model:, worker:)
+          Migration::FailureManager.purge_failures!(data_migration)
+        end
       end
 
       def runnable?

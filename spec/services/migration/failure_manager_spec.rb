@@ -31,6 +31,25 @@ RSpec.describe Migration::FailureManager, :in_memory_rails_cache do
     end
   end
 
+  describe ".migration_failure_key" do
+    subject { described_class.migration_failure_key(data_migration) }
+
+    let(:data_migration) { create(:data_migration, model: :statement) }
+
+    it { is_expected.to eq("migration_failure_#{data_migration.model}_#{data_migration.id}") }
+  end
+
+  describe ".purge_failures!" do
+    let(:item) { create(:ecf_migration_statement) }
+    let(:data_migration) { create(:data_migration, model: :statement, failure_count: 1) }
+
+    before { instance.record_failure(item, "failure message") }
+
+    subject(:purge_failures) { described_class.purge_failures!(data_migration) }
+
+    it { expect { purge_failures }.to change(instance, :all_failures).from(be_present).to be_nil }
+  end
+
   describe "#record_failure" do
     subject { instance.record_failure(item, failure_message) }
 

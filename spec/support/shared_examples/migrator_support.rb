@@ -22,11 +22,19 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   end
 
   describe ".prepare!" do
+    before { Migration::DataMigration.destroy_all }
+
     subject(:prepare!) { described_class.prepare! }
 
     it "creates a pending data migrations" do
       expect { prepare! }.to change(Migration::DataMigration, :count).by(1)
       expect(Migration::DataMigration.all).to all(be_pending)
+    end
+
+    it "purges the failures from previous runs" do
+      allow(Migration::FailureManager).to receive(:purge_failures!)
+      prepare!
+      expect(Migration::FailureManager).to have_received(:purge_failures!).once.with(Migration::DataMigration.last)
     end
 
     context "when there are enough models for two workers" do
@@ -35,6 +43,14 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
       it "creates two pending data migrations" do
         expect { prepare! }.to change(Migration::DataMigration, :count).by(2)
         expect(Migration::DataMigration.all).to all(be_pending)
+      end
+
+      it "purges the failures from both data migrations" do
+        allow(Migration::FailureManager).to receive(:purge_failures!)
+        prepare!
+        Migration::DataMigration.last(2).each do |data_migration|
+          expect(Migration::FailureManager).to have_received(:purge_failures!).once.with(data_migration)
+        end
       end
     end
   end
