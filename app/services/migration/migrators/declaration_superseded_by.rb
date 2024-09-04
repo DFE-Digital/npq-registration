@@ -20,10 +20,10 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_declarations) do |ecf_declaration|
-        declaration = ::Declaration.find_by!(ecf_id: ecf_declaration.id)
+        declaration = find_declaration!(ecf_id: ecf_declaration.id)
 
         declaration.update!(
-          superseded_by_id: ::Declaration.select(:id).find_by(ecf_id: ecf_declaration.superseded_by_id).id,
+          superseded_by: find_declaration!(ecf_id: ecf_declaration.superseded_by_id),
         )
       end
     end

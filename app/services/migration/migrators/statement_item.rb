@@ -20,11 +20,11 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_statement_items) do |ecf_statement_item|
-        statement = ::Statement.find_or_initialize_by(ecf_id: ecf_statement_item.statement_id)
-        declaration_id = ::Declaration.select(:id).find_by!(ecf_id: ecf_statement_item.participant_declaration_id).id
+        statement = find_statement!(ecf_id: ecf_statement_item.statement_id)
+        declaration = find_declaration!(ecf_id: ecf_statement_item.participant_declaration_id)
         statement_item = ::StatementItem.find_or_initialize_by(
           statement:,
-          declaration_id:,
+          declaration:,
           state: ecf_statement_item.state,
         )
 

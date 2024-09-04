@@ -21,9 +21,9 @@ module Migration::Migrators
     def call
       migrate(self.class.ecf_outcomes) do |ecf_outcome|
         outcome = ::ParticipantOutcome.find_or_initialize_by(ecf_id: ecf_outcome.id)
-        declaration_id = ::Declaration.select(:id).find_by!(ecf_id: ecf_outcome.participant_declaration_id).id
+        declaration = find_declaration!(ecf_id: ecf_outcome.participant_declaration_id)
 
-        outcome.update!(ecf_outcome.attributes.except("id", "participant_declaration_id").merge({ declaration_id: }))
+        outcome.update!(ecf_outcome.attributes.except("id", "participant_declaration_id").merge({ declaration: }))
       end
     end
   end

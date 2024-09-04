@@ -26,10 +26,10 @@ module Migration::Migrators
         application_state = ::ApplicationState.find_or_initialize_by(ecf_id: ecf_participant_profile_state.id)
 
         ecf_lead_provider_id = ecf_participant_profile_state.cpd_lead_provider&.npq_lead_provider&.id
-        application_state.lead_provider = ::LeadProvider.find_by!(ecf_id: ecf_lead_provider_id) if ecf_lead_provider_id
+        application_state.lead_provider = find_lead_provider!(ecf_id: ecf_lead_provider_id) if ecf_lead_provider_id
 
         ecf_application_id = ecf_participant_profile_state.participant_profile_id
-        application_state.application_id = ::Application.select(:id).find_by!(ecf_id: ecf_application_id).id
+        application_state.application = find_application!(ecf_id: ecf_application_id)
 
         application_state.update!(ecf_participant_profile_state.attributes.slice(%w[state reason created_at updated_at]))
       end

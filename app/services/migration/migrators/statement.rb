@@ -32,8 +32,8 @@ module Migration::Migrators
           deadline_date: ecf_statement.deadline_date,
           payment_date: ecf_statement.payment_date,
           output_fee: ecf_statement.output_fee,
-          cohort: cohorts_by_start_year[ecf_statement.cohort.start_year],
-          lead_provider: lead_providers_by_ecf_id[ecf_statement.cpd_lead_provider.npq_lead_provider.id],
+          cohort: find_cohort!(start_year: ecf_statement.cohort.start_year),
+          lead_provider: find_lead_provider!(ecf_id: ecf_statement.cpd_lead_provider.npq_lead_provider.id),
           marked_as_paid_at: ecf_statement.marked_as_paid_at,
           reconcile_amount: ecf_statement.reconcile_amount,
           state: npq_state(ecf_statement),
@@ -52,14 +52,6 @@ module Migration::Migrators
       else
         :open
       end
-    end
-
-    def lead_providers_by_ecf_id
-      @lead_providers_by_ecf_id ||= ::LeadProvider.all.index_by(&:ecf_id)
-    end
-
-    def cohorts_by_start_year
-      @cohorts_by_start_year ||= ::Cohort.all.index_by(&:start_year)
     end
   end
 end

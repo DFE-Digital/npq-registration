@@ -48,7 +48,7 @@ module Migration::Migrators
       end
 
       def records_per_worker
-        1_000
+        10_000
       end
     end
 
@@ -83,7 +83,47 @@ module Migration::Migrators
       @data_migration ||= Migration::DataMigration.find_by(model: self.class.model, worker:)
     end
 
+    def find_lead_provider!(ecf_id:)
+      lead_providers_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
+    end
+
+    def find_cohort!(start_year:)
+      cohorts_by_start_year[start_year] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
+    end
+
+    def find_application!(ecf_id:)
+      applications_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
+    end
+
+    def find_declaration!(ecf_id:)
+      declarations_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Declaration")
+    end
+
+    def find_statement!(ecf_id:)
+      statements_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
+    end
+
   private
+
+    def statements_by_ecf_id
+      @statements_by_ecf_id ||= ::Statement.select(:id, :ecf_id).all.index_by(&:ecf_id)
+    end
+
+    def declarations_by_ecf_id
+      @declarations_by_ecf_id ||= ::Declaration.all.index_by(&:ecf_id)
+    end
+
+    def applications_by_ecf_id
+      @applications_by_ecf_id ||= ::Application.select(:id, :ecf_id).all.index_by(&:ecf_id)
+    end
+
+    def lead_providers_by_ecf_id
+      @lead_providers_by_ecf_id ||= ::LeadProvider.select(:id, :ecf_id).all.index_by(&:ecf_id)
+    end
+
+    def cohorts_by_start_year
+      @cohorts_by_start_year ||= ::Cohort.select(:id, :start_year).all.index_by(&:start_year)
+    end
 
     def offset
       worker * self.class.records_per_worker

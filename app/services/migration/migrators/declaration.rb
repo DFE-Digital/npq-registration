@@ -30,25 +30,32 @@ module Migration::Migrators
           declaration_date: ecf_declaration.declaration_date,
           state: ecf_declaration.state,
           state_reason: latest_declaration_state&.state_reason,
-          cohort: cohorts_by_start_year[ecf_declaration.cohort.start_year],
-          lead_provider: lead_providers_by_ecf_id[ecf_declaration.cpd_lead_provider.npq_lead_provider.id],
-          application: application(ecf_declaration.course_identifier, ecf_declaration.user_id),
+          cohort: find_cohort!(start_year: ecf_declaration.cohort.start_year),
+          lead_provider: find_lead_provider!(ecf_id: ecf_declaration.cpd_lead_provider.npq_lead_provider.id),
+          application: find_application!(course_identifier: ecf_declaration.course_identifier, ecf_user_id: ecf_declaration.user_id),
         )
       end
     end
 
   private
 
-    def cohorts_by_start_year
-      @cohorts_by_start_year ||= ::Cohort.all.index_by(&:start_year)
+    def find_application!(course_identifier:, ecf_user_id:)
+      applications_by_course_identifier_and_ecf_user_id.dig(course_identifier, ecf_user_id) || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
     end
 
-    def lead_providers_by_ecf_id
-      @lead_providers_by_ecf_id ||= ::LeadProvider.all.index_by(&:ecf_id)
-    end
+    def applications_by_course_identifier_and_ecf_user_id
+      @applications_by_course_identifier_and_ecf_user_id ||= begin
+        applications = ::Application
+          .includes(:user, :course)
 
-    def application(course_identifier, ecf_user_id)
-      ::Application.includes(:user, :course).find_by(course: { identifier: course_identifier }, user: { ecf_id: ecf_user_id })
+        applications.each_with_object({}) do |application, hash|
+          course_identifier = application.course.identifier
+          ecf_user_id = application.user.ecf_id
+
+          hash[course_identifier] ||= {}
+          hash[course_identifier][ecf_user_id] = application
+        end
+      end
     end
   end
 end
