@@ -52,7 +52,7 @@ RSpec.describe Migration::Migrators::Contract do
       cohort = create(:ecf_migration_cohort)
       npq_lead_provider = create(:ecf_migration_npq_lead_provider)
 
-      ecf_statement = create(
+      create(
         :ecf_migration_statement,
         cpd_lead_provider: npq_lead_provider.cpd_lead_provider,
         cohort:,
