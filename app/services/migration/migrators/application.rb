@@ -39,15 +39,21 @@ module Migration::Migrators
       run_once { report_applications_not_in_ecf_as_failures }
 
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
-        application = ::Application
-          .select(ATTRIBUTES_TO_COMPARE)
-          .find_by!(ecf_id: ecf_npq_application.id)
+        application = applications_by_ecf_id[ecf_npq_application.id]
+        raise ActiveRecord::RecordNotFound, "Application not found" unless application
 
         compare_attributes_values!(ecf_npq_application, application)
       end
     end
 
   private
+
+    def applications_by_ecf_id
+      @applications_by_ecf_id ||= ::Application
+        .select(ATTRIBUTES_TO_COMPARE + %i[ecf_id])
+        .where(ecf_id: self.class.ecf_npq_applications.pluck(:id))
+        .index_by(&:ecf_id)
+    end
 
     def report_applications_not_in_ecf_as_failures
       applications_not_in_ecf = ::Application.where.not(ecf_id: self.class.ecf_npq_applications.pluck(:id)).select(:id)

@@ -23,7 +23,7 @@ module Migration::Migrators
         declaration = ::Declaration.find_by!(ecf_id: ecf_declaration.id)
 
         declaration.update!(
-          superseded_by_id: ::Declaration.select(:id).find_by(ecf_id: ecf_declaration.superseded_by_id).id,
+          superseded_by_id: find_declaration_id!(ecf_id: ecf_declaration.superseded_by_id),
         )
       end
     end

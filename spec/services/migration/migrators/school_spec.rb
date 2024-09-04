@@ -7,7 +7,7 @@ RSpec.describe Migration::Migrators::School do
     end
 
     def create_npq_resource(ecf_resource)
-      create(:school, urn: ecf_resource.urn, name: ecf_resource.name)
+      create(:school, urn: ecf_resource.urn, name: ecf_resource.name.upcase)
     end
 
     def setup_failure_state
