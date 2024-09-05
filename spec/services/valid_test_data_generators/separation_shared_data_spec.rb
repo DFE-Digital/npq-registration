@@ -10,7 +10,9 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
 
   before do
     allow(Rails).to receive(:env) { environment.inquiry }
+    # Stub Faker and Courses here so we have all scenarios created regardless
     allow(Faker::Boolean).to receive(:boolean).and_return(false)
+    allow(Course).to receive(:all).and_return([Course.find_by(identifier: "npq-headship"), Course.find_by(identifier: "npq-leading-literacy")])
   end
 
   subject { described_class.new(lead_provider:, cohort:) }
