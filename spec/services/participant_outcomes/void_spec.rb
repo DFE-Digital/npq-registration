@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe ParticipantOutcomes::Void, type: :model do
   let(:course) { create(:course, :senior_leadership) }
-  let(:declaration) { create(:declaration, declaration_type, :paid, course:) }
+  let(:declaration) { create_declaration(declaration_type, :paid, course:) }
   let(:declaration_type) { :completed }
 
   subject(:service) { described_class.new(declaration:) }

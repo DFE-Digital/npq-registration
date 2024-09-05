@@ -11,7 +11,7 @@ RSpec.describe Migration::Migrators::ParticipantOutcome do
     end
 
     def create_npq_resource(ecf_resource)
-      create(:declaration, ecf_id: ecf_resource.participant_declaration_id)
+      create_declaration(ecf_id: ecf_resource.participant_declaration_id)
       create(:participant_outcome, ecf_id: ecf_resource.id)
     end
 

@@ -10,7 +10,7 @@ RSpec.describe Migration::Migrators::DeclarationSupersededBy do
     end
 
     def create_npq_resource(ecf_resource)
-      create(:declaration, :ineligible, ecf_id: ecf_resource.id)
+      create_declaration(:ineligible, ecf_id: ecf_resource.id)
     end
 
     def setup_failure_state

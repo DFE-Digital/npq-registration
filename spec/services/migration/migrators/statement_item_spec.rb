@@ -8,7 +8,7 @@ RSpec.describe Migration::Migrators::StatementItem do
 
     def create_npq_resource(ecf_resource)
       statement = create(:statement, ecf_id: ecf_resource.statement_id)
-      declaration = create(:declaration, ecf_id: ecf_resource.participant_declaration_id)
+      declaration = create_declaration(ecf_id: ecf_resource.participant_declaration_id)
       create(:statement_item, declaration:, statement:, state: ecf_resource.state)
     end
 

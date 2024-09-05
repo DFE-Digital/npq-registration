@@ -12,7 +12,7 @@ RSpec.describe Migration::Migrators::Declaration do
       course = create(:course, identifier: ecf_resource.course_identifier)
       user = create(:user, ecf_id: ecf_resource.user.id)
       application = create(:application, :accepted, course:, user:)
-      create(:declaration, ecf_id: ecf_resource.id, cohort:, lead_provider:, application:)
+      create_declaration(ecf_id: ecf_resource.id, cohort:, lead_provider:, application:)
     end
 
     def setup_failure_state

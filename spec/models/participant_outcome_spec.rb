@@ -1,12 +1,8 @@
 require "rails_helper"
 
 RSpec.describe ParticipantOutcome, type: :model do
-  let(:application) { create(:application, :accepted) }
-  let(:declaration_date) { application.schedule.applies_from + 1.day }
   let!(:declaration) do
-    travel_to declaration_date do
-      create(:declaration, :completed, application:, declaration_date:)
-    end
+    create_declaration(:completed)
   end
 
   subject(:instance) { build(:participant_outcome, declaration:) }
@@ -24,9 +20,8 @@ RSpec.describe ParticipantOutcome, type: :model do
   describe ".latest" do
     subject { described_class.latest }
 
-    let!(:latest_outcome) { create(:participant_outcome) }
-
-    before { travel_to(1.day.ago) { create(:participant_outcome) } }
+    let!(:older_outcome) { create_participant_outcome }
+    let!(:latest_outcome) { create_participant_outcome }
 
     it { is_expected.to eq(latest_outcome) }
   end
@@ -153,9 +148,9 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
 
     describe ".sent_to_qualified_teachers_api" do
-      before { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+      before { create_participant_outcome(:not_sent_to_qualified_teachers_api) }
 
-      let!(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+      let!(:outcome) { create_participant_outcome(:sent_to_qualified_teachers_api) }
 
       subject(:result) { described_class.sent_to_qualified_teachers_api.map(&:id) }
 
@@ -163,9 +158,9 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
 
     describe ".not_sent_to_qualified_teachers_api" do
-      before { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+      before { create_participant_outcome(:sent_to_qualified_teachers_api) }
 
-      let!(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+      let!(:outcome) { create_participant_outcome(:not_sent_to_qualified_teachers_api) }
 
       subject(:result) { described_class.not_sent_to_qualified_teachers_api.map(&:id) }
 
@@ -173,19 +168,12 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
 
     describe ".declarations_where_outcome_passed_and_sent" do
-      let(:application_1) { create(:application, :accepted) }
-      let(:declaration_date_1) { application.schedule.applies_from + 1.day }
-      let(:application_2) { create(:application, :accepted) }
-      let(:declaration_date_2) { application.schedule.applies_from + 1.day }
       let!(:declaration_1) do
-        travel_to declaration_date_1 do
-          create(:declaration, :completed, application:, declaration_date:)
-        end
+        create_declaration(:completed)
       end
+
       let!(:declaration_2) do
-        travel_to declaration_date_2 do
-          create(:declaration, :completed, application:, declaration_date:)
-        end
+        create_declaration(:completed)
       end
 
       before do
@@ -201,19 +189,11 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
 
     describe ".latest_per_declaration" do
-      let(:application_1) { create(:application, :accepted) }
-      let(:declaration_date_1) { application.schedule.applies_from + 1.day }
-      let(:application_2) { create(:application, :accepted) }
-      let(:declaration_date_2) { application.schedule.applies_from + 1.day }
       let!(:declaration_1) do
-        travel_to declaration_date_1 do
-          create(:declaration, :completed, application:, declaration_date:)
-        end
+        create_declaration(:completed)
       end
       let!(:declaration_2) do
-        travel_to declaration_date_2 do
-          create(:declaration, :completed, application:, declaration_date:)
-        end
+        create_declaration(:completed)
       end
       let!(:outcome_1) { create(:participant_outcome, declaration: declaration_1) }
       let!(:outcome_2) { create(:participant_outcome, declaration: declaration_2) }

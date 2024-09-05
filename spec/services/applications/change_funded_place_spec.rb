@@ -107,7 +107,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
 
             Declaration.states.each_key do |state|
               it "is valid if the application has #{state} declarations" do
-                create(:declaration, application:, state:)
+                create_declaration(application:, state:)
                 service.change
 
                 expect(service.errors.messages_for(:application)).to be_empty
@@ -123,7 +123,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
             applicable = %w[submitted eligible payable paid]
             applicable.each do |applicable_state|
               it "is invalid if the application has #{applicable_state} declarations" do
-                create(:declaration, application:, state: applicable_state)
+                create_declaration(application:, state: applicable_state)
 
                 service.change
 
@@ -133,7 +133,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
 
             (Declaration.states.keys - applicable).each do |non_applicable_state|
               it "is valid if the application has #{non_applicable_state} declarations" do
-                create(:declaration, application:, state: non_applicable_state)
+                create_declaration(application:, state: non_applicable_state)
 
                 service.change
 

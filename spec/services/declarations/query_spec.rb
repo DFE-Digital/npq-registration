@@ -23,7 +23,7 @@ RSpec.describe Declarations::Query do
       describe "lead provider" do
         it "filters by lead provider" do
           declaration = create(:declaration)
-          create(:declaration, lead_provider: create(:lead_provider))
+          create_declaration(lead_provider: create(:lead_provider))
 
           query = described_class.new(lead_provider: declaration.lead_provider)
           expect(query.declarations).to contain_exactly(declaration)
@@ -46,8 +46,8 @@ RSpec.describe Declarations::Query do
 
       describe "updated since" do
         it "filters by updated since" do
-          create(:declaration, updated_at: 2.days.ago)
-          declaration = create(:declaration, updated_at: Time.zone.now)
+          create_declaration(updated_at: 2.days.ago)
+          declaration = create_declaration(updated_at: Time.zone.now)
 
           query = described_class.new(updated_since: 1.day.ago)
 
@@ -147,17 +147,17 @@ RSpec.describe Declarations::Query do
         let(:cohort_2025) { create(:cohort, start_year: 2025) }
 
         it "filters by cohort" do
-          create(:declaration, cohort: cohort_2023)
-          declaration = create(:declaration, cohort: cohort_2024)
+          create_declaration(cohort: cohort_2023)
+          declaration = create_declaration(cohort: cohort_2024)
           query = described_class.new(cohort_start_years: "2024")
 
           expect(query.declarations).to contain_exactly(declaration)
         end
 
         it "filters by multiple cohorts" do
-          declaration1 = create(:declaration, cohort: cohort_2023)
-          declaration2 = create(:declaration, cohort: cohort_2024)
-          create(:declaration, cohort: cohort_2025)
+          declaration1 = create_declaration(cohort: cohort_2023)
+          declaration2 = create_declaration(cohort: cohort_2024)
+          create_declaration(cohort: cohort_2025)
           query = described_class.new(cohort_start_years: "2023,2024")
 
           expect(query.declarations).to contain_exactly(declaration1, declaration2)
@@ -186,17 +186,17 @@ RSpec.describe Declarations::Query do
 
       context "when filtering by participant_id" do
         it "filters by participant_id" do
-          create(:declaration, application: create(:application, user: create(:user)))
-          declaration = create(:declaration, application: create(:application, user: create(:user)))
+          create_declaration(application: create(:application, user: create(:user)))
+          declaration = create_declaration(application: create(:application, user: create(:user)))
           query = described_class.new(participant_ids: declaration.user.ecf_id)
 
           expect(query.declarations).to contain_exactly(declaration)
         end
 
         it "filters by multiple participant_ids" do
-          declaration2 = create(:declaration, application: create(:application, user: create(:user)))
-          declaration1 = create(:declaration, application: create(:application, user: create(:user)))
-          create(:declaration, application: create(:application, user: create(:user)))
+          declaration2 = create_declaration(application: create(:application, user: create(:user)))
+          declaration1 = create_declaration(application: create(:application, user: create(:user)))
+          create_declaration(application: create(:application, user: create(:user)))
           query = described_class.new(participant_ids: [declaration1.user.ecf_id, declaration2.user.ecf_id].join(","))
 
           expect(query.declarations).to contain_exactly(declaration1, declaration2)
@@ -227,7 +227,7 @@ RSpec.describe Declarations::Query do
 
   describe "#declaration" do
     let(:lead_provider) { create(:lead_provider, name: "Lead Provider") }
-    let(:declaration) { create(:declaration, lead_provider:) }
+    let(:declaration) { create_declaration(lead_provider:) }
     let(:query) { described_class.new(lead_provider:) }
 
     it "returns a declaration by the given id" do
@@ -241,7 +241,7 @@ RSpec.describe Declarations::Query do
     end
 
     it "raises an error if the declaration is not in the filtered query" do
-      other_declaration = create(:declaration, lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
+      other_declaration = create_declaration(lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
 
       expect { query.declaration(ecf_id: other_declaration.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect { query.declaration(id: other_declaration.id) }.to raise_error(ActiveRecord::RecordNotFound)

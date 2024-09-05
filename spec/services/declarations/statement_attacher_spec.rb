@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Declarations::StatementAttacher, type: :model do
   let(:statement) { create(:statement, :next_output_fee) }
-  let(:declaration) { create(:declaration, :paid, lead_provider: statement.lead_provider, cohort: statement.cohort) }
+  let(:declaration) { create_declaration(:paid, lead_provider: statement.lead_provider, cohort: statement.cohort) }
   let(:instance) { described_class.new(declaration:) }
 
   describe "validations" do

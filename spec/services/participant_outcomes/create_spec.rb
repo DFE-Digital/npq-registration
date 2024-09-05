@@ -8,7 +8,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:course_identifier) { described_class::PERMITTED_COURSES.sample }
   let(:course) { Course.find_by(identifier: course_identifier) }
   let(:state) { described_class::STATES.sample }
-  let(:completed_declaration) { create(:declaration, :completed, :payable, course:) }
+  let(:completed_declaration) { create_declaration(:completed, :payable, course:) }
   let(:instance) { described_class.new(lead_provider:, participant_id:, completion_date:, state:, course_identifier:) }
 
   describe "validations" do

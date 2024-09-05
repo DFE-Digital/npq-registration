@@ -260,7 +260,7 @@ RSpec.describe Declarations::Create, type: :model do
       end
 
       context "when there is an existing billable declaration" do
-        before { create(:declaration, :paid, application:, declaration_date:) }
+        before { create_declaration(:paid, application:, declaration_date:) }
 
         it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
       end
@@ -329,7 +329,7 @@ RSpec.describe Declarations::Create, type: :model do
     context "when duplicate declaration exists" do
       let(:original_user) { create(:user, trn: participant.trn) }
       let(:original_application) { create(:application, :accepted, cohort:, course:, user: original_user) }
-      let!(:original_declaration) { create(:declaration, application: original_application) }
+      let!(:original_declaration) { create_declaration(application: original_application) }
 
       it "creates an `ineligible` declaration superseded by the original declaration" do
         subject

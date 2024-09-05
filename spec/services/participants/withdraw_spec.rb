@@ -30,7 +30,7 @@ RSpec.describe Participants::Withdraw, type: :model do
       context "when the application has no started declarations" do
         let(:application) { create(:application, :accepted) }
 
-        before { create(:declaration, application:, declaration_type: "retained-1") }
+        before { create_declaration(application:, declaration_type: "retained-1") }
 
         it { expect(instance).to have_error(:participant_id, :no_started_declarations, "An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance") }
       end

@@ -26,8 +26,10 @@ RSpec.describe Declaration, type: :model do
       end
 
       it "has an error on update" do
-        subject.declaration_date = 1.day.ago
-        expect(subject.save).to be_truthy
+        subject.declaration_date = subject.application.schedule.applies_from
+        travel_to(subject.declaration_date) do
+          expect(subject.save).to be_truthy
+        end
 
         subject.declaration_date = 1.day.from_now
         expect(subject.save).to be_falsey
@@ -45,7 +47,10 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when declaration_date is at the schedule start" do
-      before { subject.declaration_date = subject.application.schedule.applies_from }
+      before do
+        subject.declaration_date = subject.application.schedule.applies_from
+        travel_to(subject.declaration_date)
+      end
 
       it { is_expected.to be_valid }
     end
@@ -89,7 +94,8 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "state transition" do
-    let(:declaration) { create(:declaration, state:) }
+    let(:declaration) { create_declaration(state:) }
+    before { travel_to(declaration.declaration_date) }
 
     describe ".mark_eligible" do
       let(:state) { :submitted }
@@ -307,7 +313,7 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "#billable_statement" do
-    let(:statement_item) { create(:statement_item, state: :payable) }
+    let(:statement_item) { create_statement_item(state: :payable) }
     let(:declaration) { statement_item.declaration }
 
     subject { declaration.billable_statement }
@@ -315,14 +321,14 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to eq(statement_item.statement) }
 
     context "when there are no billable statement items" do
-      let(:statement_item) { create(:statement_item, state: :awaiting_clawback) }
+      let(:statement_item) { create_statement_item(state: :awaiting_clawback) }
 
       it { is_expected.to be_nil }
     end
   end
 
   describe "#refundable_statement" do
-    let(:statement_item) { create(:statement_item, state: :awaiting_clawback) }
+    let(:statement_item) { create_statement_item(state: :awaiting_clawback) }
     let(:declaration) { statement_item.declaration }
 
     subject { declaration.refundable_statement }
@@ -330,7 +336,7 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to eq(statement_item.statement) }
 
     context "when there are no refundable statement items" do
-      let(:statement_item) { create(:statement_item, state: :payable) }
+      let(:statement_item) { create_statement_item(state: :payable) }
 
       it { is_expected.to be_nil }
     end
@@ -338,8 +344,8 @@ RSpec.describe Declaration, type: :model do
 
   describe "scopes" do
     describe ".latest_first" do
-      let!(:latest_declaration) { create(:declaration) }
-      let!(:older_declaration) { travel_to(1.day.ago) { create(:declaration) } }
+      let!(:older_declaration) { create_declaration }
+      let!(:latest_declaration) { create_declaration }
 
       it "returns the declarations with those created latest first" do
         expect(described_class.latest_first).to eq([latest_declaration, older_declaration])
@@ -351,9 +357,9 @@ RSpec.describe Declaration, type: :model do
 
       let(:lead_provider) { completed_declaration.lead_provider }
       let(:course_identifier) { completed_declaration.course_identifier }
-      let(:completed_declaration) { create(:declaration, :completed, :payable) }
+      let(:older_completed_declaration) { create_declaration(:completed, :payable, course:, lead_provider:) }
+      let(:completed_declaration) { create_declaration(:completed, :payable) }
       let(:course) { completed_declaration.course }
-      let(:older_completed_declaration) { travel_to(1.day.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
 
       before do
         # Not a completed declaration.
@@ -381,7 +387,7 @@ RSpec.describe Declaration, type: :model do
     end
 
     describe "declaration states" do
-      let(:declarations) { described_class.states.keys.map { |state| create(:declaration, state:) } }
+      let(:declarations) { described_class.states.keys.map { |state| create_declaration(state:) } }
 
       describe ".billable" do
         it "returns declarations with billable states" do
@@ -428,19 +434,19 @@ RSpec.describe Declaration, type: :model do
 
     describe ".with_lead_provider" do
       let(:lead_provider) { declaration.lead_provider }
-      let(:declaration) { create(:declaration) }
+      let(:declaration) { create_declaration }
 
-      before { create(:declaration, lead_provider: LeadProvider.where.not(id: lead_provider.id).first) }
+      before { create_declaration(lead_provider: LeadProvider.where.not(id: lead_provider.id).first) }
 
       it { expect(described_class.with_lead_provider(lead_provider)).to contain_exactly(declaration) }
     end
 
     describe ".completed" do
-      let(:completed_declaration) { create(:declaration, :completed) }
+      let(:completed_declaration) { create_declaration(:completed) }
 
       before do
         described_class.declaration_types.keys.excluding("completed").each do |declaration_type|
-          create(:declaration, declaration_type:)
+          create_declaration(declaration_type:)
         end
       end
 
@@ -449,11 +455,11 @@ RSpec.describe Declaration, type: :model do
 
     describe ".with_course_identifier" do
       let(:course_identifier) { declaration.application.course.identifier }
-      let(:declaration) { create(:declaration) }
+      let(:declaration) { create_declaration }
 
       before do
         Course::IDENTIFIERS.excluding(course_identifier).each do |identifier|
-          create(:declaration, course: Course.find_by(identifier:))
+          create_declaration(course: Course.find_by(identifier:))
         end
       end
 
@@ -468,7 +474,7 @@ RSpec.describe Declaration, type: :model do
     let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:) }
     let(:participant) { application.user }
-    let!(:declaration) { create(:declaration, application:) }
+    let!(:declaration) { create_declaration(application:) }
 
     context "when a user exists with the same TRN" do
       let(:other_user) { create(:user, trn: participant.trn) }
@@ -476,7 +482,7 @@ RSpec.describe Declaration, type: :model do
       context "when declarations have been made for a user with the same trn" do
         context "when declarations have been made for the same course" do
           let(:other_application) { create(:application, :accepted, cohort:, course:, user: other_user) }
-          let!(:other_declaration) { create(:declaration, application: other_application) }
+          let!(:other_declaration) { create_declaration(application: other_application) }
 
           it "returns those declarations" do
             expect(declaration.duplicate_declarations).to eq([other_declaration])
@@ -487,7 +493,7 @@ RSpec.describe Declaration, type: :model do
           before do
             course = create(:course, :early_headship_coaching_offer, course_group:)
             other_application = create(:application, :accepted, course:, cohort:, user: other_user)
-            create(:declaration, application: other_application)
+            create_declaration(application: other_application)
           end
 
           it "returns no declarations" do
@@ -504,7 +510,7 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when a declaration has been superseded by another" do
-      before { create(:declaration, application:, superseded_by: declaration) }
+      before { create_declaration(application:, superseded_by: declaration) }
 
       it "returns no declarations" do
         expect(declaration.duplicate_declarations).to be_empty
@@ -512,7 +518,7 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when a declaration has a different type" do
-      before { create(:declaration, application:, declaration_type: :completed) }
+      before { create_declaration(application:, declaration_type: :completed) }
 
       it "returns no declarations" do
         expect(declaration.duplicate_declarations).to be_empty
@@ -520,7 +526,7 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when a declaration has a not billable/submitted state" do
-      before { create(:declaration, application:, state: :clawed_back) }
+      before { create_declaration(application:, state: :clawed_back) }
 
       it "returns no declarations" do
         expect(declaration.duplicate_declarations).to be_empty
@@ -531,7 +537,7 @@ RSpec.describe Declaration, type: :model do
       before do
         course = create(:course, :early_headship_coaching_offer, course_group:)
         other_application = create(:application, :accepted, course:, cohort:, user: participant)
-        create(:declaration, application: other_application)
+        create_declaration(application: other_application)
       end
 
       it "returns no declarations" do

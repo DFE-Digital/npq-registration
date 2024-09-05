@@ -66,7 +66,7 @@ RSpec.describe QualifiedTeachers::Client do
       .to_return(status: 400, body: "", headers: {})
   end
   let(:course) { create(:course, :senior_leadership) }
-  let(:declaration) { create(:declaration, :completed, user:, course:) }
+  let(:declaration) { create_declaration(:completed, user:, course:) }
   let!(:participant_outcome) { create(:participant_outcome, declaration:, completion_date: Time.zone.local(2023, 2, 20, 17, 30, 0).rfc3339) }
   let(:trn) { participant_outcome.declaration.user.trn }
   let(:incorrect_trn) { "1001009" }
