@@ -11,8 +11,14 @@ RSpec.describe "Participant endpoints", type: :request do
     let(:path) { api_v2_participants_path }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:user, :with_application, **attrs)
+    def create_resource(created_since: nil, updated_since: nil, **attrs)
+      user = create(:user, :with_application, **attrs)
+      user.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+      user.applications.first.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+      user.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+      user.applications.first.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+      user
     end
 
     it_behaves_like "an API index endpoint"
@@ -83,7 +89,7 @@ RSpec.describe "Participant endpoints", type: :request do
   end
 
   describe "PUT /api/v2/participants/:ecf_id/change-schedule" do
-    let(:application) { create(:application, :with_declaration, lead_provider: current_lead_provider) }
+    let(:application) { create_application_with_declaration(lead_provider: current_lead_provider) }
     let(:schedule_identifier) { application.schedule.identifier }
     let(:course_identifier) { application.course.identifier }
     let(:resource) { application.user }

@@ -6,13 +6,17 @@ RSpec.describe "Declaration endpoints", type: :request do
   let(:serializer) { API::DeclarationSerializer }
   let(:serializer_version) { :v3 }
 
-  def create_resource(**attrs)
+  def create_resource(created_since: nil, updated_since: nil, **attrs)
     if attrs[:user]
-      attrs[:application] = create(:application, user: attrs[:user])
+      attrs[:application] = create(:application, :accepted, user: attrs[:user])
       attrs.delete(:user)
     end
 
-    create(:declaration, **attrs)
+    declaration = create_declaration(**attrs)
+    declaration.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+    declaration.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+    declaration
   end
 
   describe "GET /api/v3/participant-declarations" do
@@ -27,7 +31,7 @@ RSpec.describe "Declaration endpoints", type: :request do
   end
 
   describe "GET /api/v3/participant-declarations/:ecf_id" do
-    let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
+    let(:resource) { create_declaration(lead_provider: current_lead_provider) }
     let(:resource_id) { resource.ecf_id }
 
     def path(id = nil)
@@ -38,7 +42,7 @@ RSpec.describe "Declaration endpoints", type: :request do
   end
 
   describe "PUT /api/v3/participant-declarations/:ecf_id/void" do
-    let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
+    let(:resource) { create_declaration(lead_provider: current_lead_provider) }
     let(:resource_id) { resource.ecf_id }
     let(:service) { Declarations::Void }
     let(:action) { :void }

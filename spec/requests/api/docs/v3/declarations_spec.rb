@@ -14,11 +14,13 @@ RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.ya
   describe "single declarations" do
     let(:lead_provider) { create(:lead_provider) }
     let(:type) { "participant-declaration" } # check
-    let(:application) { create(:application, :accepted, :with_declaration, lead_provider:) }
+    let(:application) { create_application_with_declaration(lead_provider:) }
     let(:resource) { application.declarations.first }
     let(:base_response_example) do
       extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v3)
     end
+
+    before { travel_to(resource.declaration_date) }
 
     it_behaves_like "an API show endpoint documentation",
                     "/api/v3/participant-declarations/{id}",
@@ -49,17 +51,19 @@ RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.ya
     let(:course_group) { CourseGroup.find_by(name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
-    let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
+    let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:) }
     let(:declaration_date) { schedule.applies_from + 1.day }
     let(:invalid_attributes) { { participant_id: "invalid" } }
     let(:attributes) do
       {
         participant_id: application.user.ecf_id,
         declaration_type: "started",
-        declaration_date: application.schedule.applies_from.rfc3339,
+        declaration_date: declaration_date.rfc3339,
         course_identifier: course.identifier,
       }
     end
+
+    before { travel_to(declaration_date) }
 
     it_behaves_like "an API create on resource endpoint documentation",
                     "/api/v3/participant-declarations",

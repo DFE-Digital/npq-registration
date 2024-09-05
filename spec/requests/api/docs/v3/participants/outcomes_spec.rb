@@ -19,7 +19,7 @@ RSpec.describe "NPQ Participant Outcomes endpoint", openapi_spec: "v3/swagger.ya
     )
   end
   let(:participant) { application.user }
-  let(:declaration) { create(:declaration, :completed, application:) }
+  let(:declaration) { create_declaration(:completed, application:) }
 
   before { create(:participant_outcome, declaration:) }
 

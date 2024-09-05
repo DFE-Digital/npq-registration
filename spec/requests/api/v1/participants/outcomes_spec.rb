@@ -8,20 +8,27 @@ RSpec.describe "Participants outcome endpoints", type: :request do
   let(:application) { create(:application, :accepted, lead_provider: current_lead_provider) }
   let(:user) { application.user }
 
-  def create_resource(**attrs)
+  def create_resource(created_since: nil, updated_since: nil, **attrs)
     if attrs[:lead_provider]
-      attrs[:declaration] = create(:declaration, application:, lead_provider: attrs[:lead_provider])
+      attrs[:declaration] = create_declaration(application:, lead_provider: attrs[:lead_provider])
       attrs.delete(:lead_provider)
     end
 
-    create(:participant_outcome, **attrs)
+    outcome = create(:participant_outcome, **attrs)
+    outcome.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+    outcome.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+    outcome
   end
 
   def create_resource_with_different_parent(**attrs)
     create_resource(**attrs).tap do |outcome|
-      outcome.declaration.update!(
-        application: create(:application, :accepted, user: create(:user, full_name: "Other User")),
-      )
+      declaration_date = application.schedule.applies_from + 1.day
+      travel_to(declaration_date) do
+        outcome.declaration.update!(
+          application: create(:application, :accepted, user: create(:user, full_name: "Other User")),
+        )
+      end
     end
   end
 

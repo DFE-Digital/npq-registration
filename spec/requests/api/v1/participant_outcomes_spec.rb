@@ -6,13 +6,17 @@ RSpec.describe "Participant outcome endpoints", type: :request do
   let(:serializer) { API::ParticipantOutcomeSerializer }
   let(:serializer_version) { :v1 }
 
-  def create_resource(**attrs)
+  def create_resource(created_since: nil, updated_since: nil, **attrs)
     if attrs[:lead_provider]
-      attrs[:declaration] = create(:declaration, lead_provider: attrs[:lead_provider])
+      attrs[:declaration] = create_declaration(lead_provider: attrs[:lead_provider])
       attrs.delete(:lead_provider)
     end
 
-    create(:participant_outcome, **attrs)
+    outcome = create(:participant_outcome, **attrs)
+    outcome.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+    outcome.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+    outcome
   end
 
   describe "GET /api/v1/participants/npq/outcomes" do

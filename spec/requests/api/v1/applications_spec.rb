@@ -20,8 +20,14 @@ RSpec.describe "Application endpoints", type: :request do
     let(:path) { api_v1_applications_path }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:application, **attrs)
+    def create_resource(created_since: nil, updated_since: nil, **attrs)
+      application = create(:application, **attrs)
+      application.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+      application.user.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+      application.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+      application.user.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+      application
     end
 
     it_behaves_like "an API index endpoint"

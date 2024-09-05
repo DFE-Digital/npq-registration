@@ -13,6 +13,14 @@ RSpec.describe "Statements endpoint", type: "request" do
       create(:statement, **attrs)
     end
 
+    def create_resource(created_since: nil, updated_since: nil, **attrs)
+      statement = create(:statement, **attrs)
+      statement.update_attribute(:updated_at, updated_since) if updated_since # rubocop:disable Rails/SkipsModelValidations
+      statement.update_attribute(:created_at, created_since) if created_since # rubocop:disable Rails/SkipsModelValidations
+
+      statement
+    end
+
     it_behaves_like "an API index endpoint with pagination"
     it_behaves_like "an API index endpoint with filter by cohort"
     it_behaves_like "an API index endpoint with filter by updated_since"
