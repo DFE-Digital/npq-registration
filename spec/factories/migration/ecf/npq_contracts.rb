@@ -7,13 +7,13 @@ FactoryBot.define do
     course_identifier { create(:ecf_migration_npq_course).identifier }
     version { "0.0.1" }
 
-    service_fee_percentage { 40 }
-    output_payment_percentage { 60 }
-    per_participant { 800.00 }
-    number_of_payment_periods { 3 }
-    recruitment_target { 72 }
-    service_fee_installments { 19 }
-    targeted_delivery_funding_per_participant { 100.0 }
-    monthly_service_fee { 200.0 }
+    service_fee_percentage { 50 }
+    output_payment_percentage { 70 }
+    per_participant { 900.00 }
+    number_of_payment_periods { 4 }
+    recruitment_target { 82 }
+    service_fee_installments { 29 }
+    targeted_delivery_funding_per_participant { 200.0 }
+    monthly_service_fee { 400.0 }
   end
 end
