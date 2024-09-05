@@ -1,5 +1,19 @@
 module Migration::Migrators
   class Contract < Base
+    SHARED_ATTRIBUTES = %w[
+      created_at
+      updated_at
+      service_fee_percentage
+      output_payment_percentage
+      per_participant
+      number_of_payment_periods
+      recruitment_target
+      service_fee_installments
+      targeted_delivery_funding_per_participant
+      monthly_service_fee
+      special_course
+    ].freeze
+
     class << self
       def record_count
         ecf_contracts.count
@@ -26,20 +40,7 @@ module Migration::Migrators
           statement = ::Statement.find_by!(ecf_id: ecf_statement.id)
 
           contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
-          contract_template.update!(
-            created_at: ecf_contract.created_at,
-            updated_at: ecf_contract.updated_at,
-
-            service_fee_percentage: ecf_contract.service_fee_percentage,
-            output_payment_percentage: ecf_contract.output_payment_percentage,
-            per_participant: ecf_contract.per_participant,
-            number_of_payment_periods: ecf_contract.number_of_payment_periods,
-            recruitment_target: ecf_contract.recruitment_target,
-            service_fee_installments: ecf_contract.service_fee_installments,
-            targeted_delivery_funding_per_participant: ecf_contract.targeted_delivery_funding_per_participant,
-            monthly_service_fee: ecf_contract.monthly_service_fee,
-            special_course: ecf_contract.special_course,
-          )
+          contract_template.update!(ecf_contract.attributes.slice(SHARED_ATTRIBUTES))
 
           contract = ::Contract.find_or_initialize_by(
             statement:,

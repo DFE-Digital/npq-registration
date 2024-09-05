@@ -49,6 +49,7 @@ RSpec.describe Migration::Migrators::Contract do
     end
 
     def setup_failure_state
+      # NPQ Contract with statement in ECF but statement has not been migrated
       cohort = create(:ecf_migration_cohort)
       npq_lead_provider = create(:ecf_migration_npq_lead_provider)
 
