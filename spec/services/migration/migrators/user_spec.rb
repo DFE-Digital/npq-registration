@@ -25,9 +25,16 @@ RSpec.describe Migration::Migrators::User do
 
       it "records a failure when there are multiple, different TRNs for the user's NPQApplications in ECF" do
         ecf_user = create(:ecf_migration_user, :npq)
-        create(:ecf_migration_npq_application, teacher_reference_number: "123456", participant_identity: ecf_user.participant_identities.first)
+        create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_user, /There are multiple different TRNs from NPQ applications/)
+      end
+
+      it "does not record a failure if there are multiple, unverified TRNs for the user's NPQApplications in ECF" do
+        ecf_user = create(:ecf_migration_user, :npq)
+        create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first)
+        instance.call
+        expect(failure_manager).not_to have_received(:record_failure)
       end
     end
   end

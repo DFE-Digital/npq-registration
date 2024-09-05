@@ -30,11 +30,11 @@ module Migration::Migrators
       migrate(self.class.ecf_users) do |ecf_user|
         user = ::User.find_or_initialize_by(ecf_id: ecf_user.id)
 
-        unique_trns = ecf_user.npq_applications.pluck(:teacher_reference_number).compact.uniq
-        validate_multiple_trns!(unique_trns, user)
+        trns = unique_validated_trns(ecf_user)
+        validate_multiple_trns!(trns, user)
 
         user.update!(
-          trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : unique_trns.last,
+          trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
           email: ecf_user.email || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
@@ -44,8 +44,16 @@ module Migration::Migrators
 
   private
 
-    def validate_multiple_trns!(unique_trns, user)
-      return unless unique_trns.size > 1
+    def unique_validated_trns(ecf_user)
+      ecf_user.npq_applications
+        .where(teacher_reference_number_verified: true)
+        .pluck(:teacher_reference_number)
+        .compact
+        .uniq
+    end
+
+    def validate_multiple_trns!(trns, user)
+      return unless trns.size > 1
 
       user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
       raise ActiveRecord::RecordInvalid, user
