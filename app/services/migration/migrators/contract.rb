@@ -25,7 +25,7 @@ module Migration::Migrators
         ecf_statements(ecf_contract).find_each do |ecf_statement|
           statement = ::Statement.find_by!(ecf_id: ecf_statement.id)
 
-          contract_template = ::ContractTemplate.find_or_create_by!(ecf_id: ecf_contract.id)
+          contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
           contract_template.update!(
             created_at: ecf_contract.created_at,
             updated_at: ecf_contract.updated_at,
