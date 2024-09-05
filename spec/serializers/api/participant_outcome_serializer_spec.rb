@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe API::ParticipantOutcomeSerializer, type: :serializer do
-  let(:outcome) { create(:participant_outcome) }
+  let(:outcome) { create_participant_outcome }
 
   describe "core attributes" do
     subject(:response) { JSON.parse(described_class.render(outcome)) }

@@ -3,17 +3,17 @@ require "rails_helper"
 RSpec.describe ParticipantOutcomes::Query do
   describe "#participant_outcomes" do
     it "returns all outcomes" do
-      outcome1 = create(:participant_outcome)
-      outcome2 = create(:participant_outcome)
+      outcome1 = create_participant_outcome
+      outcome2 = create_participant_outcome
 
       query = described_class.new
       expect(query.participant_outcomes).to contain_exactly(outcome1, outcome2)
     end
 
     it "orders outcomes by created_at in ascending order" do
-      outcome1 = create(:participant_outcome)
-      outcome2 = travel_to(1.hour.ago) { create(:participant_outcome) }
-      outcome3 = travel_to(1.minute.ago) { create(:participant_outcome) }
+      outcome1 = create_participant_outcome
+      outcome2 = travel_to(1.hour.ago) { create_participant_outcome }
+      outcome3 = travel_to(1.minute.ago) { create_participant_outcome }
 
       query = described_class.new
       expect(query.participant_outcomes).to eq([outcome2, outcome3, outcome1])
@@ -22,7 +22,7 @@ RSpec.describe ParticipantOutcomes::Query do
     describe "filtering" do
       describe "lead provider" do
         it "filters by lead provider" do
-          outcome = create(:participant_outcome)
+          outcome = create_participant_outcome
           create(:participant_outcome, declaration: create_declaration(lead_provider: create(:lead_provider)))
 
           query = described_class.new(lead_provider: outcome.lead_provider)
@@ -46,8 +46,8 @@ RSpec.describe ParticipantOutcomes::Query do
 
       describe "created since" do
         it "filters by created since" do
-          travel_to(2.days.ago) { create(:participant_outcome) }
-          outcome = create(:participant_outcome)
+          travel_to(2.days.ago) { create_participant_outcome }
+          outcome = create_participant_outcome
 
           query = described_class.new(created_since: 1.day.ago)
 

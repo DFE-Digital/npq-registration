@@ -3,17 +3,17 @@ require "rails_helper"
 RSpec.describe Declarations::Query do
   describe "#declarations" do
     it "returns all declarations" do
-      declaration1 = create(:declaration)
-      declaration2 = create(:declaration)
+      declaration1 = create_declaration
+      declaration2 = create_declaration
 
       query = described_class.new
       expect(query.declarations).to contain_exactly(declaration1, declaration2)
     end
 
     it "orders declarations by created_at in ascending order" do
-      declaration1 = create(:declaration)
-      declaration2 = travel_to(1.hour.ago) { create(:declaration) }
-      declaration3 = travel_to(1.minute.ago) { create(:declaration) }
+      declaration1 = create_declaration
+      declaration2 = travel_to(1.hour.ago) { create_declaration }
+      declaration3 = travel_to(1.minute.ago) { create_declaration }
 
       query = described_class.new
       expect(query.declarations).to eq([declaration2, declaration3, declaration1])
@@ -22,7 +22,7 @@ RSpec.describe Declarations::Query do
     describe "filtering" do
       describe "lead provider" do
         it "filters by lead provider" do
-          declaration = create(:declaration)
+          declaration = create_declaration
           create_declaration(lead_provider: create(:lead_provider))
 
           query = described_class.new(lead_provider: declaration.lead_provider)
@@ -71,7 +71,7 @@ RSpec.describe Declarations::Query do
         context "when participant_outcome was updated recently" do
           let!(:declaration1) do
             travel_to(1.day.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec
@@ -79,7 +79,7 @@ RSpec.describe Declarations::Query do
           end
           let!(:declaration2) do
             travel_to(2.days.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec
@@ -87,7 +87,7 @@ RSpec.describe Declarations::Query do
           end
           let!(:declaration3) do
             travel_to(5.days.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec
@@ -107,7 +107,7 @@ RSpec.describe Declarations::Query do
         context "when statement_item was updated recently" do
           let!(:declaration1) do
             travel_to(1.day.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec
@@ -115,7 +115,7 @@ RSpec.describe Declarations::Query do
           end
           let!(:declaration2) do
             travel_to(2.days.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec
@@ -123,7 +123,7 @@ RSpec.describe Declarations::Query do
           end
           let!(:declaration3) do
             travel_to(5.days.ago) do
-              dec = create(:declaration)
+              dec = create_declaration
               create(:participant_outcome, declaration: dec)
               create(:statement_item, declaration: dec)
               dec

@@ -16,13 +16,13 @@ RSpec.describe Participants::Defer, type: :model do
       it { is_expected.to validate_inclusion_of(:reason).in_array(described_class::DEFERRAL_REASONS).with_message("The property '#/reason' must be a valid reason") }
 
       context "when the application is already deferred" do
-        let(:application) { create(:application, :with_declaration, :deferred) }
+        let(:application) { create_application_with_declaration(:deferred) }
 
         it { expect(instance).to have_error(:participant_id, :already_deferred, "The participant is already deferred") }
       end
 
       context "when the application is withdrawn" do
-        let(:application) { create(:application, :with_declaration, :withdrawn) }
+        let(:application) { create_application_with_declaration(:withdrawn) }
 
         it { expect(instance).to have_error(:participant_id, :already_withdrawn, "The participant is already withdrawn") }
       end

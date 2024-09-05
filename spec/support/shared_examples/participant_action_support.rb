@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.shared_examples "a participant action" do
   let(:lead_provider) { application.lead_provider }
   let(:participant_id) { application.user.ecf_id }
-  let(:application) { create(:application, :accepted, :with_declaration) }
+  let(:application) { create_application_witn_declaration }
   let(:course_identifier) { application.course.identifier }
 
   it { expect(instance).to be_valid }
@@ -48,7 +48,7 @@ end
 RSpec.shared_examples "a participant state transition" do |action, from_states, to_state|
   let(:lead_provider) { application.lead_provider }
   let(:participant_id) { application.user.ecf_id }
-  let(:application) { create(:application, :accepted, :with_declaration, training_status: from_states.sample) }
+  let(:application) { create_application_witn_declaration(training_status: from_states.sample) }
   let(:course_identifier) { application.course.identifier }
 
   it { expect(instance).to be_valid }
@@ -60,7 +60,7 @@ RSpec.shared_examples "a participant state transition" do |action, from_states, 
 
     from_states.each do |from_state|
       context "when the application is #{from_state}" do
-        let(:application) { create(:application, :accepted, :with_declaration, training_status: from_state) }
+        let(:application) { create_application_witn_declaration(training_status: from_state) }
 
         it "creates a #{to_state} application state" do
           expect { perform_action }.to change(ApplicationState, :count).by(1)

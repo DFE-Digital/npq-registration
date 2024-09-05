@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe API::DeclarationSerializer, type: :serializer do
-  let(:declaration) { create(:declaration) }
+  let(:declaration) { create_declaration }
 
   describe "core attributes" do
     subject(:response) { JSON.parse(described_class.render(declaration)) }

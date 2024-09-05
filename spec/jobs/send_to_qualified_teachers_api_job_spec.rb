@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe SendToQualifiedTeachersAPIJob, type: :job do
   describe "#perform" do
-    let(:participant_outcome) { create(:participant_outcome) }
+    let(:participant_outcome) { create_participant_outcome }
     let(:api_sender) { double }
     let!(:participant_outcome_id) { participant_outcome.id }
 

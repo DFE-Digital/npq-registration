@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::Resume, type: :model do
   it_behaves_like "a participant action" do
     let(:instance) { described_class.new(lead_provider:, participant_id:, course_identifier:) }
-    let(:application) { create(:application, :accepted, :with_declaration, training_status: %w[withdrawn deferred].sample) }
+    let(:application) { create_application_with_declaration(training_status: %w[withdrawn deferred].sample) }
   end
 
   it_behaves_like "a participant state transition", :resume, %w[withdrawn deferred], "active" do
