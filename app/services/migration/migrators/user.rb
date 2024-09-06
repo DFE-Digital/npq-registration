@@ -33,10 +33,14 @@ module Migration::Migrators
         trns = unique_validated_trns(ecf_user)
         validate_multiple_trns!(trns, user)
 
+        unique_emails = ecf_user.npq_applications.map { |app| app.participant_identity.email.to_s.downcase.strip }.compact.uniq
+        validate_multiple_emails!(unique_emails, user)
+        validate_existing_email_match!(unique_emails.first, user)
+
         user.update!(
           trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
-          email: ecf_user.email || user.email,
+          email: unique_emails.first || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
         )
       end
@@ -56,6 +60,21 @@ module Migration::Migrators
       return unless trns.size > 1
 
       user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
+      raise ActiveRecord::RecordInvalid, user
+    end
+
+    def validate_multiple_emails!(unique_emails, user)
+      return unless unique_emails.size > 1
+
+      user.errors.add(:base, "There are multiple different emails from user identities in NPQ applications")
+      raise ActiveRecord::RecordInvalid, user
+    end
+
+    def validate_existing_email_match!(ecf_email, user)
+      return if user.email.blank?
+      return if ecf_email == user.email
+
+      user.errors.add(:base, "Participant identity email from ECF does not match existing user email in NPQ")
       raise ActiveRecord::RecordInvalid, user
     end
   end
