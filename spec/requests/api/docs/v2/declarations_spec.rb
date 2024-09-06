@@ -55,7 +55,7 @@ RSpec.describe "Declarations endpoints", openapi_spec: "v2/swagger.yaml", type: 
     let(:course_group) { CourseGroup.find_by(name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
-    let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
+    let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:) }
     let(:declaration_date) { schedule.applies_from + 1.day }
     let(:response_example) do
       extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v2)
@@ -65,7 +65,7 @@ RSpec.describe "Declarations endpoints", openapi_spec: "v2/swagger.yaml", type: 
       {
         participant_id: application.user.ecf_id,
         declaration_type: "started",
-        declaration_date: application.schedule.applies_from.rfc3339,
+        declaration_date: declaration_date.rfc3339,
         course_identifier: course.identifier,
       }
     end

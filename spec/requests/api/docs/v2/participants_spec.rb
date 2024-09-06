@@ -106,6 +106,19 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v2/swagger.yaml", typ
                     "The NPQ participant changing schedule",
                     "#/components/schemas/ParticipantResponse",
                     "#/components/schemas/ParticipantChangeScheduleRequest" do
+      let(:application) do
+        create(
+          :application,
+          :accepted,
+          :eligible_for_funded_place,
+          :with_participant_id_change,
+          lead_provider:,
+          course:,
+          cohort:,
+          schedule:,
+          funded_place: true,
+        )
+      end
       let(:resource) { participant }
       let(:type) { "participant-change-schedule" }
       let(:new_schedule) { create(:schedule, :npq_ehco_march, cohort:) }
