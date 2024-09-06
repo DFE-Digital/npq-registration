@@ -180,8 +180,8 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         ecf_user1 = create(:ecf_migration_user, :npq)
         ecf_user2 = create(:ecf_migration_user, :npq)
 
-        create(:user, :with_random_name, ecf_id: ecf_user1.id)
-        create(:user, :with_random_name, ecf_id: ecf_user2.id)
+        create(:user, :with_random_name, ecf_id: ecf_user1.id, email: ecf_user1.email)
+        create(:user, :with_random_name, ecf_id: ecf_user2.id, email: ecf_user2.email)
 
         create(:ecf_migration_user, :npq, get_an_identity_id: "123456")
         create(:user, :with_random_name, uid: "123456")
