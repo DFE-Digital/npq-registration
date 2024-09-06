@@ -18,7 +18,6 @@ module Migration::Migrators
       primary_establishment
       tsf_primary_eligibility
       tsf_primary_plus_eligibility
-      lead_provider_approval_status
     ].freeze
 
     class << self
