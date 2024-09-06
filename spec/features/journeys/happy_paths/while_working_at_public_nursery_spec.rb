@@ -77,7 +77,7 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
       expect(page).to have_text("You’re not eligible for scholarship funding")
-      expect(page).to have_text("such as state funded schools")
+      expect(page).to have_text("such as state-funded schools")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")
