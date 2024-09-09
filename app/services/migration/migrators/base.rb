@@ -48,7 +48,7 @@ module Migration::Migrators
       end
 
       def records_per_worker
-        1_000
+        5_000
       end
     end
 
@@ -83,7 +83,47 @@ module Migration::Migrators
       @data_migration ||= Migration::DataMigration.find_by(model: self.class.model, worker:)
     end
 
+    def find_lead_provider_id!(ecf_id:)
+      lead_provider_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
+    end
+
+    def find_cohort_id!(start_year:)
+      cohort_ids_by_start_year[start_year] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
+    end
+
+    def find_application_id!(ecf_id:)
+      application_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
+    end
+
+    def find_declaration_id!(ecf_id:)
+      declaration_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Declaration")
+    end
+
+    def find_statement_id!(ecf_id:)
+      statement_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
+    end
+
   private
+
+    def statement_ids_by_ecf_id
+      @statement_ids_by_ecf_id ||= ::Statement.pluck(:ecf_id, :id).to_h
+    end
+
+    def declaration_ids_by_ecf_id
+      @declaration_ids_by_ecf_id ||= ::Declaration.pluck(:ecf_id, :id).to_h
+    end
+
+    def application_ids_by_ecf_id
+      @application_ids_by_ecf_id ||= ::Application.pluck(:ecf_id, :id).to_h
+    end
+
+    def lead_provider_ids_by_ecf_id
+      @lead_provider_ids_by_ecf_id ||= ::LeadProvider.pluck(:ecf_id, :id).to_h
+    end
+
+    def cohort_ids_by_start_year
+      @cohort_ids_by_start_year ||= ::Cohort.pluck(:start_year, :id).to_h
+    end
 
     def offset
       worker * self.class.records_per_worker

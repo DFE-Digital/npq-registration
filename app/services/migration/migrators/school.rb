@@ -18,7 +18,23 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_schools) do |ecf_school|
-        ::School.find_by!(urn: ecf_school.urn, name: ecf_school.name)
+        find_school_id!(urn: ecf_school.urn, name: ecf_school.name.downcase)
+      end
+    end
+
+  private
+
+    def find_school_id!(urn:, name:)
+      school_ids_by_urn_and_name.dig(urn, name) || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
+    end
+
+    def school_ids_by_urn_and_name
+      @school_ids_by_urn_and_name ||= begin
+        schools = ::School.pluck(:id, :urn, :name)
+        schools.each_with_object({}) do |(id, urn, name), hash|
+          hash[urn] ||= {}
+          hash[urn][name.downcase] = id
+        end
       end
     end
   end

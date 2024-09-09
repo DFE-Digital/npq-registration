@@ -30,7 +30,7 @@ module Migration::Migrators
         end
 
         ::Schedule.find_or_initialize_by(
-          cohort_id: cohorts_by_start_year[ecf_schedule.cohort.start_year].id,
+          cohort_id: find_cohort_id!(start_year: ecf_schedule.cohort.start_year),
           identifier: ecf_schedule.schedule_identifier,
           course_group:,
         ).tap do |schedule|
@@ -66,10 +66,6 @@ module Migration::Migrators
 
       ecf_schedule.errors.add(:base, "Milestones contain different dates")
       raise ActiveRecord::RecordInvalid, ecf_schedule
-    end
-
-    def cohorts_by_start_year
-      @cohorts_by_start_year ||= ::Cohort.all.index_by(&:start_year)
     end
   end
 end
