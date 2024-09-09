@@ -33,14 +33,14 @@ module Migration::Migrators
         trns = unique_validated_trns(ecf_user)
         validate_multiple_trns!(trns, user)
 
-        unique_emails = ecf_user.npq_applications.map { |app| app.participant_identity.email.to_s.downcase.strip }.compact.uniq
-        validate_multiple_emails!(unique_emails, user)
-        validate_existing_email_match!(unique_emails.first, user)
+        emails = unique_emails(ecf_user)
+        validate_multiple_emails!(emails, user)
+        validate_existing_email_match!(emails.first, user)
 
         user.update!(
           trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
-          email: unique_emails.first || user.email,
+          email: emails.first || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
         )
       end
@@ -54,6 +54,10 @@ module Migration::Migrators
         .pluck(:teacher_reference_number)
         .compact
         .uniq
+    end
+
+    def unique_emails(ecf_user)
+      ecf_user.npq_applications.map { |app| app.participant_identity.email.to_s.downcase.strip }.compact.uniq
     end
 
     def validate_multiple_trns!(trns, user)
