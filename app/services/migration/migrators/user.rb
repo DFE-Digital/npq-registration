@@ -57,7 +57,9 @@ module Migration::Migrators
     end
 
     def unique_emails(ecf_user)
-      ecf_user.npq_applications.map { |app| app.participant_identity.email.to_s.downcase.strip }.compact.uniq
+      emails = ecf_user.npq_profiles.map { |pp| pp.participant_identity.email }
+      emails += ecf_user.npq_applications.map { |app| app.participant_identity.email }
+      emails.map { |email| email.to_s.downcase.strip }.compact.uniq
     end
 
     def validate_multiple_trns!(trns, user)
