@@ -21,7 +21,7 @@ module Migration::Migrators
           .where("npq_applications.id is not NULL")
 
         Migration::Ecf::User
-          .includes(:teacher_profile)
+          .includes(:teacher_profile, :npq_profiles)
           .from("(#{users_with_npq_profiles.to_sql} UNION #{users_with_npq_applications.to_sql}) AS users")
       end
     end
