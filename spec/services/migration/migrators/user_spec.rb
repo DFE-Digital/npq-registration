@@ -53,6 +53,32 @@ RSpec.describe Migration::Migrators::User do
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_user, /Participant identity email from ECF does not match existing user email in NPQ/)
       end
+
+      it "sets User attributes from recent updated npq application" do
+        ecf_user = travel_to 5.days.ago do
+          create(:ecf_migration_user, :npq, email: "joe@example.com")
+        end
+
+        create(
+          :ecf_migration_npq_application,
+          participant_identity: ecf_user.participant_identities.first,
+          teacher_reference_number: ecf_user.npq_applications.first.teacher_reference_number,
+          date_of_birth: "1980-01-01",
+          nino: "XXX123",
+          active_alert: true,
+          teacher_reference_number_verified: true,
+        )
+
+        instance.call
+
+        user = User.find_by(ecf_id: ecf_user.id)
+        expect(user).to have_attributes(
+          date_of_birth: "1980-01-01".to_date,
+          national_insurance_number: "XXX123",
+          active_alert: true,
+          trn_verified: true,
+        )
+      end
     end
   end
 end

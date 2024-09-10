@@ -37,11 +37,17 @@ module Migration::Migrators
         validate_multiple_emails!(emails, user)
         validate_existing_email_match!(emails.first, user)
 
+        npq_application = most_recent_updated_npq_application(ecf_user)
+
         user.update!(
           trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
           email: emails.first || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
+          date_of_birth: npq_application.date_of_birth || user.date_of_birth,
+          national_insurance_number: npq_application.nino || user.national_insurance_number,
+          active_alert: npq_application.active_alert,
+          trn_verified: npq_application.teacher_reference_number_verified,
         )
       end
     end
@@ -60,6 +66,10 @@ module Migration::Migrators
       emails = ecf_user.npq_profiles.map { |pp| pp.participant_identity.email }
       emails += ecf_user.npq_applications.map { |app| app.participant_identity.email }
       emails.map { |email| email.to_s.downcase.strip }.compact.uniq
+    end
+
+    def most_recent_updated_npq_application(ecf_user)
+      ecf_user.npq_applications.order(updated_at: :desc).first
     end
 
     def validate_multiple_trns!(trns, user)
