@@ -1,13 +1,14 @@
 module Migration::Migrators
   class Application < Base
-    ATTRIBUTES_TO_COMPARE = %w[
+    ATTRIBUTES = %w[
       headteacher_status
       eligible_for_funding
       funding_choice
-      teacher_catchment
       works_in_school
       employer_name
       employment_role
+      targeted_support_funding_eligibility
+      teacher_catchment_iso_country_code
       works_in_nursery
       works_in_childcare
       kind_of_nursery
@@ -16,9 +17,14 @@ module Migration::Migrators
       employment_type
       lead_mentor
       primary_establishment
+      number_of_pupils
       tsf_primary_eligibility
       tsf_primary_plus_eligibility
       lead_provider_approval_status
+      teacher_catchment
+      teacher_catchment_country
+      notes
+      funded_place
     ].freeze
 
     class << self
@@ -30,8 +36,14 @@ module Migration::Migrators
         :application
       end
 
+      def dependencies
+        %i[cohort lead_provider schedule course user school]
+      end
+
       def ecf_npq_applications
-        Migration::Ecf::NpqApplication.joins(:participant_identity)
+        Migration::Ecf::NpqApplication
+          .joins(:participant_identity)
+          .includes(:cohort, :user, profile: :schedule)
       end
     end
 
@@ -39,32 +51,71 @@ module Migration::Migrators
       run_once { report_applications_not_in_ecf_as_failures }
 
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
-        application = applications_by_ecf_id[ecf_npq_application.id]
-        raise ActiveRecord::RecordNotFound, "Application not found" unless application
+        application = ::Application.find_by!(ecf_id: ecf_npq_application.id)
 
-        compare_attributes_values!(ecf_npq_application, application)
+        ensure_relationships_are_consistent!(ecf_npq_application, application)
+
+        ecf_schedule = ecf_npq_application.profile&.schedule
+        if ecf_schedule
+          schedule_cohort_id = find_cohort_id!(start_year: ecf_schedule.cohort.start_year)
+          course_group_name = course_groups_by_schedule_type(ecf_schedule.type).name
+          application.schedule_id = find_schedule_id!(cohort_id: schedule_cohort_id, identifier: ecf_schedule.schedule_identifier, course_group_name:)
+        end
+
+        application.cohort_id = find_cohort_id!(start_year: ecf_npq_application.cohort.start_year)
+        application.itt_provider_id = find_itt_provider_id!(legal_name: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
+        application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
+
+        application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
+        application.ukprn = ecf_npq_application.school_ukprn
+
+        application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
     end
 
   private
 
-    def applications_by_ecf_id
-      @applications_by_ecf_id ||= ::Application
-        .select(ATTRIBUTES_TO_COMPARE + %i[ecf_id])
-        .where(ecf_id: self.class.ecf_npq_applications.pluck(:id))
-        .index_by(&:ecf_id)
+    def find_schedule_id!(cohort_id:, identifier:, course_group_name:)
+      schedule_ids_by_cohort_id_and_identifier_and_course_group.dig(cohort_id, identifier, course_group_name) || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
+    end
+
+    def schedule_ids_by_cohort_id_and_identifier_and_course_group
+      @schedule_ids_by_cohort_id_and_identifier_and_course_group ||= begin
+        schedules = ::Schedule.includes(:course_group).pluck(:id, :cohort_id, :identifier, "course_groups.name")
+        schedules.each_with_object({}) do |(id, cohort_id, identifier, course_group), hash|
+          hash[cohort_id] ||= {}
+          hash[cohort_id][identifier] ||= {}
+          hash[cohort_id][identifier][course_group] = id
+        end
+      end
+    end
+
+    def ensure_relationships_are_consistent!(ecf_npq_application, application)
+      if application.school_id && !ecf_npq_application.school_urn || ecf_npq_application.school_urn && application.school_id != find_school_id!(urn: ecf_npq_application.school_urn)
+        raise_error(ecf_npq_application, message: "School in ECF is different")
+      end
+
+      if application.course_id != find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
+        raise_error(ecf_npq_application, message: "Course in ECF is different")
+      end
+
+      if application.lead_provider_id != find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
+        raise_error(ecf_npq_application, message: "LeadProvider in ECF is different")
+      end
+
+      if application.user_id != find_user_id!(ecf_id: ecf_npq_application.user.id)
+        raise_error(ecf_npq_application, message: "User in ECF is different")
+      end
+    end
+
+    def raise_error(application, message:)
+      application.errors.add(:base, message)
+      raise ActiveRecord::RecordInvalid, application
     end
 
     def report_applications_not_in_ecf_as_failures
       applications_not_in_ecf = ::Application.where.not(ecf_id: self.class.ecf_npq_applications.pluck(:id)).select(:id)
       applications_not_in_ecf.each { |a| failure_manager.record_failure(a, "NPQApplication not found in ECF") }
-    end
-
-    def compare_attributes_values!(ecf_npq_application, application)
-      return unless ATTRIBUTES_TO_COMPARE.any? { |attribute| ecf_npq_application[attribute] != application[attribute] }
-
-      application.errors.add(:base, "There are some discrepancies in one or more attributes values")
-      raise ActiveRecord::RecordInvalid, application
     end
   end
 end

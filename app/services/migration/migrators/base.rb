@@ -103,14 +103,50 @@ module Migration::Migrators
       statement_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
     end
 
-    def find_course_id!(identifier:)
-      course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
+    def find_course_id!(identifier: nil, ecf_id: nil)
+      raise ActiveRecord::RecordNotFound, "Couldn't find Course" unless identifier || ecf_id
+
+      return course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if identifier
+      course_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if ecf_id
+    end
+
+    def find_school_id!(urn:)
+      school_ids_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
+    end
+
+    def find_itt_provider_id!(legal_name:)
+      itt_provider_ids_by_legal_name[legal_name] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
+    end
+
+    def find_private_childcare_provider_id!(provider_urn:)
+      private_childcare_provider_ids_by_provider_urn[provider_urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find PrivateChildcareProvider")
+    end
+
+    def find_user_id!(ecf_id:)
+      user_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
+    end
+
+    def course_groups_by_schedule_type(ecf_type)
+      case ecf_type
+      when "Finance::Schedule::NPQLeadership"
+        CourseGroup.find_by!(name: :leadership)
+      when "Finance::Schedule::NPQSpecialist"
+        CourseGroup.find_by!(name: :specialist)
+      when "Finance::Schedule::NPQSupport"
+        CourseGroup.find_by!(name: :support)
+      when "Finance::Schedule::NPQEhco"
+        CourseGroup.find_by!(name: :ehco)
+      end
     end
 
   private
 
     def course_ids_by_identifier
       @course_ids_by_identifier ||= ::Course.pluck(:identifier, :id).to_h
+    end
+
+    def course_ids_by_ecf_id
+      @course_ids_by_ecf_id ||= ::Course.pluck(:ecf_id, :id).to_h
     end
 
     def statement_ids_by_ecf_id
@@ -129,8 +165,24 @@ module Migration::Migrators
       @lead_provider_ids_by_ecf_id ||= ::LeadProvider.pluck(:ecf_id, :id).to_h
     end
 
+    def user_ids_by_ecf_id
+      @user_ids_by_ecf_id ||= ::User.pluck(:ecf_id, :id).to_h
+    end
+
     def cohort_ids_by_start_year
       @cohort_ids_by_start_year ||= ::Cohort.pluck(:start_year, :id).to_h
+    end
+
+    def school_ids_by_urn
+      @school_ids_by_urn ||= ::School.pluck(:urn, :id).to_h
+    end
+
+    def itt_provider_ids_by_legal_name
+      @itt_provider_ids_by_legal_name ||= ::IttProvider.pluck(:legal_name, :id).to_h
+    end
+
+    def private_childcare_provider_ids_by_provider_urn
+      @private_childcare_provider_ids_by_provider_urn ||= ::PrivateChildcareProvider.pluck(:provider_urn, :id).to_h
     end
 
     def offset

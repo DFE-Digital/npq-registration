@@ -22,7 +22,7 @@ module Migration::Migrators
       migrate(self.class.ecf_schedules) do |ecf_schedule|
         ensure_milestone_dates_are_all_the_same!(ecf_schedule)
 
-        course_group = course_groups_by_identifier(ecf_schedule.type)
+        course_group = course_groups_by_schedule_type(ecf_schedule.type)
 
         unless course_group
           ecf_schedule.errors.add(:base, "Course group not found for schedule")
@@ -46,19 +46,6 @@ module Migration::Migrators
     end
 
   private
-
-    def course_groups_by_identifier(ecf_type)
-      case ecf_type
-      when "Finance::Schedule::NPQLeadership"
-        CourseGroup.find_by!(name: :leadership)
-      when "Finance::Schedule::NPQSpecialist"
-        CourseGroup.find_by!(name: :specialist)
-      when "Finance::Schedule::NPQSupport"
-        CourseGroup.find_by!(name: :support)
-      when "Finance::Schedule::NPQEhco"
-        CourseGroup.find_by!(name: :ehco)
-      end
-    end
 
     def ensure_milestone_dates_are_all_the_same!(ecf_schedule)
       dates = ecf_schedule.milestones.map { |m| [m.start_date, m.payment_date] }
