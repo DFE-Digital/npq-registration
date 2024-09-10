@@ -7,6 +7,7 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v3/swagger.yaml", typ
   let(:course) { create(:course, :early_headship_coaching_offer) }
   let(:cohort) { create(:cohort, :current) }
   let(:schedule) { create(:schedule, :npq_ehco_december, cohort:) }
+  let(:user) { create(:user, :with_verified_trn) }
   let(:application) do
     create(:application,
            :accepted,
@@ -17,6 +18,7 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v3/swagger.yaml", typ
            course:,
            cohort:,
            schedule:,
+           user:,
            funded_place: true)
   end
   let!(:participant) { application.user }

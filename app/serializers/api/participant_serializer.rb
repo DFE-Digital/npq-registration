@@ -25,7 +25,9 @@ module API
           end
         end
 
-        field(:trn, name: :teacher_reference_number)
+        field(:teacher_reference_number) do |object, _options|
+          object.trn if object.trn_verified
+        end
         field(:updated_at) do |object, _options|
           updated_at(object)
         end
@@ -34,7 +36,9 @@ module API
       view :v2 do
         field(:email)
         field(:full_name)
-        field(:trn, name: :teacher_reference_number)
+        field(:teacher_reference_number) do |object, _options|
+          object.trn if object.trn_verified
+        end
         field(:updated_at) do |object, _options|
           updated_at(object)
         end
@@ -58,7 +62,9 @@ module API
 
       view :v3 do
         field(:full_name)
-        field(:trn, name: :teacher_reference_number)
+        field(:teacher_reference_number) do |object, _options|
+          object.trn if object.trn_verified
+        end
         field(:updated_at) do |object, _options|
           updated_at(object)
         end
