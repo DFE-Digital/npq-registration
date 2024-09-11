@@ -44,10 +44,10 @@ module Migration::Migrators
           full_name: ecf_user.full_name || user.full_name,
           email: emails.first || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
-          date_of_birth: npq_application.date_of_birth || user.date_of_birth,
-          national_insurance_number: npq_application.nino || user.national_insurance_number,
-          active_alert: npq_application.active_alert,
-          trn_verified: npq_application.teacher_reference_number_verified,
+          date_of_birth: npq_application&.date_of_birth || user.date_of_birth,
+          national_insurance_number: npq_application&.nino || user.national_insurance_number,
+          active_alert: npq_application&.active_alert,
+          trn_verified: npq_application&.teacher_reference_number_verified,
         )
       end
     end
