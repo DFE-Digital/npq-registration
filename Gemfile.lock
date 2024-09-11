@@ -369,7 +369,7 @@ GEM
     os (1.1.4)
     ostruct (0.6.0)
     pagy (8.6.3)
-    paper_trail (15.1.0)
+    paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
     parallel (1.26.3)
@@ -461,7 +461,7 @@ GEM
       declarative (< 0.1.0)
       trailblazer-option (>= 0.1.1, < 0.2.0)
       uber (< 0.2.0)
-    request_store (1.5.1)
+    request_store (1.7.0)
       rack (>= 1.4)
     responders (3.1.1)
       actionpack (>= 5.2)
@@ -712,7 +712,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-rails_csrf_protection
   pagy
-  paper_trail (~> 15.1)
+  paper_trail (~> 15.2)
   parallel_tests (~> 4.7)
   pg (>= 0.18, < 2.0)
   pg_search
