@@ -89,7 +89,7 @@ group :test do
   gem "rspec-default_http_header"
   gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.0"
-  gem "webdrivers"
+  gem "selenium-webdriver"
   gem "webmock", "~> 3.23"
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end

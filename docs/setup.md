@@ -5,6 +5,7 @@
 1. [Local development](#local-development)
 2. [Codespaces](#codespaces)
 3. [Docker](#docker)
+4. [Docker Compose](#docker-compose)
 
 ## Local development
 
@@ -46,11 +47,22 @@ rails action_mailbox:ingress:exim        # Relay an inbound email from Exim to A
 ...
 ```
 
-### Run in production mode
-Docker compose provides a default empty database to run rails in production mode.
+## Docker Compose
+
+Starts the stack (database and application) for development. You only need Docker on your machine.
 
 ```
-docker-compose up
+docker-compose up -d
 ```
 
-Open: http://localhost:3000
+Open http://localhost:3000 to browse the app. Edit code as normal (the project directory is mounted as a volume.)
+
+Prefix other commands with `docker compose run web`, e.g.:
+- `docker compose run web bundle exec rails c`
+- `docker compose run web bundle exec rails db:migrate`
+- `docker compose run web bundle exec rake`
+- `docker compose run web bundle add foobar`
+
+If you need to rebuild the image (e.g. `Gemfile.lock` changed), add `--build`: `docker compose up -d --build`
+
+The `ops` service (`docker compose run ops`) starts a bash shell with `make`, `az` and `kubectl` ready to use.

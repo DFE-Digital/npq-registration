@@ -1,9 +1,6 @@
 require "knapsack"
 Knapsack::Adapters::RSpecAdapter.bind
 
-require "webdrivers"
-Webdrivers.install_dir = [Webdrivers.install_dir, ENV["TEST_ENV_NUMBER"]].compact.join(File::SEPARATOR)
-
 require "simplecov"
 require "simplecov_json_formatter"
 SimpleCov.start "rails"
