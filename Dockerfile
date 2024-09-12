@@ -22,11 +22,13 @@ RUN gem install bundler:2.5.15 --no-document
 COPY .ruby-version Gemfile Gemfile.lock ./
 
 ENV NODE_OPTIONS=--openssl-legacy-provider
+
+ARG BUNDLE_WITHOUT="development test"
 # Install gems and remove gem cache
 RUN bundler -v && \
     bundle config set no-cache 'true' && \
     bundle config set no-binstubs 'true' && \
-    bundle config set without 'development test' && \
+    bundle config without ${BUNDLE_WITHOUT} && \
     bundle install --retry=5 --jobs=4 && \
     rm -rf /usr/local/bundle/cache
 
@@ -57,7 +59,8 @@ FROM ruby:3.3.4-alpine3.20 AS production
 WORKDIR /app
 
 # Add the timezone as it's not configured by default in Alpine
-RUN apk add --update --no-cache libpq tzdata && \
+ARG EXTRA_PACKAGES=""
+RUN apk add --update --no-cache libpq tzdata ${EXTRA_PACKAGES} && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
     echo "Europe/London" > /etc/timezone
 

@@ -69,7 +69,7 @@ RSpec.describe Migration::Migrators::Schedule do
       }.each do |scehdule_factory, course_group_name|
         context "when there are #{scehdule_factory} schedules" do
           it "creates a new schedule in NPQ with the correct course group" do
-            ecf_schedule = create(scehdule_factory).tap do |schedule| # rubocop:disable RSpec/SaveBang
+            ecf_schedule = create(scehdule_factory).tap do |schedule| # rubocop:disable Rails/SaveBang
               create(:ecf_migration_milestone, schedule:)
             end
 

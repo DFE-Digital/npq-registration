@@ -1,32 +1,55 @@
-volumes:
-  dbdata:
+x-app: &app
+  build:
+    args:
+      - BUNDLE_WITHOUT=production review separation
+      - EXTRA_PACKAGES=chromium chromium-chromedriver gcompat yarn
+    context: .
+  depends_on:
+    - db
+  environment:
+    - DATABASE_URL=postgresql://postgres@db:5432/
+    - ECF_DATABASE_URL=postgresql://postgres@db:5432/
+    - RAILS_ENV=development
+    - RAILS_LOG_TO_STDOUT=true
+    - RAILS_SERVE_STATIC_FILES=true
+    - SECRET_KEY_BASE=abcd1234
+  volumes:
+    - .:/app
 
 services:
   db:
     image: postgres:14-alpine
     restart: always
-    # To preserve data between runs of docker-compose, we mount a folder from the host machine.
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  ops:
+    build:
+      dockerfile_inline: |
+        FROM mcr.microsoft.com/azure-cli:cbl-mariner2.0
+        RUN mkdir /app
+        WORKDIR /app
+        RUN yum install -y make
+        RUN az aks install-cli
+    command: bash
+    scale: 0
+    volumes:
+      - azure-data:/root/.azure
+      - .:/app
 
   web:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      args:
-        GIT_COMMIT_SHA: DOCKER_COMPOSE_GIT_COMMIT_SHA
+    <<: *app
+    command: bin/dev
     ports:
-      - 8080:8080
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://root:password@db:5432/npq_registration_local
-      - ECF_DATABASE_URL=postgresql://root:password@db:5432/early_careers_framework_local
-      - RAILS_ENV=production
-      - RAILS_SERVE_STATIC_FILES=true
-      - RAILS_LOG_TO_STDOUT=true
-      - SECRET_KEY_BASE=abcd1234
-      - GOVUK_NOTIFY_API_KEY=addnotifykeyhere
+      - 3000:3000
+    shm_size: '512mb' # required for chromium / selenium
+
+  worker:
+    <<: *app
+    command: bundle exec rake jobs:work
+
+volumes:
+  azure-data:
+  db-data:
