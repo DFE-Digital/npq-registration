@@ -1,3 +1,21 @@
+x-app: &app
+  build:
+    args:
+      - BUNDLE_WITHOUT=production review separation
+      - EXTRA_PACKAGES=chromium chromium-chromedriver gcompat yarn
+    context: .
+  depends_on:
+    - db
+  environment:
+    - DATABASE_URL=postgresql://postgres@db:5432/
+    - ECF_DATABASE_URL=postgresql://postgres@db:5432/
+    - RAILS_ENV=development
+    - RAILS_LOG_TO_STDOUT=true
+    - RAILS_SERVE_STATIC_FILES=true
+    - SECRET_KEY_BASE=abcd1234
+  volumes:
+    - .:/app
+
 services:
   db:
     image: postgres:14-alpine
@@ -22,26 +40,15 @@ services:
       - .:/app
 
   web:
-    build:
-      args:
-        - BUNDLE_WITHOUT=production review separation
-        - EXTRA_PACKAGES=chromium chromium-chromedriver gcompat yarn
-      context: .
+    <<: *app
     command: bin/dev
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://postgres@db:5432/
-      - ECF_DATABASE_URL=postgresql://postgres@db:5432/
-      - RAILS_ENV=development
-      - RAILS_SERVE_STATIC_FILES=true
-      - RAILS_LOG_TO_STDOUT=true
-      - SECRET_KEY_BASE=abcd1234
     ports:
       - 3000:3000
     shm_size: '512mb' # required for chromium / selenium
-    volumes:
-      - .:/app
+
+  worker:
+    <<: *app
+    command: bundle exec rake jobs:work
 
 volumes:
   azure-data:
