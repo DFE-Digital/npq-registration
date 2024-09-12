@@ -59,6 +59,7 @@ FactoryBot.define do
       schedule { Schedule.find_by(cohort:, course_group: course.course_group) || create(:schedule, course_group: course.course_group, cohort:) }
       funded_place { !!eligible_for_funding }
       accepted_at { Time.zone.now }
+      training_status { :active }
     end
 
     trait :rejected do

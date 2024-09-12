@@ -55,6 +55,7 @@ module Applications
         lead_provider_approval_status: "accepted",
         schedule:,
         accepted_at: Time.zone.now,
+        training_status: :active,
       }
 
       if cohort&.funding_cap?

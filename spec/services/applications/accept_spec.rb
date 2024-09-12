@@ -103,6 +103,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
         expect(application.reload.accepted_at).to be_within(1.minute).of(Time.zone.now)
+        expect(service.application).to be_active_training_status
         expect(other_application.reload.lead_provider_approval_status).to eql("rejected")
       end
     end
@@ -196,6 +197,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         service.accept
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
         expect(application.reload.accepted_at).to be_within(1.minute).of(Time.zone.now)
+        expect(service.application).to be_active_training_status
         expect(other_application.reload.lead_provider_approval_status).to eql("pending")
       end
     end
@@ -358,6 +360,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
           expect(service.accept).to be_truthy
           expect(service.application.lead_provider_approval_status).to eql("accepted")
+          expect(service.application).to be_active_training_status
           expect(service.application.schedule).to eql(new_schedule)
           expect(service.application.accepted_at).to be_within(1.minute).of(Time.zone.now)
 
