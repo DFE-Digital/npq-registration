@@ -63,6 +63,8 @@ Prefix other commands with `docker compose run web`, e.g.:
 - `docker compose run web bundle exec rake`
 - `docker compose run web bundle add foobar`
 
+n.b. to run parallel tests, you need to explicitly set RAILS_ENV e.g.: `docker compose run -e RAILS_ENV=test web bundle exec rake parallel:spec`
+
 If you need to rebuild the image (e.g. `Gemfile.lock` changed), add `--build`: `docker compose up -d --build`
 
 The `ops` service (`docker compose run ops`) starts a bash shell with `make`, `az` and `kubectl` ready to use.
