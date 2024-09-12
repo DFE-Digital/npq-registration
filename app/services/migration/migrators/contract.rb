@@ -34,17 +34,17 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_contracts) do |ecf_contract|
-        course = courses_by_identifier[ecf_contract.course_identifier]
+        course_id = find_course_id!(identifier: ecf_contract.course_identifier)
 
         ecf_statements(ecf_contract).find_each do |ecf_statement|
-          statement = ::Statement.find_by!(ecf_id: ecf_statement.id)
+          statement_id = find_statement_id!(ecf_id: ecf_statement.id)
 
           contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
           contract_template.update!(ecf_contract.attributes.slice(SHARED_ATTRIBUTES))
 
           contract = ::Contract.find_or_initialize_by(
-            statement:,
-            course:,
+            statement_id:,
+            course_id:,
           )
           contract.update!(contract_template:)
         end
