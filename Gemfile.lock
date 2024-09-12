@@ -267,7 +267,7 @@ GEM
     i18n-debug (1.2.0)
       i18n (< 2)
     ice_nine (0.11.2)
-    iconv (1.0.8)
+    iconv (1.1.0)
     io-console (0.7.2)
     irb (1.14.0)
       rdoc (>= 4.0.0)
