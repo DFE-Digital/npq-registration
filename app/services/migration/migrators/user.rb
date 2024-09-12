@@ -46,8 +46,8 @@ module Migration::Migrators
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application&.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application&.nino || user.national_insurance_number,
-          active_alert: npq_application&.active_alert,
-          trn_verified: npq_application&.teacher_reference_number_verified,
+          active_alert: npq_application&.active_alert || user.active_alert,
+          trn_verified: npq_application&.teacher_reference_number_verified || user.trn_verified,
         )
       end
     end
@@ -69,7 +69,13 @@ module Migration::Migrators
     end
 
     def most_recent_updated_npq_application(ecf_user)
-      ecf_user.npq_applications.order(updated_at: :desc).first
+      profile_apps = Migration::Ecf::NpqApplication.where(id: ecf_user.npq_profiles.select(:id))
+      user_apps = ecf_user.npq_applications
+
+      Migration::Ecf::NpqApplication
+        .from("(#{profile_apps.to_sql} UNION #{user_apps.to_sql}) AS npq_applications")
+        .order(updated_at: :desc)
+        .first
     end
 
     def validate_multiple_trns!(trns, user)
