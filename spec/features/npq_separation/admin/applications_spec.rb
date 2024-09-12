@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Listing and viewing applications", type: :feature do
   include Helpers::AdminLogin
 
-  let(:applications_per_page) { Pagy::DEFAULT[:items] }
+  let(:applications_per_page) { Pagy::DEFAULT[:limit] }
   let(:applications_in_order) { Application.order(created_at: :asc) }
 
   before do

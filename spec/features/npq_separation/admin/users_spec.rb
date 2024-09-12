@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Listing and viewing users", type: :feature do
   include Helpers::AdminLogin
 
-  let(:users_per_page) { Pagy::DEFAULT[:items] }
+  let(:users_per_page) { Pagy::DEFAULT[:limit] }
 
   before do
     create_list(:user, users_per_page + 1, :with_get_an_identity_id)
