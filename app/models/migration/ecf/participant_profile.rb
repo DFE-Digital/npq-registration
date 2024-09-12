@@ -4,6 +4,7 @@ module Migration::Ecf
 
     belongs_to :teacher_profile
     belongs_to :schedule, class_name: "Finance::Schedule"
+    belongs_to :participant_identity
     has_one :user, through: :teacher_profile
     has_one :npq_application, foreign_key: :id
 

@@ -32,6 +32,7 @@ FactoryBot.define do
           user: npq_application.user,
           type: "ParticipantProfile::NPQ",
           schedule: create(:ecf_migration_schedule, cohort: npq_application.cohort, schedule_identifier: npq_application.npq_course.identifier),
+          participant_identity_id: npq_application.participant_identity_id,
         )
       end
     end
