@@ -104,7 +104,7 @@ module Migration::Migrators
     end
 
     def find_course_id!(identifier:)
-      courses_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
+      course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
     end
 
   private
