@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Listing and viewing statements", type: :feature do
   include Helpers::AdminLogin
 
-  let(:statements_per_page) { Pagy::DEFAULT[:items] }
+  let(:statements_per_page) { Pagy::DEFAULT[:limit] }
 
   before do
     create_list(:statement, statements_per_page + 1)

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Listing and viewing courses", type: :feature do
   include Helpers::AdminLogin
 
-  let(:courses_per_page) { Pagy::DEFAULT[:items] }
+  let(:courses_per_page) { Pagy::DEFAULT[:limit] }
 
   before do
     sign_in_as(create(:admin))

@@ -10,7 +10,7 @@ module API
   private
 
     def paginate(scope)
-      _pagy, paginated_records = pagy(scope, items: per_page, page:)
+      _pagy, paginated_records = pagy(scope, limit: per_page, page:)
 
       paginated_records
     end

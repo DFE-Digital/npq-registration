@@ -8,10 +8,10 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
   let(:admin) { create(:admin) }
 
   around do |example|
-    previous_pagination = Pagy::DEFAULT[:items]
-    Pagy::DEFAULT[:items] = 3
+    previous_pagination = Pagy::DEFAULT[:limit]
+    Pagy::DEFAULT[:limit] = 3
     example.run
-    Pagy::DEFAULT[:items] = previous_pagination
+    Pagy::DEFAULT[:limit] = previous_pagination
   end
 
   scenario "when not logged in, admin interface is inaccessible" do

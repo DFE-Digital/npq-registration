@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.feature "Listing and viewing schools", type: :feature do
   include Helpers::AdminLogin
 
-  let(:schools_per_page) { Pagy::DEFAULT[:items] }
+  let(:schools_per_page) { Pagy::DEFAULT[:limit] }
 
   before do
     create_list(:school, schools_per_page + 1)
