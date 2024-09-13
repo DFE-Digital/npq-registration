@@ -1,5 +1,5 @@
-class Accounts::UserRegistrationsController < ApplicationController
+class Accounts::UserRegistrationsController < AccountsController
   def show
-    @application = Application.find(params[:id])
+    @application = current_user.applications.find(params[:id])
   end
 end
