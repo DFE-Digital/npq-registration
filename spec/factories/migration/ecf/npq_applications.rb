@@ -21,6 +21,7 @@ FactoryBot.define do
     teacher_catchment_country { nil }
     itt_provider { "University of Southampton" }
     lead_mentor { true }
+    private_childcare_provider_urn { rand(100_000..999_999).to_s }
 
     trait :accepted do
       lead_provider_approval_status { "accepted" }
@@ -31,7 +32,7 @@ FactoryBot.define do
           teacher_profile: npq_application.user.teacher_profile,
           user: npq_application.user,
           type: "ParticipantProfile::NPQ",
-          schedule: create(:ecf_migration_schedule, cohort: npq_application.cohort, schedule_identifier: npq_application.npq_course.identifier),
+          schedule: create(:ecf_migration_schedule_npq_support, cohort: npq_application.cohort, schedule_identifier: npq_application.npq_course.identifier),
           participant_identity_id: npq_application.participant_identity_id,
         )
       end
