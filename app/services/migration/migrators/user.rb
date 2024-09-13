@@ -28,7 +28,7 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_users) do |ecf_user|
-        user = ::User.find_or_initialize_by(ecf_id: ecf_user.id)
+        user = find_or_initialize_user(ecf_user)
 
         trns = unique_validated_trns(ecf_user)
         validate_multiple_trns!(trns, user)
@@ -53,6 +53,60 @@ module Migration::Migrators
     end
 
   private
+
+    def find_or_initialize_user(ecf_user)
+      # Find User with `ecf_user.id`
+      user_with_ecf_id = ::User.find_by(ecf_id: ecf_user.id)
+
+      # Find User with `ecf_user.get_an_identity_id`
+      if ecf_user.get_an_identity_id.present?
+        user_with_gai_id = ::User.find_by(uid: ecf_user.get_an_identity_id)
+      end
+
+      # User does not exist, initialize new user
+      if user_with_ecf_id.nil? && user_with_gai_id.nil?
+        return ::User.new(ecf_id: ecf_user.id)
+      end
+
+      # Both id's return the same record, success
+      if user_with_ecf_id == user_with_gai_id
+        return user_with_ecf_id
+      end
+
+      # User found with `ecf_user.id`, but not `ecf_user.get_an_identity_id`
+      if user_with_ecf_id && user_with_gai_id.nil?
+        return user_with_ecf_id
+      end
+
+      # We have User 2 records, but they are different
+      if user_with_ecf_id && user_with_gai_id && user_with_ecf_id != user_with_gai_id
+        raise "[#{ecf_user.id}] ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different"
+      end
+
+      # Found User with `ecf_user.get_an_identity_id` only (not found with `ecf_user.id`)
+      if user_with_ecf_id.nil? && user_with_gai_id
+        # Can we find a `ecf_user` with `user.ecf_id`?
+        ecf_user_from_gai_user_ecf_id = Migration::Ecf::User.find_by(id: user_with_gai_id.ecf_id)
+
+        # Not found
+        if ecf_user_from_gai_user_ecf_id.nil?
+          # We set `user.ecf_id` to `ecf_user.id`, return user
+          user_with_gai_id.ecf_id = ecf_user.id
+          return user_with_gai_id
+        end
+
+        # Found, is it an orphan user?
+        if ecf_user_from_gai_user_ecf_id.npq_applications.empty? && ecf_user_from_gai_user_ecf_id.npq_profiles.empty?
+          # Orphaned ecf_user, we set `user.ecf_id` to `ecf_user.id`, return user
+          user_with_gai_id.ecf_id = ecf_user.id
+          return user_with_gai_id
+        end
+
+        raise "[#{ecf_user.id}] User found with ecf_user.get_an_identity_id, but its user.uid linked to another ecf_user that is not an orphan"
+      end
+
+      raise "[#{ecf_user.id}] End of find_or_initialize_user logic, something weird happened"
+    end
 
     def unique_validated_trns(ecf_user)
       ecf_user.npq_applications
