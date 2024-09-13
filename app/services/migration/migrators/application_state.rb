@@ -31,7 +31,7 @@ module Migration::Migrators
         ecf_application_id = ecf_participant_profile_state.participant_profile_id
         application_state.application_id = find_application_id!(ecf_id: ecf_application_id)
 
-        application_state.update!(ecf_participant_profile_state.attributes.slice(%w[state reason created_at updated_at]))
+        application_state.update!(ecf_participant_profile_state.attributes.slice("state", "reason", "created_at", "updated_at"))
       end
     end
   end

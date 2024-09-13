@@ -103,7 +103,15 @@ module Migration::Migrators
       statement_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
     end
 
+    def find_course_id!(identifier:)
+      course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
+    end
+
   private
+
+    def course_ids_by_identifier
+      @course_ids_by_identifier ||= ::Course.pluck(:identifier, :id).to_h
+    end
 
     def statement_ids_by_ecf_id
       @statement_ids_by_ecf_id ||= ::Statement.pluck(:ecf_id, :id).to_h

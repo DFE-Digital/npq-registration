@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Migration::Migrators::Contract do
-  it_behaves_like "a migrator", :contract, %i[cohort lead_provider course statement] do
+  it_behaves_like "a migrator", :contract, %i[course statement] do
     def create_ecf_resource
       cohort = create(:ecf_migration_cohort)
       npq_lead_provider = create(:ecf_migration_npq_lead_provider)
@@ -91,18 +91,7 @@ RSpec.describe Migration::Migrators::Contract do
         contract_template = contract.contract_template
         expect(contract_template.ecf_id).to eq(ecf_resource1.id)
 
-        attrs = ecf_resource1.attributes.slice(
-          :service_fee_percentage,
-          :output_payment_percentage,
-          :per_participant,
-          :number_of_payment_periods,
-          :recruitment_target,
-          :service_fee_installments,
-          :targeted_delivery_funding_per_participant,
-          :monthly_service_fee,
-          :created_at,
-          :updated_at,
-        )
+        attrs = ecf_resource1.attributes.slice(*described_class::SHARED_ATTRIBUTES)
         expect(contract_template).to have_attributes(attrs)
 
         expect(Contract.where(contract_template:).count).to eq(1)

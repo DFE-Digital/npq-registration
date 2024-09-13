@@ -23,7 +23,7 @@ RSpec.describe Migration::Migrators::ApplicationState do
         instance.call
 
         application_state = ApplicationState.joins(:application).find_by(application: { ecf_id: ecf_resource1.participant_profile_id })
-        expect(application_state).to have_attributes(ecf_resource1.attributes.slice(%w[state reason created_at updated_at]))
+        expect(application_state).to have_attributes(ecf_resource1.attributes.slice("state", "reason", "created_at", "updated_at"))
         expect(application_state.lead_provider.ecf_id).to eq(ecf_resource1.cpd_lead_provider.npq_lead_provider.id)
       end
 
