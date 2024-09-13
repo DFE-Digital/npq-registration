@@ -11,6 +11,8 @@ module Migration::Migrators
 
       def ecf_statement_items
         Migration::Ecf::Finance::StatementLineItem
+          .joins(:participant_declaration)
+          .where(participant_declaration: { type: "ParticipantDeclaration::NPQ" })
       end
 
       def dependencies

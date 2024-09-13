@@ -26,6 +26,12 @@ RSpec.describe Migration::Migrators::StatementItem do
         expect(statement_item.declaration.ecf_id).to eq(ecf_resource1.participant_declaration_id)
         expect(statement_item.statement.ecf_id).to eq(ecf_resource1.statement_id)
       end
+
+      it "ignores StatementItem records for ECF declarations" do
+        create(:ecf_migration_statement_line_item, participant_declaration: create(:ecf_migration_participant_declaration, type: "ParticipantDeclaration::ECF"))
+
+        expect { instance.call }.to change { data_migration.reload.processed_count }.by(2).and(not_change { data_migration.failure_count })
+      end
     end
   end
 end

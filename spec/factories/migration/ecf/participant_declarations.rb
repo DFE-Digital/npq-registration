@@ -5,6 +5,7 @@ FactoryBot.define do
     declaration_date { 1.day.ago }
     state { Declaration.states.keys.sample }
     declaration_type { Declaration.declaration_types.keys.sample }
+    type { "ParticipantDeclaration::NPQ" }
     course_identifier { "course-identifier" }
     user { create(:ecf_migration_user) }
     cohort { create(:ecf_migration_cohort) }
