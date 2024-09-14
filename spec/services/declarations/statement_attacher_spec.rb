@@ -8,6 +8,8 @@ RSpec.describe Declarations::StatementAttacher, type: :model do
   let(:instance) { described_class.new(declaration:) }
 
   describe "validations" do
+    before { travel_to(declaration.declaration_date) }
+
     it { is_expected.to validate_presence_of(:declaration).with_message("You must specify a declaration") }
 
     context "when the next output fee statement does not exist" do

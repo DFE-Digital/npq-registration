@@ -27,6 +27,8 @@ RSpec.describe "Declarations endpoints", openapi_spec: "v2/swagger.yaml", type: 
       extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v2)
     end
 
+    before { travel_to(resource.declaration_date) }
+
     it_behaves_like "an API show endpoint documentation",
                     "/api/v2/participant-declarations/{id}",
                     "Participant declarations",
@@ -69,6 +71,8 @@ RSpec.describe "Declarations endpoints", openapi_spec: "v2/swagger.yaml", type: 
         course_identifier: course.identifier,
       }
     end
+
+    before { travel_to(declaration_date) }
 
     it_behaves_like "an API create on resource endpoint documentation",
                     "/api/v2/participant-declarations",

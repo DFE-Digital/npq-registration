@@ -7,6 +7,10 @@ FactoryBot.define do
       Cohort.find_or_create_by(start_year:)
     end
 
+    trait :previous do
+      start_year { Date.current.month < 9 ? Date.current.year.pred - 1 : Date.current.year.pred }
+    end
+
     trait :current do
       start_year { Date.current.month < 9 ? Date.current.year.pred : Date.current.year }
     end

@@ -4,12 +4,14 @@ FactoryBot.define do
       user { create(:user) }
       lead_provider { create(:lead_provider) }
       course { Course.find_by!(identifier: ParticipantOutcomes::Create::PERMITTED_COURSES.sample) }
+      cohort { create(:cohort, :previous) }
+      application { create(:application, :accepted, user:, course:, lead_provider:, cohort:) }
     end
 
     passed
     completion_date { 1.week.ago }
     ecf_id { SecureRandom.uuid }
-    declaration { association :declaration, :completed, :payable, lead_provider:, course:, user: }
+    declaration { association :declaration, :completed, :payable, lead_provider:, course:, user:, application: }
 
     trait :passed do
       state { "passed" }

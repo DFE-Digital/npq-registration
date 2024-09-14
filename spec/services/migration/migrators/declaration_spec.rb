@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Migration::Migrators::Declaration do
   it_behaves_like "a migrator", :declaration, %i[cohort application lead_provider course user] do
     def create_ecf_resource
-      create(:ecf_migration_participant_declaration, :ineligible)
+      create(:ecf_migration_participant_declaration, :ineligible, cohort: create(:ecf_migration_cohort, start_year: Date.current.year - 1))
     end
 
     def create_npq_resource(ecf_resource)
@@ -11,7 +11,7 @@ RSpec.describe Migration::Migrators::Declaration do
       cohort = create(:cohort, start_year: ecf_resource.cohort.start_year)
       course = create(:course, identifier: ecf_resource.course_identifier.upcase)
       user = create(:user, ecf_id: ecf_resource.user.id)
-      application = create(:application, :accepted, course:, user:)
+      application = create(:application, :accepted, course:, user:, cohort:)
       create(:declaration, ecf_id: ecf_resource.id, cohort:, lead_provider:, application:)
     end
 

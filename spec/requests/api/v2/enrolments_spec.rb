@@ -10,8 +10,10 @@ RSpec.describe "Enrolment endpoints", type: :request do
     let(:path) { api_v2_enrolments_path(format: :csv) }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:application, :accepted, **attrs)
+    def create_resource(travel_to_time: Time.zone.now, **attrs)
+      travel_to(travel_to_time) do
+        create(:application, :accepted, **attrs)
+      end
     end
 
     it "only returns accepted applications" do

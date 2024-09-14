@@ -18,11 +18,7 @@ RSpec.describe "Participants outcome endpoints", type: :request do
   end
 
   def create_resource_with_different_parent(**attrs)
-    create_resource(**attrs).tap do |outcome|
-      outcome.declaration.update!(
-        application: create(:application, :accepted, user: create(:user, full_name: "Other User")),
-      )
-    end
+    create(:participant_outcome, **attrs, application: create(:application, :accepted, user: create(:user, full_name: "Other User")))
   end
 
   describe "GET /api/v1/participants/npq/:participant_id/outcomes" do

@@ -89,12 +89,8 @@ end
 RSpec.shared_examples "an API index Csv endpoint with filter by updated_since" do
   context "when fitlering by updated_since" do
     it "returns resources updated since the specified date" do
-      travel_to(2.hours.ago) do
-        create_resource(lead_provider: current_lead_provider)
-      end
-      travel_to(1.minute.ago) do
-        create_resource(lead_provider: current_lead_provider)
-      end
+      create_resource(travel_to_time: 2.hours.ago, lead_provider: current_lead_provider)
+      create_resource(travel_to_time: 1.minute.ago, lead_provider: current_lead_provider)
 
       api_get(path, params: { filter: { updated_since: 1.hour.ago.iso8601 } })
 

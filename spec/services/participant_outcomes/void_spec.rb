@@ -10,7 +10,9 @@ RSpec.describe ParticipantOutcomes::Void, type: :model do
   describe "#void_outcome" do
     context "when completed declaration" do
       before do
+        travel_to(declaration.declaration_date)
         create(:participant_outcome, :passed, declaration:)
+        travel_to(declaration.declaration_date + 1.day)
       end
 
       it "creates new participant outcome record" do

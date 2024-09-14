@@ -27,6 +27,8 @@ RSpec.describe "Declarations endpoints", openapi_spec: "v1/swagger.yaml", type: 
       extract_swagger_example(schema: "#/components/schemas/ParticipantDeclarationResponse", version: :v1)
     end
 
+    before { travel_to(resource.declaration_date) }
+
     it_behaves_like "an API show endpoint documentation",
                     "/api/v1/participant-declarations/{id}",
                     "Participant declarations",

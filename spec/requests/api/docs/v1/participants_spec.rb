@@ -102,6 +102,7 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v1/swagger.yaml", typ
           cohort:,
           schedule:,
           funded_place: true,
+          user:,
         )
       end
       let(:resource) { participant }

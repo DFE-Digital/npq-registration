@@ -5,16 +5,15 @@ FactoryBot.define do
     transient do
       user { create(:user) }
       course { create(:course) }
-      transient_application { create(:application, :accepted, user:, course:) }
     end
 
-    application { transient_application }
+    application { association :application, :accepted, user:, course:, cohort: build(:cohort, :previous) }
     lead_provider { application&.lead_provider || build(:lead_provider) }
-    cohort { application&.cohort || build(:cohort, :current) }
+    cohort { application&.cohort || build(:cohort, :previous) }
     declaration_type { "started" }
     declaration_date do
-      schedule = application.schedule || transient_application.schedule
-      schedule.applies_from + 1.day
+      date = application.schedule&.applies_from || Date.current
+      date + 1.day
     end
     state { "submitted" }
 
@@ -40,8 +39,8 @@ FactoryBot.define do
       declaration_type { :completed }
     end
 
-    after(:build) do |declaration, _context|
-      helpers.travel_to(declaration.declaration_date)
+    to_create do |instance|
+      helpers.travel_to(instance.declaration_date) { instance.save! }
     end
   end
 end

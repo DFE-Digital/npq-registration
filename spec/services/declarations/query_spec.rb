@@ -12,8 +12,11 @@ RSpec.describe Declarations::Query do
 
     it "orders declarations by created_at in ascending order" do
       declaration1 = create(:declaration)
-      declaration2 = travel_to(1.hour.ago) { create(:declaration) }
-      declaration3 = travel_to(1.minute.ago) { create(:declaration) }
+      declaration2 = create(:declaration)
+      declaration3 = create(:declaration)
+      travel_to(1.hour.ago) { declaration2.update!(created_at: Time.zone.now) }
+      travel_to(2.minutes.ago) { declaration3.update!(created_at: Time.zone.now) }
+      travel_to(1.minute.ago) { declaration1.update!(created_at: Time.zone.now) }
 
       query = described_class.new
       expect(query.declarations).to eq([declaration2, declaration3, declaration1])

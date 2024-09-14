@@ -20,8 +20,10 @@ RSpec.describe "Application endpoints", type: :request do
     let(:path) { api_v1_applications_path }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:application, **attrs)
+    def create_resource(travel_to_time: Time.zone.now, **attrs)
+      travel_to(travel_to_time) do
+        create(:application, **attrs)
+      end
     end
 
     it_behaves_like "an API index endpoint"
@@ -36,8 +38,10 @@ RSpec.describe "Application endpoints", type: :request do
     let(:path) { api_v1_applications_path(format: :csv) }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:application, **attrs)
+    def create_resource(travel_to_time: Time.zone.now, **attrs)
+      travel_to(travel_to_time) do
+        create(:application, **attrs)
+      end
     end
 
     it_behaves_like "an API index Csv endpoint"

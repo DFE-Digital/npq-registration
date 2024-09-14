@@ -6,13 +6,22 @@ RSpec.describe "Declaration endpoints", type: :request do
   let(:serializer) { API::DeclarationSerializer }
   let(:serializer_version) { :v2 }
 
-  def create_resource(**attrs)
+  def create_resource(travel_to_time: nil, **attrs)
     if attrs[:user]
       attrs[:application] = create(:application, user: attrs[:user])
       attrs.delete(:user)
     end
 
-    create(:declaration, **attrs)
+    declaration = create(:declaration, **attrs)
+    if travel_to_time
+      travel_to(travel_to_time) do
+        declaration.touch
+        declaration.participant_outcomes.each(&:touch)
+        declaration.statement_items.each(&:touch)
+      end
+    end
+
+    declaration
   end
 
   describe "GET /api/v2/participant-declarations" do

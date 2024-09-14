@@ -9,8 +9,10 @@ RSpec.describe "Statements endpoint", type: "request" do
     let(:path) { api_v3_statements_path }
     let(:resource_id_key) { :ecf_id }
 
-    def create_resource(**attrs)
-      create(:statement, **attrs)
+    def create_resource(travel_to_time: Time.zone.now, **attrs)
+      travel_to(travel_to_time) do
+        create(:statement, **attrs)
+      end
     end
 
     it_behaves_like "an API index endpoint with pagination"

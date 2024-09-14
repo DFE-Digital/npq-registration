@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Declarations::Create, type: :model do
   let(:lead_provider) { LeadProvider.all.sample }
-  let(:cohort) { create(:cohort, :current) }
+  let(:cohort) { create(:cohort, :previous) }
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
   let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
@@ -81,13 +81,15 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when the declaration_date is today" do
-      before { params[:declaration_date] = Time.zone.today.rfc3339 }
+      before { travel_to(declaration_date) }
 
       it { is_expected.to be_valid }
     end
 
     context "when the declaration_date is in the past" do
-      before { params[:declaration_date] = 1.day.ago.rfc3339 }
+      before do
+        travel_to(schedule.applies_from + 2.days)
+      end
 
       it { is_expected.to be_valid }
     end
@@ -118,7 +120,7 @@ RSpec.describe Declarations::Create, type: :model do
         end
       end
 
-      context "with an fundable participant" do
+      context "with a fundable participant" do
         let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
         let(:existing_declaration) { Declaration.last }
 
