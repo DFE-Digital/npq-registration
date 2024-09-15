@@ -55,13 +55,22 @@ module Migration::Migrators
   private
 
     def find_or_initialize_user(ecf_user)
-      # Find User with `ecf_user.id`
-      user_with_ecf_id = ::User.find_by(ecf_id: ecf_user.id)
+      # Find Users with `ecf_user.id`
+      users_with_ecf_id = ::User.where(ecf_id: ecf_user.id)
 
       # Find User with `ecf_user.get_an_identity_id`
       if ecf_user.get_an_identity_id.present?
         user_with_gai_id = ::User.find_by(uid: ecf_user.get_an_identity_id)
       end
+
+      # user.ecf_id is not validated as unique, check for duplicates
+      if users_with_ecf_id && users_with_ecf_id.size > 1
+        ecf_user.errors.add(:base, "ecf_user.id has multiple users in NPQ")
+        raise ActiveRecord::RecordInvalid, ecf_user
+      end
+
+      # User with `ecf_user.id`
+      user_with_ecf_id = users_with_ecf_id.first
 
       # User does not exist, initialize new user
       if user_with_ecf_id.nil? && user_with_gai_id.nil?
@@ -80,7 +89,8 @@ module Migration::Migrators
 
       # We have User 2 records, but they are different
       if user_with_ecf_id && user_with_gai_id && user_with_ecf_id != user_with_gai_id
-        raise "[#{ecf_user.id}] ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different"
+        ecf_user.errors.add(:base, "ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different")
+        raise ActiveRecord::RecordInvalid, ecf_user
       end
 
       # Found User with `ecf_user.get_an_identity_id` only (not found with `ecf_user.id`)
@@ -102,10 +112,12 @@ module Migration::Migrators
           return user_with_gai_id
         end
 
-        raise "[#{ecf_user.id}] User found with ecf_user.get_an_identity_id, but its user.uid linked to another ecf_user that is not an orphan"
+        ecf_user.errors.add(:base, "User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
+        raise ActiveRecord::RecordInvalid, ecf_user
       end
 
-      raise "[#{ecf_user.id}] End of find_or_initialize_user logic, something weird happened"
+      ecf_user.errors.add(:base, "End of find_or_initialize_user logic, something weird happened")
+      raise ActiveRecord::RecordInvalid, ecf_user
     end
 
     def unique_validated_trns(ecf_user)
