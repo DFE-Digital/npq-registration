@@ -34,7 +34,7 @@ module Migration::Migrators
         validate_multiple_trns!(trns, user, ecf_user)
 
         emails = unique_emails(ecf_user)
-        validate_multiple_emails!(emails, user)
+        validate_multiple_emails!(emails, user, ecf_user)
         # validate_existing_email_match!(emails.first, user)
 
         npq_application = most_recent_updated_npq_application(ecf_user)
@@ -93,8 +93,14 @@ module Migration::Migrators
 
       # We have User 2 records, but they are different
       if user_with_ecf_id && user_with_gai_id && user_with_ecf_id != user_with_gai_id
-        ecf_user.errors.add(:base, "ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different")
-        raise ActiveRecord::RecordInvalid, ecf_user
+        # ecf_user.errors.add(:base, "ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different")
+        # raise ActiveRecord::RecordInvalid, ecf_user
+        user_with_gai_id.applications.each do |application|
+          application.update!(user: user_with_ecf_id)
+          user_with_ecf_id.uid = user_with_gai_id.uid
+          user_with_gai_id.update!(uid: nil)
+          user_with_ecf_id.save!
+        end
       end
 
       # Found User with `ecf_user.get_an_identity_id` only (not found with `ecf_user.id`)
@@ -156,11 +162,16 @@ module Migration::Migrators
       raise ActiveRecord::RecordInvalid, user
     end
 
-    def validate_multiple_emails!(unique_emails, user)
+    def validate_multiple_emails!(unique_emails, user, ecf_user)
       return unless unique_emails.size > 1
+      different_users_with_emails_in_npq = ::User.where(email: unique_emails)
 
-      user.errors.add(:base, "There are multiple different emails from user identities in NPQ applications")
-      raise ActiveRecord::RecordInvalid, user
+      return if different_users_with_emails_in_npq == 1 && different_users_with_emails_in_npq.first.ecf_id == ecf_user.id
+      different_users_with_emails_in_npq.each do |user_to_be_merged|
+        user_to_be_merged.applications.each do |application|
+          application.update!(user:)
+        end
+      end
     end
 
     def validate_existing_email_match!(ecf_email, user)
