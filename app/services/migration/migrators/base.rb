@@ -115,11 +115,11 @@ module Migration::Migrators
     end
 
     def find_itt_provider_id!(legal_name:)
-      itt_provider_ids_by_legal_name[legal_name] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
+      itt_provider_ids_by_legal_name[legal_name]
     end
 
     def find_private_childcare_provider_id!(provider_urn:)
-      private_childcare_provider_ids_by_provider_urn[provider_urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find PrivateChildcareProvider")
+      private_childcare_provider_ids_by_provider_urn[provider_urn]
     end
 
     def find_user_id!(ecf_id:)

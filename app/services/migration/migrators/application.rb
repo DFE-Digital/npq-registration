@@ -92,19 +92,21 @@ module Migration::Migrators
 
     def ensure_relationships_are_consistent!(ecf_npq_application, application)
       if application.school_id && !ecf_npq_application.school_urn || ecf_npq_application.school_urn && application.school_id != find_school_id!(urn: ecf_npq_application.school_urn)
-        raise_error(ecf_npq_application, message: "School in ECF is different")
+        # raise_error(ecf_npq_application, message: "School in ECF is different")
+        application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
       end
 
       if application.course_id != find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
-        raise_error(ecf_npq_application, message: "Course in ECF is different")
+        # raise_error(ecf_npq_application, message: "Course in ECF is different")
+        application.course_id = find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
       end
 
       if application.lead_provider_id != find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
-        raise_error(ecf_npq_application, message: "LeadProvider in ECF is different")
+        application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
       end
 
       if application.user_id != find_user_id!(ecf_id: ecf_npq_application.user.id)
-        raise_error(ecf_npq_application, message: "User in ECF is different")
+        application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
       end
     end
 

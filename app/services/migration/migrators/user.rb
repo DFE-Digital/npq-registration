@@ -34,7 +34,6 @@ module Migration::Migrators
         validate_multiple_trns!(trns, user, ecf_user)
 
         emails = unique_emails(ecf_user)
-        validate_multiple_emails!(emails, user, ecf_user)
         # validate_existing_email_match!(emails.first, user)
 
         npq_application = most_recent_updated_npq_application(ecf_user)
@@ -49,6 +48,7 @@ module Migration::Migrators
           active_alert: npq_application&.active_alert || user.active_alert,
           trn_verified: npq_application&.teacher_reference_number_verified || user.trn_verified,
         )
+        validate_multiple_emails!(emails, user, ecf_user)
       end
     end
 
@@ -101,6 +101,7 @@ module Migration::Migrators
           user_with_gai_id.update!(uid: nil)
           user_with_ecf_id.save!
         end
+        return user_with_ecf_id
       end
 
       # Found User with `ecf_user.get_an_identity_id` only (not found with `ecf_user.id`)
