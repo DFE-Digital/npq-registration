@@ -31,7 +31,7 @@ module Migration::Migrators
         user = find_or_initialize_user(ecf_user)
 
         trns = unique_validated_trns(ecf_user)
-        validate_multiple_trns!(trns, user)
+        validate_multiple_trns!(trns, user, ecf_user)
 
         emails = unique_emails(ecf_user)
         validate_multiple_emails!(emails, user)
@@ -148,8 +148,9 @@ module Migration::Migrators
         .first
     end
 
-    def validate_multiple_trns!(trns, user)
+    def validate_multiple_trns!(trns, user, ecf_user)
       return unless trns.size > 1
+      return if ecf_user.teacher_profile&.trn.present?
 
       user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
       raise ActiveRecord::RecordInvalid, user
