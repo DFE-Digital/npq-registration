@@ -35,7 +35,7 @@ module Migration::Migrators
 
         emails = unique_emails(ecf_user)
         validate_multiple_emails!(emails, user)
-        validate_existing_email_match!(emails.first, user)
+        # validate_existing_email_match!(emails.first, user)
 
         npq_application = most_recent_updated_npq_application(ecf_user)
 
