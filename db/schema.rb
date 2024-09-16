@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_16_124923) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -134,6 +134,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "funding_cap", default: false, null: false
+    t.uuid "ecf_id"
+    t.index ["ecf_id"], name: "index_cohorts_on_ecf_id", unique: true
     t.index ["start_year"], name: "index_cohorts_on_start_year", unique: true
   end
 
@@ -159,8 +161,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
     t.bigint "contract_template_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "ecf_id"
     t.index ["contract_template_id"], name: "index_contracts_on_contract_template_id"
     t.index ["course_id"], name: "index_contracts_on_course_id"
+    t.index ["ecf_id"], name: "index_contracts_on_ecf_id", unique: true
     t.index ["statement_id", "course_id"], name: "index_contracts_on_statement_id_and_course_id", unique: true
     t.index ["statement_id"], name: "index_contracts_on_statement_id"
   end
@@ -315,6 +319,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
     t.bigint "to_participant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "ecf_id"
+    t.index ["ecf_id"], name: "index_participant_id_changes_on_ecf_id"
     t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
     t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"
@@ -399,8 +405,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
     t.enum "allowed_declaration_types", default: ["started", "retained-1", "retained-2", "completed"], array: true, enum_type: "declaration_types"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "ecf_id"
     t.index ["cohort_id"], name: "index_schedules_on_cohort_id"
     t.index ["course_group_id"], name: "index_schedules_on_course_group_id"
+    t.index ["ecf_id"], name: "index_schedules_on_ecf_id", unique: true
     t.index ["identifier", "cohort_id"], name: "index_schedules_on_identifier_and_cohort_id", unique: true
   end
 
@@ -460,7 +468,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "declaration_id"
+    t.uuid "ecf_id"
     t.index ["declaration_id"], name: "index_statement_items_on_declaration_id"
+    t.index ["ecf_id"], name: "index_statement_items_on_ecf_id", unique: true
     t.index ["statement_id"], name: "index_statement_items_on_statement_id"
   end
 
