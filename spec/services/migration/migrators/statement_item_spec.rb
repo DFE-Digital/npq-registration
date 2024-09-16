@@ -7,9 +7,9 @@ RSpec.describe Migration::Migrators::StatementItem do
     end
 
     def create_npq_resource(ecf_resource)
-      statement = create(:statement, ecf_id: ecf_resource.statement_id)
-      declaration = create(:declaration, ecf_id: ecf_resource.participant_declaration_id)
-      create(:statement_item, declaration:, statement:, state: ecf_resource.state)
+      create(:statement, ecf_id: ecf_resource.statement_id)
+      create(:declaration, ecf_id: ecf_resource.participant_declaration_id)
+      create(:statement_item, ecf_id: ecf_resource.id)
     end
 
     def setup_failure_state
@@ -21,7 +21,7 @@ RSpec.describe Migration::Migrators::StatementItem do
       it "creates the StatementItems and sets attributes correctly" do
         instance.call
 
-        statement_item = StatementItem.includes(:statement, :declaration).find_by(statement: { ecf_id: ecf_resource1.statement_id })
+        statement_item = StatementItem.includes(:statement, :declaration).find_by(ecf_id: ecf_resource1.id)
         expect(statement_item).to have_attributes(ecf_resource1.attributes.slice(:state, :created_at, :updated_at))
         expect(statement_item.declaration.ecf_id).to eq(ecf_resource1.participant_declaration_id)
         expect(statement_item.statement.ecf_id).to eq(ecf_resource1.statement_id)

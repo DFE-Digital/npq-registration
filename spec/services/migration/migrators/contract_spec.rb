@@ -28,23 +28,21 @@ RSpec.describe Migration::Migrators::Contract do
     def create_npq_resource(ecf_resource)
       lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider.id)
       cohort = create(:cohort, start_year: ecf_resource.cohort.start_year)
-      course = create(:course, identifier: ecf_resource.course_identifier)
+      create(:course, identifier: ecf_resource.course_identifier)
       ecf_statement = Migration::Ecf::Finance::Statement.where(cpd_lead_provider: ecf_resource.npq_lead_provider.cpd_lead_provider).first!
-      statement = create(
+      create(
         :statement,
         ecf_id: ecf_statement.id,
         lead_provider:,
         cohort:,
       )
-      contract_template = create(
+      create(
         :contract_template,
         ecf_id: ecf_resource.id,
       )
       create(
         :contract,
-        statement:,
-        course:,
-        contract_template:,
+        ecf_id: ecf_resource.id,
       )
     end
 

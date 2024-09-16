@@ -16,8 +16,11 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_cohorts) do |ecf_cohort|
-        cohort = ::Cohort.find_or_initialize_by(start_year: ecf_cohort.start_year)
-        cohort.update!(registration_start_date: ecf_cohort.npq_registration_start_date.presence || ecf_cohort.registration_start_date)
+        cohort = ::Cohort.find_or_initialize_by(ecf_id: ecf_cohort.id)
+        cohort.update!(
+          start_year: ecf_cohort.start_year,
+          registration_start_date: ecf_cohort.npq_registration_start_date.presence || ecf_cohort.registration_start_date,
+        )
       end
     end
   end
