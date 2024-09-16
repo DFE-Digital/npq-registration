@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_16_124923) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_16_194001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -284,6 +284,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_16_124923) do
     t.boolean "approved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "disabled_at"
     t.index ["legal_name"], name: "index_itt_providers_on_legal_name", unique: true
   end
 
@@ -375,6 +376,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_16_124923) do
     t.integer "places"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "disabled_at"
     t.index ["provider_urn"], name: "index_private_childcare_providers_on_provider_urn"
   end
 

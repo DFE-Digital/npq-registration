@@ -3,6 +3,8 @@ class PrivateChildcareProvider < ApplicationRecord
 
   include PgSearch::Model
 
+  default_scope { where(disabled_at: nil) }
+
   pg_search_scope :search_by_name,
                   against: [:name],
                   using: {

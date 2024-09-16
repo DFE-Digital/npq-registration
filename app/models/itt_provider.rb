@@ -5,5 +5,7 @@ class IttProvider < ApplicationRecord
   validates :operating_name,
             presence: true
 
+  default_scope { where(disabled_at: nil) }
+
   scope :currently_approved, -> { where(approved: true) }
 end

@@ -7,5 +7,9 @@ FactoryBot.define do
     initialize_with do
       IttProvider.find_by(legal_name:) || new(**attributes)
     end
+
+    trait :disabled do
+      disabled_at { 1.day.ago }
+    end
   end
 end
