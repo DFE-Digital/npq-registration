@@ -20,7 +20,7 @@ RSpec.shared_context "with default schedules", shared_context: :metadata do
         npq_specialist_spring
         npq_specialist_autumn
       ].each do |schedule_identifier|
-        FactoryBot.create(:schedule, schedule_identifier, cohort:)
+        FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
       end
     end
   end

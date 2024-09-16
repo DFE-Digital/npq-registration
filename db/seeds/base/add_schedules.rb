@@ -13,6 +13,6 @@ Cohort.find_each do |cohort|
     npq_specialist_autumn
     npq_specialist_spring
   ].each do |schedule_identifier|
-    FactoryBot.create(:schedule, schedule_identifier, cohort:)
+    FactoryBot.create(:schedule, schedule_identifier, cohort:, change_applies_dates: false)
   end
 end

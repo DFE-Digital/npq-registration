@@ -1,5 +1,9 @@
 FactoryBot.define do
   factory :schedule do
+    transient do
+      change_applies_dates { true }
+    end
+
     course_group
     cohort { create(:cohort, :current) }
 
@@ -137,6 +141,19 @@ FactoryBot.define do
       applies_to { Date.new(cohort.start_year + 1, 1, 1) }
 
       allowed_declaration_types { %w[started retained-1 completed] }
+    end
+
+    # Setting the schedule dates to 1 week ago is to ensure that
+    # without time travel declaration factories are valid. Declaration model
+    # validations require the `declaration_date` not to be in the future, and
+    # to be after the application schedule `applies_from` date. We can disable
+    # this callback via the transient `change_applies_dates` attribute by
+    # setting it to false
+    before(:create) do |schedule, evaluator|
+      if schedule.applies_from.future? && evaluator.change_applies_dates
+        schedule.applies_from = Date.current - 1.week
+        schedule.applies_to = Date.current + 1.month
+      end
     end
   end
 end
