@@ -10,7 +10,7 @@ module Migration::Migrators
       end
 
       def ecf_schedules
-        Migration::Ecf::Finance::Schedule.includes(:cohort, :milestones)
+        Migration::Ecf::Finance::Schedule.includes(:milestones)
       end
 
       def dependencies
@@ -32,7 +32,7 @@ module Migration::Migrators
         ::Schedule.find_or_initialize_by(ecf_id: ecf_schedule.id).tap do |schedule|
           ecf_milestone = ecf_schedule.milestones.first
           schedule.update!(
-            cohort_id: find_cohort_id!(start_year: ecf_schedule.cohort.start_year),
+            cohort_id: find_cohort_id!(ecf_id: ecf_schedule.cohort_id),
             course_group:,
             identifier: ecf_schedule.schedule_identifier,
             applies_from: ecf_milestone.start_date,

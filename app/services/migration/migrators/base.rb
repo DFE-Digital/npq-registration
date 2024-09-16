@@ -87,8 +87,8 @@ module Migration::Migrators
       lead_provider_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
     end
 
-    def find_cohort_id!(start_year:)
-      cohort_ids_by_start_year[start_year] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
+    def find_cohort_id!(ecf_id:)
+      cohort_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
     end
 
     def find_application_id!(ecf_id:)
@@ -169,8 +169,8 @@ module Migration::Migrators
       @user_ids_by_ecf_id ||= ::User.pluck(:ecf_id, :id).to_h
     end
 
-    def cohort_ids_by_start_year
-      @cohort_ids_by_start_year ||= ::Cohort.pluck(:start_year, :id).to_h
+    def cohort_ids_by_ecf_id
+      @cohort_ids_by_ecf_id ||= ::Cohort.pluck(:ecf_id, :id).to_h
     end
 
     def school_ids_by_urn

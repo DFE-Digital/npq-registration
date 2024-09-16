@@ -11,7 +11,7 @@ RSpec.describe Migration::Migrators::Schedule do
     end
 
     def create_npq_resource(ecf_resource)
-      create(:cohort, start_year: ecf_resource.cohort.start_year)
+      create(:cohort, ecf_id: ecf_resource.cohort_id, start_year: ecf_resource.cohort.start_year)
       create(:course_group, name: :support)
 
       create(:schedule, ecf_id: ecf_resource.id)

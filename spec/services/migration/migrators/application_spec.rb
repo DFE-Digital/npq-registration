@@ -7,13 +7,13 @@ RSpec.describe Migration::Migrators::Application do
     end
 
     def create_npq_resource(ecf_resource)
-      cohort = create(:cohort, start_year: ecf_resource.cohort.start_year)
+      cohort = create(:cohort, ecf_id: ecf_resource.cohort_id, start_year: ecf_resource.cohort.start_year)
       ecf_schedule = ecf_resource.profile.schedule
       create(:schedule, :npq_aso_december, cohort:, identifier: ecf_schedule.schedule_identifier)
       create(:private_childcare_provider, provider_urn: ecf_resource.private_childcare_provider_urn)
 
       school = create(:school, urn: ecf_resource.school_urn)
-      course = create(:course, identifier: ecf_resource.npq_course.identifier, ecf_id: ecf_resource.npq_course_id)
+      course = create(:course, ecf_id: ecf_resource.npq_course_id, identifier: ecf_resource.npq_course.identifier, ecf_id: ecf_resource.npq_course_id)
       lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider_id)
       user = create(:user, ecf_id: ecf_resource.user.id)
       create(:application, ecf_id: ecf_resource.id, school:, course:, lead_provider:, user:)
@@ -102,7 +102,7 @@ RSpec.describe Migration::Migrators::Application do
       end
 
       it "records a failure when the cohort cannot be found" do
-        ecf_resource1.cohort.update!(start_year: "1999")
+        Cohort.find_by!(ecf_id: ecf_resource1.cohort_id).update!(ecf_id: SecureRandom.uuid)
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find Cohort/)
       end

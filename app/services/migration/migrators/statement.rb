@@ -11,10 +11,7 @@ module Migration::Migrators
 
       def ecf_statements
         Migration::Ecf::Finance::Statement
-          .includes(
-            :cohort,
-            cpd_lead_provider: :npq_lead_provider,
-          )
+          .includes(cpd_lead_provider: :npq_lead_provider)
       end
 
       def dependencies
@@ -32,7 +29,7 @@ module Migration::Migrators
           deadline_date: ecf_statement.deadline_date,
           payment_date: ecf_statement.payment_date,
           output_fee: ecf_statement.output_fee,
-          cohort_id: find_cohort_id!(start_year: ecf_statement.cohort.start_year),
+          cohort_id: find_cohort_id!(ecf_id: ecf_statement.cohort_id),
           lead_provider_id: find_lead_provider_id!(ecf_id: ecf_statement.cpd_lead_provider.npq_lead_provider.id),
           marked_as_paid_at: ecf_statement.marked_as_paid_at,
           reconcile_amount: ecf_statement.reconcile_amount,

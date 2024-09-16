@@ -43,7 +43,7 @@ module Migration::Migrators
       def ecf_npq_applications
         Migration::Ecf::NpqApplication
           .joins(:participant_identity)
-          .includes(:cohort, :user, profile: :schedule)
+          .includes(:user, profile: :schedule)
       end
     end
 
@@ -57,12 +57,12 @@ module Migration::Migrators
 
         ecf_schedule = ecf_npq_application.profile&.schedule
         if ecf_schedule
-          schedule_cohort_id = find_cohort_id!(start_year: ecf_schedule.cohort.start_year)
+          schedule_cohort_id = find_cohort_id!(ecf_id: ecf_schedule.cohort_id)
           course_group_name = course_groups_by_schedule_type(ecf_schedule.type).name
           application.schedule_id = find_schedule_id!(cohort_id: schedule_cohort_id, identifier: ecf_schedule.schedule_identifier, course_group_name:)
         end
 
-        application.cohort_id = find_cohort_id!(start_year: ecf_npq_application.cohort.start_year)
+        application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(legal_name: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
 
