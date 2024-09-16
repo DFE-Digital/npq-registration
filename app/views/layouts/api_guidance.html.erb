@@ -5,22 +5,35 @@
 <body class="govuk-template__body js-enabled <%= yield :body_class %>">
   <%= render partial: "layouts/shared/govuk_javascript" %>
 
-<a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+  <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-<%= render partial: "layouts/api_guidance/header" %>
-<% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, default_to_first_section: false, structure: guidance_navigation_structure) %>
-<%= render(primary_navigation) %>
+  <%= render partial: "layouts/api_guidance/header" %>
+  <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, default_to_first_section: false, structure: guidance_navigation_structure) %>
+  <%= render(primary_navigation) %>
 
-<main id="main-content" class="api-guidance">
-  <%= render partial: "layouts/shared/messages" %>
+  <% if !@page.index_page? %>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          <div role="region" aria-label="Backwards navigation">
+            <%= govuk_back_link(href: url_for(:back)) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
-  <div class="govuk-grid-row">
+  <main id="main-content" class="api-guidance">
+    <%= render partial: "layouts/shared/messages" %>
+
     <% if @page.index_page? %>
-      <div class="govuk-grid-column-full">
-        <%= yield %>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <%= yield %>
+        </div>
       </div>
     <% else %>
-      <div class="govuk-width-container  govuk-!-padding-top-7">
+      <div class="govuk-width-container">
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-quarter">
             <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
@@ -49,8 +62,7 @@
         <% end %>
       </div>
     <% end %>
-  </div>
-</main>
+  </main>
 </body>
 <%= render partial: "layouts/shared/footer" %>
 </html>
