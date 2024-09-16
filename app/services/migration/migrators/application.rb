@@ -56,11 +56,7 @@ module Migration::Migrators
         ensure_relationships_are_consistent!(ecf_npq_application, application)
 
         ecf_schedule = ecf_npq_application.profile&.schedule
-        if ecf_schedule
-          schedule_cohort_id = find_cohort_id!(ecf_id: ecf_schedule.cohort_id)
-          course_group_name = course_groups_by_schedule_type(ecf_schedule.type).name
-          application.schedule_id = find_schedule_id!(cohort_id: schedule_cohort_id, identifier: ecf_schedule.schedule_identifier, course_group_name:)
-        end
+        application.schedule_id = find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
 
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(legal_name: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
@@ -80,21 +76,6 @@ module Migration::Migrators
     end
 
   private
-
-    def find_schedule_id!(cohort_id:, identifier:, course_group_name:)
-      schedule_ids_by_cohort_id_and_identifier_and_course_group.dig(cohort_id, identifier, course_group_name) || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
-    end
-
-    def schedule_ids_by_cohort_id_and_identifier_and_course_group
-      @schedule_ids_by_cohort_id_and_identifier_and_course_group ||= begin
-        schedules = ::Schedule.includes(:course_group).pluck(:id, :cohort_id, :identifier, "course_groups.name")
-        schedules.each_with_object({}) do |(id, cohort_id, identifier, course_group), hash|
-          hash[cohort_id] ||= {}
-          hash[cohort_id][identifier] ||= {}
-          hash[cohort_id][identifier][course_group] = id
-        end
-      end
-    end
 
     def ensure_relationships_are_consistent!(ecf_npq_application, application)
       if application.user_id != find_user_id!(ecf_id: ecf_npq_application.user.id)

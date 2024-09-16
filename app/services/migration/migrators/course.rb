@@ -46,7 +46,7 @@ module Migration::Migrators
         raise ActiveRecord::RecordInvalid, course
       end
 
-      ::CourseGroup.find_by(name: course_definition[:course_group_name])
+      ::CourseGroup.find_by!(name: course_definition[:course_group_name])
     end
   end
 end

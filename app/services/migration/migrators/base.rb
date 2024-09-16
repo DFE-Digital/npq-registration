@@ -126,6 +126,10 @@ module Migration::Migrators
       user_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
     end
 
+    def find_schedule_id!(ecf_id:)
+      schedule_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
+    end
+
     def course_groups_by_schedule_type(ecf_type)
       case ecf_type
       when "Finance::Schedule::NPQLeadership"
@@ -171,6 +175,10 @@ module Migration::Migrators
 
     def cohort_ids_by_ecf_id
       @cohort_ids_by_ecf_id ||= ::Cohort.pluck(:ecf_id, :id).to_h
+    end
+
+    def schedule_ids_by_ecf_id
+      @schedule_ids_by_ecf_id ||= ::Schedule.pluck(:ecf_id, :id).to_h
     end
 
     def school_ids_by_urn
