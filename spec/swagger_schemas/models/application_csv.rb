@@ -8,7 +8,6 @@ APPLICATION_CSV = {
       full_name
       email
       email_validated
-      teacher_reference_number
       teacher_reference_number_validated
       school_urn
       headteacher_status
@@ -47,6 +46,7 @@ APPLICATION_CSV = {
         description: "The Teacher Reference Number (TRN) for this NPQ participant",
         type: :string,
         example: "1234567",
+        nullable: true,
       },
       teacher_reference_number_validated: {
         description: "Indicates whether the Teacher Reference Number (TRN) has been validated",
