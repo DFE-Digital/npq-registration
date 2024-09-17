@@ -37,7 +37,7 @@ module Migration::Migrators
       end
 
       def dependencies
-        %i[cohort lead_provider schedule course user school]
+        %i[private_childcare_provider itt_provider cohort lead_provider schedule course user school]
       end
 
       def ecf_npq_applications
@@ -59,7 +59,7 @@ module Migration::Migrators
         application.schedule_id = find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
 
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
-        application.itt_provider_id = find_itt_provider_id!(legal_name: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
+        application.itt_provider_id = find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
 
         if ecf_npq_application.school_urn.present?

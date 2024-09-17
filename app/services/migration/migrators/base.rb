@@ -114,8 +114,8 @@ module Migration::Migrators
       school_ids_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
     end
 
-    def find_itt_provider_id!(legal_name:)
-      itt_provider_ids_by_legal_name[legal_name] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
+    def find_itt_provider_id!(itt_provider:)
+      itt_provider_ids_by_legal_name_and_operating_name[itt_provider.downcase] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
     end
 
     def find_private_childcare_provider_id!(provider_urn:)
@@ -185,12 +185,17 @@ module Migration::Migrators
       @school_ids_by_urn ||= ::School.pluck(:urn, :id).to_h
     end
 
-    def itt_provider_ids_by_legal_name
-      @itt_provider_ids_by_legal_name ||= ::IttProvider.pluck(:legal_name, :id).to_h
+    def itt_provider_ids_by_legal_name_and_operating_name
+      @itt_provider_ids_by_legal_name_and_operating_name ||= begin
+        providers = ::IttProvider.including_disabled
+        providers_by_legal_name = providers.pluck(:legal_name, :id).to_h.transform_keys(&:downcase)
+        providers_by_operating_name = providers.pluck(:operating_name, :id).to_h.transform_keys(&:downcase)
+        providers_by_legal_name.merge!(providers_by_operating_name)
+      end
     end
 
     def private_childcare_provider_ids_by_provider_urn
-      @private_childcare_provider_ids_by_provider_urn ||= ::PrivateChildcareProvider.pluck(:provider_urn, :id).to_h
+      @private_childcare_provider_ids_by_provider_urn ||= ::PrivateChildcareProvider.including_disabled.pluck(:provider_urn, :id).to_h
     end
 
     def offset
