@@ -66,6 +66,12 @@ module Migration::Migrators
         application.itt_provider_id = find_itt_provider_id!(legal_name: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
 
+        if ecf_npq_application.school_urn.present?
+          application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
+        end
+        application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
+        application.course_id = find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
+
         application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
         application.ukprn = ecf_npq_application.school_ukprn
 
@@ -91,18 +97,6 @@ module Migration::Migrators
     end
 
     def ensure_relationships_are_consistent!(ecf_npq_application, application)
-      if application.school_id && !ecf_npq_application.school_urn || ecf_npq_application.school_urn && application.school_id != find_school_id!(urn: ecf_npq_application.school_urn)
-        raise_error(ecf_npq_application, message: "School in ECF is different")
-      end
-
-      if application.course_id != find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
-        raise_error(ecf_npq_application, message: "Course in ECF is different")
-      end
-
-      if application.lead_provider_id != find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
-        raise_error(ecf_npq_application, message: "LeadProvider in ECF is different")
-      end
-
       if application.user_id != find_user_id!(ecf_id: ecf_npq_application.user.id)
         raise_error(ecf_npq_application, message: "User in ECF is different")
       end
