@@ -33,16 +33,13 @@ module Migration::Migrators
         trns = unique_validated_trns(ecf_user)
         validate_multiple_trns!(trns, user)
 
-        emails = unique_emails(ecf_user)
-        validate_multiple_emails!(emails, user)
-        validate_existing_email_match!(emails.first, user)
-
         npq_application = most_recent_updated_npq_application(ecf_user)
+        email = npq_application&.participant_identity&.email
 
         user.update!(
           trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
-          email: emails.first || user.email,
+          email: email || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application&.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application&.nino || user.national_insurance_number,
@@ -125,12 +122,6 @@ module Migration::Migrators
         .uniq
     end
 
-    def unique_emails(ecf_user)
-      emails = ecf_user.npq_profiles.map { |pp| pp.participant_identity.email }
-      emails += ecf_user.npq_applications.map { |app| app.participant_identity.email }
-      emails.map { |email| email.to_s.downcase.strip }.compact.uniq
-    end
-
     def most_recent_updated_npq_application(ecf_user)
       profile_apps = Migration::Ecf::NpqApplication.where(id: ecf_user.npq_profiles.select(:id))
       user_apps = ecf_user.npq_applications
@@ -145,21 +136,6 @@ module Migration::Migrators
       return unless trns.size > 1
 
       user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
-      raise ActiveRecord::RecordInvalid, user
-    end
-
-    def validate_multiple_emails!(unique_emails, user)
-      return unless unique_emails.size > 1
-
-      user.errors.add(:base, "There are multiple different emails from user identities in NPQ applications")
-      raise ActiveRecord::RecordInvalid, user
-    end
-
-    def validate_existing_email_match!(ecf_email, user)
-      return if user.email.blank?
-      return if ecf_email == user.email
-
-      user.errors.add(:base, "Participant identity email from ECF does not match existing user email in NPQ")
       raise ActiveRecord::RecordInvalid, user
     end
   end
