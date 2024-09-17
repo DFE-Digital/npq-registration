@@ -5,7 +5,7 @@
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-      "packages": "libpq-dev, libvips, postgresql-client-15"
+      "packages": "libpq-dev, libvips, postgresql-client-15, clang"
     },
     "ghcr.io/devcontainers/features/git:1": {
       "version": "latest"
@@ -48,7 +48,7 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ".devcontainer/boot.sh",
 
-	"postStartCommand": "bin/rails s"
+  "postStartCommand": "bin/dev"
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
