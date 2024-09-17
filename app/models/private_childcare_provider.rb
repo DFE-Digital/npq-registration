@@ -1,9 +1,9 @@
 class PrivateChildcareProvider < ApplicationRecord
+  include Disableable
+
   REDACTED_DATA_STRING = "REDACTED".freeze
 
   include PgSearch::Model
-
-  default_scope { where(disabled_at: nil) }
 
   pg_search_scope :search_by_name,
                   against: [:name],

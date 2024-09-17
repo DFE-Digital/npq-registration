@@ -1,15 +1,7 @@
 require "rails_helper"
 
 RSpec.describe PrivateChildcareProvider, type: :model do
-  describe "default_scope" do
-    subject { described_class.all }
-
-    let!(:enabled_provider) { create(:private_childcare_provider) }
-    let!(:disabled_provider) { create(:private_childcare_provider, :disabled) }
-
-    it { is_expected.to include(enabled_provider) }
-    it { is_expected.not_to include(disabled_provider) }
-  end
+  it_behaves_like "a disableable model"
 
   describe "#on_early_years_register?" do
     let(:provider) do
