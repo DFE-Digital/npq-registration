@@ -194,9 +194,10 @@ RSpec.describe Migration::Migrators::User do
             let(:failure_manager) do
               TmpFailureManager.new
             end
+            let(:records_per_worker) { 10 }
 
             it "raises error" do
-              non_orphaned_ecf_user = create(:ecf_migration_user, :npq, id: user.ecf_id)
+              non_orphaned_ecf_user = create(:ecf_migration_user, :npq, id: user.ecf_id, get_an_identity_id: nil)
               expect(non_orphaned_ecf_user.npq_applications).to be_present
 
               instance.call
