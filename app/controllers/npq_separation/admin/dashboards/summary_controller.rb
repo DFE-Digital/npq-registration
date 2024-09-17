@@ -1,7 +1,17 @@
 class NpqSeparation::Admin::Dashboards::SummaryController < NpqSeparation::AdminController
   def show
-    @applications_this_week = Application.where(created_at: 1.week.ago..).count
-    @applications_this_month = Application.where(created_at: 1.month.ago..).count
-    @applications_this_year = Application.where(created_at: 1.year.ago..).count
+    @courses = tally_applications_by :course
+    @lead_providers = tally_applications_by :lead_provider
+  end
+
+private
+
+  def tally_applications_by(dimension)
+    column = "#{dimension.to_s.pluralize}.name"
+    Application.where(cohort:).joins(dimension).pluck(column).tally.sort
+  end
+
+  def cohort
+    @cohort ||= Cohort.current
   end
 end
