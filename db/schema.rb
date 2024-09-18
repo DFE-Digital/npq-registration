@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_16_194001) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -314,8 +314,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_16_194001) do
 
   create_table "participant_id_changes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "from_participant_id", null: false
-    t.bigint "to_participant_id", null: false
+    t.uuid "from_participant_id", null: false
+    t.uuid "to_participant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "ecf_id"
@@ -551,8 +551,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_16_194001) do
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
   add_foreign_key "declarations", "lead_providers"
   add_foreign_key "participant_id_changes", "users"
-  add_foreign_key "participant_id_changes", "users", column: "from_participant_id"
-  add_foreign_key "participant_id_changes", "users", column: "to_participant_id"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"
   add_foreign_key "schedules", "cohorts"

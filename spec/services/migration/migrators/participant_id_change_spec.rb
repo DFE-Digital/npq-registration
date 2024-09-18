@@ -28,8 +28,8 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
         participant_id_change = ParticipantIdChange.find_by!(ecf_id: ecf_resource1.id)
         expect(participant_id_change).to have_attributes({
           user_id: User.find_by(ecf_id: ecf_resource1.user_id).id,
-          from_participant_id: User.find_by(ecf_id: ecf_resource1.from_participant_id).id,
-          to_participant_id: User.find_by(ecf_id: ecf_resource1.to_participant_id).id,
+          from_participant_id: ecf_resource1.from_participant_id,
+          to_participant_id: ecf_resource1.to_participant_id,
           created_at: ecf_resource1.created_at,
         })
       end

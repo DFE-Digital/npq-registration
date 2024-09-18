@@ -11,7 +11,7 @@ RSpec.describe ParticipantIdChange, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:user).class_name("User") }
-    it { is_expected.to belong_to(:from_participant).class_name("User") }
-    it { is_expected.to belong_to(:to_participant).class_name("User") }
+    it { is_expected.to belong_to(:from_participant).class_name("User").with_primary_key("ecf_id") }
+    it { is_expected.to belong_to(:to_participant).class_name("User").with_primary_key("ecf_id") }
   end
 end
