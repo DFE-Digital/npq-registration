@@ -10,7 +10,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
   end
 
   context "when admin is logged in" do
-    before { create :cohort }
+    before { create :cohort, :current }
 
     it "shows the admin landing page" do
       sign_in_as_admin
