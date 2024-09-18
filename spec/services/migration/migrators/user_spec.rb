@@ -3,7 +3,9 @@ require "rails_helper"
 RSpec.describe Migration::Migrators::User do
   it_behaves_like "a migrator", :user, [] do
     def create_ecf_resource
-      create(:ecf_migration_user, :npq)
+      travel_to 10.days.ago do
+        create(:ecf_migration_user, :npq)
+      end
     end
 
     def create_npq_resource(ecf_resource)
@@ -17,10 +19,31 @@ RSpec.describe Migration::Migrators::User do
     end
 
     describe "#call" do
-      it "sets the created User attributes correctly" do
-        user = User.find_by(ecf_id: ecf_resource1.id)
+      it "sets User attributes with most recent created npq application" do
+        travel_to 5.days.ago do
+          participant_identity1 = create(:ecf_migration_participant_identity, user: ecf_resource1, email: "email-2@example.com", external_identifier: SecureRandom.uuid)
+          create(:ecf_migration_npq_application, teacher_reference_number: ecf_resource1.npq_applications.first.teacher_reference_number, participant_identity: participant_identity1)
+        end
+        npq_application = travel_to 1.day.ago do
+          participant_identity2 = create(:ecf_migration_participant_identity, user: ecf_resource1, email: "email-3@example.com", external_identifier: SecureRandom.uuid)
+          create(:ecf_migration_npq_application,
+                 teacher_reference_number: ecf_resource1.npq_applications.first.teacher_reference_number,
+                 participant_identity: participant_identity2,
+                 date_of_birth: "1980-01-01",
+                 nino: "1234567890XYZ",
+                 active_alert: true,
+                 teacher_reference_number_verified: true)
+        end
+
         instance.call
-        expect(user.reload).to have_attributes(ecf_resource1.attributes.slice(:trn, :full_name, :email, :get_an_identity_id))
+
+        user = User.find_by(ecf_id: ecf_resource1.id)
+        expect(user).to have_attributes(ecf_resource1.attributes.slice(:trn, :full_name, :get_an_identity_id))
+        expect(user.email).to eq("email-3@example.com")
+        expect(user.date_of_birth).to eq(npq_application.date_of_birth)
+        expect(user.national_insurance_number).to eq(npq_application.nino)
+        expect(user.active_alert).to eq(npq_application.active_alert)
+        expect(user.trn_verified).to eq(npq_application.teacher_reference_number_verified)
       end
 
       it "records a failure when there are multiple, different TRNs for the user's NPQApplications in ECF" do
@@ -35,24 +58,6 @@ RSpec.describe Migration::Migrators::User do
         create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first)
         instance.call
         expect(failure_manager).not_to have_received(:record_failure)
-      end
-
-      it "sets User email from recent updated npq application participant identity" do
-        ecf_user = travel_to 10.days.ago do
-          create(:ecf_migration_user, :npq, email: "email-1@example.com")
-        end
-        travel_to 5.days.ago do
-          participant_identity1 = create(:ecf_migration_participant_identity, user: ecf_user, email: "email-2@example.com", external_identifier: SecureRandom.uuid)
-          create(:ecf_migration_npq_application, teacher_reference_number: ecf_user.npq_applications.first.teacher_reference_number, participant_identity: participant_identity1)
-        end
-        travel_to 1.day.ago do
-          participant_identity2 = create(:ecf_migration_participant_identity, user: ecf_user, email: "email-3@example.com", external_identifier: SecureRandom.uuid)
-          create(:ecf_migration_npq_application, teacher_reference_number: ecf_user.npq_applications.first.teacher_reference_number, participant_identity: participant_identity2)
-        end
-
-        instance.call
-        user = User.find_by(ecf_id: ecf_user.id)
-        expect(user.email).to eq("email-3@example.com")
       end
 
       it "sets User attributes from recent updated npq application" do

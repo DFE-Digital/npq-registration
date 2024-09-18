@@ -128,7 +128,7 @@ module Migration::Migrators
 
       Migration::Ecf::NpqApplication
         .from("(#{profile_apps.to_sql} UNION #{user_apps.to_sql}) AS npq_applications")
-        .order(updated_at: :desc)
+        .order(created_at: :desc)
         .first
     end
 
