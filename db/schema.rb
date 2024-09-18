@@ -161,10 +161,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_16_124923) do
     t.bigint "contract_template_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "ecf_id"
     t.index ["contract_template_id"], name: "index_contracts_on_contract_template_id"
     t.index ["course_id"], name: "index_contracts_on_course_id"
-    t.index ["ecf_id"], name: "index_contracts_on_ecf_id", unique: true
     t.index ["statement_id", "course_id"], name: "index_contracts_on_statement_id_and_course_id", unique: true
     t.index ["statement_id"], name: "index_contracts_on_statement_id"
   end
