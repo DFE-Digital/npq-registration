@@ -120,6 +120,15 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
 
         it { expect(attributes["itt_provider"]).to be_nil }
       end
+
+      context "when the `itt_provider` is disabled" do
+        let(:itt_provider) { build(:itt_provider, :disabled) }
+
+        it "serializes the `itt_provider`" do
+          itt_provider.legal_name = "provider"
+          expect(attributes["itt_provider"]).to eq(itt_provider.legal_name)
+        end
+      end
     end
 
     describe "school serialization" do
@@ -158,6 +167,15 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         let(:private_childcare_provider) { nil }
 
         it { expect(attributes["private_childcare_provider_urn"]).to be_nil }
+      end
+
+      context "when the `private_childcare_provider` is disabled" do
+        let(:private_childcare_provider) { build(:private_childcare_provider, :disabled) }
+
+        it "serializes the `private_childcare_provider_urn`" do
+          private_childcare_provider.provider_urn = "2345678"
+          expect(attributes["private_childcare_provider_urn"]).to eq(private_childcare_provider.provider_urn)
+        end
       end
     end
 
