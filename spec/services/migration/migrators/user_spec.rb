@@ -1,19 +1,5 @@
 require "rails_helper"
 
-class TmpFailureManager
-  def initialize
-    @failures = {}
-  end
-
-  def failures(user)
-    @failures[user]
-  end
-
-  def record_failure(user, msg)
-    @failures[user] = msg
-  end
-end
-
 RSpec.describe Migration::Migrators::User do
   it_behaves_like "a migrator", :user, [] do
     def create_ecf_resource
@@ -191,9 +177,6 @@ RSpec.describe Migration::Migrators::User do
           end
 
           context "when linked ecf_user is not an orphan" do
-            let(:failure_manager) do
-              TmpFailureManager.new
-            end
             let(:records_per_worker) { 10 }
 
             it "raises error" do
@@ -201,8 +184,8 @@ RSpec.describe Migration::Migrators::User do
               expect(non_orphaned_ecf_user.npq_applications).to be_present
 
               instance.call
-              expect(failure_manager.failures(ecf_user)).to eq("Validation failed: User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
-              expect(failure_manager.failures(non_orphaned_ecf_user)).to eq("Validation failed: Participant identity email from ECF does not match existing user email in NPQ")
+              expect(failure_manager).to have_received(:record_failure).once.with(ecf_user, "Validation failed: User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
+              expect(failure_manager).to have_received(:record_failure).once.with(non_orphaned_ecf_user, "Validation failed: Participant identity email from ECF does not match existing user email in NPQ")
             end
           end
         end
