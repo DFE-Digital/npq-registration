@@ -9,6 +9,7 @@ import institutionPicker from "./institution-picker";
 import countryPicker from "./country-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
 import cookieBanner from "./cookie-banner";
+import mermaid from 'mermaid';
 
 Rails.start();
 import * as GOVUKFrontend from 'govuk-frontend'
@@ -44,3 +45,19 @@ if (document.querySelector('#private-childcare-provider-picker')) {
     lookupPath: 'private_childcare_providers'
   })
 }
+
+mermaid.initialize({
+  startOnLoad: true,
+  theme: "base",
+  fontSize: "19px",
+  themeVariables: {
+    primaryColor: "#1D70B8",
+    primaryTextColor: "#FFFFFF",
+    primaryBorderColor: "#B1B4B6",
+    actorBorder: "#B1B4B6",
+    noteBkgColor: "#B1B4B6",
+    noteBorderColor: "#B1B4B6",
+    textColor: "#000000",
+    fontFamily: '"GDS Transport", arial, sans-serif',
+  }
+});
