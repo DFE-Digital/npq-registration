@@ -65,27 +65,28 @@ RSpec.describe Migration::Migrators::Application do
       end
 
       it "overrides school from ECF NPQApplication on the NPQ application" do
-        Application.first.update!(school: create(:school, urn: "111333"))
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(school: create(:school, urn: "111333"))
         instance.call
 
-        application = Application.find_by(ecf_id: ecf_resource1.id)
-        expect(application.school.urn).to eq(ecf_resource1.school_urn)
+        expect(application.reload.school.urn).to eq(ecf_resource1.school_urn)
       end
 
       it "overrides lead_provider from ECF NPQApplication on the NPQ application" do
-        Application.first.update!(lead_provider: create(:lead_provider, name: "Test Provider"))
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(lead_provider: create(:lead_provider, name: "Test Provider"))
         instance.call
 
-        application = Application.find_by(ecf_id: ecf_resource1.id)
-        expect(application.lead_provider.ecf_id).to eq(ecf_resource1.npq_lead_provider.id)
+        expect(application.reload.lead_provider.ecf_id).to eq(ecf_resource1.npq_lead_provider.id)
       end
 
       it "overrides course from ECF NPQApplication on the NPQ application" do
-        Application.first.update!(course: create(:course, name: "Test Course"))
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(course: create(:course, name: "Test Course"))
+
         instance.call
 
-        application = Application.find_by(ecf_id: ecf_resource1.id)
-        expect(application.course.ecf_id).to eq(ecf_resource1.npq_course.id)
+        expect(application.reload.course.ecf_id).to eq(ecf_resource1.npq_course.id)
       end
 
       it "records a failure when the user in NPQ reg does not match the user in ECF" do
