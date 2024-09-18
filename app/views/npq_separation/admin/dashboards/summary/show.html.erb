@@ -1,41 +1,4 @@
 <h1 class="govuk-heading-l">Summary</h1>
 
-<%=
-  govuk_table do |table|
-    table.with_head do |header|
-      header.with_row do |row|
-        row.with_cell(text: "Course Name")
-        row.with_cell(text: "Applications", numeric: true)
-      end
-    end
-
-    table.with_body do |body|
-      @courses.each do |course, application_count|
-        body.with_row do |row|
-          row.with_cell(text: course)
-          row.with_cell(text: application_count, numeric: true)
-        end
-      end
-    end
-  end
-%>
-
-<%=
-  govuk_table do |table|
-    table.with_head do |header|
-      header.with_row do |row|
-        row.with_cell(text: "Lead Provider")
-        row.with_cell(text: "Applications", numeric: true)
-      end
-    end
-
-    table.with_body do |body|
-      @lead_providers.each do |lead_provider, application_count|
-        body.with_row do |row|
-          row.with_cell(text: lead_provider)
-          row.with_cell(text: application_count, numeric: true)
-        end
-      end
-    end
-  end
-%>
+<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :course) %>
+<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :lead_provider) %>
