@@ -115,9 +115,6 @@ module Migration::Migrators
         ecf_user.errors.add(:base, "User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
         raise ActiveRecord::RecordInvalid, ecf_user
       end
-
-      ecf_user.errors.add(:base, "End of find_or_initialize_user logic, something weird happened")
-      raise ActiveRecord::RecordInvalid, ecf_user
     end
 
     def unique_validated_trns(ecf_user)
