@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_04_072033) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_12_135346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -108,7 +108,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_04_072033) do
     t.string "notes"
     t.bigint "cohort_id"
     t.boolean "funded_place"
-    t.enum "training_status", default: "active", null: false, enum_type: "application_statuses"
+    t.enum "training_status", enum_type: "application_statuses"
     t.bigint "schedule_id"
     t.string "referred_by_return_to_teaching_adviser"
     t.datetime "accepted_at"

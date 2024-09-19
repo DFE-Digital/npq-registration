@@ -181,7 +181,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "teacher_catchment_country" => nil,
       "teacher_catchment_iso_country_code" => nil,
       "teacher_catchment_synced_to_ecf" => false,
-      "training_status" => "active",
+      "training_status" => nil,
       "ukprn" => nil,
       "primary_establishment" => true,
       "number_of_pupils" => 150,
