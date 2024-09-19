@@ -33,6 +33,16 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
           created_at: ecf_resource1.created_at,
         })
       end
+
+      context "when a matching `participant_id_change` and the to/from participants do not exist in NPQ reg" do
+        def create_npq_resource(ecf_resource)
+          create(:user, ecf_id: ecf_resource.user.id)
+        end
+
+        it "creates a new participant_id_change record in NPQ reg" do
+          expect { instance.call }.to change(ParticipantIdChange, :count).by(2)
+        end
+      end
     end
   end
 end

@@ -314,11 +314,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
 
   create_table "participant_id_changes", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.uuid "from_participant_id", null: false
-    t.uuid "to_participant_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "ecf_id"
+    t.uuid "from_participant_id", null: false
+    t.uuid "to_participant_id", null: false
     t.index ["ecf_id"], name: "index_participant_id_changes_on_ecf_id"
     t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
     t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"

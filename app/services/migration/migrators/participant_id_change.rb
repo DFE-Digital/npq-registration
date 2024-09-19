@@ -30,8 +30,8 @@ module Migration::Migrators
 
         participant_id_change.update!(
           user: find_user!(ecf_id: ecf_participant_id_change.user_id),
-          from_participant: find_user!(ecf_id: ecf_participant_id_change.from_participant_id),
-          to_participant: find_user!(ecf_id: ecf_participant_id_change.to_participant_id),
+          from_participant_id: ecf_participant_id_change.from_participant_id,
+          to_participant_id: ecf_participant_id_change.to_participant_id,
           created_at: ecf_participant_id_change.created_at,
         )
       end
