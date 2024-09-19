@@ -79,6 +79,117 @@ RSpec.describe Migration::Migrators::User do
           trn_verified: true,
         )
       end
+
+      context "when there are multiple users with the same ecf_id" do
+        it "raises error" do
+          ecf_user = create(:ecf_migration_user, :npq, email: "email-1@example.com")
+          create(:user, ecf_id: ecf_user.id, email: "email-1@example.com")
+          create(:user, ecf_id: ecf_user.id, email: "email-2@example.com")
+
+          instance.call
+          expect(failure_manager).to have_received(:record_failure).with(ecf_user, /ecf_user.id has multiple users in NPQ/)
+        end
+      end
+
+      context "when no user exists with ecf_id or get_an_identity_id" do
+        it "creates a new user" do
+          ecf_user = create(:ecf_migration_user, :npq, get_an_identity_id: SecureRandom.uuid)
+
+          expect(User.find_by(ecf_id: ecf_user.id)).to be_nil
+          expect(User.find_by(uid: ecf_user.get_an_identity_id)).to be_nil
+
+          instance.call
+
+          expect(User.where(ecf_id: ecf_user.id).count).to eq(1)
+          user = User.find_by(uid: ecf_user.get_an_identity_id)
+          expect(user.ecf_id).to eq(ecf_user.id)
+        end
+      end
+
+      context "when only one user exists with both ecf_id and get_an_identity_id" do
+        it "updates the user" do
+          ecf_user = create(:ecf_migration_user, :npq, get_an_identity_id: SecureRandom.uuid, full_name: "New Name")
+          create(:user, email: ecf_user.email, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id, full_name: "Old Name")
+
+          instance.call
+
+          expect(User.where(ecf_id: ecf_user.id).count).to eq(1)
+          user = User.find_by(uid: ecf_user.get_an_identity_id)
+          expect(user.ecf_id).to eq(ecf_user.id)
+          expect(user.full_name).to eq("New Name")
+        end
+      end
+
+      context "when one user exists with ecf_id only" do
+        it "updates the user" do
+          ecf_user = create(:ecf_migration_user, :npq, get_an_identity_id: SecureRandom.uuid, full_name: "New Name")
+          create(:user, email: ecf_user.email, ecf_id: ecf_user.id, uid: SecureRandom.uuid, full_name: "Old Name")
+
+          expect(User.where(ecf_id: ecf_user.id).count).to eq(1)
+          expect(User.where(uid: ecf_user.get_an_identity_id).count).to eq(0)
+
+          instance.call
+
+          expect(User.where(ecf_id: ecf_user.id).count).to eq(1)
+          user = User.find_by(uid: ecf_user.get_an_identity_id)
+          expect(user.ecf_id).to eq(ecf_user.id)
+          expect(user.full_name).to eq("New Name")
+        end
+      end
+
+      context "when ecf_id and get_an_identity_id both return users and are different" do
+        it "raises error" do
+          ecf_user = create(:ecf_migration_user, :npq, email: "email-1@example.com", get_an_identity_id: SecureRandom.uuid)
+          create(:user, ecf_id: ecf_user.id, email: "email-1@example.com")
+          create(:user, uid: ecf_user.get_an_identity_id, email: "email-2@example.com")
+
+          instance.call
+          expect(failure_manager).to have_received(:record_failure).with(ecf_user, /ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different/)
+        end
+      end
+
+      context "when NPQ user found with ecf_user.get_an_identity_id only" do
+        let(:ecf_user) { create(:ecf_migration_user, :npq, email: "email-1@example.com", get_an_identity_id: SecureRandom.uuid, full_name: "New Name") }
+        let(:user) do
+          create(:user, email: ecf_user.email, ecf_id: SecureRandom.uuid, uid: ecf_user.get_an_identity_id, full_name: "Old Name")
+        end
+
+        context "when NPQ user.ecf_id is set but no ecf user found" do
+          it "updates user.ecf_id with ecf_user.id" do
+            expect(Migration::Ecf::User.find_by(id: user.ecf_id)).to be_nil
+
+            instance.call
+            expect(user.reload.ecf_id).to eq(ecf_user.id)
+            expect(user.full_name).to eq("New Name")
+          end
+        end
+
+        context "when NPQ user.ecf_id links to a different ecf_user" do
+          context "when linked ecf_user is an orphan" do
+            it "updates user.ecf_id with ecf_user.id" do
+              orphaned_ecf_user = create(:ecf_migration_user, id: user.ecf_id)
+              expect(orphaned_ecf_user.npq_applications).to be_empty
+
+              instance.call
+              expect(user.reload.ecf_id).to eq(ecf_user.id)
+              expect(user.full_name).to eq("New Name")
+            end
+          end
+
+          context "when linked ecf_user is not an orphan" do
+            let(:records_per_worker) { 10 }
+
+            it "raises error" do
+              non_orphaned_ecf_user = create(:ecf_migration_user, :npq, id: user.ecf_id, get_an_identity_id: nil)
+              expect(non_orphaned_ecf_user.npq_applications).to be_present
+
+              instance.call
+              expect(failure_manager).to have_received(:record_failure).once.with(ecf_user, "Validation failed: User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
+              expect(failure_manager).to have_received(:record_failure).once.with(non_orphaned_ecf_user, "Validation failed: Participant identity email from ECF does not match existing user email in NPQ")
+            end
+          end
+        end
+      end
     end
   end
 end
