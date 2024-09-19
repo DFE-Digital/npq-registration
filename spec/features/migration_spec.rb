@@ -183,8 +183,10 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         create(:user, :with_random_name, ecf_id: ecf_user1.id, email: ecf_user1.email)
         create(:user, :with_random_name, ecf_id: ecf_user2.id, email: ecf_user2.email)
 
-        create(:ecf_migration_user, :npq, get_an_identity_id: "123456")
-        create(:user, :with_random_name, uid: "123456")
+        # Duplicate users with ecf_id
+        ecf_user = create(:ecf_migration_user, :npq)
+        create(:user, ecf_id: ecf_user.id)
+        create(:user, ecf_id: ecf_user.id)
       end
 
       scenario "running a migration" do
