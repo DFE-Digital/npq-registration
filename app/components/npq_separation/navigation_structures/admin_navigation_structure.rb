@@ -13,17 +13,7 @@ module NpqSeparation
             name: "Dashboard",
             href: npq_separation_admin_path,
             prefix: "/npq-separation/admin/dashboard",
-          ) => [
-            Node.new(
-              name: "Summary",
-              href: npq_separation_admin_dashboards_summary_path,
-              prefix: "/npq-separation/admin/dashboard",
-              nodes: [
-                Node.new(name: "Dashboard 1", href: "#", prefix: "/npq-separation/admin/dashboards/one"),
-                Node.new(name: "Dashboard 2", href: "#", prefix: "/npq-separation/admin/dashboards/two"),
-              ],
-            ),
-          ],
+          ) => [],
           Node.new(
             name: "Applications",
             href: npq_separation_admin_applications_path,
