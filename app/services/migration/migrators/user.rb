@@ -39,7 +39,7 @@ module Migration::Migrators
         user.update!(
           trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
           full_name: ecf_user.full_name || user.full_name,
-          email: email || user.email,
+          email:,
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application.nino || user.national_insurance_number,
