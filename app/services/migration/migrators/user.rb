@@ -33,7 +33,7 @@ module Migration::Migrators
         trns = unique_validated_trns(ecf_user)
         validate_multiple_trns!(trns, user)
 
-        npq_application = most_recent_updated_npq_application(ecf_user)
+        npq_application = most_recent_created_npq_application(ecf_user)
         email = npq_application&.participant_identity&.email
 
         user.update!(
@@ -41,10 +41,10 @@ module Migration::Migrators
           full_name: ecf_user.full_name || user.full_name,
           email: email || user.email,
           uid: ecf_user.get_an_identity_id || user.uid,
-          date_of_birth: npq_application&.date_of_birth || user.date_of_birth,
-          national_insurance_number: npq_application&.nino || user.national_insurance_number,
-          active_alert: npq_application&.active_alert || user.active_alert,
-          trn_verified: npq_application&.teacher_reference_number_verified || user.trn_verified,
+          date_of_birth: npq_application.date_of_birth || user.date_of_birth,
+          national_insurance_number: npq_application.nino || user.national_insurance_number,
+          active_alert: npq_application.active_alert || user.active_alert,
+          trn_verified: npq_application.teacher_reference_number_verified || user.trn_verified,
         )
       end
     end
@@ -122,7 +122,7 @@ module Migration::Migrators
         .uniq
     end
 
-    def most_recent_updated_npq_application(ecf_user)
+    def most_recent_created_npq_application(ecf_user)
       profile_apps = Migration::Ecf::NpqApplication.where(id: ecf_user.npq_profiles.select(:id))
       user_apps = ecf_user.npq_applications
 
