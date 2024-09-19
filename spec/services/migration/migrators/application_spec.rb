@@ -64,41 +64,35 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.private_childcare_provider.provider_urn).to eq(ecf_resource1.private_childcare_provider_urn)
       end
 
-      it "records a failure when the school in NPQ reg does not match the school in ECF" do
-        Application.first.update!(school: create(:school, urn: "111333"))
+      it "overrides school from ECF NPQApplication on the NPQ application" do
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(school: create(:school, urn: "111333"))
         instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /School in ECF is different/)
+
+        expect(application.reload.school.urn).to eq(ecf_resource1.school_urn)
       end
 
-      it "records a failure when the school exists on the application in NPQ reg but not ECF" do
-        ecf_resource1.update!(school_urn: nil)
+      it "overrides lead_provider from ECF NPQApplication on the NPQ application" do
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(lead_provider: create(:lead_provider, name: "Test Provider"))
         instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /School in ECF is different/)
+
+        expect(application.reload.lead_provider.ecf_id).to eq(ecf_resource1.npq_lead_provider.id)
       end
 
-      it "does not record a failure when the school is nil for both ECF and NPQ reg" do
-        ecf_resource1.update!(school_urn: nil)
-        Application.find_by(ecf_id: ecf_resource1.id).update!(school: nil)
+      it "overrides course from ECF NPQApplication on the NPQ application" do
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        application.update!(course: create(:course, name: "Test Course"))
+
         instance.call
-        expect(failure_manager).not_to have_received(:record_failure)
+
+        expect(application.reload.course.ecf_id).to eq(ecf_resource1.npq_course.id)
       end
 
       it "records a failure when the user in NPQ reg does not match the user in ECF" do
         Application.first.update!(user: create(:user))
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /User in ECF is different/)
-      end
-
-      it "records a failure when the course in NPQ reg does not match the course in ECF" do
-        Application.first.update!(course: create(:course))
-        instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Course in ECF is different/)
-      end
-
-      it "records a failure when the lead provider in NPQ reg does not match the lead provider in ECF" do
-        Application.first.update!(lead_provider: create(:lead_provider))
-        instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /LeadProvider in ECF is different/)
       end
 
       it "records a failure when the schedule cannot be found" do
