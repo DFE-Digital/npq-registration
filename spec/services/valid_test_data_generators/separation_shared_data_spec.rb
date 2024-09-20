@@ -112,6 +112,8 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       end
 
       it "voids some declarations" do
+        allow(Faker::Boolean).to receive(:boolean).and_return(false)
+
         expect {
           subject.populate
         }.to(change(Declaration.voided_state, :count).and(change(ParticipantOutcome.voided_state, :count)))
