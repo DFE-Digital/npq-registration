@@ -4,6 +4,7 @@ RSpec.feature "Listing and viewing users", type: :feature do
   include Helpers::AdminLogin
 
   let(:users_per_page) { Pagy::DEFAULT[:limit] }
+  let(:user) { User.first }
 
   before do
     create_list(:user, users_per_page + 1, :with_get_an_identity_id)
@@ -33,10 +34,18 @@ RSpec.feature "Listing and viewing users", type: :feature do
     expect(page).to have_css(".govuk-pagination__item--current", text: "2")
   end
 
-  scenario "viewing user details" do
+  scenario "searching for a user" do
     visit(npq_separation_admin_users_path)
 
-    user = User.first
+    fill_in("Search records", with: user.email)
+    click_on("Search")
+
+    expect(page).to have_css("tbody tr", count: 1)
+    expect(page).to have_css("tbody tr", text: user.full_name)
+  end
+
+  scenario "viewing user details" do
+    visit(npq_separation_admin_users_path)
 
     all_participants_table = find("h1", text: "All participants").sibling("table")
     all_participants_table.click_link(user.full_name)
