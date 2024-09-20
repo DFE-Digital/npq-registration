@@ -7,7 +7,7 @@ RSpec.describe Migration::Migrators::Cohort do
     end
 
     def create_npq_resource(ecf_resource)
-      create(:cohort, ecf_id: ecf_resource.id)
+      create(:cohort, ecf_id: ecf_resource.id, start_year: ecf_resource.start_year)
     end
 
     def setup_failure_state
