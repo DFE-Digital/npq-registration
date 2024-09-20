@@ -78,6 +78,7 @@ PARTICIPANT = {
             description: "The Teacher Reference Number (TRN) for this NPQ participant",
             type: :string,
             example: "1234567",
+            nullable: true,
           },
           updated_at: {
             description: "The date the application was last updated",
