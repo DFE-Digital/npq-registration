@@ -27,6 +27,10 @@
         %>
       <% end %>
 
+      <% if @wizard.current_step == :choose_your_provider %>
+        <%= govuk_warning_text(text: t('helpers.warnings.registration_wizard.check_provider_is_open')) %>
+      <% end %>
+
       <%= f.govuk_submit %>
     <% end %>
   </div>

@@ -575,6 +575,9 @@ en:
     not_eligible_for_funding: "If your provider does not confirm you've started the course before %{date}, your registration will expire. You can register again later."
 
   helpers:
+    warnings: 
+      registration_wizard:
+        check_provider_is_open: "Before selecting your provider, you must check that they are currently open to accepting NPQ applications.​"
     title:
       registration_wizard:
         get_an_identity: "Get an identity"
