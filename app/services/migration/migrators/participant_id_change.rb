@@ -26,13 +26,14 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_participant_id_changes) do |ecf_participant_id_change|
-        ::ParticipantIdChange.find_or_create_by!(
+        participant_id_change = ::ParticipantIdChange.find_or_initialize_by(ecf_id: ecf_participant_id_change.id)
+
+        participant_id_change.update!(
           user: find_user!(ecf_id: ecf_participant_id_change.user_id),
           from_participant: find_user!(ecf_id: ecf_participant_id_change.from_participant_id),
           to_participant: find_user!(ecf_id: ecf_participant_id_change.to_participant_id),
-        ).tap do |participant_id_change|
-          participant_id_change.update!(created_at: ecf_participant_id_change.created_at)
-        end
+          created_at: ecf_participant_id_change.created_at,
+        )
       end
     end
 

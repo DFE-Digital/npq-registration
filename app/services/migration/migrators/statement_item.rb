@@ -24,13 +24,11 @@ module Migration::Migrators
       migrate(self.class.ecf_statement_items) do |ecf_statement_item|
         statement_id = find_statement_id!(ecf_id: ecf_statement_item.statement_id)
         declaration_id = find_declaration_id!(ecf_id: ecf_statement_item.participant_declaration_id)
-        statement_item = ::StatementItem.find_or_initialize_by(
-          statement_id:,
-          declaration_id:,
-          state: ecf_statement_item.state,
-        )
+        statement_item = ::StatementItem.find_or_initialize_by(ecf_id: ecf_statement_item.id)
 
-        statement_item.update!(ecf_statement_item.attributes.slice(:created_at, :updated_at))
+        statement_item.update!(
+          ecf_statement_item.attributes.slice(:state, :created_at, :updated_at).merge(statement_id:, declaration_id:),
+        )
       end
     end
   end

@@ -10,7 +10,7 @@ module Migration::Migrators
       end
 
       def ecf_declarations
-        Migration::Ecf::ParticipantDeclaration.includes(:cohort, :declaration_states, cpd_lead_provider: :npq_lead_provider)
+        Migration::Ecf::ParticipantDeclaration.includes(:declaration_states, cpd_lead_provider: :npq_lead_provider)
       end
 
       def dependencies
@@ -30,7 +30,7 @@ module Migration::Migrators
           declaration_date: ecf_declaration.declaration_date,
           state: ecf_declaration.state,
           state_reason: latest_declaration_state&.state_reason,
-          cohort_id: find_cohort_id!(start_year: ecf_declaration.cohort.start_year),
+          cohort_id: find_cohort_id!(ecf_id: ecf_declaration.cohort_id),
           lead_provider_id: find_lead_provider_id!(ecf_id: ecf_declaration.cpd_lead_provider.npq_lead_provider.id),
           application_id: find_application_id!(course_identifier: ecf_declaration.course_identifier, ecf_user_id: ecf_declaration.user_id),
         )

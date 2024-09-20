@@ -8,7 +8,7 @@ RSpec.describe Migration::Migrators::Statement do
 
     def create_npq_resource(ecf_resource)
       lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider.id)
-      cohort = create(:cohort, start_year: ecf_resource.cohort.start_year)
+      cohort = create(:cohort, ecf_id: ecf_resource.cohort_id, start_year: ecf_resource.cohort.start_year)
       create(:statement, lead_provider:, cohort:)
     end
 

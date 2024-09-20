@@ -97,8 +97,8 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         ecf_cohort1 = create(:ecf_migration_cohort, start_year: 2026)
         ecf_cohort2 = create(:ecf_migration_cohort, start_year: 2029)
 
-        create(:cohort, start_year: ecf_cohort1.start_year)
-        create(:cohort, start_year: ecf_cohort2.start_year)
+        create(:cohort, ecf_id: ecf_cohort1.id, start_year: ecf_cohort1.start_year)
+        create(:cohort, ecf_id: ecf_cohort2.id, start_year: ecf_cohort2.start_year)
 
         create(:ecf_migration_cohort, registration_start_date: nil)
       end
@@ -137,11 +137,14 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
         ecf_statement1 = create(:ecf_migration_statement, name: "July 2026")
         ecf_statement2 = create(:ecf_migration_statement, name: "January 2030")
 
+        cohort1 = create(:cohort, ecf_id: ecf_statement1.cohort_id, start_year: ecf_statement1.cohort.start_year)
+        cohort2 = create(:cohort, ecf_id: ecf_statement2.cohort_id, start_year: ecf_statement2.cohort.start_year)
+
         lead_provider1 = create(:lead_provider, ecf_id: ecf_statement1.npq_lead_provider.id)
         lead_provider2 = create(:lead_provider, ecf_id: ecf_statement2.npq_lead_provider.id)
 
-        create(:statement, month: 7, year: 2026, lead_provider: lead_provider1)
-        create(:statement, month: 1, year: 2030, lead_provider: lead_provider2)
+        create(:statement, ecf_id: ecf_statement1.id, month: 7, year: 2026, lead_provider: lead_provider1, cohort: cohort1)
+        create(:statement, ecf_id: ecf_statement2.id, month: 1, year: 2030, lead_provider: lead_provider2, cohort: cohort2)
 
         create(:ecf_migration_statement, output_fee: nil)
       end

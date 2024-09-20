@@ -8,11 +8,11 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
     end
 
     def create_npq_resource(ecf_resource)
-      user = create(:user, ecf_id: ecf_resource.user.id)
-      from_participant = create(:user, ecf_id: ecf_resource.from_participant.id)
-      to_participant = create(:user, ecf_id: ecf_resource.to_participant.id)
+      create(:user, ecf_id: ecf_resource.user.id)
+      create(:user, ecf_id: ecf_resource.from_participant.id)
+      create(:user, ecf_id: ecf_resource.to_participant.id)
 
-      create(:participant_id_change, user:, from_participant:, to_participant:)
+      create(:participant_id_change, ecf_id: ecf_resource.id)
     end
 
     def setup_failure_state
@@ -25,7 +25,7 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
       it "sets the created ParticipantIdChange attributes correctly" do
         instance.call
 
-        participant_id_change = ParticipantIdChange.first
+        participant_id_change = ParticipantIdChange.find_by!(ecf_id: ecf_resource1.id)
         expect(participant_id_change).to have_attributes({
           user_id: User.find_by(ecf_id: ecf_resource1.user_id).id,
           from_participant_id: User.find_by(ecf_id: ecf_resource1.from_participant_id).id,

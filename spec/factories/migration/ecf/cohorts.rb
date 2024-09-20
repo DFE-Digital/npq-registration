@@ -14,5 +14,9 @@ FactoryBot.define do
     trait :with_sequential_start_year do
       sequence(:start_year) { |n| 2021 + (n % 9) }
     end
+
+    trait :with_npq_registration_start_date do
+      npq_registration_start_date { Date.new(start_year.to_i, 7, 6) }
+    end
   end
 end
