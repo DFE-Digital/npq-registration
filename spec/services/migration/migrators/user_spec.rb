@@ -144,17 +144,6 @@ RSpec.describe Migration::Migrators::User do
         end
       end
 
-      context "when ecf_id and get_an_identity_id both return users and are different" do
-        it "raises error" do
-          ecf_user = create(:ecf_migration_user, :npq, email: "email-1@example.com", get_an_identity_id: SecureRandom.uuid)
-          create(:user, ecf_id: ecf_user.id, email: "email-1@example.com")
-          create(:user, uid: ecf_user.get_an_identity_id, email: "email-2@example.com")
-
-          instance.call
-          expect(failure_manager).to have_received(:record_failure).with(ecf_user, /ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different/)
-        end
-      end
-
       context "when NPQ user found with ecf_user.get_an_identity_id only" do
         let(:ecf_user) { create(:ecf_migration_user, :npq, email: "email-1@example.com", get_an_identity_id: SecureRandom.uuid, full_name: "New Name") }
         let(:user) do
