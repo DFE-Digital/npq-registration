@@ -1,4 +1,6 @@
 class PrivateChildcareProvider < ApplicationRecord
+  include Disableable
+
   REDACTED_DATA_STRING = "REDACTED".freeze
 
   include PgSearch::Model

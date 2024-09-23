@@ -5,6 +5,10 @@ FactoryBot.define do
     provider_status { "Active" }
     address_1 { "5 Charlotte Road" }
 
+    trait :disabled do
+      disabled_at { 1.day.ago }
+    end
+
     trait :on_early_years_register do
       early_years_individual_registers { %w[EYR] }
     end

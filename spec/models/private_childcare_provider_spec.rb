@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe PrivateChildcareProvider, type: :model do
+  it_behaves_like "a disableable model"
+
   describe "#on_early_years_register?" do
     let(:provider) do
       described_class.new(early_years_individual_registers:)

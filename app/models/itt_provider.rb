@@ -1,4 +1,6 @@
 class IttProvider < ApplicationRecord
+  include Disableable
+
   validates :legal_name,
             presence: true,
             uniqueness: true
