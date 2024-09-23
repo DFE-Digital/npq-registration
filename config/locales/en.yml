@@ -577,7 +577,7 @@ en:
   helpers:
     warnings: 
       registration_wizard:
-        check_provider_is_open: "Before selecting your provider, you must check that they are currently open to accepting NPQ applications.​"
+        check_provider_is_open: "Before selecting your provider, you must check that they are currently open to accepting NPQ applications."
     title:
       registration_wizard:
         get_an_identity: "Get an identity"
