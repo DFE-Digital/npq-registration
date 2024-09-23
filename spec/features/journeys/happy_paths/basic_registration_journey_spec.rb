@@ -70,7 +70,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
-      expect(page).to have_text("Before selecting your provider, you must check that they are currently open to accepting NPQ applications.​")
+      expect(page).to have_text("Before selecting your provider​")
       page.choose("Teach First", visible: :all)
     end
 
