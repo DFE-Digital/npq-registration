@@ -1,6 +1,22 @@
 require "rails_helper"
 
 RSpec.feature "Guidance", type: :feature do
+  describe "Back link navigation" do
+    it "renders a working back link on non-index guidance pages" do
+      visit "/api/guidance"
+
+      expect(page).not_to have_link("Back")
+
+      within("nav") { click_on "Get started" }
+
+      expect(page).to have_link("Back", href: %r{/api/guidance})
+
+      click_on "Back"
+
+      expect(page).to have_current_path("/api/guidance", ignore_query: true)
+    end
+  end
+
   describe "GET /api/guidance" do
     it "renders the index page" do
       visit "/api/guidance"
