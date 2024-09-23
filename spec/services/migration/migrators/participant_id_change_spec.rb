@@ -28,10 +28,20 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
         participant_id_change = ParticipantIdChange.find_by!(ecf_id: ecf_resource1.id)
         expect(participant_id_change).to have_attributes({
           user_id: User.find_by(ecf_id: ecf_resource1.user_id).id,
-          from_participant_id: User.find_by(ecf_id: ecf_resource1.from_participant_id).id,
-          to_participant_id: User.find_by(ecf_id: ecf_resource1.to_participant_id).id,
+          from_participant_id: ecf_resource1.from_participant_id,
+          to_participant_id: ecf_resource1.to_participant_id,
           created_at: ecf_resource1.created_at,
         })
+      end
+
+      context "when a matching `participant_id_change` and the to/from participants do not exist in NPQ reg" do
+        def create_npq_resource(ecf_resource)
+          create(:user, ecf_id: ecf_resource.user.id)
+        end
+
+        it "creates a new participant_id_change record in NPQ reg" do
+          expect { instance.call }.to change(ParticipantIdChange, :count).by(2)
+        end
       end
     end
   end

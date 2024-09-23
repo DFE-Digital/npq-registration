@@ -56,7 +56,7 @@ module Participants
     def where_from_participant_id_is(from_participant_id)
       return if ignore?(filter: from_participant_id)
 
-      scope.merge!(scope.joins(:participant_id_changes).merge(ParticipantIdChange.where(from_participant: User.where(ecf_id: from_participant_id))))
+      scope.merge!(scope.joins(:participant_id_changes).merge(ParticipantIdChange.where(from_participant_id:)))
     end
 
     def order_by
@@ -67,7 +67,7 @@ module Participants
       User
         .joins(:applications).merge(Application.accepted)
         .includes(
-          participant_id_changes: %i[from_participant to_participant],
+          :participant_id_changes,
           applications: %i[
             course
             school

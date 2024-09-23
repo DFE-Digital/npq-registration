@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :participant_id_change do
     user
-    association :from_participant, factory: :user
-    association :to_participant, factory: :user
+    from_participant_id { SecureRandom.uuid }
+    to_participant_id { user.ecf_id }
   end
 end

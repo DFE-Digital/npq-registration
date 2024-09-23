@@ -330,8 +330,8 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
       it "serializes the `participant_id_changes`" do
         expect(attributes["participant_id_changes"]).to eq([
           {
-            from_participant_id: participant.participant_id_changes.last.from_participant.ecf_id,
-            to_participant_id: participant.participant_id_changes.last.to_participant.ecf_id,
+            from_participant_id: participant.participant_id_changes.last.from_participant_id,
+            to_participant_id: participant.participant_id_changes.last.to_participant_id,
             changed_at: participant.participant_id_changes.last.created_at.rfc3339,
           }.stringify_keys,
         ])

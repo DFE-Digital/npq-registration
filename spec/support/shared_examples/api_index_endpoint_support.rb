@@ -265,8 +265,8 @@ end
 RSpec.shared_examples "an API index endpoint with filter by from_participant_id" do
   context "when fitlering by from_participant_id" do
     let!(:resource) { create_resource(lead_provider: current_lead_provider) }
-    let(:participant_id_change) { create(:participant_id_change, user: resource, to_participant: resource) }
-    let(:from_participant_id) { participant_id_change.from_participant.ecf_id }
+    let(:participant_id_change) { create(:participant_id_change, user: resource, to_participant_id: resource.ecf_id) }
+    let(:from_participant_id) { participant_id_change.from_participant_id }
 
     it "returns resources with the given `from_participant_id`" do
       create_resource(lead_provider: current_lead_provider)

@@ -168,8 +168,8 @@ RSpec.describe Participants::Query do
       end
 
       describe "from participant id" do
-        let(:participant_id_change) { create(:participant_id_change, user: participant1, to_participant: participant1) }
-        let(:from_participant_id) { participant_id_change.from_participant.ecf_id }
+        let(:participant_id_change) { create(:participant_id_change, user: participant1, to_participant_id: participant1.ecf_id) }
+        let(:from_participant_id) { participant_id_change.from_participant_id }
 
         context "when a from participant id is supplied" do
           let(:params) { { from_participant_id: } }

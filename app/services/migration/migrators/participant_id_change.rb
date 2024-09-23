@@ -30,8 +30,8 @@ module Migration::Migrators
 
         participant_id_change.update!(
           user: find_user!(ecf_id: ecf_participant_id_change.user_id),
-          from_participant: find_user!(ecf_id: ecf_participant_id_change.from_participant_id),
-          to_participant: find_user!(ecf_id: ecf_participant_id_change.to_participant_id),
+          from_participant_id: ecf_participant_id_change.from_participant_id,
+          to_participant_id: ecf_participant_id_change.to_participant_id,
           created_at: ecf_participant_id_change.created_at,
         )
       end
@@ -45,7 +45,7 @@ module Migration::Migrators
 
     def users_by_ecf_id
       @users_by_ecf_id ||= begin
-        ecf_ids = self.class.ecf_participant_id_changes.pluck(:user_id, :from_participant_id, :to_participant_id).flatten.uniq
+        ecf_ids = self.class.ecf_participant_id_changes.pluck(:user_id).flatten.uniq
         ::User.where(ecf_id: ecf_ids).select(:id, :ecf_id).index_by(&:ecf_id)
       end
     end

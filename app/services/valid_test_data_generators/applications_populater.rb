@@ -91,7 +91,7 @@ module ValidTestDataGenerators
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
       user = application.user
-      FactoryBot.create(:participant_id_change, to_participant: user, user:)
+      FactoryBot.create(:participant_id_change, to_participant_id: user.ecf_id, user:)
     end
 
     def create_user

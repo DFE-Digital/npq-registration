@@ -2,8 +2,6 @@
 
 class ParticipantIdChange < ApplicationRecord
   belongs_to :user
-  belongs_to :from_participant, class_name: "User"
-  belongs_to :to_participant, class_name: "User"
 
-  validates :user, :from_participant, :to_participant, presence: true
+  validates :user, :from_participant_id, :to_participant_id, presence: true
 end
