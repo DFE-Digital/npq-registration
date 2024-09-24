@@ -1,0 +1,51 @@
+<%- title = "Application #{application_iteration.index + 1}" -%>
+<%- actions = [govuk_link_to("View full application", npq_separation_admin_application_path(application))] -%>
+
+<%=
+  govuk_summary_list(card: { title:, actions: }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Application ID")
+      row.with_value(text: application.id)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Lead Provider")
+      row.with_value(text: application.lead_provider.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Lead Provider Approval Status")
+      row.with_value(text: application.lead_provider_approval_status)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "NPQ Course")
+      row.with_value(text: application.course.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "School URN")
+      row.with_value(text: application.school.urn)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "School UKPRN")
+      row.with_value(text: application.school.ukprn)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Funded Place?")
+      row.with_value(text: boolean_red_green_tag(application.funded_place?))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Created At")
+      row.with_value(text: application.created_at.to_fs(:govuk_short))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Updated At")
+      row.with_value(text: application.updated_at.to_fs(:govuk_short))
+    end
+  end
+%>

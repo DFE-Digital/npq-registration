@@ -4,7 +4,7 @@ class NpqSeparation::Admin::UsersController < NpqSeparation::AdminController
   end
 
   def show
-    @user = User.find(params[:id])
+    @user = User.includes(applications: %i[course lead_provider school]).find(params[:id])
   end
 
 private

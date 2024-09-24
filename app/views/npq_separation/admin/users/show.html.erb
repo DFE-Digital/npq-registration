@@ -1,6 +1,6 @@
 <%= govuk_back_link(href: url_for(:back)) %>
 
-<h1 class="govuk-heading-l"><%= @user.full_name %></h1>
+<h1 class="govuk-heading-l">Participant</h1>
 
 <%=
   govuk_summary_list do |sl|
@@ -15,13 +15,23 @@
     end
 
     sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @user.full_name)
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Email")
       row.with_value(text: @user.email)
     end
 
     sl.with_row do |row|
-      row.with_key(text: "Name")
-      row.with_value(text: @user.full_name)
+      row.with_key(text: "National Insurance Number")
+      row.with_value(text: @user.national_insurance_number)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Date of Birth")
+      row.with_value(text: @user.date_of_birth.to_fs(:govuk_short))
     end
 
     sl.with_row do |row|
@@ -40,3 +50,12 @@
     end
   end
 %>
+
+<hr class="govuk-section-break govuk-section-break--l">
+
+<h1 class="govuk-heading-l">Applications</h1>
+<% if @user.applications.none? %>
+  <p class="govuk-body">This participant has no applications.</p>
+<% else %>
+  <%= render partial: 'application', collection: @user.applications %>
+<% end %>
