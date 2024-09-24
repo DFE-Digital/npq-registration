@@ -30,21 +30,22 @@ module Migration::Migrators
       migrate(self.class.ecf_users) do |ecf_user|
         user = find_or_initialize_user(ecf_user)
 
-        trns = unique_validated_trns(ecf_user)
-        validate_multiple_trns!(trns, user)
+        application_trns = validated_application_trns(ecf_user)
+        raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, ecf_user)
+        ecf_trn = ecf_user.teacher_profile&.trn || application_trns.last
 
         npq_application = most_recent_created_npq_application(ecf_user)
         email = npq_application&.participant_identity&.email
 
         user.update!(
-          trn: ecf_user.teacher_profile&.trn ? ecf_user.teacher_profile.trn : trns.last,
+          trn: ecf_trn || user.trn,
           full_name: ecf_user.full_name || user.full_name,
           email:,
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application.nino || user.national_insurance_number,
           active_alert: npq_application.active_alert || user.active_alert,
-          trn_verified: npq_application.teacher_reference_number_verified || user.trn_verified,
+          trn_verified: ecf_trn.present? || user&.trn_verified,
         )
       end
     end
@@ -114,7 +115,7 @@ module Migration::Migrators
       end
     end
 
-    def unique_validated_trns(ecf_user)
+    def validated_application_trns(ecf_user)
       ecf_user.npq_applications
         .where(teacher_reference_number_verified: true)
         .pluck(:teacher_reference_number)
@@ -132,8 +133,8 @@ module Migration::Migrators
         .first
     end
 
-    def validate_multiple_trns!(trns, user)
-      return unless trns.size > 1
+    def raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, user)
+      return if application_trns.size < 2 || user.teacher_profile&.trn
 
       user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
       raise ActiveRecord::RecordInvalid, user
