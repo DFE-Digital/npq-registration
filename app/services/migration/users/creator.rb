@@ -19,20 +19,20 @@ module Migration
         end
 
         if both_ecf_ids_return_different_users?
-          # Scenario 1 on JIRA
-          # - ecf_user1 => user1
-          # - ecf_user1 => user2
-          # - user2 => ecf_user2 (orphan or nil)
+          # ECF has primary user that has been deduped, second NPQ user links to orphaned or nil ecf_user
+          # - ecf_user1.id => user1
+          # - ecf_user1.get_an_identity_id => user2
+          # - user2.ecf_id => ecf_user2 (orphan or nil)
           if gai_user_ecf_id_links_to_no_ecf_user? || gai_user_ecf_id_links_to_orphan_ecf_user?
             # We merge `user_by_ecf_user_gai_id` into `user_by_ecf_user_id`
             Users::Merger.new(from_user: user_by_ecf_user_gai_id, to_user: user_by_ecf_user_id).merge!
             return user_by_ecf_user_id
           end
 
-          # Scenario 3 and Scenario 2 (when running on ecf_user with 8910)
-          # - ecf_user1 => user1
-          # - ecf_user1 => user2
-          # - user2 => ecf_user2
+          # ecf_user returns two NPQ users, the second NPQ user links to an ecf_user, which is not an orphan
+          # - ecf_user1.id => user1
+          # - ecf_user1.get_an_identity_id => user2
+          # - user2.ecf_id => ecf_user2
           raise_error("ecf_user.id and ecf_user.get_an_identity_id both return NPQ User records, and the NPQ User link to non-orphan ECF users")
         end
 
@@ -43,7 +43,11 @@ module Migration
             return user_by_ecf_user_gai_id
           end
 
-          # Scenario 2 on JIRA (when running on ecf_user with 123)
+          # ecf_user only returns one NPQ user with get_an_identity_id,
+          # this NPQ user links to an ecf_user with its ecf_id, which is not an orphan
+          # - ecf_user1.id => nil
+          # - ecf_user1.get_an_identity_id => user
+          # - user.ecf_id => ecf_user2
           raise_error("User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
         end
       end
