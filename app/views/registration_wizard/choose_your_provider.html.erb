@@ -1,3 +1,7 @@
+<% content_for :before_submit do %>
+  <%= govuk_warning_text(text: t('helpers.warnings.registration_wizard.check_provider_is_open')) %>
+<% end %>
+
 <%=
   render(
     'registration_wizard/shared/questions_page',
