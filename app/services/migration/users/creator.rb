@@ -8,11 +8,11 @@ module Migration
       end
 
       def find_or_initialize
+        raise_on_multiple_ecf_users_with_same_ecf_id!
+
         if user_does_not_exist_on_npq?
           return ::User.new(ecf_id: ecf_user.id)
         end
-
-        raise_on_multiple_ecf_users_with_same_ecf_id!
 
         if both_ecf_ids_return_same_user? || only_ecf_id_return_user?
           return user_by_ecf_user_id
