@@ -23,6 +23,50 @@ RSpec.describe Feature do
     end
   end
 
+  describe "#registration_disabled?" do
+    context "when enabled" do
+      before do
+        Flipper.enable(Feature::REGISTRATION_DISABLED)
+      end
+
+      it "registration_disabled? returns true" do
+        expect(described_class.registration_disabled?).to be(true)
+      end
+
+      it "registration_enabled? returns false" do
+        expect(described_class.registration_enabled?).to be(false)
+      end
+    end
+
+    context "when disabled" do
+      before do
+        Flipper.disable(Feature::REGISTRATION_DISABLED)
+      end
+
+      it "registration_disabled? returns false" do
+        expect(described_class.registration_disabled?).to be(false)
+      end
+
+      it "registration_enabled? returns true" do
+        expect(described_class.registration_enabled?).to be(true)
+      end
+    end
+  end
+
+  describe "#disable_registration!" do
+    it "disables registration" do
+      Feature.disable_registration!
+      expect(Flipper.enabled?(Feature::REGISTRATION_DISABLED)).to be(true)
+    end
+  end
+
+  describe "#enable_registration!" do
+    it "enables registration" do
+      Feature.enable_registration!
+      expect(Flipper.enabled?(Feature::REGISTRATION_DISABLED)).to be(false)
+    end
+  end
+
   describe "#ecf_api_disabled?" do
     context "when enabled" do
       before do
