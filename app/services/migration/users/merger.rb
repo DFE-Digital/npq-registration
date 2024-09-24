@@ -11,7 +11,6 @@ module Migration
       def merge!
         ApplicationRecord.transaction do
           from_user.applications.update!(user: to_user)
-          from_user.participant_id_changes.update!(user: to_user) # not sure?
           from_user.update!(uid: nil)
         end
       end
