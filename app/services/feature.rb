@@ -7,10 +7,13 @@ class Feature
 
   SENCO_ENABLED = "Senco enabled".freeze
 
+  ECF_API_DISABLED = "NPQ Separation ECF API disabled".freeze
+
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
     CLOSED_REGISTRATION_ENABLED,
     SENCO_ENABLED,
+    ECF_API_DISABLED,
   ].freeze
 
   class << self
@@ -50,6 +53,10 @@ class Feature
 
     def enable_registration!
       Flipper.disable(REGISTRATION_DISABLED)
+    end
+
+    def ecf_api_disabled?
+      Flipper.enabled?(ECF_API_DISABLED)
     end
   end
 end
