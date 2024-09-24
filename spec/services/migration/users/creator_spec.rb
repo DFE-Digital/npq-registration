@@ -1,17 +1,17 @@
 require "rails_helper"
 
-RSpec.describe Migration::UserMigrator do
+RSpec.describe Migration::Users::Creator do
   let(:ecf_user) { create(:ecf_migration_user, :npq, get_an_identity_id: SecureRandom.uuid, email: "email-1@example.com") }
 
   subject { described_class.new(ecf_user) }
 
-  describe ".find_initialize_or_merge_user" do
+  describe ".find_or_initialize" do
     context "when user doesnt exist" do
       it "returns new user" do
         expect(User.find_by(ecf_id: ecf_user.id)).to be_nil
         expect(User.find_by(uid: ecf_user.get_an_identity_id)).to be_nil
 
-        user = subject.find_initialize_or_merge_user
+        user = subject.find_or_initialize
 
         expect(user).to be_new_record
         expect(user.ecf_id).to eq(ecf_user.id)
@@ -24,7 +24,7 @@ RSpec.describe Migration::UserMigrator do
         create(:user, ecf_id: ecf_user.id)
 
         expect {
-          subject.find_initialize_or_merge_user
+          subject.find_or_initialize
         }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: ecf_user.id has multiple users in NPQ")
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe Migration::UserMigrator do
       it "returns user" do
         existing_user = create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id)
 
-        user = subject.find_initialize_or_merge_user
+        user = subject.find_or_initialize
 
         expect(user).to eq(existing_user)
         expect(user.ecf_id).to eq(ecf_user.id)
@@ -45,7 +45,7 @@ RSpec.describe Migration::UserMigrator do
       it "returns user" do
         existing_user = create(:user, ecf_id: ecf_user.id, uid: nil)
 
-        user = subject.find_initialize_or_merge_user
+        user = subject.find_or_initialize
 
         expect(user).to eq(existing_user)
         expect(user.ecf_id).to eq(ecf_user.id)
@@ -60,7 +60,7 @@ RSpec.describe Migration::UserMigrator do
         it "returns user with updated ecf_id merges user" do
           expect(::Migration::Ecf::User.find_by(id: existing_user2.ecf_id)).to be_nil
 
-          user = subject.find_initialize_or_merge_user
+          user = subject.find_or_initialize
 
           expect(user.reload).to eq(existing_user1)
           expect(user.ecf_id).to eq(ecf_user.id)
@@ -76,7 +76,7 @@ RSpec.describe Migration::UserMigrator do
           orphaned_ecf_user
           expect(::Migration::Ecf::User.find_by(id: existing_user2.ecf_id)).to eq(orphaned_ecf_user)
 
-          user = subject.find_initialize_or_merge_user
+          user = subject.find_or_initialize
 
           expect(user.reload).to eq(existing_user1)
           expect(user.ecf_id).to eq(ecf_user.id)
@@ -92,7 +92,7 @@ RSpec.describe Migration::UserMigrator do
           non_orphaned_ecf_user
 
           expect {
-            subject.find_initialize_or_merge_user
+            subject.find_or_initialize
           }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: ecf_user.id and ecf_user.get_an_identity_id both return NPQ User records, and the NPQ User link to non-orphan ECF users")
         end
       end
@@ -105,7 +105,7 @@ RSpec.describe Migration::UserMigrator do
         it "returns user with updated ecf_id" do
           expect(::Migration::Ecf::User.find_by(id: existing_user.ecf_id)).to be_nil
 
-          user = subject.find_initialize_or_merge_user
+          user = subject.find_or_initialize
 
           expect(user).to eq(existing_user)
           expect(user.ecf_id).to eq(ecf_user.id)
@@ -120,7 +120,7 @@ RSpec.describe Migration::UserMigrator do
           orphaned_ecf_user
           expect(::Migration::Ecf::User.find_by(id: existing_user.ecf_id)).to eq(orphaned_ecf_user)
 
-          user = subject.find_initialize_or_merge_user
+          user = subject.find_or_initialize
 
           expect(user).to eq(existing_user)
           expect(user.ecf_id).to eq(ecf_user.id)
@@ -135,7 +135,7 @@ RSpec.describe Migration::UserMigrator do
           non_orphaned_ecf_user
 
           expect {
-            subject.find_initialize_or_merge_user
+            subject.find_or_initialize
           }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
         end
       end

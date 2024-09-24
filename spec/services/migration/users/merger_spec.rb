@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Migration::UserMerger do
+RSpec.describe Migration::Users::Merger do
   let(:from_user) { create(:user, uid: SecureRandom.uuid) }
   let(:to_user) { create(:user, uid: SecureRandom.uuid) }
 
@@ -29,6 +29,14 @@ RSpec.describe Migration::UserMerger do
         subject.merge!
 
         expect(participant_id_change.reload.user).to eq(to_user)
+        expect(from_user.uid).to be_nil
+      end
+    end
+
+    context "when from_user has uid" do
+      it "sets from_user.uid to nil" do
+        subject.merge!
+
         expect(from_user.uid).to be_nil
       end
     end
