@@ -49,7 +49,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "returns true" do
               expect(subject).to be_funded
@@ -82,7 +82,7 @@ RSpec.describe FundingEligibility do
 
             context "when External::EcfAPI is disabled" do
               before do
-                allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true })
+                allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
                 user = create(:user, trn:)
                 create(:application, :previously_funded, user:, course:)
               end
@@ -125,7 +125,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "returns true" do
               expect(subject).to be_funded
@@ -166,7 +166,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "returns false" do
               expect(subject).not_to be_funded
@@ -239,7 +239,7 @@ RSpec.describe FundingEligibility do
         end
 
         context "when External::EcfAPI is disabled" do
-          before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+          before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
           it "is eligible" do
             expect(subject).to be_funded
@@ -258,7 +258,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "is not eligible for #{course.identifier}" do
               expect(subject).not_to be_funded
@@ -278,7 +278,7 @@ RSpec.describe FundingEligibility do
       end
 
       context "when External::EcfAPI is disabled" do
-        before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+        before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
         it "is eligible" do
           expect(subject).to be_funded
@@ -296,7 +296,7 @@ RSpec.describe FundingEligibility do
 
         context "when External::EcfAPI is disabled" do
           before do
-            allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true })
+            allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
             user = create(:user, trn:)
             create(:application, :previously_funded, user:, course:)
           end
@@ -325,7 +325,7 @@ RSpec.describe FundingEligibility do
 
           context "when External::EcfAPI is disabled" do
             before do
-              allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true })
+              allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
               user = create(:user, trn:)
               create(:application, :previously_funded, user:, course:)
             end
@@ -349,7 +349,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "returns status code :not_in_england" do
               expect(subject.funding_eligiblity_status_code).to eq :not_in_england
@@ -373,7 +373,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "returns status code :early_years_invalid_npq" do
               expect(subject.funding_eligiblity_status_code).to eq :early_years_invalid_npq
@@ -395,7 +395,7 @@ RSpec.describe FundingEligibility do
           end
 
           context "when External::EcfAPI is disabled" do
-            before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
             it "is not eligible" do
               expect(subject.funded?).to be false
@@ -417,7 +417,7 @@ RSpec.describe FundingEligibility do
       end
 
       context "when External::EcfAPI is disabled" do
-        before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+        before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
         it "is ineligible" do
           expect(subject.funded?).to be false
