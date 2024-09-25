@@ -125,8 +125,12 @@ RSpec.describe Ecf::NpqProfileUpdater do
   context "when ecf_api_disabled flag is toggled on" do
     before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
-    it "returns nil" do
+    it ".call returns nil" do
       expect(subject.call).to be_nil
+    end
+
+    it ".tsf_data_field_update returns nil" do
+      expect(subject.tsf_data_field_update).to be_nil
     end
   end
 end

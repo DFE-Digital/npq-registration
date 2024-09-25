@@ -27,12 +27,14 @@ RSpec.describe FundingEligibility do
   let(:query_store) { nil }
 
   before do
-    mock_previous_funding_api_request(
-      course_identifier:,
-      get_an_identity_id:,
-      trn:,
-      response: ecf_funding_lookup_response(previously_funded:),
-    )
+    unless Feature.ecf_api_disabled?
+      mock_previous_funding_api_request(
+        course_identifier:,
+        get_an_identity_id:,
+        trn:,
+        response: ecf_funding_lookup_response(previously_funded:),
+      )
+    end
   end
 
   describe ".funded? && .funding_eligiblity_status_code" do
