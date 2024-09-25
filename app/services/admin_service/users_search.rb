@@ -20,7 +20,7 @@ class AdminService::UsersSearch
       chain = chain.or(default_scope.where(applications: { private_childcare_provider_id: find_private_childcare_providers.pluck(:id) }))
     end
 
-    chain
+    chain.distinct
   end
 
 private
