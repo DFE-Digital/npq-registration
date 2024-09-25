@@ -18,6 +18,10 @@ module Migration::Migrators
       def dependencies
         %i[statement declaration]
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call

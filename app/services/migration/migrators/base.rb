@@ -5,6 +5,8 @@ module Migration::Migrators
     include ActiveModel::Model
     include ActiveModel::Attributes
 
+    INFRA_WORKER_COUNT = 20
+
     attribute :worker
 
     class << self
@@ -50,7 +52,9 @@ module Migration::Migrators
       end
 
       def records_per_worker
-        5_000
+        # Aim for 20 workers by default so all workers are utilised
+        # where possible.
+        [1, (record_count / INFRA_WORKER_COUNT.to_f).ceil].max
       end
 
       def warm_cache

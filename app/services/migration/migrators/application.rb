@@ -45,6 +45,10 @@ module Migration::Migrators
           .joins(:participant_identity)
           .includes(:user, profile: :schedule)
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call

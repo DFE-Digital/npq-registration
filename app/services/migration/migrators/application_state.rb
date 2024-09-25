@@ -19,6 +19,10 @@ module Migration::Migrators
           .includes(:cpd_lead_provider)
           .where(teacher_profile: { user_id: User.ecf_users.pluck(:id) })
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call
