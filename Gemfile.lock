@@ -532,6 +532,7 @@ GEM
       rubocop (~> 1.0)
     rubocop-rspec (3.0.1)
       rubocop (~> 1.61)
+    ruby-prof (1.7.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -601,7 +602,6 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    stackprof (0.2.26)
     state_machines (0.6.0)
     state_machines-activemodel (0.9.0)
       activemodel (>= 6.0)
@@ -728,6 +728,7 @@ DEPENDENCIES
   rspec-sonarqube-formatter
   rswag-specs
   rubocop-govuk
+  ruby-prof
   rubyzip
   scenic
   scss_lint-govuk
@@ -741,7 +742,6 @@ DEPENDENCIES
   site_prism (~> 5.0)
   sprockets (~> 4.2.0)
   sprockets-rails
-  stackprof
   state_machines-activerecord
   stimulus-rails
   tzinfo-data

@@ -1,3 +1,5 @@
+require "ruby-prof"
+
 module Migration::Migrators
   class Base
     include ActiveModel::Model
@@ -59,7 +61,7 @@ module Migration::Migrators
 
       start_migration!(items.count)
 
-      StackProf.run(mode: :cpu, raw: true, out: "tmp/dump-#{self.class.model}-worker-#{worker}.dump") do
+      result = RubyProf::Profile.profile do
         # As we're using offset/limit, we can't use find_each!
         items.each do |item|
           yield(item)
@@ -68,6 +70,11 @@ module Migration::Migrators
           Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
           failure_manager.record_failure(item, e.message)
         end
+      end
+
+      File.open("tmp/profiling_results_#{self.class.model}_#{worker}.txt", "w") do |file|
+        printer = RubyProf::FlatPrinter.new(result)
+        printer.print(file)
       end
 
       finalise_migration!
