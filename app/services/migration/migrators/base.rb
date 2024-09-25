@@ -59,13 +59,15 @@ module Migration::Migrators
 
       start_migration!(items.count)
 
-      # As we're using offset/limit, we can't use find_each!
-      items.each do |item|
-        yield(item)
-        Migration::DataMigration.update_counters(data_migration.id, processed_count: 1)
-      rescue ActiveRecord::ActiveRecordError => e
-        Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
-        failure_manager.record_failure(item, e.message)
+      StackProf.run(mode: :cpu, raw: true, out: "tmp/dump-#{self.class.model}-worker-#{worker}.dump") do
+        # As we're using offset/limit, we can't use find_each!
+        items.each do |item|
+          yield(item)
+          Migration::DataMigration.update_counters(data_migration.id, processed_count: 1)
+        rescue ActiveRecord::ActiveRecordError => e
+          Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
+          failure_manager.record_failure(item, e.message)
+        end
       end
 
       finalise_migration!
