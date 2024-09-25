@@ -7,6 +7,8 @@ module Migration
       def prepare_for_migration
         raise MigrationAlreadyPreparedError, "The migration has already been prepared" if DataMigration.exists?
 
+        Migration::Migrators::Base.flush_cache!
+
         migrators.each(&:prepare!)
       end
 
@@ -35,6 +37,7 @@ module Migration
 
       return unless next_runnable_migrator
 
+      next_runnable_migrator.warm_cache
       next_runnable_migrator.queue
     end
   end

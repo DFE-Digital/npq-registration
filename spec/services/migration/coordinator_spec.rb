@@ -14,6 +14,12 @@ RSpec.describe Migration::Coordinator do
 
       described_class.prepare_for_migration
     end
+
+    it "calls flush_cache! on the Base migrator" do
+      expect(Migration::Migrators::Base).to receive(:flush_cache!)
+
+      described_class.prepare_for_migration
+    end
   end
 
   describe "#migrate!" do
@@ -23,6 +29,7 @@ RSpec.describe Migration::Coordinator do
       allow(described_class.migrators.first).to receive(:runnable?).and_return(false)
       allow(described_class.migrators.second).to receive(:runnable?).and_return(true)
 
+      expect(described_class.migrators.second).to receive(:warm_cache)
       expect(described_class.migrators.second).to receive(:queue)
 
       migrate

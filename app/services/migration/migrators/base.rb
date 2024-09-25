@@ -52,6 +52,130 @@ module Migration::Migrators
       def records_per_worker
         5_000
       end
+
+      def warm_cache
+        dependencies.each do |dependency|
+          cache_keys.select { |key| key.include?(dependency.to_s) }.each do |cache_key|
+            send(cache_key)
+          end
+        end
+      end
+
+      def flush_cache!
+        cache_keys.each do |key|
+          Rails.cache.delete(key)
+          instance_variable_set("@#{key}", nil)
+        end
+      end
+
+      def cache_keys
+        methods.map(&:to_s).select { |m| m.include?("_ids_by_") }
+      end
+
+      def find_lead_provider_id!(ecf_id:)
+        lead_provider_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
+      end
+
+      def find_cohort_id!(ecf_id:)
+        cohort_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
+      end
+
+      def find_application_id!(ecf_id:)
+        application_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
+      end
+
+      def find_declaration_id!(ecf_id:)
+        declaration_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Declaration")
+      end
+
+      def find_statement_id!(ecf_id:)
+        statement_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
+      end
+
+      def find_course_id!(identifier: nil, ecf_id: nil)
+        raise ActiveRecord::RecordNotFound, "Couldn't find Course" unless identifier || ecf_id
+
+        return course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if identifier
+        course_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if ecf_id
+      end
+
+      def find_school_id!(urn:)
+        school_ids_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
+      end
+
+      def find_itt_provider_id!(itt_provider:)
+        itt_provider_ids_by_legal_name_and_operating_name[itt_provider.downcase] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
+      end
+
+      def find_private_childcare_provider_id!(provider_urn:)
+        private_childcare_provider_ids_by_provider_urn[provider_urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find PrivateChildcareProvider")
+      end
+
+      def find_user_id!(ecf_id:)
+        user_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
+      end
+
+      def find_schedule_id!(ecf_id:)
+        schedule_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
+      end
+
+      def cached(&block)
+        caller_method = caller_locations.first.label
+        Rails.cache.fetch(caller_method, expires_in: 2.hours) { block.call }
+      end
+
+      def course_ids_by_identifier
+        @course_ids_by_identifier ||= cached { ::Course.pluck(:identifier, :id).to_h }
+      end
+
+      def course_ids_by_ecf_id
+        @course_ids_by_ecf_id ||= cached { ::Course.pluck(:ecf_id, :id).to_h }
+      end
+
+      def statement_ids_by_ecf_id
+        @statement_ids_by_ecf_id ||= cached { ::Statement.pluck(:ecf_id, :id).to_h }
+      end
+
+      def declaration_ids_by_ecf_id
+        @declaration_ids_by_ecf_id ||= cached { ::Declaration.pluck(:ecf_id, :id).to_h }
+      end
+
+      def application_ids_by_ecf_id
+        @application_ids_by_ecf_id ||= cached { ::Application.pluck(:ecf_id, :id).to_h }
+      end
+
+      def lead_provider_ids_by_ecf_id
+        @lead_provider_ids_by_ecf_id ||= cached { ::LeadProvider.pluck(:ecf_id, :id).to_h }
+      end
+
+      def user_ids_by_ecf_id
+        @user_ids_by_ecf_id ||= cached { ::User.pluck(:ecf_id, :id).to_h }
+      end
+
+      def cohort_ids_by_ecf_id
+        @cohort_ids_by_ecf_id ||= cached { ::Cohort.pluck(:ecf_id, :id).to_h }
+      end
+
+      def schedule_ids_by_ecf_id
+        @schedule_ids_by_ecf_id ||= cached { ::Schedule.pluck(:ecf_id, :id).to_h }
+      end
+
+      def school_ids_by_urn
+        @school_ids_by_urn ||= cached { ::School.pluck(:urn, :id).to_h }
+      end
+
+      def itt_provider_ids_by_legal_name_and_operating_name
+        @itt_provider_ids_by_legal_name_and_operating_name ||= cached do
+          providers = ::IttProvider.including_disabled
+          providers_by_legal_name = providers.pluck(:legal_name, :id).to_h.transform_keys(&:downcase)
+          providers_by_operating_name = providers.pluck(:operating_name, :id).to_h.transform_keys(&:downcase)
+          providers_by_legal_name.merge!(providers_by_operating_name)
+        end
+      end
+
+      def private_childcare_provider_ids_by_provider_urn
+        @private_childcare_provider_ids_by_provider_urn ||= cached { ::PrivateChildcareProvider.including_disabled.pluck(:provider_urn, :id).to_h }
+      end
     end
 
   protected
@@ -92,53 +216,6 @@ module Migration::Migrators
       @data_migration ||= Migration::DataMigration.find_by(model: self.class.model, worker:)
     end
 
-    def find_lead_provider_id!(ecf_id:)
-      lead_provider_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
-    end
-
-    def find_cohort_id!(ecf_id:)
-      cohort_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
-    end
-
-    def find_application_id!(ecf_id:)
-      application_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
-    end
-
-    def find_declaration_id!(ecf_id:)
-      declaration_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Declaration")
-    end
-
-    def find_statement_id!(ecf_id:)
-      statement_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
-    end
-
-    def find_course_id!(identifier: nil, ecf_id: nil)
-      raise ActiveRecord::RecordNotFound, "Couldn't find Course" unless identifier || ecf_id
-
-      return course_ids_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if identifier
-      course_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if ecf_id
-    end
-
-    def find_school_id!(urn:)
-      school_ids_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
-    end
-
-    def find_itt_provider_id!(itt_provider:)
-      itt_provider_ids_by_legal_name_and_operating_name[itt_provider.downcase] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
-    end
-
-    def find_private_childcare_provider_id!(provider_urn:)
-      private_childcare_provider_ids_by_provider_urn[provider_urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find PrivateChildcareProvider")
-    end
-
-    def find_user_id!(ecf_id:)
-      user_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
-    end
-
-    def find_schedule_id!(ecf_id:)
-      schedule_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
-    end
-
     def course_groups_by_schedule_type(ecf_type)
       case ecf_type
       when "Finance::Schedule::NPQLeadership"
@@ -153,59 +230,6 @@ module Migration::Migrators
     end
 
   private
-
-    def course_ids_by_identifier
-      @course_ids_by_identifier ||= ::Course.pluck(:identifier, :id).to_h
-    end
-
-    def course_ids_by_ecf_id
-      @course_ids_by_ecf_id ||= ::Course.pluck(:ecf_id, :id).to_h
-    end
-
-    def statement_ids_by_ecf_id
-      @statement_ids_by_ecf_id ||= ::Statement.pluck(:ecf_id, :id).to_h
-    end
-
-    def declaration_ids_by_ecf_id
-      @declaration_ids_by_ecf_id ||= ::Declaration.pluck(:ecf_id, :id).to_h
-    end
-
-    def application_ids_by_ecf_id
-      @application_ids_by_ecf_id ||= ::Application.pluck(:ecf_id, :id).to_h
-    end
-
-    def lead_provider_ids_by_ecf_id
-      @lead_provider_ids_by_ecf_id ||= ::LeadProvider.pluck(:ecf_id, :id).to_h
-    end
-
-    def user_ids_by_ecf_id
-      @user_ids_by_ecf_id ||= ::User.pluck(:ecf_id, :id).to_h
-    end
-
-    def cohort_ids_by_ecf_id
-      @cohort_ids_by_ecf_id ||= ::Cohort.pluck(:ecf_id, :id).to_h
-    end
-
-    def schedule_ids_by_ecf_id
-      @schedule_ids_by_ecf_id ||= ::Schedule.pluck(:ecf_id, :id).to_h
-    end
-
-    def school_ids_by_urn
-      @school_ids_by_urn ||= ::School.pluck(:urn, :id).to_h
-    end
-
-    def itt_provider_ids_by_legal_name_and_operating_name
-      @itt_provider_ids_by_legal_name_and_operating_name ||= begin
-        providers = ::IttProvider.including_disabled
-        providers_by_legal_name = providers.pluck(:legal_name, :id).to_h.transform_keys(&:downcase)
-        providers_by_operating_name = providers.pluck(:operating_name, :id).to_h.transform_keys(&:downcase)
-        providers_by_legal_name.merge!(providers_by_operating_name)
-      end
-    end
-
-    def private_childcare_provider_ids_by_provider_urn
-      @private_childcare_provider_ids_by_provider_urn ||= ::PrivateChildcareProvider.including_disabled.pluck(:provider_urn, :id).to_h
-    end
 
     def offset
       worker * self.class.records_per_worker

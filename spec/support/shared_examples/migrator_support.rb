@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.shared_examples "a migrator" do |model, dependencies|
+RSpec.shared_examples "a migrator", :in_memory_rails_cache do |model, dependencies|
   let(:worker) { 0 }
   let(:instance) { described_class.new(worker:) }
   let(:data_migration) { create(:data_migration, model:, worker: 0) }
@@ -19,6 +19,42 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
 
     allow(described_class).to receive(:records_per_worker).and_return(records_per_worker)
     allow(Migration::FailureManager).to receive(:new).with(data_migration:) { failure_manager }
+
+    described_class.flush_cache!
+  end
+
+  describe ".flush_cache!" do
+    it "clears the Rails cache for all lookups" do
+      allow(Rails.cache).to receive(:delete)
+
+      described_class.flush_cache!
+
+      expect(Rails.cache).to have_received(:delete).with("course_ids_by_identifier")
+      expect(Rails.cache).to have_received(:delete).with("course_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("statement_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("declaration_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("application_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("lead_provider_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("user_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("cohort_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("schedule_ids_by_ecf_id")
+      expect(Rails.cache).to have_received(:delete).with("school_ids_by_urn")
+      expect(Rails.cache).to have_received(:delete).with("itt_provider_ids_by_legal_name_and_operating_name")
+      expect(Rails.cache).to have_received(:delete).with("private_childcare_provider_ids_by_provider_urn")
+    end
+  end
+
+  describe ".warm_cache" do
+    it "warms the cache for all dependencies" do
+      dependencies = described_class.dependencies.map(&:to_s)
+      matching_cache_keys = described_class.cache_keys.select { |k| dependencies.any? { |d| k.include?(d.to_s) } }
+
+      if matching_cache_keys.any?
+        matching_cache_keys.each { |k| expect(described_class).to receive(:send).with(k).once }
+      end
+
+      described_class.warm_cache
+    end
   end
 
   describe ".prepare!" do
@@ -124,9 +160,9 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   end
 
   describe ".dependencies" do
-    subject { described_class.dependencies }
+    subject { described_class.dependencies.map(&:to_sym) }
 
-    it { is_expected.to eq(dependencies) }
+    it { is_expected.to eq(dependencies.map(&:to_sym)) }
   end
 
   describe "#queue" do
