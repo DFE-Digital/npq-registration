@@ -9,20 +9,8 @@
   <h1 class="govuk-heading-xl">We cannot find your details</h1>
 
   <p class="govuk-body">
-    We cannot find a match with the details you’ve given.
+    We cannot find a match with the details you’ve given:
   </p>
-
-  <p class="govuk-body">
-    This could be because:
-  </p>
-
-  <ul class="govuk-list govuk-list--bullet">
-    <li>you have abbreviated your first name, for example Rob/Robert</li>
-    <li>your surname is different to the name held on the Teaching Regulation Agency records</li>
-    <li>you mistyped or entered some incorrect information</li>
-  </ul>
-
-  <h2 class="govuk-heading-m">Check your details and try again</h2>
 
   <%= render GovukComponent::SummaryListComponent.new do |summary_list| %>
     <% summary_list.with_row do |row|
@@ -48,25 +36,42 @@
     <% end %>
   <% end %>
 
-  <p class="govuk-body">Use our <%= govuk_link_to("Find a lost teacher reference number (TRN)", "https://find-a-lost-trn.education.gov.uk/start") %> service to check your TRN is correct.</p>
-
-  <p class="govuk-body">If you've never received a TRN, use our <%= govuk_link_to("Get a teacher reference number (TRN)", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn") %> service</p>
-
   <p class="govuk-body">
-    <% if @wizard.store["national_insurance_number"].present? %>
-      Try again to enter your details.
-    <% else %>
-      Try again to enter your details – entering your National Insurance number will help us match your details.
-    <% end %>
+    This could be because:
   </p>
 
-<%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path), class: "govuk-button--secondary" %>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
+    <li>your surname differs from Teaching Regulation Agency records</li>
+    <li>you mistyped or entered incorrect details</li>
+  </ul>
 
-  <h2 class="govuk-heading-m">Still unable to match your details?</h2>
+  <h2 class="govuk-heading-m">Next steps</h2>
 
   <p class="govuk-body">
-    You can still continue to register - our support team will manually match your details over the next few weeks. You will only be contacted if we cannot match your details.
+    You can:
   </p>
 
-  <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path) %>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>check your TRN is correct using the <%= govuk_link_to("Find a lost TRN", "https://find-a-lost-trn.education.gov.uk/start") %> service</li>
+    <li>use the <%= govuk_link_to("Get a TRN", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn") %> service if you’ve never received a TRN</li>
+  </ul>
+
+  <p class="govuk-body">
+    You can complete registration without validating your TRN, and our support team will manually match your details.
+  </p>
+
+  <div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+      <span class="govuk-visually-hidden">Warning</span>
+      If your TRN is not validated, your funded place cannot be confirmed and your NPQ application may be rejected by your provider.
+    </strong>
+  </div>
+
+  <div class="govuk-button-group">
+    <%= govuk_button_link_to "Try again", registration_wizard_show_path(@wizard.previous_step_path) %>
+    <%= govuk_button_link_to "Continue registration", registration_wizard_show_path(@wizard.next_step_path), class: "govuk-button--secondary" %>
+  </div>
+
 <% end %>
