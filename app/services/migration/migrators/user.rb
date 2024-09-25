@@ -28,7 +28,7 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_users) do |ecf_user|
-        user = find_or_initialize_user(ecf_user)
+        user = ::Migration::Users::Creator.new(ecf_user).find_or_initialize
 
         application_trns = validated_application_trns(ecf_user)
         raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, ecf_user)
@@ -51,69 +51,6 @@ module Migration::Migrators
     end
 
   private
-
-    def find_or_initialize_user(ecf_user)
-      # Find Users with `ecf_user.id`
-      users_with_ecf_id = ::User.where(ecf_id: ecf_user.id)
-
-      # Find User with `ecf_user.get_an_identity_id`
-      if ecf_user.get_an_identity_id.present?
-        user_with_gai_id = ::User.find_by(uid: ecf_user.get_an_identity_id)
-      end
-
-      # user.ecf_id is not validated as unique, check for duplicates
-      if users_with_ecf_id && users_with_ecf_id.size > 1
-        ecf_user.errors.add(:base, "ecf_user.id has multiple users in NPQ")
-        raise ActiveRecord::RecordInvalid, ecf_user
-      end
-
-      # User with `ecf_user.id`
-      user_with_ecf_id = users_with_ecf_id.first
-
-      # User does not exist, initialize new user
-      if user_with_ecf_id.nil? && user_with_gai_id.nil?
-        return ::User.new(ecf_id: ecf_user.id)
-      end
-
-      # Both id's return the same record, success
-      if user_with_ecf_id == user_with_gai_id
-        return user_with_ecf_id
-      end
-
-      # User found with `ecf_user.id`, but not `ecf_user.get_an_identity_id`
-      if user_with_ecf_id && user_with_gai_id.nil?
-        return user_with_ecf_id
-      end
-
-      # We have User 2 records, but they are different
-      if user_with_ecf_id && user_with_gai_id && user_with_ecf_id != user_with_gai_id
-        ecf_user.errors.add(:base, "ecf_user.id and ecf_user.get_an_identity_id both return User records, but they are different")
-        raise ActiveRecord::RecordInvalid, ecf_user
-      end
-
-      # Found User with `ecf_user.get_an_identity_id` only (not found with `ecf_user.id`)
-      if user_with_ecf_id.nil? && user_with_gai_id
-        # Can we find a `ecf_user` with `user.ecf_id`?
-        ecf_user_from_gai_user_ecf_id = Migration::Ecf::User.find_by(id: user_with_gai_id.ecf_id)
-
-        # Not found
-        if ecf_user_from_gai_user_ecf_id.nil?
-          # We set `user.ecf_id` to `ecf_user.id`, return user
-          user_with_gai_id.ecf_id = ecf_user.id
-          return user_with_gai_id
-        end
-
-        # Found, is it an orphan user?
-        if ecf_user_from_gai_user_ecf_id.npq_applications.empty? && ecf_user_from_gai_user_ecf_id.npq_profiles.empty?
-          # Orphaned ecf_user, we set `user.ecf_id` to `ecf_user.id`, return user
-          user_with_gai_id.ecf_id = ecf_user.id
-          return user_with_gai_id
-        end
-
-        ecf_user.errors.add(:base, "User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
-        raise ActiveRecord::RecordInvalid, ecf_user
-      end
-    end
 
     def validated_application_trns(ecf_user)
       ecf_user.npq_applications
