@@ -120,5 +120,13 @@ RSpec.describe ApplicationSubmissionJob do
         subject.perform_now
       end
     end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it "returns nil" do
+        expect(subject.perform_now).to be_nil
+      end
+    end
   end
 end

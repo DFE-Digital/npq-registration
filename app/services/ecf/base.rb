@@ -3,7 +3,7 @@
 module Ecf
   module Base
     def call
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+      return if Feature.ecf_api_disabled?
 
       super
     end

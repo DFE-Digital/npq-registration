@@ -349,6 +349,23 @@ RSpec.describe HandleSubmissionForStore do
           expect(user.applications.first.reload.headteacher_status).to eq "yes_over_five_years"
         end
       end
+
+      it "enqueues ApplicationSubmissionJob" do
+        expect { subject.call }.to have_enqueued_job(ApplicationSubmissionJob).exactly(:once).on_queue("default")
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before do
+        Flipper.enable(Feature::ECF_API_DISABLED)
+        # Stubbing rails config as well as we're not touching FundingEligibility in this card
+        # TODO: Remove this when CPDLP-3510 is done
+        allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true })
+      end
+
+      it "enqueues SendApplicationSubmissionEmailJob" do
+        expect { subject.call }.to have_enqueued_job(SendApplicationSubmissionEmailJob).exactly(:once).on_queue("default")
+      end
     end
 
     context "when External::EcfAPI is disabled" do

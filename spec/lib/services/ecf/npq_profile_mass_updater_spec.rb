@@ -24,7 +24,7 @@ RSpec.describe Ecf::NpqProfileMassUpdater do
   end
 
   context "when ecf_api_disabled flag is toggled on" do
-    before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+    before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
     it "returns nil" do
       expect(subject.call).to be_nil

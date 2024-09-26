@@ -4,6 +4,8 @@ class ApplicationSubmissionJob < ApplicationJob
   queue_as :default
 
   def perform(user:, email_template:)
+    return if Feature.ecf_api_disabled?
+
     if user.synced_to_ecf?
       update_ecf_user_details(user:)
     else
