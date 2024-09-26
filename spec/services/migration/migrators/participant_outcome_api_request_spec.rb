@@ -21,8 +21,10 @@ RSpec.describe Migration::Migrators::ParticipantOutcomeAPIRequest do
         instance.call
 
         outcome_api_request = ParticipantOutcomeAPIRequest.find_by(ecf_id: ecf_resource1.id)
-        expect(outcome_api_request).to have_attributes(ecf_resource1.attributes.except("id", "participant_outcome_id"))
+        expect(outcome_api_request).to have_attributes(ecf_resource1.attributes.except("id", "participant_outcome_id", "updated_at", "created_at"))
         expect(outcome_api_request.participant_outcome.ecf_id).to eq(ecf_resource1.participant_outcome_id)
+        expect(outcome_api_request.participant_outcome.updated_at).to be_within(5.seconds).of(ecf_resource1.updated_at)
+        expect(outcome_api_request.participant_outcome.created_at).to be_within(5.seconds).of(ecf_resource1.created_at)
       end
     end
   end

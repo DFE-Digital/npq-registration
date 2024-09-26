@@ -56,30 +56,49 @@ module Migration::Migrators
 
       applications_by_ecf_id = ::Application.where(ecf_id: self.class.ecf_npq_applications.pluck(:id)).index_by(&:ecf_id)
 
-      migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
-        application = applications_by_ecf_id[ecf_npq_application.id]
+      migrate(self.class.ecf_npq_applications) do |ecf_npq_applications|
+        applications_to_update = []
 
-        raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
+        ecf_npq_applications.each do |ecf_npq_application|
+          application = applications_by_ecf_id[ecf_npq_application.id]
 
-        ensure_relationships_are_consistent!(ecf_npq_application, application)
+          raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
 
-        ecf_schedule = ecf_npq_application.profile&.schedule
-        application.schedule_id = self.class.find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
+          ensure_relationships_are_consistent!(ecf_npq_application, application)
 
-        application.cohort_id = self.class.find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
-        application.itt_provider_id = self.class.find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
-        application.private_childcare_provider_id = self.class.find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
+          ecf_schedule = ecf_npq_application.profile&.schedule
+          application.schedule_id = self.class.find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
 
-        if ecf_npq_application.school_urn.present?
-          application.school_id = self.class.find_school_id!(urn: ecf_npq_application.school_urn)
+          application.cohort_id = self.class.find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
+          application.itt_provider_id = self.class.find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
+          application.private_childcare_provider_id = self.class.find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
+
+          if ecf_npq_application.school_urn.present?
+            application.school_id = self.class.find_school_id!(urn: ecf_npq_application.school_urn)
+          end
+          application.lead_provider_id = self.class.find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
+          application.course_id = self.class.find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
+
+          application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
+          application.ukprn = ecf_npq_application.school_ukprn
+
+          application.assign_attributes(ecf_npq_application.attributes.slice(*ATTRIBUTES))
+
+          if application.invalid?
+            raise ActiveRecord::ActiveRecordError("Validation failed: #{application.errors.full_messages.join(', ')}")
+          end
+
+          applications_to_update << application
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_npq_application, e)
         end
-        application.lead_provider_id = self.class.find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
-        application.course_id = self.class.find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
 
-        application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
-        application.ukprn = ecf_npq_application.school_ukprn
-
-        application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
+        # Super hacky just to test performance
+        attrs = ATTRIBUTES + %w[id user_id schedule_id cohort_id itt_provider_id private_childcare_provider_id school_id lead_provider_id course_id training_status ukprn]
+        records = applications_to_update.map(&:attributes).map { |attributes| attributes.slice(*attrs) }.map(&:symbolize_keys)
+        ::Application.upsert_all(records, unique_by: :id)
       end
     end
 

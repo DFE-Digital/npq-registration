@@ -31,26 +31,32 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_users) do |ecf_user|
-        user = ::Migration::Users::Creator.new(ecf_user).find_or_initialize
+      migrate(self.class.ecf_users) do |ecf_users|
+        ecf_users.each do |ecf_user|
+          user = ::Migration::Users::Creator.new(ecf_user).find_or_initialize
 
-        application_trns = validated_application_trns(ecf_user)
-        raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, ecf_user)
-        ecf_trn = ecf_user.teacher_profile&.trn || application_trns.last
+          application_trns = validated_application_trns(ecf_user)
+          raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, ecf_user)
+          ecf_trn = ecf_user.teacher_profile&.trn || application_trns.last
 
-        npq_application = most_recent_created_npq_application(ecf_user)
-        email = npq_application&.participant_identity&.email
+          npq_application = most_recent_created_npq_application(ecf_user)
+          email = npq_application&.participant_identity&.email
 
-        user.update!(
-          trn: ecf_trn || user.trn,
-          full_name: ecf_user.full_name || user.full_name,
-          email:,
-          uid: ecf_user.get_an_identity_id || user.uid,
-          date_of_birth: npq_application.date_of_birth || user.date_of_birth,
-          national_insurance_number: npq_application.nino || user.national_insurance_number,
-          active_alert: npq_application.active_alert || user.active_alert,
-          trn_verified: ecf_trn.present? || user&.trn_verified,
-        )
+          user.update!(
+            trn: ecf_trn || user.trn,
+            full_name: ecf_user.full_name || user.full_name,
+            email:,
+            uid: ecf_user.get_an_identity_id || user.uid,
+            date_of_birth: npq_application.date_of_birth || user.date_of_birth,
+            national_insurance_number: npq_application.nino || user.national_insurance_number,
+            active_alert: npq_application.active_alert || user.active_alert,
+            trn_verified: ecf_trn.present? || user&.trn_verified,
+          )
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_user, e)
+        end
       end
     end
 

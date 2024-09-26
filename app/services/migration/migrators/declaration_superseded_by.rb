@@ -19,12 +19,17 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_declarations) do |ecf_declaration|
-        declaration = ::Declaration.find_by!(ecf_id: ecf_declaration.id)
+      migrate(self.class.ecf_declarations) do |ecf_declarations|
+        ecf_declarations.each do |ecf_declaration|
+          declaration = ::Declaration.find_by!(ecf_id: ecf_declaration.id)
 
-        declaration.update!(
-          superseded_by_id: self.class.find_declaration_id!(ecf_id: ecf_declaration.superseded_by_id),
-        )
+          declaration.update!(
+            superseded_by_id: self.class.find_declaration_id!(ecf_id: ecf_declaration.superseded_by_id),
+          )
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_declaration, e)
+        end
       end
     end
   end

@@ -190,14 +190,7 @@ module Migration::Migrators
       start_migration!(items.count)
 
       result = RubyProf::Profile.profile do
-        # As we're using offset/limit, we can't use find_each!
-        items.each do |item|
-          yield(item)
-          Migration::DataMigration.update_counters(data_migration.id, processed_count: 1)
-        rescue ActiveRecord::ActiveRecordError => e
-          Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
-          failure_manager.record_failure(item, e.message)
-        end
+        yield(items)
       end
 
       File.open("tmp/profiling_results_#{self.class.model}_#{worker}.txt", "w") do |file|
@@ -206,6 +199,15 @@ module Migration::Migrators
       end
 
       finalise_migration!
+    end
+
+    def increment_processed_count
+      Migration::DataMigration.update_counters(data_migration.id, processed_count: 1)
+    end
+
+    def increment_failure_count(item, error)
+      Migration::DataMigration.update_counters(data_migration.id, failure_count: 1, processed_count: 1)
+      failure_manager.record_failure(item, error.message)
     end
 
     def run_once

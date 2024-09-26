@@ -33,21 +33,27 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_contracts) do |ecf_contract|
-        course_id = self.class.find_course_id!(identifier: ecf_contract.course_identifier)
+      migrate(self.class.ecf_contracts) do |ecf_contracts|
+        ecf_contracts.each do |ecf_contract|
+          course_id = self.class.find_course_id!(identifier: ecf_contract.course_identifier)
 
-        ecf_statements(ecf_contract).find_each do |ecf_statement|
-          statement_id = self.class.find_statement_id!(ecf_id: ecf_statement.id)
+          ecf_statements(ecf_contract).find_each do |ecf_statement|
+            statement_id = self.class.find_statement_id!(ecf_id: ecf_statement.id)
 
-          contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
-          contract_template.update!(ecf_contract.attributes.slice(*SHARED_ATTRIBUTES))
+            contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
+            contract_template.update!(ecf_contract.attributes.slice(*SHARED_ATTRIBUTES))
 
-          contract = ::Contract.find_or_initialize_by(
-            statement_id:,
-            course_id:,
-          )
+            contract = ::Contract.find_or_initialize_by(
+              statement_id:,
+              course_id:,
+            )
 
-          contract.update!(contract_template:)
+            contract.update!(contract_template:)
+          end
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_contract, e)
         end
       end
     end

@@ -19,27 +19,33 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_schedules) do |ecf_schedule|
-        ensure_milestone_dates_are_all_the_same!(ecf_schedule)
+      migrate(self.class.ecf_schedules) do |ecf_schedules|
+        ecf_schedules.each do |ecf_schedule|
+          ensure_milestone_dates_are_all_the_same!(ecf_schedule)
 
-        course_group = course_groups_by_schedule_type(ecf_schedule.type)
+          course_group = course_groups_by_schedule_type(ecf_schedule.type)
 
-        unless course_group
-          ecf_schedule.errors.add(:base, "Course group not found for schedule")
-          raise ActiveRecord::RecordInvalid, ecf_schedule
-        end
+          unless course_group
+            ecf_schedule.errors.add(:base, "Course group not found for schedule")
+            raise ActiveRecord::RecordInvalid, ecf_schedule
+          end
 
-        ::Schedule.find_or_initialize_by(ecf_id: ecf_schedule.id).tap do |schedule|
-          ecf_milestone = ecf_schedule.milestones.first
-          schedule.update!(
-            cohort_id: self.class.find_cohort_id!(ecf_id: ecf_schedule.cohort_id),
-            course_group:,
-            identifier: ecf_schedule.schedule_identifier,
-            applies_from: ecf_milestone.start_date,
-            applies_to: ecf_milestone.payment_date,
-            name: ecf_schedule.name,
-            allowed_declaration_types: ecf_schedule.milestones.pluck(:declaration_type),
-          )
+          ::Schedule.find_or_initialize_by(ecf_id: ecf_schedule.id).tap do |schedule|
+            ecf_milestone = ecf_schedule.milestones.first
+            schedule.update!(
+              cohort_id: self.class.find_cohort_id!(ecf_id: ecf_schedule.cohort_id),
+              course_group:,
+              identifier: ecf_schedule.schedule_identifier,
+              applies_from: ecf_milestone.start_date,
+              applies_to: ecf_milestone.payment_date,
+              name: ecf_schedule.name,
+              allowed_declaration_types: ecf_schedule.milestones.pluck(:declaration_type),
+            )
+          end
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_schedule, e)
         end
       end
     end

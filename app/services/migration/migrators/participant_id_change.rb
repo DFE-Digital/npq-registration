@@ -21,15 +21,21 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_participant_id_changes) do |ecf_participant_id_change|
-        participant_id_change = ::ParticipantIdChange.find_or_initialize_by(ecf_id: ecf_participant_id_change.id)
+      migrate(self.class.ecf_participant_id_changes) do |ecf_participant_id_changes|
+        ecf_participant_id_changes.each do |ecf_participant_id_change|
+          participant_id_change = ::ParticipantIdChange.find_or_initialize_by(ecf_id: ecf_participant_id_change.id)
 
-        participant_id_change.update!(
-          user: find_user!(ecf_id: ecf_participant_id_change.user_id),
-          from_participant_id: ecf_participant_id_change.from_participant_id,
-          to_participant_id: ecf_participant_id_change.to_participant_id,
-          created_at: ecf_participant_id_change.created_at,
-        )
+          participant_id_change.update!(
+            user: find_user!(ecf_id: ecf_participant_id_change.user_id),
+            from_participant_id: ecf_participant_id_change.from_participant_id,
+            to_participant_id: ecf_participant_id_change.to_participant_id,
+            created_at: ecf_participant_id_change.created_at,
+          )
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_participant_id_change, e)
+        end
       end
     end
 

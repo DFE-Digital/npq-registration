@@ -24,15 +24,21 @@ module Migration::Migrators
     def call
       COURSE_GROUP_NAMES.each { |name| ::CourseGroup.find_or_create_by!(name:) }
 
-      migrate(self.class.ecf_npq_courses) do |ecf_npq_course|
-        course = ::Course.find_or_initialize_by(ecf_id: ecf_npq_course.id)
-        course_group = find_course_group!(course, ecf_npq_course.identifier)
+      migrate(self.class.ecf_npq_courses) do |ecf_npq_courses|
+        ecf_npq_courses.each do |ecf_npq_course|
+          course = ::Course.find_or_initialize_by(ecf_id: ecf_npq_course.id)
+          course_group = find_course_group!(course, ecf_npq_course.identifier)
 
-        course.update!(
-          name: ecf_npq_course.name,
-          identifier: ecf_npq_course.identifier,
-          course_group:,
-        )
+          course.update!(
+            name: ecf_npq_course.name,
+            identifier: ecf_npq_course.identifier,
+            course_group:,
+          )
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_npq_course, e)
+        end
       end
     end
 

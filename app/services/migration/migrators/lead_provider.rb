@@ -15,8 +15,14 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_npq_lead_providers) do |ecf_npq_lead_provider|
-        ::LeadProvider.find_by!(ecf_id: ecf_npq_lead_provider.id)
+      migrate(self.class.ecf_npq_lead_providers) do |ecf_npq_lead_providers|
+        ecf_npq_lead_providers.each do |ecf_npq_lead_provider|
+          ::LeadProvider.find_by!(ecf_id: ecf_npq_lead_provider.id)
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_npq_lead_provider, e)
+        end
       end
     end
   end

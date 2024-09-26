@@ -17,8 +17,14 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_schools) do |ecf_school|
-        find_school_id!(urn: ecf_school.urn, name: ecf_school.name.downcase)
+      migrate(self.class.ecf_schools) do |ecf_schools|
+        ecf_schools.each do |ecf_school|
+          find_school_id!(urn: ecf_school.urn, name: ecf_school.name.downcase)
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_school, e)
+        end
       end
     end
 

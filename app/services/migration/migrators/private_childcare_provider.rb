@@ -15,12 +15,20 @@ module Migration::Migrators
     end
 
     def call
-      migrate(self.class.ecf_applications) do |application|
-        provider_urn = application.private_childcare_provider_urn
+      migrate(self.class.ecf_applications) do |ecf_applications|
+        ecf_applications.each do |ecf_application|
+          provider_urn = ecf_application.private_childcare_provider_urn
 
-        next if ::PrivateChildcareProvider.including_disabled.where(provider_urn:).exists?
+          provider_exists = ::PrivateChildcareProvider.including_disabled.where(provider_urn:).exists?
 
-        ::PrivateChildcareProvider.create!(provider_urn:, disabled_at: Time.zone.now)
+          unless provider_exists
+            ::PrivateChildcareProvider.create!(provider_urn:, disabled_at: Time.zone.now)
+          end
+
+          increment_processed_count
+        rescue ActiveRecord::ActiveRecordError => e
+          increment_failure_count(ecf_application, e)
+        end
       end
     end
   end
