@@ -150,7 +150,7 @@ RSpec.describe User do
     end
 
     context "when ecf_api_disabled flag is toggled on" do
-      before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
+      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
 
       it "returns nil" do
         expect(user.ecf_user).to be_nil

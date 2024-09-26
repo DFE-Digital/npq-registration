@@ -171,7 +171,7 @@ RSpec.describe Ecf::EcfUserCreator do
       let(:response_code) { 201 }
       let(:response_body) { "anything" }
 
-      before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
+      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
 
       it "returns nil" do
         expect(subject.call).to be_nil
