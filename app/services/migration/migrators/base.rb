@@ -5,7 +5,7 @@ module Migration::Migrators
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    INFRA_WORKER_COUNT = 20
+    INFRA_WORKER_COUNT = 30
 
     attribute :worker
 
