@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.shared_examples "a migrator" do |model, dependencies|
+RSpec.shared_examples "a migrator", :in_memory_rails_cache do |model, dependencies|
   let(:worker) { 0 }
   let(:instance) { described_class.new(worker:) }
   let(:data_migration) { create(:data_migration, model:, worker: 0) }
@@ -20,6 +20,8 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
 
     allow(described_class).to receive(:records_per_worker).and_return(records_per_worker)
     allow(Migration::FailureManager).to receive(:new).with(data_migration:) { failure_manager }
+
+    described_class.warm_cache
   end
 
   describe ".prepare!" do
@@ -176,6 +178,25 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
       it "queues a job for each worker" do
         expect { queue }.to have_enqueued_job(MigratorJob).with(migrator: described_class, worker: 0)
           .and(have_enqueued_job(MigratorJob).with(migrator: described_class, worker: 1))
+      end
+    end
+
+    if dependencies.any?
+      context "when the migration has dependencies" do
+        it "warms the cache for the dependencies" do
+          # We need to clear the cache here as we warm it before all
+          # tests and it will only warm once.
+          Rails.cache.clear
+
+          cache_methods = described_class.warm_cache_methods
+          dependencies_with_cache = dependencies.select { |d| cache_methods.any? { |m| m.include?(d.to_s) } }
+
+          if dependencies_with_cache.any?
+            expect(Rails.cache).to receive(:write_multi).at_least(dependencies_with_cache.count).times
+          end
+
+          queue
+        end
       end
     end
   end
