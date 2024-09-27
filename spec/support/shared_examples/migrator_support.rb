@@ -23,6 +23,20 @@ RSpec.shared_examples "a migrator", :in_memory_rails_cache do |model, dependenci
     described_class.warm_cache
   end
 
+  describe ".flush_cache!" do
+    subject(:flush_cache!) { described_class.flush_cache! }
+
+    it "deletes the cache for the warm cache methods" do
+      described_class.warm_cache_methods.each do |method|
+        key = method.chomp("_warm_cache")
+        expect(Rails.cache).to receive(:delete).with(key).once
+        expect(Rails.cache).to receive(:delete).with("#{key}_already_cached").once
+      end
+
+      flush_cache!
+    end
+  end
+
   describe ".prepare!" do
     before { Migration::DataMigration.destroy_all }
 
@@ -164,7 +178,7 @@ RSpec.shared_examples "a migrator", :in_memory_rails_cache do |model, dependenci
           dependencies_with_cache = dependencies.select { |d| cache_methods.any? { |m| m.include?(d.to_s) } }
 
           if dependencies_with_cache.any?
-            expect(Rails.cache).to receive(:write_multi).at_least(dependencies_with_cache.count).times
+            expect(Rails.cache).to receive(:write).at_least(dependencies_with_cache.count).times
           end
 
           queue

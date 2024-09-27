@@ -53,6 +53,14 @@ module Migration::Migrators
         5_000
       end
 
+      def flush_cache!
+        warm_cache_methods.each do |m|
+          key = m.chomp("_warm_cache")
+          Rails.cache.delete(key)
+          Rails.cache.delete("#{key}_already_cached")
+        end
+      end
+
       def warm_cache
         dependencies.each do |dependency|
           cache_to_warm = warm_cache_methods.select { |key| key.include?(dependency.to_s) }
@@ -121,10 +129,8 @@ module Migration::Migrators
         already_cached_key = "#{prefix}_already_cached"
         return if Rails.cache.read(already_cached_key)
 
-        hash = block.call.transform_keys { |key| "#{prefix}_#{key}" }
-        Rails.cache.write_multi(hash, expires_in: 1.hour)
-
-        Rails.cache.write(already_cached_key, true)
+        Rails.cache.write(prefix, block.call, expires_in: 1.hour)
+        Rails.cache.write(already_cached_key, true, expires_in: 1.hour)
       end
     end
 
@@ -160,55 +166,65 @@ module Migration::Migrators
     end
 
     def find_lead_provider_id!(ecf_id:)
-      cache_read!(:lead_provider_by_ecf_id, ecf_id)
+      @lead_provider_by_ecf_id ||= Rails.cache.read(:lead_provider_by_ecf_id)
+      @lead_provider_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find LeadProvider")
     end
 
     def find_cohort_id!(ecf_id:)
-      cache_read!(:cohort_by_ecf_id, ecf_id)
+      @cohort_by_ecf_id ||= Rails.cache.read(:cohort_by_ecf_id)
+      @cohort_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Cohort")
     end
 
     def find_application_id!(ecf_id:)
-      cache_read!(:application_by_ecf_id, ecf_id)
+      @application_by_ecf_id ||= Rails.cache.read(:application_by_ecf_id)
+      @application_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Application")
     end
 
     def find_declaration_id!(ecf_id:)
-      cache_read!(:declaration_by_ecf_id, ecf_id)
+      @declaration_by_ecf_id ||= Rails.cache.read(:declaration_by_ecf_id)
+      @declaration_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Declaration")
     end
 
     def find_statement_id!(ecf_id:)
-      cache_read!(:statement_by_ecf_id, ecf_id)
+      @statement_by_ecf_id ||= Rails.cache.read(:statement_by_ecf_id)
+      @statement_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Statement")
     end
 
     def find_course_id!(identifier: nil, ecf_id: nil)
       raise ActiveRecord::RecordNotFound, "Couldn't find Course" unless identifier || ecf_id
 
-      return cache_read!(:course_by_ecf_id, ecf_id) if ecf_id
-
-      cache_read!(:course_by_identifier, identifier) if identifier
+      if ecf_id
+        @course_by_ecf_id ||= Rails.cache.read(:course_by_ecf_id)
+        @course_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
+      else
+        @course_by_identifier ||= Rails.cache.read(:course_by_identifier)
+        @course_by_identifier[identifier] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course")
+      end
     end
 
     def find_school_id!(urn:)
-      cache_read!(:school_by_urn, urn)
+      @school_by_urn ||= Rails.cache.read(:school_by_urn)
+      @school_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
     end
 
     def find_itt_provider_id!(itt_provider:)
-      cache_read!(:itt_provider_by_legal_name_and_operating_name, itt_provider.downcase)
+      @itt_provider_by_legal_name_and_operating_name ||= Rails.cache.read(:itt_provider_by_legal_name_and_operating_name)
+      @itt_provider_by_legal_name_and_operating_name[itt_provider.downcase] || raise(ActiveRecord::RecordNotFound, "Couldn't find IttProvider")
     end
 
     def find_private_childcare_provider_id!(provider_urn:)
-      cache_read!(:private_childcare_provider_by_urn, provider_urn)
+      @private_childcare_provider_by_urn ||= Rails.cache.read(:private_childcare_provider_by_urn)
+      @private_childcare_provider_by_urn[provider_urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find PrivateChildcareProvider")
     end
 
     def find_user_id!(ecf_id:)
-      cache_read!(:user_by_ecf_id, ecf_id)
+      @user_by_ecf_id ||= Rails.cache.read(:user_by_ecf_id)
+      @user_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
     end
 
     def find_schedule_id!(ecf_id:)
-      cache_read!(:schedule_by_ecf_id, ecf_id)
-    end
-
-    def cache_read!(prefix, key)
-      Rails.cache.read("#{prefix}_#{key}") || raise(ActiveRecord::RecordNotFound, "Couldn't find #{prefix.to_s.split("_by_").first.camelize}")
+      @schedule_by_ecf_id ||= Rails.cache.read(:schedule_by_ecf_id)
+      @schedule_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
     end
 
     def course_groups_by_schedule_type(ecf_type)

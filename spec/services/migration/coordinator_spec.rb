@@ -10,6 +10,7 @@ RSpec.describe Migration::Coordinator do
 
   describe ".prepare_for_migration" do
     it "calls prepare! on each migrator" do
+      expect(Migration::Migrators::Base).to receive(:flush_cache!)
       expect(described_class.migrators).to all(receive(:prepare!))
 
       described_class.prepare_for_migration

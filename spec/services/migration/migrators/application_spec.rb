@@ -94,25 +94,25 @@ RSpec.describe Migration::Migrators::Application do
       end
 
       it "records a failure when the schedule cannot be found" do
-        Rails.cache.delete("schedule_by_ecf_id_#{ecf_resource1.profile.schedule.id}")
+        Rails.cache.write("schedule_by_ecf_id", {})
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find Schedule/)
       end
 
       it "records a failure when the cohort cannot be found" do
-        Rails.cache.delete("cohort_by_ecf_id_#{ecf_resource1.cohort_id}")
+        Rails.cache.write("cohort_by_ecf_id", {})
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find Cohort/)
       end
 
       it "records a failure when the ITT provider cannot be found" do
-        Rails.cache.delete("itt_provider_by_legal_name_and_operating_name_#{ecf_resource1.itt_provider.downcase}")
+        Rails.cache.write("itt_provider_by_legal_name_and_operating_name", {})
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find IttProvider/)
       end
 
       it "records a failure when the private childcare provider cannot be found" do
-        Rails.cache.delete("private_childcare_provider_by_urn_#{ecf_resource1.private_childcare_provider_urn}")
+        Rails.cache.write("private_childcare_provider_by_urn", {})
         instance.call
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find PrivateChildcareProvider/)
       end
