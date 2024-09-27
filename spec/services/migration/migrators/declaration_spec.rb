@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::Declaration do
   it_behaves_like "a migrator", :declaration, %i[cohort application lead_provider course user] do
+    let(:records_per_worker_divider) { 2 }
+
     def create_ecf_resource
       create(:ecf_migration_participant_declaration, :ineligible)
     end
