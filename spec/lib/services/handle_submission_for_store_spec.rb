@@ -7,7 +7,7 @@ RSpec.describe HandleSubmissionForStore do
   let(:user) { create(:user, trn: user_record_trn, full_name: "John Doe", ecf_id: nil) }
   let(:school) { create(:school, :funding_eligible_establishment_type_code) }
   let(:private_childcare_provider) { create(:private_childcare_provider, :on_early_years_register) }
-
+  let(:cohort) { create(:cohort, :current) }
   let(:courses) { Course.where(identifier: "npq-leading-primary-mathematics") }
 
   let(:course) { courses.sample }
@@ -32,6 +32,7 @@ RSpec.describe HandleSubmissionForStore do
       trn: "0012345",
       response: ecf_funding_lookup_response(previously_funded: false),
     )
+    travel_to(Date.new(cohort.start_year, 9, 26))
   end
 
   describe "#call" do
@@ -53,7 +54,7 @@ RSpec.describe HandleSubmissionForStore do
         }
       end
 
-      it "store data from store" do
+      it "stores data from store" do
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
           "ecf_id" => nil,
@@ -161,7 +162,7 @@ RSpec.describe HandleSubmissionForStore do
         }
       end
 
-      it "store data from store" do
+      it "stores data from store" do
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
           "ecf_id" => nil,
@@ -347,6 +348,75 @@ RSpec.describe HandleSubmissionForStore do
           subject.call
           expect(user.applications.first.reload.headteacher_status).to eq "yes_over_five_years"
         end
+      end
+    end
+
+    context "when External::EcfAPI is disabled" do
+      before do
+        allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
+      end
+
+      let(:store) do
+        {
+          "current_user" => user,
+          "course_identifier" => course.identifier,
+          "institution_identifier" => "School-#{school.urn}",
+          "lead_provider_id" => lead_provider.id,
+          "works_in_school" => "yes",
+          "teacher_catchment" => "england",
+          "work_setting" => "a_school",
+          "referred_by_return_to_teaching_adviser" => "no",
+        }
+      end
+
+      it "stores data from store" do
+        subject.call
+
+        expect(stable_as_json(user.applications.last)).to match({
+          "course_id" => course.id,
+          "schedule_id" => nil,
+          "ecf_id" => nil,
+          "eligible_for_funding" => true,
+          "employer_name" => nil,
+          "employment_type" => nil,
+          "employment_role" => nil,
+          "funded_place" => nil,
+          "funding_choice" => nil,
+          "funding_eligiblity_status_code" => "funded",
+          "headteacher_status" => nil,
+          "kind_of_nursery" => nil,
+          "itt_provider_id" => nil,
+          "DEPRECATED_itt_provider" => nil,
+          "lead_mentor" => false,
+          "lead_provider_approval_status" => "pending",
+          "participant_outcome_state" => nil,
+          "lead_provider_id" => lead_provider.id,
+          "notes" => nil,
+          "private_childcare_provider_id" => nil,
+          "DEPRECATED_private_childcare_provider_urn" => nil,
+          "cohort_id" => cohort.id,
+          "school_id" => school.id,
+          "targeted_delivery_funding_eligibility" => false,
+          "targeted_support_funding_eligibility" => false,
+          "teacher_catchment" => "england",
+          "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+          "teacher_catchment_iso_country_code" => "GBR",
+          "teacher_catchment_synced_to_ecf" => false,
+          "training_status" => nil,
+          "ukprn" => school.ukprn,
+          "number_of_pupils" => nil,
+          "primary_establishment" => false,
+          "tsf_primary_eligibility" => false,
+          "tsf_primary_plus_eligibility" => false,
+          "user_id" => user.id,
+          "works_in_nursery" => nil,
+          "works_in_childcare" => false,
+          "works_in_school" => true,
+          "work_setting" => "a_school",
+          "raw_application_data" => store.except("current_user"),
+          "referred_by_return_to_teaching_adviser" => "no",
+          "accepted_at" => nil,
+        })
       end
     end
   end
