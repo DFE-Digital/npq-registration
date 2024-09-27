@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::User do
   it_behaves_like "a migrator", :user, [] do
+    let(:records_per_worker_divider) { 2 }
+
     def create_ecf_resource
       travel_to 10.days.ago do
         create(:ecf_migration_user, :npq)

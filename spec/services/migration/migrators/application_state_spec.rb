@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::ApplicationState do
   it_behaves_like "a migrator", :application_state, %i[application lead_provider] do
+    let(:records_per_worker_divider) { 2 }
+
     def create_ecf_resource
       create(:ecf_migration_participant_profile_state)
     end

@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::Application do
   it_behaves_like "a migrator", :application, %i[private_childcare_provider itt_provider cohort lead_provider schedule course user school] do
+    let(:records_per_worker_divider) { 2 }
+
     def create_ecf_resource
       create(:ecf_migration_npq_application, :accepted)
     end

@@ -24,6 +24,10 @@ module Migration::Migrators
           .includes(:teacher_profile, :npq_profiles)
           .from("(#{users_with_npq_profiles.to_sql} UNION #{users_with_npq_applications.to_sql}) AS users")
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call
