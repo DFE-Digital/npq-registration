@@ -237,8 +237,10 @@ RSpec.describe Ecf::EcfUserUpdater do
 
       before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.call).to be_nil
+      it "does not call ecf" do
+        subject.call
+
+        expect(a_request(:patch, "https://ecf-app.gov.uk/api/v1/npq/users/#{ecf_id}")).not_to have_been_made
       end
     end
   end

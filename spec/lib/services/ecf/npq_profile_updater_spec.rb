@@ -120,14 +120,17 @@ RSpec.describe Ecf::NpqProfileUpdater do
 
     it "calls ecf to update the eligible_for_funding attribute" do
       subject.call
+
       expect(update_ecf_stub).to have_been_requested
     end
 
     context "when ecf_api_disabled flag is toggled on" do
       before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.call).to be_nil
+      it "does not call ecf" do
+        subject.call
+
+        expect(update_ecf_stub).not_to have_been_requested
       end
     end
   end
@@ -149,14 +152,17 @@ RSpec.describe Ecf::NpqProfileUpdater do
 
     it "calls ecf to update the eligible_for_funding attribute" do
       subject.tsf_data_field_update
+
       expect(update_ecf_stub).to have_been_requested
     end
 
     context "when ecf_api_disabled flag is toggled on" do
       before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.tsf_data_field_update).to be_nil
+      it "does not call ecf" do
+        subject.tsf_data_field_update
+
+        expect(update_ecf_stub).not_to have_been_requested
       end
     end
   end

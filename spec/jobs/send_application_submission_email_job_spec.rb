@@ -10,8 +10,10 @@ RSpec.describe SendApplicationSubmissionEmailJob, type: :job do
     context "when ecf_api_disabled flag is toggled off" do
       before { Flipper.disable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(job.perform_now).to be_nil
+      it "does not call `ApplicationSubmissionMailer`" do
+        expect(ApplicationSubmissionMailer).not_to receive(:application_submitted_mail)
+
+        job.perform_now
       end
     end
 
@@ -21,7 +23,7 @@ RSpec.describe SendApplicationSubmissionEmailJob, type: :job do
         allow(ApplicationSubmissionMailer).to receive(:application_submitted_mail).and_call_original
       end
 
-      it "sends application submission email" do
+      it "calls `ApplicationSubmissionMailer`" do
         expect(ApplicationSubmissionMailer).to receive(:application_submitted_mail).with(
           "b8b53310-fa6f-4587-972a-f3f3c6e0892e",
           amount: "123",
