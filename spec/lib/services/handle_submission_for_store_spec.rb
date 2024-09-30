@@ -418,6 +418,220 @@ RSpec.describe HandleSubmissionForStore do
           "accepted_at" => nil,
         })
       end
+
+      context "when teacher catchment is not in the UK catchment area" do
+        let(:store) do
+          {
+            "current_user" => user,
+            "course_identifier" => course.identifier,
+            "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+            "lead_provider_id" => lead_provider.id,
+            "works_in_childcare" => "yes",
+            "works_in_school" => "no",
+            "kind_of_nursery" => "private_nursery",
+            "teacher_catchment" => "another",
+            "teacher_catchment_country" => "spain",
+            "work_setting" => "early_years_or_childcare",
+            "referred_by_return_to_teaching_adviser" => "no",
+          }
+        end
+
+        it "stores data from store" do
+          subject.call
+
+          expect(stable_as_json(user.applications.last)).to match({
+            "course_id" => course.id,
+            "schedule_id" => nil,
+            "ecf_id" => nil,
+            "eligible_for_funding" => false,
+            "employer_name" => nil,
+            "employment_type" => nil,
+            "employment_role" => nil,
+            "funded_place" => nil,
+            "funding_choice" => nil,
+            "funding_eligiblity_status_code" => "not_in_england",
+            "headteacher_status" => nil,
+            "kind_of_nursery" => "private_nursery",
+            "itt_provider_id" => nil,
+            "DEPRECATED_itt_provider" => nil,
+            "lead_mentor" => false,
+            "lead_provider_approval_status" => "pending",
+            "participant_outcome_state" => nil,
+            "lead_provider_id" => lead_provider.id,
+            "notes" => nil,
+            "private_childcare_provider_id" => nil,
+            "DEPRECATED_private_childcare_provider_urn" => nil,
+            "cohort_id" => cohort.id,
+            "school_id" => nil,
+            "targeted_delivery_funding_eligibility" => false,
+            "targeted_support_funding_eligibility" => false,
+            "teacher_catchment" => "another",
+            "teacher_catchment_country" => "spain",
+            "teacher_catchment_iso_country_code" => "ESP",
+            "teacher_catchment_synced_to_ecf" => false,
+            "training_status" => nil,
+            "ukprn" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
+            "user_id" => user.id,
+            "works_in_nursery" => nil,
+            "works_in_childcare" => true,
+            "works_in_school" => false,
+            "work_setting" => "early_years_or_childcare",
+            "raw_application_data" => store.except("current_user"),
+            "referred_by_return_to_teaching_adviser" => "no",
+            "accepted_at" => nil,
+          })
+        end
+      end
+
+      context "when teacher catchment is empty" do
+        let(:store) do
+          {
+            "current_user" => user,
+            "course_identifier" => course.identifier,
+            "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+            "lead_provider_id" => lead_provider.id,
+            "works_in_childcare" => "yes",
+            "works_in_school" => "no",
+            "kind_of_nursery" => "private_nursery",
+            "teacher_catchment" => nil,
+            "teacher_catchment_country" => nil,
+            "work_setting" => "early_years_or_childcare",
+            "referred_by_return_to_teaching_adviser" => "no",
+          }
+        end
+
+        it "stores data from store" do
+          subject.call
+
+          expect(stable_as_json(user.applications.last)).to match({
+            "course_id" => course.id,
+            "schedule_id" => nil,
+            "ecf_id" => nil,
+            "eligible_for_funding" => false,
+            "employer_name" => nil,
+            "employment_type" => nil,
+            "employment_role" => nil,
+            "funded_place" => nil,
+            "funding_choice" => nil,
+            "funding_eligiblity_status_code" => "not_in_england",
+            "headteacher_status" => nil,
+            "kind_of_nursery" => "private_nursery",
+            "itt_provider_id" => nil,
+            "DEPRECATED_itt_provider" => nil,
+            "lead_mentor" => false,
+            "lead_provider_approval_status" => "pending",
+            "participant_outcome_state" => nil,
+            "lead_provider_id" => lead_provider.id,
+            "notes" => nil,
+            "private_childcare_provider_id" => nil,
+            "DEPRECATED_private_childcare_provider_urn" => nil,
+            "cohort_id" => cohort.id,
+            "school_id" => nil,
+            "targeted_delivery_funding_eligibility" => false,
+            "targeted_support_funding_eligibility" => false,
+            "teacher_catchment" => nil,
+            "teacher_catchment_country" => nil,
+            "teacher_catchment_iso_country_code" => nil,
+            "teacher_catchment_synced_to_ecf" => false,
+            "training_status" => nil,
+            "ukprn" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
+            "user_id" => user.id,
+            "works_in_nursery" => nil,
+            "works_in_childcare" => true,
+            "works_in_school" => false,
+            "work_setting" => "early_years_or_childcare",
+            "raw_application_data" => store.except("current_user"),
+            "referred_by_return_to_teaching_adviser" => "no",
+            "accepted_at" => nil,
+          })
+        end
+      end
+
+      context "when teacher catchment is not found" do
+        before do
+          allow(Sentry).to receive(:capture_message)
+        end
+
+        let(:store) do
+          {
+            "current_user" => user,
+            "course_identifier" => course.identifier,
+            "institution_identifier" => "PrivateChildcareProvider-#{private_childcare_provider.provider_urn}",
+            "lead_provider_id" => lead_provider.id,
+            "works_in_childcare" => "yes",
+            "works_in_school" => "no",
+            "kind_of_nursery" => "private_nursery",
+            "teacher_catchment" => "another",
+            "teacher_catchment_country" => "wonderland",
+            "work_setting" => "early_years_or_childcare",
+            "referred_by_return_to_teaching_adviser" => "no",
+          }
+        end
+
+        it "logs an error" do
+          subject.call
+
+          expect(Sentry).to have_received(:capture_message).with("Could not find the ISO3166 alpha3 code for wonderland.", level: :warning)
+        end
+
+        it "stores data from store" do
+          subject.call
+
+          expect(stable_as_json(user.applications.last)).to match({
+            "course_id" => course.id,
+            "schedule_id" => nil,
+            "ecf_id" => nil,
+            "eligible_for_funding" => false,
+            "employer_name" => nil,
+            "employment_type" => nil,
+            "employment_role" => nil,
+            "funded_place" => nil,
+            "funding_choice" => nil,
+            "funding_eligiblity_status_code" => "not_in_england",
+            "headteacher_status" => nil,
+            "kind_of_nursery" => "private_nursery",
+            "itt_provider_id" => nil,
+            "DEPRECATED_itt_provider" => nil,
+            "lead_mentor" => false,
+            "lead_provider_approval_status" => "pending",
+            "participant_outcome_state" => nil,
+            "lead_provider_id" => lead_provider.id,
+            "notes" => nil,
+            "private_childcare_provider_id" => nil,
+            "DEPRECATED_private_childcare_provider_urn" => nil,
+            "cohort_id" => cohort.id,
+            "school_id" => nil,
+            "targeted_delivery_funding_eligibility" => false,
+            "targeted_support_funding_eligibility" => false,
+            "teacher_catchment" => "another",
+            "teacher_catchment_country" => "wonderland",
+            "teacher_catchment_iso_country_code" => nil,
+            "teacher_catchment_synced_to_ecf" => false,
+            "training_status" => nil,
+            "ukprn" => nil,
+            "number_of_pupils" => 0,
+            "primary_establishment" => false,
+            "tsf_primary_eligibility" => false,
+            "tsf_primary_plus_eligibility" => false,
+            "user_id" => user.id,
+            "works_in_nursery" => nil,
+            "works_in_childcare" => true,
+            "works_in_school" => false,
+            "work_setting" => "early_years_or_childcare",
+            "raw_application_data" => store.except("current_user"),
+            "referred_by_return_to_teaching_adviser" => "no",
+            "accepted_at" => nil,
+          })
+        end
+      end
     end
   end
 end

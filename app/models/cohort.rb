@@ -26,8 +26,4 @@ class Cohort < ApplicationRecord
       .order(start_year: :desc)
       .first!
   end
-
-  def self.active_registration_cohort
-    where(registration_start_date: ..Date.current).order(start_year: :desc).first.presence || current
-  end
 end

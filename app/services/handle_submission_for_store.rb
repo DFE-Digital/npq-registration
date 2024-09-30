@@ -43,7 +43,7 @@ class HandleSubmissionForStore
         application.update!(
           teacher_catchment_country:,
           teacher_catchment_iso_country_code:,
-          cohort:,
+          cohort: Cohort.current,
           lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
         )
       end
@@ -246,9 +246,5 @@ private
       Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
       nil
     end
-  end
-
-  def cohort
-    Cohort.active_registration_cohort
   end
 end
