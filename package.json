@@ -21,7 +21,7 @@
     "isomorphic-fetch": "^3.0.0",
     "mermaid": "^11.2.1",
     "rails-ujs": "^5.2.8",
-    "sass": "^1.79.3",
+    "sass": "^1.79.4",
     "serialize-javascript": "^6.0.2",
     "swagger-ui-dist": "^5.17.14",
     "webpack": "^5.95.0",
