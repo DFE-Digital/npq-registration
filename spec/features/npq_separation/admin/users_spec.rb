@@ -84,7 +84,7 @@ RSpec.feature "User administration", type: :feature do
           expect(summary_card).to have_summary_item("NPQ Course", application.course.name)
           expect(summary_card).to have_summary_item("School URN", application.school.urn)
           expect(summary_card).to have_summary_item("School UKPRN", application.school.ukprn)
-          expect(summary_card).to have_summary_item("Funded Place?", application.funded_place? ? "Yes" : "No")
+          expect(summary_card).to have_summary_item("Funded Place", "")
           expect(summary_card).to have_summary_item("Created At", application.created_at.to_fs(:govuk_short))
           expect(summary_card).to have_summary_item("Updated At", application.updated_at.to_fs(:govuk_short))
         end
