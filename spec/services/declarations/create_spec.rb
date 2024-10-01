@@ -12,7 +12,7 @@ RSpec.describe Declarations::Create, type: :model do
   let(:participant) { application.user }
   let(:participant_id) { participant.ecf_id }
   let(:declaration_type) { "started" }
-  let(:declaration_date) { schedule.applies_from + 1.day }
+  let(:declaration_date) { schedule.applies_from + 1.hour }
   let(:course_identifier) { course.identifier }
   let(:has_passed) { true }
   let(:params) do
@@ -87,7 +87,7 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when the declaration_date is in the past" do
-      before { params[:declaration_date] = 1.day.ago.rfc3339 }
+      before { params[:declaration_date] = 1.hour.ago.rfc3339 }
 
       it { is_expected.to be_valid }
     end
