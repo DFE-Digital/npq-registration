@@ -90,7 +90,7 @@ group :test do
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.0"
-  gem "webmock", "~> 3.23"
+  gem "webmock", "~> 3.24"
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
