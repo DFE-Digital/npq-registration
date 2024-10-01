@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Application do
+  subject { create(:application) }
+
   describe "relationships" do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:course) }
@@ -58,6 +60,26 @@ RSpec.describe Application do
           expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course", :npq_separation)
         end
       end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
+      it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
+
+      it "ensures ecf_id is populated" do
+        application = build(:application, ecf_id: nil)
+        application.valid?
+        expect(application.ecf_id).not_to be_nil
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled off" do
+      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+
+      it { is_expected.not_to validate_presence_of(:ecf_id) }
+      it { is_expected.not_to validate_uniqueness_of(:ecf_id) }
     end
   end
 
