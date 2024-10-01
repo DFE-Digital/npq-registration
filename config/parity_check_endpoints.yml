@@ -1,0 +1,32 @@
+get:
+  "/api/v3/users":
+    paginate: true
+    provider: ambition
+post:
+  "/api/v3/npq-applications/accept":
+    provider: ambition
+    body:
+      data:
+        type: npq-application-accept
+        attributes:
+          schedule_identifier: npq-leadership-spring
+          funded_place: true
+  "/api/v3/participant-declarations":
+    provider: ambition
+    body:
+      data:
+        type: participant-declaration
+        attributes:
+          participant_id: 123
+          declaration_type: started
+          declaration_date: "2024-10-01T10:00:00.000Z"
+          course_identifier: course-identifier
+put:
+  "/api/v3/participants/ecf/123/defer":
+    provider: ambition
+    body:
+      data:
+        type: participant-defer
+        attributes:
+          reason: parental-leave
+          course_identifier: course-identifier

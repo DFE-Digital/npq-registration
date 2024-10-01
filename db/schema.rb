@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_30_122313) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -310,6 +310,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ukprn"], name: "index_local_authorities_on_ukprn"
+  end
+
+  create_table "parity_check_comparisons", force: :cascade do |t|
+    t.string "path", null: false
+    t.string "method", null: false
+    t.integer "ecf_status", null: false
+    t.integer "npq_status", null: false
+    t.boolean "equal", null: false
+    t.string "ecf_response", null: false
+    t.string "npq_response", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "participant_id_changes", force: :cascade do |t|

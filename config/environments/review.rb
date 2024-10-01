@@ -9,5 +9,8 @@ Rails.application.configure do
     api_enabled: true,
     migration_enabled: true,
     ecf_api_disabled: false,
+    ecf_parity_check: {
+      enabled: false,
+    },
   }
 end

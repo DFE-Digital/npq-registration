@@ -178,6 +178,7 @@ GEM
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
+    excon (0.111.0)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.2)
@@ -252,6 +253,7 @@ GEM
     govuk_markdown (2.0.2)
       activesupport
       redcarpet
+    hash_diff (1.1.1)
     hashdiff (1.1.0)
     hashie (5.0.0)
     html-attributes-utils (1.0.2)
@@ -685,6 +687,7 @@ DEPENDENCIES
   devise (~> 4.9)
   dotenv-rails
   email_validator
+  excon
   factory_bot_rails
   faker (~> 3.4)
   flipper (~> 1.2.2)
@@ -694,6 +697,7 @@ DEPENDENCIES
   govuk-components (~> 5.6.1)
   govuk_design_system_formbuilder (~> 5.4.0)
   govuk_markdown
+  hash_diff
   httparty (~> 0.22)
   i18n-debug
   iconv
