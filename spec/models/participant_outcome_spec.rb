@@ -26,7 +26,7 @@ RSpec.describe ParticipantOutcome, type: :model do
 
     let!(:latest_outcome) { create(:participant_outcome) }
 
-    before { travel_to(1.day.ago) { create(:participant_outcome) } }
+    before { travel_to(1.hour.ago) { create(:participant_outcome) } }
 
     it { is_expected.to eq(latest_outcome) }
   end
