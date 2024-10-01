@@ -12,67 +12,7 @@ RSpec.describe Dqt::V1::Teacher do
   let(:response_hash) do
     {
       "trn": trn,
-      "ni_number": "AB123456D",
-      "name": "Mostly Populated",
-      "dob": "1987-12-13",
       "active_alert": active_alert,
-      "state": 0,
-      "state_name": "Active",
-      "qualified_teacher_status": {
-        "name": "Qualified teacher (trained)",
-        "qts_date": "2021-07-05T00:00:00Z",
-        "state": 0,
-        "state_name": "Active",
-      },
-      "induction": {
-        "start_date": "2021-07-01T00:00:00Z",
-        "completion_date": "2021-07-05T00:00:00Z",
-        "status": "Pass",
-        "state": 0,
-        "state_name": "Active",
-      },
-      "initial_teacher_training": {
-        "programme_start_date": "2021-06-27T00:00:00Z",
-        "programme_end_date": "2021-07-04T00:00:00Z",
-        "programme_type": "Overseas Trained Teacher Programme",
-        "result": "Pass",
-        "subject1": "applied biology",
-        "subject2": "applied chemistry",
-        "subject3": "applied computing",
-        "qualification": "BA (Hons)",
-        "state": 0,
-        "state_name": "Active",
-      },
-      "qualifications": [
-        {
-          "name": "Higher Education",
-          "date_awarded": nil,
-        },
-        {
-          "name": "NPQH",
-          "date_awarded": "2021-07-05T00:00:00Z",
-        },
-        {
-          "name": "Mandatory Qualification",
-          "date_awarded": nil,
-        },
-        {
-          "name": "HLTA",
-          "date_awarded": nil,
-        },
-        {
-          "name": "NPQML",
-          "date_awarded": "2021-07-05T00:00:00Z",
-        },
-        {
-          "name": "NPQSL",
-          "date_awarded": "2021-07-04T00:00:00Z",
-        },
-        {
-          "name": "NPQEL",
-          "date_awarded": "2021-07-04T00:00:00Z",
-        },
-      ],
     }
   end
 

@@ -117,7 +117,13 @@ RSpec.describe ParticipantValidator do
     end
 
     context "when ecf_api_disabled is true" do
-      before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
+      before do
+        allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
+
+        allow(Dqt::V1::Teacher).to receive(:validate_trn)
+          .with(trn:, birthdate: date_of_birth.iso8601, nino: national_insurance_number)
+          .and_return(body)
+      end
 
       context "when matching trn found" do
         let(:body) do
@@ -125,12 +131,6 @@ RSpec.describe ParticipantValidator do
             "trn" => trn,
             "active_alert" => false,
           }
-        end
-
-        before do
-          allow(Dqt::V1::Teacher).to receive(:validate_trn)
-            .with(trn:, birthdate: date_of_birth.iso8601, nino: national_insurance_number)
-            .and_return(body)
         end
 
         it "returns record with matching trn" do
@@ -147,12 +147,6 @@ RSpec.describe ParticipantValidator do
           }
         end
 
-        before do
-          allow(Dqt::V1::Teacher).to receive(:validate_trn)
-            .with(trn:, birthdate: date_of_birth.iso8601, nino: national_insurance_number)
-            .and_return(body)
-        end
-
         it "returns record with diffrent trn" do
           expect(subject.trn).to be_present
           expect(subject.trn).not_to eql(trn)
@@ -161,11 +155,7 @@ RSpec.describe ParticipantValidator do
       end
 
       context "when no record could be found" do
-        before do
-          allow(Dqt::V1::Teacher).to receive(:validate_trn)
-            .with(trn:, birthdate: date_of_birth.iso8601, nino: national_insurance_number)
-            .and_return(nil)
-        end
+        let(:body) { nil }
 
         it "returns nil" do
           expect(subject).to be_nil
