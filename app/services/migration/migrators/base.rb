@@ -3,6 +3,8 @@ module Migration::Migrators
     include ActiveModel::Model
     include ActiveModel::Attributes
 
+    INFRA_WORKER_COUNT = 30
+
     attribute :worker
 
     class << self
@@ -48,7 +50,8 @@ module Migration::Migrators
       end
 
       def records_per_worker
-        5_000
+        # By default ensure all workers are exercised.
+        [1, (record_count / INFRA_WORKER_COUNT.to_f).ceil].max
       end
     end
 

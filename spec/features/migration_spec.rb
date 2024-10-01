@@ -68,7 +68,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
 
         click_button "Run migration"
 
-        within ".data-migration-lead_provider" do
+        within first(".data-migration-lead_provider") do
           expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Lead provider")
           expect(page).to have_css(".govuk-task-list__status", text: "Pending")
         end
@@ -108,7 +108,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
 
         click_button "Run migration"
 
-        within ".data-migration-cohort" do
+        within first(".data-migration-cohort") do
           expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Cohort")
           expect(page).to have_css(".govuk-task-list__status", text: "Pending")
         end
@@ -154,7 +154,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
 
         click_button "Run migration"
 
-        within ".data-migration-statement" do
+        within first(".data-migration-statement") do
           expect(page).to have_css(".govuk-task-list__name-and-hint", text: "Statement")
           expect(page).to have_css(".govuk-task-list__status", text: "Pending")
         end
@@ -197,7 +197,7 @@ RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :fea
 
         click_button "Run migration"
 
-        within ".data-migration-user" do
+        within first(".data-migration-user") do
           expect(page).to have_css(".govuk-task-list__name-and-hint", text: "User")
           expect(page).to have_css(".govuk-task-list__status", text: "Pending")
         end

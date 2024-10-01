@@ -12,6 +12,7 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   let(:ecf_class) { ecf_resource1.class }
   let(:records_per_worker) { 3 }
   let(:model_name) { model.to_s }
+  let(:records_per_worker_divider) { 1 }
 
   before do
     create_npq_resource(ecf_resource1)
@@ -62,9 +63,36 @@ RSpec.shared_examples "a migrator" do |model, dependencies|
   end
 
   describe ".records_per_worker" do
+    before do
+      allow(described_class).to receive(:records_per_worker).and_call_original
+      allow(described_class).to receive(:record_count).and_return(record_count)
+    end
+
     subject { described_class.records_per_worker }
 
-    it { is_expected.to eq(records_per_worker) }
+    context "when the record count is zero" do
+      let(:record_count) { 0 }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context "when the record count is less than the number of workers" do
+      let(:record_count) { described_class::INFRA_WORKER_COUNT - 1 }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context "when the record count is equal to the number of workers" do
+      let(:record_count) { described_class::INFRA_WORKER_COUNT }
+
+      it { is_expected.to eq(1) }
+    end
+
+    context "when the record count is greater than the number of workers" do
+      let(:record_count) { described_class::INFRA_WORKER_COUNT * 2 }
+
+      it { is_expected.to eq(2 / records_per_worker_divider) }
+    end
   end
 
   describe ".number_of_workers" do

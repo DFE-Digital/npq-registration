@@ -16,6 +16,10 @@ module Migration::Migrators
       def dependencies
         %i[cohort application lead_provider course user]
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call

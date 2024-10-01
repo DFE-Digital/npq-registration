@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::StatementItem do
   it_behaves_like "a migrator", :statement_item, %i[statement declaration] do
+    let(:records_per_worker_divider) { 2 }
+
     def create_ecf_resource
       create(:ecf_migration_statement_line_item)
     end
