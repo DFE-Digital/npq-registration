@@ -12,6 +12,7 @@ module Migration
     scope :complete, -> { where.not(completed_at: nil) }
     scope :incomplete, -> { where(completed_at: nil) }
     scope :queued, -> { where.not(queued_at: nil) }
+    scope :failed, -> { where.not(failure_count: 0) }
 
     def percentage_migrated_successfully
       return 0 unless processed_count&.positive?

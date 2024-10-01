@@ -179,6 +179,10 @@ aks-console: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails c"
 
+aks-runner: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
+
 aks-ssh: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh
