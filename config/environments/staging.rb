@@ -8,7 +8,7 @@ Rails.application.configure do
   config.npq_separation = {
     admin_portal_enabled: true,
     api_enabled: true,
-    migration_enabled: true,
+    migration_enabled: false,
     ecf_api_disabled: false,
   }
 end
