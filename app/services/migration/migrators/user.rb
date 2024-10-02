@@ -34,34 +34,40 @@ module Migration::Migrators
       migrate(self.class.ecf_users) do |ecf_user|
         user = ::Migration::Users::Creator.new(ecf_user).find_or_initialize
 
-        application_trns = validated_application_trns(ecf_user)
-        raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, ecf_user)
-        ecf_trn = ecf_user.teacher_profile&.trn || application_trns.last
+        application_trns_by_verified = application_trns_by_verified(ecf_user)
+
+        raise_if_multiple_verified_application_trns_and_no_teacher_profile_trn!(application_trns_by_verified[true], ecf_user)
+        ecf_verified_trn = ecf_user.teacher_profile&.trn || application_trns_by_verified[true]&.first
+        ecf_unverified_trn = application_trns_by_verified[false]&.first
 
         npq_application = most_recent_created_npq_application(ecf_user)
         email = npq_application&.participant_identity&.email
 
         user.update!(
-          trn: ecf_trn || user.trn,
+          trn: ecf_verified_trn || ecf_unverified_trn || user.trn,
           full_name: ecf_user.full_name || user.full_name,
           email:,
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application.nino || user.national_insurance_number,
           active_alert: npq_application.active_alert || user.active_alert,
-          trn_verified: ecf_trn.present? || user&.trn_verified,
+          trn_verified: ecf_verified_trn.present? || (ecf_unverified_trn.blank? && user&.trn_verified),
         )
       end
     end
 
   private
 
-    def validated_application_trns(ecf_user)
+    def application_trns_by_verified(ecf_user)
       ecf_user.npq_applications
-        .where(teacher_reference_number_verified: true)
-        .pluck(:teacher_reference_number)
-        .compact
+        .order(created_at: :desc)
+        .where.not(teacher_reference_number: nil)
+        .pluck(:teacher_reference_number_verified, :teacher_reference_number)
         .uniq
+        .each_with_object({}) do |(verified, trn), hash|
+          hash[verified] ||= []
+          hash[verified] << trn
+        end
     end
 
     def most_recent_created_npq_application(ecf_user)
@@ -74,10 +80,10 @@ module Migration::Migrators
         .first
     end
 
-    def raise_if_multiple_application_trns_and_no_teacher_profile_trn!(application_trns, user)
-      return if application_trns.size < 2 || user.teacher_profile&.trn
+    def raise_if_multiple_verified_application_trns_and_no_teacher_profile_trn!(verified_application_trns, user)
+      return if !verified_application_trns || verified_application_trns.size < 2 || user.teacher_profile&.trn
 
-      user.errors.add(:base, "There are multiple different TRNs from NPQ applications")
+      user.errors.add(:base, "There are multiple different, verified TRNs from NPQ applications")
       raise ActiveRecord::RecordInvalid, user
     end
   end
