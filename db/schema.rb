@@ -149,10 +149,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
     t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.boolean "special_course", default: false, null: false
-    t.uuid "ecf_id"
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id"
+    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id", unique: true
   end
 
   create_table "contracts", force: :cascade do |t|
