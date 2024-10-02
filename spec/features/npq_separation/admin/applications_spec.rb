@@ -80,9 +80,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     user = applications_in_order.first.user
 
-    click_link(user.full_name)
-
-    expect(page).to have_css("h1", text: user.full_name)
+    expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
   end
 
   scenario "viewing school details" do

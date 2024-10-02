@@ -2,6 +2,21 @@ require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
   include GovukComponentsHelper
+
+  shared_examples "boolean tag" do
+    it "is a red tag with 'No' when bool is false" do
+      expect(boolean_red_green_tag(false)).to have_css("strong.govuk-tag.govuk-tag--red", text: "No")
+    end
+
+    it "is a green tag with 'Yes' when bool is true" do
+      expect(boolean_red_green_tag(true)).to have_css("strong.govuk-tag.govuk-tag--green", text: "Yes")
+    end
+
+    it "allows custom text to be set" do
+      expect(boolean_red_green_tag(true, "Totally")).to have_css("strong.govuk-tag", text: "Totally")
+    end
+  end
+
   describe "#show_tracking_pixels?" do
     let(:cookie_name) { "consented-to-cookies" }
 
@@ -42,16 +57,14 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#boolean_red_green_tag" do
-    it "is a red tag with 'No' when bool is false" do
-      expect(boolean_red_green_tag(false)).to have_css("strong.govuk-tag.govuk-tag--red", text: "No")
-    end
+    include_examples "boolean tag"
+  end
 
-    it "is a green tag with 'Yes' when bool is true" do
-      expect(boolean_red_green_tag(true)).to have_css("strong.govuk-tag.govuk-tag--green", text: "Yes")
-    end
+  describe "#boolean_red_green_nil_tag" do
+    include_examples "boolean tag"
 
-    it "allows custom text to be set" do
-      expect(boolean_red_green_tag(true, "Totally")).to have_css("strong.govuk-tag", text: "Totally")
+    it "returns an empty string when bool is nil" do
+      expect(boolean_red_green_nil_tag(nil)).to eq("")
     end
   end
 end

@@ -24,6 +24,12 @@ module ApplicationHelper
     govuk_tag(text:, colour:)
   end
 
+  def boolean_red_green_nil_tag(bool, text = nil)
+    return "" if bool.nil?
+
+    boolean_red_green_tag(bool, text)
+  end
+
   def boolean_tag(bool)
     bool ? "Yes" : "No"
   end
