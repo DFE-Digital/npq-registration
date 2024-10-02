@@ -29,6 +29,7 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
       travel_to(1.day.ago) { create(:data_migration) }
       travel_to(3.days.ago) { create(:data_migration, :completed) }
       travel_to(5.days.ago) { create(:data_migration, :queued) }
+      travel_to(7.days.ago) { create(:data_migration, :with_failures) }
       create(:data_migration)
     end
 
@@ -44,6 +45,10 @@ RSpec.describe Migration::DataMigration, :in_memory_rails_cache, type: :model do
 
     describe ".queued" do
       it { expect(described_class.queued).to eq(described_class.where.not(queued_at: nil)) }
+    end
+
+    describe ".failed" do
+      it { expect(described_class.failed).to eq(described_class.where.not(failure_count: 0)) }
     end
   end
 

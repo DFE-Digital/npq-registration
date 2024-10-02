@@ -1,0 +1,59 @@
+name: "Report migration results"
+
+on:
+  schedule:
+    - cron: "0 8 * * *" # Run at 8am, daily
+
+jobs:
+  report_results:
+    name: "Report migration results"
+    env:
+      GOVUK_NOTIFY_API_KEY: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout Code
+
+      - name: Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ inputs.azure-credentials }}
+
+      - name: Check for data migration failures
+        shell: bash
+        run: |
+          ANY_FAILURES=$(make ci migration aks-runner code="puts Migration::DataMigration.failed.any?")
+          echo "Failed data migrations? $FAILURES"
+
+          if [[ "$ANY_FAILURES" == "true" ]]; then
+            exit 1
+          fi
+
+      - name: Notify Slack channel of success
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: CI Deployment
+          SLACK_TITLE: Data migration success!
+          SLACK_MESSAGE: No failures were detected in the nightly data migration
+          SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
+          SLACK_COLOR: success
+          SLACK_FOOTER: Sent from report-migration-results workflow
+
+      - name: Retrieve failure details
+        if: failure()
+        shell;: bash
+        run: |
+          FAILURES=$(make ci migration aks-runner code="puts Migration::DataMigration.failed.map { |m| \"#{m.name} - #{m.percentage_migrated_successfully}%\" }.join(\"\n\")")
+          echo "Failed data migrations:\n $FAILURES"
+
+      - name: Notify Slack channel of failures
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: CI Deployment
+          SLACK_TITLE: Data migration failure!
+          SLACK_MESSAGE: "$FAILURES"
+          SLACK_WEBHOOK: ${{ steps.key-vault-secrets.outputs.SLACK-WEBHOOK }}
+          SLACK_COLOR: failure
+          SLACK_FOOTER: Sent from report-migration-results workflow
