@@ -1,6 +1,15 @@
 name: "Report migration results"
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: GitHub environment to report from
+        type: choice
+        default: migration
+        options:
+          - migration
+        required: true
   schedule:
     - cron: "0 8 * * *" # Run at 8am, daily
 
