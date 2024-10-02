@@ -8,29 +8,29 @@
 
     <h2 class="govuk-heading-m">Before you start</h2>
 
-    <p class="govuk-body">
-      You should have already chosen which NPQ you want to do and who your provider is. If you have not chosen
-      yet, <%= govuk_link_to("find out about NPQ courses", "https://www.gov.uk/guidance/national-professional-qualification-npq-courses") %>.
-
+<p class="govuk-body">
+      You’ll need to know which NPQ you want to take and who your provider is. If you have not chosen yet, <%= govuk_link_to("find out about NPQ courses", "https://www.gov.uk/guidance/national-professional-qualification-npq-courses") %>.
     </p>
 
     <p class="govuk-body">
-      You also need a teacher reference number (TRN) to register for an NPQ, even if you’re not a
-      teacher. <%= govuk_link_to("Learn about TRNs", "https://www.gov.uk/guidance/teacher-reference-number-trn") %>
-      including how to request one if you do not have one.
+      You’ll also need a teacher reference number (TRN) to register, even if you’re not a teacher. If you are a teacher, you can find your TRN on your payslip, teaching contract or teachers’ pension records.
     </p>
 
     <p class="govuk-body">
-      If you work in early years or
-      childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %>
-      and get their Ofsted unique reference number (URN) if they have one.
+      If you’ve lost your TRN, you can use the <%= govuk_link_to("Find a lost TRN", "https://find-a-lost-trn.education.gov.uk/start") %> service. If you’ve never had one, use the <%= govuk_link_to("Get a TRN", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn?ffiid=629f122b-54ef-41ca-b3b1-61142854ee11") %> service.
     </p>
 
     <p class="govuk-body">
-      Before registering for an NPQ you’ll be asked to create a DfE Identity account or sign in to your account.
+      If you work in early years or childcare, <%= govuk_link_to("check if your workplace is registered with Ofsted", "https://reports.ofsted.gov.uk/childcare") %> and get their Ofsted unique reference number (URN), if available.
+    </p>
+    
+    <p class="govuk-body">
+      You’ll need to create or sign in to your DfE Identity account.
     </p>
 
-    <p class="govuk-body">By continuing, you agree to our <a class="govuk-link" href="/privacy-policy">privacy notice</a></p>
+    <p class="govuk-body">
+      By continuing, you agree to our <%= govuk_link_to("privacy notice", PRIVACY_NOTICE) %>.
+    </p>
 
     <% if Feature.registration_enabled? %>
       <%=
