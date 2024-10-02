@@ -14,7 +14,8 @@ RSpec.describe Migration::Migrators::Schedule do
       create(:cohort, ecf_id: ecf_resource.cohort_id, start_year: ecf_resource.cohort.start_year)
       create(:course_group, name: :support)
 
-      create(:schedule, ecf_id: ecf_resource.id)
+      # Use relative dates to avoid flakey spec when the two schedule factory dates align.
+      create(:schedule, ecf_id: ecf_resource.id, applies_from: 2.months.ago, applies_to: 1.month.ago)
     end
 
     def setup_failure_state

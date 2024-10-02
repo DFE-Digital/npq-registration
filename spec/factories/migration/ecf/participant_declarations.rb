@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :ecf_migration_participant_declaration, class: "Migration::Ecf::ParticipantDeclaration" do
-    declaration_date { 1.day.ago }
+    declaration_date { 1.hour.ago }
     state { Declaration.states.keys.sample }
     declaration_type { Declaration.declaration_types.keys.sample }
     type { "ParticipantDeclaration::NPQ" }

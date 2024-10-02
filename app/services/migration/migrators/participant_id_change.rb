@@ -18,10 +18,6 @@ module Migration::Migrators
           .joins(:user)
           .where(user: { id: User.ecf_users.pluck(:id) })
       end
-
-      def records_per_worker
-        1_000
-      end
     end
 
     def call

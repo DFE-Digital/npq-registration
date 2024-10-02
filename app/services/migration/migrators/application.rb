@@ -45,13 +45,21 @@ module Migration::Migrators
           .joins(:participant_identity)
           .includes(:user, profile: :schedule)
       end
+
+      def records_per_worker
+        (super / 2.0).ceil
+      end
     end
 
     def call
       run_once { report_applications_not_in_ecf_as_failures }
 
+      applications_by_ecf_id = ::Application.where(ecf_id: self.class.ecf_npq_applications.pluck(:id)).index_by(&:ecf_id)
+
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
-        application = ::Application.find_by!(ecf_id: ecf_npq_application.id)
+        application = applications_by_ecf_id[ecf_npq_application.id]
+
+        raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
 
         ensure_relationships_are_consistent!(ecf_npq_application, application)
 

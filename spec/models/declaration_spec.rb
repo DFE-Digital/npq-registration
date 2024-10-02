@@ -26,7 +26,7 @@ RSpec.describe Declaration, type: :model do
       end
 
       it "has an error on update" do
-        subject.declaration_date = 1.day.ago
+        subject.declaration_date = Time.zone.now
         expect(subject.save).to be_truthy
 
         subject.declaration_date = 1.day.from_now
@@ -353,7 +353,7 @@ RSpec.describe Declaration, type: :model do
       let(:course_identifier) { completed_declaration.course_identifier }
       let(:completed_declaration) { create(:declaration, :completed, :payable) }
       let(:course) { completed_declaration.course }
-      let(:older_completed_declaration) { travel_to(1.day.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
+      let(:older_completed_declaration) { travel_to(1.hour.ago) { create(:declaration, :completed, :payable, course:, lead_provider:) } }
 
       before do
         # Not a completed declaration.
