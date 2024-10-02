@@ -117,45 +117,47 @@ RSpec.describe ParticipantValidator do
     end
 
     context "when ecf_api_disabled is true" do
+      let(:total_matched) { 3 }
+      let(:body) do
+        {
+          "trn" => trn,
+          "active_alert" => true,
+        }
+      end
+      let(:dqt_result) do
+        OpenStruct.new(
+          dqt_record: Dqt::TeacherRecord.new(body),
+          total_matched:,
+        )
+      end
+
       before do
         allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
 
-        allow(Dqt::V1::Teacher).to receive(:validate_trn)
-          .with(trn:, birthdate: date_of_birth.iso8601, nino: national_insurance_number)
-          .and_return(body)
+        service = instance_double(Dqt::RecordCheck)
+        allow(service).to receive(:call).and_return(dqt_result)
+
+        allow(Dqt::RecordCheck).to receive(:new)
+          .with(
+            trn:,
+            full_name:,
+            date_of_birth: date_of_birth.iso8601,
+            nino: national_insurance_number,
+            check_first_name_only: true,
+          ).and_return(service)
       end
 
-      context "when matching trn found" do
-        let(:body) do
-          {
-            "trn" => trn,
-            "active_alert" => false,
-          }
-        end
+      context "when total_matched is 3" do
+        let(:total_matched) { 3 }
 
-        it "returns record with matching trn" do
+        it "returns teacher record" do
           expect(subject.trn).to eq(trn)
-          expect(subject.active_alert).to be(false)
+          expect(subject.active_alert).to be(true)
         end
       end
 
-      context "when different trn found by fuzzy matching" do
-        let(:body) do
-          {
-            "trn" => (trn.to_i + 1).to_s,
-            "active_alert" => false,
-          }
-        end
-
-        it "returns record with diffrent trn" do
-          expect(subject.trn).to be_present
-          expect(subject.trn).not_to eql(trn)
-          expect(subject.active_alert).to be_falsey
-        end
-      end
-
-      context "when no record could be found" do
-        let(:body) { nil }
+      context "when total_matched is 2" do
+        let(:total_matched) { 2 }
 
         it "returns nil" do
           expect(subject).to be_nil

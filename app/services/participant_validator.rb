@@ -42,8 +42,10 @@ private
   end
 
   def call_with_dqt
-    record = Dqt::V1::Teacher.validate_trn(trn:, birthdate: dob_as_string, nino: national_insurance_number)
-    OpenStruct.new(record) if record
+    result = Dqt::RecordCheck.new(**payload.merge(check_first_name_only: true)).call
+    if result.total_matched >= 3
+      result.dqt_record
+    end
   end
 
   def call_with_ecf
