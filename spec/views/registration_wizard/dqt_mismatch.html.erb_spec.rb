@@ -30,7 +30,7 @@ RSpec.describe "registration_wizard/dqt_mismatch.html.erb", type: :view do
       assign(:wizard, wizard)
 
       render
-      expect(rendered).not_to have_content("entering your National Insurance number")
+      expect(rendered).not_to have_content("you have not entered your National Insurance number")
     end
   end
 

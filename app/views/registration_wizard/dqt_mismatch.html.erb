@@ -41,9 +41,16 @@
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
+  <% if @wizard.store["national_insurance_number"].present? %>
     <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
     <li>your surname differs from Teaching Regulation Agency records</li>
     <li>you mistyped or entered incorrect details</li>
+  <% else %>
+    <li>you have not entered your National Insurance number</li>
+    <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
+    <li>your surname differs from Teaching Regulation Agency records</li>
+    <li>you mistyped or entered incorrect details</li>
+  <% end %>
   </ul>
 
   <h2 class="govuk-heading-m">Next steps</h2>
