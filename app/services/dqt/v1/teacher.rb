@@ -7,7 +7,7 @@ module Dqt
       base_uri ENV["DQT_API_URL"]
       headers "Authorization" => "Bearer #{ENV["DQT_API_KEY"]}"
 
-      def self.validate_trn(trn:, birthdate:, nino: nil)
+      def self.find(trn:, birthdate:, nino: nil)
         path = "/v1/teachers/#{trn}"
         query = {
           birthdate:,
@@ -17,7 +17,14 @@ module Dqt
         response = get(path, query:)
 
         if response.success?
-          response.slice("trn", "active_alert")
+          response.slice(
+            "trn",
+            "state_name",
+            "name",
+            "dob",
+            "ni_number",
+            "active_alert",
+          )
         end
       end
     end

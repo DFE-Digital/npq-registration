@@ -12,7 +12,11 @@ RSpec.describe Dqt::V1::Teacher do
   let(:response_hash) do
     {
       "trn": trn,
+      "ni_number": "AB123456D",
+      "name": "Mostly Populated",
+      "dob": "1987-12-13",
       "active_alert": active_alert,
+      "state_name": "Active",
     }
   end
 
@@ -55,21 +59,26 @@ RSpec.describe Dqt::V1::Teacher do
       .to_return(status: 200, body: response_hash.to_json, headers: {})
   end
 
-  describe ".validate_trn" do
+  describe ".find" do
     it "returns teacher record" do
       stub_api_request
 
-      record = subject.validate_trn(trn:, birthdate:)
+      record = subject.find(trn:, birthdate:)
 
       expect(record["trn"]).to eq(trn)
       expect(record["active_alert"]).to be(true)
+
+      expect(record["ni_number"]).to eq("AB123456D")
+      expect(record["name"]).to eq("Mostly Populated")
+      expect(record["dob"]).to eq("1987-12-13")
+      expect(record["state_name"]).to eq("Active")
     end
 
     context "when record does not exist" do
       it "returns nil" do
         stub_api_404_request
 
-        record = subject.validate_trn(trn:, birthdate:)
+        record = subject.find(trn:, birthdate:)
 
         expect(record).to be_nil
       end
@@ -81,7 +90,7 @@ RSpec.describe Dqt::V1::Teacher do
       it "returns correct record" do
         stub_api_different_record_request
 
-        record = subject.validate_trn(trn: incorrect_trn, birthdate:, nino:)
+        record = subject.find(trn: incorrect_trn, birthdate:, nino:)
 
         expect(record["trn"]).to eql(trn)
         expect(record["active_alert"]).to be(false)
