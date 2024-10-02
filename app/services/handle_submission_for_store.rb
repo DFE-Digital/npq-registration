@@ -9,7 +9,7 @@ class HandleSubmissionForStore
 
   def call
     ActiveRecord::Base.transaction do
-      user.applications.create!(
+      application = user.applications.create!(
         course_id: course.id,
         lead_provider_id: store["lead_provider_id"],
         private_childcare_provider: private_childcare_provider_urn.present? && PrivateChildcareProvider.find_by(provider_urn: private_childcare_provider_urn),
@@ -19,7 +19,7 @@ class HandleSubmissionForStore
         eligible_for_funding: eligible_for_funding?,
         funding_eligiblity_status_code:,
         funding_choice:,
-        teacher_catchment: store["teacher_catchment"],
+        teacher_catchment:,
         teacher_catchment_country: store["teacher_catchment_country"].presence,
         works_in_school: store["works_in_school"] == "yes",
         employer_name:,
@@ -38,6 +38,15 @@ class HandleSubmissionForStore
         referred_by_return_to_teaching_adviser: store["referred_by_return_to_teaching_adviser"],
         raw_application_data: raw_application_data.except("current_user"),
       )
+
+      if Feature.ecf_api_disabled?
+        application.update!(
+          teacher_catchment_country:,
+          teacher_catchment_iso_country_code:,
+          cohort: Cohort.current,
+          lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
+        )
+      end
 
       enqueue_job
     end
@@ -207,5 +216,35 @@ private
 
   def user
     @user ||= store["current_user"]
+  end
+
+  def uk_country
+    @uk_country ||= ISO3166::Country.find_country_by_any_name("United Kingdom")
+  end
+
+  def teacher_catchment_country
+    return uk_country.iso_short_name if in_uk_catchement_area?
+
+    store["teacher_catchment_country"]
+  end
+
+  def teacher_catchment
+    store["teacher_catchment"]
+  end
+
+  def in_uk_catchement_area?
+    teacher_catchment.in?(Application::UK_CATCHMENT_AREA)
+  end
+
+  def teacher_catchment_iso_country_code
+    return if teacher_catchment_country.blank?
+    return uk_country.alpha3 if in_uk_catchement_area?
+
+    if (country = ISO3166::Country.find_country_by_any_name(teacher_catchment_country))
+      country.alpha3
+    else
+      Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
+      nil
+    end
   end
 end

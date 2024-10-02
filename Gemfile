@@ -7,6 +7,7 @@ gem "activerecord-session_store"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
+gem "countries"
 gem "cssbundling-rails", "~> 1.4"
 gem "daemons"
 gem "delayed_cron_job"
