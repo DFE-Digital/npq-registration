@@ -41,16 +41,12 @@
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
-  <% if @wizard.store["national_insurance_number"].present? %>
+    <% unless @wizard.store["national_insurance_number"].present? %>
+      <li>you have not entered your National Insurance number</li>
+    <% end %>
     <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
     <li>your surname differs from Teaching Regulation Agency records</li>
     <li>you mistyped or entered incorrect details</li>
-  <% else %>
-    <li>you have not entered your National Insurance number</li>
-    <li>you’ve abbreviated your first name, for example ‘Rob’ for ‘Robert’</li>
-    <li>your surname differs from Teaching Regulation Agency records</li>
-    <li>you mistyped or entered incorrect details</li>
-  <% end %>
   </ul>
 
   <h2 class="govuk-heading-m">Next steps</h2>
@@ -60,14 +56,11 @@
   </p>
 
   <ul class="govuk-list govuk-list--bullet">
-  <% if @wizard.store["national_insurance_number"].present? %>
+    <% unless @wizard.store["national_insurance_number"].present? %>
+      <li>enter your National Insurance number</li>
+    <% end %>
     <li>check your TRN is correct using the <%= govuk_link_to("Find a lost TRN", "https://find-a-lost-trn.education.gov.uk/start") %> service</li>
     <li>use the <%= govuk_link_to("Get a TRN", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn") %> service if you’ve never received a TRN</li>
-  <% else %>
-    <li>enter your National Insurance number</li>
-    <li>check your TRN is correct using the <%= govuk_link_to("Find a lost TRN", "https://find-a-lost-trn.education.gov.uk/start") %> service</li>
-    <li>use the <%= govuk_link_to("Get a TRN", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn") %> service if you’ve never received a TRN</li>
-  <% end %>
   </ul>
 
   <p class="govuk-body">
