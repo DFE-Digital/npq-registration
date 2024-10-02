@@ -71,7 +71,7 @@ RSpec.feature "User administration", type: :feature do
     end
 
     scenario "shows a summary of each user application" do
-      applications = 2.times.map { create(:application, user:) }
+      applications = %i[headship senco].map { create(:application, user:, course: create(:course, _1)) }
       visit npq_separation_admin_user_path(user)
 
       expect(page).to have_css("h1", text: "Applications")
