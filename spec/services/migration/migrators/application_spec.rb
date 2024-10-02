@@ -33,6 +33,7 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.attributes).to include(ecf_resource1.attributes.slice(*described_class::ATTRIBUTES))
         expect(application.training_status).to eq(ecf_resource1.profile.training_status)
         expect(application.ukprn).to eq(ecf_resource1.school_ukprn)
+        expect(application.user.ecf_id).to eq(ecf_resource1.user.id)
       end
 
       it "sets the schedule from the ECF NPQApplication on the NPQ application" do
@@ -87,12 +88,6 @@ RSpec.describe Migration::Migrators::Application do
         instance.call
 
         expect(application.reload.course.ecf_id).to eq(ecf_resource1.npq_course.id)
-      end
-
-      it "records a failure when the user in NPQ reg does not match the user in ECF" do
-        Application.find_by!(ecf_id: ecf_resource1.id).update!(user: create(:user))
-        instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /User in ECF is different/)
       end
 
       it "records a failure when the schedule cannot be found" do

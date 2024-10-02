@@ -61,8 +61,6 @@ module Migration::Migrators
 
         raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
 
-        ensure_relationships_are_consistent!(ecf_npq_application, application)
-
         ecf_schedule = ecf_npq_application.profile&.schedule
         application.schedule_id = find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
 
@@ -79,22 +77,13 @@ module Migration::Migrators
         application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
         application.ukprn = ecf_npq_application.school_ukprn
 
+        application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
+
         application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
     end
 
   private
-
-    def ensure_relationships_are_consistent!(ecf_npq_application, application)
-      if application.user_id != find_user_id!(ecf_id: ecf_npq_application.user.id)
-        raise_error(ecf_npq_application, message: "User in ECF is different")
-      end
-    end
-
-    def raise_error(application, message:)
-      application.errors.add(:base, message)
-      raise ActiveRecord::RecordInvalid, application
-    end
 
     def report_applications_not_in_ecf_as_failures
       applications_not_in_ecf = ::Application.where.not(ecf_id: self.class.ecf_npq_applications.pluck(:id)).select(:id)
