@@ -112,6 +112,8 @@ en:
               <<: *schedule
             funded_place:
               <<: *funded_place
+            ecf_id:
+              blank: "Enter an ECF ID"
         declaration:
           attributes:
             declaration_date:
@@ -145,7 +147,10 @@ en:
           attributes:
             course_id:
               taken: "Can only have one contract for statement and course"
-
+        user:
+          attributes:
+            ecf_id:
+              blank: "Enter an ECF ID"
   activemodel:
     attributes:
       questionnaires/funding_your_npq:
@@ -575,7 +580,7 @@ en:
     not_eligible_for_funding: "If your provider does not confirm you've started the course before %{date}, your registration will expire. You can register again later."
 
   helpers:
-    warnings: 
+    warnings:
       registration_wizard:
         check_provider_is_open: "Before selecting your provider, you must check that they are currently open to accepting NPQ applications."
     title:
