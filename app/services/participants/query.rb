@@ -60,11 +60,12 @@ module Participants
     end
 
     def order_by
-      sort_order(sort:, model: User, default: { accepted_at: :asc })
+      sort_order(sort:, model: User, default: { created_at: :asc })
     end
 
     def all_participants
       User
+        .distinct
         .joins(:applications).merge(Application.accepted)
         .includes(
           :participant_id_changes,
