@@ -494,4 +494,32 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "#participant_outcome_state" do
+    subject { application.participant_outcome_state }
+
+    let(:application) { create(:application, :accepted, participant_outcome_state: "anything") }
+    let(:declaration) { create(:declaration, :completed, application:) }
+
+    before do
+      create(:participant_outcome, :failed, declaration:, created_at: 1.week.ago)
+      create(:participant_outcome, declaration:)
+    end
+
+    context "when ecf_api_disabled flag is toggled off" do
+      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+
+      it "returns the attribute value" do
+        expect(subject).to eq("anything")
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it "returns the state from latest outcome" do
+        expect(subject).to eq("passed")
+      end
+    end
+  end
 end
