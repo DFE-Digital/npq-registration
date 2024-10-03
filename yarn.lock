@@ -1438,11 +1438,16 @@
   version "4.2.2"
   resolved "https://registry.npmjs.org/@xtuc/long/-/long-4.2.2.tgz"
 
-accessible-autocomplete@^2.0.3, accessible-autocomplete@^2.0.4:
+accessible-autocomplete@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/accessible-autocomplete/-/accessible-autocomplete-2.0.4.tgz"
   dependencies:
     preact "^8.3.1"
+
+accessible-autocomplete@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/accessible-autocomplete/-/accessible-autocomplete-3.0.1.tgz#8ddf4934d0b4ba6acb28de486dd505e062cdc86e"
+  integrity sha512-xMshgc2LT5addvvfCTGzIkRrvhbOFeylFSnSMfS/PdjvvvElZkakCwxO3/yJYBWyi1hi3tZloqOJQ5kqqJtH4g==
 
 acorn-import-attributes@^1.9.5:
   version "1.9.5"
