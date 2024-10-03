@@ -371,6 +371,7 @@ RSpec.describe HandleSubmissionForStore do
     context "when External::EcfAPI is disabled" do
       before do
         allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
+        allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true })
       end
 
       let(:store) do
