@@ -157,4 +157,93 @@ RSpec.describe User do
       end
     end
   end
+
+  context "when updating the user with the TRA data" do
+    let(:provider_data) do
+      OpenStruct.new(
+        provider: "example_provider",
+        uid: "example_uid",
+        info: OpenStruct.new(
+          email: "user@example.com",
+          email_verified: true,
+          name: "Example User",
+          trn:,
+        ),
+      )
+    end
+
+    let(:feature_flag_id) { 1 }
+    let(:trn) { "1234567" }
+
+    shared_examples "a TRN updater" do |method_name|
+      context "when TRA provides a TRN" do
+        it "update the user" do
+          described_class.public_send(method_name, provider_data, feature_flag_id:)
+
+          expect(user.trn).to eq "1234567"
+          expect(user.email).to eq "user@example.com"
+          expect(user.full_name).to eq "Example User"
+        end
+      end
+
+      context "when TRA provides a nil TRN" do
+        let(:trn) { nil }
+
+        it "update the user, but keep the TRN unchanged" do
+          original_trn = user.trn
+
+          described_class.public_send(method_name, provider_data, feature_flag_id:)
+
+          expect(user.trn).to eq original_trn
+          expect(user.email).to eq "user@example.com"
+          expect(user.full_name).to eq "Example User"
+        end
+      end
+    end
+
+    describe ".find_or_create_from_tra_data_on_uid" do
+      let(:user) { create(:user, provider: "example_provider", trn: "1020304") }
+
+      before do
+        allow(User).to receive(:find_or_initialize_by).and_return(user)
+      end
+
+      it_behaves_like "a TRN updater", :find_or_create_from_tra_data_on_uid
+    end
+
+    describe ".find_or_create_from_tra_data_on_unclaimed_email" do
+      let(:user) { create(:user, provider: nil, uid: nil, email: "user@example.com", trn: "1020304") }
+
+      before do
+        allow(User).to receive(:find_or_initialize_by).and_return(user)
+      end
+
+      it_behaves_like "a TRN updater", :find_or_create_from_tra_data_on_unclaimed_email
+
+      context "when TRA provides a TRN and user has unclaimed email" do
+        it "updates provider and UID along with TRN" do
+          described_class.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
+
+          expect(user.trn).to eq "1234567"
+          expect(user.email).to eq "user@example.com"
+          expect(user.full_name).to eq "Example User"
+          expect(user.provider).to eq "example_provider"
+          expect(user.uid).to eq "example_uid"
+        end
+      end
+
+      context "when user cannot be saved" do
+        before do
+          allow(user).to receive(:save).and_return(false)
+          allow(Rails.logger).to receive(:info)
+        end
+
+        it "logs the error" do
+          described_class.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
+
+          expect(Rails.logger).to have_received(:info).with(/\[GAI\] User not persisted, .+ trying to reclaim email failed/)
+        end
+      end
+    end
+  end
 end
