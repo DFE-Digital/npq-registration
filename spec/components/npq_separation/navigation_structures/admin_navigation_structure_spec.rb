@@ -12,7 +12,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Finance" => "/npq-separation/admin/finance/statements",
       "Schools" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
-      "Settings" => "#",
+      "Admins" => "/npq-separation/admin/admins",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
         expect(subject[i].name).to eql(name)
