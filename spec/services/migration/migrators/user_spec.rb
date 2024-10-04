@@ -51,42 +51,81 @@ RSpec.describe Migration::Migrators::User do
         )
       end
 
-      it "records a failure when there are multiple, different TRNs for the user's NPQApplications in ECF and no teacher profile TRN" do
-        ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: nil) }
-        create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
-        instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_user, /There are multiple different TRNs from NPQ applications/)
-      end
-
-      it "does not record a failure when there are multiple, different TRNs for the user's NPQApplications in ECF and there is also a teacher profile TRN" do
-        ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: "1234567") }
-        create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
-        instance.call
-        expect(failure_manager).not_to have_received(:record_failure)
-        user = User.find_by(ecf_id: ecf_user.id)
-        expect(user.trn).to eq(ecf_user.teacher_profile.trn)
-        expect(user).to be_trn_verified
-      end
-
-      it "does not record a failure if there are multiple, unverified TRNs for the user's NPQApplications in ECF" do
-        ecf_user = create(:ecf_migration_user, :npq)
-        create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first)
-        instance.call
-        expect(failure_manager).not_to have_received(:record_failure)
-        user = User.find_by(ecf_id: ecf_user.id)
-        expect(user.trn).to eq(ecf_user.teacher_profile.trn)
-        expect(user).to be_trn_verified
-      end
-
-      it "retains the NPQ user TRN if the ECF user does not have a verified TRN" do
-        ecf_user = create(:ecf_migration_user, :npq).tap do |u|
-          u.npq_applications.update!(teacher_reference_number_verified: false)
-          u.teacher_profile.update!(trn: nil)
+      describe "TRN prioritisation" do
+        it "records a failure when there are multiple, different/verified TRNs for the user's NPQApplications in ECF and no teacher profile TRN" do
+          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: nil) }
+          create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
+          instance.call
+          expect(failure_manager).to have_received(:record_failure).with(ecf_user, /There are multiple different, verified TRNs from NPQ applications/)
         end
-        existing_user = create(:user, ecf_id: ecf_user.id, email: ecf_user.email, trn: "123123", trn_verified: true)
-        instance.call
-        expect(failure_manager).not_to have_received(:record_failure)
-        expect(existing_user.reload).to have_attributes(trn: "123123", trn_verified: true)
+
+        it "uses the teacher profile TRN if there are multiple/verified TRNs for the user's NPQApplications in ECF and there is also a teacher profile TRN" do
+          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: "1234567") }
+          create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          user = User.find_by(ecf_id: ecf_user.id)
+          expect(user.trn).to eq(ecf_user.teacher_profile.trn)
+          expect(user).to be_trn_verified
+        end
+
+        it "uses the verified NPQApplication TRN from ECF if there is no teacher profile TRN" do
+          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: nil) }
+          verified_ecf_application = ecf_user.npq_applications.first
+          create(:ecf_migration_npq_application, teacher_reference_number: "765432", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          user = User.find_by(ecf_id: ecf_user.id)
+          expect(user.trn).to eq(verified_ecf_application.teacher_reference_number)
+          expect(user).to be_trn_verified
+        end
+
+        it "uses the verified NPQApplication TRN from ECF (when there are multiple applications with the same verified TRN) if there is no teacher profile TRN" do
+          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: nil) }
+          verified_ecf_application = ecf_user.npq_applications.first
+          create(:ecf_migration_npq_application, teacher_reference_number: verified_ecf_application.teacher_reference_number, teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          user = User.find_by(ecf_id: ecf_user.id)
+          expect(user.trn).to eq(verified_ecf_application.teacher_reference_number)
+          expect(user).to be_trn_verified
+        end
+
+        it "uses the latest unverified NPQApplication TRN from ECF if there is no teacher profile TRN or verified NPQApplication TRN" do
+          ecf_user = create(:ecf_migration_user, :npq).tap do |u|
+            u.teacher_profile.update!(trn: nil)
+            u.npq_applications.update!(teacher_reference_number_verified: false)
+          end
+          latest_unverified_application = travel_to(1.day.from_now) { create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first) }
+          create(:ecf_migration_npq_application, teacher_reference_number: "765432", teacher_reference_number_verified: false, participant_identity: ecf_user.participant_identities.first)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          user = User.find_by(ecf_id: ecf_user.id)
+          expect(user.trn).to eq(latest_unverified_application.teacher_reference_number)
+          expect(user).not_to be_trn_verified
+        end
+
+        it "retains the NPQ user's verified TRN if the ECF user does not have any TRNs" do
+          ecf_user = create(:ecf_migration_user, :npq).tap do |u|
+            u.npq_applications.update!(teacher_reference_number: nil)
+            u.teacher_profile.update!(trn: nil)
+          end
+          existing_user = create(:user, ecf_id: ecf_user.id, email: ecf_user.email, trn: "123123", trn_verified: true)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          expect(existing_user.reload).to have_attributes(trn: "123123", trn_verified: true)
+        end
+
+        it "retains the NPQ user's unverified TRN if the ECF user does not have any TRNs" do
+          ecf_user = create(:ecf_migration_user, :npq).tap do |u|
+            u.npq_applications.update!(teacher_reference_number: nil)
+            u.teacher_profile.update!(trn: nil)
+          end
+          existing_user = create(:user, ecf_id: ecf_user.id, email: ecf_user.email, trn: "332245", trn_verified: false)
+          instance.call
+          expect(failure_manager).not_to have_received(:record_failure)
+          expect(existing_user.reload).to have_attributes(trn: "332245", trn_verified: false)
+        end
       end
 
       context "when there are multiple users with the same ecf_id" do
