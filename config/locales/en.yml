@@ -468,7 +468,7 @@ en:
       update:
         success: Super admin permissions granted to %{email}
         failure: Failed to grant super admin permissions to %{email}, please contact technical support if this problem persists.
-    admins:
+    admins: &admins
       new:
         title: "Add a new admin"
       index:
@@ -575,7 +575,7 @@ en:
     not_eligible_for_funding: "If your provider does not confirm you've started the course before %{date}, your registration will expire. You can register again later."
 
   helpers:
-    warnings: 
+    warnings:
       registration_wizard:
         check_provider_is_open: "Before selecting your provider, you must check that they are currently open to accepting NPQ applications."
     title:
@@ -807,3 +807,18 @@ en:
         national_insurance_number: "National Insurance number (optional)"
 
         date_of_birth: What is your date of birth?
+
+  npq_separation:
+    admin:
+      admins:
+        <<: *admins
+        create:
+          success: Created admin %{email}
+          failure: Failed to create admin for %{email}, please contact technical support if this problem persists.
+        update:
+          success: Super admin permissions granted to %{email}
+          failure: Failed to grant super admin permissions to %{email}, please contact technical support if this problem persists.
+        destroy:
+          forbidden: You cannot remove admin permissions from yourself or another super admin.
+          success: Deleted admin %{email}
+          failure: Failed to remove admin permissions from %{email}, please contact technical support if this problem persists.

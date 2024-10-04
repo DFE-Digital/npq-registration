@@ -20,4 +20,16 @@ module AdminManagementHelper
 
     govuk_link_to(t(".buttons.elevate"), admin_super_admin_path(user), method: :patch)
   end
+
+  def npq_separation_destroy_admin_cell_contents(admin)
+    return "" if admin.super_admin?
+
+    govuk_button_link_to(t(".buttons.delete"), npq_separation_admin_admin_path(admin), method: :delete, warning: true)
+  end
+
+  def npq_separation_elevate_to_super_admin_cell_contents(admin)
+    return "" if admin.super_admin?
+
+    govuk_link_to(t(".buttons.elevate"), npq_separation_admin_admin_path(admin), method: :patch)
+  end
 end

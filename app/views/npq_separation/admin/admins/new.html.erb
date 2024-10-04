@@ -1,0 +1,22 @@
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: :back
+  ) %>
+<% end %>
+
+<h1 class="govuk-heading-l"><%= t(".title") %></h1>
+
+<%= form_with model: @admin, url: npq_separation_admin_admins_path do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_email_field :email,
+                          label: { text: "Email address" },
+                          width: "three-quarters" %>
+
+  <%= f.govuk_email_field :full_name,
+                          label: { text: "Full name" },
+                          width: "three-quarters" %>
+
+  <%= f.govuk_submit "Add admin" %>
+<% end %>

@@ -244,7 +244,7 @@ Rails.application.routes.draw do
         end
 
         resources :lead_providers, only: %i[index show], path: "lead-providers"
-        resources :admins, only: %i[index]
+        resources :admins, except: :edit
       end
     end
 

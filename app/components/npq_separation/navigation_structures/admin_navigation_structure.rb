@@ -57,9 +57,9 @@ module NpqSeparation
             prefix: "/npq-separation/admin/lead_providers",
           ) => [],
           Node.new(
-            name: "Settings",
-            href: "#",
-            prefix: "/npq-separation/admin/settings",
+            name: "Admins",
+            href: npq_separation_admin_admins_path,
+            prefix: "/npq-separation/admin/admins",
           ) => [],
         }
       end
