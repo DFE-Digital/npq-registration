@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_01_141442) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -39,6 +39,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
     t.datetime "otp_expires_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
   create_table "api_tokens", force: :cascade do |t|

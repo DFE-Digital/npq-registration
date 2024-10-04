@@ -5,7 +5,8 @@ class Admin < ApplicationRecord
 
   validates :email,
             presence: { message: "Enter an email address" },
-            length: { maximum: 64, message: "Email must be shorter than 64 characters" }
+            length: { maximum: 64, message: "Email must be shorter than 64 characters" },
+            uniqueness: { message: "An admin with this email address already exists" }
 
   # Whether this user has admin access to the feature flagging interface
   def flipper_access?
