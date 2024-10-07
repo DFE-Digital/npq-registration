@@ -232,12 +232,6 @@ RSpec.describe Participants::Query do
 
       subject(:participants) { query.participants }
 
-      before do
-        participant1.applications.first.update!(accepted_at: 1.day.ago)
-        participant2.applications.first.update!(accepted_at: 10.days.ago)
-        participant3.applications.first.update!(accepted_at: 2.days.ago)
-      end
-
       it "by default orders by created_at in ascending order" do
         expect(query.participants).to eq([participant1, participant2, participant3])
       end

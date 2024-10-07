@@ -38,7 +38,7 @@ module ParticipantOutcomes
     end
 
     def all_participant_outcomes
-      ParticipantOutcome.includes(
+      ParticipantOutcome.distinct.includes(
         declaration: {
           lead_provider: {},
           application: %i[course user],

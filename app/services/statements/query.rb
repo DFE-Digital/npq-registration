@@ -6,7 +6,7 @@ module Statements
     attr_reader :scope
 
     def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, state: :ignore, output_fee: true)
-      @scope = Statement.includes(:cohort)
+      @scope = Statement.distinct.includes(:cohort)
 
       where_lead_provider_is(lead_provider)
       where_cohort_start_year_in(cohort_start_years)

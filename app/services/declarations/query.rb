@@ -57,6 +57,7 @@ module Declarations
 
     def all_declarations
       Declaration
+        .distinct
         .includes(
           :cohort,
           :lead_provider,
