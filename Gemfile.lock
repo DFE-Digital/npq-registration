@@ -480,16 +480,16 @@ GEM
       rspec-support (~> 3.13.0)
     rspec-default_http_header (0.0.6)
       rspec-rails (> 3.0)
-    rspec-expectations (3.13.2)
+    rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.1)
+    rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-rails (6.1.4)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      railties (>= 6.1)
+    rspec-rails (7.0.1)
+      actionpack (>= 7.0)
+      activesupport (>= 7.0)
+      railties (>= 7.0)
       rspec-core (~> 3.13)
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
@@ -727,7 +727,7 @@ DEPENDENCIES
   redis
   rouge
   rspec-default_http_header
-  rspec-rails (~> 6.1.4)
+  rspec-rails (~> 7.0.1)
   rspec-sonarqube-formatter
   rswag-specs
   rubocop-govuk
