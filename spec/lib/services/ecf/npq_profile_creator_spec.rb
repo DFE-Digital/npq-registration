@@ -116,7 +116,7 @@ RSpec.describe Ecf::NpqProfileCreator do
       }.to_json
     end
 
-    before do
+    let!(:create_ecf_stub) do
       stub_request(:post, "https://ecf-app.gov.uk/api/v1/npq-profiles")
         .with(
           body: request_body,
@@ -145,6 +145,12 @@ RSpec.describe Ecf::NpqProfileCreator do
             id: "d7236e96-4ff8-4e12-9cf9-7592b9699c94",
           },
         }
+      end
+
+      it "calls ecf to create an application/profile" do
+        subject.call
+
+        expect(create_ecf_stub).to have_been_requested
       end
 
       it "sets application.ecf_id with returned guid" do
@@ -265,10 +271,12 @@ RSpec.describe Ecf::NpqProfileCreator do
     context "when ecf_api_disabled flag is toggled on" do
       let(:response_code) { 200 }
 
-      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.call).to be_nil
+      it "does not call ecf" do
+        subject.call
+
+        expect(create_ecf_stub).not_to have_been_requested
       end
     end
   end

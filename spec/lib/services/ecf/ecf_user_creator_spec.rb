@@ -27,7 +27,7 @@ RSpec.describe Ecf::EcfUserCreator do
       }.to_json
     end
 
-    before do
+    let!(:create_ecf_stub) do
       stub_request(:post, "https://ecf-app.gov.uk/api/v1/npq/users")
         .with(
           body: request_body,
@@ -55,6 +55,12 @@ RSpec.describe Ecf::EcfUserCreator do
             id: "93b23032-a82e-4912-aac7-992868af8848",
           },
         }
+      end
+
+      it "calls ecf to create a user" do
+        subject.call
+
+        expect(create_ecf_stub).to have_been_requested
       end
 
       it "sets user.ecf_id with returned guid" do
@@ -171,10 +177,12 @@ RSpec.describe Ecf::EcfUserCreator do
       let(:response_code) { 201 }
       let(:response_body) { "anything" }
 
-      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.call).to be_nil
+      it "does not call ecf" do
+        subject.call
+
+        expect(create_ecf_stub).not_to have_been_requested
       end
     end
   end

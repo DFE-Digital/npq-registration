@@ -48,7 +48,7 @@ class HandleSubmissionForStore
         )
       end
 
-      enqueue_job
+      enqueue_job(application)
     end
   end
 
@@ -166,8 +166,12 @@ private
     end
   end
 
-  def enqueue_job
-    ApplicationSubmissionJob.perform_later(user:, email_template:)
+  def enqueue_job(application)
+    if Feature.ecf_api_disabled?
+      SendApplicationSubmissionEmailJob.perform_later(application:, email_template:)
+    else
+      ApplicationSubmissionJob.perform_later(user:, email_template:)
+    end
   end
 
   def funding_eligibility_service

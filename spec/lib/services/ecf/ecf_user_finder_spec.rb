@@ -6,7 +6,7 @@ RSpec.describe Ecf::EcfUserFinder do
   let(:user) { User.create!(email: "john.doe@example.com", full_name: "John Doe") }
 
   describe "#call" do
-    before do
+    let!(:get_ecf_stub) do
       stub_request(:get, "https://ecf-app.gov.uk/api/v1/users?filter[email]=john.doe@example.com&page[page]=1&page[per_page]=1")
         .with(
           headers: {
@@ -37,6 +37,12 @@ RSpec.describe Ecf::EcfUserFinder do
         }.to_json
       end
 
+      it "calls ecf to get a user profile" do
+        subject.call
+
+        expect(get_ecf_stub).to have_been_requested
+      end
+
       it "returns the user" do
         object = subject.call
 
@@ -61,10 +67,12 @@ RSpec.describe Ecf::EcfUserFinder do
     context "when ecf_api_disabled flag is toggled on" do
       let(:response_body) { "anything" }
 
-      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(subject.call).to be_nil
+      it "does not call ecf" do
+        subject.call
+
+        expect(get_ecf_stub).not_to have_been_requested
       end
     end
   end

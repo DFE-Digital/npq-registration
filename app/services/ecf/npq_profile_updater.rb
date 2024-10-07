@@ -18,7 +18,7 @@ module Ecf
     end
 
     def tsf_data_field_update
-      return if Rails.application.config.npq_separation[:ecf_api_disabled]
+      return if Feature.ecf_api_disabled?
 
       profile = External::EcfAPI::NpqProfile.find(application.ecf_id).first
       profile.primary_establishment = application.primary_establishment

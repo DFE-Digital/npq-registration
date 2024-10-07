@@ -7,7 +7,7 @@ RSpec.describe Ecf::EcfApplicationSynchronization do
     let(:response_data) { [{ id: get_an_identity_id, type: "application_synchronization", "attributes" => { "id" => get_an_identity_id, "lead_provider_approval_status" => "accepted", "participant_outcome_state" => "passed" } }] }
     let(:success_response) { instance_double(ActionDispatch::Response, is_a?: Net::HTTPSuccess, body: { "data" => response_data }.to_json) }
 
-    before do
+    let!(:get_ecf_stub) do
       stub_request(:get, "https://ecf-app.gov.uk:443/api/v1/npq/application_synchronizations")
       .with(
         headers: {
@@ -59,10 +59,12 @@ RSpec.describe Ecf::EcfApplicationSynchronization do
     end
 
     context "when ecf_api_disabled flag is toggled on" do
-      before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
 
-      it "returns nil" do
-        expect(service.call).to be_nil
+      it "does not call ecf" do
+        service.call
+
+        expect(get_ecf_stub).not_to have_been_requested
       end
     end
   end

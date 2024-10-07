@@ -82,21 +82,6 @@ RSpec.describe Ecf::NpqProfileUpdater do
     }.to_json
   end
 
-  let(:request_body) do
-    {
-      data: {
-        id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
-        type: "npq_profiles",
-        attributes: {
-          eligible_for_funding: true,
-          funding_eligiblity_status_code: "funded",
-          teacher_catchment: new_teacher_catchment,
-          teacher_catchment_country: new_teacher_catchment_country,
-        },
-      },
-    }.to_json
-  end
-
   let(:response_body) do
     {
       data: {
@@ -117,16 +102,68 @@ RSpec.describe Ecf::NpqProfileUpdater do
       )
   end
 
-  it "calls ecf to update the eligible_for_funding attribute" do
-    subject.call
-    expect(update_ecf_stub).to have_been_requested
+  describe ".call" do
+    let(:request_body) do
+      {
+        data: {
+          id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
+          type: "npq_profiles",
+          attributes: {
+            eligible_for_funding: true,
+            funding_eligiblity_status_code: "funded",
+            teacher_catchment: new_teacher_catchment,
+            teacher_catchment_country: new_teacher_catchment_country,
+          },
+        },
+      }.to_json
+    end
+
+    it "calls ecf to update the eligible_for_funding attribute" do
+      subject.call
+
+      expect(update_ecf_stub).to have_been_requested
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it "does not call ecf" do
+        subject.call
+
+        expect(update_ecf_stub).not_to have_been_requested
+      end
+    end
   end
 
-  context "when ecf_api_disabled flag is toggled on" do
-    before { allow(Rails.application.config).to receive(:npq_separation).and_return({ ecf_api_disabled: true }) }
+  describe ".tsf_data_field_update" do
+    let(:request_body) do
+      {
+        data: {
+          id: "a6df7e0b-dff6-46c5-a5ea-9c1145cf96b7",
+          type: "npq_profiles",
+          attributes: {
+            primary_establishment: false,
+            number_of_pupils: 0,
+            tsf_primary_plus_eligibility: false,
+          },
+        },
+      }.to_json
+    end
 
-    it "returns nil" do
-      expect(subject.call).to be_nil
+    it "calls ecf to update the eligible_for_funding attribute" do
+      subject.tsf_data_field_update
+
+      expect(update_ecf_stub).to have_been_requested
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it "does not call ecf" do
+        subject.tsf_data_field_update
+
+        expect(update_ecf_stub).not_to have_been_requested
+      end
     end
   end
 end
