@@ -53,24 +53,50 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     summary_lists = all(".govuk-summary-list")
 
+    expect(page).to have_css("h2", text: "Application details")
+
     within(summary_lists[0]) do |summary_list|
       expect(summary_list).to have_summary_item("Application ID", application.id)
+      expect(summary_list).to have_summary_item("ECF ID", application.ecf_id)
+      expect(summary_list).to have_summary_item("User ID", application.user.id)
       expect(summary_list).to have_summary_item("Email", application.user.email)
+      expect(summary_list).to have_summary_item("TRN", application.user.trn)
+      expect(summary_list).to have_summary_item("TRN validated", "No")
       expect(summary_list).to have_summary_item("Course name", application.course.name)
       expect(summary_list).to have_summary_item("Lead provider name", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Lead provider approval status", application.lead_provider_approval_status.humanize)
-      expect(summary_list).to have_summary_item("Application submitted date", application.created_at.to_fs(:govuk_short))
-      expect(summary_list).to have_summary_item("Last updated at", application.updated_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Created at", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Updated at", application.updated_at.to_fs(:govuk_short))
     end
 
-    expect(page).to have_css("h2", text: "Scholarship funding")
+    expect(page).to have_css("h2", text: "Employment details")
 
     within(summary_lists[1]) do |summary_list|
-      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
-      expect(summary_list).to have_summary_item("Funding eligibility status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("School URN", application.school_urn)
+      expect(summary_list).to have_summary_item("School UKPRN", application.school.ukprn)
+      expect(summary_list).to have_summary_item("Private Childcare Provider URN", "-")
+      expect(summary_list).to have_summary_item("Headteacher status", application.headteacher_status)
       expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
       expect(summary_list).to have_summary_item("Employer name", application.employer_name)
       expect(summary_list).to have_summary_item("Employment role", application.employment_role.humanize)
+      expect(summary_list).to have_summary_item("ITT Lead mentor", application.lead_mentor? ? "Yes" : "No")
+      expect(summary_list).to have_summary_item("ITT provider", application.itt_provider.operating_name)
+      expect(summary_list).to have_summary_item("Country", application.teacher_catchment_country)
+    end
+
+    expect(page).to have_css("h2", text: "Funding eligibility")
+
+    within(summary_lists[2]) do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list).to have_summary_item("Funded place", "")
+      expect(summary_list).to have_summary_item("Funding eligibility status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("Primary establishment", "No")
+      expect(summary_list).to have_summary_item("Number of pupils", application.number_of_pupils)
+      expect(summary_list).to have_summary_item("Targeted support funding primary plus eligibility", "No")
+      expect(summary_list).to have_summary_item("Targeted delivery funding eligibility", "No")
+      expect(summary_list).to have_summary_item("Funding choice", application.funding_choice&.capitalize)
+      expect(summary_list).to have_summary_item("Schedule Cohort", application.cohort.start_year)
+      expect(summary_list).to have_summary_item("Schedule identifier", "-")
       expect(summary_list).to have_summary_item("Notes", "No notes")
     end
   end
