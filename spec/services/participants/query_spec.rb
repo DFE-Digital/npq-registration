@@ -35,6 +35,22 @@ RSpec.describe Participants::Query do
       expect(query.participants).to eq([participant1, participant2])
     end
 
+    context "when participant has multiple associated records" do
+      let(:application1) { create(:application, :accepted, lead_provider:) }
+      let!(:participant1) { application1.user }
+
+      before do
+        create(:participant_id_change, user: participant1, to_participant_id: participant1.ecf_id)
+        create(:participant_id_change, user: participant1, to_participant_id: participant1.ecf_id)
+        create(:application, :accepted, user: participant1, lead_provider:, cohort: application1.cohort)
+        create(:application, :accepted, user: participant1, lead_provider:, cohort: application1.cohort)
+      end
+
+      it "does not return duplicate participants" do
+        expect(query.participants).to contain_exactly(participant1, participant2)
+      end
+    end
+
     describe "filtering" do
       describe "lead provider" do
         context "when a lead provider is supplied" do
@@ -216,14 +232,8 @@ RSpec.describe Participants::Query do
 
       subject(:participants) { query.participants }
 
-      before do
-        participant1.applications.first.update!(accepted_at: 1.day.ago)
-        participant2.applications.first.update!(accepted_at: 10.days.ago)
-        participant3.applications.first.update!(accepted_at: 2.days.ago)
-      end
-
-      it "orders applications by accepted_at in ascending order" do
-        expect(query.participants).to eq([participant2, participant3, participant1])
+      it "by default orders by created_at in ascending order" do
+        expect(query.participants).to eq([participant1, participant2, participant3])
       end
 
       context "when sorting by created at, descending" do

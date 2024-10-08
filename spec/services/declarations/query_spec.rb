@@ -19,6 +19,23 @@ RSpec.describe Declarations::Query do
       expect(query.declarations).to eq([declaration2, declaration3, declaration1])
     end
 
+    context "when declaration has multiple associated records" do
+      let!(:declaration1) { create(:declaration) }
+      let!(:declaration2) { create(:declaration) }
+
+      before do
+        create(:participant_outcome, declaration: declaration1)
+        create(:participant_outcome, declaration: declaration1)
+        create(:statement_item, declaration: declaration1)
+        create(:statement_item, declaration: declaration1)
+      end
+
+      it "does not return duplicate declarations" do
+        query = described_class.new
+        expect(query.declarations).to contain_exactly(declaration1, declaration2)
+      end
+    end
+
     describe "filtering" do
       describe "lead provider" do
         it "filters by lead provider" do
