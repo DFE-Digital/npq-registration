@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Application do
+  subject { create(:application) }
+
   describe "relationships" do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:course) }
@@ -57,6 +59,38 @@ RSpec.describe Application do
 
           expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course", :npq_separation)
         end
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      # TODO: uncomment this when `before_validation` is removed from model, as `before_validation` is adding ecf_id regardless
+      # it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
+
+      it "ensures ecf_id is automatically populated" do
+        application = build(:application, ecf_id: nil)
+        application.valid?
+        expect(application.ecf_id).not_to be_nil
+      end
+
+      it "ensures ecf_id does not change on validation" do
+        ecf_id = SecureRandom.uuid
+        application = build(:application, ecf_id:)
+        application.valid?
+        expect(application.ecf_id).to eq(ecf_id)
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled off" do
+      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+
+      it { is_expected.not_to validate_presence_of(:ecf_id) }
+
+      it "ensures ecf_id is not automatically populated" do
+        application = build(:application, ecf_id: nil)
+        application.valid?
+        expect(application.ecf_id).to be_nil
       end
     end
   end

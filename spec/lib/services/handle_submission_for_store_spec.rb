@@ -393,7 +393,7 @@ RSpec.describe HandleSubmissionForStore do
         expect(stable_as_json(user.applications.last)).to match({
           "course_id" => course.id,
           "schedule_id" => nil,
-          "ecf_id" => nil,
+          "ecf_id" => user.applications.last.ecf_id,
           "eligible_for_funding" => true,
           "employer_name" => nil,
           "employment_type" => nil,
@@ -460,7 +460,7 @@ RSpec.describe HandleSubmissionForStore do
           expect(stable_as_json(user.applications.last)).to match({
             "course_id" => course.id,
             "schedule_id" => nil,
-            "ecf_id" => nil,
+            "ecf_id" => user.applications.last.ecf_id,
             "eligible_for_funding" => false,
             "employer_name" => nil,
             "employment_type" => nil,
@@ -528,7 +528,7 @@ RSpec.describe HandleSubmissionForStore do
           expect(stable_as_json(user.applications.last)).to match({
             "course_id" => course.id,
             "schedule_id" => nil,
-            "ecf_id" => nil,
+            "ecf_id" => user.applications.last.ecf_id,
             "eligible_for_funding" => false,
             "employer_name" => nil,
             "employment_type" => nil,
@@ -606,7 +606,7 @@ RSpec.describe HandleSubmissionForStore do
           expect(stable_as_json(user.applications.last)).to match({
             "course_id" => course.id,
             "schedule_id" => nil,
-            "ecf_id" => nil,
+            "ecf_id" => user.applications.last.ecf_id,
             "eligible_for_funding" => false,
             "employer_name" => nil,
             "employment_type" => nil,

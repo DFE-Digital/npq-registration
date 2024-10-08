@@ -35,8 +35,15 @@ class Application < ApplicationRecord
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
 
   validate :schedule_cohort_matches
+  # TODO: add constraints into the DB after separation
+  validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
 
   after_commit :touch_user_if_changed
+
+  # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
+  before_validation do
+    self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
+  end
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_01_200634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -114,6 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
     t.datetime "accepted_at"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
+    t.index ["ecf_id"], name: "index_applications_on_ecf_id"
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
@@ -149,10 +150,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_18_145749) do
     t.decimal "monthly_service_fee", default: "0.0"
     t.decimal "targeted_delivery_funding_per_participant", default: "100.0"
     t.boolean "special_course", default: false, null: false
-    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "ecf_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id", unique: true
+    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id"
   end
 
   create_table "contracts", force: :cascade do |t|

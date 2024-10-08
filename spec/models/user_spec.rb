@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe User do
+  subject { create(:user) }
+
   describe "relationships" do
     it { is_expected.to have_many(:applications).dependent(:destroy) }
     it { is_expected.to have_many(:ecf_sync_request_logs).dependent(:destroy) }
@@ -10,11 +12,9 @@ RSpec.describe User do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
-
     it { is_expected.to validate_presence_of(:email).on(:npq_separation).with_message("Enter an email address") }
     it { is_expected.to validate_uniqueness_of(:email).on(:npq_separation).case_insensitive.with_message("Email address must be unique") }
     it { is_expected.not_to allow_value("invalid-email").for(:email).on(:npq_separation) }
-
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
 
     it "does not allow a uid to change once set" do
@@ -23,6 +23,38 @@ RSpec.describe User do
 
       expect(user).to be_invalid(:npq_separation)
       expect(user.errors[:uid]).to be_present
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      # TODO: uncomment this when `before_validation` is removed from model, as `before_validation` is adding ecf_id regardless
+      # it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
+
+      it "ensures ecf_id is automatically populated" do
+        user = build(:user, ecf_id: nil)
+        user.valid?
+        expect(user.ecf_id).not_to be_nil
+      end
+
+      it "ensures ecf_id does not change on validation" do
+        ecf_id = SecureRandom.uuid
+        application = build(:application, ecf_id:)
+        application.valid?
+        expect(application.ecf_id).to eq(ecf_id)
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled off" do
+      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+
+      it { is_expected.not_to validate_presence_of(:ecf_id) }
+
+      it "ensures ecf_id is not automatically populated" do
+        application = build(:application, ecf_id: nil)
+        application.valid?
+        expect(application.ecf_id).to be_nil
+      end
     end
   end
 

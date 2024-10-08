@@ -19,6 +19,13 @@ class User < ApplicationRecord
 
   validates :uid, uniqueness: { allow_blank: true }
   validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
+  # TODO: add constraints into the DB after separation
+  validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
+
+  # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
+  before_validation do
+    self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
+  end
 
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
