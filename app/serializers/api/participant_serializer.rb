@@ -104,7 +104,7 @@ module API
         def applications(object, options)
           return Application.none unless options[:lead_provider]
 
-          object.applications.accepted.select { |application| application.lead_provider_id == options[:lead_provider].id }
+          object.applications.select { |application| application.lead_provider_approval_status == "accepted" && application.lead_provider_id == options[:lead_provider].id }
         end
 
         def withdrawal(application:, lead_provider:)
