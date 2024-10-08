@@ -59,10 +59,10 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
         allow(dataset).to receive(:table).and_return(table)
       end
 
-      it "enqueues a job" do
+      it "enqueues a job with the correct arguments" do
         expect {
-          described_class.perform_later
-        }.to have_enqueued_job
+          described_class.perform_later(request_data, response_data, status_code, created_at)
+        }.to have_enqueued_job.with(request_data, response_data, status_code, created_at)
       end
 
       context "when API Request response is success" do
