@@ -59,7 +59,7 @@ module ValidTestDataGenerators
 
       return if Faker::Boolean.boolean(true_ratio: 0.3)
 
-      current_date = schedule.applies_from + rand(1..100)
+      current_date = schedule.applies_from + rand(5.days).seconds
 
       travel_to(current_date) do
         accept_application(application)
