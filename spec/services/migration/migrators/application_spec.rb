@@ -34,6 +34,7 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.training_status).to eq(ecf_resource1.profile.training_status)
         expect(application.ukprn).to eq(ecf_resource1.school_ukprn)
         expect(application.user.ecf_id).to eq(ecf_resource1.user.id)
+        expect(application.accepted_at).to eq(ecf_resource1.profile.created_at)
       end
 
       it "sets the schedule from the ECF NPQApplication on the NPQ application" do
@@ -114,7 +115,7 @@ RSpec.describe Migration::Migrators::Application do
         expect(failure_manager).to have_received(:record_failure).with(ecf_resource1, /Couldn't find PrivateChildcareProvider/)
       end
 
-      it "treats the schedule and training_status as optional (as profile can be nil)" do
+      it "treats the schedule, training_status and accepted_at as optional (as profile can be nil)" do
         ecf_resource1.profile.destroy!
         instance.call
         expect(failure_manager).not_to have_received(:record_failure)

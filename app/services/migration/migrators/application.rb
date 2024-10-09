@@ -61,9 +61,6 @@ module Migration::Migrators
 
         raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
 
-        ecf_schedule = ecf_npq_application.profile&.schedule
-        application.schedule_id = find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
-
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
@@ -71,14 +68,20 @@ module Migration::Migrators
         if ecf_npq_application.school_urn.present?
           application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
         end
+
         application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
         application.course_id = find_course_id!(ecf_id: ecf_npq_application.npq_course_id)
 
-        application.training_status = ecf_npq_application.profile&.training_status if ecf_npq_application.profile
+        if ecf_npq_application.profile
+          ecf_schedule = ecf_npq_application.profile.schedule
+          application.schedule_id = find_schedule_id!(ecf_id: ecf_schedule.id) if ecf_schedule
+
+          application.training_status = ecf_npq_application.profile.training_status
+          application.accepted_at = ecf_npq_application.profile.created_at
+        end
+
         application.ukprn = ecf_npq_application.school_ukprn
-
         application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
-
         application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
     end
