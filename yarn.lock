@@ -1336,11 +1336,10 @@
   version "4.2.2"
   resolved "https://registry.npmjs.org/@xtuc/long/-/long-4.2.2.tgz"
 
-accessible-autocomplete@^2.0.3, accessible-autocomplete@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.npmjs.org/accessible-autocomplete/-/accessible-autocomplete-2.0.4.tgz"
-  dependencies:
-    preact "^8.3.1"
+accessible-autocomplete@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/accessible-autocomplete/-/accessible-autocomplete-3.0.1.tgz#8ddf4934d0b4ba6acb28de486dd505e062cdc86e"
+  integrity sha512-xMshgc2LT5addvvfCTGzIkRrvhbOFeylFSnSMfS/PdjvvvElZkakCwxO3/yJYBWyi1hi3tZloqOJQ5kqqJtH4g==
 
 acorn-import-attributes@^1.9.5:
   version "1.9.5"
@@ -2101,11 +2100,12 @@ globals@^11.1.0:
   version "11.12.0"
   resolved "https://registry.npmjs.org/globals/-/globals-11.12.0.tgz"
 
-govuk-country-and-territory-autocomplete@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/govuk-country-and-territory-autocomplete/-/govuk-country-and-territory-autocomplete-1.0.2.tgz"
+govuk-country-and-territory-autocomplete@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/govuk-country-and-territory-autocomplete/-/govuk-country-and-territory-autocomplete-2.0.0.tgz#317ff2b44371134fcd8c5a221a3fca53313e269a"
+  integrity sha512-/CBGA/MAdadcxq1qCBteTN7CseO+XhMYYLSUIzSlwOgnTzybV87aOSPlgo2jnzpZuJSV3pIsouu8g+8yC0VmOQ==
   dependencies:
-    accessible-autocomplete "^2.0.4"
+    accessible-autocomplete "^3.0.1"
     core-js "3.2.1"
     openregister-picker-engine "^1.2.1"
 
@@ -2568,10 +2568,6 @@ points-on-path@^0.2.1:
   dependencies:
     path-data-parser "0.1.0"
     points-on-curve "0.2.0"
-
-preact@^8.3.1:
-  version "8.5.3"
-  resolved "https://registry.npmjs.org/preact/-/preact-8.5.3.tgz"
 
 punycode@^2.1.0:
   version "2.3.0"
