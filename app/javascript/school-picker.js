@@ -1,12 +1,14 @@
-import { createElement, render } from 'preact' /** @jsx createElement */
-import Autocomplete from 'accessible-autocomplete/src/autocomplete'
+import accessibleAutocomplete from 'accessible-autocomplete'
 import debounce from 'lodash.debounce'
 
 function schoolPicker (options) {
   if (!options.element) { throw new Error('element is not defined') }
   if (!options.id) { throw new Error('id is not defined') }
 
-  render(<Autocomplete {...options} />, options.element)
+  accessibleAutocomplete({
+    element: options.element,
+    ...options
+  })
 }
 
 async function fetchSource(query, location) {
