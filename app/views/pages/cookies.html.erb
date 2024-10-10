@@ -49,33 +49,14 @@
           <td class="govuk-table__cell">1 year</td>
         </tr>
 
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">hide-cookies-banner</td>
-          <td class="govuk-table__cell" width="50%">Show or hide cookie banner</td>
-          <td class="govuk-table__cell">1 year</td>
-        </tr>
-
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell">tis-auth</td>
-          <td class="govuk-table__cell" width="50%">Keeps you signed in</td>
-          <td class="govuk-table__cell">When the session ends</td>
-        </tr>
-
-         <tr class="govuk-table__row">
-          <td class="govuk-table__cell">tis-antiforgery</td>
-          <td class="govuk-table__cell" width="50%">Prevents forgery attacks</td>
-          <td class="govuk-table__cell">When the session ends</td>
-        </tr>
-
-         <tr class="govuk-table__row">
-          <td class="govuk-table__cell">tis-session</td>
-          <td class="govuk-table__cell" width="50%">Stores authentication information</td>
-          <td class="govuk-table__cell">When the session ends</td>
-        </tr>
       </tbody>
     </table>
 
-    <h2 class="govuk-heading-m ">Analytics cookies (optional)</h2>
+    <p class="govuk-body">
+      To register for an NPQ you need to create or sign in to your DfE Identity account. This uses <a href="https://teaching-identity.education.gov.uk/cookies" class="govuk-link">other cookies</a>. 
+    </p>
+
+    <h2 class="govuk-heading-m">Analytics cookies (optional)</h2>
 
     <p class="govuk-body">
       With your permission, we use Google Analytics to collect data about how you use the service. This information helps us to improve our service.
@@ -108,13 +89,13 @@
         <tr class="govuk-table__row">
           <td class="govuk-table__cell">_ga</td>
           <td class="govuk-table__cell" width="50%">Checks if you’ve visited the service before. This helps us count how many people visit our site.</td>
-          <td class="govuk-table__cell">2 years</td>
+          <td class="govuk-table__cell">1 year</td>
         </tr>
 
         <tr class="govuk-table__row">
           <td class="govuk-table__cell">_ga_<%= (ENV["GOOGLE_ANALYTICS_ID"] || "").split("-").last %></td>
           <td class="govuk-table__cell" width="50%">Checks if you’ve visited the service before. This helps us count how many people visit our site.</td>
-          <td class="govuk-table__cell">24 hours</td>
+          <td class="govuk-table__cell">1 year</td>
         </tr>
       </tbody>
     </table>
