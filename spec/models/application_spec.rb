@@ -494,4 +494,55 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "#latest_participant_outcome_state" do
+    subject { application.latest_participant_outcome_state }
+
+    let(:application) { create(:application, :accepted, participant_outcome_state: "anything") }
+    let(:declaration) { create(:declaration, :completed, application:) }
+    let!(:participant_outcome) { create(:participant_outcome, declaration:) }
+
+    context "when ecf_api_disabled flag is toggled off" do
+      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+
+      it "returns the attribute value" do
+        expect(subject).to eq("anything")
+      end
+    end
+
+    context "when ecf_api_disabled flag is toggled on" do
+      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+
+      it "returns the state from latest outcome" do
+        expect(subject).to eq("passed")
+      end
+
+      context "when no completed declaration exists" do
+        before { declaration.update!(application: create(:application)) }
+
+        it "returns nil" do
+          expect(subject).to be_nil
+        end
+      end
+
+      context "when other type of declaration exists" do
+        before { declaration.update!(declaration_type: "retained-1") }
+
+        it "returns nil" do
+          expect(subject).to be_nil
+        end
+      end
+
+      context "when completed declaration is voided" do
+        before do
+          declaration.update!(state: "voided")
+          participant_outcome.update!(state: "voided")
+        end
+
+        it "returns nil" do
+          expect(subject).to be_nil
+        end
+      end
+    end
+  end
 end

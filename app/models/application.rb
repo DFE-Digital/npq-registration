@@ -188,6 +188,12 @@ class Application < ApplicationRecord
     eligible_for_dfe_funding?(with_funded_place: true)
   end
 
+  def latest_participant_outcome_state
+    return participant_outcome_state unless Feature.ecf_api_disabled?
+
+    declarations.completed.billable_or_voidable.latest_first.first&.participant_outcomes&.latest&.state
+  end
+
 private
 
   def funding_eligibility(with_funded_place:)
