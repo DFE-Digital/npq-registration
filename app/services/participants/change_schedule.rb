@@ -8,7 +8,7 @@ module Participants
 
     validates :schedule_identifier, presence: true
     validate :validate_new_schedule_found
-    # validates :cohort, npq_contract_for_cohort_and_course: true # TODO we don't have NPQ Contract yet
+    validates :cohort, contract_for_cohort_and_course: true
     validate :validate_not_withdrawn
     validate :validate_new_schedule_valid_with_existing_declarations
     validate :validate_changing_to_different_schedule
@@ -28,14 +28,14 @@ module Participants
       true
     end
 
-  private
-
-    def new_cohort
-      @new_cohort ||= cohort ? Cohort.find_by(start_year: cohort) : fallback_cohort
+    def cohort
+      @cohort ||= super ? Cohort.find_by(start_year: super) : fallback_cohort
     end
 
+  private
+
     def new_schedule
-      @new_schedule ||= Schedule.find_by(identifier: schedule_identifier, cohort: new_cohort)
+      @new_schedule ||= Schedule.find_by(identifier: schedule_identifier, cohort:)
     end
 
     def fallback_cohort
@@ -45,16 +45,16 @@ module Participants
     def update_application!
       params = { schedule: new_schedule }
 
-      if application.cohort != new_cohort
-        params[:cohort] = new_cohort
+      if application.cohort != cohort
+        params[:cohort] = cohort
       end
 
       application.update!(params)
     end
 
     def update_funded_place!
-      return if application&.cohort&.funding_cap? && new_cohort.funding_cap?
-      return unless new_cohort.funding_cap?
+      return if application&.cohort&.funding_cap? && cohort.funding_cap?
+      return unless cohort.funding_cap?
 
       application.update!(funded_place: application.eligible_for_funding)
     end
@@ -118,9 +118,9 @@ module Participants
 
     def validate_application_funded_place
       return unless application
-      return unless application.cohort != new_cohort
+      return unless application.cohort != cohort
 
-      if application.cohort&.funding_cap? && !new_cohort.funding_cap?
+      if application.cohort&.funding_cap? && !cohort.funding_cap?
         errors.add(:cohort, :cannot_change)
       end
     end

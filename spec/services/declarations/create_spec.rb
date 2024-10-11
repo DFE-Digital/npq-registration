@@ -25,7 +25,8 @@ RSpec.describe Declarations::Create, type: :model do
       has_passed:,
     }
   end
-  let!(:statement) { create(:statement, cohort:, lead_provider:) }
+  let(:statement) { create(:statement, cohort:, lead_provider:) }
+  let!(:contract) { create(:contract, statement:, course:) }
 
   subject(:service) { described_class.new(**params) }
 
@@ -264,6 +265,12 @@ RSpec.describe Declarations::Create, type: :model do
 
         it { is_expected.to have_error(:cohort, :no_output_fee_statement, "You cannot submit or void declarations for the #{cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
       end
+    end
+
+    context "when lead provider has no contract for the cohort and course" do
+      before { contract.update!(course: create(:course, :leading_literacy)) }
+
+      it { is_expected.to have_error(:cohort, :missing_contract_for_cohort_and_course, "You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.") }
     end
   end
 

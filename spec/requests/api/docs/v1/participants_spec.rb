@@ -23,6 +23,11 @@ RSpec.describe "NPQ Participants endpoint", openapi_spec: "v1/swagger.yaml", typ
   end
   let!(:participant) { application.user }
 
+  before do
+    statement = create(:statement, cohort:, lead_provider:)
+    create(:contract, statement:, course:)
+  end
+
   it_behaves_like "an API index endpoint documentation",
                   "/api/v1/participants/npq",
                   "NPQ Participants",
