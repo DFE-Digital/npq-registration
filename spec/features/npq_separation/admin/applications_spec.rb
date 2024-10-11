@@ -63,6 +63,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("TRN", application.user.trn)
       expect(summary_list).to have_summary_item("TRN validated", "No")
       expect(summary_list).to have_summary_item("Course name", application.course.name)
+      expect(summary_list).to have_summary_item("Training status", application.training_status)
       expect(summary_list).to have_summary_item("Lead provider name", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Lead provider approval status", application.lead_provider_approval_status.humanize)
       expect(summary_list).to have_summary_item("Created at", application.created_at.to_fs(:govuk_short))

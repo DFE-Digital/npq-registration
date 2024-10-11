@@ -43,6 +43,11 @@
     end
 
     sl.with_row do |row|
+      row.with_key { "Training status" }
+      row.with_value { @application.training_status || '-' }
+    end
+
+    sl.with_row do |row|
       row.with_key(text: "Lead provider name")
       row.with_value(text: @application.lead_provider.name)
     end
