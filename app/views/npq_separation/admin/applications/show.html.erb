@@ -265,3 +265,6 @@
 <% if @declarations.none? %>
 <p class="govuk-body">No declarations</p>
 <% end %>
+<h2 class="govuk-heading-m">Outcomes</h2>
+
+<%= render NpqSeparation::Admin::OutcomesTableComponent.new(@application.participant_outcomes) %>
