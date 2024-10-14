@@ -37,7 +37,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing application details" do
     visit(npq_separation_admin_applications_path)
 
-    application = Application.order(created_at: :asc).first
+    application = applications_in_order.first
     application.update!(
       eligible_for_funding: true,
       lead_provider_approval_status: :accepted,
@@ -63,6 +63,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("TRN", application.user.trn)
       expect(summary_list).to have_summary_item("TRN validated", "No")
       expect(summary_list).to have_summary_item("Course name", application.course.name)
+      expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
       expect(summary_list).to have_summary_item("Training status", application.training_status)
       expect(summary_list).to have_summary_item("Lead provider name", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Lead provider approval status", application.lead_provider_approval_status.humanize)
@@ -99,6 +100,53 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("Schedule Cohort", application.cohort.start_year)
       expect(summary_list).to have_summary_item("Schedule identifier", "-")
       expect(summary_list).to have_summary_item("Notes", "No notes")
+    end
+
+    expect(page).to have_css("h2", text: "Declarations")
+
+    expect(page).to have_css("p", text: "No declarations")
+  end
+
+  scenario "viewing application details with declarations" do
+    visit(npq_separation_admin_applications_path)
+
+    application = Application.order(created_at: :asc).first
+    started_declaration = create(:declaration, application:)
+    completed_declaration = create(:declaration, :completed, application:)
+
+    click_link(application.ecf_id)
+
+    expect(page).to have_css("h2", text: "Declarations")
+
+    summary_cards = all(".govuk-summary-card")
+    expect(summary_cards).to have_attributes(length: 2)
+
+    within(summary_cards[0]) do |summary_card|
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started")
+
+      within(find(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Declaration ID", started_declaration.id)
+        expect(summary_list).to have_summary_item("Declaration type", started_declaration.declaration_type.humanize)
+        expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Lead provider", started_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("State", started_declaration.state.humanize)
+        expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
+      end
+    end
+
+    within(summary_cards[1]) do |summary_card|
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Completed")
+
+      within(find(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Declaration ID", completed_declaration.id)
+        expect(summary_list).to have_summary_item("Declaration type", completed_declaration.declaration_type.humanize)
+        expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Lead provider", completed_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("State", completed_declaration.state.humanize)
+        expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
+      end
     end
   end
 
