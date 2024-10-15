@@ -212,49 +212,49 @@
 <h2 class="govuk-heading-m govuk-!-margin-top-9">Declarations</h2>
 
 <% @declarations.each do |declaration| %>
-  <%= govuk_summary_card(title: declaration.declaration_type.humanize) do |summary_card| %>
-    <%= summary_card.with_summary_list do |sl| %>
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Declaration ID" ) %>
-        <% row.with_value(text: declaration.id) %>
-      <% end %>
+  <%= govuk_summary_card(title: declaration.declaration_type.humanize) do |summary_card|
+    summary_card.with_summary_list do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "Declaration ID" )
+        row.with_value(text: declaration.id)
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "ECF ID" ) %>
-        <% row.with_value { declaration.ecf_id || "-" } %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "ECF ID" )
+        row.with_value { declaration.ecf_id || "-" }
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Declaration type") %>
-        <% row.with_value(text: declaration.declaration_type.humanize) %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Declaration type")
+        row.with_value(text: declaration.declaration_type.humanize)
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Declaration date") %>
-        <% row.with_value(text: declaration.declaration_date.to_fs(:govuk_short)) %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Declaration date")
+        row.with_value(text: declaration.declaration_date.to_fs(:govuk_short))
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Lead provider") %>
-        <% row.with_value(text: declaration.lead_provider.name) %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Lead provider")
+        row.with_value(text: declaration.lead_provider.name)
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "State") %>
-        <% row.with_value(text: declaration.state.humanize) %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "State")
+        row.with_value(text: declaration.state.humanize)
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Created at") %>
-        <% row.with_value(text: declaration.created_at.to_fs(:govuk_short)) %>
-      <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Created at")
+        row.with_value(text: declaration.created_at.to_fs(:govuk_short))
+      end
 
-      <% sl.with_row do |row| %>
-        <% row.with_key(text: "Updated at") %>
-        <% row.with_value(text: declaration.updated_at.to_fs(:govuk_short)) %>
-      <% end %>
-    <% end %>
-  <% end %>
+      sl.with_row do |row|
+        row.with_key(text: "Updated at")
+        row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
+      end
+    end
+  end %>
 <% end %>
 
 <% if @declarations.none? %>
