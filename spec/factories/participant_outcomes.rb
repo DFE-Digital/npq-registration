@@ -24,7 +24,7 @@ FactoryBot.define do
     end
 
     trait :sent_to_qualified_teachers_api do
-      sent_to_qualified_teachers_api_at { Time.zone.now - 1.hour }
+      sent_to_qualified_teachers_api_at { 1.hour.ago }
     end
 
     trait :not_sent_to_qualified_teachers_api do

@@ -238,4 +238,60 @@ RSpec.describe ParticipantOutcome, type: :model do
       it { is_expected.to contain_exactly(outcome_1.id, outcome_2.id) }
     end
   end
+
+  describe "#allow_resending_to_qualified_teachers_api?" do
+    subject { outcome.allow_resending_to_qualified_teachers_api? }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#resend_to_qualified_teachers_api!" do
+    subject { outcome.resend_to_qualified_teachers_api! }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
