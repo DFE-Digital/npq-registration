@@ -12,5 +12,9 @@ module Migration::Ecf
     def owner_description
       "CPD lead provider: #{cpd_lead_provider.name}"
     end
+
+    def readonly?
+      false
+    end
   end
 end
