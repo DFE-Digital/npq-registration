@@ -54,10 +54,18 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
     let(:cell_text) { page.find("tbody tr td:nth-child(5)").text }
 
     context "when the outcome has not been sent to TRA" do
-      let(:outcomes) { [create(:participant_outcome)] }
+      let(:cell_texts) { page.all("tbody tr td:nth-child(5)").map(&:text) }
+      let(:declaration) { create :declaration }
+      let(:outcomes) do
+        2.times.map { create(:participant_outcome, declaration:) }
+      end
 
-      it "is empty" do
-        expect(cell_text).to be_empty
+      it "renders 'Pending' for the latest outcome" do
+        expect(cell_texts[0]).to eq("Pending")
+      end
+
+      it "renders 'N/A' for superceded outcomes" do
+        expect(cell_texts[1]).to eq("N/A")
       end
     end
 

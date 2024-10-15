@@ -34,8 +34,16 @@ module NpqSeparation
             outcome.completion_date.to_fs(:govuk_short),
             outcome.created_at.to_date.to_fs(:govuk),
             outcome.sent_to_qualified_teachers_api_at.try(:to_fs, :govuk_short).presence || "No",
-            helpers.boolean_red_green_nil_tag(outcome.qualified_teachers_api_request_successful),
+            recorded_by_tra_api(outcome),
           ]
+        end
+      end
+
+      def recorded_by_tra_api(outcome)
+        if outcome.qualified_teachers_api_request_successful.nil?
+          outcome.latest_for_declaration? ? "Pending" : "N/A"
+        else
+          helpers.boolean_red_green_tag(outcome.qualified_teachers_api_request_successful)
         end
       end
     end
