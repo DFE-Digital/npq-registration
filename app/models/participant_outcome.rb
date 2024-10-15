@@ -63,6 +63,19 @@ class ParticipantOutcome < ApplicationRecord
     declaration.participant_outcomes.latest == self
   end
 
+  def allow_resending_to_qualified_teachers_api?
+    sent_to_qualified_teachers_api_at? &&
+      !qualified_teachers_api_request_successful.nil? &&
+      !qualified_teachers_api_request_successful?
+  end
+
+  def resend_to_qualified_teachers_api!
+    return false unless allow_resending_to_qualified_teachers_api?
+
+    update!(qualified_teachers_api_request_successful: nil,
+            sent_to_qualified_teachers_api_at: nil)
+  end
+
 private
 
   def completion_date_not_in_the_future
