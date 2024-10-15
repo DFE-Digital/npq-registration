@@ -33,5 +33,9 @@ FactoryBot.define do
     trait :completed do
       declaration_type { :completed }
     end
+
+    trait :from_ecf do
+      ecf_id { SecureRandom.uuid }
+    end
   end
 end

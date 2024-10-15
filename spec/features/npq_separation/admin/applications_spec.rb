@@ -111,7 +111,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     visit(npq_separation_admin_applications_path)
 
     application = Application.order(created_at: :asc).first
-    started_declaration = create(:declaration, application:)
+    started_declaration = create(:declaration, :from_ecf, application:)
     completed_declaration = create(:declaration, :completed, application:)
 
     click_link(application.ecf_id)
@@ -126,6 +126,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
       within(find(".govuk-summary-list")) do |summary_list|
         expect(summary_list).to have_summary_item("Declaration ID", started_declaration.id)
+        expect(summary_list).to have_summary_item("ECF ID", started_declaration.ecf_id)
         expect(summary_list).to have_summary_item("Declaration type", started_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Lead provider", started_declaration.lead_provider.name)
@@ -140,6 +141,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
       within(find(".govuk-summary-list")) do |summary_list|
         expect(summary_list).to have_summary_item("Declaration ID", completed_declaration.id)
+        expect(summary_list).to have_summary_item("ECF ID", "-")
         expect(summary_list).to have_summary_item("Declaration type", completed_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Lead provider", completed_declaration.lead_provider.name)

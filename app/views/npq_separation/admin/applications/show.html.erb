@@ -220,6 +220,11 @@
       <% end %>
 
       <% sl.with_row do |row| %>
+        <% row.with_key(text: "ECF ID" ) %>
+        <% row.with_value { declaration.ecf_id || "-" } %>
+      <% end %>
+
+      <% sl.with_row do |row| %>
         <% row.with_key(text: "Declaration type") %>
         <% row.with_value(text: declaration.declaration_type.humanize) %>
       <% end %>
