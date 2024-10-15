@@ -235,6 +235,11 @@
       end
 
       sl.with_row do |row|
+        row.with_key(text: "Declaration cohort")
+        row.with_value(text: declaration.cohort.start_year)
+      end
+
+      sl.with_row do |row|
         row.with_key(text: "Lead provider")
         row.with_value(text: declaration.lead_provider.name)
       end

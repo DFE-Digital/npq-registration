@@ -6,7 +6,7 @@ class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminControl
   def show
     @application = applications_query.application(id: params[:id])
     @declarations = @application.declarations
-                                .includes(:lead_provider)
+                                .includes(:lead_provider, :cohort)
                                 .order(created_at: :asc, id: :asc)
   end
 
