@@ -37,6 +37,7 @@ en:
 
   cohort: &cohort
     cannot_change: "You cannot change the '#/%{parameterized_attribute}' field"
+    missing_contract_for_cohort_and_course: You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.
 
   schedule: &schedule
     cohort_mismatch: The schedule cohort must match the application cohort
@@ -399,6 +400,7 @@ en:
               <<: *lead_provider
             cohort:
               <<: *statement
+              missing_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
         participant_outcomes/create:
           attributes:
             base:
