@@ -16,6 +16,7 @@ end
 Rails.logger.info("Seeding database")
 
 [
+  "add_feature_flags.rb",
   "add_cohorts.rb",
   "add_childcare_providers.rb",
   "add_schools.rb",
@@ -31,7 +32,6 @@ Rails.logger.info("Seeding database")
   "add_contracts.rb",
   "add_declarations.rb",
   "add_api_tokens.rb",
-  "add_feature_flags.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   load_base_file(seed_file)
