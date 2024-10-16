@@ -2,15 +2,7 @@ require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
   before do
-    render_inline(NpqSeparation::Admin::OutcomesTableComponent.new(outcomes))
-  end
-
-  context "when there are no outcomes" do
-    let(:outcomes) { build(:application).participant_outcomes }
-
-    it "renders a message" do
-      expect(rendered_content).to have_text("No outcomes recorded.")
-    end
+    render_inline(described_class.new(outcomes))
   end
 
   context "when there are multiple outcomes" do

@@ -209,11 +209,11 @@
 
 <hr class="govuk-section-break govuk-section-break--l">
 
-<h2 class="govuk-heading-m govuk-!-margin-top-9">Declarations</h2>
+<h2 class="govuk-heading-m">Declarations</h2>
 
 <% @declarations.each do |declaration| %>
   <%= govuk_summary_card(title: declaration.declaration_type.humanize) do |summary_card|
-    summary_card.with_summary_list do |sl|
+    concat(govuk_summary_list do |sl|
       sl.with_row do |row|
         row.with_key(text: "Declaration ID" )
         row.with_value(text: declaration.id)
@@ -258,13 +258,15 @@
         row.with_key(text: "Updated at")
         row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
       end
+    end)
+
+    if declaration.participant_outcomes.any?
+      concat tag.hr(class: "govuk-section-break govuk-section-break--m")
+      concat render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes))
     end
   end %>
 <% end %>
 
 <% if @declarations.none? %>
-<p class="govuk-body">No declarations</p>
+  <p class="govuk-body">No declarations</p>
 <% end %>
-<h2 class="govuk-heading-m">Outcomes</h2>
-
-<%= render NpqSeparation::Admin::OutcomesTableComponent.new(@application.participant_outcomes) %>

@@ -8,11 +8,7 @@ module NpqSeparation
       end
 
       def call
-        if outcomes.none?
-          tag.p "No outcomes recorded.", class: "govuk-body"
-        else
-          render(GovukComponent::TableComponent.new(head:, rows:))
-        end
+        render GovukComponent::TableComponent.new(head:, rows:)
       end
 
     private
