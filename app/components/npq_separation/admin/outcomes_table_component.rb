@@ -19,7 +19,8 @@ module NpqSeparation
           "Completion date",
           "Submitted by provider",
           "Sent to TRA API",
-          "Recorded by TRA API",
+          "Recorded by API",
+          "",
         ]
       end
 
@@ -28,9 +29,10 @@ module NpqSeparation
           [
             outcome.state.humanize,
             outcome.completion_date.to_fs(:govuk_short),
-            outcome.created_at.to_date.to_fs(:govuk),
-            outcome.sent_to_qualified_teachers_api_at.try(:to_fs, :govuk_short).presence || "N/A",
+            outcome.created_at.to_date.to_fs(:govuk_short),
+            outcome.sent_to_qualified_teachers_api_at&.to_date&.to_fs(:govuk_short) || "N/A",
             recorded_by_tra_api(outcome),
+            tra_api_resend_link(outcome),
           ]
         end
       end
@@ -45,6 +47,12 @@ module NpqSeparation
         else
           helpers.boolean_red_green_tag(outcome.qualified_teachers_api_request_successful)
         end
+      end
+
+      def tra_api_resend_link(outcome)
+        return "" unless outcome.allow_resending_to_qualified_teachers_api?
+
+        govuk_link_to("Resend", resend_npq_separation_admin_participant_outcome_path(outcome))
       end
     end
   end

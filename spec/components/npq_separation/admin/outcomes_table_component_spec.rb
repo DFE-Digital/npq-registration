@@ -35,14 +35,14 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
       let(:outcomes) { [create(:participant_outcome, :sent_to_qualified_teachers_api)] }
 
       it "renders the timestamp" do
-        expected = outcomes.first.sent_to_qualified_teachers_api_at.to_fs(:govuk_short)
+        expected = outcomes.first.sent_to_qualified_teachers_api_at.to_date.to_fs(:govuk_short)
 
         expect(Time.zone.parse(cell_text)).to eq(expected)
       end
     end
   end
 
-  describe "'Recorded by TRA API' column" do
+  describe "'Recorded by API' column" do
     let(:cell_text) { page.find("tbody tr td:nth-child(5)").text }
 
     context "when the outcome has not been sent to TRA" do
@@ -74,6 +74,37 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
 
       it "renders yes" do
         expect(cell_text).to eq("Yes")
+      end
+    end
+  end
+
+  describe "Resend column" do
+    let(:resend_cell) { page.find("tbody tr td:nth-child(6)") }
+
+    context "when the outcome can be resent" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :unsuccessfully_sent_to_qualified_teachers_api)
+      end
+
+      let :resend_path do
+        Rails.application
+             .routes
+             .url_helpers
+             .resend_npq_separation_admin_participant_outcome_path(outcomes.first)
+      end
+
+      it "renders a resend link" do
+        expect(resend_cell).to have_link("Resend", href: resend_path)
+      end
+    end
+
+    context "when the outcome cannot be resent" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :unsuccessfully_sent_to_qualified_teachers_api)
+      end
+
+      it "renders a blank cell" do
+        expect(resend_cell).to have_text("")
       end
     end
   end
