@@ -171,4 +171,21 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css("h1", text: school.name)
   end
+
+  scenario "resending outcome to qualified teachers api" do
+    outcome = create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api)
+
+    visit npq_separation_admin_application_path(outcome.application_id)
+
+    expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
+
+    within(".govuk-table tbody tr:first-of-type td:last-of-type") do |action_cell|
+      expect(action_cell).to have_link("Resend")
+
+      click_link("Resend")
+    end
+
+    expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
+    expect(page).to have_css(".govuk-notification-banner--success", text: /rescheduled/i)
+  end
 end
