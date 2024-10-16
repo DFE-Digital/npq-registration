@@ -59,7 +59,11 @@ module Migration::Migrators
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
         application = applications_by_ecf_id[ecf_npq_application.id]
 
-        raise ActiveRecord::RecordNotFound, "Couldn't find Application" unless application
+        application ||= ::Application.new(
+          ecf_id: ecf_npq_application.id,
+          created_at: ecf_npq_application.created_at,
+          updated_at: ecf_npq_application.updated_at,
+        )
 
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
