@@ -234,6 +234,10 @@ Rails.application.routes.draw do
         resources :courses, only: %i[index show]
         resources :users, only: %i[index show]
 
+        resources :participant_outcomes, only: %i[] do
+          member { get :resend }
+        end
+
         namespace :finance do
           resources :statements, only: %i[index show] do
             collection do
