@@ -46,12 +46,12 @@ module Migration::Migrators
       end
 
       def number_of_workers
-        [1, (record_count / records_per_worker.to_f).ceil].max
+        [1, (record_count / records_per_worker.to_f)].max
       end
 
       def records_per_worker
         # By default ensure all workers are exercised.
-        [1, (record_count / INFRA_WORKER_COUNT.to_f).ceil].max
+        [1, (record_count / INFRA_WORKER_COUNT.to_f)].max
       end
     end
 
