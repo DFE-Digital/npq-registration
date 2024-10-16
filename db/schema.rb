@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_01_200634) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_15_121123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -396,6 +396,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_01_200634) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "response_comparisons", force: :cascade do |t|
+    t.string "request_path", null: false
+    t.string "request_method", null: false
+    t.integer "ecf_response_status_code", null: false
+    t.integer "npq_response_status_code", null: false
+    t.string "ecf_response_body"
+    t.string "npq_response_body"
+    t.integer "ecf_response_time_ms", null: false
+    t.integer "npq_response_time_ms", null: false
+    t.bigint "lead_provider_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lead_provider_id"], name: "index_response_comparisons_on_lead_provider_id"
+  end
+
   create_table "schedules", force: :cascade do |t|
     t.bigint "course_group_id", null: false
     t.bigint "cohort_id", null: false
@@ -554,6 +569,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_01_200634) do
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"
+  add_foreign_key "response_comparisons", "lead_providers"
   add_foreign_key "schedules", "cohorts"
   add_foreign_key "schedules", "course_groups"
   add_foreign_key "statement_items", "declarations"
