@@ -1,4 +1,4 @@
-name: "Report migration results"
+name: "Run nightly migration"
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
     - cron: "30 0 * * *" # Run at 12:30am, daily
 
 jobs:
-  report_results:
+  run_migration:
     name: "Run nightly migration"
     environment: production
     runs-on: ubuntu-latest
