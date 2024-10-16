@@ -76,6 +76,9 @@ Rails.application.configure do
     api_enabled: true,
     migration_enabled: true,
     ecf_api_disabled: false,
+    parity_check: {
+      enabled: true,
+    },
   }
 
   config.dotenv.autorestore = false if config.respond_to?(:dotenv)
