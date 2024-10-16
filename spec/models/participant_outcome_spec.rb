@@ -265,6 +265,17 @@ RSpec.describe ParticipantOutcome, type: :model do
 
       it { is_expected.to be false }
     end
+
+    context "when not latest outcome" do
+      before do
+        create(:participant_outcome, :failed, declaration: outcome.declaration,
+                                              created_at: 3.minutes.from_now)
+      end
+
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
   end
 
   describe "#resend_to_qualified_teachers_api!" do

@@ -60,13 +60,13 @@ class ParticipantOutcome < ApplicationRecord
   end
 
   def latest_for_declaration?
-    declaration.participant_outcomes.order(created_at: :desc).first == self
+    self == declaration.participant_outcomes.max_by { |po| [po.created_at, po.id] }
   end
 
   def allow_resending_to_qualified_teachers_api?
     sent_to_qualified_teachers_api_at? &&
-      !qualified_teachers_api_request_successful.nil? &&
-      !qualified_teachers_api_request_successful?
+      qualified_teachers_api_request_successful == false &&
+      latest_for_declaration?
   end
 
   def resend_to_qualified_teachers_api!
