@@ -13,8 +13,7 @@ class User < ApplicationRecord
   validates :email,
             presence: { message: "Enter an email address" },
             uniqueness: { message: "Email address must be unique" },
-            notify_email: true,
-            on: :npq_separation
+            notify_email: true
   # rubocop:enable Rails/UniqueValidationWithoutIndex
 
   validates :uid, uniqueness: { allow_blank: true }
