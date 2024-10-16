@@ -33,6 +33,35 @@ RSpec.describe Migration::Migrators::Declaration do
         expect(declaration.application.course.identifier.downcase).to eq(ecf_resource1.course_identifier.downcase)
         expect(declaration.application.user.ecf_id).to eq(ecf_resource1.user.id)
       end
+
+      context "when declaration date is before the schedule start" do
+        before do
+          declaration = Declaration.find_by(ecf_id: ecf_resource1.id)
+          ecf_resource1.update!(declaration_date: declaration.application.schedule.applies_from.prev_week)
+        end
+
+        it "does not record a failure" do
+          instance.call
+
+          expect(failure_manager).not_to have_received(:record_failure)
+        end
+
+        context "when `skip_declaration_date_within_schedule_validation` is set to nil" do
+          it "records a failure" do
+            instance.call(skip_declaration_date_within_schedule_validation: nil)
+
+            expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, "Validation failed: Declaration date Enter a '#/declaration_date' that's on or after the schedule start.")
+          end
+        end
+
+        context "when `skip_declaration_date_within_schedule_validation` is set to false" do
+          it "records a failure" do
+            instance.call(skip_declaration_date_within_schedule_validation: false)
+
+            expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, "Validation failed: Declaration date Enter a '#/declaration_date' that's on or after the schedule start.")
+          end
+        end
+      end
     end
   end
 end
