@@ -28,8 +28,8 @@ RSpec.describe Statements::Query do
       before do
         create(:statement_item, statement: statement1)
         create(:statement_item, statement: statement1)
-        create(:contract, statement: statement1)
-        create(:contract, statement: statement1)
+        create(:contract, course: create(:course, :senior_leadership), statement: statement1)
+        create(:contract, course: create(:course, :leading_literacy), statement: statement1)
       end
 
       it "does not return duplicate statements" do
