@@ -14,6 +14,8 @@ Rails.application.configure do
     ecf_api_disabled: true,
     parity_check: {
       enabled: true,
+      npq_url: "https://npq-registration-migration-web.teacherservices.cloud",
+      ecf_url: "https://cpd-ecf-migration-web.teacherservices.cloud",
     },
   }
 end
