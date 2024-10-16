@@ -4,28 +4,31 @@ require "rails_helper"
 
 RSpec.describe Participants::ChangeSchedule, type: :model do
   let(:cohort) { create(:cohort, :current) }
-  let(:lead_provider) { create(:lead_provider) }
-  let(:course) { create(:course, :senior_leadership) }
-  let(:course_identifier) { course.identifier }
-  let(:schedule) { create(:schedule, :npq_leadership_spring, cohort:) }
-  let!(:application) { create(:application, :accepted, cohort:, lead_provider:, course:, schedule:) }
-
-  let(:participant) { application.user }
-  let(:participant_id) { participant.ecf_id }
-
-  let(:new_cohort) { create(:cohort, :next) }
-  let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
-  let(:new_schedule_identifier) { new_schedule.identifier }
-
   let(:params) do
     {
       lead_provider:,
       participant_id:,
       course_identifier:,
-
       schedule_identifier: new_schedule_identifier,
       cohort: nil,
     }
+  end
+  let(:lead_provider) { create(:lead_provider) }
+  let(:course) { create(:course, :senior_leadership) }
+  let(:course_identifier) { course.identifier }
+  let(:schedule) { create(:schedule, :npq_leadership_spring, cohort:) }
+  let!(:application) { create(:application, :accepted, cohort:, lead_provider:, course:, schedule:) }
+  let(:participant) { application.user }
+  let(:participant_id) { participant.ecf_id }
+  let(:new_cohort) { create(:cohort, :next) }
+  let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
+  let(:new_schedule_identifier) { new_schedule.identifier }
+  let(:statement) { create(:statement, cohort:, lead_provider:) }
+  let!(:contract) { create(:contract, statement:, course:) }
+
+  before do
+    new_statement = create(:statement, cohort: new_cohort, lead_provider:)
+    create(:contract, statement: new_statement, course:)
   end
 
   subject { described_class.new(params) }
@@ -38,7 +41,6 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
             lead_provider:,
             participant_id:,
             course_identifier:,
-
             schedule_identifier: new_schedule_identifier,
             cohort: new_cohort.start_year,
           }
@@ -56,14 +58,9 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
 
       context "when the schedule identifier change of the same type again" do
-        before do
-          create(:schedule, :npq_leadership_autumn, cohort:)
-        end
+        let(:new_schedule) { create(:schedule, :npq_leadership_spring, cohort:) }
 
-        it "is invalid and returns an error message" do
-          expect(subject.change_schedule).to be_truthy
-          expect(subject).to have_error(:schedule_identifier, :already_on_the_profile, "Selected schedule is already on the profile")
-        end
+        it { is_expected.to have_error(:schedule_identifier, :already_on_the_profile, "Selected schedule is already on the profile") }
       end
     end
 
@@ -83,7 +80,6 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
           lead_provider:,
           participant_id:,
           course_identifier:,
-
           schedule_identifier: new_schedule_identifier,
           cohort: new_cohort.start_year,
         }
@@ -272,20 +268,13 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
     end
 
-    # TODO: when NPQ Contract has been migrated
-    ###########################################
-    # context "when lead provider has no contract for the cohort and course" do
-    #   let(:new_cohort) { Cohort.previous }
-    #
-    #   before { npq_contract.update!(npq_course: create(:npq_specialist_course)) }
-    #
-    #   it "is invalid and returns an error message" do
-    #     is_expected.to be_invalid
-    #
-    #     expect(subject.errors.messages_for(:cohort)).to include("You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.")
-    #   end
-    # end
-    ###########################################
+    context "when lead provider has no contract for the cohort and course" do
+      let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort:) }
+
+      before { contract.update!(course: create(:course, :leading_literacy)) }
+
+      it { is_expected.to have_error(:cohort, :missing_contract_for_cohort_and_course, "You cannot change a participant to this cohort as you do not have a contract for the cohort and course. Contact the DfE for assistance.") }
+    end
   end
 
   describe "#change_schedule" do
@@ -316,17 +305,17 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
         end
 
         context "when schedule is nil" do
-          let!(:current_cohort) { create(:cohort, :current) }
+          let(:new_cohort) { create(:cohort, :current) }
+          let(:new_schedule) { create(:schedule, :npq_leadership_autumn, cohort: new_cohort) }
 
           before do
-            create(:schedule, :npq_leadership_autumn, cohort: current_cohort)
             application.update!(schedule: nil)
           end
 
           it "fallback to Cohort.current" do
             expect(subject.change_schedule).to be_truthy
             application.reload
-            expect(application.cohort).to eql(current_cohort)
+            expect(application.cohort).to eql(new_cohort)
           end
         end
       end
@@ -338,7 +327,6 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
           lead_provider:,
           participant_id:,
           course_identifier:,
-
           schedule_identifier: new_schedule_identifier,
           cohort: new_cohort.start_year,
         }

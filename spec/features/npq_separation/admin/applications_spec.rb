@@ -37,7 +37,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing application details" do
     visit(npq_separation_admin_applications_path)
 
-    application = Application.order(created_at: :asc).first
+    application = applications_in_order.first
     application.update!(
       eligible_for_funding: true,
       lead_provider_approval_status: :accepted,
@@ -53,25 +53,104 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     summary_lists = all(".govuk-summary-list")
 
+    expect(page).to have_css("h2", text: "Application details")
+
     within(summary_lists[0]) do |summary_list|
       expect(summary_list).to have_summary_item("Application ID", application.id)
+      expect(summary_list).to have_summary_item("ECF ID", application.ecf_id)
+      expect(summary_list).to have_summary_item("User ID", application.user.id)
       expect(summary_list).to have_summary_item("Email", application.user.email)
+      expect(summary_list).to have_summary_item("TRN", application.user.trn)
+      expect(summary_list).to have_summary_item("TRN validated", "No")
       expect(summary_list).to have_summary_item("Course name", application.course.name)
+      expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
+      expect(summary_list).to have_summary_item("Training status", application.training_status)
       expect(summary_list).to have_summary_item("Lead provider name", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Lead provider approval status", application.lead_provider_approval_status.humanize)
-      expect(summary_list).to have_summary_item("Application submitted date", application.created_at.to_fs(:govuk_short))
-      expect(summary_list).to have_summary_item("Last updated at", application.updated_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Created at", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Updated at", application.updated_at.to_fs(:govuk_short))
     end
 
-    expect(page).to have_css("h2", text: "Scholarship funding")
+    expect(page).to have_css("h2", text: "Employment details")
 
     within(summary_lists[1]) do |summary_list|
-      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
-      expect(summary_list).to have_summary_item("Funding eligibility status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("School URN", application.school_urn)
+      expect(summary_list).to have_summary_item("School UKPRN", application.school.ukprn)
+      expect(summary_list).to have_summary_item("Private Childcare Provider URN", "-")
+      expect(summary_list).to have_summary_item("Headteacher status", application.headteacher_status)
       expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
       expect(summary_list).to have_summary_item("Employer name", application.employer_name)
       expect(summary_list).to have_summary_item("Employment role", application.employment_role.humanize)
+      expect(summary_list).to have_summary_item("ITT Lead mentor", application.lead_mentor? ? "Yes" : "No")
+      expect(summary_list).to have_summary_item("ITT provider", application.itt_provider.operating_name)
+      expect(summary_list).to have_summary_item("Country", application.teacher_catchment_country)
+    end
+
+    expect(page).to have_css("h2", text: "Funding eligibility")
+
+    within(summary_lists[2]) do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list).to have_summary_item("Funded place", "")
+      expect(summary_list).to have_summary_item("Funding eligibility status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("Primary establishment", "No")
+      expect(summary_list).to have_summary_item("Number of pupils", application.number_of_pupils)
+      expect(summary_list).to have_summary_item("Targeted support funding primary plus eligibility", "No")
+      expect(summary_list).to have_summary_item("Targeted delivery funding eligibility", "No")
+      expect(summary_list).to have_summary_item("Funding choice", application.funding_choice&.capitalize)
+      expect(summary_list).to have_summary_item("Schedule Cohort", application.cohort.start_year)
+      expect(summary_list).to have_summary_item("Schedule identifier", "-")
       expect(summary_list).to have_summary_item("Notes", "No notes")
+    end
+
+    expect(page).to have_css("h2", text: "Declarations")
+
+    expect(page).to have_css("p", text: "No declarations")
+  end
+
+  scenario "viewing application details with declarations" do
+    visit(npq_separation_admin_applications_path)
+
+    application = Application.order(created_at: :asc).first
+    started_declaration = create(:declaration, :from_ecf, application:)
+    completed_declaration = create(:declaration, :completed, application:)
+
+    click_link(application.ecf_id)
+
+    expect(page).to have_css("h2", text: "Declarations")
+
+    summary_cards = all(".govuk-summary-card")
+    expect(summary_cards).to have_attributes(length: 2)
+
+    within(summary_cards[0]) do |summary_card|
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started")
+
+      within(find(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Declaration ID", started_declaration.id)
+        expect(summary_list).to have_summary_item("ECF ID", started_declaration.ecf_id)
+        expect(summary_list).to have_summary_item("Declaration type", started_declaration.declaration_type.humanize)
+        expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Declaration cohort", started_declaration.cohort.start_year)
+        expect(summary_list).to have_summary_item("Lead provider", started_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("State", started_declaration.state.humanize)
+        expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
+      end
+    end
+
+    within(summary_cards[1]) do |summary_card|
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Completed")
+
+      within(find(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Declaration ID", completed_declaration.id)
+        expect(summary_list).to have_summary_item("ECF ID", "-")
+        expect(summary_list).to have_summary_item("Declaration type", completed_declaration.declaration_type.humanize)
+        expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)
+        expect(summary_list).to have_summary_item("Lead provider", completed_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("State", completed_declaration.state.humanize)
+        expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
+      end
     end
   end
 

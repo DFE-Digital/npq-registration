@@ -61,6 +61,11 @@ RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.ya
       }
     end
 
+    before do
+      statement = create(:statement, cohort:, lead_provider:)
+      create(:contract, statement:, course:)
+    end
+
     it_behaves_like "an API create on resource endpoint documentation",
                     "/api/v3/participant-declarations",
                     "Participant declarations",
