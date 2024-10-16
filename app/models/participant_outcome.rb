@@ -65,8 +65,8 @@ class ParticipantOutcome < ApplicationRecord
 
   def allow_resending_to_qualified_teachers_api?
     sent_to_qualified_teachers_api_at? &&
-      !qualified_teachers_api_request_successful.nil? &&
-      !qualified_teachers_api_request_successful?
+      qualified_teachers_api_request_successful == false &&
+      latest_for_declaration?
   end
 
   def resend_to_qualified_teachers_api!
