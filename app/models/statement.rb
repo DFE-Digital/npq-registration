@@ -51,6 +51,10 @@ class Statement < ApplicationRecord
     end
   end
 
+  def period
+    "#{Date::MONTHNAMES[month]} #{year}"
+  end
+
 private
 
   def validate_max_statement_items_count
