@@ -59,6 +59,18 @@ class Statement < ApplicationRecord
     marked_as_paid_at.present? && paid?
   end
 
+  def name
+    "#{Date::MONTHNAMES[month]} #{year}"
+  end
+
+  def period
+    "#{year}-#{month}"
+  end
+
+  def show_targeted_delivery_funding?
+    cohort.start_year >= 2022
+  end
+
 private
 
   def validate_max_statement_items_count

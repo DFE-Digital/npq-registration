@@ -46,6 +46,36 @@ en:
     cohort_mismatch: The schedule cohort must match the application cohort
     invalid_for_course: Selected schedule is not valid for the course
 
+  finance:
+    calculation_rounding_message:
+      title: Calculation rounding errors
+      content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
+    clawbacks:
+      caption: Clawbacks
+    course:
+      participants: Participants
+      payment_per_participant: Payment per participant
+    course_total: Course total
+    cut_off_date:
+      caption: Output payment cut off date
+    output_payment:
+      label: Output payment
+    payment_type: Payment type
+    service_fee:
+      caption: Service fee
+    targeted_delivery_funding:
+      caption: Targeted delivery funding
+    total: Total
+    total_completed: Total completed
+    total_net_vat: Total net VAT
+    total_not_eligible_for_funding: Total not eligible for funding
+    total_retained: Total retained
+    total_starts: Total starts
+    total_voids: Total voids
+    totals: Totals
+    total_declarations: Total declarations
+    view: View
+
   funded_place: &funded_place
     inclusion: Set '#/%{parameterized_attribute}' to true or false.
     not_eligible: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
@@ -83,6 +113,11 @@ en:
 
   lead_provider: &lead_provider
     blank: Your update cannot be made as the '#/%{parameterized_attribute}' is not recognised. Check lead provider details and try again.
+
+  number:
+    currency:
+      format:
+        unit: £
 
   participant_course_identifier: &participant_course_identifier
     blank: Enter a '#/%{parameterized_attribute}' value for this participant.
@@ -638,8 +673,8 @@ en:
               title: "Check %{statement_name} statement details before authorising for payment"
               button: "Authorise for payment"
               checks_done_legend: Have all necessary assurance checks been done?
-            # tag:
-            #   content: "Authorised for payment at %{statement_marked_as_paid_at}"
+            tag:
+              content: "Authorised for payment at %{statement_marked_as_paid_at}"
             # banner:
             #   title: "Authorising for payment"
             #   content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."

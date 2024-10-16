@@ -118,3 +118,45 @@
   margin: 0;
   padding: govuk-spacing(2) govuk-spacing(3) govuk-spacing(2) 0;
 }
+
+.app-statement-selector {
+  margin-bottom: 30px;
+
+  .govuk-form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 8px;
+
+    @include govuk-media-query($until: desktop) {
+      width: 100% !important;
+    }
+  }
+
+  select {
+    @extend .govuk-\!-width-full; // hack as form builder does not seem to support injecting of classes where needed
+
+    @include govuk-media-query($until: desktop) {
+      margin-bottom: 15px;
+    }
+  }
+
+  button[type=submit] {
+    margin-bottom: 0;
+    vertical-align: bottom;
+  }
+}
+
+.app-statement-block {
+  background-color: govuk-colour("light-grey");
+}
+
+.app-statement-block__declaration-types {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.float-right {
+  float: right;
+}
