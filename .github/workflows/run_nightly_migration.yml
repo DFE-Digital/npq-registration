@@ -42,4 +42,4 @@ jobs:
       - name: Run migration
         shell: bash
         run: |
-          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::Coordinator.new.migrate!\""
+          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::Coordinator.prepare_for_migration; Migration::Coordinator.new.migrate!\""
