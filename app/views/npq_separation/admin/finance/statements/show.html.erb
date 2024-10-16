@@ -18,8 +18,45 @@
     end
 
     summary_list.with_row do |row|
+      row.with_key(text: "Statement period")
+      row.with_value(text: @statement.period)
+    end
+
+    summary_list.with_row do |row|
       row.with_key(text: "Status")
       row.with_value(text: govuk_tag(text: @statement.state.capitalize))
     end
   end
 %>
+
+<%=
+  govuk_details(summary_text: "Contract information") do
+    govuk_table do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: "Course")
+          row.with_cell(text: "Recruitment target")
+          row.with_cell(text: "Payment amount per participant")
+        end
+      end
+
+      table.with_body do |body|
+        @statement.contracts.each do |contract|
+          body.with_row do |row|
+            row.with_cell(text: contract.course.name)
+            row.with_cell(text: contract.contract_template.recruitment_target)
+            row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
+          end
+        end
+      end
+    end
+  end
+%>
+
+
+<h2>statement items:</h2>
+<% @statement.statement_items.each do |item| %>
+  <div>
+    <%= item.to_json %>
+  </div>
+<% end %>

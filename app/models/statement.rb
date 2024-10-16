@@ -59,6 +59,10 @@ class Statement < ApplicationRecord
     marked_as_paid_at.present? && paid?
   end
 
+  def period
+    "#{Date::MONTHNAMES[month]} #{year}"
+  end
+
 private
 
   def validate_max_statement_items_count
