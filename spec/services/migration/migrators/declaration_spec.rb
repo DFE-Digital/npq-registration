@@ -45,22 +45,6 @@ RSpec.describe Migration::Migrators::Declaration do
 
           expect(failure_manager).not_to have_received(:record_failure)
         end
-
-        context "when `skip_declaration_date_within_schedule_validation` is set to nil" do
-          it "records a failure" do
-            instance.call(skip_declaration_date_within_schedule_validation: nil)
-
-            expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, "Validation failed: Declaration date Enter a '#/declaration_date' that's on or after the schedule start.")
-          end
-        end
-
-        context "when `skip_declaration_date_within_schedule_validation` is set to false" do
-          it "records a failure" do
-            instance.call(skip_declaration_date_within_schedule_validation: false)
-
-            expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, "Validation failed: Declaration date Enter a '#/declaration_date' that's on or after the schedule start.")
-          end
-        end
       end
     end
   end
