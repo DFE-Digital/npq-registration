@@ -59,6 +59,10 @@ class ParticipantOutcome < ApplicationRecord
     passed_state?
   end
 
+  def latest_for_declaration?
+    declaration.participant_outcomes.order(created_at: :desc).first == self
+  end
+
 private
 
   def completion_date_not_in_the_future
