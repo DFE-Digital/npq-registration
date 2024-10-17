@@ -1,0 +1,8 @@
+
+<h2 class="govuk-heading-l">Completed parity check</h2>
+
+<p class="govuk-body">
+  The latest parity check was completed <%= tag.strong(time_ago_in_words(@parity_check_completed_at)) %> ago.<br>
+  The parity check took <%= tag.strong(ActiveSupport::Duration.build((@parity_check_completed_at - @parity_check_started_at).to_i).inspect) %> to complete.
+</p>
+

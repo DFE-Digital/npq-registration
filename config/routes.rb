@@ -252,6 +252,8 @@ Rails.application.routes.draw do
       resources :migrations, only: %i[index create] do
         get "download_report/:model", on: :collection, action: :download_report, as: :download_report
       end
+
+      resources :parity_checks, only: %i[index create]
     end
   end
 
