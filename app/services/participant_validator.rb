@@ -9,20 +9,10 @@ class ParticipantValidator
   end
 
   def call
-    return if Feature.ecf_api_disabled?
-
-    request = Net::HTTP::Post.new(uri)
-    request["Authorization"] = "Bearer #{config.bearer_token}"
-    request.set_form_data(payload)
-
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl?, read_timeout: 20) do |http|
-      http.request(request)
-    end
-
-    if response.code == "404"
-      nil
+    if Feature.ecf_api_disabled?
+      call_with_dqt
     else
-      OpenStruct.new(JSON.parse(response.body)["data"]["attributes"])
+      call_with_ecf
     end
   end
 
@@ -49,5 +39,28 @@ private
 
   def dob_as_string
     date_of_birth.iso8601
+  end
+
+  def call_with_dqt
+    result = Dqt::RecordCheck.new(**payload.merge(check_first_name_only: true)).call
+    if result.total_matched >= 3
+      result.dqt_record
+    end
+  end
+
+  def call_with_ecf
+    request = Net::HTTP::Post.new(uri)
+    request["Authorization"] = "Bearer #{config.bearer_token}"
+    request.set_form_data(payload)
+
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: use_ssl?, read_timeout: 20) do |http|
+      http.request(request)
+    end
+
+    if response.code == "404"
+      nil
+    else
+      OpenStruct.new(JSON.parse(response.body)["data"]["attributes"])
+    end
   end
 end

@@ -76,6 +76,11 @@ Rails.application.configure do
     api_enabled: true,
     migration_enabled: true,
     ecf_api_disabled: false,
+    parity_check: {
+      enabled: true,
+      npq_url: "http://ecf.example.com",
+      ecf_url: "http://npq.example.com",
+    },
   }
 
   config.dotenv.autorestore = false if config.respond_to?(:dotenv)
