@@ -133,6 +133,24 @@ RSpec.describe Migration::Migrators::Application do
         expect(failure_manager).to have_received(:record_failure).once.with(orphan_application1, /NPQApplication not found in ECF/)
         expect(failure_manager).to have_received(:record_failure).once.with(orphan_application2, /NPQApplication not found in ECF/)
       end
+
+      context "when application does not exist on NPQ" do
+        it "creates application" do
+          created_at = 10.days.ago
+          updated_at = 3.days.ago
+
+          ::Application.find_by!(ecf_id: ecf_resource1.id).destroy!
+          expect(::Application.find_by_ecf_id(ecf_resource1.id)).to be_nil
+
+          ecf_resource1.update!(created_at:, updated_at:)
+
+          instance.call
+
+          application = ::Application.find_by_ecf_id!(ecf_resource1.id)
+          expect(application.created_at.to_s).to eq(created_at.to_s)
+          expect(application.updated_at.to_s).to eq(updated_at.to_s)
+        end
+      end
     end
   end
 end
