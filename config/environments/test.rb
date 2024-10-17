@@ -78,6 +78,8 @@ Rails.application.configure do
     ecf_api_disabled: false,
     parity_check: {
       enabled: true,
+      npq_url: "http://ecf.example.com",
+      ecf_url: "http://npq.example.com",
     },
   }
 

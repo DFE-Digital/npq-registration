@@ -1,5 +1,5 @@
-module Migration::ParityCheck
-  class TokenProvider
+module Migration
+  class ParityCheck::TokenProvider
     class UnsupportedEnvironmentError < RuntimeError; end
 
     def generate!
