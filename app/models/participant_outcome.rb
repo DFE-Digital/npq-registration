@@ -59,6 +59,10 @@ class ParticipantOutcome < ApplicationRecord
     passed_state?
   end
 
+  def latest_for_declaration?
+    declaration.participant_outcomes.latest == self
+  end
+
 private
 
   def completion_date_not_in_the_future

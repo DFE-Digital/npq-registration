@@ -96,6 +96,19 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
   end
 
+  describe "#latest_for_declaration?" do
+    let!(:previous_outcome) { create(:participant_outcome, :voided, declaration:, created_at: 2.minutes.ago) }
+    let!(:latest_outcome) { create(:participant_outcome, :passed, declaration:, created_at: 1.minute.ago) }
+
+    it "returns false for superceded outcomes" do
+      expect(previous_outcome).not_to be_latest_for_declaration
+    end
+
+    it "returns true for latest outcomes" do
+      expect(latest_outcome).to be_latest_for_declaration
+    end
+  end
+
   describe ".to_send_to_qualified_teachers_api" do
     subject(:result) { described_class.to_send_to_qualified_teachers_api.map(&:id) }
 
