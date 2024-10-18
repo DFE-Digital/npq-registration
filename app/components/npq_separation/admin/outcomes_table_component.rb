@@ -37,7 +37,11 @@ module NpqSeparation
 
       def recorded_by_tra_api(outcome)
         if outcome.qualified_teachers_api_request_successful.nil?
-          outcome.latest_for_declaration? ? "Pending" : "N/A"
+          if outcome.latest_for_declaration?
+            tag.strong("Pending", class: "govuk-tag govuk-tag--blue")
+          else
+            tag.strong("N/A", class: "govuk-tag govuk-tag--yellow")
+          end
         else
           helpers.boolean_red_green_tag(outcome.qualified_teachers_api_request_successful)
         end
