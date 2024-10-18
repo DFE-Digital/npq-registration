@@ -60,7 +60,7 @@ class ParticipantOutcome < ApplicationRecord
   end
 
   def latest_for_declaration?
-    declaration.participant_outcomes.order(created_at: :desc).first == self
+    declaration.participant_outcomes.latest == self
   end
 
 private
