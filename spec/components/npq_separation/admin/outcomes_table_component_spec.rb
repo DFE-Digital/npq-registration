@@ -26,8 +26,8 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
     context "when the outcome has not been sent to TRA" do
       let(:outcomes) { [create(:participant_outcome)] }
 
-      it "renders 'No'" do
-        expect(cell_text).to eq("No")
+      it "renders 'N/A'" do
+        expect(cell_text).to eq("N/A")
       end
     end
 
