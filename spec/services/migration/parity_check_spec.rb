@@ -28,7 +28,7 @@ RSpec.describe Migration::ParityCheck do
     end
 
     allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with("PARITY-CHECK-KEYS").and_return(keys.to_json)
+    allow(ENV).to receive(:[]).with("PARITY_CHECK_KEYS").and_return(keys.to_json)
   end
 
   describe(".run!") do
