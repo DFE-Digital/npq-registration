@@ -38,7 +38,6 @@ module Migration
     def run!
       raise UnsupportedEnvironmentError, "The parity check functionality is disabled for this environment" unless enabled?
 
-      purge_comparisons!
       lead_providers.each(&method(:call_endpoints))
 
       finalise!

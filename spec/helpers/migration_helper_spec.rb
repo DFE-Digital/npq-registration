@@ -207,4 +207,96 @@ RSpec.describe MigrationHelper, type: :helper do
       end
     end
   end
+
+  describe ".response_comparison_status_tag" do
+    subject { helper.response_comparison_status_tag(different) }
+
+    context "when not different" do
+      let(:different) { false }
+
+      it { is_expected.to have_css("strong.govuk-tag.govuk-tag--green", text: "EQUAL") }
+    end
+
+    context "when different" do
+      let(:different) { true }
+
+      it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "DIFFERENT") }
+    end
+  end
+
+  describe ".response_comparison_performance" do
+    subject { helper.response_comparison_performance(response_comparison) }
+
+    context "when NPQ is slower" do
+      let(:response_comparison) { build(:response_comparison, npq_response_time_ms: 2, ecf_response_time_ms: 1) }
+
+      it { is_expected.to have_css("strong", text: "🐌 0.5x slower") }
+    end
+
+    context "when NPQ is faster" do
+      let(:response_comparison) { build(:response_comparison, npq_response_time_ms: 1, ecf_response_time_ms: 2) }
+
+      it { is_expected.to have_css("i", text: "🚀 2x faster") }
+    end
+  end
+
+  describe ".response_comparison_detail_path" do
+    subject { helper.response_comparison_detail_path(response_comparison) }
+
+    context "when different" do
+      let(:response_comparison) { create(:response_comparison, :different) }
+
+      it { is_expected.to include("/npq-separation/migration/parity_checks/response_comparisons/#{response_comparison.id}") }
+    end
+
+    context "when equal" do
+      let(:response_comparison) { build(:response_comparison, :equal) }
+
+      it { is_expected.to be_nil }
+    end
+  end
+
+  describe ".response_comparison_response_duration_human_readable" do
+    subject { helper.response_comparison_response_duration_human_readable(duration_ms) }
+
+    context "when the duration is less than 1 second" do
+      let(:duration_ms) { 500 }
+
+      it { is_expected.to eq("500ms") }
+    end
+
+    context "when the duration is 1 second" do
+      let(:duration_ms) { 1_000 }
+
+      it { is_expected.to eq("1 second") }
+    end
+
+    context "when the duration is more than 1 second" do
+      let(:duration_ms) { 2_525 }
+
+      it { is_expected.to eq("2 seconds") }
+    end
+  end
+
+  describe ".response_comparison_status_code_tag" do
+    subject { helper.response_comparison_status_code_tag(status_code) }
+
+    context "when the status code is less than or equal to 299" do
+      let(:status_code) { 200 }
+
+      it { is_expected.to have_css("strong.govuk-tag.govuk-tag--green", text: "200") }
+    end
+
+    context "when the status code is less than or equal to 399" do
+      let(:status_code) { 302 }
+
+      it { is_expected.to have_css("strong.govuk-tag.govuk-tag--yellow", text: "302") }
+    end
+
+    context "when the status code is greater than 399" do
+      let(:status_code) { 500 }
+
+      it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "500") }
+    end
+  end
 end

@@ -144,23 +144,24 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
         it "calls the endpoints on ECF/NPQ with correct headers for each lead provider" do
           run
 
-          ecf_tokens = ecf_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          expect(ecf_tokens).to match_array(keys.values)
+          expect(ecf_requests.count).to eql(LeadProvider.count)
+          expect(npq_requests.count).to eql(LeadProvider.count)
 
-          npq_tokens = npq_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          expect(npq_tokens).to match_array(keys.values)
+          requests.each do |request|
+            expect(request.uri.path).to eq("/api/v3/statements")
+            expect(request.headers["Accept"]).to eq("application/json")
+            expect(request.headers["Content-Type"]).to eq("application/json")
+          end
         end
 
         it "calls the endpoints on ECF/NPQ with valid authorization tokens for each lead provider" do
           run
 
           ecf_tokens = ecf_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          ecf_lead_providers_for_tokens = ecf_tokens.map { |token| Migration::Ecf::APIToken.find_by_unhashed_token(token).owner }
-          expect(ecf_lead_providers_for_tokens).to match_array(Migration::Ecf::CpdLeadProvider.all)
+          expect(ecf_tokens).to match_array(keys.values)
 
           npq_tokens = npq_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          npq_lead_providers_for_tokens = npq_tokens.map { |token| APIToken.find_by_unhashed_token(token).lead_provider }
-          expect(npq_lead_providers_for_tokens).to match_array(LeadProvider.all)
+          expect(npq_tokens).to match_array(keys.values)
         end
 
         it "saves response comparisons for each endpoint and lead provider" do

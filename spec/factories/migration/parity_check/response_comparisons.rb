@@ -12,8 +12,6 @@ FactoryBot.define do
     trait :equal do
       ecf_response_status_code { 200 }
       npq_response_status_code { 200 }
-      ecf_response_body { "ecf_response_body" }
-      npq_response_body { "npq_response_body" }
     end
 
     trait :different do
@@ -24,7 +22,7 @@ FactoryBot.define do
     end
 
     after :create do |response_comparison|
-      create(:ecf_migration_npq_lead_provider, id: response_comparison.lead_provider.ecf_id)
+      create(:ecf_migration_npq_lead_provider, id: response_comparison.lead_provider.ecf_id) unless Migration::Ecf::NpqLeadProvider.exists?(response_comparison.lead_provider.ecf_id)
     end
   end
 end
