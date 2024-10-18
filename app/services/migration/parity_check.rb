@@ -13,7 +13,6 @@ module Migration
       raise UnsupportedEnvironmentError, "The parity check functionality is disabled for this environment" unless enabled?
 
       purge_comparisons!
-      tokens_by_lead_provider # Preload to avoid this effecting the first request benchmark.
       lead_providers.each(&method(:call_endpoints))
     end
 
@@ -61,7 +60,7 @@ module Migration
     end
 
     def get_request(lead_provider:, path:, app:)
-      HTTParty.get(url(app:, path:), headers: headers(token(lead_provider, app)))
+      HTTParty.get(url(app:, path:), headers: headers(token_provider.token(lead_provider:)))
     end
 
     def timed_response(&request)
@@ -73,14 +72,6 @@ module Migration
 
     def lead_providers
       @lead_providers ||= LeadProvider.all
-    end
-
-    def token(lead_provider, app)
-      @tokens_by_lead_provider[lead_provider.ecf_id][app]
-    end
-
-    def tokens_by_lead_provider
-      @tokens_by_lead_provider ||= token_provider.generate!
     end
 
     def token_provider
