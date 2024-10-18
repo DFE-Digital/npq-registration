@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
+  subject { page }
+
   before do
     render_inline(described_class.new(outcomes))
   end
@@ -93,8 +95,10 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
              .resend_npq_separation_admin_participant_outcome_path(outcomes.first)
       end
 
-      it "renders a resend link" do
-        expect(resend_cell).to have_link("Resend", href: resend_path)
+      it "renders a resend button" do
+        within(%(tbody tr td:nth-child(6) form[action="#{resend_path}")) do |form|
+          expect(form).to have_button("Resend")
+        end
       end
     end
 

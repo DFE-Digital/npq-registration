@@ -6,7 +6,7 @@ RSpec.describe NpqSeparation::Admin::ParticipantOutcomesController, type: :reque
   describe "/npq_separation/admin/participant_outcomes/:id/resend" do
     subject :do_request do
       sign_in_as_admin
-      get resend_npq_separation_admin_participant_outcome_path(participant_outcome)
+      post resend_npq_separation_admin_participant_outcome_path(participant_outcome)
       response
     end
 

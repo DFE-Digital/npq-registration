@@ -235,7 +235,7 @@ Rails.application.routes.draw do
         resources :users, only: %i[index show]
 
         resources :participant_outcomes, only: %i[] do
-          member { get :resend }
+          member { post :resend }
         end
 
         namespace :finance do

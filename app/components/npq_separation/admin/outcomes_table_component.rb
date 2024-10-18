@@ -52,7 +52,9 @@ module NpqSeparation
       def tra_api_resend_link(outcome)
         return "" unless outcome.allow_resending_to_qualified_teachers_api?
 
-        govuk_link_to("Resend", resend_npq_separation_admin_participant_outcome_path(outcome))
+        govuk_button_to("Resend",
+                        resend_npq_separation_admin_participant_outcome_path(outcome),
+                        class: "govuk-!-margin-bottom-0")
       end
     end
   end

@@ -180,9 +180,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
 
     within(".govuk-table tbody tr:first-of-type td:last-of-type") do |action_cell|
-      expect(action_cell).to have_link("Resend")
+      expect(action_cell).to have_button("Resend")
 
-      click_link("Resend")
+      click_button("Resend")
     end
 
     expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
