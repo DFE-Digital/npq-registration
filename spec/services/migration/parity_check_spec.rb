@@ -6,6 +6,11 @@ RSpec.describe Migration::ParityCheck do
   let(:enabled) { true }
   let(:ecf_url) { "http://ecf.example.com" }
   let(:npq_url) { "http://npq.example.com" }
+  let(:keys) do
+    LeadProvider.all.each_with_object({}) do |lead_provider, hash|
+      hash[lead_provider.ecf_id] = SecureRandom.uuid
+    end
+  end
 
   before do
     LeadProvider.all.find_each do |lead_provider|
@@ -21,6 +26,9 @@ RSpec.describe Migration::ParityCheck do
         },
       }
     end
+
+    allow(ENV).to receive(:[]).and_call_original
+    allow(ENV).to receive(:[]).with("PARITY-CHECK-KEYS").and_return(keys.to_json)
   end
 
   describe(".run!") do
@@ -72,12 +80,10 @@ RSpec.describe Migration::ParityCheck do
         run
 
         ecf_tokens = ecf_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-        ecf_lead_providers_for_tokens = ecf_tokens.map { |token| Migration::Ecf::APIToken.find_by_unhashed_token(token).owner }
-        expect(ecf_lead_providers_for_tokens).to match_array(Migration::Ecf::CpdLeadProvider.all)
+        expect(ecf_tokens).to match_array(keys.values)
 
         npq_tokens = npq_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-        npq_lead_providers_for_tokens = npq_tokens.map { |token| APIToken.find_by_unhashed_token(token).lead_provider }
-        expect(npq_lead_providers_for_tokens).to match_array(LeadProvider.all)
+        expect(npq_tokens).to match_array(keys.values)
       end
 
       it "saves response comparisons for each endpoint and lead provider" do
