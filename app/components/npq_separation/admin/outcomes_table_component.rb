@@ -29,7 +29,7 @@ module NpqSeparation
             outcome.state.humanize,
             outcome.completion_date.to_fs(:govuk_short),
             outcome.created_at.to_date.to_fs(:govuk),
-            outcome.sent_to_qualified_teachers_api_at.try(:to_fs, :govuk_short).presence || "No",
+            outcome.sent_to_qualified_teachers_api_at.try(:to_fs, :govuk_short).presence || "N/A",
             recorded_by_tra_api(outcome),
           ]
         end
