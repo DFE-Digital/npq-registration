@@ -78,7 +78,7 @@ class ParticipantOutcome < ApplicationRecord
   end
 
   def latest_for_declaration?
-    declaration.participant_outcomes.latest == self
+    self == declaration.participant_outcomes.max_by(&:created_at)
   end
 
   def allow_resending_to_qualified_teachers_api?
