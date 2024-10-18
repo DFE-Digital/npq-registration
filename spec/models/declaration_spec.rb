@@ -42,6 +42,12 @@ RSpec.describe Declaration, type: :model do
         expect(subject).to be_invalid
         expect(subject).to have_error(:declaration_date, :declaration_before_schedule_start, "Enter a '#/declaration_date' that's on or after the schedule start.")
       end
+
+      context "when `skip_declaration_date_within_schedule_validation` is set to true" do
+        before { subject.skip_declaration_date_within_schedule_validation = true }
+
+        it { is_expected.to be_valid }
+      end
     end
 
     context "when declaration_date is at the schedule start" do

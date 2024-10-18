@@ -37,6 +37,7 @@ module Migration::Migrators
           cohort_id: find_cohort_id!(ecf_id: ecf_declaration.cohort_id),
           lead_provider_id: find_lead_provider_id!(ecf_id: ecf_declaration.cpd_lead_provider.npq_lead_provider.id),
           application_id: find_application_id!(course_identifier: ecf_declaration.course_identifier, ecf_user_id: ecf_declaration.user_id),
+          skip_declaration_date_within_schedule_validation: true,
         )
       end
     end
