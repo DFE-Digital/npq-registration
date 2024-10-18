@@ -14,7 +14,7 @@ RSpec.describe Migration::Migrators::Application do
       create(:schedule, :npq_aso_december, ecf_id: ecf_schedule.id, cohort:, identifier: ecf_schedule.schedule_identifier)
       create(:private_childcare_provider, provider_urn: ecf_resource.private_childcare_provider_urn)
 
-      school = create(:school, urn: ecf_resource.school_urn)
+      school = create(:school, urn: ecf_resource.school_urn, ukprn: ecf_resource.school_ukprn)
       course = create(:course, identifier: ecf_resource.npq_course.identifier, ecf_id: ecf_resource.npq_course_id)
       lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider_id)
       user = create(:user, ecf_id: ecf_resource.user.id)
@@ -149,6 +149,16 @@ RSpec.describe Migration::Migrators::Application do
           application = ::Application.find_by_ecf_id!(ecf_resource1.id)
           expect(application.created_at.to_s).to eq(created_at.to_s)
           expect(application.updated_at.to_s).to eq(updated_at.to_s)
+        end
+      end
+
+      context "when the school ukprn does not match with the one pulled in from ECF" do
+        before { ecf_resource1.update!(school_ukprn: rand(10_000_000..99_999_999).to_s) }
+
+        it "records a failure" do
+          instance.call
+
+          expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, /Validation failed: School UKPRN does not match/)
         end
       end
     end
