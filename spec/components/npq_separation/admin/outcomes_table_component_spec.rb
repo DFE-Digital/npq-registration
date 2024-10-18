@@ -22,6 +22,56 @@ RSpec.describe NpqSeparation::Admin::OutcomesTableComponent, type: :component do
     end
   end
 
+  describe "Table caption text" do
+    context "when passed but not sent" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :passed)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Passed" }
+    end
+
+    context "when failed but not sent" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :failed)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Failed" }
+    end
+
+    context "when passed and sent and recorded" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :passed, :successfully_sent_to_qualified_teachers_api)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Passed and recorded" }
+    end
+
+    context "when failed and sent and recorded" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :failed, :successfully_sent_to_qualified_teachers_api)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Failed and recorded" }
+    end
+
+    context "when passed and sent but not recorded" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :passed, :unsuccessfully_sent_to_qualified_teachers_api)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Passed but not recorded" }
+    end
+
+    context "when failed and sent but not recored" do
+      let :outcomes do
+        create_list(:participant_outcome, 1, :failed, :unsuccessfully_sent_to_qualified_teachers_api)
+      end
+
+      it { is_expected.to have_css "caption", text: "Declaration Outcomes: Failed but not recorded" }
+    end
+  end
+
   describe "'Sent to TRA API' column" do
     let(:cell_text) { page.find("tbody tr td:nth-child(4)").text }
 
