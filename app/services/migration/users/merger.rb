@@ -11,7 +11,8 @@ module Migration
       def merge!
         ApplicationRecord.transaction do
           from_user.applications.update!(user: to_user)
-          from_user.update!(uid: nil)
+          email = from_user.email
+          from_user.update!(uid: nil, email: "merged-#{email}")
         end
       end
     end

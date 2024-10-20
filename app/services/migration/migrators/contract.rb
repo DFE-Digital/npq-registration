@@ -42,12 +42,11 @@ module Migration::Migrators
           contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
           contract_template.update!(ecf_contract.attributes.slice(*SHARED_ATTRIBUTES))
 
-          # contract = ::Contract.find_or_initialize_by(
-          #   statement_id:,
-          #   course_id:,
-          # )
-
-          # contract.update!(contract_template:)
+          contract = ::Contract.create!(
+            statement_id:,
+            course_id:,
+            contract_template_id: contract_template.id
+          )
         end
       end
     end
