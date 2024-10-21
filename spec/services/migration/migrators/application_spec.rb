@@ -161,6 +161,19 @@ RSpec.describe Migration::Migrators::Application do
           expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, /Validation failed: School UKPRN does not match/)
         end
       end
+
+      context "when the school ukprn pulled in from ECF is nil" do
+        before { ecf_resource1.update!(school_ukprn: nil) }
+
+        it "overrides ukprn from Schools table on the NPQ application" do
+          application = Application.find_by!(ecf_id: ecf_resource1.id)
+          expect(application.ukprn).to be_nil
+
+          instance.call
+
+          expect(application.reload.ukprn).to eq(application.school.ukprn)
+        end
+      end
     end
   end
 end
