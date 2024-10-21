@@ -2,20 +2,6 @@ module Migration::Migrators
   class Contract < Base
     INFRA_WORKER_COUNT = 1
 
-    SHARED_ATTRIBUTES = %w[
-      created_at
-      updated_at
-      service_fee_percentage
-      output_payment_percentage
-      per_participant
-      number_of_payment_periods
-      recruitment_target
-      service_fee_installments
-      targeted_delivery_funding_per_participant
-      monthly_service_fee
-      special_course
-    ].freeze
-
     class << self
       def record_count
         ecf_contracts.count
@@ -30,7 +16,7 @@ module Migration::Migrators
       end
 
       def dependencies
-        %i[course statement]
+        %i[course statement contract_template]
       end
 
       def number_of_workers
@@ -48,36 +34,22 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_contracts) do |ecf_contract|
-        ApplicationRecord.transaction do
-          course_id = find_course_id!(identifier: ecf_contract.course_identifier)
+        course_id = find_course_id!(identifier: ecf_contract.course_identifier)
+        contract_template_id = find_contract_template_id!(ecf_id: ecf_contract.id)
+        statements_by_id = ::Statement.where(ecf_id: ecf_statements(ecf_contract).pluck(:id)).index_by(&:id)
 
-          contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
-          unless contract_template.persisted?
-            contract_template.update!(ecf_contract.attributes.slice(*SHARED_ATTRIBUTES))
-          end
-
-          statements_by_id = ::Statement.where(ecf_id: ecf_statements(ecf_contract).pluck(:id)).index_by(&:id)
-          statements_by_id.each_key do |statement_id|
-            contract = ::Contract.find_by(
-              statement_id:,
-              course_id:,
-            )
-
-            next if contract.present?
-
-            ::Contract.create!(
-              statement_id:,
-              course_id:,
-              contract_template:,
-            )
-          end
+        statements_by_id.each_key do |statement_id|
+          contract = ::Contract.find_or_initialize_by(
+            statement_id:,
+            course_id:,
+          )
+          contract.update!(contract_template_id:)
         end
       end
     end
 
     def ecf_statements(ecf_contract)
-      @ecf_statements ||= {}
-      @ecf_statements["#{ecf_contract.npq_lead_provider.cpd_lead_provider},#{ecf_contract.cohort},#{ecf_contract.version}"] ||= Migration::Ecf::Finance::Statement.where(
+      Migration::Ecf::Finance::Statement.where(
         cpd_lead_provider: ecf_contract.npq_lead_provider.cpd_lead_provider,
         cohort: ecf_contract.cohort,
         contract_version: ecf_contract.version,
