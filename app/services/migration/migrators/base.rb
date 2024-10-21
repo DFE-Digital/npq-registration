@@ -133,6 +133,10 @@ module Migration::Migrators
       schedule_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
     end
 
+    def find_contract_template_id!(ecf_id:)
+      contract_template_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Contract Template")
+    end
+
     def course_groups_by_schedule_type(ecf_type)
       case ecf_type
       when "Finance::Schedule::NPQLeadership"
@@ -186,6 +190,10 @@ module Migration::Migrators
 
     def school_ids_by_urn
       @school_ids_by_urn ||= ::School.pluck(:urn, :id).to_h
+    end
+
+    def contract_template_ids_by_ecf_id
+      @contract_template_ids_by_ecf_id ||= ::ContractTemplate.pluck(:ecf_id, :id).to_h
     end
 
     def itt_provider_ids_by_legal_name_and_operating_name
