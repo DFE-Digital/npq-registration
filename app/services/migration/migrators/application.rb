@@ -72,8 +72,10 @@ module Migration::Migrators
         if ecf_npq_application.school_urn.present?
           application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
 
-          if application.school.ukprn.to_s == ecf_npq_application.school_ukprn.to_s
+          if ecf_npq_application.school_ukprn && ecf_npq_application.school_ukprn.to_s == application.school.ukprn.to_s
             application.ukprn = ecf_npq_application.school_ukprn
+          elsif ecf_npq_application.school_ukprn.blank?
+            application.ukprn = application.school.ukprn
           else
             ecf_npq_application.errors.add(:base, "School UKPRN does not match")
             raise ActiveRecord::RecordInvalid, ecf_npq_application
