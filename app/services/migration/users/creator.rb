@@ -1,22 +1,33 @@
 module Migration
   module Users
     class Creator
-      attr_reader :ecf_user
+      attr_reader :ecf_user, :email
 
-      def initialize(ecf_user)
+      def initialize(ecf_user, email)
         @ecf_user = ecf_user
+        @email = email
       end
 
       def find_or_initialize
         raise_on_multiple_ecf_users_with_same_ecf_id!
 
+        if email_user_only_exists_in_npq?
+          # user linked to orphan user
+          user = Migration::Ecf::User.find_by(id: user_by_ecf_email.ecf_id)
+          if user && user.npq_applications.empty? && user.npq_profiles.empty?
+            user_by_ecf_email.ecf_id = ecf_user.id
+            return user_by_ecf_email
+          end
+        end
+
         if user_does_not_exist_on_npq?
           return ::User.new(ecf_id: ecf_user.id)
         end
 
-        if both_ecf_ids_return_same_user? || only_ecf_id_return_user?
+        if all_identifiers_return_same_user? || only_ecf_id_return_user?
           return user_by_ecf_user_id
         end
+
 
         if both_ecf_ids_return_different_users?
           # ECF has primary user that has been deduped, second NPQ user links to orphaned or nil ecf_user
@@ -59,6 +70,12 @@ module Migration
         @user_by_ecf_user_id ||= ::User.find_by(ecf_id: ecf_user.id)
       end
 
+      def user_by_ecf_email
+        return if email.blank?
+        # Find User with `ecf_user.id`
+        @user_by_ecf_email ||= ::User.find_by(email:)
+      end
+
       def user_by_ecf_user_gai_id
         return if ecf_user.get_an_identity_id.blank?
 
@@ -82,6 +99,10 @@ module Migration
         user_by_ecf_user_id.nil? && user_by_ecf_user_gai_id.nil?
       end
 
+      def email_user_only_exists_in_npq?
+        user_by_ecf_user_id.nil? && user_by_ecf_user_gai_id.nil? && user_by_ecf_email.present?
+      end
+
       def raise_on_multiple_ecf_users_with_same_ecf_id!
         # user.ecf_id is not validated as unique, check for duplicates
         return unless ::User.where(ecf_id: ecf_user.id).count > 1
@@ -94,7 +115,7 @@ module Migration
         user_by_ecf_user_id && user_by_ecf_user_gai_id.nil?
       end
 
-      def both_ecf_ids_return_same_user?
+      def all_identifiers_return_same_user?
         # Both id's return the same record, success
         user_by_ecf_user_id == user_by_ecf_user_gai_id
       end
