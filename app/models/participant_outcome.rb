@@ -7,7 +7,7 @@ class ParticipantOutcome < ApplicationRecord
   validates :completion_date, presence: true
   validate :completion_date_not_in_the_future
 
-  delegate :user, :lead_provider, :course, to: :declaration
+  delegate :user, :lead_provider, :course, :application_id, to: :declaration
 
   enum state: {
     passed: "passed",
@@ -59,8 +59,37 @@ class ParticipantOutcome < ApplicationRecord
     passed_state?
   end
 
+  def has_failed?
+    return nil if voided_state?
+
+    failed_state?
+  end
+
+  def not_sent?
+    sent_to_qualified_teachers_api_at.nil?
+  end
+
+  def sent_and_recorded?
+    sent_to_qualified_teachers_api_at? && qualified_teachers_api_request_successful?
+  end
+
+  def sent_but_not_recorded?
+    sent_to_qualified_teachers_api_at? && qualified_teachers_api_request_successful == false
+  end
+
   def latest_for_declaration?
-    declaration.participant_outcomes.latest == self
+    self == declaration.participant_outcomes.max_by(&:created_at)
+  end
+
+  def allow_resending_to_qualified_teachers_api?
+    sent_but_not_recorded? && latest_for_declaration?
+  end
+
+  def resend_to_qualified_teachers_api!
+    return false unless allow_resending_to_qualified_teachers_api?
+
+    update!(qualified_teachers_api_request_successful: nil,
+            sent_to_qualified_teachers_api_at: nil)
   end
 
 private

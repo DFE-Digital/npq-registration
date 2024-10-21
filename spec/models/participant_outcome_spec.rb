@@ -96,6 +96,28 @@ RSpec.describe ParticipantOutcome, type: :model do
     end
   end
 
+  describe "#has_failed?" do
+    context "when the outcome is voided" do
+      before { instance.state = :voided }
+
+      it { expect(instance.has_failed?).to be_nil }
+    end
+
+    context "when the outcome is passed" do
+      before { instance.state = :failed }
+
+      it { is_expected.to be_has_failed }
+    end
+
+    described_class.states.keys.excluding("failed", "voided").each do |state|
+      context "when the outcome is #{state}" do
+        before { instance.state = state }
+
+        it { is_expected.not_to be_has_failed }
+      end
+    end
+  end
+
   describe "#latest_for_declaration?" do
     let!(:previous_outcome) { create(:participant_outcome, :voided, declaration:, created_at: 2.minutes.ago) }
     let!(:latest_outcome) { create(:participant_outcome, :passed, declaration:, created_at: 1.minute.ago) }
@@ -236,6 +258,165 @@ RSpec.describe ParticipantOutcome, type: :model do
       subject(:result) { described_class.latest_per_declaration.map(&:id) }
 
       it { is_expected.to contain_exactly(outcome_1.id, outcome_2.id) }
+    end
+  end
+
+  describe "#not_sent?" do
+    subject { outcome.not_sent? }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+  end
+
+  describe "#sent_and_recorded?" do
+    subject { outcome.sent_and_recorded? }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#sent_and_not_recorded?" do
+    subject { outcome.sent_but_not_recorded? }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#allow_resending_to_qualified_teachers_api?" do
+    subject { outcome.allow_resending_to_qualified_teachers_api? }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+
+    context "when not latest outcome" do
+      before do
+        create(:participant_outcome, :failed, declaration: outcome.declaration,
+                                              created_at: 3.minutes.from_now)
+      end
+
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#resend_to_qualified_teachers_api!" do
+    subject(:resend) { outcome.resend_to_qualified_teachers_api! }
+
+    context "with successfully delivery" do
+      let(:outcome) { create(:participant_outcome, :successfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+      it { expect { resend }.not_to change(outcome.reload, :sent_to_qualified_teachers_api_at) }
+      it { expect { resend }.not_to change(outcome.reload, :qualified_teachers_api_request_successful) }
+    end
+
+    context "with failed delivery" do
+      let(:outcome) { create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be true }
+      it { expect { resend }.to change(outcome.reload, :sent_to_qualified_teachers_api_at).to(nil) }
+      it { expect { resend }.to change(outcome.reload, :qualified_teachers_api_request_successful).to(nil) }
+    end
+
+    context "with incomplete delivery" do
+      let(:outcome) { create(:participant_outcome, :sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+      it { expect { resend }.not_to change(outcome.reload, :sent_to_qualified_teachers_api_at) }
+      it { expect { resend }.not_to change(outcome.reload, :qualified_teachers_api_request_successful) }
+    end
+
+    context "with undelivered" do
+      let(:outcome) { create(:participant_outcome, :not_sent_to_qualified_teachers_api) }
+
+      it { is_expected.to be false }
+      it { expect { resend }.not_to change(outcome.reload, :sent_to_qualified_teachers_api_at) }
+      it { expect { resend }.not_to change(outcome.reload, :qualified_teachers_api_request_successful) }
     end
   end
 end
