@@ -6,6 +6,7 @@ module Migration
 
     validates :lead_provider, presence: true
     validates :request_path, presence: true
+    validates :page, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
     validates :request_method, inclusion: { in: %w[get post put] }
     validates :ecf_response_status_code, inclusion: { in: 100..599 }
     validates :npq_response_status_code, inclusion: { in: 100..599 }

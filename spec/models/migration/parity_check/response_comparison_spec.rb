@@ -17,6 +17,7 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
     it { is_expected.to validate_inclusion_of(:npq_response_status_code).in_range(100..599) }
     it { is_expected.to validate_numericality_of(:ecf_response_time_ms).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:npq_response_time_ms).is_greater_than(0) }
+    it { is_expected.to validate_numericality_of(:page).only_integer.is_greater_than(0).allow_nil }
 
     context "when the response comparison is equal" do
       subject { create(:response_comparison, :equal) }
