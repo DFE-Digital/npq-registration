@@ -30,11 +30,18 @@ RSpec.describe Migration::ParityCheck::Client do
     it { expect(instance.path).to eq(path) }
     it { expect(instance.method).to eq(method) }
     it { expect(instance.options).to eq(options) }
+    it { expect(instance.page).to be_nil }
 
     context "when options is nil" do
       let(:options) { nil }
 
       it { expect(instance.options).to eq({}) }
+    end
+
+    context "when paginate is true" do
+      let(:options) { { paginate: true } }
+
+      it { expect(instance.page).to eq(1) }
     end
   end
 
@@ -51,27 +58,34 @@ RSpec.describe Migration::ParityCheck::Client do
         stub_request(:get, "#{npq_url}#{path}").to_return(status: 201, body: "npq_response_body")
       end
 
-      it "makes a request to ECF/NPQ with correct path and headers" do
-        instance.make_requests do
-          requests.each do |request|
-            expect(request.uri.path).to eq(path)
-            expect(request.headers["Accept"]).to eq("application/json")
-            expect(request.headers["Content-Type"]).to eq("application/json")
-          end
+      it "makes a request to each service" do
+        instance.make_requests {}
+
+        expect(ecf_requests.count).to eq(1)
+        expect(npq_requests.count).to eq(1)
+      end
+
+      it "makes requests with the correct path and headers" do
+        instance.make_requests {}
+
+        requests.each do |request|
+          expect(request.uri.path).to eq(path)
+          expect(request.headers["Accept"]).to eq("application/json")
+          expect(request.headers["Content-Type"]).to eq("application/json")
         end
       end
 
-      it "makes a request to ECF/NPQ with a valid authorization token for the lead provider" do
-        instance.make_requests do
-          ecf_token = ecf_requests.first.headers["Authorization"].partition("Bearer ").last
-          expect(ecf_token).to eq(keys[lead_provider.ecf_id])
+      it "makes requests with a valid authorization token for the lead provider" do
+        instance.make_requests {}
 
-          npq_token = npq_requests.first.headers["Authorization"].partition("Bearer ").last
-          expect(npq_token).to eq(keys[lead_provider.ecf_id])
-        end
+        ecf_token = ecf_requests.first.headers["Authorization"].partition("Bearer ").last
+        expect(ecf_token).to eq(keys[lead_provider.ecf_id])
+
+        npq_token = npq_requests.first.headers["Authorization"].partition("Bearer ").last
+        expect(npq_token).to eq(keys[lead_provider.ecf_id])
       end
 
-      it "yeilds the result of each call to the block" do
+      it "yields the result of each request to the block" do
         instance.make_requests do |ecf_result, npq_result, page|
           expect(ecf_result[:response].code).to eq(200)
           expect(ecf_result[:response].body).to eq("ecf_response_body")
@@ -82,6 +96,116 @@ RSpec.describe Migration::ParityCheck::Client do
           expect(npq_result[:response_ms]).to be >= 0
 
           expect(page).to be_nil
+        end
+      end
+
+      context "when paginate is true" do
+        let(:options) { { paginate: true } }
+
+        before { stub_const("Migration::ParityCheck::Client::PAGINATION_PER_PAGE", 2) }
+
+        context "when there is only one page of results" do
+          before do
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1] }.to_json)
+
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1] }.to_json)
+          end
+
+          it "makes a single request to each service for the first page" do
+            instance.make_requests {}
+
+            expect(ecf_requests.count).to eq(1)
+            expect(URI.decode_uri_component(ecf_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+
+            expect(npq_requests.count).to eq(1)
+            expect(URI.decode_uri_component(npq_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+          end
+
+          it "yields the result of each request to the block" do
+            instance.make_requests do |ecf_result, npq_result, page|
+              expect(ecf_result[:response].code).to eq(200)
+              expect(ecf_result[:response].body).to eq({ data: [1] }.to_json)
+              expect(ecf_result[:response_ms]).to be >= 0
+
+              expect(npq_result[:response].code).to eq(200)
+              expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
+              expect(npq_result[:response_ms]).to be >= 0
+
+              expect(page).to eq(1)
+            end
+          end
+        end
+
+        context "when there are multiple pages of results" do
+          before do
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1, 2] }.to_json)
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 2, per_page: 2 } })
+              .to_return(status: 200, body: { data: [3] }.to_json)
+
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1] }.to_json)
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 2, per_page: 2 } })
+              .to_return(status: 200, body: { data: [] }.to_json)
+          end
+
+          it "makes a single request to each service for all pages" do
+            instance.make_requests {}
+
+            expect(ecf_requests.count).to eq(2)
+            expect(URI.decode_uri_component(ecf_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+            expect(URI.decode_uri_component(ecf_requests.last.uri.query)).to eq("page[page]=2&page[per_page]=2")
+
+            expect(npq_requests.count).to eq(2)
+            expect(URI.decode_uri_component(npq_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+            expect(URI.decode_uri_component(npq_requests.last.uri.query)).to eq("page[page]=2&page[per_page]=2")
+          end
+
+          it "yields the result of each request to the block" do
+            expected_page = 0
+
+            instance.make_requests do |ecf_result, npq_result, page|
+              expected_page += 1
+              expect(page).to eq(expected_page)
+
+              case page
+              when 1
+                expect(ecf_result[:response].body).to eq({ data: [1, 2] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
+              when 2
+                expect(ecf_result[:response].body).to eq({ data: [3] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [] }.to_json)
+              end
+            end
+
+            expect(expected_page).to eq(2)
+          end
+        end
+
+        context "when a page of results does not return JSON" do
+          before do
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1] }.to_json)
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: "error")
+          end
+
+          it "treats it as if there are no more pages" do
+            instance.make_requests {}
+
+            expect(ecf_requests.count).to eq(1)
+            expect(npq_requests.count).to eq(1)
+          end
         end
       end
     end
