@@ -1,19 +1,5 @@
 module Migration::Migrators
   class Contract < Base
-    SHARED_ATTRIBUTES = %w[
-      created_at
-      updated_at
-      service_fee_percentage
-      output_payment_percentage
-      per_participant
-      number_of_payment_periods
-      recruitment_target
-      service_fee_installments
-      targeted_delivery_funding_per_participant
-      monthly_service_fee
-      special_course
-    ].freeze
-
     class << self
       def record_count
         ecf_contracts.count
@@ -28,26 +14,22 @@ module Migration::Migrators
       end
 
       def dependencies
-        %i[course statement]
+        %i[course statement contract_template]
       end
     end
 
     def call
       migrate(self.class.ecf_contracts) do |ecf_contract|
         course_id = find_course_id!(identifier: ecf_contract.course_identifier)
+        contract_template_id = find_contract_template_id!(ecf_id: ecf_contract.id)
+        statements_by_id = ::Statement.where(ecf_id: ecf_statements(ecf_contract).pluck(:id)).index_by(&:id)
 
-        ecf_statements(ecf_contract).find_each do |ecf_statement|
-          statement_id = find_statement_id!(ecf_id: ecf_statement.id)
-
-          contract_template = ::ContractTemplate.find_or_initialize_by(ecf_id: ecf_contract.id)
-          contract_template.update!(ecf_contract.attributes.slice(*SHARED_ATTRIBUTES))
-
+        statements_by_id.each_key do |statement_id|
           contract = ::Contract.find_or_initialize_by(
             statement_id:,
             course_id:,
           )
-
-          contract.update!(contract_template:)
+          contract.update!(contract_template_id:)
         end
       end
     end

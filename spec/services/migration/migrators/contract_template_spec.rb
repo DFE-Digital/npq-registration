@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Migration::Migrators::Contract do
-  it_behaves_like "a migrator", :contract, %i[course statement contract_template] do
+RSpec.describe Migration::Migrators::ContractTemplate do
+  it_behaves_like "a migrator", :contract_template, %i[statement] do
     def create_ecf_resource
       cohort = create(:ecf_migration_cohort)
       npq_lead_provider = create(:ecf_migration_npq_lead_provider)
@@ -36,7 +36,6 @@ RSpec.describe Migration::Migrators::Contract do
         lead_provider:,
         cohort:,
       )
-      create(:contract_template, ecf_id: ecf_resource.id)
     end
 
     def setup_failure_state
@@ -73,16 +72,9 @@ RSpec.describe Migration::Migrators::Contract do
         statement = statements.first
         expect(statement.cohort.start_year).to eq(ecf_resource1.cohort.start_year)
 
-        contracts = statement.contracts
-        expect(contracts.count).to eq(1)
-
-        contract = statement.contracts.first
-        expect(contract.course.identifier).to eq(ecf_resource1.course_identifier)
-
-        contract_template = contract.contract_template
-        expect(contract_template.ecf_id).to eq(ecf_resource1.id)
-
-        expect(Contract.where(contract_template:).count).to eq(1)
+        contract_template = ContractTemplate.find_by!(ecf_id: ecf_resource1.id)
+        attrs = ecf_resource1.attributes.slice(*described_class::SHARED_ATTRIBUTES)
+        expect(contract_template).to have_attributes(attrs)
       end
     end
   end
