@@ -256,6 +256,10 @@ Rails.application.routes.draw do
       resources :migrations, only: %i[index create] do
         get "download_report/:model", on: :collection, action: :download_report, as: :download_report
       end
+
+      resources :parity_checks, only: %i[index create] do
+        get "response_comparisons/:id", on: :collection, action: :response_comparison, as: :response_comparison
+      end
     end
   end
 
