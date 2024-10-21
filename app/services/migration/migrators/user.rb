@@ -32,16 +32,17 @@ module Migration::Migrators
 
     def call
       migrate(self.class.ecf_users) do |ecf_user|
-        user = ::Migration::Users::Creator.new(ecf_user).find_or_initialize
+        npq_application = most_recent_created_npq_application(ecf_user)
+        email = npq_application&.participant_identity&.email
+        email = email.downcase if email.present?
+
+        user = ::Migration::Users::Creator.new(ecf_user, email).find_or_initialize
 
         application_trns_by_verified = application_trns_by_verified(ecf_user)
 
         raise_if_multiple_verified_application_trns_and_no_teacher_profile_trn!(application_trns_by_verified[true], ecf_user)
         ecf_verified_trn = ecf_user.teacher_profile&.trn || application_trns_by_verified[true]&.first
         ecf_unverified_trn = application_trns_by_verified[false]&.first
-
-        npq_application = most_recent_created_npq_application(ecf_user)
-        email = npq_application&.participant_identity&.email
 
         user.update!(
           trn: ecf_verified_trn || ecf_unverified_trn || user.trn,
