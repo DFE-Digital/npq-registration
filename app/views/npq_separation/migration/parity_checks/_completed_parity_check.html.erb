@@ -8,13 +8,13 @@
 <canvas id="response-time-chart"></canvas>
 
 <%= govuk_accordion do |accordion|
-  @response_comparisons_by_lead_provider.each do |lead_provider_name, comparisons|
-    accordion.with_section(heading_text: lead_provider_name, expanded: comparisons.any?(&:different?)) do
+  @response_comparisons_by_lead_provider.each do |lead_provider_name, comparisons_by_description|
+    accordion.with_section(heading_text: lead_provider_name, expanded: comparisons_by_description.values.flatten.any?(&:different?)) do
       govuk_task_list do |task_list|
-        comparisons.each do |comparison|
+        comparisons_by_description.each do |description, comparisons|
           task_list.with_item do |item|
-            item.with_title(text: comparison.description, hint: response_comparison_performance(comparison), href: response_comparison_detail_path(comparison))
-            item.with_status(text: response_comparison_status_tag(comparison.different?))
+            item.with_title(text: description, hint: response_comparison_performance(comparisons), href: response_comparison_detail_path(comparisons))
+            item.with_status(text: response_comparison_status_tag(comparisons.any?(&:different?)))
           end
         end
       end

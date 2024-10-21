@@ -7,35 +7,21 @@
 <span class="govuk-caption-xl"><%= @comparison.lead_provider_name %></span>
 <h1 class="govuk-heading-xl"><%= @comparison.description %></h1>
 
-<%= govuk_table do |table|
-  table.with_caption(size: "m", text: "Overview")
+<% unless @matching_comparisons.one? %>
+  <%= render(partial: "multiple_comparisons_summary", locals: { comparisons: @matching_comparisons }) %>
+<% end %>
 
-  table.with_head do |head|
-    head.with_row do |row|
-      row.with_cell(text: "Metric")
-      row.with_cell(text: "ECF")
-      row.with_cell(text: "NPQ")
-      row.with_cell(text: "Comparison")
-    end
-  end
-
-  table.with_body do |body|
-    body.with_row do |row|
-      row.with_cell(text: "Response time")
-      row.with_cell(text: response_comparison_response_duration_human_readable(@comparison.ecf_response_time_ms))
-      row.with_cell(text: response_comparison_response_duration_human_readable(@comparison.npq_response_time_ms))
-      row.with_cell(text: response_comparison_performance(@comparison))
-    end
-
-    body.with_row do |row|
-      row.with_cell(text: "Status code")
-      row.with_cell(text: response_comparison_status_code_tag(@comparison.ecf_response_status_code))
-      row.with_cell(text: response_comparison_status_code_tag(@comparison.npq_response_status_code))
-      row.with_cell(text: response_comparison_status_tag(@comparison.ecf_response_status_code != @comparison.npq_response_status_code))
-    end
-  end
-end %>
-
-<h2 class="govuk-heading-m">Response body diff</h2>
-
-<%= @response_body_diff.to_s(:html).html_safe %>
+<% if @matching_comparisons.any?(&:different?) %>
+  <% if @matching_comparisons.one? %>
+    <%= render(partial: "single_comparison_summary", locals: { comparison: @comparison }) %>
+    <%= render(partial: "response_body_diff", locals: { response_body_diff: @comparison.response_body_diff }) %>
+  <% else %>
+    <%= govuk_accordion do |accordion|
+      @matching_comparisons.select(&:different?).each do |comparison|
+        accordion.with_section(heading_text: response_comparison_page_summary(comparison), expanded: comparison.different?) do
+          render(partial: "response_body_diff", locals: { response_body_diff: comparison.response_body_diff })
+        end
+      end
+    end %>
+  <% end %>
+<% end %>

@@ -34,19 +34,6 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
     end
   end
 
-  describe "scopes" do
-    describe ".with_differences" do
-      let!(:different_status_code) { create(:response_comparison, ecf_response_status_code: 200, npq_response_status_code: 201, ecf_response_body: "test", npq_response_body: "test") }
-      let!(:different_response_body) { create(:response_comparison, ecf_response_body: "ecf", npq_response_body: "npq", ecf_response_status_code: 200, npq_response_status_code: 200) }
-
-      before { create(:response_comparison, :equal) }
-
-      subject { described_class.with_differences }
-
-      it { is_expected.to contain_exactly(different_status_code, different_response_body) }
-    end
-  end
-
   describe "before_validation" do
     it "nullifies the response bodies when the response comparison is equal" do
       response_comparison = build(:response_comparison, :equal, ecf_response_body: "response", npq_response_body: "response")
@@ -57,17 +44,43 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
     end
   end
 
+  describe "scopes" do
+    describe ".matching" do
+      let(:comparison) { create(:response_comparison, page: 1, lead_provider: matching_comparison.lead_provider) }
+      let(:matching_comparison) { create(:response_comparison, page: 2) }
+
+      before do
+        # Matches apart from the lead provider
+        comparison.dup.update!(lead_provider: create(:lead_provider))
+
+        # Matches apart from the request path
+        comparison.dup.update!(request_path: "other/path")
+
+        # Matches apart from the request method
+        comparison.dup.update!(request_method: :post)
+      end
+
+      subject { described_class.matching(comparison) }
+
+      it { is_expected.to eq([comparison, matching_comparison]) }
+    end
+  end
+
   describe ".by_lead_provider" do
-    let!(:response_comparison1) { create(:response_comparison) }
+    let!(:response_comparison1) { create(:response_comparison, page: 1) }
     let!(:response_comparison2) { create(:response_comparison) }
-    let!(:response_comparison3) { create(:response_comparison, lead_provider: response_comparison1.lead_provider) }
+    let!(:response_comparison3) { create(:response_comparison, lead_provider: response_comparison1.lead_provider, page: 2) }
 
     subject(:by_lead_provider) { described_class.by_lead_provider }
 
-    it "groups the response comparisons by lead provider name" do
+    it "groups the response comparisons by lead provider name and then description" do
       expect(by_lead_provider).to eq(
-        response_comparison1.lead_provider_name => [response_comparison1, response_comparison3],
-        response_comparison2.lead_provider_name => [response_comparison2],
+        response_comparison1.lead_provider_name => {
+          response_comparison1.description => [response_comparison1, response_comparison3],
+        },
+        response_comparison2.lead_provider_name => {
+          response_comparison2.description => [response_comparison2],
+        },
       )
     end
   end
@@ -76,28 +89,6 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
     subject { build(:response_comparison, request_method: "get", request_path: "/path").description }
 
     it { is_expected.to eq("GET /path") }
-  end
-
-  describe "#npq_slower?" do
-    subject(:instance) { create(:response_comparison) }
-
-    context "when NPQ has a slower response time than ECF" do
-      before { instance.npq_response_time_ms = instance.ecf_response_time_ms + 1 }
-
-      it { is_expected.to be_npq_slower }
-    end
-
-    context "when NPQ has a faster response time than ECF" do
-      before { instance.npq_response_time_ms = instance.ecf_response_time_ms - 1 }
-
-      it { is_expected.not_to be_npq_slower }
-    end
-
-    context "when NPQ has tje same response time as ECF" do
-      before { instance.npq_response_time_ms = instance.ecf_response_time_ms }
-
-      it { is_expected.not_to be_npq_slower }
-    end
   end
 
   describe "#response_body_diff" do

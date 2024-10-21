@@ -31,7 +31,7 @@ module Migration
       return false unless paginate?
 
       [ecf_response[:response].body, npq_response[:response].body].any? do |body|
-        JSON.parse(body)["data"].size == PAGINATION_PER_PAGE
+        JSON.parse(body)["data"]&.size == PAGINATION_PER_PAGE
       rescue JSON::ParserError
         false
       end

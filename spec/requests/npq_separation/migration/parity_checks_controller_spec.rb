@@ -81,12 +81,6 @@ RSpec.describe NpqSeparation::Migration::ParityChecksController, type: :request 
 
       it { expect(response).to be_successful }
 
-      context "when the response comparison is equal", :exceptions_app do
-        let(:comparison) { create(:response_comparison, :equal) }
-
-        it { expect(response).to be_not_found }
-      end
-
       context "when the response comparison is not found", :exceptions_app do
         let(:comparison) { OpenStruct.new(id: -1) }
 

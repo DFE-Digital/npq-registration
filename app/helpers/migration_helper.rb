@@ -79,27 +79,44 @@ module MigrationHelper
     end
   end
 
-  def response_comparison_performance(comparison)
-    performance = (comparison.ecf_response_time_ms.to_f / comparison.npq_response_time_ms).round(1).to_s.chomp(".0")
+  def response_comparison_performance(comparisons)
+    comparisons = Array.wrap(comparisons)
+    average_performance = (comparisons.sum(&:ecf_response_time_ms).to_f / comparisons.sum(&:npq_response_time_ms)).round(1)
+    formatted_performance = average_performance.to_s.chomp(".0")
 
-    if comparison.npq_slower?
-      tag.strong("🐌 #{performance}x slower")
+    if average_performance < 1
+      tag.strong("🐌 #{formatted_performance}x as fast")
     else
-      tag.i("🚀 #{performance}x faster")
+      tag.i("🚀 #{formatted_performance}x faster")
     end
   end
 
-  def response_comparison_detail_path(comparison)
-    return unless comparison.different?
+  def response_comparison_detail_path(comparisons)
+    return unless comparisons.any?(&:different?)
 
-    response_comparison_npq_separation_migration_parity_checks_path(comparison)
+    response_comparison_npq_separation_migration_parity_checks_path(comparisons.sample.id)
   end
 
-  def response_comparison_response_duration_human_readable(duration_ms)
+  def response_comparison_response_duration_human_readable(comparisons, response_time_attribute)
+    comparisons = Array.wrap(comparisons)
+    duration_ms = (comparisons.sum(&response_time_attribute).to_f / comparisons.size).round(0)
+
     if duration_ms < 1_000
       "#{duration_ms}ms"
     else
       ActiveSupport::Duration.build(duration_ms / 1_000).inspect
+    end
+  end
+
+  def response_comparison_page_summary(comparison)
+    tag.div(class: "govuk-grid-row") do
+      tag.div("Page #{comparison.page}", class: "govuk-grid-column-two-thirds") +
+        tag.div(class: "govuk-grid-column-one-third govuk-!-text-align-right") do
+          tag.span("ECF: ", class: "govuk-!-font-weight-regular govuk-!-font-size-16") +
+            response_comparison_status_code_tag(comparison.ecf_response_status_code) +
+            tag.span(" NPQ: ", class: "govuk-!-font-weight-regular govuk-!-font-size-16") +
+            response_comparison_status_code_tag(comparison.npq_response_status_code)
+        end
     end
   end
 end

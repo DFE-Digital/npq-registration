@@ -16,7 +16,7 @@ class NpqSeparation::Migration::ParityChecksController < SuperAdminController
   end
 
   def response_comparison
-    @comparison = Migration::ParityCheck::ResponseComparison.with_differences.find(params[:id])
-    @response_body_diff = @comparison.response_body_diff
+    @comparison = Migration::ParityCheck::ResponseComparison.find(params[:id])
+    @matching_comparisons = Migration::ParityCheck::ResponseComparison.matching(@comparison)
   end
 end
