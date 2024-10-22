@@ -32,5 +32,10 @@ FactoryBot.define do
         create(:application, :accepted, user:, lead_provider: evaluator.lead_provider)
       end
     end
+
+    trait :archived do
+      archived_email { Faker::Internet.email(name: full_name) }
+      email { "archived-#{archived_email}" }
+    end
   end
 end

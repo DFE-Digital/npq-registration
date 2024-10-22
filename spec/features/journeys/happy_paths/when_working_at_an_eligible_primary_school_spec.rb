@@ -135,6 +135,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     expect(retrieve_latest_application_user_data).to match(
       "active_alert" => false,
+      "archived_email" => nil,
       "date_of_birth" => "1980-12-13",
       "ecf_id" => nil,
       "email" => "user@example.com",

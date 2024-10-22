@@ -29,21 +29,19 @@ module Migration
             return user_by_ecf_user_email
           end
 
-          raise_error("user not found with ecf_id or gai_id, user found with ecf_user_email. this user has a linked ecf_user which is not an orphan")
+          raise_error("User not found with ecf_id or gai_id, user found with ecf_user_email. this user has a linked ecf_user which is not an orphan")
         end
 
         # primary user and email user found, are different
         if primary_user && user_by_ecf_user_email
           if ecf_user_by_ecf_user_email_user_ecf_id.nil? || email_user_ecf_id_links_to_orphan_ecf_user?
-            # TODO: swap email to something else so primary_user.email can use it
-            raise_error("User found with ecf_id or gai_id AND user found with ecf_user_email. ecf_user_email user is orphan. But we need to do some email swapping")
+            ::Users::Archiver.new(user: user_by_ecf_user_email).archive!
+            return primary_user
           end
 
           raise_error("User found with ecf_id or gai_id AND user found with ecf_user_email. ecf_user_email user is not orphan.")
         end
       end
-
-    private
 
       def find_primary_user
         raise_on_multiple_ecf_users_with_same_ecf_id!
@@ -89,6 +87,8 @@ module Migration
           raise_error("User found with ecf_user.get_an_identity_id, but its user.ecf_id linked to another ecf_user that is not an orphan")
         end
       end
+
+    private
 
       def user_by_ecf_user_id
         # Find User with `ecf_user.id`
@@ -172,9 +172,9 @@ module Migration
         orphaned_ecf_user?(ecf_user_by_ecf_user_email_user_ecf_id)
       end
 
-      def orphaned_ecf_user?(u)
+      def orphaned_ecf_user?(ecf_user)
         # is it an orphan ecf user?
-        u.npq_applications.empty? && u.npq_profiles.empty?
+        ecf_user.npq_applications.empty? && ecf_user.npq_profiles.empty?
       end
     end
   end
