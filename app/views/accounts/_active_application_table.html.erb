@@ -28,7 +28,7 @@
         <dd class="govuk-summary-list__value">
           <% if application.lead_provider_approval_status.blank? || pending?(application) %>
             <%= govuk_tag(text: "Apply with provider", colour: "yellow") %>
-            <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= I18n.t("provider_details.pending_status")  %></p>
+            <%= render 'provider_pending_status' %>
           <% elsif accepted?(application) %>
             <%= govuk_tag(text: "Successful", colour: "green") %>
           <% elsif rejected?(application) %>
