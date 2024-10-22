@@ -71,6 +71,15 @@ module Migration::Migrators
 
         if ecf_npq_application.school_urn.present?
           application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
+
+          if ecf_npq_application.school_ukprn && ecf_npq_application.school_ukprn.to_s == application.school.ukprn.to_s
+            application.ukprn = ecf_npq_application.school_ukprn
+          elsif ecf_npq_application.school_ukprn.blank?
+            application.ukprn = application.school.ukprn
+          else
+            ecf_npq_application.errors.add(:base, "School UKPRN does not match")
+            raise ActiveRecord::RecordInvalid, ecf_npq_application
+          end
         end
 
         application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
@@ -84,7 +93,6 @@ module Migration::Migrators
           application.accepted_at = ecf_npq_application.profile.created_at
         end
 
-        application.ukprn = ecf_npq_application.school_ukprn
         application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
         application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
