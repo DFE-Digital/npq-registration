@@ -11,7 +11,8 @@ module Migration
         Rails.cache.write(:parity_check_started_at, Time.zone.now)
         Rails.cache.write(:parity_check_completed_at, nil)
 
-        Migration::ParityCheck::ResponseComparison.destroy_all
+        # We want this to be fast, so we're not bothering with callbacks.
+        Migration::ParityCheck::ResponseComparison.delete_all
       end
 
       def running?
