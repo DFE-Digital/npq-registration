@@ -2,8 +2,6 @@ require "rails_helper"
 
 RSpec.describe Migration::Migrators::Contract do
   it_behaves_like "a migrator", :contract, %i[course statement contract_template] do
-    let(:records_per_worker_divider) { 2 }
-
     def create_ecf_resource
       cohort = create(:ecf_migration_cohort)
       npq_lead_provider = create(:ecf_migration_npq_lead_provider)

@@ -1,7 +1,5 @@
 module Migration::Migrators
   class Contract < Base
-    INFRA_WORKER_COUNT = 1
-
     class << self
       def record_count
         ecf_contracts.count
@@ -17,18 +15,6 @@ module Migration::Migrators
 
       def dependencies
         %i[course statement contract_template]
-      end
-
-      def number_of_workers
-        return 1 if record_count > 1000
-
-        super
-      end
-
-      def records_per_worker
-        return record_count if record_count > 1000
-
-        super
       end
     end
 
