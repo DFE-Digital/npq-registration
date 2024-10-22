@@ -7,54 +7,53 @@ RSpec.describe Migration::Users::Creator do
   subject { described_class.new(ecf_user, ecf_user_email) }
 
   describe ".find_or_initialize" do
-    context "when ecf_user_email user does not exist" do
+    context "when both primary_user and email_user are not found" do
       let(:ecf_user_email) { nil }
 
-      context "when find_primary_user returns nil" do
-        it "returns new user" do
-          expect(User.find_by(ecf_id: ecf_user.id)).to be_nil
-          expect(User.find_by(uid: ecf_user.get_an_identity_id)).to be_nil
+      it "returns new user" do
+        expect(User.find_by(ecf_id: ecf_user.id)).to be_nil
+        expect(User.find_by(uid: ecf_user.get_an_identity_id)).to be_nil
 
-          user = subject.find_or_initialize
+        user = subject.find_or_initialize
 
-          expect(user).to be_new_record
-          expect(user.ecf_id).to eq(ecf_user.id)
-        end
-      end
-
-      context "when find_primary_user returns user" do
-        it "returns primary user" do
-          existing_user = create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id)
-
-          user = subject.find_or_initialize
-
-          expect(user).to eq(existing_user)
-          expect(user.ecf_id).to eq(ecf_user.id)
-          expect(user.uid).to eq(ecf_user.get_an_identity_id)
-        end
+        expect(user).to be_new_record
+        expect(user.ecf_id).to eq(ecf_user.id)
       end
     end
 
-    context "when ecf_user_email user exists" do
-      context "when email is same as primary user" do
-        let(:existing_user) { create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id) }
-        let(:ecf_user_email) { existing_user.email }
+    context "when primary_user found, email_user not found" do
+      let(:ecf_user_email) { nil }
+      let!(:existing_user) { create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id) }
 
-        it "returns primary user" do
-          user = subject.find_or_initialize
+      it "returns primary user" do
+        user = subject.find_or_initialize
 
-          expect(user).to eq(existing_user)
-          expect(user.ecf_id).to eq(ecf_user.id)
-          expect(user.uid).to eq(ecf_user.get_an_identity_id)
-          expect(user.email).to eq(ecf_user_email)
-        end
+        expect(user).to eq(existing_user)
+        expect(user.ecf_id).to eq(ecf_user.id)
+        expect(user.uid).to eq(ecf_user.get_an_identity_id)
       end
+    end
 
-      context "when find_primary_user is nil" do
-        let(:existing_email_user) { create(:user, ecf_id: SecureRandom.uuid) }
-        let(:ecf_user_email) { existing_email_user.email }
+    context "when primary_user found, email_user found, both same" do
+      let!(:existing_user) { create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id) }
+      let(:ecf_user_email) { existing_user.email }
 
-        it "returns email user with ecf_id set to ecf_user.id" do
+      it "returns primary user" do
+        user = subject.find_or_initialize
+
+        expect(user).to eq(existing_user)
+        expect(user.ecf_id).to eq(ecf_user.id)
+        expect(user.uid).to eq(ecf_user.get_an_identity_id)
+        expect(user.email).to eq(ecf_user_email)
+      end
+    end
+
+    context "when primary_user not found, email_user found" do
+      let(:existing_email_user) { create(:user, ecf_id: SecureRandom.uuid) }
+      let(:ecf_user_email) { existing_email_user.email }
+
+      context "when email_user has no ecf_user" do
+        it "returns email_user with ecf_id set to ecf_user.id" do
           expect(existing_email_user.ecf_id).not_to eq(ecf_user.id)
 
           user = subject.find_or_initialize
@@ -62,6 +61,78 @@ RSpec.describe Migration::Users::Creator do
           expect(user).to eq(existing_email_user)
           expect(user.ecf_id).to eq(ecf_user.id)
           expect(user.email).to eq(ecf_user_email)
+        end
+      end
+
+      context "when email_user has ecf_user, but its an orphan" do
+        let!(:orphaned_ecf_user) { create(:ecf_migration_user, id: existing_email_user.ecf_id) }
+
+        it "returns email_user with ecf_id set to ecf_user.id" do
+          expect(existing_email_user.ecf_id).not_to eq(ecf_user.id)
+          expect(::Migration::Ecf::User.find_by(id: existing_email_user.ecf_id)).to eq(orphaned_ecf_user)
+
+          user = subject.find_or_initialize
+
+          expect(user).to eq(existing_email_user)
+          expect(user.ecf_id).to eq(ecf_user.id)
+          expect(user.email).to eq(ecf_user_email)
+        end
+      end
+
+      context "when email_user has ecf_user, but its not an orphan" do
+        let(:non_orphaned_ecf_user) { create(:ecf_migration_user, :npq, id: existing_email_user.ecf_id) }
+
+        it "raises error" do
+          non_orphaned_ecf_user
+
+          expect {
+            subject.find_or_initialize
+          }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: User not found with ecf_id or gai_id, user found with ecf_user_email. this user has a linked ecf_user which is not an orphan")
+        end
+      end
+    end
+
+    context "when primary_user found, email_user found" do
+      let!(:existing_primary_user) { create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id) }
+      let!(:existing_email_user) { create(:user, ecf_id: SecureRandom.uuid) }
+      let(:ecf_user_email) { existing_email_user.email }
+
+      context "when email_user has no ecf_user" do
+        it "returns primary_user, and archives email_user" do
+          expect(existing_email_user).not_to be_archived
+
+          user = subject.find_or_initialize
+
+          expect(user).to eq(existing_primary_user)
+          expect(existing_email_user.reload).to be_archived
+          expect(existing_email_user.email).not_to eq(ecf_user_email)
+        end
+      end
+
+      context "when email_user has ecf_user, but its an orphan" do
+        let!(:orphaned_ecf_user) { create(:ecf_migration_user, id: existing_email_user.ecf_id) }
+
+        it "returns primary_user, and archives email_user" do
+          expect(existing_email_user).not_to be_archived
+          expect(::Migration::Ecf::User.find_by(id: existing_email_user.ecf_id)).to eq(orphaned_ecf_user)
+
+          user = subject.find_or_initialize
+
+          expect(user).to eq(existing_primary_user)
+          expect(existing_email_user.reload).to be_archived
+          expect(existing_email_user.email).not_to eq(ecf_user_email)
+        end
+      end
+
+      context "when email_user has ecf_user, but its not an orphan" do
+        let(:non_orphaned_ecf_user) { create(:ecf_migration_user, :npq, id: existing_email_user.ecf_id) }
+
+        it "raises error" do
+          non_orphaned_ecf_user
+
+          expect {
+            subject.find_or_initialize
+          }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: User found with ecf_id or gai_id AND user found with ecf_user_email. ecf_user_email user is not orphan.")
         end
       end
     end

@@ -21,9 +21,9 @@ module Migration
           return primary_user
         end
 
-        ## No nil `user_by_ecf_user_email` from this point on
-
+        # Primary user not found, email user found
         if primary_user.nil? && user_by_ecf_user_email
+          # email user, does it have `ecf_user`, is it orphan
           if ecf_user_by_ecf_user_email_user_ecf_id.nil? || email_user_ecf_id_links_to_orphan_ecf_user?
             user_by_ecf_user_email.ecf_id = ecf_user.id
             return user_by_ecf_user_email
@@ -32,8 +32,9 @@ module Migration
           raise_error("User not found with ecf_id or gai_id, user found with ecf_user_email. this user has a linked ecf_user which is not an orphan")
         end
 
-        # primary user and email user found, are different
+        # Primary user and email user found, are different
         if primary_user && user_by_ecf_user_email
+          # email user, does it have `ecf_user`, is it orphan
           if ecf_user_by_ecf_user_email_user_ecf_id.nil? || email_user_ecf_id_links_to_orphan_ecf_user?
             ::Users::Archiver.new(user: user_by_ecf_user_email).archive!
             return primary_user
