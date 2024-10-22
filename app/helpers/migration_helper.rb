@@ -60,4 +60,46 @@ module MigrationHelper
 
     govuk_link_to("Failures report", download_report_npq_separation_migration_migrations_path(data_migrations.sample.model))
   end
+
+  def response_comparison_status_tag(different)
+    if different
+      govuk_tag(text: "DIFFERENT", colour: "red")
+    else
+      govuk_tag(text: "EQUAL", colour: "green")
+    end
+  end
+
+  def response_comparison_status_code_tag(status_code)
+    if status_code <= 299
+      govuk_tag(text: status_code, colour: "green")
+    elsif status_code <= 399
+      govuk_tag(text: status_code, colour: "yellow")
+    else
+      govuk_tag(text: status_code, colour: "red")
+    end
+  end
+
+  def response_comparison_performance(comparison)
+    performance = (comparison.ecf_response_time_ms.to_f / comparison.npq_response_time_ms).round(1).to_s.chomp(".0")
+
+    if comparison.npq_slower?
+      tag.strong("🐌 #{performance}x slower")
+    else
+      tag.i("🚀 #{performance}x faster")
+    end
+  end
+
+  def response_comparison_detail_path(comparison)
+    return unless comparison.different?
+
+    response_comparison_npq_separation_migration_parity_checks_path(comparison)
+  end
+
+  def response_comparison_response_duration_human_readable(duration_ms)
+    if duration_ms < 1_000
+      "#{duration_ms}ms"
+    else
+      ActiveSupport::Duration.build(duration_ms / 1_000).inspect
+    end
+  end
 end

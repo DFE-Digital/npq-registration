@@ -2,8 +2,34 @@ module Migration
   class ParityCheck
     class UnsupportedEnvironmentError < RuntimeError; end
     class EndpointsFileNotFoundError < RuntimeError; end
+    class NotPreparedError < RuntimeError; end
 
     attr_reader :endpoints_file_path
+
+    class << self
+      def prepare!
+        Rails.cache.write(:parity_check_started_at, Time.zone.now)
+        Rails.cache.write(:parity_check_completed_at, nil)
+
+        Migration::ParityCheck::ResponseComparison.destroy_all
+      end
+
+      def running?
+        started_at && !completed_at
+      end
+
+      def completed?
+        completed_at.present?
+      end
+
+      def started_at
+        Rails.cache.read(:parity_check_started_at)
+      end
+
+      def completed_at
+        Rails.cache.read(:parity_check_completed_at)
+      end
+    end
 
     def initialize(endpoints_file_path: "config/parity_check_endpoints.yml")
       @endpoints_file_path = endpoints_file_path
@@ -12,13 +38,20 @@ module Migration
     def run!
       raise UnsupportedEnvironmentError, "The parity check functionality is disabled for this environment" unless enabled?
 
-      purge_comparisons!
       lead_providers.each(&method(:call_endpoints))
+
+      finalise!
     end
 
   private
 
+    def prepared?
+      self.class.started_at.present?
+    end
+
     def call_endpoints(lead_provider)
+      raise NotPreparedError, "You must call prepare! before running the parity check" unless prepared?
+
       endpoints.each do |method, paths|
         paths.each_key do |path|
           ecf_result = timed_response { get_request(lead_provider:, path:, app: :ecf) }
@@ -27,6 +60,10 @@ module Migration
           save_comparison!(lead_provider:, path:, method:, ecf_result:, npq_result:)
         end
       end
+    end
+
+    def finalise!
+      Rails.cache.write(:parity_check_completed_at, Time.zone.now)
     end
 
     def save_comparison!(lead_provider:, path:, method:, ecf_result:, npq_result:)
@@ -41,10 +78,6 @@ module Migration
         ecf_response_time_ms: ecf_result[:response_ms],
         npq_response_time_ms: npq_result[:response_ms],
       })
-    end
-
-    def purge_comparisons!
-      Migration::ParityCheck::ResponseComparison.destroy_all
     end
 
     def endpoints
