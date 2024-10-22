@@ -12,6 +12,7 @@ module Users
 
       ApplicationRecord.transaction do
         user.archived_email = user.email
+        user.archived_at = Time.zone.now
         user.email = "archived-#{user.email}"
         user.save!
       end
