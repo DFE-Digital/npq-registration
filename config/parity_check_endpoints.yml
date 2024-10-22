@@ -5,3 +5,5 @@ get:
     paginate: true
   "/api/v3/statements?filter[updated_since]=2024-01-01T12:00:00Z":
     paginate: true
+  "/api/v3/statements/:id":
+    id: lead_provider.statements.pluck(:id).sample

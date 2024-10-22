@@ -99,6 +99,22 @@ RSpec.describe Migration::ParityCheck::Client do
         end
       end
 
+      context "when using id substitution" do
+        let(:options) { { id: "lead_provider.statements.pluck(:id).sample" } }
+        let(:path) { "/api/v3/statements/:id" }
+
+        it "evaluates the id option and substitutes it into the path" do
+          statement = create(:statement, lead_provider:)
+
+          stub_request(:get, "#{ecf_url}/api/v3/statements/#{statement.id}")
+          stub_request(:get, "#{npq_url}/api/v3/statements/#{statement.id}")
+
+          instance.make_requests {}
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
       context "when paginate is true" do
         let(:options) { { paginate: true } }
 

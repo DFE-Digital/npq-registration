@@ -49,7 +49,7 @@ module Migration
     end
 
     def get_request(app:)
-      HTTParty.get(url(app:, path:), query:, headers:)
+      HTTParty.get(url(app:), query:, headers:)
     end
 
     def token_provider
@@ -70,8 +70,14 @@ module Migration
       }
     end
 
-    def url(app:, path:)
-      Rails.application.config.npq_separation[:parity_check]["#{app}_url".to_sym] + path
+    def url(app:)
+      Rails.application.config.npq_separation[:parity_check]["#{app}_url".to_sym] + formatted_path
+    end
+
+    def formatted_path
+      return path unless options[:id] && path.include?(":id")
+
+      path.sub(":id", eval(options[:id]).to_s) # rubocop:disable Security/Eval
     end
   end
 end
