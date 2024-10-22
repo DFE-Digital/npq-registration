@@ -50,9 +50,9 @@ module AssuranceReports
         JOIN schedules sch                  ON sch.id = a.schedule_id
         LEFT OUTER JOIN schools sc          ON sc.id = a.school_id
         LEFT OUTER JOIN (
-             SELECT DISTINCT ON (lead_provider_id) lead_provider_id, application_id, state, reason
+             SELECT DISTINCT ON (lead_provider_id, application_id) lead_provider_id, application_id, state, reason
              FROM application_states
-             ORDER BY lead_provider_id, created_at DESC
+             ORDER BY lead_provider_id, application_id, created_at DESC
         ) AS st ON
           st.application_id = a.id AND
           st.lead_provider_id = d.lead_provider_id AND

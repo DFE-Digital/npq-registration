@@ -94,6 +94,27 @@ RSpec.describe AssuranceReports::Query do
 
         it { is_expected.to have_attributes training_status: "withdrawn" }
         it { is_expected.to have_attributes training_status_reason: "other" }
+
+        context "with later second declaration for same lead provider" do
+          before do
+            statement = create(:statement, lead_provider:)
+
+            travel_to(statement.deadline_date) do
+              create(:declaration, lead_provider:) do |declaration|
+                create(:statement_item, statement:, declaration:)
+
+                declaration.application.update! training_status: "withdrawn"
+
+                create(:application_state, :withdrawn, application: declaration.application,
+                                                       lead_provider: declaration.lead_provider,
+                                                       reason: "a different reason")
+              end
+            end
+          end
+
+          it { is_expected.to have_attributes training_status: "withdrawn" }
+          it { is_expected.to have_attributes training_status_reason: "other" }
+        end
       end
 
       context "when last status update was 'deferred'" do
