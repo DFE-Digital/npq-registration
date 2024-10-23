@@ -1,2 +1,7 @@
 get:
   "/api/v3/statements":
+    paginate: true
+  "/api/v3/statements?filter[cohort]=2021":
+    paginate: true
+  "/api/v3/statements?filter[updated_since]=2024-01-01T12:00:00Z":
+    paginate: true

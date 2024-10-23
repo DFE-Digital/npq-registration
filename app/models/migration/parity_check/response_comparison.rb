@@ -6,6 +6,7 @@ module Migration
 
     validates :lead_provider, presence: true
     validates :request_path, presence: true
+    validates :page, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
     validates :request_method, inclusion: { in: %w[get post put] }
     validates :ecf_response_status_code, inclusion: { in: 100..599 }
     validates :npq_response_status_code, inclusion: { in: 100..599 }
@@ -16,11 +17,22 @@ module Migration
 
     delegate :name, to: :lead_provider, prefix: true
 
-    scope :with_differences, -> { where("ecf_response_status_code != npq_response_status_code OR ecf_response_body != npq_response_body") }
+    scope :matching, lambda { |comparison|
+      where(
+        lead_provider: comparison.lead_provider,
+        request_path: comparison.request_path,
+        request_method: comparison.request_method,
+      )
+      .order(page: :asc)
+    }
 
     class << self
       def by_lead_provider
-        includes(:lead_provider).group_by(&:lead_provider_name)
+        includes(:lead_provider)
+          .group_by(&:lead_provider_name)
+          .transform_values do |comparisons|
+            comparisons.group_by(&:description)
+          end
       end
 
       def response_times_by_path
@@ -51,12 +63,8 @@ module Migration
       "#{request_method.upcase} #{request_path}"
     end
 
-    def npq_slower?
-      npq_response_time_ms > ecf_response_time_ms
-    end
-
     def response_body_diff
-      Diffy::Diff.new(ecf_response_body, npq_response_body, context: 3)
+      @response_body_diff ||= Diffy::Diff.new(ecf_response_body, npq_response_body, context: 3)
     end
 
   private

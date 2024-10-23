@@ -225,56 +225,89 @@ RSpec.describe MigrationHelper, type: :helper do
   end
 
   describe ".response_comparison_performance" do
-    subject { helper.response_comparison_performance(response_comparison) }
+    let(:comparisons) { [response_comparison1, response_comparison2] }
+
+    subject { helper.response_comparison_performance(comparisons) }
 
     context "when NPQ is slower" do
-      let(:response_comparison) { build(:response_comparison, npq_response_time_ms: 2, ecf_response_time_ms: 1) }
+      let(:response_comparison1) { build(:response_comparison, npq_response_time_ms: 2, ecf_response_time_ms: 1) }
+      let(:response_comparison2) { build(:response_comparison, npq_response_time_ms: 2, ecf_response_time_ms: 1) }
 
-      it { is_expected.to have_css("strong", text: "🐌 0.5x slower") }
+      it { is_expected.to have_css("strong", text: "🐌 0.5x as fast") }
     end
 
     context "when NPQ is faster" do
-      let(:response_comparison) { build(:response_comparison, npq_response_time_ms: 1, ecf_response_time_ms: 2) }
+      let(:response_comparison1) { build(:response_comparison, npq_response_time_ms: 1, ecf_response_time_ms: 2) }
+      let(:response_comparison2) { build(:response_comparison, npq_response_time_ms: 1, ecf_response_time_ms: 2) }
 
       it { is_expected.to have_css("i", text: "🚀 2x faster") }
+    end
+
+    context "when passed a single comparison" do
+      let(:comparisons) { create(:response_comparison, npq_response_time_ms: 1, ecf_response_time_ms: 3) }
+
+      it { is_expected.to have_css("i", text: "🚀 3x faster") }
     end
   end
 
   describe ".response_comparison_detail_path" do
-    subject { helper.response_comparison_detail_path(response_comparison) }
+    subject { helper.response_comparison_detail_path([response_comparison1, response_comparison2]) }
 
-    context "when different" do
-      let(:response_comparison) { create(:response_comparison, :different) }
+    context "when at least one is different" do
+      let(:response_comparison1) { create(:response_comparison, :different) }
+      let(:response_comparison2) { create(:response_comparison, :equal) }
 
-      it { is_expected.to include("/npq-separation/migration/parity_checks/response_comparisons/#{response_comparison.id}") }
+      it { is_expected.to include(%r{/npq-separation/migration/parity_checks/response_comparisons/(#{response_comparison1.id}|#{response_comparison2.id})}) }
     end
 
-    context "when equal" do
-      let(:response_comparison) { build(:response_comparison, :equal) }
+    context "when all are equal" do
+      let(:response_comparison1) { build(:response_comparison, :equal) }
+      let(:response_comparison2) { build(:response_comparison, :equal) }
 
       it { is_expected.to be_nil }
     end
   end
 
   describe ".response_comparison_response_duration_human_readable" do
-    subject { helper.response_comparison_response_duration_human_readable(duration_ms) }
+    subject { helper.response_comparison_response_duration_human_readable(comparisons, :ecf_response_time_ms) }
 
-    context "when the duration is less than 1 second" do
-      let(:duration_ms) { 500 }
+    context "when the average duration is less than 1 second" do
+      let(:comparisons) do
+        [
+          create(:response_comparison, ecf_response_time_ms: 600),
+          create(:response_comparison, ecf_response_time_ms: 400),
+        ]
+      end
 
       it { is_expected.to eq("500ms") }
     end
 
     context "when the duration is 1 second" do
-      let(:duration_ms) { 1_000 }
+      let(:comparisons) do
+        [
+          create(:response_comparison, ecf_response_time_ms: 1_000),
+          create(:response_comparison, ecf_response_time_ms: 1_000),
+        ]
+      end
 
       it { is_expected.to eq("1 second") }
     end
 
     context "when the duration is more than 1 second" do
-      let(:duration_ms) { 2_525 }
+      let(:comparisons) do
+        [
+          create(:response_comparison, ecf_response_time_ms: 2_000),
+          create(:response_comparison, ecf_response_time_ms: 2_200),
+        ]
+      end
 
       it { is_expected.to eq("2 seconds") }
+    end
+
+    context "when passed a single comparison" do
+      let(:comparisons) { create(:response_comparison, ecf_response_time_ms: 1_000) }
+
+      it { is_expected.to eq("1 second") }
     end
   end
 
@@ -298,5 +331,14 @@ RSpec.describe MigrationHelper, type: :helper do
 
       it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "500") }
     end
+  end
+
+  describe ".response_comparison_page_summary" do
+    let(:comparison) { create(:response_comparison, :different, page: 1) }
+
+    subject { helper.response_comparison_page_summary(comparison) }
+
+    it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-two-thirds", text: "Page 1") }
+    it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-one-third", text: "ECF: 200 NPQ: 201") }
   end
 end

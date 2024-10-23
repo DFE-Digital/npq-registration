@@ -53,11 +53,12 @@ module Migration
       raise NotPreparedError, "You must call prepare! before running the parity check" unless prepared?
 
       endpoints.each do |method, paths|
-        paths.each_key do |path|
-          ecf_result = timed_response { get_request(lead_provider:, path:, app: :ecf) }
-          npq_result = timed_response { get_request(lead_provider:, path:, app: :npq) }
+        paths.each do |path, options|
+          client = Client.new(lead_provider:, method:, path:, options:)
 
-          save_comparison!(lead_provider:, path:, method:, ecf_result:, npq_result:)
+          client.make_requests do |ecf_result, npq_result, page|
+            save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:)
+          end
         end
       end
     end
@@ -66,7 +67,7 @@ module Migration
       Rails.cache.write(:parity_check_completed_at, Time.zone.now)
     end
 
-    def save_comparison!(lead_provider:, path:, method:, ecf_result:, npq_result:)
+    def save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:)
       Migration::ParityCheck::ResponseComparison.create!({
         lead_provider:,
         request_path: path,
@@ -77,6 +78,7 @@ module Migration
         npq_response_body: npq_result[:response].body,
         ecf_response_time_ms: ecf_result[:response_ms],
         npq_response_time_ms: npq_result[:response_ms],
+        page:,
       })
     end
 
@@ -85,42 +87,15 @@ module Migration
 
       raise EndpointsFileNotFoundError, "Endpoints file not found: #{endpoints_file_path}" unless File.exist?(file)
 
-      YAML.load_file(file)
+      YAML.load_file(file).with_indifferent_access
     end
 
     def enabled?
       Rails.application.config.npq_separation[:parity_check][:enabled]
     end
 
-    def get_request(lead_provider:, path:, app:)
-      HTTParty.get(url(app:, path:), headers: headers(token_provider.token(lead_provider:)))
-    end
-
-    def timed_response(&request)
-      response = nil
-      response_ms = Benchmark.realtime { response = request.call } * 1_000
-
-      { response:, response_ms: }
-    end
-
     def lead_providers
       @lead_providers ||= LeadProvider.all
-    end
-
-    def token_provider
-      @token_provider ||= TokenProvider.new
-    end
-
-    def headers(token)
-      {
-        "Authorization" => "Bearer #{token}",
-        "Accept" => "application/json",
-        "Content-Type" => "application/json",
-      }
-    end
-
-    def url(app:, path:)
-      Rails.application.config.npq_separation[:parity_check]["#{app}_url".to_sym] + path
     end
   end
 end

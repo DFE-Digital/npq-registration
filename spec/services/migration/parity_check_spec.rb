@@ -4,13 +4,6 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
   let(:endpoints_file_path) { "spec/fixtures/files/parity_check/no_endpoints.yml" }
   let(:instance) { described_class.new(endpoints_file_path:) }
   let(:enabled) { true }
-  let(:ecf_url) { "http://ecf.example.com" }
-  let(:npq_url) { "http://npq.example.com" }
-  let(:keys) do
-    LeadProvider.all.each_with_object({}) do |lead_provider, hash|
-      hash[lead_provider.ecf_id] = SecureRandom.uuid
-    end
-  end
 
   before do
     create_matching_ecf_lead_providers
@@ -19,14 +12,9 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
       {
         parity_check: {
           enabled:,
-          ecf_url:,
-          npq_url:,
         },
       }
     end
-
-    allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with("PARITY_CHECK_KEYS").and_return(keys.to_json)
   end
 
   describe ".prepare!" do
@@ -132,39 +120,31 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
 
       context "when there are GET endpoints" do
         let(:endpoints_file_path) { "spec/fixtures/files/parity_check/get_endpoints.yml" }
-        let(:requests) { WebMock::RequestRegistry.instance.requested_signatures.hash.keys }
-        let(:ecf_requests) { requests.select { |r| r.uri.host.include?("ecf") } }
-        let(:npq_requests) { requests.select { |r| r.uri.host.include?("npq") } }
 
-        before do
-          stub_request(:get, "#{ecf_url}/api/v3/statements").to_return(status: 200, body: "ecf_response_body")
-          stub_request(:get, "#{npq_url}/api/v3/statements").to_return(status: 201, body: "npq_response_body")
-        end
+        it "calls the client for each lead provider with the correct options" do
+          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
 
-        it "calls the endpoints on ECF/NPQ with correct headers for each lead provider" do
           run
 
-          expect(ecf_requests.count).to eql(LeadProvider.count)
-          expect(npq_requests.count).to eql(LeadProvider.count)
-
-          requests.each do |request|
-            expect(request.uri.path).to eq("/api/v3/statements")
-            expect(request.headers["Accept"]).to eq("application/json")
-            expect(request.headers["Content-Type"]).to eq("application/json")
+          LeadProvider.find_each do |lead_provider|
+            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+              lead_provider:,
+              method: "get",
+              path: "/api/v3/statements",
+              options: { paginate: true },
+            )
           end
-        end
-
-        it "calls the endpoints on ECF/NPQ with valid authorization tokens for each lead provider" do
-          run
-
-          ecf_tokens = ecf_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          expect(ecf_tokens).to match_array(keys.values)
-
-          npq_tokens = npq_requests.map { |r| r.headers["Authorization"].partition("Bearer ").last }
-          expect(npq_tokens).to match_array(keys.values)
+          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
         end
 
         it "saves response comparisons for each endpoint and lead provider" do
+          client_double = instance_double(Migration::ParityCheck::Client)
+          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
+          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
+          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, 1)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+
           expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
 
           expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
@@ -175,8 +155,9 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
             npq_response_status_code: 201,
             ecf_response_body: "ecf_response_body",
             npq_response_body: "npq_response_body",
-            ecf_response_time_ms: a_value >= 0,
-            npq_response_time_ms: a_value >= 0,
+            ecf_response_time_ms: 100,
+            npq_response_time_ms: 150,
+            page: 1,
           }))
         end
       end

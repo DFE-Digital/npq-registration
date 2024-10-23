@@ -1,0 +1,28 @@
+<%= govuk_table do |table|
+  table.with_caption(size: "m", text: "Overview (#{pluralize(comparisons.size, "pages")})")
+
+  table.with_head do |head|
+    head.with_row do |row|
+      row.with_cell(text: "Metric")
+      row.with_cell(text: "ECF")
+      row.with_cell(text: "NPQ")
+      row.with_cell(text: "Comparison")
+    end
+  end
+
+  table.with_body do |body|
+    body.with_row do |row|
+      row.with_cell(text: "Equality check")
+      row.with_cell(text: "-")
+      row.with_cell(text: "-")
+      row.with_cell(text: response_comparison_status_tag(comparisons.any?(&:different?)))
+    end
+
+    body.with_row do |row|
+      row.with_cell(text: "Average response time")
+      row.with_cell(text: response_comparison_response_duration_human_readable(comparisons, :ecf_response_time_ms))
+      row.with_cell(text: response_comparison_response_duration_human_readable(comparisons, :npq_response_time_ms))
+      row.with_cell(text: response_comparison_performance(comparisons))
+    end
+  end
+end %>
