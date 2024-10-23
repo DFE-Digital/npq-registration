@@ -50,6 +50,36 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
       expect(response_comparison.ecf_response_body).to eq("051e069f1405735e3c348cae238eaee95a20c898e950e23c63f118df1518327e")
       expect(response_comparison.npq_response_body).to eq("bdbfa59f301e06b4598976d83df868f62b2c1ce3aad679ee9034370fdaf9ea31")
     end
+
+    it "performs a deep sort on JSON response bodies" do
+      response_comparison = build(:response_comparison, ecf_response_body: %({ "foo": "bar", "baz": [2, 1] }), npq_response_body: %({ "foo": "baz", "bar": [5, 1, 4] }))
+      response_comparison.valid?
+
+      expect(response_comparison.ecf_response_body).to eq(
+        <<~JSON.strip,
+          {
+            "baz": [
+              1,
+              2
+            ],
+            "foo": "bar"
+          }
+        JSON
+      )
+
+      expect(response_comparison.npq_response_body).to eq(
+        <<~JSON.strip,
+          {
+            "bar": [
+              1,
+              4,
+              5
+            ],
+            "foo": "baz"
+          }
+        JSON
+      )
+    end
   end
 
   describe "scopes" do
@@ -118,15 +148,15 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
     }
 
     context "when the response bodies are JSON" do
-      let(:instance) { create(:response_comparison, :different, ecf_response_body: %({ "foo": "bar", "baz": "baz" }), npq_response_body: %({ "foo": "bar", "baz": "qux" })) }
+      let(:instance) { create(:response_comparison, :different, ecf_response_body: %({ "baz": "baz", "foo": "bar" }), npq_response_body: %({ "foo": "bar", "baz": "qux" })) }
 
       it {
         expect(diff.to_s(:text)).to eq(
           <<~DIFF,
              {
-               "foo": "bar",
-            -  "baz": "baz"
-            +  "baz": "qux"
+            -  "baz": "baz",
+            +  "baz": "qux",
+               "foo": "bar"
              }
             \\ No newline at end of file
           DIFF

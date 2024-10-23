@@ -1,6 +1,6 @@
 module Migration
   class ParityCheck::ResponseComparison < ApplicationRecord
-    before_validation :digest_csv_response_bodies, :clear_response_bodies_when_equal
+    before_validation :digest_csv_response_bodies, :format_json_response_bodies, :clear_response_bodies_when_equal
 
     belongs_to :lead_provider
 
@@ -64,15 +64,30 @@ module Migration
     end
 
     def response_body_diff
-      @response_body_diff ||= Diffy::Diff.new(pretty_format(ecf_response_body), pretty_format(npq_response_body), context: 3)
+      @response_body_diff ||= Diffy::Diff.new(ecf_response_body, npq_response_body, context: 3)
     end
 
   private
 
-    def pretty_format(body)
-      JSON.pretty_generate(JSON.parse(body))
-    rescue JSON::ParserError
-      body
+    def format_json_response_bodies
+      self.ecf_response_body = pretty_format(ecf_response_body_hash) if ecf_response_body_hash
+      self.npq_response_body = pretty_format(npq_response_body_hash) if npq_response_body_hash
+    end
+
+    def pretty_format(hash)
+      JSON.pretty_generate(hash)
+    end
+
+    def ecf_response_body_hash
+      @ecf_response_body_hash ||= JSON.parse(ecf_response_body).deep_sort
+    rescue JSON::ParserError, TypeError
+      nil
+    end
+
+    def npq_response_body_hash
+      @npq_response_body_hash ||= JSON.parse(npq_response_body).deep_sort
+    rescue JSON::ParserError, TypeError
+      nil
     end
 
     def digest_csv_response_bodies
