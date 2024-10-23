@@ -86,7 +86,7 @@ RSpec.describe Migration::ParityCheck::Client do
       end
 
       it "yields the result of each request to the block" do
-        instance.make_requests do |ecf_result, npq_result, page|
+        instance.make_requests do |ecf_result, npq_result, formatted_path, page|
           expect(ecf_result[:response].code).to eq(200)
           expect(ecf_result[:response].body).to eq("ecf_response_body")
           expect(ecf_result[:response_ms]).to be >= 0
@@ -95,21 +95,24 @@ RSpec.describe Migration::ParityCheck::Client do
           expect(npq_result[:response].body).to eq("npq_response_body")
           expect(npq_result[:response_ms]).to be >= 0
 
+          expect(formatted_path).to eq(path)
           expect(page).to be_nil
         end
       end
 
       context "when using id substitution" do
-        let(:options) { { id: "lead_provider.statements.pluck(:id).sample" } }
+        let(:options) { { id: "lead_provider.statements.pluck(:ecf_id).sample" } }
         let(:path) { "/api/v3/statements/:id" }
 
         it "evaluates the id option and substitutes it into the path" do
           statement = create(:statement, lead_provider:)
 
-          stub_request(:get, "#{ecf_url}/api/v3/statements/#{statement.id}")
-          stub_request(:get, "#{npq_url}/api/v3/statements/#{statement.id}")
+          stub_request(:get, "#{ecf_url}/api/v3/statements/#{statement.ecf_id}")
+          stub_request(:get, "#{npq_url}/api/v3/statements/#{statement.ecf_id}")
 
-          instance.make_requests {}
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/api/v3/statements/#{statement.ecf_id}")
+          end
 
           expect(requests.count).to eq(2)
         end
@@ -142,7 +145,7 @@ RSpec.describe Migration::ParityCheck::Client do
           end
 
           it "yields the result of each request to the block" do
-            instance.make_requests do |ecf_result, npq_result, page|
+            instance.make_requests do |ecf_result, npq_result, formatted_path, page|
               expect(ecf_result[:response].code).to eq(200)
               expect(ecf_result[:response].body).to eq({ data: [1] }.to_json)
               expect(ecf_result[:response_ms]).to be >= 0
@@ -151,6 +154,7 @@ RSpec.describe Migration::ParityCheck::Client do
               expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
               expect(npq_result[:response_ms]).to be >= 0
 
+              expect(formatted_path).to eq(path)
               expect(page).to eq(1)
             end
           end
@@ -188,9 +192,10 @@ RSpec.describe Migration::ParityCheck::Client do
           it "yields the result of each request to the block" do
             expected_page = 0
 
-            instance.make_requests do |ecf_result, npq_result, page|
+            instance.make_requests do |ecf_result, npq_result, formatted_path, page|
               expected_page += 1
               expect(page).to eq(expected_page)
+              expect(formatted_path).to eq(path)
 
               case page
               when 1

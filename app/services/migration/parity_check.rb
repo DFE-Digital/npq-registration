@@ -57,8 +57,8 @@ module Migration
         paths.each do |path, options|
           client = Client.new(lead_provider:, method:, path:, options:)
 
-          client.make_requests do |ecf_result, npq_result, page|
-            save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:)
+          client.make_requests do |ecf_result, npq_result, formatted_path, page|
+            save_comparison!(lead_provider:, path: formatted_path, method:, page:, ecf_result:, npq_result:)
           end
         end
       end

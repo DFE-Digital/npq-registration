@@ -142,14 +142,14 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
           client_double = instance_double(Migration::ParityCheck::Client)
           ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
           npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
-          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, 1)
+          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", 1)
           allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
 
           expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
 
           expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
             lead_provider: an_instance_of(LeadProvider),
-            request_path: "/api/v3/statements",
+            request_path: "/formatted/path",
             request_method: "get",
             ecf_response_status_code: 200,
             npq_response_status_code: 201,

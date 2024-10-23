@@ -17,7 +17,7 @@ module Migration
         ecf_result = timed_response { send("#{method}_request", app: :ecf) }
         npq_result = timed_response { send("#{method}_request", app: :npq) }
 
-        block.call(ecf_result, npq_result, page)
+        block.call(ecf_result, npq_result, formatted_path, page)
 
         break unless next_page?(ecf_result, npq_result)
 
@@ -85,9 +85,11 @@ module Migration
     end
 
     def formatted_path
-      return path unless options[:id] && path.include?(":id")
+      @formatted_path ||= begin
+        return path unless options[:id] && path.include?(":id")
 
-      path.sub(":id", eval(options[:id]).to_s) # rubocop:disable Security/Eval
+        path.sub(":id", eval(options[:id]).to_s) # rubocop:disable Security/Eval
+      end
     end
   end
 end
