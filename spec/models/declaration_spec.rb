@@ -16,6 +16,7 @@ RSpec.describe Declaration, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:declaration_type) }
     it { is_expected.to validate_presence_of(:declaration_date) }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
     context "when the declaration_date is in the future" do
       before { subject.declaration_date = 1.day.from_now }
@@ -363,17 +364,17 @@ RSpec.describe Declaration, type: :model do
 
       before do
         # Not a completed declaration.
-        completed_declaration.dup.update!(declaration_type: "retained-1")
+        create(:declaration, :payable, lead_provider:, course:, declaration_type: "retained-1")
 
         # Declaration on another provider.
-        completed_declaration.dup.update!(lead_provider: LeadProvider.where.not(id: lead_provider.id).first)
+        create(:declaration, :completed, :payable, lead_provider: LeadProvider.where.not(id: lead_provider.id).first, course:)
 
         # Declaration with different course.
-        completed_declaration.dup.update!(application: create(:application, course: create(:course, identifier: "other-course")))
+        create(:declaration, :completed, :payable, lead_provider:, course:, application: create(:application, course: create(:course, identifier: "other-course")))
 
         # Declarations that are not billable or voidable.
         Declaration.states.keys.excluding(Declaration::BILLABLE_STATES + Declaration::VOIDABLE_STATES).each do |state|
-          completed_declaration.dup.update!(state:)
+          create(:declaration, :completed, :payable, lead_provider:, course:, state:)
         end
       end
 

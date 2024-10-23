@@ -14,6 +14,9 @@ en:
   errors:
     email:
       invalid: Enter a valid email address
+    ecf_id: &ecf_id
+      blank: "Enter an ECF ID"
+      taken: "ECF ID must be unique"
 
   application: &application
     blank: The entered '#/%{parameterized_attribute}' is missing from your request. Check details and try again.
@@ -126,17 +129,15 @@ en:
             funded_place:
               <<: *funded_place
             ecf_id:
-              blank: "Enter an ECF ID"
-        declaration:
+              *ecf_id
+        application_state:
           attributes:
-            declaration_date:
-              *declaration_date
-            declaration_type:
-              *declaration_type
-        participant_outcome:
+            ecf_id:
+              *ecf_id
+        cohort:
           attributes:
-            completion_date:
-              *completion_date
+            ecf_id:
+              *ecf_id
         contract_template:
           attributes:
             number_of_payment_periods: &integer_greater_than_or_equal_to_zero
@@ -156,14 +157,58 @@ en:
               not_a_number: "Must be an integer greater than zero"
               not_an_integer: "Must be an integer greater than zero"
               greater_than: "Must be an integer greater than zero"
+            ecf_id:
+              *ecf_id
         contract:
           attributes:
             course_id:
               taken: "Can only have one contract for statement and course"
+        course:
+          attributes:
+            ecf_id:
+              *ecf_id
+        declaration:
+          attributes:
+            declaration_date:
+              *declaration_date
+            declaration_type:
+              *declaration_type
+            ecf_id:
+              *ecf_id
+        lead_provider:
+          attributes:
+            ecf_id:
+              *ecf_id
+        participant_id_change:
+          attributes:
+            ecf_id:
+              *ecf_id
+        participant_outcome:
+          attributes:
+            completion_date:
+              *completion_date
+            ecf_id:
+              *ecf_id
+        participant_outcome_api_request:
+          attributes:
+            ecf_id:
+              *ecf_id
+        schedule:
+          attributes:
+            ecf_id:
+              *ecf_id
+        statement:
+          attributes:
+            ecf_id:
+              *ecf_id
+        statement_item:
+          attributes:
+            ecf_id:
+              *ecf_id
         user:
           attributes:
             ecf_id:
-              blank: "Enter an ECF ID"
+              *ecf_id
   activemodel:
     attributes:
       questionnaires/funding_your_npq:
