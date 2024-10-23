@@ -156,7 +156,7 @@ RSpec.describe Migration::ParityCheck::Client do
           end
         end
 
-        context "when there are multiple pages of results" do
+        context "when there are two pages of results and the responses from the first page match" do
           before do
             stub_request(:get, "#{ecf_url}#{path}")
               .with(query: { page: { page: 1, per_page: 2 } })
@@ -167,10 +167,10 @@ RSpec.describe Migration::ParityCheck::Client do
 
             stub_request(:get, "#{npq_url}#{path}")
               .with(query: { page: { page: 1, per_page: 2 } })
-              .to_return(status: 200, body: { data: [1] }.to_json)
+              .to_return(status: 200, body: { data: [1, 2] }.to_json)
             stub_request(:get, "#{npq_url}#{path}")
               .with(query: { page: { page: 2, per_page: 2 } })
-              .to_return(status: 200, body: { data: [] }.to_json)
+              .to_return(status: 200, body: { data: [3] }.to_json)
           end
 
           it "makes a single request to each service for all pages" do
@@ -195,14 +195,35 @@ RSpec.describe Migration::ParityCheck::Client do
               case page
               when 1
                 expect(ecf_result[:response].body).to eq({ data: [1, 2] }.to_json)
-                expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [1, 2] }.to_json)
               when 2
                 expect(ecf_result[:response].body).to eq({ data: [3] }.to_json)
-                expect(npq_result[:response].body).to eq({ data: [] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [3] }.to_json)
               end
             end
 
             expect(expected_page).to eq(2)
+          end
+        end
+
+        context "when there are two pages of results and the first page responses do not match" do
+          before do
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1, 2] }.to_json)
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [3] }.to_json)
+          end
+
+          it "stops at the first page of responses" do
+            instance.make_requests {}
+
+            expect(ecf_requests.count).to eq(1)
+            expect(URI.decode_uri_component(ecf_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+
+            expect(npq_requests.count).to eq(1)
+            expect(URI.decode_uri_component(npq_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
           end
         end
 

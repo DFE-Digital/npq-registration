@@ -29,7 +29,17 @@ module Migration
 
     def next_page?(ecf_response, npq_response)
       return false unless paginate?
+      return false unless responses_match?(ecf_response, npq_response)
 
+      pages_remain?(ecf_response, npq_response)
+    end
+
+    def responses_match?(ecf_response, npq_response)
+      ecf_response[:response].code == npq_response[:response].code &&
+        ecf_response[:response].body == npq_response[:response].body
+    end
+
+    def pages_remain?(ecf_response, npq_response)
       [ecf_response[:response].body, npq_response[:response].body].any? do |body|
         JSON.parse(body)["data"]&.size == PAGINATION_PER_PAGE
       rescue JSON::ParserError
