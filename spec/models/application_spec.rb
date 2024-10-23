@@ -41,6 +41,8 @@ RSpec.describe Application do
   end
 
   describe "validations" do
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+
     context "when the schedule cohort does not match the application cohort" do
       subject do
         build(:application).tap do |application|

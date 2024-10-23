@@ -22,13 +22,8 @@ class Statement < ApplicationRecord
               only_integer: true,
               message: "Year must be a 4 digit number",
             }
-  validates :ecf_id,
-            presence: { message: "Enter an ECF ID" },
-            uniqueness: {
-              case_sensitive: false,
-              message: "ECF ID must be unique",
-            }
 
+  validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }

@@ -7,9 +7,9 @@ RSpec.describe Schedule, type: :model do
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_presence_of(:identifier) }
     it { is_expected.to validate_uniqueness_of(:identifier).scoped_to(:cohort_id) }
-
     it { is_expected.to validate_presence_of(:applies_from) }
     it { is_expected.to validate_presence_of(:applies_to) }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
   end
 
   describe "associations" do

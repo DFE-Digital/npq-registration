@@ -8,7 +8,6 @@ RSpec.describe ParticipantOutcomeAPIRequest, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:ecf_id) }
-    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
   end
 end
