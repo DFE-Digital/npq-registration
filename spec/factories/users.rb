@@ -35,6 +35,7 @@ FactoryBot.define do
 
     trait :archived do
       archived_email { Faker::Internet.email(name: full_name) }
+      archived_at { Time.zone.now }
       email { "archived-#{archived_email}" }
     end
   end
