@@ -25,6 +25,8 @@ module Migration::Migrators
       teacher_catchment_country
       notes
       funded_place
+      created_at
+      updated_at
     ].freeze
 
     class << self
@@ -59,11 +61,7 @@ module Migration::Migrators
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
         application = applications_by_ecf_id[ecf_npq_application.id]
 
-        application ||= ::Application.new(
-          ecf_id: ecf_npq_application.id,
-          created_at: ecf_npq_application.created_at,
-          updated_at: ecf_npq_application.updated_at,
-        )
+        application ||= ::Application.new(ecf_id: ecf_npq_application.id)
 
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
@@ -94,6 +92,7 @@ module Migration::Migrators
         end
 
         application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
+        application.version_note = "Changes migrated from ECF to NPQ"
         application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
     end

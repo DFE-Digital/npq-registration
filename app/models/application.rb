@@ -11,7 +11,7 @@ class Application < ApplicationRecord
     establishment-ineligible
   ].freeze
 
-  has_paper_trail only: %i[lead_provider_approval_status participant_outcome_state]
+  has_paper_trail meta: { note: :version_note }
 
   belongs_to :user
   belongs_to :course
@@ -33,6 +33,8 @@ class Application < ApplicationRecord
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
+
+  attr_accessor :version_note
 
   validate :schedule_cohort_matches
   # TODO: add constraints into the DB after separation

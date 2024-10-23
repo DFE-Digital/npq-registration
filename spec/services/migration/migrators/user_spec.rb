@@ -51,6 +51,27 @@ RSpec.describe Migration::Migrators::User do
         )
       end
 
+      it "sets the timestamps from the ECF User" do
+        created_at = 10.days.ago
+        updated_at = 3.days.ago
+        ecf_resource1.update!(created_at:, updated_at:)
+
+        with_versioning do
+          expect(PaperTrail).to be_enabled
+
+          instance.call
+
+          user = ::User.find_by_ecf_id!(ecf_resource1.id)
+          expect(user.created_at.to_s).to eq(created_at.to_s)
+          expect(user.updated_at.to_s).to eq(updated_at.to_s)
+
+          version = user.versions.last
+          expect(version.note).to eq("Changes migrated from ECF to NPQ")
+          expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
+          expect(version.object_changes["updated_at"].last).to eq(updated_at.iso8601(3))
+        end
+      end
+
       describe "TRN prioritisation" do
         it "records a failure when there are multiple, different/verified TRNs for the user's NPQApplications in ECF and no teacher profile TRN" do
           ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: nil) }

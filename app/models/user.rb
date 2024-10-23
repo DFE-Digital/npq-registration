@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
+  has_paper_trail meta: { note: :version_note }
+
   has_many :applications, dependent: :destroy
   has_many :declarations, through: :applications
   has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
@@ -37,6 +39,8 @@ class User < ApplicationRecord
   EMAIL_UPDATES_ALL_STATES = [:empty] + EMAIL_UPDATES_STATES
 
   enum email_updates_status: EMAIL_UPDATES_ALL_STATES, _suffix: true
+
+  attr_accessor :version_note
 
   def latest_participant_outcome(lead_provider, course_identifier)
     declarations.eligible_for_outcomes(lead_provider, course_identifier)
