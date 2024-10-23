@@ -244,6 +244,10 @@ Rails.application.routes.draw do
               resources :unpaid, controller: "statements/unpaid", only: "index"
               resources :paid, controller: "statements/paid", only: "index"
             end
+
+            member do
+              resource :assurance_report, controller: "statements/assurance_reports", only: "show"
+            end
           end
         end
 
