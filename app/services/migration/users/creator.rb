@@ -16,7 +16,7 @@ module Migration
           return ::User.new(ecf_id: ecf_user.id)
         end
 
-        # Primary user found and `ecf_user_email` if blank or same as primary user
+        # Primary user found and `ecf_user_email` is blank or same as primary user
         if primary_user && (user_by_ecf_user_email.nil? || primary_user == user_by_ecf_user_email)
           return primary_user
         end

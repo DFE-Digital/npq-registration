@@ -33,8 +33,7 @@ module Migration::Migrators
     def call
       migrate(self.class.ecf_users) do |ecf_user|
         npq_application = most_recent_created_npq_application(ecf_user)
-        email = npq_application&.participant_identity&.email
-        email = email.downcase if email.present?
+        email = npq_application&.participant_identity&.email&.downcase
 
         user = ::Migration::Users::Creator.new(ecf_user, email).find_or_initialize
 
