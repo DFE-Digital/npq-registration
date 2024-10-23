@@ -1,9 +1,74 @@
 get:
+  "/api/v1/npq-applications":
+    paginate: true
+  "/api/v2/npq-applications":
+    paginate: true
+  "/api/v3/npq-applications":
+    paginate: true
+
+  "/api/v1/npq-applications.csv":
+  "/api/v2/npq-applications.csv":
+
+  "/api/v1/npq-applications/:id":
+    id: 'lead_provider.applications.order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v2/npq-applications/:id":
+    id: 'lead_provider.applications.order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v3/npq-applications/:id":
+    id: 'lead_provider.applications.order("RANDOM()").limit(1).pick(:ecf_id)'
+
+  "/api/v1/participant-declarations":
+    paginate: true
+  "/api/v2/participant-declarations":
+    paginate: true
+  "/api/v3/participant-declarations":
+    paginate: true
+
+  "/api/v1/participant-declarations.csv":
+  "/api/v2/participant-declarations.csv":
+
+  "/api/v1/participant-declarations/:id":
+    id: 'Declaration.where(lead_provider:).order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v2/participant-declarations/:id":
+    id: 'Declaration.where(lead_provider:).order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v3/participant-declarations/:id":
+    id: 'Declaration.where(lead_provider:).order("RANDOM()").limit(1).pick(:ecf_id)'
+
+  "/api/v2/npq-enrolments.csv":
+
+  "/api/v1/participants/npq/outcomes":
+    paginate: true
+  "/api/v2/participants/npq/outcomes":
+    paginate: true 
+  "/api/v3/participants/npq/outcomes":
+    paginate: true
+
+  "/api/v1/participants/npq/:id/outcomes":
+    id: 'ParticipantOutcome.includes(declaration: { application: :user }).where(declaration: { lead_provider: }).order("RANDOM()").limit(1).pick("users.ecf_id")'
+  "/api/v2/participants/npq/:id/outcomes":
+    id: 'ParticipantOutcome.includes(declaration: { application: :user }).where(declaration: { lead_provider: }).order("RANDOM()").limit(1).pick("users.ecf_id")'
+  "/api/v3/participants/npq/:id/outcomes":
+    id: 'ParticipantOutcome.includes(declaration: { application: :user }).where(declaration: { lead_provider: }).order("RANDOM()").limit(1).pick("users.ecf_id")'
+
+  "/api/v1/participants/npq":
+    paginate: true
+  "/api/v2/participants/npq":
+    paginate: true
+  "/api/v3/participants/npq":
+    paginate: true
+
+  "/api/v1/participants/npq/:id":
+    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v2/participants/npq/:id":
+    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+  "/api/v3/participants/npq/:id":
+    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+
   "/api/v3/statements":
     paginate: true
   "/api/v3/statements?filter[cohort]=2021":
     paginate: true
   "/api/v3/statements?filter[updated_since]=2024-01-01T12:00:00Z":
     paginate: true
+
   "/api/v3/statements/:id":
-    id: lead_provider.statements.pluck(:id).sample
+    id: 'lead_provider.statements.order("RANDOM()").limit(1).pick(:ecf_id)'
