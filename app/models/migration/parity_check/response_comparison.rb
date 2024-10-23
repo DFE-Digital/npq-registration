@@ -64,10 +64,16 @@ module Migration
     end
 
     def response_body_diff
-      @response_body_diff ||= Diffy::Diff.new(ecf_response_body, npq_response_body, context: 3)
+      @response_body_diff ||= Diffy::Diff.new(pretty_format(ecf_response_body), pretty_format(npq_response_body), context: 3)
     end
 
   private
+
+    def pretty_format(body)
+      JSON.pretty_generate(JSON.parse(body))
+    rescue JSON::ParserError
+      body
+    end
 
     def digest_csv_response_bodies
       return unless request_path&.include?(".csv")

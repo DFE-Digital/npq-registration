@@ -116,6 +116,23 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
         DIFF
       )
     }
+
+    context "when the response bodies are JSON" do
+      let(:instance) { create(:response_comparison, :different, ecf_response_body: %({ "foo": "bar", "baz": "baz" }), npq_response_body: %({ "foo": "bar", "baz": "qux" })) }
+
+      it {
+        expect(diff.to_s(:text)).to eq(
+          <<~DIFF,
+             {
+               "foo": "bar",
+            -  "baz": "baz"
+            +  "baz": "qux"
+             }
+            \\ No newline at end of file
+          DIFF
+        )
+      }
+    end
   end
 
   describe "#response_times_by_path" do
