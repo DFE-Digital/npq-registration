@@ -58,7 +58,7 @@ module Migration::Migrators
   protected
 
     def migrate(items)
-      items = items.order(:id).offset(offset).limit(limit)
+      items = items.order(:id, :created_at).offset(offset).limit(limit)
 
       start_migration!(items.count)
 
