@@ -1,6 +1,6 @@
 module Migration
   class ParityCheck::ResponseComparison < ApplicationRecord
-    before_validation :clear_response_bodies_when_equal
+    before_validation :digest_csv_response_bodies, :clear_response_bodies_when_equal
 
     belongs_to :lead_provider
 
@@ -68,6 +68,13 @@ module Migration
     end
 
   private
+
+    def digest_csv_response_bodies
+      return unless request_path&.include?(".csv")
+
+      self.ecf_response_body = Digest::SHA2.hexdigest(ecf_response_body) if ecf_response_body
+      self.npq_response_body = Digest::SHA2.hexdigest(npq_response_body) if npq_response_body
+    end
 
     def clear_response_bodies_when_equal
       return if different?
