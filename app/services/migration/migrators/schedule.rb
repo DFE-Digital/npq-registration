@@ -39,6 +39,8 @@ module Migration::Migrators
             applies_to: ecf_milestone.payment_date,
             name: ecf_schedule.name,
             allowed_declaration_types: ecf_schedule.milestones.pluck(:declaration_type),
+            created_at: ecf_schedule.created_at,
+            updated_at: ecf_schedule.updated_at,
           )
         end
       end
