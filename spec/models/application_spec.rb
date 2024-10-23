@@ -18,6 +18,28 @@ RSpec.describe Application do
     it { is_expected.to have_many(:declarations) }
   end
 
+  describe "paper_trail" do
+    subject { create(:application, lead_provider_approval_status: "pending") }
+
+    it "enables paper trail" do
+      expect(subject).to be_versioned
+    end
+
+    it "creates a version with a note" do
+      with_versioning do
+        expect(PaperTrail).to be_enabled
+
+        subject.update!(
+          lead_provider_approval_status: "rejected",
+          version_note: "This is a test",
+        )
+        version = subject.versions.last
+        expect(version.note).to eq("This is a test")
+        expect(version.object_changes["lead_provider_approval_status"]).to eq(%w[pending rejected])
+      end
+    end
+  end
+
   describe "validations" do
     context "when the schedule cohort does not match the application cohort" do
       subject do

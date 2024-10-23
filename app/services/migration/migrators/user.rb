@@ -52,6 +52,9 @@ module Migration::Migrators
           national_insurance_number: npq_application.nino || user.national_insurance_number,
           active_alert: npq_application.active_alert || user.active_alert,
           trn_verified: ecf_verified_trn.present? || (ecf_unverified_trn.blank? && user&.trn_verified),
+          created_at: ecf_user.created_at,
+          updated_at: ecf_user.updated_at,
+          version_note: "Changes migrated from ECF to NPQ",
         )
       end
     end

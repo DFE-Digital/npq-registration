@@ -37,6 +37,27 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.accepted_at).to eq(ecf_resource1.profile.created_at)
       end
 
+      it "sets the timestamps from the ECF NPQApplication on the NPQ application" do
+        created_at = 10.days.ago
+        updated_at = 3.days.ago
+        ecf_resource1.update!(created_at:, updated_at:)
+
+        with_versioning do
+          expect(PaperTrail).to be_enabled
+
+          instance.call
+
+          application = ::Application.find_by_ecf_id!(ecf_resource1.id)
+          expect(application.created_at.to_s).to eq(created_at.to_s)
+          expect(application.updated_at.to_s).to eq(updated_at.to_s)
+
+          version = application.versions.last
+          expect(version.note).to eq("Changes migrated from ECF to NPQ")
+          expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
+          expect(version.object_changes["updated_at"].last).to eq(updated_at.iso8601(3))
+        end
+      end
+
       it "sets the schedule from the ECF NPQApplication on the NPQ application" do
         instance.call
 
