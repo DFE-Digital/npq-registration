@@ -5,8 +5,10 @@ RSpec.describe Migration::Migrators::Schedule do
     let(:ecf_class) { Migration::Ecf::Finance::Schedule }
 
     def create_ecf_resource
-      create(:ecf_migration_schedule_npq_support).tap do |schedule|
-        create(:ecf_migration_milestone, schedule:)
+      travel_to(rand(100).hours.ago) do
+        create(:ecf_migration_schedule_npq_support).tap do |schedule|
+          create(:ecf_migration_milestone, schedule:)
+        end
       end
     end
 
@@ -39,6 +41,14 @@ RSpec.describe Migration::Migrators::Schedule do
         schedule = Schedule.find_by!(ecf_id: ecf_resource1.id)
 
         expect { instance.call }.to change { schedule.reload.allowed_declaration_types }.to(ecf_milestones.pluck(:declaration_type))
+      end
+
+      it "sets timestamps from ecf" do
+        instance.call
+
+        schedule = Schedule.find_by!(ecf_id: ecf_resource1.id)
+        expect(schedule.created_at.to_s).to eq(ecf_resource1.created_at.to_s)
+        expect(schedule.updated_at.to_s).to eq(ecf_resource1.updated_at.to_s)
       end
 
       context "when the schedule type cannot be mapped to a course group" do
