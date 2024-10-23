@@ -3,8 +3,10 @@ require "rails_helper"
 RSpec.describe Migration::Migrators::ParticipantIdChange do
   it_behaves_like "a migrator", :participant_id_change, %i[user] do
     def create_ecf_resource
-      user = create(:ecf_migration_user, :npq)
-      create(:ecf_migration_participant_id_change, user:)
+      travel_to(rand(100).hours.ago) do
+        user = create(:ecf_migration_user, :npq)
+        create(:ecf_migration_participant_id_change, user:)
+      end
     end
 
     def create_npq_resource(ecf_resource)
@@ -22,7 +24,7 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
     end
 
     describe "#call" do
-      it "sets the created ParticipantIdChange attributes correctly" do
+      it "sets the ParticipantIdChange attributes correctly" do
         instance.call
 
         participant_id_change = ParticipantIdChange.find_by!(ecf_id: ecf_resource1.id)
@@ -31,6 +33,7 @@ RSpec.describe Migration::Migrators::ParticipantIdChange do
           from_participant_id: ecf_resource1.from_participant_id,
           to_participant_id: ecf_resource1.to_participant_id,
           created_at: ecf_resource1.created_at,
+          updated_at: ecf_resource1.updated_at,
         })
       end
 
