@@ -15,17 +15,41 @@ get:
 
   "/api/v1/participant-declarations":
     paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
   "/api/v2/participant-declarations":
     paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
   "/api/v3/participant-declarations":
     paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
 
   "/api/v1/participant-declarations/:id":
     id: declaration_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
   "/api/v2/participant-declarations/:id":
     id: declaration_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
   "/api/v3/participant-declarations/:id":
     id: declaration_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
 
   "/api/v1/participants/npq/outcomes":
     paginate: true
@@ -57,10 +81,18 @@ get:
 
   "/api/v3/statements":
     paginate: true
+    exclude:
+      - type
   "/api/v3/statements?filter[cohort]=2021":
     paginate: true
+    exclude:
+      - type
   "/api/v3/statements?filter[updated_since]=2024-01-01T12:00:00Z":
     paginate: true
+    exclude:
+      - type
 
   "/api/v3/statements/:id":
     id: statement_ecf_id
+    exclude:
+      - type
