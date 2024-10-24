@@ -62,12 +62,10 @@ module Questionnaires
 
       schools = School
                   .open
-                  .search_by_location(institution_location)
                   .search_by_name(institution_name)
                   .limit(10)
 
       local_authorities = LocalAuthority
-                            .search_by_location(institution_location)
                             .search_by_name(institution_name)
                             .limit(10)
 
