@@ -106,6 +106,47 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
         JSON
       )
     end
+
+    describe "populating response body ids" do
+      let(:instance) { build(:response_comparison, :different, ecf_response_body: response_body, npq_response_body: response_body) }
+
+      before { instance.valid? }
+
+      context "when the response body contains multiple results" do
+        let(:response_body) { %({ "data": [{ "id": "1" }, { "id": "2" }] }) }
+
+        it { expect(instance.ecf_response_body_ids).to contain_exactly("1", "2") }
+        it { expect(instance.npq_response_body_ids).to contain_exactly("1", "2") }
+      end
+
+      context "when the response body contains a single result" do
+        let(:response_body) { %({ "data": { "id": "1" } }) }
+
+        it { expect(instance.ecf_response_body_ids).to contain_exactly("1") }
+        it { expect(instance.npq_response_body_ids).to contain_exactly("1") }
+      end
+
+      context "when the response body is not in the expected format" do
+        let(:response_body) { %({ "foo": { "id": "1" } }) }
+
+        it { expect(instance.ecf_response_body_ids).to be_empty }
+        it { expect(instance.npq_response_body_ids).to be_empty }
+      end
+
+      context "when the response body is not JSON" do
+        let(:response_body) { %(Error!) }
+
+        it { expect(instance.ecf_response_body_ids).to be_empty }
+        it { expect(instance.npq_response_body_ids).to be_empty }
+      end
+
+      context "when the response body is nil" do
+        let(:response_body) { nil }
+
+        it { expect(instance.ecf_response_body_ids).to be_empty }
+        it { expect(instance.npq_response_body_ids).to be_empty }
+      end
+    end
   end
 
   describe "scopes" do
