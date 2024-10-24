@@ -29,6 +29,7 @@ module Migration::Migrators
           from_participant_id: ecf_participant_id_change.from_participant_id,
           to_participant_id: ecf_participant_id_change.to_participant_id,
           created_at: ecf_participant_id_change.created_at,
+          updated_at: ecf_participant_id_change.updated_at,
         )
       end
     end

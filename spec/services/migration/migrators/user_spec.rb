@@ -226,6 +226,73 @@ RSpec.describe Migration::Migrators::User do
           end
         end
       end
+
+      context "when setting timestamps from ECF" do
+        let(:created_at) { 10.days.ago }
+        let(:updated_at) { 3.days.ago }
+
+        it "sets the timestamps from the ECF User" do
+          ecf_resource1.update!(created_at:, updated_at:)
+
+          with_versioning do
+            expect(PaperTrail).to be_enabled
+
+            instance.call
+
+            user = ::User.find_by_ecf_id!(ecf_resource1.id)
+            expect(user.created_at.to_s).to eq(created_at.to_s)
+            expect(user.updated_at.to_s).to eq(updated_at.to_s)
+
+            version = user.versions.last
+            expect(version.note).to eq("Changes migrated from ECF to NPQ")
+            expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
+            expect(version.object_changes["updated_at"].last).to eq(updated_at.iso8601(3))
+          end
+        end
+
+        it "sets updated_at to now if trn has changed" do
+          ecf_resource1.update!(created_at:, updated_at:)
+          ecf_resource1.teacher_profile.update!(trn: nil)
+
+          freeze_time do
+            with_versioning do
+              expect(PaperTrail).to be_enabled
+
+              instance.call
+
+              user = ::User.find_by_ecf_id!(ecf_resource1.id)
+              expect(user.created_at.to_s).to eq(created_at.to_s)
+              expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
+
+              version = user.versions.last
+              expect(version.note).to eq("Changes migrated from ECF to NPQ")
+              expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
+              expect(version.object_changes["updated_at"].last).to eq(Time.zone.now.iso8601(3))
+            end
+          end
+        end
+
+        it "sets updated_at to now if email has changed" do
+          ecf_resource1.update!(created_at:, updated_at:, email: "some@thing.com")
+
+          freeze_time do
+            with_versioning do
+              expect(PaperTrail).to be_enabled
+
+              instance.call
+
+              user = ::User.find_by_ecf_id!(ecf_resource1.id)
+              expect(user.created_at.to_s).to eq(created_at.to_s)
+              expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
+
+              version = user.versions.last
+              expect(version.note).to eq("Changes migrated from ECF to NPQ")
+              expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
+              expect(version.object_changes["updated_at"].last).to eq(Time.zone.now.iso8601(3))
+            end
+          end
+        end
+      end
     end
   end
 end

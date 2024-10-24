@@ -3,7 +3,9 @@ require "rails_helper"
 RSpec.describe Migration::Migrators::Statement do
   it_behaves_like "a migrator", :statement, %i[cohort lead_provider] do
     def create_ecf_resource
-      create(:ecf_migration_statement, name: "March 2023")
+      travel_to(rand(100).hours.ago) do
+        create(:ecf_migration_statement, name: "March 2023")
+      end
     end
 
     def create_npq_resource(ecf_resource)
@@ -28,6 +30,8 @@ RSpec.describe Migration::Migrators::Statement do
         expect(statement.cohort.start_year).to eq(ecf_resource1.cohort.start_year)
         expect(statement.lead_provider.ecf_id).to eq(ecf_resource1.cpd_lead_provider.npq_lead_provider.id)
         expect(statement.state).to eq("open")
+        expect(statement.created_at.to_s).to eq(ecf_resource1.created_at.to_s)
+        expect(statement.updated_at.to_s).to eq(ecf_resource1.updated_at.to_s)
       end
     end
   end

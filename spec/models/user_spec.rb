@@ -10,6 +10,28 @@ RSpec.describe User do
     it { is_expected.to have_many(:declarations).through(:applications) }
   end
 
+  describe "paper_trail" do
+    subject { create(:user, full_name: "Joe") }
+
+    it "enables paper trail" do
+      expect(subject).to be_versioned
+    end
+
+    it "creates a version with a note" do
+      with_versioning do
+        expect(PaperTrail).to be_enabled
+
+        subject.update!(
+          full_name: "Changed Name",
+          version_note: "This is a test",
+        )
+        version = subject.versions.last
+        expect(version.note).to eq("This is a test")
+        expect(version.object_changes["full_name"]).to eq(["Joe", "Changed Name"])
+      end
+    end
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
     it { is_expected.to validate_presence_of(:email).on(:npq_separation).with_message("Enter an email address") }
