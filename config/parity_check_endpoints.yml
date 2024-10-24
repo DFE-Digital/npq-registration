@@ -79,15 +79,7 @@ get:
   "/api/v3/participants/npq/:id":
     id: 'User.includes(:applications).where(applications: { lead_provider:, lead_provider_approval_status: :accepted }).order("RANDOM()").limit(1).pick(:ecf_id)'
 
-  "/api/v3/statements":
-    paginate: true
-    exclude:
-      - type
-  "/api/v3/statements?filter[cohort]=2021":
-    paginate: true
-    exclude:
-      - type
-  "/api/v3/statements?filter[updated_since]=2024-01-01T12:00:00Z":
+  "/api/v3/statements?filter[type]=npq":
     paginate: true
     exclude:
       - type
