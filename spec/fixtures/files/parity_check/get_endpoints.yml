@@ -1,3 +1,5 @@
 get:
   "/api/v3/statements":
     paginate: true
+    exclude:
+      - attribute

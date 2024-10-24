@@ -58,7 +58,7 @@ module Migration
           client = Client.new(lead_provider:, method:, path:, options:)
 
           client.make_requests do |ecf_result, npq_result, formatted_path, page|
-            save_comparison!(lead_provider:, path: formatted_path, method:, page:, ecf_result:, npq_result:)
+            save_comparison!(lead_provider:, path: formatted_path, method:, page:, ecf_result:, npq_result:, options:)
           end
         end
       end
@@ -68,7 +68,7 @@ module Migration
       Rails.cache.write(:parity_check_completed_at, Time.zone.now)
     end
 
-    def save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:)
+    def save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:, options:)
       Migration::ParityCheck::ResponseComparison.create!({
         lead_provider:,
         request_path: path,
@@ -79,6 +79,7 @@ module Migration
         npq_response_body: npq_result[:response].body,
         ecf_response_time_ms: ecf_result[:response_ms],
         npq_response_time_ms: npq_result[:response_ms],
+        exclude: options[:exclude],
         page:,
       })
     end

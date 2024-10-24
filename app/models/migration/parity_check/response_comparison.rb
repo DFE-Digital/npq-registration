@@ -1,5 +1,7 @@
 module Migration
   class ParityCheck::ResponseComparison < ApplicationRecord
+    attr_accessor :exclude
+
     before_validation :digest_csv_response_bodies, :format_json_response_bodies, :clear_response_bodies_when_equal
 
     belongs_to :lead_provider
@@ -79,13 +81,13 @@ module Migration
     end
 
     def ecf_response_body_hash
-      @ecf_response_body_hash ||= JSON.parse(ecf_response_body).deep_sort
+      @ecf_response_body_hash ||= deep_remove_keys(JSON.parse(ecf_response_body).deep_sort, exclude)
     rescue JSON::ParserError, TypeError
       nil
     end
 
     def npq_response_body_hash
-      @npq_response_body_hash ||= JSON.parse(npq_response_body).deep_sort
+      @npq_response_body_hash ||= deep_remove_keys(JSON.parse(npq_response_body).deep_sort, exclude)
     rescue JSON::ParserError, TypeError
       nil
     end
@@ -101,6 +103,23 @@ module Migration
       return if different?
 
       assign_attributes(ecf_response_body: nil, npq_response_body: nil)
+    end
+
+    def deep_remove_keys(hash, keys_to_remove)
+      return hash if keys_to_remove.blank?
+
+      case hash
+      when Hash
+        hash.each_with_object({}) do |(key, value), result|
+          next if key.in?(keys_to_remove)
+
+          result[key] = deep_remove_keys(value, keys_to_remove)
+        end
+      when Array
+        hash.map { |item| deep_remove_keys(item, keys_to_remove) }
+      else
+        hash
+      end
     end
   end
 end

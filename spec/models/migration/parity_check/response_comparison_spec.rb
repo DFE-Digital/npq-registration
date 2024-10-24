@@ -80,6 +80,32 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
         JSON
       )
     end
+
+    it "removes excluded attributes" do
+      response_comparison = build(:response_comparison, exclude: %w[baz], ecf_response_body: %({ "foo": "bar", "baz": "qux"}), npq_response_body: %({ "foo": "baz", "qux": [{ "baz": ["qux"], "foo": "bar" }] }))
+      response_comparison.valid?
+
+      expect(response_comparison.ecf_response_body).to eq(
+        <<~JSON.strip,
+          {
+            "foo": "bar"
+          }
+        JSON
+      )
+
+      expect(response_comparison.npq_response_body).to eq(
+        <<~JSON.strip,
+          {
+            "foo": "baz",
+            "qux": [
+              {
+                "foo": "bar"
+              }
+            ]
+          }
+        JSON
+      )
+    end
   end
 
   describe "scopes" do

@@ -148,6 +148,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
           expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
 
           expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
+            exclude: %w[attribute],
             lead_provider: an_instance_of(LeadProvider),
             request_path: "/formatted/path",
             request_method: "get",
