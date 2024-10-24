@@ -101,20 +101,85 @@ RSpec.describe Migration::ParityCheck::Client do
       end
 
       context "when using id substitution" do
-        let(:options) { { id: "lead_provider.statements.pluck(:ecf_id).sample" } }
-        let(:path) { "/api/v3/statements/:id" }
+        let(:options) { { id: } }
+        let(:path) { "/path/:id" }
 
-        it "evaluates the id option and substitutes it into the path" do
-          statement = create(:statement, lead_provider:)
+        before do
+          stub_request(:get, "#{ecf_url}/path/#{resource.ecf_id}")
+          stub_request(:get, "#{npq_url}/path/#{resource.ecf_id}")
+        end
 
-          stub_request(:get, "#{ecf_url}/api/v3/statements/#{statement.ecf_id}")
-          stub_request(:get, "#{npq_url}/api/v3/statements/#{statement.ecf_id}")
+        context "when using an unsupported id" do
+          let(:id) { "not_recognised" }
+          let(:resource) { OpenStruct.new(ecf_id: "123") }
 
-          instance.make_requests do |_, _, formatted_path|
-            expect(formatted_path).to eq("/api/v3/statements/#{statement.ecf_id}")
+          it { expect { instance.make_requests {} }.to raise_error described_class::UnsupportedIdOption, "Unsupported id option: not_recognised" }
+        end
+
+        context "when using statement_ecf_id" do
+          let(:id) { "statement_ecf_id" }
+          let(:resource) { create(:statement, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
           end
+        end
 
-          expect(requests.count).to eq(2)
+        context "when using application_ecf_id" do
+          let(:id) { "application_ecf_id" }
+          let(:resource) { create(:application, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using declaration_ecf_id" do
+          let(:id) { "declaration_ecf_id" }
+          let(:resource) { create(:declaration, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using participant_outcome_ecf_id" do
+          let(:id) { "participant_outcome_ecf_id" }
+          let(:declaration) { create(:declaration, lead_provider:) }
+          let(:resource) { create(:participant_outcome, declaration:).declaration.application.user }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using participant_ecf_id" do
+          let(:id) { "participant_ecf_id" }
+          let(:resource) { create(:application, :accepted, lead_provider:).user }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
         end
       end
 

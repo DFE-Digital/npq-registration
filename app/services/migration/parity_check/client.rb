@@ -1,5 +1,7 @@
 module Migration
   class ParityCheck::Client
+    class UnsupportedIdOption < RuntimeError; end
+
     attr_reader :lead_provider, :method, :path, :options, :page
 
     PAGINATION_PER_PAGE = 10
@@ -88,8 +90,40 @@ module Migration
       @formatted_path ||= begin
         return path unless options[:id] && path.include?(":id")
 
-        path.sub(":id", eval(options[:id]).to_s) # rubocop:disable Security/Eval
+        raise UnsupportedIdOption, "Unsupported id option: #{options[:id]}" unless respond_to?(options[:id], true)
+
+        path.sub(":id", send(options[:id]).to_s)
       end
+    end
+
+    def application_ecf_id
+      lead_provider.applications.order("RANDOM()").limit(1).pick(:ecf_id)
+    end
+
+    def declaration_ecf_id
+      Declaration.where(lead_provider:).order("RANDOM()").limit(1).pick(:ecf_id)
+    end
+
+    def participant_outcome_ecf_id
+      ParticipantOutcome
+        .includes(declaration: { application: :user })
+        .where(declaration: { lead_provider: })
+        .order("RANDOM()")
+        .limit(1)
+        .pick("users.ecf_id")
+    end
+
+    def participant_ecf_id
+      User
+        .includes(:applications)
+        .where(applications: { lead_provider:, lead_provider_approval_status: :accepted })
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def statement_ecf_id
+      lead_provider.statements.order("RANDOM()").limit(1).pick(:ecf_id)
     end
   end
 end
