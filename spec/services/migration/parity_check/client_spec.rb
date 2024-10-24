@@ -86,7 +86,7 @@ RSpec.describe Migration::ParityCheck::Client do
       end
 
       it "yields the result of each request to the block" do
-        instance.make_requests do |ecf_result, npq_result, page|
+        instance.make_requests do |ecf_result, npq_result, formatted_path, page|
           expect(ecf_result[:response].code).to eq(200)
           expect(ecf_result[:response].body).to eq("ecf_response_body")
           expect(ecf_result[:response_ms]).to be >= 0
@@ -95,7 +95,91 @@ RSpec.describe Migration::ParityCheck::Client do
           expect(npq_result[:response].body).to eq("npq_response_body")
           expect(npq_result[:response_ms]).to be >= 0
 
+          expect(formatted_path).to eq(path)
           expect(page).to be_nil
+        end
+      end
+
+      context "when using id substitution" do
+        let(:options) { { id: } }
+        let(:path) { "/path/:id" }
+
+        before do
+          stub_request(:get, "#{ecf_url}/path/#{resource.ecf_id}")
+          stub_request(:get, "#{npq_url}/path/#{resource.ecf_id}")
+        end
+
+        context "when using an unsupported id" do
+          let(:id) { "not_recognised" }
+          let(:resource) { OpenStruct.new(ecf_id: "123") }
+
+          it { expect { instance.make_requests {} }.to raise_error described_class::UnsupportedIdOption, "Unsupported id option: not_recognised" }
+        end
+
+        context "when using statement_ecf_id" do
+          let(:id) { "statement_ecf_id" }
+          let(:resource) { create(:statement, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using application_ecf_id" do
+          let(:id) { "application_ecf_id" }
+          let(:resource) { create(:application, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using declaration_ecf_id" do
+          let(:id) { "declaration_ecf_id" }
+          let(:resource) { create(:declaration, lead_provider:) }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using participant_outcome_ecf_id" do
+          let(:id) { "participant_outcome_ecf_id" }
+          let(:declaration) { create(:declaration, lead_provider:) }
+          let(:resource) { create(:participant_outcome, declaration:).declaration.application.user }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
+        end
+
+        context "when using participant_ecf_id" do
+          let(:id) { "participant_ecf_id" }
+          let(:resource) { create(:application, :accepted, lead_provider:).user }
+
+          it "evaluates the id option and substitutes it into the path" do
+            instance.make_requests do |_, _, formatted_path|
+              expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+            end
+
+            expect(requests.count).to eq(2)
+          end
         end
       end
 
@@ -126,7 +210,7 @@ RSpec.describe Migration::ParityCheck::Client do
           end
 
           it "yields the result of each request to the block" do
-            instance.make_requests do |ecf_result, npq_result, page|
+            instance.make_requests do |ecf_result, npq_result, formatted_path, page|
               expect(ecf_result[:response].code).to eq(200)
               expect(ecf_result[:response].body).to eq({ data: [1] }.to_json)
               expect(ecf_result[:response_ms]).to be >= 0
@@ -135,12 +219,13 @@ RSpec.describe Migration::ParityCheck::Client do
               expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
               expect(npq_result[:response_ms]).to be >= 0
 
+              expect(formatted_path).to eq(path)
               expect(page).to eq(1)
             end
           end
         end
 
-        context "when there are multiple pages of results" do
+        context "when there are two pages of results and the responses from the first page match" do
           before do
             stub_request(:get, "#{ecf_url}#{path}")
               .with(query: { page: { page: 1, per_page: 2 } })
@@ -151,10 +236,10 @@ RSpec.describe Migration::ParityCheck::Client do
 
             stub_request(:get, "#{npq_url}#{path}")
               .with(query: { page: { page: 1, per_page: 2 } })
-              .to_return(status: 200, body: { data: [1] }.to_json)
+              .to_return(status: 200, body: { data: [1, 2] }.to_json)
             stub_request(:get, "#{npq_url}#{path}")
               .with(query: { page: { page: 2, per_page: 2 } })
-              .to_return(status: 200, body: { data: [] }.to_json)
+              .to_return(status: 200, body: { data: [3] }.to_json)
           end
 
           it "makes a single request to each service for all pages" do
@@ -172,21 +257,43 @@ RSpec.describe Migration::ParityCheck::Client do
           it "yields the result of each request to the block" do
             expected_page = 0
 
-            instance.make_requests do |ecf_result, npq_result, page|
+            instance.make_requests do |ecf_result, npq_result, formatted_path, page|
               expected_page += 1
               expect(page).to eq(expected_page)
+              expect(formatted_path).to eq(path)
 
               case page
               when 1
                 expect(ecf_result[:response].body).to eq({ data: [1, 2] }.to_json)
-                expect(npq_result[:response].body).to eq({ data: [1] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [1, 2] }.to_json)
               when 2
                 expect(ecf_result[:response].body).to eq({ data: [3] }.to_json)
-                expect(npq_result[:response].body).to eq({ data: [] }.to_json)
+                expect(npq_result[:response].body).to eq({ data: [3] }.to_json)
               end
             end
 
             expect(expected_page).to eq(2)
+          end
+        end
+
+        context "when there are two pages of results and the first page responses do not match" do
+          before do
+            stub_request(:get, "#{ecf_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [1, 2] }.to_json)
+            stub_request(:get, "#{npq_url}#{path}")
+              .with(query: { page: { page: 1, per_page: 2 } })
+              .to_return(status: 200, body: { data: [3] }.to_json)
+          end
+
+          it "stops at the first page of responses" do
+            instance.make_requests {}
+
+            expect(ecf_requests.count).to eq(1)
+            expect(URI.decode_uri_component(ecf_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
+
+            expect(npq_requests.count).to eq(1)
+            expect(URI.decode_uri_component(npq_requests.first.uri.query)).to eq("page[page]=1&page[per_page]=2")
           end
         end
 
