@@ -13,19 +13,19 @@ get:
   "/api/v3/npq-applications/:id":
     id: application_ecf_id
 
-  "/api/v1/participant-declarations":
+  "/api/v1/participant-declarations?filter[type]=npq":
     paginate: true
     exclude:
       - delivery_partner_id
       - mentor_id
       - evidence_held
-  "/api/v2/participant-declarations":
+  "/api/v2/participant-declarations?filter[type]=npq":
     paginate: true
     exclude:
       - delivery_partner_id
       - mentor_id
       - evidence_held
-  "/api/v3/participant-declarations":
+  "/api/v3/participant-declarations?filter[type]=npq":
     paginate: true
     exclude:
       - delivery_partner_id
