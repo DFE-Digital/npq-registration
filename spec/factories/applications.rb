@@ -120,10 +120,9 @@ FactoryBot.define do
         application.update!(training_status: ApplicationState.states[:withdrawn])
 
         create(:application_state,
+               :withdrawn,
                application:,
-               lead_provider: application.lead_provider,
-               state: ApplicationState.states[:withdrawn],
-               reason: "other")
+               lead_provider: application.lead_provider)
       end
     end
 
@@ -132,10 +131,9 @@ FactoryBot.define do
         application.update!(training_status: ApplicationState.states[:deferred])
 
         create(:application_state,
+               :deferred,
                application:,
-               lead_provider: application.lead_provider,
-               state: ApplicationState.states[:deferred],
-               reason: "other")
+               lead_provider: application.lead_provider)
       end
     end
   end
