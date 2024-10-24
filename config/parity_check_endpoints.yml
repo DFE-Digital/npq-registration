@@ -49,11 +49,11 @@ get:
     paginate: true
 
   "/api/v1/participants/npq/:id":
-    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+    id: 'User.includes(:applications).where(applications: { lead_provider:, lead_provider_approval_status: :accepted }).order("RANDOM()").limit(1).pick(:ecf_id)'
   "/api/v2/participants/npq/:id":
-    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+    id: 'User.includes(:applications).where(applications: { lead_provider:, lead_provider_approval_status: :accepted }).order("RANDOM()").limit(1).pick(:ecf_id)'
   "/api/v3/participants/npq/:id":
-    id: 'User.includes(:applications).where(applications: { lead_provider: }).order("RANDOM()").limit(1).pick(:ecf_id)'
+    id: 'User.includes(:applications).where(applications: { lead_provider:, lead_provider_approval_status: :accepted }).order("RANDOM()").limit(1).pick(:ecf_id)'
 
   "/api/v3/statements":
     paginate: true
