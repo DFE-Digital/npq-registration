@@ -5,6 +5,8 @@ class StatementItem < ApplicationRecord
   belongs_to :statement
   belongs_to :declaration
 
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
+
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
 

@@ -14,6 +14,7 @@ class Cohort < ApplicationRecord
               in: [true, false],
               message: "Choose true or false for funding cap",
             }
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   def registration_start_date_matches_start_year
     return if registration_start_date.blank?
