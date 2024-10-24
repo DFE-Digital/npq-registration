@@ -4,7 +4,6 @@ class ApplicationState < ApplicationRecord
   belongs_to :application
   belongs_to :lead_provider, optional: true
 
-  # TODO: remove "allow_nil" and add default value "gen_random_uuid()" and constraints into the DB after separation
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   enum state: {
