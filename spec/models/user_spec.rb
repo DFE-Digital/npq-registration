@@ -278,4 +278,22 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#archived?" do
+    context "when user is archived" do
+      subject(:user) { build(:user, :archived) }
+
+      it "returns true" do
+        expect(user.archived?).to be(true)
+      end
+    end
+
+    context "when user is not archived" do
+      subject(:user) { build(:user) }
+
+      it "returns false" do
+        expect(user.archived?).to be(false)
+      end
+    end
+  end
 end

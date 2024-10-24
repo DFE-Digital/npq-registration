@@ -1,17 +1,54 @@
 module Migration
   module Users
     class Creator
-      attr_reader :ecf_user
+      attr_reader :ecf_user, :ecf_user_email
 
-      def initialize(ecf_user)
+      def initialize(ecf_user, ecf_user_email)
         @ecf_user = ecf_user
+        @ecf_user_email = ecf_user_email
       end
 
       def find_or_initialize
+        primary_user = find_primary_user
+
+        # User doesn't exist at all
+        if primary_user.nil? && user_by_ecf_user_email.nil?
+          return ::User.new(ecf_id: ecf_user.id)
+        end
+
+        # Primary user found and `ecf_user_email` is blank or same as primary user
+        if primary_user && (user_by_ecf_user_email.nil? || primary_user == user_by_ecf_user_email)
+          return primary_user
+        end
+
+        # Primary user not found, email user found
+        if primary_user.nil? && user_by_ecf_user_email
+          # email user, does it have `ecf_user`, is it orphan
+          if ecf_user_by_ecf_user_email_user_ecf_id.nil? || email_user_ecf_id_links_to_orphan_ecf_user?
+            user_by_ecf_user_email.ecf_id = ecf_user.id
+            return user_by_ecf_user_email
+          end
+
+          raise_error("User not found with ecf_id or gai_id, user found with ecf_user_email. this user has a linked ecf_user which is not an orphan")
+        end
+
+        # Primary user and email user found, are different
+        if primary_user && user_by_ecf_user_email
+          # email user, does it have `ecf_user`, is it orphan
+          if ecf_user_by_ecf_user_email_user_ecf_id.nil? || email_user_ecf_id_links_to_orphan_ecf_user?
+            ::Users::Archiver.new(user: user_by_ecf_user_email).archive!
+            return primary_user
+          end
+
+          raise_error("User found with ecf_id or gai_id AND user found with ecf_user_email. ecf_user_email user is not orphan.")
+        end
+      end
+
+      def find_primary_user
         raise_on_multiple_ecf_users_with_same_ecf_id!
 
         if user_does_not_exist_on_npq?
-          return ::User.new(ecf_id: ecf_user.id)
+          return nil
         end
 
         if both_ecf_ids_return_same_user? || only_ecf_id_return_user?
@@ -66,11 +103,25 @@ module Migration
         @user_by_ecf_user_gai_id ||= ::User.find_by(uid: ecf_user.get_an_identity_id)
       end
 
+      def user_by_ecf_user_email
+        return if ecf_user_email.blank?
+
+        # Find User with `ecf_user_email` (most recent npq_application identity email)
+        @user_by_ecf_user_email ||= ::User.find_by(email: ecf_user_email)
+      end
+
       def ecf_user_by_user_ecf_id
         return if user_by_ecf_user_gai_id&.ecf_id.blank?
 
         # Find ECF User with `user.ecf_id`, which was found with `ecf_user.get_an_identity_id`
         @ecf_user_by_user_ecf_id ||= Migration::Ecf::User.find_by(id: user_by_ecf_user_gai_id.ecf_id)
+      end
+
+      def ecf_user_by_ecf_user_email_user_ecf_id
+        return if user_by_ecf_user_email.nil?
+
+        # Find ECF User with `user_by_ecf_user_email.ecf_id`
+        @ecf_user_by_ecf_user_email_user_ecf_id ||= Migration::Ecf::User.find_by(id: user_by_ecf_user_email.ecf_id)
       end
 
       def raise_error(msg)
@@ -115,8 +166,16 @@ module Migration
       end
 
       def gai_user_ecf_id_links_to_orphan_ecf_user?
+        orphaned_ecf_user?(ecf_user_by_user_ecf_id)
+      end
+
+      def email_user_ecf_id_links_to_orphan_ecf_user?
+        orphaned_ecf_user?(ecf_user_by_ecf_user_email_user_ecf_id)
+      end
+
+      def orphaned_ecf_user?(ecf_user)
         # is it an orphan ecf user?
-        ecf_user_by_user_ecf_id.npq_applications.empty? && ecf_user_by_user_ecf_id.npq_profiles.empty?
+        ecf_user.npq_applications.empty? && ecf_user.npq_profiles.empty?
       end
     end
   end

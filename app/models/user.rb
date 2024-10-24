@@ -190,4 +190,8 @@ class User < ApplicationRecord
     self.email_updates_unsubscribe_key = nil
     save!
   end
+
+  def archived?
+    archived_email.present?
+  end
 end
