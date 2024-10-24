@@ -14,8 +14,6 @@ class Cohort < ApplicationRecord
               in: [true, false],
               message: "Choose true or false for funding cap",
             }
-
-  # TODO: remove "allow_nil" and add default value "gen_random_uuid()" and constraints into the DB after separation
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   def registration_start_date_matches_start_year

@@ -23,8 +23,8 @@ class Statement < ApplicationRecord
               message: "Year must be a 4 digit number",
             }
 
-  validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
+  validates :ecf_id, uniqueness: { case_sensitive: false }
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
   scope :with_state, ->(*state) { where(state:) }

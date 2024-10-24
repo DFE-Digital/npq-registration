@@ -5,7 +5,6 @@ class StatementItem < ApplicationRecord
   belongs_to :statement
   belongs_to :declaration
 
-  # TODO: remove "allow_nil" and add default value "gen_random_uuid()" and constraints into the DB after separation
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
