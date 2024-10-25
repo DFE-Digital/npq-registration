@@ -61,11 +61,11 @@ module MigrationHelper
     govuk_link_to("Failures report", download_report_npq_separation_migration_migrations_path(data_migrations.sample.model))
   end
 
-  def response_comparison_status_tag(different)
+  def response_comparison_status_tag(different, equal_text: "equal", different_text: "different")
     if different
-      govuk_tag(text: "DIFFERENT", colour: "red")
+      govuk_tag(text: different_text.upcase, colour: "red")
     else
-      govuk_tag(text: "EQUAL", colour: "green")
+      govuk_tag(text: equal_text.upcase, colour: "green")
     end
   end
 
@@ -118,5 +118,10 @@ module MigrationHelper
             response_comparison_status_code_tag(comparison.npq_response_status_code)
         end
     end
+  end
+
+  def contains_duplicate_ids?(comparisons, attribute)
+    ids = comparisons.map(&attribute).flatten
+    ids.size != ids.uniq.size
   end
 end

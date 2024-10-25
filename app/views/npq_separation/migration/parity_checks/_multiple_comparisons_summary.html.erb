@@ -1,5 +1,5 @@
 <%= govuk_table do |table|
-  table.with_caption(size: "m", text: "Overview (#{pluralize(comparisons.size, "pages")})")
+  table.with_caption(size: "m", text: "Overview (#{pluralize(comparisons.size, "page")})")
 
   table.with_head do |head|
     head.with_row do |row|
@@ -23,6 +23,28 @@
       row.with_cell(text: response_comparison_response_duration_human_readable(comparisons, :ecf_response_time_ms))
       row.with_cell(text: response_comparison_response_duration_human_readable(comparisons, :npq_response_time_ms))
       row.with_cell(text: response_comparison_performance(comparisons))
+    end
+
+    body.with_row do |row|
+      row.with_cell(text: "ID duplicates check")
+      
+      ecf_duplicates = contains_duplicate_ids?(comparisons, :ecf_response_body_ids)
+      npq_duplicates = contains_duplicate_ids?(comparisons, :npq_response_body_ids)
+    
+      row.with_cell(text: response_comparison_status_tag(ecf_duplicates, equal_text: "no", different_text: "yes"))
+      row.with_cell(text: response_comparison_status_tag(npq_duplicates, equal_text: "no", different_text: "yes"))
+      row.with_cell(text: response_comparison_status_tag(ecf_duplicates || npq_duplicates, equal_text: "unique", different_text: "duplicates"))
+    end
+
+    body.with_row do |row|
+      row.with_cell(text: "ID equality check")
+      
+      ecf_ids = comparisons.map(&:ecf_response_body_ids).flatten.sort
+      npq_ids = comparisons.map(&:npq_response_body_ids).flatten.sort
+    
+      row.with_cell(text: number_with_delimiter(ecf_ids.size))
+      row.with_cell(text: number_with_delimiter(npq_ids.size))
+      row.with_cell(text: response_comparison_status_tag(ecf_ids != npq_ids))
     end
   end
 end %>
