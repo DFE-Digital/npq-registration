@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
-  has_paper_trail meta: { note: :version_note }
+  has_paper_trail meta: { note: :version_note }, ignore: [:raw_tra_provider_data]
 
   has_many :applications, dependent: :destroy
   has_many :declarations, through: :applications
