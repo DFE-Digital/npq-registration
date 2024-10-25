@@ -3,7 +3,9 @@ require "rails_helper"
 RSpec.describe Migration::Migrators::Cohort do
   it_behaves_like "a migrator", :cohort, [] do
     def create_ecf_resource
-      create(:ecf_migration_cohort, :with_sequential_start_year)
+      travel_to(rand(100).hours.ago) do
+        create(:ecf_migration_cohort, :with_sequential_start_year)
+      end
     end
 
     def create_npq_resource(ecf_resource)
@@ -20,6 +22,8 @@ RSpec.describe Migration::Migrators::Cohort do
         instance.call
         cohort = Cohort.find_by!(ecf_id: ecf_resource1.id)
         expect(cohort.attributes).to include(ecf_resource1.attributes.slice("start_year", "registration_start_date"))
+        expect(cohort.created_at.to_s).to eq(ecf_resource1.created_at.to_s)
+        expect(cohort.updated_at.to_s).to eq(ecf_resource1.updated_at.to_s)
       end
 
       context "when the npq_registration_start_date is set on the ECF cohort" do

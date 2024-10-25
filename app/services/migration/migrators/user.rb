@@ -43,7 +43,7 @@ module Migration::Migrators
         ecf_verified_trn = ecf_user.teacher_profile&.trn || application_trns_by_verified[true]&.first
         ecf_unverified_trn = application_trns_by_verified[false]&.first
 
-        user.update!(
+        attrs = {
           trn: ecf_verified_trn || ecf_unverified_trn || user.trn,
           full_name: ecf_user.full_name || user.full_name,
           email:,
@@ -52,7 +52,16 @@ module Migration::Migrators
           national_insurance_number: npq_application.nino || user.national_insurance_number,
           active_alert: npq_application.active_alert || user.active_alert,
           trn_verified: ecf_verified_trn.present? || (ecf_unverified_trn.blank? && user&.trn_verified),
-        )
+          created_at: ecf_user.created_at,
+          updated_at: ecf_user.updated_at,
+          version_note: "Changes migrated from ECF to NPQ",
+        }
+
+        if changed_ecf_user_attrs?(attrs, ecf_user)
+          attrs[:updated_at] = Time.zone.now
+        end
+
+        user.update!(attrs)
       end
     end
 
@@ -85,6 +94,11 @@ module Migration::Migrators
 
       user.errors.add(:base, "There are multiple different, verified TRNs from NPQ applications")
       raise ActiveRecord::RecordInvalid, user
+    end
+
+    def changed_ecf_user_attrs?(attrs, ecf_user)
+      attrs[:trn] != ecf_user.teacher_profile&.trn ||
+        attrs[:email] != ecf_user.email
     end
   end
 end

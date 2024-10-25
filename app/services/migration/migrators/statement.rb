@@ -34,6 +34,8 @@ module Migration::Migrators
           marked_as_paid_at: ecf_statement.marked_as_paid_at,
           reconcile_amount: ecf_statement.reconcile_amount,
           state: npq_state(ecf_statement),
+          created_at: ecf_statement.created_at,
+          updated_at: ecf_statement.updated_at,
         )
       end
     end
