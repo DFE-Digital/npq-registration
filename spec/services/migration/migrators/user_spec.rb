@@ -293,6 +293,24 @@ RSpec.describe Migration::Migrators::User do
           end
         end
       end
+
+      context "when backfilling existing users" do
+        it "sets `ecf_id` for users with application" do
+          user_with_application = create(:user, :with_application, ecf_id: nil)
+
+          instance.call
+
+          expect(user_with_application.reload.ecf_id).to be_present
+        end
+
+        it "does not set `ecf_id` for with no application" do
+          user_without_application = create(:user, ecf_id: nil)
+
+          instance.call
+
+          expect(user_without_application.reload.ecf_id).to be_nil
+        end
+      end
     end
   end
 end

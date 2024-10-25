@@ -219,6 +219,24 @@ RSpec.describe Migration::Migrators::Application do
           end
         end
       end
+
+      context "when backfilling existing applications" do
+        it "sets `ecf_id`" do
+          application = create(:application, ecf_id: nil)
+
+          instance.call
+
+          expect(application.reload.ecf_id).to be_present
+        end
+
+        it "sets `cohort_id` to current cohort when schedule is not set" do
+          application = create(:application, cohort_id: nil)
+
+          instance.call
+
+          expect(application.reload.cohort_id).to eq(::Cohort.current.id)
+        end
+      end
     end
   end
 end

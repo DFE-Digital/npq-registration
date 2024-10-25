@@ -96,6 +96,10 @@ module Migration::Migrators
         application.version_note = "Changes migrated from ECF to NPQ"
         application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
       end
+
+      run_once { backfill_ecf_ids }
+      run_once { backfill_cohorts }
+      run_once { backfill_lead_provider_approval_statuses }
     end
 
   private
@@ -103,6 +107,28 @@ module Migration::Migrators
     def report_applications_not_in_ecf_as_failures
       applications_not_in_ecf = ::Application.where.not(ecf_id: self.class.ecf_npq_applications.pluck(:id)).select(:id)
       applications_not_in_ecf.each { |a| failure_manager.record_failure(a, "NPQApplication not found in ECF") }
+    end
+
+    def backfill_ecf_ids
+      ::Application.where(ecf_id: nil).find_each do |application|
+        version_note = "Changes migrated from ECF to NPQ"
+        application.update!(ecf_id: SecureRandom.uuid, version_note:)
+      end
+    end
+
+    def backfill_cohorts
+      ::Application.where(cohort_id: nil).find_each do |application|
+        version_note = "Changes migrated from ECF to NPQ"
+        fallback_cohort = application&.schedule&.cohort || ::Cohort.current
+        application.update!(cohort: fallback_cohort, version_note:)
+      end
+    end
+
+    def backfill_lead_provider_approval_statuses
+      ::Application.where(lead_provider_approval_status: nil).find_each do |application|
+        version_note = "Changes migrated from ECF to NPQ"
+        application.update!(lead_provider_approval_status: "pending", version_note:)
+      end
     end
   end
 end
