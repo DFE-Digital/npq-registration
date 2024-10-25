@@ -20,6 +20,9 @@ class User < ApplicationRecord
   validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
   # TODO: add constraints into the DB after separation
   validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
+  # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :ecf_id, uniqueness: { allow_blank: true }
+  # rubocop:enable Rails/UniqueValidationWithoutIndex
 
   # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
   before_validation do
