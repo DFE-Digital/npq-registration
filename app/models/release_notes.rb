@@ -13,7 +13,7 @@ private
     content.scan(regexp).map do |match|
       ReleaseNote.new(
         date: match[0],
-        content: match[1].strip,
+        content: GovukMarkdown.render(match[1].strip),
       )
     end
   end
