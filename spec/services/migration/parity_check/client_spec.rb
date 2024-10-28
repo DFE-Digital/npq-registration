@@ -144,6 +144,56 @@ RSpec.describe Migration::ParityCheck::Client do
       end
     end
 
+    context "when making a PUT request" do
+      let(:method) { :put }
+      let(:options) { { payload: { type: "type", attributes: { "key": "value" } } } }
+      let(:body) { { data: options[:payload] } }
+
+      before do
+        stub_request(:put, "#{ecf_url}#{path}").with(body:).to_return(status: 200, body: "ecf_response_body")
+        stub_request(:put, "#{npq_url}#{path}").with(body:).to_return(status: 201, body: "npq_response_body")
+      end
+
+      include_context "makes valid requests and yields the results"
+
+      context "when the payload is not specified" do
+        let(:options) { {} }
+        let(:body) { {} }
+
+        include_context "makes valid requests and yields the results"
+      end
+
+      context "when the payload is a method instead of a hash" do
+        let(:options) { { id: :participant_ecf_id_for_resume, payload: :put_participant_resume_payload } }
+
+        before do
+          create(:application, :accepted, :deferred, lead_provider:)
+
+          stub_request(:put, "#{ecf_url}#{path}").to_return(status: 200, body: "ecf_response_body")
+          stub_request(:put, "#{npq_url}#{path}").to_return(status: 201, body: "npq_response_body")
+        end
+
+        include_context "makes valid requests and yields the results"
+
+        it "uses the method to get the payload" do
+          instance.make_requests {}
+
+          requests.each do |request|
+            body = JSON.parse(request.body)
+
+            expect(body).to include({
+              "data" => {
+                "type" => "participant-resume",
+                "attributes" => a_hash_including({
+                  "course_identifier" => /.*/,
+                }),
+              },
+            })
+          end
+        end
+      end
+    end
+
     context "when making a GET request" do
       let(:method) { :get }
 
@@ -423,6 +473,84 @@ RSpec.describe Migration::ParityCheck::Client do
           expect(requests.count).to eq(2)
         end
       end
+
+      context "when using application_ecf_id_for_change_from_funded_place" do
+        let(:id) { "application_ecf_id_for_change_from_funded_place" }
+        let(:resource) { create(:application, :accepted, lead_provider:, funded_place: true) }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
+      context "when using declaration_ecf_id_for_void" do
+        let(:id) { "declaration_ecf_id_for_void" }
+        let(:resource) { create(:declaration, :payable, lead_provider:) }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
+      context "when using declaration_ecf_id_for_clawback" do
+        let(:id) { "declaration_ecf_id_for_clawback" }
+        let(:resource) { create(:declaration, :paid, lead_provider:) }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
+      context "when using participant_ecf_id_for_resume" do
+        let(:id) { "participant_ecf_id_for_resume" }
+        let(:resource) { create(:application, :accepted, :deferred, lead_provider:).user }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
+      context "when using participant_ecf_id_for_defer" do
+        let(:id) { "participant_ecf_id_for_defer" }
+        let(:resource) { create(:application, :with_declaration, :accepted, :active, lead_provider:).user }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
+
+      context "when using participant_ecf_id_for_withdraw" do
+        let(:id) { "participant_ecf_id_for_withdraw" }
+        let(:resource) { create(:application, :with_declaration, :accepted, :deferred, lead_provider:).user }
+
+        it "evaluates the id option and substitutes it into the path" do
+          instance.make_requests do |_, _, formatted_path|
+            expect(formatted_path).to eq("/path/#{resource.ecf_id}")
+          end
+
+          expect(requests.count).to eq(2)
+        end
+      end
     end
 
     context "when using dynamic payloads substitution" do
@@ -461,6 +589,65 @@ RSpec.describe Migration::ParityCheck::Client do
                 state: :passed,
                 course_identifier: declaration.application.course.identifier,
                 completion_date: 1.day.ago.rfc3339,
+              },
+            })
+          end
+        end
+      end
+
+      describe "#put_participant_resume_payload" do
+        let!(:application) { create(:application, :accepted, :deferred, lead_provider:) }
+        let(:path) { "/api/v1/participants/npq/:id/resume" }
+        let(:options) { { id: :participant_ecf_id_for_resume } }
+
+        it "returns a valid payload for the lead provider" do
+          freeze_time do
+            payload = instance.put_participant_resume_payload
+
+            expect(payload).to include({
+              type: "participant-resume",
+              attributes: {
+                course_identifier: application.course.identifier,
+              },
+            })
+          end
+        end
+      end
+
+      describe "#put_participant_defer_payload" do
+        let!(:application) { create(:application, :with_declaration, :accepted, lead_provider:) }
+        let(:path) { "/api/v1/participants/npq/:id/defer" }
+        let(:options) { { id: :participant_ecf_id_for_defer } }
+
+        it "returns a valid payload for the lead provider" do
+          freeze_time do
+            payload = instance.put_participant_defer_payload
+
+            expect(payload).to include({
+              type: "participant-defer",
+              attributes: {
+                course_identifier: application.course.identifier,
+                reason: satisfy { |value| value.in?(Participants::Defer::DEFERRAL_REASONS) },
+              },
+            })
+          end
+        end
+      end
+
+      describe "#participant_ecf_id_for_withdraw" do
+        let!(:application) { create(:application, :with_declaration, :accepted, lead_provider:) }
+        let(:path) { "/api/v1/participants/npq/:id/withdraw" }
+        let(:options) { { id: :participant_ecf_id_for_withdraw } }
+
+        it "returns a valid payload for the lead provider" do
+          freeze_time do
+            payload = instance.put_participant_withdraw_payload
+
+            expect(payload).to include({
+              type: "participant-withdraw",
+              attributes: {
+                course_identifier: application.course.identifier,
+                reason: satisfy { |value| value.in?(Participants::Withdraw::WITHDRAWAL_REASONS) },
               },
             })
           end

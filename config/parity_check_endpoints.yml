@@ -151,3 +151,67 @@ post:
   "/api/v3/participants/npq/:id/outcomes":
     id: participant_ecf_id_for_create_outcome
     payload: post_participant_outcome_payload
+
+put:
+  "/api/v1/npq-applications/:id/change-funded-place":
+    id: application_ecf_id_for_change_from_funded_place
+    payload:
+      type: "npq-application-change-funded-place"
+      attributes:
+        funded_place: false
+  "/api/v2/npq-applications/:id/change-funded-place":
+    id: application_ecf_id_for_change_from_funded_place
+    payload:
+      type: "npq-application-change-funded-place"
+      attributes:
+        funded_place: false
+  "/api/v3/npq-applications/:id/change-funded-place":
+    id: application_ecf_id_for_change_from_funded_place
+    payload:
+      type: "npq-application-change-funded-place"
+      attributes:
+        funded_place: false
+
+  "/api/v1/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_void
+  "/api/v2/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_void
+  "/api/v3/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_void
+
+  "/api/v1/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_clawback
+  "/api/v2/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_clawback
+  "/api/v3/participant-declarations/:id/void":
+    id: declaration_ecf_id_for_clawback
+
+  "/api/v1/participants/npq/:id/resume":
+    id: participant_ecf_id_for_resume
+    payload: put_participant_resume_payload
+  "/api/v2/participants/npq/:id/resume":
+    id: participant_ecf_id_for_resume
+    payload: put_participant_resume_payload
+  "/api/v3/participants/npq/:id/resume":
+    id: participant_ecf_id_for_resume
+    payload: put_participant_resume_payload
+
+  "/api/v1/participants/npq/:id/defer":
+    id: participant_ecf_id_for_defer
+    payload: put_participant_defer_payload
+  "/api/v2/participants/npq/:id/defer":
+    id: participant_ecf_id_for_defer
+    payload: put_participant_defer_payload
+  "/api/v3/participants/npq/:id/defer":
+    id: participant_ecf_id_for_defer
+    payload: put_participant_defer_payload
+
+  "/api/v1/participants/npq/:id/withdraw":
+    id: participant_ecf_id_for_withdraw
+    payload: put_participant_withdraw_payload
+  "/api/v2/participants/npq/:id/withdraw":
+    id: participant_ecf_id_for_withdraw
+    payload: put_participant_withdraw_payload
+  "/api/v3/participants/npq/:id/withdraw":
+    id: participant_ecf_id_for_withdraw
+    payload: put_participant_withdraw_payload

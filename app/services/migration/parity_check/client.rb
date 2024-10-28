@@ -65,6 +65,41 @@ module Migration
       }
     end
 
+    def put_participant_resume_payload
+      participant = User.includes(applications: :course).find_by(ecf_id: path_id)
+
+      {
+        type: "participant-resume",
+        attributes: {
+          course_identifier: participant.applications.accepted.first.course.identifier,
+        },
+      }
+    end
+
+    def put_participant_defer_payload
+      participant = User.includes(applications: :course).find_by(ecf_id: path_id)
+
+      {
+        type: "participant-defer",
+        attributes: {
+          course_identifier: participant.applications.accepted.first.course.identifier,
+          reason: Participants::Defer::DEFERRAL_REASONS.sample,
+        },
+      }
+    end
+
+    def put_participant_withdraw_payload
+      participant = User.includes(applications: :course).find_by(ecf_id: path_id)
+
+      {
+        type: "participant-withdraw",
+        attributes: {
+          course_identifier: participant.applications.accepted.first.course.identifier,
+          reason: Participants::Withdraw::WITHDRAWAL_REASONS.sample,
+        },
+      }
+    end
+
   private
 
     def next_page?(ecf_response, npq_response)
@@ -104,6 +139,10 @@ module Migration
 
     def post_request(app:)
       HTTParty.post(url(app:), body:, query:, headers:)
+    end
+
+    def put_request(app:)
+      HTTParty.put(url(app:), body:, query:, headers:)
     end
 
     def body
@@ -215,6 +254,55 @@ module Migration
         .includes(:applications, :declarations)
         .where(applications: { lead_provider:, lead_provider_approval_status: :accepted })
         .where(declarations: { declaration_type: :completed })
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def application_ecf_id_for_change_from_funded_place
+      lead_provider
+        .applications
+        .accepted
+        .where(funded_place: true)
+        .pick(:ecf_id)
+    end
+
+    def declaration_ecf_id_for_void
+      Declaration
+        .voidable
+        .where(lead_provider:)
+        .pick(:ecf_id)
+    end
+
+    def declaration_ecf_id_for_clawback
+      Declaration
+        .where(lead_provider:, state: Declarations::Void::CLAWBACK_STATES)
+        .pick(:ecf_id)
+    end
+
+    def participant_ecf_id_for_resume
+      User
+        .includes(:applications)
+        .where(applications: { lead_provider:, lead_provider_approval_status: :accepted, training_status: %i[deferred withdrawn] })
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def participant_ecf_id_for_defer
+      User
+        .includes(:applications, :declarations)
+        .where(applications: { lead_provider:, lead_provider_approval_status: :accepted, training_status: :active })
+        .where.not(declarations: { id: nil })
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def participant_ecf_id_for_withdraw
+      User
+        .includes(:applications, :declarations)
+        .where(applications: { lead_provider:, lead_provider_approval_status: :accepted, training_status: %i[deferred active], declarations: { declaration_type: :started } })
         .order("RANDOM()")
         .limit(1)
         .pick(:ecf_id)
