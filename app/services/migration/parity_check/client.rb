@@ -146,11 +146,13 @@ module Migration
     end
 
     def body
-      return {} unless options.key?(:payload)
+      @body ||= begin
+        return {} unless options.key?(:payload)
 
-      data = options[:payload].is_a?(Hash) ? options[:payload] : send(options[:payload])
+        data = options[:payload].is_a?(Hash) ? options[:payload] : send(options[:payload])
 
-      { data: }.to_json
+        { data: }.to_json
+      end
     end
 
     def token_provider
