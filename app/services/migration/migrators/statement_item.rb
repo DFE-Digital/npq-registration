@@ -31,7 +31,7 @@ module Migration::Migrators
         statement_item = ::StatementItem.find_or_initialize_by(ecf_id: ecf_statement_item.id)
 
         statement_item.update!(
-          ecf_statement_item.attributes.slice(:state, :created_at, :updated_at).merge(statement_id:, declaration_id:),
+          ecf_statement_item.attributes.slice("state", "created_at", "updated_at").merge(statement_id:, declaration_id:),
         )
       end
     end

@@ -23,7 +23,7 @@ RSpec.describe Migration::Migrators::Course do
       it "sets the created Course attributes correctly" do
         instance.call
         course = Course.find_by(ecf_id: ecf_resource1.id)
-        expect(course).to have_attributes(ecf_resource1.attributes.slice(:identifier, :name))
+        expect(course).to have_attributes(ecf_resource1.attributes.slice("identifier", "name"))
         expect(course.course_group.name).to eq(Courses::DEFINITIONS.find { |d| d[:identifier] == ecf_resource1.identifier }[:course_group_name])
       end
 
