@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing courses", type: :feature do
+RSpec.feature "Listing and viewing courses", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   let(:courses_per_page) { Pagy::DEFAULT[:limit] }

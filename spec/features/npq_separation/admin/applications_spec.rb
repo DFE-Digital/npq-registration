@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing applications", type: :feature do
+RSpec.feature "Listing and viewing applications", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }

@@ -1,7 +1,7 @@
 require "rails_helper"
 require "middleware/api_request_middleware"
 
-RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
+RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :request do
   let(:status) { 200 }
   let(:request) { Rack::MockRequest.new(subject) }
   let(:headers) { { "HEADER" => "Yeah!" } }
@@ -94,8 +94,8 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
     end
   end
 
-  context "when `api_enabled` flag is false" do
-    before { allow(Rails.application.config).to receive(:npq_separation).and_return({ api_enabled: false }) }
+  context "when `ecf_api_disabled` feature is false" do
+    before { allow(Feature).to receive(:ecf_api_disabled?).and_return(false) }
 
     it "does not fire StreamAPIRequestsToBigQueryJob" do
       request.get "/api/v1/participants/npq", params: { foo: "bar" }

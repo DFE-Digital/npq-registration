@@ -1,7 +1,7 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "NPQ Participant Outcomes endpoint", openapi_spec: "v1/swagger.yaml", type: :request do
+RSpec.describe "NPQ Participant Outcomes endpoint", :ecf_api_disabled, openapi_spec: "v1/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }

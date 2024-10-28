@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Migration::ParityChecksController, type: :request do
+RSpec.describe NpqSeparation::Migration::ParityChecksController, :ecf_api_disabled, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   before do

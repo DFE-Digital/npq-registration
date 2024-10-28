@@ -45,5 +45,5 @@ jobs:
       - name: Generate known keys
         shell: bash
         run: |
-          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::ParityCheck::TokenProvider.new.generate!\""
-          
+          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner 'Migration::ParityCheck::TokenProvider.new.generate!' && bundle exec rails runner 'Feature.enable_ecf_api_disabled'"
+

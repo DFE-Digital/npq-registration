@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Declaration endpoints", type: :request do
+RSpec.describe "Declaration endpoints", :ecf_api_disabled, type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Declarations::Query }
   let(:serializer) { API::DeclarationSerializer }

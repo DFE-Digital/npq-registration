@@ -6,10 +6,6 @@ Rails.application.configure do
 
   # Enable/disable aspects of the NPQ separation
   config.npq_separation = {
-    admin_portal_enabled: true,
-    api_enabled: true,
-    migration_enabled: false,
-    ecf_api_disabled: true,
     parity_check: {
       enabled: false,
     },

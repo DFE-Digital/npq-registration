@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::Finance::Statements::AssuranceReportsController, type: :request do
+RSpec.describe NpqSeparation::Admin::Finance::Statements::AssuranceReportsController, :ecf_api_disabled, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   describe "#show" do
