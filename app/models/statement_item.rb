@@ -11,6 +11,11 @@ class StatementItem < ApplicationRecord
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
+  scope :eligible, -> { where(state: :eligible) }
+  scope :payable, -> { where(state: :payable) }
+  scope :paid, -> { where(state: :paid) }
+  scope :awaiting_clawback, -> { where(state: :awaiting_clawback) }
+  scope :clawed_back, -> { where(state: :clawed_back) }
 
   state_machine :state, initial: :eligible do
     state :eligible

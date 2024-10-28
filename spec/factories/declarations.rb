@@ -23,6 +23,10 @@ FactoryBot.define do
       end
     end
 
+    trait :payable do
+      state { :payable }
+    end
+
     trait :paid do
       state { :paid }
     end
