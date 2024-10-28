@@ -27,6 +27,44 @@ module Migration
       end
     end
 
+    # These are public for ease of testing
+    def post_declaration_payload
+      application = lead_provider.applications
+        .includes(:user)
+        .left_joins(:declarations)
+        .where(declarations: { id: nil })
+        .accepted
+        .order("RANDOM()")
+        .first
+
+      participant_id = application.user.ecf_id
+      course_identifier = application.course.identifier
+      declaration_date = 1.day.ago.rfc3339
+
+      {
+        type: "participant-declaration",
+        attributes: {
+          participant_id:,
+          declaration_type: :started,
+          declaration_date:,
+          course_identifier:,
+        },
+      }
+    end
+
+    def post_participant_outcome_payload
+      participant = User.includes(applications: :course).find_by(ecf_id: path_id)
+
+      {
+        type: "npq-outcome-confirmation",
+        attributes: {
+          course_identifier: participant.applications.accepted.first.course.identifier,
+          state: :passed,
+          completion_date: 1.day.ago.rfc3339,
+        },
+      }
+    end
+
   private
 
     def next_page?(ecf_response, npq_response)
@@ -64,6 +102,18 @@ module Migration
       HTTParty.get(url(app:), query:, headers:)
     end
 
+    def post_request(app:)
+      HTTParty.post(url(app:), body:, query:, headers:)
+    end
+
+    def body
+      return {} unless options.key?(:payload)
+
+      data = options[:payload].is_a?(Hash) ? options[:payload] : send(options[:payload])
+
+      { data: }.to_json
+    end
+
     def token_provider
       @token_provider ||= Migration::ParityCheck::TokenProvider.new
     end
@@ -88,12 +138,18 @@ module Migration
 
     def formatted_path
       @formatted_path ||= begin
-        return path unless options[:id] && path.include?(":id")
+        return path unless path.include?(":id")
 
-        raise UnsupportedIdOption, "Unsupported id option: #{options[:id]}" unless respond_to?(options[:id], true)
-
-        path.sub(":id", send(options[:id]).to_s)
+        path.sub(":id", path_id)
       end
+    end
+
+    def path_id
+      return nil unless options[:id]
+
+      raise UnsupportedIdOption, "Unsupported id option: #{options[:id]}" unless respond_to?(options[:id], true)
+
+      send(options[:id]).to_s
     end
 
     def application_ecf_id
@@ -124,6 +180,44 @@ module Migration
 
     def statement_ecf_id
       lead_provider.statements.order("RANDOM()").limit(1).pick(:ecf_id)
+    end
+
+    def application_ecf_id_for_accept_with_funded_place
+      lead_provider
+        .applications
+        .eligible_for_funding
+        .where(lead_provider_approval_status: :pending)
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def application_ecf_id_for_accept_without_funded_place
+      lead_provider
+        .applications
+        .where(lead_provider_approval_status: :pending, eligible_for_funding: false)
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def application_ecf_id_for_reject
+      lead_provider
+        .applications
+        .where(lead_provider_approval_status: :pending)
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
+    end
+
+    def participant_ecf_id_for_create_outcome
+      User
+        .includes(:applications, :declarations)
+        .where(applications: { lead_provider:, lead_provider_approval_status: :accepted })
+        .where(declarations: { declaration_type: :completed })
+        .order("RANDOM()")
+        .limit(1)
+        .pick(:ecf_id)
     end
   end
 end

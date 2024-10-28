@@ -1,0 +1,7 @@
+post:
+  "/api/v1/npq-applications/:id/accept":
+    id: application_ecf_id_for_accept_with_funded_place
+    payload:
+      type: "npq-application-accept"
+      attributes:
+        funded_place: true
