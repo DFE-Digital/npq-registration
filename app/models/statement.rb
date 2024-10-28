@@ -3,6 +3,7 @@ class Statement < ApplicationRecord
   belongs_to :lead_provider
   has_many :statement_items
   has_many :contracts
+  has_many :declarations, through: :statement_items
 
   validates :output_fee,
             inclusion: {

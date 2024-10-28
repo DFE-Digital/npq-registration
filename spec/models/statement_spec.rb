@@ -8,6 +8,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to belong_to(:lead_provider).required }
     it { is_expected.to have_many(:statement_items) }
     it { is_expected.to have_many(:contracts) }
+    it { is_expected.to have_many(:declarations).through(:statement_items) }
   end
 
   describe "validations" do
