@@ -7,10 +7,8 @@ concurrency:
 on:
   push:
     branches:
-      - '**'
+      - main
   pull_request:
-    branches:
-      - '**'
   merge_group:
 
 jobs:
