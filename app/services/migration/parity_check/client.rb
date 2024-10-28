@@ -237,6 +237,7 @@ module Migration
       lead_provider
         .applications
         .where(lead_provider_approval_status: :pending, eligible_for_funding: false)
+        .where.not(user_id: Application.group(:user_id).having("COUNT(*) > 1").pluck(:user_id))
         .order("RANDOM()")
         .limit(1)
         .pick(:ecf_id)
@@ -278,7 +279,9 @@ module Migration
 
     def declaration_ecf_id_for_clawback
       Declaration
+        .includes(:statement_items)
         .where(lead_provider:, state: Declarations::Void::CLAWBACK_STATES)
+        .where.not(id: StatementItem.where(declaration_id: Declaration.select(:id)).where(state: StatementItem::REFUNDABLE_STATES).select(:declaration_id))
         .pick(:ecf_id)
     end
 
