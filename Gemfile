@@ -56,7 +56,7 @@ gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "whenever"
 
-gem "net-imap", "~> 0.4.16", require: false
+gem "net-imap", "~> 0.5.0", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.0", require: false
 
