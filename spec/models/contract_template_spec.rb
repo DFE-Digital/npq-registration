@@ -12,8 +12,8 @@ RSpec.describe ContractTemplate, type: :model do
     it { is_expected.to validate_numericality_of(:output_payment_percentage).only_integer.is_greater_than_or_equal_to(0).with_message("Must be an integer greater than or equal to zero") }
     it { is_expected.to validate_numericality_of(:service_fee_installments).only_integer.is_greater_than_or_equal_to(0).with_message("Must be an integer greater than or equal to zero") }
     it { is_expected.to validate_numericality_of(:service_fee_percentage).only_integer.is_greater_than_or_equal_to(0).with_message("Must be an integer greater than or equal to zero") }
-
     it { is_expected.to validate_numericality_of(:per_participant).is_greater_than(0).with_message("Must be greater than zero") }
     it { is_expected.to validate_numericality_of(:recruitment_target).only_integer.is_greater_than(0).with_message("Must be an integer greater than zero") }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
   end
 end

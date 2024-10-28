@@ -18,7 +18,7 @@ class Schedule < ApplicationRecord
 
   validates :name, presence: true
   validates :identifier, presence: true, uniqueness: { scope: :cohort_id }
-
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validates :applies_from, presence: true
   validates :applies_to, presence: true
 end

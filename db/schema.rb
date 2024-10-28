@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_23_141630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -114,7 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.datetime "accepted_at"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
-    t.index ["ecf_id"], name: "index_applications_on_ecf_id"
+    t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
@@ -153,7 +153,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.uuid "ecf_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id"
+    t.index ["ecf_id"], name: "index_contract_templates_on_ecf_id", unique: true
   end
 
   create_table "contracts", force: :cascade do |t|
@@ -186,6 +186,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.string "identifier"
     t.bigint "course_group_id"
     t.index ["course_group_id"], name: "index_courses_on_course_group_id"
+    t.index ["ecf_id"], name: "index_courses_on_ecf_id", unique: true
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
@@ -216,7 +217,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.datetime "updated_at", null: false
     t.index ["application_id"], name: "index_declarations_on_application_id"
     t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
-    t.index ["ecf_id"], name: "index_declarations_on_ecf_id"
+    t.index ["ecf_id"], name: "index_declarations_on_ecf_id", unique: true
     t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
     t.index ["superseded_by_id"], name: "index_declarations_on_superseded_by_id"
   end
@@ -295,6 +296,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.datetime "updated_at", null: false
     t.uuid "ecf_id"
     t.string "hint"
+    t.index ["ecf_id"], name: "index_lead_providers_on_ecf_id", unique: true
   end
 
   create_table "local_authorities", force: :cascade do |t|
@@ -320,7 +322,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_113236) do
     t.uuid "ecf_id"
     t.uuid "from_participant_id", null: false
     t.uuid "to_participant_id", null: false
-    t.index ["ecf_id"], name: "index_participant_id_changes_on_ecf_id"
+    t.index ["ecf_id"], name: "index_participant_id_changes_on_ecf_id", unique: true
     t.index ["from_participant_id"], name: "index_participant_id_changes_on_from_participant_id"
     t.index ["to_participant_id"], name: "index_participant_id_changes_on_to_participant_id"
     t.index ["user_id"], name: "index_participant_id_changes_on_user_id"

@@ -37,8 +37,9 @@ class Application < ApplicationRecord
   attr_accessor :version_note
 
   validate :schedule_cohort_matches
-  # TODO: add constraints into the DB after separation
+  # TODO: remove "if" and "allow_nil" and add constraints into the DB after separation
   validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: !Feature.ecf_api_disabled?
 
   after_commit :touch_user_if_changed
 

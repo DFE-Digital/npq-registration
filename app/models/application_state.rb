@@ -4,6 +4,8 @@ class ApplicationState < ApplicationRecord
   belongs_to :application
   belongs_to :lead_provider, optional: true
 
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
+
   enum state: {
     active: "active",
     deferred: "deferred",

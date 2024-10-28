@@ -11,6 +11,7 @@ FactoryBot.define do
     declaration_type { "started" }
     declaration_date { Date.current }
     state { "submitted" }
+    ecf_id { SecureRandom.uuid }
 
     trait :submitted_or_eligible do
       state do

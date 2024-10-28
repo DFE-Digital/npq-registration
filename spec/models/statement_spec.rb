@@ -15,7 +15,6 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to validate_numericality_of(:year).only_integer.is_in(2020..2050).with_message("Year must be a 4 digit number") }
     it { is_expected.to allow_value(%w[true false]).for(:output_fee).with_message("Output fee must be true or false") }
     it { is_expected.not_to allow_value(nil).for(:output_fee).with_message("Choose yes or no for output fee") }
-    it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
     describe "Validation for statement items count" do

@@ -13,6 +13,7 @@ class Course < ApplicationRecord
   validates :identifier,
             presence: { message: "Enter a identifier" },
             uniqueness: { message: "Identifier already exists, enter a unique one" }
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
   IDENTIFIERS = %w[

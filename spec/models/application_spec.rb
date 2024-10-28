@@ -41,6 +41,8 @@ RSpec.describe Application do
   end
 
   describe "validations" do
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+
     context "when the schedule cohort does not match the application cohort" do
       subject do
         build(:application).tap do |application|
@@ -89,6 +91,7 @@ RSpec.describe Application do
 
       # TODO: uncomment this when `before_validation` is removed from model, as `before_validation` is adding ecf_id regardless
       # it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
+      it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
       it "ensures ecf_id is automatically populated" do
         application = build(:application, ecf_id: nil)

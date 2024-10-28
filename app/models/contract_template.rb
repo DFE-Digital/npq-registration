@@ -18,4 +18,5 @@ class ContractTemplate < ApplicationRecord
               only_integer: true,
               greater_than: 0,
             }
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 end

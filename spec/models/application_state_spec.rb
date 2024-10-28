@@ -10,6 +10,10 @@ RSpec.describe ApplicationState do
     it { is_expected.to belong_to(:lead_provider).optional }
   end
 
+  describe "validations" do
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+  end
+
   describe "enums" do
     it {
       expect(subject).to define_enum_for(:state).with_values(

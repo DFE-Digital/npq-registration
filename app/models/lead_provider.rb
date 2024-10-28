@@ -91,6 +91,9 @@ class LeadProvider < ApplicationRecord
   has_many :applications
   has_many :statements
 
+  validates :name, presence: true
+  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
+
   scope :alphabetical, -> { order(name: :asc) }
 
   def next_output_fee_statement(cohort)

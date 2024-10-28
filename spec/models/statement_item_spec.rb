@@ -1,12 +1,16 @@
 require "rails_helper"
 
 RSpec.describe StatementItem, type: :model do
+  subject { build(:statement_item) }
+
   describe "relationships" do
     it { is_expected.to belong_to(:statement).required }
     it { is_expected.to belong_to(:declaration).required }
   end
 
   describe "validations" do
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+
     context "when setting invalid state" do
       let(:statement_item) { build(:statement_item, state: "madeup") }
 
