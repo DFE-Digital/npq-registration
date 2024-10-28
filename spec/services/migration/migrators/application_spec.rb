@@ -236,6 +236,14 @@ RSpec.describe Migration::Migrators::Application do
 
           expect(application.reload.cohort_id).to eq(::Cohort.current.id)
         end
+
+        it "sets `lead_provider_approval_status` to pending if not set" do
+          application = create(:application, cohort_id: nil, lead_provider_approval_status: nil)
+
+          instance.call
+
+          expect(application.reload.lead_provider_approval_status).to eq("pending")
+        end
       end
     end
   end
