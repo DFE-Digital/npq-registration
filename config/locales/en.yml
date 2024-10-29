@@ -498,6 +498,10 @@ en:
               blank: "The property '#/missing_participant_outcome_id' must be present"
             participant_outcome:
               blank: "There's no participant outcome for the given ID"
+        statements/payment_authorisation_form:
+          attributes:
+            checks_done:
+              accepted: Confirm all necessary assurance checks have been done before authorising this statement for payment
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

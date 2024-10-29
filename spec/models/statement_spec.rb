@@ -126,4 +126,23 @@ RSpec.describe Statement, type: :model do
       end
     end
   end
+
+  describe "#mark_as_paid_at!" do
+    it "sets marked_as_paid_at" do
+      expect { subject.tap(&:mark_as_paid_at!).reload }
+        .to change(subject, :marked_as_paid_at)
+    end
+  end
+
+  describe "#marked_as_paid?" do
+    context "with a statement marked as paid" do
+      subject { create(:statement, :paid) }
+
+      it { is_expected.to be_marked_as_paid }
+    end
+
+    context "with a statement not marked as paid" do
+      it { is_expected.not_to be_marked_as_paid }
+    end
+  end
 end

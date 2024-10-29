@@ -48,6 +48,14 @@ class Statement < ApplicationRecord
     end
   end
 
+  def mark_as_paid_at!
+    update!(marked_as_paid_at: Time.zone.now)
+  end
+
+  def marked_as_paid?
+    marked_as_paid_at.present? && paid?
+  end
+
 private
 
   def validate_max_statement_items_count
