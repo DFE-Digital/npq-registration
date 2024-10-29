@@ -132,7 +132,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
               lead_provider:,
               method: "get",
               path: "/api/v3/statements",
-              options: { paginate: true },
+              options: { paginate: true, exclude: %w[attribute] },
             )
           end
           expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
@@ -140,7 +140,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
 
         it "saves response comparisons for each endpoint and lead provider" do
           client_double = instance_double(Migration::ParityCheck::Client)
-          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
+          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: %({ "foo": "bar", "attribute": "excluded" }), code: 200), response_ms: 100 }
           npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
           allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", 1)
           allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
@@ -153,7 +153,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
             request_method: "get",
             ecf_response_status_code: 200,
             npq_response_status_code: 201,
-            ecf_response_body: "ecf_response_body",
+            ecf_response_body: %({\n  \"foo\": \"bar\"\n}),
             npq_response_body: "npq_response_body",
             ecf_response_time_ms: 100,
             npq_response_time_ms: 150,
