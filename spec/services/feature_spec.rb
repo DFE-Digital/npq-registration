@@ -105,10 +105,10 @@ RSpec.describe Feature do
     end
   end
 
-  describe "#enable_ecf_api_disabled" do
+  describe "#enable_ecf_api_disabled!" do
     it "enables ecf_api_disabled feature" do
       expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(false)
-      Feature.enable_ecf_api_disabled
+      Feature.enable_ecf_api_disabled!
       expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(true)
     end
   end

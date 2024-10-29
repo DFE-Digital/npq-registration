@@ -130,7 +130,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, :ecf_api_disabled) do
-    Feature.enable_ecf_api_disabled
+    Feature.enable_ecf_api_disabled!
   end
 
   config.before(:each, :exceptions_app) do
