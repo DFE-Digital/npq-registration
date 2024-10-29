@@ -63,6 +63,8 @@ module Migration::Migrators
 
         user.update!(attrs)
       end
+
+      run_once { backfill_ecf_ids }
     end
 
   private
@@ -99,6 +101,13 @@ module Migration::Migrators
     def changed_ecf_user_attrs?(attrs, ecf_user)
       attrs[:trn] != ecf_user.teacher_profile&.trn ||
         attrs[:email] != ecf_user.email
+    end
+
+    def backfill_ecf_ids
+      ::User.joins(:applications).where(ecf_id: nil).distinct.find_each do |user|
+        version_note = "Changes migrated from ECF to NPQ"
+        user.update!(ecf_id: SecureRandom.uuid, version_note:)
+      end
     end
   end
 end
