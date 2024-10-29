@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_23_141630) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_24_142323) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -411,6 +411,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_23_141630) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "page"
+    t.string "npq_response_body_ids", default: [], array: true
+    t.string "ecf_response_body_ids", default: [], array: true
     t.index ["lead_provider_id"], name: "index_response_comparisons_on_lead_provider_id"
   end
 

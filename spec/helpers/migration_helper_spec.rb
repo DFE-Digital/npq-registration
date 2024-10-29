@@ -215,12 +215,24 @@ RSpec.describe MigrationHelper, type: :helper do
       let(:different) { false }
 
       it { is_expected.to have_css("strong.govuk-tag.govuk-tag--green", text: "EQUAL") }
+
+      context "when equal_text is specified" do
+        subject { helper.response_comparison_status_tag(different, equal_text: "yes") }
+
+        it { is_expected.to have_css("strong.govuk-tag.govuk-tag--green", text: "YES") }
+      end
     end
 
     context "when different" do
       let(:different) { true }
 
       it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "DIFFERENT") }
+
+      context "when different_text is specified" do
+        subject { helper.response_comparison_status_tag(different, different_text: "no") }
+
+        it { is_expected.to have_css("strong.govuk-tag.govuk-tag--red", text: "NO") }
+      end
     end
   end
 
@@ -340,5 +352,42 @@ RSpec.describe MigrationHelper, type: :helper do
 
     it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-two-thirds", text: "Page 1") }
     it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-one-third", text: "ECF: 200 NPQ: 201") }
+  end
+
+  describe ".contains_duplicate_ids?" do
+    subject { helper.contains_duplicate_ids?(comparisons, :npq_response_body_ids) }
+
+    context "when the comparisons contain duplicates across all comparisons" do
+      let(:comparisons) do
+        [
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "1" }, { "id": "2" }, { "id": "3" }] })),
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "1" }, { "id": "4" }, { "id": "5" }] })),
+        ]
+      end
+
+      it { is_expected.to be(true) }
+    end
+
+    context "when the comparisons contain duplicates in individual comparisons" do
+      let(:comparisons) do
+        [
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "1" }, { "id": "1" }, { "id": "3" }] })),
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "4" }, { "id": "5" }, { "id": "6" }] })),
+        ]
+      end
+
+      it { is_expected.to be(true) }
+    end
+
+    context "when the comparisons do not contain duplicates" do
+      let(:comparisons) do
+        [
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "1" }, { "id": "2" }, { "id": "3" }] })),
+          create(:response_comparison, :different, npq_response_body: %({ "data": [{ "id": "4" }, { "id": "5" }, { "id": "6" }] })),
+        ]
+      end
+
+      it { is_expected.to be(false) }
+    end
   end
 end

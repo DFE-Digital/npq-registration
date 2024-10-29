@@ -7,12 +7,12 @@
 <span class="govuk-caption-xl"><%= @comparison.lead_provider_name %></span>
 <h1 class="govuk-heading-xl"><%= @comparison.description %></h1>
 
-<% unless @matching_comparisons.one? %>
+<% unless @multiple_results %>
   <%= render(partial: "multiple_comparisons_summary", locals: { comparisons: @matching_comparisons }) %>
 <% end %>
 
 <% if @matching_comparisons.any?(&:different?) %>
-  <% if @matching_comparisons.one? %>
+  <% if @multiple_results %>
     <%= render(partial: "single_comparison_summary", locals: { comparison: @comparison }) %>
     <%= render(partial: "response_body_diff", locals: { response_body_diff: @comparison.response_body_diff }) %>
   <% else %>

@@ -2,7 +2,7 @@ module Migration
   class ParityCheck::ResponseComparison < ApplicationRecord
     attr_accessor :exclude
 
-    before_validation :digest_csv_response_bodies, :format_json_response_bodies, :clear_response_bodies_when_equal
+    before_validation :digest_csv_response_bodies, :format_json_response_bodies, :populate_response_body_ids, :clear_response_bodies_when_equal
 
     belongs_to :lead_provider
 
@@ -70,6 +70,11 @@ module Migration
     end
 
   private
+
+    def populate_response_body_ids
+      self.ecf_response_body_ids = Array.wrap(ecf_response_body_hash&.dig("data") || []).map { |record| record["id"] }
+      self.npq_response_body_ids = Array.wrap(npq_response_body_hash&.dig("data") || []).map { |record| record["id"] }
+    end
 
     def format_json_response_bodies
       self.ecf_response_body = pretty_format(ecf_response_body_hash) if ecf_response_body_hash

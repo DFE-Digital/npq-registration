@@ -135,7 +135,8 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
 
       different_comparison = create(:response_comparison, :different, page: 1)
       lead_provider = different_comparison.lead_provider
-      create(:response_comparison, :different, npq_response_body: "body", ecf_response_body: "body", page: 2, lead_provider:)
+      body = %({ "data": [{ "id": "1" }, { "id": "1" }] })
+      create(:response_comparison, :different, npq_response_body: body, ecf_response_body: body, page: 2, lead_provider:)
       create(:response_comparison, :equal, page: 3, lead_provider:)
 
       # Reload to display the different comparison created manually
@@ -153,11 +154,25 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
         expect(page).to have_text("DIFFERENT")
       end
 
-      within("tbody tr:last") do
+      within("tbody tr:nth-of-type(2)") do
         expect(page).to have_text("Average response time")
         expect(page).to have_text("100ms")
         expect(page).to have_text("50ms")
         expect(page).to have_text("🚀 2x faster")
+      end
+
+      within("tbody tr:nth-of-type(3)") do
+        expect(page).to have_text("ID duplicates check")
+        expect(page).to have_text("YES")
+        expect(page).to have_text("YES")
+        expect(page).to have_text("DUPLICATES")
+      end
+
+      within("tbody tr:nth-of-type(4)") do
+        expect(page).to have_text("ID equality check")
+        expect(page).to have_text("2")
+        expect(page).to have_text("2")
+        expect(page).to have_text("EQUAL")
       end
 
       expect(page).to have_css(".govuk-grid-row", text: "Page 1\nECF: 200 NPQ: 201")
