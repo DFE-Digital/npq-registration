@@ -35,6 +35,10 @@ FactoryBot.define do
       state { :ineligible }
     end
 
+    trait :voided do
+      state { :voided }
+    end
+
     trait :completed do
       declaration_type { :completed }
     end

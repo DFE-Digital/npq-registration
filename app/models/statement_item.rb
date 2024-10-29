@@ -14,6 +14,7 @@ class StatementItem < ApplicationRecord
   scope :eligible, -> { where(state: :eligible) }
   scope :payable, -> { where(state: :payable) }
   scope :paid, -> { where(state: :paid) }
+  scope :voided, -> { where(state: :voided) }
   scope :awaiting_clawback, -> { where(state: :awaiting_clawback) }
   scope :clawed_back, -> { where(state: :clawed_back) }
 

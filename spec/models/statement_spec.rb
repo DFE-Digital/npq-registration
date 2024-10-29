@@ -98,7 +98,7 @@ RSpec.describe Statement, type: :model do
 
   describe "State transition" do
     context "when from open to payable" do
-      let(:statement) { create(:statement, state: "open") }
+      let(:statement) { create(:statement, :open) }
 
       it "transitions state to payable" do
         expect(statement).to be_open
@@ -108,7 +108,7 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when from payable to paid" do
-      let(:statement) { create(:statement, state: "payable") }
+      let(:statement) { create(:statement, :payable, marked_as_paid_at: 1.week.ago) }
 
       it "transitions state to payable" do
         expect(statement).to be_payable
@@ -118,7 +118,7 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when from paid to payable" do
-      let(:statement) { create(:statement, state: "paid") }
+      let(:statement) { create(:statement, :paid) }
 
       it "raises error" do
         expect(statement).to be_paid

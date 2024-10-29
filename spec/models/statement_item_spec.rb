@@ -58,6 +58,12 @@ RSpec.describe StatementItem, type: :model do
       end
     end
 
+    describe ".voided" do
+      it "returns only voided records" do
+        expect(described_class.voided.pluck(:state)).to all eq("voided")
+      end
+    end
+
     describe ".awaiting_clawback" do
       it "returns only records awaiting clawback" do
         expect(described_class.awaiting_clawback.pluck(:state)).to all eq("awaiting_clawback")
