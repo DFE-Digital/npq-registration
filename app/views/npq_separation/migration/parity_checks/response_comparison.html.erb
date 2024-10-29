@@ -7,18 +7,18 @@
 <span class="govuk-caption-xl"><%= @comparison.lead_provider_name %></span>
 <h1 class="govuk-heading-xl"><%= @comparison.description %></h1>
 
-<% unless @multiple_results %>
+<% if @multiple_results %>
   <%= render(partial: "multiple_comparisons_summary", locals: { comparisons: @matching_comparisons }) %>
 <% end %>
 
-<% if @matching_comparisons.any?(&:different?) %>
-  <% if @multiple_results %>
+<% if @matching_comparisons.any?(&:needs_review?) %>
+  <% unless @multiple_results %>
     <%= render(partial: "single_comparison_summary", locals: { comparison: @comparison }) %>
     <%= render(partial: "response_body_diff", locals: { response_body_diff: @comparison.response_body_diff }) %>
   <% else %>
     <%= govuk_accordion do |accordion|
-      @matching_comparisons.select(&:different?).each do |comparison|
-        accordion.with_section(heading_text: response_comparison_page_summary(comparison), expanded: comparison.different?) do
+      @matching_comparisons.select(&:needs_review?).each do |comparison|
+        accordion.with_section(heading_text: response_comparison_page_summary(comparison), expanded: comparison.needs_review?) do
           render(partial: "response_body_diff", locals: { response_body_diff: comparison.response_body_diff })
         end
       end

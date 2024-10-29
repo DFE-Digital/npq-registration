@@ -61,6 +61,14 @@ module Migration
       ecf_response_status_code != npq_response_status_code || ecf_response_body != npq_response_body
     end
 
+    def unexpected?
+      [ecf_response_status_code, npq_response_status_code].any? { |code| code != 200 }
+    end
+
+    def needs_review?
+      different? || unexpected?
+    end
+
     def description
       "#{request_method.upcase} #{request_path}"
     end

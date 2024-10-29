@@ -298,4 +298,46 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
       it { is_expected.to be_different }
     end
   end
+
+  describe "#unexpected?" do
+    subject(:instance) { build(:response_comparison) }
+
+    context "when the status codes are 200" do
+      before { instance.assign_attributes(ecf_response_status_code: 200, npq_response_status_code: 200) }
+
+      it { is_expected.not_to be_unexpected }
+    end
+
+    context "when neither status code is 200" do
+      before { instance.assign_attributes(ecf_response_status_code: 201, npq_response_status_code: 422) }
+
+      it { is_expected.to be_unexpected }
+    end
+
+    context "when one status code is not 200" do
+      before { instance.assign_attributes(ecf_response_status_code: 200, npq_response_status_code: 422) }
+
+      it { is_expected.to be_unexpected }
+    end
+  end
+
+  describe "#needs_review?" do
+    context "when different" do
+      subject(:instance) { build(:response_comparison, :different) }
+
+      it { is_expected.to be_needs_review }
+    end
+
+    context "when unexpected" do
+      subject(:instance) { build(:response_comparison, :unexpected) }
+
+      it { is_expected.to be_needs_review }
+    end
+
+    context "when equal" do
+      subject(:instance) { build(:response_comparison, :equal) }
+
+      it { is_expected.not_to be_needs_review }
+    end
+  end
 end

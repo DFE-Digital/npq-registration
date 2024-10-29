@@ -16,9 +16,14 @@ FactoryBot.define do
 
     trait :different do
       ecf_response_status_code { 200 }
-      npq_response_status_code { 201 }
+      npq_response_status_code { 200 }
       ecf_response_body { "response1" }
       npq_response_body { "response2" }
+    end
+
+    trait :unexpected do
+      ecf_response_status_code { 500 }
+      npq_response_status_code { 500 }
     end
 
     after :create do |response_comparison|

@@ -272,6 +272,13 @@ RSpec.describe MigrationHelper, type: :helper do
       it { is_expected.to include(%r{/npq-separation/migration/parity_checks/response_comparisons/(#{response_comparison1.id}|#{response_comparison2.id})}) }
     end
 
+    context "when at least one is unexpected" do
+      let(:response_comparison1) { create(:response_comparison, :unexpected) }
+      let(:response_comparison2) { create(:response_comparison, :equal) }
+
+      it { is_expected.to include(%r{/npq-separation/migration/parity_checks/response_comparisons/(#{response_comparison1.id}|#{response_comparison2.id})}) }
+    end
+
     context "when all are equal" do
       let(:response_comparison1) { build(:response_comparison, :equal) }
       let(:response_comparison2) { build(:response_comparison, :equal) }
@@ -351,7 +358,7 @@ RSpec.describe MigrationHelper, type: :helper do
     subject { helper.response_comparison_page_summary(comparison) }
 
     it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-two-thirds", text: "Page 1") }
-    it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-one-third", text: "ECF: 200 NPQ: 201") }
+    it { is_expected.to have_css(".govuk-grid-row .govuk-grid-column-one-third", text: "ECF: 200 NPQ: 200") }
   end
 
   describe ".contains_duplicate_ids?" do

@@ -92,7 +92,7 @@ module MigrationHelper
   end
 
   def response_comparison_detail_path(comparisons)
-    return unless comparisons.any?(&:different?)
+    return unless comparisons.any? { |c| c.different? || c.unexpected? }
 
     response_comparison_npq_separation_migration_parity_checks_path(comparisons.sample.id)
   end

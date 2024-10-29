@@ -18,6 +18,6 @@ class NpqSeparation::Migration::ParityChecksController < SuperAdminController
   def response_comparison
     @comparison = Migration::ParityCheck::ResponseComparison.find(params[:id])
     @matching_comparisons = Migration::ParityCheck::ResponseComparison.matching(@comparison)
-    @multiple_results = @matching_comparisons.one? && @comparison.page.nil?
+    @multiple_results = @matching_comparisons.size > 1 || @comparison.page.present?
   end
 end

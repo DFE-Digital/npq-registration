@@ -105,6 +105,25 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
       end
     end
 
+    scenario "viewing the completed parity check when it contains unexpected response status codes" do
+      visit npq_separation_migration_parity_checks_path
+
+      perform_enqueued_jobs do
+        click_button "Run parity check"
+      end
+
+      unexpected_comparison = create(:response_comparison, :unexpected)
+
+      # Reload to display the unexpected comparison created manually
+      visit current_path
+
+      within("##{unexpected_comparison.lead_provider_name.parameterize}-section") do
+        details_path = response_comparison_npq_separation_migration_parity_checks_path(unexpected_comparison)
+        expect(page).to have_link(unexpected_comparison.description, href: details_path)
+        expect(page).to have_text("UNEXPECTED")
+      end
+    end
+
     scenario "viewing the details of a response comparison" do
       visit npq_separation_migration_parity_checks_path
 
@@ -133,8 +152,8 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
       within("tbody tr:last") do
         expect(page).to have_text("Status code")
         expect(page).to have_text("200")
-        expect(page).to have_text("201")
-        expect(page).to have_text("DIFFERENT")
+        expect(page).to have_text("200")
+        expect(page).to have_text("EQUAL")
       end
 
       expect(page).to have_css(".diff", text: "response1 response2")
@@ -150,7 +169,7 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
       different_comparison = create(:response_comparison, :different, page: 1)
       lead_provider = different_comparison.lead_provider
       body = %({ "data": [{ "id": "1" }, { "id": "1" }] })
-      create(:response_comparison, :different, npq_response_body: body, ecf_response_body: body, page: 2, lead_provider:)
+      create(:response_comparison, :unexpected, npq_response_body: body, ecf_response_body: body, page: 2, lead_provider:)
       create(:response_comparison, :equal, page: 3, lead_provider:)
 
       # Reload to display the different comparison created manually
@@ -189,9 +208,9 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
         expect(page).to have_text("EQUAL")
       end
 
-      expect(page).to have_css(".govuk-grid-row", text: "Page 1\nECF: 200 NPQ: 201")
+      expect(page).to have_css(".govuk-grid-row", text: "Page 1\nECF: 200 NPQ: 200")
 
-      expect(page).to have_css(".govuk-grid-row", text: "Page 2\nECF: 200 NPQ: 201")
+      expect(page).to have_css(".govuk-grid-row", text: "Page 2\nECF: 500 NPQ: 500")
       expect(page).to have_text("No difference")
 
       expect(page).not_to have_text("Page 3")
