@@ -7,6 +7,20 @@ RSpec.feature "Parity check", :in_memory_rails_cache, :rack_test_driver, type: :
     create_matching_ecf_lead_providers
 
     stub_request(:get, %r{http://(npq|ecf).example.com/api/.*})
+    stub_request(:post, %r{http://(npq|ecf).example.com/api/.*})
+    stub_request(:put, %r{http://(npq|ecf).example.com/api/.*})
+
+    LeadProvider.find_each do |lead_provider|
+      create(:statement, lead_provider:)
+      create(:participant_outcome, declaration: create(:declaration, lead_provider:))
+      create(:application, lead_provider:, eligible_for_funding: false)
+      create(:declaration, :completed, application: create(:application, :accepted, lead_provider:))
+      create(:application, :accepted, lead_provider:, funded_place: true)
+      create(:declaration, :payable, lead_provider:)
+      create(:declaration, :paid, lead_provider:)
+      create(:application, :with_declaration, :accepted, :active, lead_provider:)
+      create(:application, :with_declaration, :accepted, :deferred, lead_provider:)
+    end
   end
 
   context "when not authenticated" do
