@@ -489,7 +489,7 @@ RSpec.describe Migration::ParityCheck::Client do
 
       context "when using declaration_ecf_id_for_void" do
         let(:id) { "declaration_ecf_id_for_void" }
-        let(:resource) { create(:declaration, :payable, lead_provider:) }
+        let(:resource) { create(:declaration, :submitted, lead_provider:) }
 
         it "evaluates the id option and substitutes it into the path" do
           instance.make_requests do |_, _, formatted_path|

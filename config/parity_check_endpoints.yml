@@ -185,18 +185,21 @@ post:
     exclude:
       - id
       - created_at
+      - updated_at
     id: participant_ecf_id_for_create_outcome
     payload: post_participant_outcome_payload
   "/api/v2/participants/npq/:id/outcomes":
     exclude:
       - id
       - created_at
+      - updated_at
     id: participant_ecf_id_for_create_outcome
     payload: post_participant_outcome_payload
   "/api/v3/participants/npq/:id/outcomes":
     exclude:
       - id
       - created_at
+      - updated_at
     id: participant_ecf_id_for_create_outcome
     payload: post_participant_outcome_payload
 
@@ -294,6 +297,7 @@ put:
   "/api/v2/participants/npq/:id/defer":
     exclude:
       - updated_at
+      - date
     id: participant_ecf_id_for_defer
     payload: put_participant_defer_payload
   "/api/v3/participants/npq/:id/defer":
