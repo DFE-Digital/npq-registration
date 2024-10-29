@@ -41,7 +41,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         teacher_reference_number: first_application.user.trn,
         teacher_reference_number_validated: first_application.user.trn_verified.to_s,
         school_urn: first_application.school.urn,
-        school_ukprn: first_application.school.ukprn,
+        school_ukprn: first_application.ukprn,
         status: first_application.lead_provider_approval_status,
         works_in_school: first_application.works_in_school.to_s,
         eligible_for_funding: first_application.eligible_for_funding.to_s,

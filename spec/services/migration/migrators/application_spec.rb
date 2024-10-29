@@ -37,6 +37,15 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.accepted_at).to eq(ecf_resource1.profile.created_at)
       end
 
+      it "sets ukprn from ECF NPQApplication even if its different from school_urn" do
+        ecf_resource1.update!(school_ukprn: "12345678")
+
+        instance.call
+        application = Application.find_by!(ecf_id: ecf_resource1.id)
+        expect(application.ukprn).to eq("12345678")
+        expect(application.school.urn).to eq(ecf_resource1.school_urn)
+      end
+
       it "sets the schedule from the ECF NPQApplication on the NPQ application" do
         instance.call
 
@@ -149,74 +158,6 @@ RSpec.describe Migration::Migrators::Application do
           application = ::Application.find_by_ecf_id!(ecf_resource1.id)
           expect(application.created_at.to_s).to eq(created_at.to_s)
           expect(application.updated_at.to_s).to eq(updated_at.to_s)
-        end
-      end
-
-      context "when the school ukprn does not match with the one pulled in from ECF" do
-        before { ecf_resource1.update!(school_ukprn: rand(10_000_000..99_999_999).to_s) }
-
-        it "records a failure" do
-          instance.call
-
-          expect(failure_manager).to have_received(:record_failure).once.with(ecf_resource1, /Validation failed: School UKPRN does not match/)
-        end
-      end
-
-      context "when the school ukprn pulled in from ECF is nil" do
-        before { ecf_resource1.update!(school_ukprn: nil) }
-
-        it "overrides ukprn from Schools table on the NPQ application" do
-          application = Application.find_by!(ecf_id: ecf_resource1.id)
-          expect(application.ukprn).to be_nil
-
-          instance.call
-
-          expect(application.reload.ukprn).to eq(application.school.ukprn)
-        end
-      end
-
-      context "when setting timestamps from ECF" do
-        let(:created_at) { 10.days.ago }
-        let(:updated_at) { 3.days.ago }
-
-        it "sets the timestamps from ECF when ukprn does not change" do
-          ecf_resource1.update!(created_at:, updated_at:)
-
-          with_versioning do
-            expect(PaperTrail).to be_enabled
-
-            instance.call
-
-            application = ::Application.find_by_ecf_id!(ecf_resource1.id)
-            expect(application.created_at.to_s).to eq(created_at.to_s)
-            expect(application.updated_at.to_s).to eq(updated_at.to_s)
-
-            version = application.versions.last
-            expect(version.note).to eq("Changes migrated from ECF to NPQ")
-            expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
-            expect(version.object_changes["updated_at"].last).to eq(updated_at.iso8601(3))
-          end
-        end
-
-        it "sets updated_at to now when ukprn is nil" do
-          ecf_resource1.update!(created_at:, updated_at:, school_ukprn: nil)
-
-          freeze_time do
-            with_versioning do
-              expect(PaperTrail).to be_enabled
-
-              instance.call
-
-              application = ::Application.find_by_ecf_id!(ecf_resource1.id)
-              expect(application.created_at.to_s).to eq(created_at.to_s)
-              expect(application.updated_at.to_s).to eq(Time.zone.now.to_s)
-
-              version = application.versions.last
-              expect(version.note).to eq("Changes migrated from ECF to NPQ")
-              expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
-              expect(version.object_changes["updated_at"].last).to eq(Time.zone.now.iso8601(3))
-            end
-          end
         end
       end
 

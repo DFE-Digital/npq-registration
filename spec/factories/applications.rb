@@ -17,6 +17,7 @@ FactoryBot.define do
     itt_provider
     funding_choice { Application.funding_choices.keys.sample }
     lead_mentor { Faker::Boolean.boolean }
+    ukprn { rand(10_000_000..99_999_999).to_s }
 
     trait :with_school do
       school
