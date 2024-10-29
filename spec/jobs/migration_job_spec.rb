@@ -15,4 +15,10 @@ RSpec.describe MigrationJob do
       expect(coordinator_double).to have_received(:migrate!).once
     end
   end
+
+  describe "#perform_later" do
+    it "enqueues the job exactly once" do
+      expect { described_class.perform_later }.to have_enqueued_job(described_class).exactly(:once).on_queue("high_priority")
+    end
+  end
 end
