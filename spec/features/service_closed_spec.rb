@@ -11,7 +11,7 @@ RSpec.feature "Service is closed", type: :feature do
     close_registration!
 
     visit "/"
-    expect(page).to have_content("Registration has closed temporarily")
+    expect(page).to have_content("Registration for autumn 2024 is now closed")
     expect(page).to be_accessible
 
     page.click_button("Request email updates")
@@ -50,7 +50,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     scenario "Allow user to register" do
       visit "/"
-      expect(page).to have_content("Registration has closed temporarily")
+      expect(page).to have_content("Registration for autumn 2024 is now closed")
 
       sign_in_as(super_admin)
 
@@ -148,7 +148,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     scenario "When user is not whitelisted" do
       visit "/"
-      expect(page).to have_content("Registration has closed temporarily")
+      expect(page).to have_content("Registration for autumn 2024 is now closed")
 
       visit "/closed_registration_exception"
 
