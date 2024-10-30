@@ -52,7 +52,6 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
             travel_to(old_datetime) do
               declaration
               create(:participant_outcome, declaration:)
-              create(:statement_item, declaration:)
             end
           end
 
@@ -66,12 +65,16 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
             end
           end
 
-          context "when statement_item is the latest" do
+          context "when a linked statement item is moved to another statement" do
+            let!(:statement_item) { create(:statement_item, declaration:) }
+
             before do
-              declaration.statement_items.first.update!(updated_at: latest_datetime)
+              travel_to(latest_datetime) do
+                statement_item.update!(statement: create(:statement))
+              end
             end
 
-            it "returns statement_item's `updated_at`" do
+            it "returns the updated declaration's `updated_at`" do
               expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
             end
           end

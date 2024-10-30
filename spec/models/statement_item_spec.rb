@@ -167,4 +167,61 @@ RSpec.describe StatementItem, type: :model do
       end
     end
   end
+
+  describe "touch declaration when statement changes" do
+    let!(:old_datetime) { 6.months.ago }
+    let(:declaration) { create(:declaration, updated_at: old_datetime) }
+    let(:statement_item) { create(:statement_item, declaration:) }
+
+    context "when `statement_item` is created" do
+      it "does not update declaration.updated_at" do
+        freeze_time do
+          expect(declaration.updated_at).to be_within(1.second).of(old_datetime)
+
+          statement_item
+
+          expect(declaration.updated_at).to be_within(1.second).of(old_datetime)
+        end
+      end
+    end
+
+    context "when `statement_item` is updated" do
+      let(:statement) { create(:statement) }
+
+      before do
+        travel_to(old_datetime) do
+          statement_item
+          statement
+        end
+      end
+
+      context "when `statement_id` is changed" do
+        it "updates declaration.updated_at" do
+          freeze_time do
+            expect(declaration.updated_at).to be_within(1.second).of(old_datetime)
+            expect(statement_item.updated_at).to be_within(1.second).of(old_datetime)
+
+            statement_item.update!(statement:)
+
+            expect(declaration.updated_at).to eq(Time.zone.now)
+            expect(statement_item.updated_at).to eq(Time.zone.now)
+          end
+        end
+      end
+
+      context "when `statement_id` is not changed" do
+        it "does not update declaration.updated_at" do
+          freeze_time do
+            expect(declaration.updated_at).to be_within(1.second).of(old_datetime)
+            expect(statement_item.updated_at).to be_within(1.second).of(old_datetime)
+
+            statement_item.update!(state: "payable")
+
+            expect(declaration.updated_at).to be_within(1.second).of(old_datetime)
+            expect(statement_item.updated_at).to eq(Time.zone.now)
+          end
+        end
+      end
+    end
+  end
 end

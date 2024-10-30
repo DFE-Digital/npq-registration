@@ -37,8 +37,6 @@ module API
 
       field(:updated_at) do |declaration|
         (
-          declaration.participant_outcomes.map(&:updated_at) +
-          declaration.statement_items.map(&:updated_at) +
           [declaration.updated_at]
         ).compact.max
       end

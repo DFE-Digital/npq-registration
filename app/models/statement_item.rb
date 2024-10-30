@@ -7,6 +7,8 @@ class StatementItem < ApplicationRecord
 
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
+  after_commit :touch_declaration_if_changed, on: :update
+
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
 
@@ -50,5 +52,13 @@ class StatementItem < ApplicationRecord
 
   def refundable?
     REFUNDABLE_STATES.include?(state)
+  end
+
+private
+
+  def touch_declaration_if_changed
+    return unless saved_change_to_statement_id?
+
+    declaration.touch(time: updated_at)
   end
 end
