@@ -1,0 +1,23 @@
+<%= govuk_back_link href: npq_separation_admin_finance_statement_path(@statement) %>
+
+<h1 class="govuk-heading-l">
+  <%= t(".title", statement_name: statement_name(@statement)) %>
+</h1>
+
+<%= form_for @payment_authorisation_form,
+             url: npq_separation_admin_finance_payment_authorisation_path(@statement) do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%#= render Finance::Statements::NPQDetailsTable.new(statement: @statement) %>
+
+  <p class="govuk-body">
+    <%= f.govuk_check_boxes_fieldset :checks_done, multiple: false, legend: { text: govuk_warning_text(text: t(".checks_done_legend")) } do %>
+      <%= f.govuk_check_box :checks_done, 1, 0, multiple: false, link_errors: true %>
+    <% end %>
+  </p>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit t(".button") %>
+    <%= govuk_link_to t("shared.cancel"), npq_separation_admin_finance_statement_path(@statement) %>
+  </div>
+<% end %>

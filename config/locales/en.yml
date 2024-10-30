@@ -220,6 +220,8 @@ en:
       questionnaires/teacher_catchment:
         teacher_catchment:
           one : nil # workaround
+      statements/payment_authorisation_form:
+        checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
         questionnaires/teacher_reference_number:
@@ -506,6 +508,9 @@ en:
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
 
+  shared:
+    cancel: Cancel
+
   accounts:
     show:
       title: "Your NPQ registration"
@@ -623,6 +628,21 @@ en:
     outcome:
       passed_html: "<a href=\"https://access-your-teaching-qualifications.education.gov.uk/qualifications/start\" class=\"govuk-link\">Access your teaching qualifications</a> to get your certificate."
       failed: "If you think this is mistake or need to appeal this outcome, contact your training provider."
+
+  npq_separation:
+    admin:
+      finance:
+        statements:
+          payment_authorisations:
+            new:
+              title: "Check %{statement_name} statement details before authorising for payment"
+              button: "Authorise for payment"
+              checks_done_legend: Have all necessary assurance checks been done?
+            # tag:
+            #   content: "Authorised for payment at %{statement_marked_as_paid_at}"
+            # banner:
+            #   title: "Authorising for payment"
+            #   content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
@@ -758,6 +778,10 @@ en:
         senco_start_date: For example, 1 2024
         work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
     label:
+      statements_payment_authorisation_form:
+        checks_done_options:
+          1: Yes, I'm ready to authorise this for payment
+
       registration_wizard:
         work_setting_options:
           early_years_or_childcare: "Early years or childcare"

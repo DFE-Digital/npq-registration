@@ -151,6 +151,12 @@ RSpec.configure do |config|
     stub_env_variables_for_gai
   end
 
+  config.before(:each, type: :view) do
+    allow(ActionView::Base)
+      .to receive(:default_form_builder)
+          .and_return GOVUKDesignSystemFormBuilder::FormBuilder
+  end
+
   config.around(:each, :in_memory_rails_cache) do |example|
     Rails.cache = ActiveSupport::Cache::MemoryStore.new
     example.run
