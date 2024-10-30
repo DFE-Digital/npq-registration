@@ -38,5 +38,13 @@ FactoryBot.define do
     trait :from_ecf do
       ecf_id { SecureRandom.uuid }
     end
+
+    trait :awaiting_clawback do
+      state { :awaiting_clawback }
+    end
+
+    trait :voided do
+      state { :voided }
+    end
   end
 end

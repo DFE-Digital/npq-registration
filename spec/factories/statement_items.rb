@@ -23,5 +23,9 @@ FactoryBot.define do
     trait :clawed_back do
       state { "clawed_back" }
     end
+
+    trait :voided do
+      state { "voided" }
+    end
   end
 end
