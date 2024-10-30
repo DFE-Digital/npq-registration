@@ -38,7 +38,7 @@ RSpec.describe User do
     it { is_expected.to validate_uniqueness_of(:email).case_insensitive.with_message("Email address must be unique") }
     it { is_expected.not_to allow_value("invalid-email").for(:email).on(:npq_separation) }
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
-    it { is_expected.to validate_uniqueness_of(:ecf_id).allow_blank.case_insensitive.with_message("ECF ID has already been taken") }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).allow_blank.case_insensitive.with_message("ECF ID must be unique") }
 
     it "does not allow a uid to change once set" do
       user = create(:user, uid: "123")

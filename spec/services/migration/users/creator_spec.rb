@@ -152,17 +152,6 @@ RSpec.describe Migration::Users::Creator do
       end
     end
 
-    context "when multiple users have same ecf_user.id" do
-      it "raises error" do
-        create(:user, ecf_id: ecf_user.id)
-        create(:user, ecf_id: ecf_user.id)
-
-        expect {
-          subject.find_primary_user
-        }.to raise_error(ActiveRecord::RecordInvalid, "Validation failed: ecf_user.id has multiple users in NPQ")
-      end
-    end
-
     context "when ecf_user.id and ecf_user.get_an_identity_id return the same user" do
       it "returns user" do
         existing_user = create(:user, ecf_id: ecf_user.id, uid: ecf_user.get_an_identity_id)

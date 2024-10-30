@@ -15,10 +15,10 @@ RSpec.describe Migration::Migrators::User do
     end
 
     def setup_failure_state
-      # Duplicate users with ecf_id
-      ecf_user = create(:ecf_migration_user, :npq)
-      create(:user, ecf_id: ecf_user.id)
-      create(:user, ecf_id: ecf_user.id)
+      # Applications with similar validated trns
+      participant_identity = create(:ecf_migration_participant_identity)
+      create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity:)
+      create(:ecf_migration_npq_application, teacher_reference_number: "7891011", teacher_reference_number_verified: true, participant_identity:)
     end
 
     describe "#call" do
@@ -125,17 +125,6 @@ RSpec.describe Migration::Migrators::User do
           instance.call
           expect(failure_manager).not_to have_received(:record_failure)
           expect(existing_user.reload).to have_attributes(trn: "332245", trn_verified: false)
-        end
-      end
-
-      context "when there are multiple users with the same ecf_id" do
-        it "raises error" do
-          ecf_user = create(:ecf_migration_user, :npq, email: "email-1@example.com")
-          create(:user, ecf_id: ecf_user.id, email: "email-1@example.com")
-          create(:user, ecf_id: ecf_user.id, email: "email-2@example.com")
-
-          instance.call
-          expect(failure_manager).to have_received(:record_failure).with(ecf_user, /ecf_user.id has multiple users in NPQ/)
         end
       end
 
