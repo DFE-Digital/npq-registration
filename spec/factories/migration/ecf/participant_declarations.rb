@@ -6,10 +6,11 @@ FactoryBot.define do
     state { Declaration.states.keys.sample }
     declaration_type { Declaration.declaration_types.keys.sample }
     type { "ParticipantDeclaration::NPQ" }
-    course_identifier { "course-identifier" }
-    user { create(:ecf_migration_user) }
-    cohort { create(:ecf_migration_cohort) }
-    cpd_lead_provider { create(:ecf_migration_npq_lead_provider).cpd_lead_provider }
+    participant_profile { create(:ecf_migration_npq_application, :accepted).profile }
+    course_identifier { participant_profile.npq_application.npq_course.identifier }
+    user { participant_profile.user }
+    cohort { participant_profile.npq_application.cohort }
+    cpd_lead_provider { participant_profile.npq_application.npq_lead_provider.cpd_lead_provider }
 
     trait :ineligible do
       after(:build) do |participant_declaration|
