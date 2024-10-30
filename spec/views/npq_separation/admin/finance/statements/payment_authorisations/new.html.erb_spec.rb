@@ -13,7 +13,7 @@ RSpec.describe "npq_separation/admin/finance/statements/payment_authorisations/n
   let(:form_path) { npq_separation_admin_finance_payment_authorisation_path(statement) }
 
   it { is_expected.to have_css("h1", text: /Check March 2024 statement/) }
-  xit { is_expected.to have_css("table.govuk-table") } # shows statement details
+  it { is_expected.to have_css(".statement-details-component") } # shows statement details
   it { is_expected.to have_css(%(form[action="#{form_path}"]), count: 1) }
   it { is_expected.to have_field("statements-payment-authorisation-form-checks-done-1-field") }
   it { is_expected.to have_css("legend", text: /Have all necessary assurance/) }
