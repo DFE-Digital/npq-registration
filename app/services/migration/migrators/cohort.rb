@@ -20,6 +20,7 @@ module Migration::Migrators
         cohort.update!(
           start_year: ecf_cohort.start_year,
           registration_start_date: ecf_cohort.npq_registration_start_date.presence || ecf_cohort.registration_start_date,
+          funding_cap: (ecf_cohort.start_year == 2024),
           created_at: ecf_cohort.created_at,
           updated_at: ecf_cohort.updated_at,
         )
