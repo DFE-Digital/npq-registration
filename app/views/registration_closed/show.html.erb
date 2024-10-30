@@ -6,7 +6,7 @@
     <h2 class="govuk-heading-m">Registration for autumn 2024 is now closed</h2>
     <p class="govuk-body">When registration reopens, use this service to register for a NPQ or the early headship coaching offer.</p>
 
-        <% if current_user.persisted? %>
+    <% if current_user.persisted? %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Request email updates",
