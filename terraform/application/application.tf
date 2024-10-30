@@ -83,7 +83,7 @@ module "migration_worker_application" {
 
   is_web = false
 
-  name = "migration_worker"
+  name = "migration-worker"
   namespace    = var.namespace
   environment  = local.environment
   service_name = var.service_name
