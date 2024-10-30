@@ -64,7 +64,7 @@ module API
         application.user.trn,
         application.user.trn_verified,
         application.school&.urn,
-        application.school&.ukprn,
+        application.ukprn,
         application.private_childcare_provider&.provider_urn,
         application.headteacher_status,
         application.eligible_for_funding,

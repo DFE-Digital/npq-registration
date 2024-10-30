@@ -138,15 +138,15 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       end
 
       it "serializes the `school_ukprn`" do
-        school.urn = "ukprn"
-        expect(attributes["school_ukprn"]).to eq(school.ukprn)
+        application.ukprn = "1234567"
+        expect(attributes["school_ukprn"]).to eq("1234567")
       end
 
       context "when `school` is `nil`" do
         let(:school) { nil }
 
         it { expect(attributes["school_urn"]).to be_nil }
-        it { expect(attributes["school_ukprn"]).to be_nil }
+        it { expect(attributes["school_ukprn"]).to eq(application.ukprn) }
       end
     end
 

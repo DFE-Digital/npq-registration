@@ -20,7 +20,7 @@ module API
       field(:teacher_reference_number) { |a| a.user.trn }
       field(:teacher_reference_number_validated) { |a| a.user.trn_verified }
       field(:school_urn) { |a| a.school&.urn }
-      field(:school_ukprn) { |a| a.school&.ukprn }
+      field(:ukprn, name: :school_ukprn)
       field(:lead_provider_approval_status, name: :status)
       field(:works_in_school)
       field(:cohort) { |a| a.cohort&.start_year&.to_s }

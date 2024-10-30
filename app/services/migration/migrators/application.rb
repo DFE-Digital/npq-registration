@@ -26,6 +26,7 @@ module Migration::Migrators
       notes
       funded_place
       created_at
+      updated_at
     ].freeze
 
     class << self
@@ -62,23 +63,13 @@ module Migration::Migrators
 
         application ||= ::Application.new(ecf_id: ecf_npq_application.id)
 
-        application.updated_at = ecf_npq_application.updated_at
         application.cohort_id = find_cohort_id!(ecf_id: ecf_npq_application.cohort_id)
         application.itt_provider_id = find_itt_provider_id!(itt_provider: ecf_npq_application.itt_provider) if ecf_npq_application.itt_provider
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
+        application.ukprn = ecf_npq_application.school_ukprn
 
         if ecf_npq_application.school_urn.present?
           application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
-
-          if ecf_npq_application.school_ukprn.present? && ecf_npq_application.school_ukprn.to_s == application.school.ukprn.to_s
-            application.ukprn = ecf_npq_application.school_ukprn
-          elsif ecf_npq_application.school_ukprn.blank?
-            application.ukprn = application.school.ukprn
-            application.updated_at = Time.zone.now
-          else
-            ecf_npq_application.errors.add(:base, "School UKPRN does not match")
-            raise ActiveRecord::RecordInvalid, ecf_npq_application
-          end
         end
 
         application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
