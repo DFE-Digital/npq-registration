@@ -24,7 +24,7 @@ RSpec.describe Migration::Migrators::Statement do
       it "sets the created Statement attributes correctly" do
         instance.call
         statement = Statement.find_by(ecf_id: ecf_resource1.id)
-        expect(statement).to have_attributes(ecf_resource1.attributes.slice(:deadline_date, :payment_date, :output_fee, :marked_as_paid_at, :reconcile_amount))
+        expect(statement).to have_attributes(ecf_resource1.attributes.slice("deadline_date", "payment_date", "output_fee", "marked_as_paid_at", "reconcile_amount"))
         expect(statement.month).to eq(3)
         expect(statement.year).to eq(2023)
         expect(statement.cohort.start_year).to eq(ecf_resource1.cohort.start_year)

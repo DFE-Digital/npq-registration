@@ -24,7 +24,7 @@ RSpec.describe Migration::Migrators::StatementItem do
         instance.call
 
         statement_item = StatementItem.includes(:statement, :declaration).find_by(ecf_id: ecf_resource1.id)
-        expect(statement_item).to have_attributes(ecf_resource1.attributes.slice(:state, :created_at, :updated_at))
+        expect(statement_item).to have_attributes(ecf_resource1.attributes.slice("state", "created_at", "updated_at"))
         expect(statement_item.declaration.ecf_id).to eq(ecf_resource1.participant_declaration_id)
         expect(statement_item.statement.ecf_id).to eq(ecf_resource1.statement_id)
       end

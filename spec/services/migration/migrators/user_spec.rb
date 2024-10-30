@@ -41,7 +41,7 @@ RSpec.describe Migration::Migrators::User do
         instance.call
 
         user = User.find_by(ecf_id: ecf_resource1.id)
-        expect(user).to have_attributes(ecf_resource1.attributes.slice(:trn, :full_name, :get_an_identity_id))
+        expect(user).to have_attributes(ecf_resource1.attributes.slice("trn", "full_name", "get_an_identity_id"))
         expect(user).to have_attributes(
           email: "email-3@example.com",
           date_of_birth: "1980-01-01".to_date,
