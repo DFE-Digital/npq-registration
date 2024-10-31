@@ -6,6 +6,40 @@ get:
   "/api/v3/npq-applications":
     paginate: true
 
+  "/api/v1/npq-applications?filter[cohort]=2023":
+    paginate: true
+  "/api/v2/npq-applications?filter[cohort]=2023":
+    paginate: true
+  "/api/v3/npq-applications?filter[cohort]=2023":
+    paginate: true
+
+  "/api/v1/npq-applications?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v2/npq-applications?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/npq-applications?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+
+  "/api/v1/npq-applications?filter[cohort]=2023&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v2/npq-applications?filter[cohort]=2023&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/npq-applications?filter[cohort]=2023&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+
+  "/api/v3/npq-applications?filter[participant_id]=:id":
+    paginate: true
+    id: application_ecf_id
+  "/api/v3/npq-applications?filter[participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: application_ecf_id
+  "/api/v3/npq-applications?filter[participant_id]=:id&filter[cohort]=2023":
+    paginate: true
+    id: application_ecf_id
+  "/api/v3/npq-applications?filter[participant_id]=:id&filter[cohort]=2023&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: application_ecf_id
+
   "/api/v1/npq-applications/:id":
     id: application_ecf_id
   "/api/v2/npq-applications/:id":
@@ -27,6 +61,69 @@ get:
       - evidence_held
   "/api/v3/participant-declarations?filter[type]=npq":
     paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+
+  "/api/v1/participant-declarations?filter[type]=npq&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v2/participant-declarations?filter[type]=npq&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v3/participant-declarations?filter[type]=npq&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+
+  "/api/v1/participant-declarations?filter[type]=npq&filter[participant_id]=:id":
+    paginate: true
+    id: participant_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v2/participant-declarations?filter[type]=npq&filter[participant_id]=:id":
+    paginate: true
+    id: participant_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v3/participant-declarations?filter[type]=npq&filter[participant_id]=:id":
+    paginate: true
+    id: participant_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+
+  "/api/v1/participant-declarations?filter[type]=npq&filter[participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: participant_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v2/participant-declarations?filter[type]=npq&filter[participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: participant_ecf_id
+    exclude:
+      - delivery_partner_id
+      - mentor_id
+      - evidence_held
+  "/api/v3/participant-declarations?filter[type]=npq&filter[participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: participant_ecf_id
     exclude:
       - delivery_partner_id
       - mentor_id
@@ -54,8 +151,15 @@ get:
   "/api/v1/participants/npq/outcomes":
     paginate: true
   "/api/v2/participants/npq/outcomes":
-    paginate: true 
+    paginate: true
   "/api/v3/participants/npq/outcomes":
+    paginate: true
+
+  "/api/v1/participants/npq/outcomes?filter[created_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v2/participants/npq/outcomes?filter[created_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/participants/npq/outcomes?filter[created_since]=2023-11-13T11:21:55Z":
     paginate: true
 
   "/api/v1/participants/npq/:id/outcomes":
@@ -72,6 +176,29 @@ get:
   "/api/v3/participants/npq":
     paginate: true
 
+  "/api/v1/participants/npq?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v2/participants/npq?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/participants/npq?filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/participants/npq?filter[training_status]=active":
+    paginate: true
+  "/api/v3/participants/npq?filter[training_status]=active&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+  "/api/v3/participants/npq?filter[from_participant_id]=:id":
+    paginate: true
+    id: participant_ecf_id
+  "/api/v3/participants/npq?filter[from_participant_id]=:id&filter[training_status]=active":
+    paginate: true
+    id: participant_ecf_id
+  "/api/v3/participants/npq?filter[from_participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z":
+    paginate: true
+    id: participant_ecf_id
+  "/api/v3/participants/npq?filter[from_participant_id]=:id&filter[updated_since]=2020-11-13T11:21:55Z&filter[training_status]=active":
+    paginate: true
+    id: participant_ecf_id
+
   "/api/v1/participants/npq/:id":
     id: participant_ecf_id
   "/api/v2/participants/npq/:id":
@@ -80,6 +207,18 @@ get:
     id: participant_ecf_id
 
   "/api/v3/statements?filter[type]=npq":
+    paginate: true
+    exclude:
+      - type
+  "/api/v3/statements?filter[type]=npq&filter[cohort]=2022,2023":
+    paginate: true
+    exclude:
+      - type
+  "/api/v3/statements?filter[type]=npq&filter[updated_since]=2023-11-13T11:21:55Z":
+    paginate: true
+    exclude:
+      - type
+  "/api/v3/statements?filter[type]=npq&filter[cohort]=2022,2023&filter[updated_since]=2023-11-13T11:21:55Z":
     paginate: true
     exclude:
       - type
