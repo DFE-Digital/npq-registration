@@ -1011,7 +1011,7 @@ paths:
               "$ref": "#/components/schemas/ParticipantChangeScheduleRequest"
         required: true
 servers:
-- url: https://npq-registration-separation-web.teacherservices.cloud/
+- url: http://0.0.0.0:3000
 components:
   securitySchemes:
     api_key:
