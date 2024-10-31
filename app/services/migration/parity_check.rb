@@ -38,8 +38,14 @@ module Migration
 
     def run!
       raise UnsupportedEnvironmentError, "The parity check functionality is disabled for this environment" unless enabled?
+      raise NotPreparedError, "You must call prepare! before running the parity check" unless prepared?
+      raise EndpointsFileNotFoundError, "Endpoints file not found: #{endpoints_file_path}" unless endpoints_file_exists?
 
-      lead_providers.each(&method(:call_endpoints))
+      threads = lead_providers.map do |lead_provider|
+        Thread.new { call_endpoints(lead_provider) }
+      end
+
+      threads.each(&:join)
 
       finalise!
     end
@@ -50,9 +56,15 @@ module Migration
       self.class.started_at.present?
     end
 
-    def call_endpoints(lead_provider)
-      raise NotPreparedError, "You must call prepare! before running the parity check" unless prepared?
+    def endpoints_file_exists?
+      File.exist?(endpoints_file_absolute_path)
+    end
 
+    def endpoints_file_absolute_path
+      Rails.root.join(endpoints_file_path)
+    end
+
+    def call_endpoints(lead_provider)
       endpoints.each do |method, paths|
         paths.each do |path, options|
           client = Client.new(lead_provider:, method:, path:, options:)
@@ -85,11 +97,7 @@ module Migration
     end
 
     def endpoints
-      file = Rails.root.join(endpoints_file_path)
-
-      raise EndpointsFileNotFoundError, "Endpoints file not found: #{endpoints_file_path}" unless File.exist?(file)
-
-      YAML.load_file(file).with_indifferent_access
+      @endpoints ||= YAML.load_file(endpoints_file_absolute_path).with_indifferent_access
     end
 
     def enabled?
