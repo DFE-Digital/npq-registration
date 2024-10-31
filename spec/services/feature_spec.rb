@@ -88,4 +88,20 @@ RSpec.describe Feature do
       end
     end
   end
+
+  describe "#maintenance_banner" do
+    subject { Feature }
+
+    context "when enabled" do
+      before { Flipper.enable(Feature::MAINTENANCE_BANNER) }
+
+      it { is_expected.to be_maintenance_banner_enabled }
+    end
+
+    context "when disabled" do
+      before { Flipper.disable(Feature::MAINTENANCE_BANNER) }
+
+      it { is_expected.not_to be_maintenance_banner_enabled }
+    end
+  end
 end

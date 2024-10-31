@@ -9,11 +9,14 @@ class Feature
 
   ECF_API_DISABLED = "NPQ Separation ECF API disabled".freeze
 
+  MAINTENANCE_BANNER = "Maintenance banner".freeze
+
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
     CLOSED_REGISTRATION_ENABLED,
     SENCO_ENABLED,
     ECF_API_DISABLED,
+    MAINTENANCE_BANNER,
   ].freeze
 
   class << self
@@ -57,6 +60,10 @@ class Feature
 
     def ecf_api_disabled?
       Flipper.enabled?(ECF_API_DISABLED)
+    end
+
+    def maintenance_banner_enabled?
+      Flipper.enabled?(MAINTENANCE_BANNER)
     end
   end
 end
