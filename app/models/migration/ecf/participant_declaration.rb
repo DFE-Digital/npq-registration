@@ -6,6 +6,7 @@ module Migration::Ecf
     belongs_to :user
     belongs_to :cohort
     belongs_to :superseded_by, class_name: "Migration::Ecf::ParticipantDeclaration", optional: true
+    belongs_to :participant_profile
 
     has_many :declaration_states
     has_many :supersedes, class_name: "Migration::Ecf::ParticipantDeclaration", foreign_key: :superseded_by_id, inverse_of: :superseded_by

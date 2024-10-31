@@ -15,7 +15,7 @@ RSpec.describe Migration::Migrators::Declaration do
       cohort = create(:cohort, ecf_id: ecf_resource.cohort_id, start_year: ecf_resource.cohort.start_year)
       course = create(:course, identifier: ecf_resource.course_identifier.upcase)
       user = create(:user, ecf_id: ecf_resource.user.id)
-      application = create(:application, :accepted, course:, user:)
+      application = create(:application, :accepted, course:, user:, ecf_id: ecf_resource.participant_profile.npq_application.id)
       create(:declaration, ecf_id: ecf_resource.id, cohort:, lead_provider:, application:)
     end
 
@@ -34,6 +34,7 @@ RSpec.describe Migration::Migrators::Declaration do
         expect(declaration.lead_provider.ecf_id).to eq(ecf_resource1.cpd_lead_provider.npq_lead_provider.id)
         expect(declaration.application.course.identifier.downcase).to eq(ecf_resource1.course_identifier.downcase)
         expect(declaration.application.user.ecf_id).to eq(ecf_resource1.user.id)
+        expect(declaration.application.ecf_id).to eq(ecf_resource1.participant_profile.npq_application.id)
         expect(declaration.created_at.to_s).to eq(ecf_resource1.created_at.to_s)
         expect(declaration.updated_at.to_s).to eq(ecf_resource1.updated_at.to_s)
         expect(declaration.declaration_date.to_s).to eq(ecf_resource1.declaration_date.to_s)
