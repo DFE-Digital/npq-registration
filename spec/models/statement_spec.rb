@@ -96,6 +96,28 @@ RSpec.describe Statement, type: :model do
     end
   end
 
+  describe "paper_trail" do
+    subject { create(:statement, :open) }
+
+    it "enables paper trail" do
+      expect(subject).to be_versioned
+    end
+
+    it "creates a version with a note" do
+      with_versioning do
+        expect(PaperTrail).to be_enabled
+
+        subject.update!(
+          state: :payable,
+          version_note: "This is a test",
+        )
+        version = subject.versions.last
+        expect(version.note).to eq("This is a test")
+        expect(version.object_changes["state"]).to eq(%w[open payable])
+      end
+    end
+  end
+
   describe "State transition" do
     context "when from open to payable" do
       let(:statement) { create(:statement, :open) }

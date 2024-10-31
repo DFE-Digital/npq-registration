@@ -1,4 +1,7 @@
 class Statement < ApplicationRecord
+  has_paper_trail meta: { note: :version_note }
+  attr_accessor :version_note
+
   belongs_to :cohort
   belongs_to :lead_provider
   has_many :statement_items
