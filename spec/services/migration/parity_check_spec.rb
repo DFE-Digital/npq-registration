@@ -161,6 +161,94 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
           }))
         end
       end
+
+      context "when there are POST endpoints" do
+        let(:endpoints_file_path) { "spec/fixtures/files/parity_check/post_endpoints.yml" }
+
+        it "calls the client for each lead provider with the correct options" do
+          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+
+          run
+
+          LeadProvider.find_each do |lead_provider|
+            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+              lead_provider:,
+              method: "post",
+              path: "/api/v1/npq-applications/:id/accept",
+              options: { id: "application_ecf_id_for_accept_with_funded_place", payload: { type: "npq-application-accept", attributes: { funded_place: true } } },
+            )
+          end
+          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
+        end
+
+        it "saves response comparisons for each endpoint and lead provider" do
+          client_double = instance_double(Migration::ParityCheck::Client)
+          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
+          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
+          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", nil)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+
+          expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
+
+          expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
+            lead_provider: an_instance_of(LeadProvider),
+            request_path: "/formatted/path",
+            request_method: "post",
+            ecf_response_status_code: 200,
+            npq_response_status_code: 201,
+            ecf_response_body: "ecf_response_body",
+            npq_response_body: "npq_response_body",
+            ecf_response_time_ms: 100,
+            npq_response_time_ms: 150,
+            page: nil,
+          }))
+        end
+      end
+
+      context "when there are PUT endpoints" do
+        let(:endpoints_file_path) { "spec/fixtures/files/parity_check/put_endpoints.yml" }
+
+        it "calls the client for each lead provider with the correct options" do
+          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+
+          run
+
+          LeadProvider.find_each do |lead_provider|
+            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+              lead_provider:,
+              method: "put",
+              path: "/api/v1/npq-applications/:id/change-funded-place",
+              options: { id: "application_ecf_id_for_change_to_funded_place", payload: { type: "npq-application-change-funded-place", attributes: { funded_place: true } } },
+            )
+          end
+          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
+        end
+
+        it "saves response comparisons for each endpoint and lead provider" do
+          client_double = instance_double(Migration::ParityCheck::Client)
+          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
+          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
+          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", nil)
+          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+
+          expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
+
+          expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
+            lead_provider: an_instance_of(LeadProvider),
+            request_path: "/formatted/path",
+            request_method: "put",
+            ecf_response_status_code: 200,
+            npq_response_status_code: 201,
+            ecf_response_body: "ecf_response_body",
+            npq_response_body: "npq_response_body",
+            ecf_response_time_ms: 100,
+            npq_response_time_ms: 150,
+            page: nil,
+          }))
+        end
+      end
     end
   end
 end

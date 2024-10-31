@@ -1,0 +1,7 @@
+put:
+  "/api/v1/npq-applications/:id/change-funded-place":
+    id: application_ecf_id_for_change_to_funded_place
+    payload:
+      type: "npq-application-change-funded-place"
+      attributes:
+        funded_place: true
