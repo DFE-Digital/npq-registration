@@ -20,7 +20,7 @@ RSpec.describe ParityCheckJob do
     it "schedules job in migration queue" do
       expect {
         described_class.perform_later
-      }.to have_enqueued_job(described_class).on_queue("migration")
+      }.to have_enqueued_job(described_class).on_queue("high_priority")
     end
   end
 end

@@ -1,5 +1,5 @@
 class ParityCheckJob < ApplicationJob
-  queue_as :migration
+  queue_as :high_priority
 
   def perform
     parity_check = Migration::ParityCheck.new
