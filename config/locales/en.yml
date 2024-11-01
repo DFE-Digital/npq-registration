@@ -930,3 +930,35 @@ en:
         national_insurance_number: "National Insurance number (optional)"
 
         date_of_birth: What is your date of birth?
+
+  finance:
+    totals: Totals
+    total_net_vat: Total net VAT
+    service_fee:
+      caption: Service fee
+    output_payment:
+      label: Output payment
+      # band_d_info: Participants over the original band C target up to the new target.
+    targeted_delivery_funding:
+      caption: Targeted delivery funding
+    clawbacks:
+      caption: Clawbacks
+      # per_participant: Clawback per participant
+    cut_off_date:
+      caption: Output payment cut off date
+    total_completed: Total completed
+    total_retained: Total retained
+    total_starts: Total starts
+    total_voids: Total voids
+    calculation_rounding_message:
+      title: Calculation rounding errors
+      content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
+    total_not_eligible_for_funding: Total not eligible for funding
+    payment_type: Payment type
+    course:
+      participants: Participants
+      payment_per_participant: Payment per participant
+    total: Total
+    course_total: Course total
+    total_declarations: Total declarations
+    view: View

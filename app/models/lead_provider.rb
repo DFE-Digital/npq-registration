@@ -89,6 +89,7 @@ class LeadProvider < ApplicationRecord
   }.freeze
 
   has_many :applications
+  has_many :contracts
   has_many :statements
 
   validates :name, presence: true

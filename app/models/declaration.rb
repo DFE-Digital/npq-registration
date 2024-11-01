@@ -9,6 +9,7 @@ class Declaration < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   belongs_to :superseded_by, class_name: "Declaration", optional: true
+  has_one :course, through: :application
   has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
   has_many :statements, through: :statement_items

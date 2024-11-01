@@ -1,6 +1,7 @@
 class StatementItem < ApplicationRecord
   BILLABLE_STATES = %w[eligible payable paid].freeze
   REFUNDABLE_STATES = %w[awaiting_clawback clawed_back].freeze
+  NOT_ELIGIBLE_STATES = %w[ineligible voided].freeze
 
   belongs_to :statement
   belongs_to :declaration
@@ -11,6 +12,7 @@ class StatementItem < ApplicationRecord
 
   scope :billable, -> { where(state: BILLABLE_STATES) }
   scope :refundable, -> { where(state: REFUNDABLE_STATES) }
+  scope :not_eligible, -> { where(state: NOT_ELIGIBLE_STATES) }
   scope :eligible, -> { where(state: :eligible) }
   scope :payable, -> { where(state: :payable) }
   scope :paid, -> { where(state: :paid) }
