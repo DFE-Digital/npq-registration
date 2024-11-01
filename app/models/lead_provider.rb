@@ -89,6 +89,7 @@ class LeadProvider < ApplicationRecord
   }.freeze
 
   has_many :applications
+  has_many :contracts
   has_many :statements
 
   scope :alphabetical, -> { order(name: :asc) }

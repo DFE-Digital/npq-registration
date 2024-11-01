@@ -1,5 +1,7 @@
 <h1 class="govuk-heading-l">Statements</h1>
 
+<%= render NpqSeparation::Admin::StatementSelectorComponent.new(params) %>
+
 <%= render NpqSeparation::Admin::StatementsTableComponent.new(@statements) %>
 
 <%= govuk_pagination(pagy: @pagy) %>

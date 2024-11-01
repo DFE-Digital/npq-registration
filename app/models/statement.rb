@@ -2,6 +2,7 @@ class Statement < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   has_many :statement_items
+  has_many :declarations, through: :statement_items
   has_many :contracts
 
   validates :output_fee,
@@ -51,8 +52,16 @@ class Statement < ApplicationRecord
     end
   end
 
-  def period
+  def name
     "#{Date::MONTHNAMES[month]} #{year}"
+  end
+
+  def period
+    "#{year}-#{month}"
+  end
+
+  def show_targeted_delivery_funding?
+    cohort.start_year >= 2022
   end
 
 private
