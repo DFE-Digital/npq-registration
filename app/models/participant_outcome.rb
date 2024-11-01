@@ -9,11 +9,11 @@ class ParticipantOutcome < ApplicationRecord
 
   delegate :user, :lead_provider, :course, :application_id, to: :declaration
 
-  enum state: {
+  enum :state, {
     passed: "passed",
     failed: "failed",
     voided: "voided",
-  }, _suffix: true
+  }, suffix: true
 
   class << self
     def latest

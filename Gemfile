@@ -30,6 +30,7 @@ gem "iconv"
 gem "jsbundling-rails", "~> 1.3"
 gem "json_api_client", ">= 1.21.1"
 gem "mail-notify"
+gem "mutex_m"
 gem "oj"
 gem "omniauth"
 gem "omniauth-oauth2"
@@ -40,6 +41,13 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma", "~> 6.4.3"
 gem "rack-attack"
+
+# TODO: remove after next version of Puma is released
+# See https://github.com/puma/puma/pull/3532
+# `require: false` is needed because you can't actually `require "rackup"`
+# due to a different bug: https://github.com/rack/rackup/commit/d03e1789
+gem "rackup", "1.0.0", require: false
+
 gem "rails", "~> 7"
 gem "rails_semantic_logger"
 gem "redis"

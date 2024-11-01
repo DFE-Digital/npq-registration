@@ -2,7 +2,7 @@ module Migration::Ecf
   class DeclarationState < BaseRecord
     belongs_to :participant_declaration
 
-    enum state: {
+    enum :state, {
       submitted: "submitted",
       eligible: "eligible",
       payable: "payable",

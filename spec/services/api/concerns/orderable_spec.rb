@@ -6,8 +6,12 @@ class TestQuery
   include API::Concerns::Orderable
 end
 
-class Test < ApplicationRecord
+class Test
   include ActiveModel::Attributes
+
+  def self.table_name
+    "tests"
+  end
 
   attribute :foo
   attribute :bar
