@@ -34,6 +34,21 @@ RSpec.describe Migration::Migrators::Cohort do
           expect(cohort.registration_start_date).to eq(ecf_cohort.npq_registration_start_date)
         end
       end
+
+      context "when start year is 2024" do
+        it "sets funding_cap to true" do
+          create(:ecf_migration_cohort, start_year: 2024)
+
+          instance.call
+          Cohort.find_each do |cohort|
+            if cohort.start_year == 2024
+              expect(cohort.funding_cap).to be(true)
+            else
+              expect(cohort.funding_cap).to be(false)
+            end
+          end
+        end
+      end
     end
   end
 end
