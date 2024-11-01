@@ -45,8 +45,6 @@ module Migration
       end
 
       def find_primary_user
-        raise_on_multiple_ecf_users_with_same_ecf_id!
-
         if user_does_not_exist_on_npq?
           return nil
         end
@@ -131,13 +129,6 @@ module Migration
 
       def user_does_not_exist_on_npq?
         user_by_ecf_user_id.nil? && user_by_ecf_user_gai_id.nil?
-      end
-
-      def raise_on_multiple_ecf_users_with_same_ecf_id!
-        # user.ecf_id is not validated as unique, check for duplicates
-        return unless ::User.where(ecf_id: ecf_user.id).count > 1
-
-        raise_error("ecf_user.id has multiple users in NPQ")
       end
 
       def only_ecf_id_return_user?
