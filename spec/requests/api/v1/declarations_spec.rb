@@ -57,7 +57,12 @@ RSpec.describe "Declaration endpoints", type: :request do
       void_api_v1_declaration_path(ecf_id: id)
     end
 
+    def get_path(id = nil)
+      api_v1_declaration_path(ecf_id: id)
+    end
+
     it_behaves_like "an API update endpoint"
+    it_behaves_like "a declaration void action"
   end
 
   describe "POST /api/v1/participant-declarations" do
