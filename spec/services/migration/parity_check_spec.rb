@@ -6,6 +6,8 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
   let(:enabled) { true }
 
   before do
+    ActiveJob::Base.queue_adapter = :test
+
     create_matching_ecf_lead_providers
 
     allow(Rails.application.config).to receive(:npq_separation) do
@@ -52,8 +54,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
     end
 
     it "returns false when a partiy check has completed" do
-      described_class.prepare!
-      instance.run!
+      Rails.cache.write(:parity_check_completed_at, 1.day.ago)
       expect(described_class).not_to be_running
     end
   end
@@ -69,8 +70,7 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
     end
 
     it "returns true when a partiy check has completed" do
-      described_class.prepare!
-      instance.run!
+      Rails.cache.write(:parity_check_completed_at, 1.day.ago)
       expect(described_class).to be_completed
     end
   end
@@ -84,11 +84,86 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
 
   describe ".completed_at" do
     it "returns the completed timestamp" do
-      described_class.prepare!
-      travel_to(1.day.from_now) do
-        instance.run!
-        expect(described_class.completed_at).to be_within(5.seconds).of(Time.zone.now)
-      end
+      Rails.cache.write(:parity_check_completed_at, 1.day.ago)
+      expect(described_class.completed_at).to be_within(5.seconds).of(1.day.ago)
+    end
+  end
+
+  describe ".finalise!" do
+    let(:job_args) { { lead_provider: create(:lead_provider), method: "get", path: "/path", options: {} } }
+
+    before { ActiveJob::Base.queue_adapter = :delayed_job }
+
+    it "sets the completed timestamp when there are no queued jobs and exactly one in-progress job" do
+      ParityCheckComparisonJob.perform_later(**job_args)
+      Delayed::Job.last.update!(locked_at: Time.zone.now)
+
+      described_class.finalise!
+
+      expect(described_class).to be_completed
+    end
+
+    it "does not set the completed timestamp when there are queued jobs and exactly one in-progress jobs" do
+      ParityCheckComparisonJob.perform_later(**job_args)
+      ParityCheckComparisonJob.perform_later(**job_args)
+      Delayed::Job.last.update!(locked_at: Time.zone.now)
+
+      described_class.finalise!
+
+      expect(described_class).not_to be_completed
+    end
+
+    it "does not set the completed timestamp when there are no queued jobs and more than one in-progress jobs" do
+      ParityCheckComparisonJob.perform_later(**job_args)
+      ParityCheckComparisonJob.perform_later(**job_args)
+      Delayed::Job.update!(locked_at: Time.zone.now)
+
+      described_class.finalise!
+
+      expect(described_class).not_to be_completed
+    end
+
+    it "does not set the completed timestamp when there are queued jobs and no in-progress jobs" do
+      ParityCheckComparisonJob.perform_later(**job_args)
+
+      described_class.finalise!
+
+      expect(described_class).not_to be_completed
+    end
+  end
+
+  describe ".progress" do
+    let(:job_args) { { lead_provider: create(:lead_provider), method: "get", path: "/path", options: {} } }
+
+    before { ActiveJob::Base.queue_adapter = :delayed_job }
+
+    it "returns the percentage of completed jobs" do
+      Rails.cache.write(:parity_check_job_count, 15)
+      ParityCheckComparisonJob.perform_later(**job_args)
+      ParityCheckComparisonJob.perform_later(**job_args)
+      Delayed::Job.last.update!(locked_at: Time.zone.now)
+
+      expect(described_class.progress).to eq(86.7)
+    end
+
+    it "returns 100 when all jobs have been completed" do
+      Rails.cache.write(:parity_check_job_count, 15)
+      expect(described_class.progress).to eq(100)
+    end
+
+    it "returns 0 when no jobs have been completed" do
+      Rails.cache.write(:parity_check_job_count, 15)
+      15.times { ParityCheckComparisonJob.perform_later(**job_args) }
+      expect(described_class.progress).to eq(0)
+    end
+
+    it "returns 100 when the job count is 0" do
+      Rails.cache.write(:parity_check_job_count, 0)
+      expect(described_class.progress).to eq(100)
+    end
+
+    it "returns 0 when the job count is not set" do
+      expect(described_class.progress).to eq(0)
     end
   end
 
@@ -99,12 +174,6 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
 
     context "when prepared" do
       before { described_class.prepare! }
-
-      it "sets the completed timestamp" do
-        run
-
-        expect(described_class.completed_at).to be_within(5.seconds).of(Time.zone.now)
-      end
 
       context "when the endpoints_file_path is not found" do
         let(:endpoints_file_path) { "missing.yml" }
@@ -118,135 +187,76 @@ RSpec.describe Migration::ParityCheck, :in_memory_rails_cache do
         it { expect { run }.to raise_error(described_class::UnsupportedEnvironmentError, "The parity check functionality is disabled for this environment") }
       end
 
+      context "when there are multiple endpoints" do
+        let(:endpoints_file_path) { "spec/fixtures/files/parity_check/multiple_endpoints.yml" }
+
+        it "stores the total job count" do
+          run
+
+          expect(Rails.cache.read(:parity_check_job_count)).to eq(5 * LeadProvider.count)
+        end
+      end
+
       context "when there are GET endpoints" do
         let(:endpoints_file_path) { "spec/fixtures/files/parity_check/get_endpoints.yml" }
 
-        it "calls the client for each lead provider with the correct options" do
-          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+        it "queues a comparison job for each lead provider with the correct options" do
+          expect { run }.to have_enqueued_job(ParityCheckComparisonJob).exactly(LeadProvider.count).times
 
-          run
+          method = "get"
+          path = "/api/v3/statements"
+          options = { paginate: true, exclude: %w[attribute] }
 
           LeadProvider.find_each do |lead_provider|
-            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+            expect(ParityCheckComparisonJob).to have_been_enqueued.with(
               lead_provider:,
-              method: "get",
-              path: "/api/v3/statements",
-              options: { paginate: true, exclude: %w[attribute] },
+              method:,
+              path:,
+              options:,
             )
           end
-          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
-        end
-
-        it "saves response comparisons for each endpoint and lead provider" do
-          client_double = instance_double(Migration::ParityCheck::Client)
-          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: %({ "foo": "bar", "attribute": "excluded" }), code: 200), response_ms: 100 }
-          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
-          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", 1)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
-
-          expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
-
-          expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
-            lead_provider: an_instance_of(LeadProvider),
-            request_path: "/formatted/path",
-            request_method: "get",
-            ecf_response_status_code: 200,
-            npq_response_status_code: 201,
-            ecf_response_body: %({\n  \"foo\": \"bar\"\n}),
-            npq_response_body: "npq_response_body",
-            ecf_response_time_ms: 100,
-            npq_response_time_ms: 150,
-            page: 1,
-          }))
         end
       end
 
       context "when there are POST endpoints" do
         let(:endpoints_file_path) { "spec/fixtures/files/parity_check/post_endpoints.yml" }
 
-        it "calls the client for each lead provider with the correct options" do
-          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+        it "queues a comparison job for each lead provider with the correct options" do
+          expect { run }.to have_enqueued_job(ParityCheckComparisonJob).exactly(LeadProvider.count).times
 
-          run
+          method = "post"
+          path = "/api/v1/npq-applications/:id/accept"
+          options = { id: "application_ecf_id_for_accept_with_funded_place", payload: { type: "npq-application-accept", attributes: { funded_place: true } } }
 
           LeadProvider.find_each do |lead_provider|
-            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+            expect(ParityCheckComparisonJob).to have_been_enqueued.with(
               lead_provider:,
-              method: "post",
-              path: "/api/v1/npq-applications/:id/accept",
-              options: { id: "application_ecf_id_for_accept_with_funded_place", payload: { type: "npq-application-accept", attributes: { funded_place: true } } },
+              method:,
+              path:,
+              options:,
             )
           end
-          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
-        end
-
-        it "saves response comparisons for each endpoint and lead provider" do
-          client_double = instance_double(Migration::ParityCheck::Client)
-          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
-          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
-          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", nil)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
-
-          expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
-
-          expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
-            lead_provider: an_instance_of(LeadProvider),
-            request_path: "/formatted/path",
-            request_method: "post",
-            ecf_response_status_code: 200,
-            npq_response_status_code: 201,
-            ecf_response_body: "ecf_response_body",
-            npq_response_body: "npq_response_body",
-            ecf_response_time_ms: 100,
-            npq_response_time_ms: 150,
-            page: nil,
-          }))
         end
       end
 
       context "when there are PUT endpoints" do
         let(:endpoints_file_path) { "spec/fixtures/files/parity_check/put_endpoints.yml" }
 
-        it "calls the client for each lead provider with the correct options" do
-          client_double = instance_double(Migration::ParityCheck::Client, make_requests: nil)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
+        it "queues a comparison job for each lead provider with the correct options" do
+          expect { run }.to have_enqueued_job(ParityCheckComparisonJob).exactly(LeadProvider.count).times
 
-          run
+          method = "put"
+          path = "/api/v1/npq-applications/:id/change-funded-place"
+          options = { id: "application_ecf_id_for_change_to_funded_place", payload: { type: "npq-application-change-funded-place", attributes: { funded_place: true } } }
 
           LeadProvider.find_each do |lead_provider|
-            expect(Migration::ParityCheck::Client).to have_received(:new).with(
+            expect(ParityCheckComparisonJob).to have_been_enqueued.with(
               lead_provider:,
-              method: "put",
-              path: "/api/v1/npq-applications/:id/change-funded-place",
-              options: { id: "application_ecf_id_for_change_to_funded_place", payload: { type: "npq-application-change-funded-place", attributes: { funded_place: true } } },
+              method:,
+              path:,
+              options:,
             )
           end
-          expect(client_double).to have_received(:make_requests).exactly(LeadProvider.count).times
-        end
-
-        it "saves response comparisons for each endpoint and lead provider" do
-          client_double = instance_double(Migration::ParityCheck::Client)
-          ecf_result_dpuble = { response: instance_double(HTTParty::Response, body: "ecf_response_body", code: 200), response_ms: 100 }
-          npq_result_double = { response: instance_double(HTTParty::Response, body: "npq_response_body", code: 201), response_ms: 150 }
-          allow(client_double).to receive(:make_requests).and_yield(ecf_result_dpuble, npq_result_double, "/formatted/path", nil)
-          allow(Migration::ParityCheck::Client).to receive(:new) { client_double }
-
-          expect { run }.to change(Migration::ParityCheck::ResponseComparison, :count).by(LeadProvider.count)
-
-          expect(Migration::ParityCheck::ResponseComparison.all).to all(have_attributes({
-            lead_provider: an_instance_of(LeadProvider),
-            request_path: "/formatted/path",
-            request_method: "put",
-            ecf_response_status_code: 200,
-            npq_response_status_code: 201,
-            ecf_response_body: "ecf_response_body",
-            npq_response_body: "npq_response_body",
-            ecf_response_time_ms: 100,
-            npq_response_time_ms: 150,
-            page: nil,
-          }))
         end
       end
     end

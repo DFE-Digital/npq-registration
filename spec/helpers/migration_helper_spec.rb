@@ -397,4 +397,16 @@ RSpec.describe MigrationHelper, type: :helper do
       it { is_expected.to be(false) }
     end
   end
+
+  describe ".parity_check_progress" do
+    it "returns the progress percentage when a whole number" do
+      allow(Migration::ParityCheck).to receive(:progress).and_return(100.0)
+      expect(helper.parity_check_progress).to eq("100%")
+    end
+
+    it "returns the progress when not a whole number" do
+      allow(Migration::ParityCheck).to receive(:progress).and_return(99.9)
+      expect(helper.parity_check_progress).to eq("99.9%")
+    end
+  end
 end

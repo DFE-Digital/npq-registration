@@ -10,6 +10,7 @@ module Migration
       def prepare!
         Rails.cache.write(:parity_check_started_at, Time.zone.now)
         Rails.cache.write(:parity_check_completed_at, nil)
+        Rails.cache.write(:parity_check_job_count, nil)
 
         # We want this to be fast, so we're not bothering with callbacks.
         Migration::ParityCheck::ResponseComparison.delete_all
@@ -30,6 +31,29 @@ module Migration
       def completed_at
         Rails.cache.read(:parity_check_completed_at)
       end
+
+      def finalise!
+        Delayed::Job.with_advisory_lock("finalise_parity_check") do
+          queued_jobs = Delayed::Job.where("handler LIKE ?", "%ParityCheckComparison%").where("locked_at IS NULL").exists?
+          in_progress_job_count = Delayed::Job.where("handler LIKE ?", "%ParityCheckComparison%").where.not("locked_at IS NULL").count
+
+          # All jobs call finalise!, but we only want the last running job
+          # to set the completed_at timestamp.
+          return if queued_jobs || in_progress_job_count != 1
+
+          Rails.cache.write(:parity_check_completed_at, Time.zone.now)
+        end
+      end
+
+      def progress
+        remaining_jobs_count = Delayed::Job.where("handler LIKE ?", "%ParityCheckComparison%").count
+        total_jobs_count = Rails.cache.read(:parity_check_job_count)
+
+        return 0 if total_jobs_count.nil?
+        return 100 if total_jobs_count.zero?
+
+        (((total_jobs_count - remaining_jobs_count.to_f) / total_jobs_count) * 100).round(1)
+      end
     end
 
     def initialize(endpoints_file_path: "config/parity_check_endpoints.yml")
@@ -41,13 +65,9 @@ module Migration
       raise NotPreparedError, "You must call prepare! before running the parity check" unless prepared?
       raise EndpointsFileNotFoundError, "Endpoints file not found: #{endpoints_file_path}" unless endpoints_file_exists?
 
-      threads = lead_providers.map do |lead_provider|
-        Thread.new { call_endpoints(lead_provider) }
-      end
+      set_job_count
 
-      threads.each(&:join)
-
-      finalise!
+      lead_providers.each { |lead_provider| queue_endpoints(lead_provider) }
     end
 
   private
@@ -64,36 +84,18 @@ module Migration
       Rails.root.join(endpoints_file_path)
     end
 
-    def call_endpoints(lead_provider)
+    def set_job_count
+      count = lead_providers.size * endpoints.sum { |_, paths| paths.size }
+
+      Rails.cache.write(:parity_check_job_count, count)
+    end
+
+    def queue_endpoints(lead_provider)
       endpoints.each do |method, paths|
         paths.each do |path, options|
-          client = Client.new(lead_provider:, method:, path:, options:)
-
-          client.make_requests do |ecf_result, npq_result, formatted_path, page|
-            save_comparison!(lead_provider:, path: formatted_path, method:, page:, ecf_result:, npq_result:, options:)
-          end
+          ParityCheckComparisonJob.perform_later(lead_provider:, method:, path:, options:)
         end
       end
-    end
-
-    def finalise!
-      Rails.cache.write(:parity_check_completed_at, Time.zone.now)
-    end
-
-    def save_comparison!(lead_provider:, path:, method:, page:, ecf_result:, npq_result:, options:)
-      Migration::ParityCheck::ResponseComparison.create!({
-        lead_provider:,
-        request_path: path,
-        request_method: method,
-        ecf_response_status_code: ecf_result[:response].code,
-        npq_response_status_code: npq_result[:response].code,
-        ecf_response_body: ecf_result[:response].body,
-        npq_response_body: npq_result[:response].body,
-        ecf_response_time_ms: ecf_result[:response_ms],
-        npq_response_time_ms: npq_result[:response_ms],
-        exclude: options[:exclude],
-        page:,
-      })
     end
 
     def endpoints

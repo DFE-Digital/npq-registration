@@ -8,7 +8,7 @@
     <h3 class="govuk-notification-banner__heading">
       A parity check is currently in-progress
     </h3>
-    <p class="govuk-body">It was started <%= tag.strong(time_ago_in_words(@parity_check_started_at)) %> ago.</p>
+    <p class="govuk-body">It was started <%= tag.strong(time_ago_in_words(@parity_check_started_at)) %> ago and is <%= tag.strong(parity_check_progress) %> complete.</p>
   </div>
 </div>
 

@@ -120,6 +120,10 @@ module MigrationHelper
     end
   end
 
+  def parity_check_progress
+    "#{Migration::ParityCheck.progress.to_s.chomp(".0")}%"
+  end
+
   def contains_duplicate_ids?(comparisons, attribute)
     ids = comparisons.map(&attribute).flatten
     ids.size != ids.uniq.size

@@ -1,0 +1,11 @@
+get:
+  "/path/1":
+  "/path/2":
+
+post:
+  "/path/3":
+
+put:
+  "/path/4":
+  "/path/5":
+
