@@ -15,4 +15,12 @@ RSpec.describe ParityCheckJob do
       expect(parity_check_double).to have_received(:run!).once
     end
   end
+
+  describe "#perform_later" do
+    it "schedules job in migration queue" do
+      expect {
+        described_class.perform_later
+      }.to have_enqueued_job(described_class).on_queue("high_priority")
+    end
+  end
 end

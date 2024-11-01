@@ -17,8 +17,8 @@ RSpec.describe MigrationJob do
   end
 
   describe "#perform_later" do
-    it "enqueues the job exactly once" do
-      expect { described_class.perform_later }.to have_enqueued_job(described_class).exactly(:once).on_queue("high_priority")
+    it "enqueues the job exactly once on migration queue" do
+      expect { described_class.perform_later }.to have_enqueued_job(described_class).exactly(:once).on_queue("migration")
     end
   end
 end
