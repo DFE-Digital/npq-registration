@@ -24,6 +24,7 @@ module Declarations
         clawing_back? ? clawback_declaration : void_declaration
 
         void_participant_outcome
+        declaration.reload
       end
 
       true
