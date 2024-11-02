@@ -57,9 +57,9 @@ module Migration::Migrators
           version_note: "Changes migrated from ECF to NPQ",
         }
 
-        if changed_ecf_user_attrs?(attrs, ecf_user)
-          attrs[:updated_at] = Time.zone.now
-        end
+        # if changed_ecf_user_attrs?(attrs, ecf_user)
+        #   attrs[:updated_at] = Time.zone.now
+        # end
 
         user.update!(attrs)
       end
