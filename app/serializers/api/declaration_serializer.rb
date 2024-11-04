@@ -35,12 +35,7 @@ module API
         field(:created_at)
       end
 
-      field(:updated_at) do |declaration|
-        (
-          declaration.participant_outcomes.map(&:updated_at) +
-          [declaration.updated_at]
-        ).compact.max
-      end
+      field(:updated_at)
     end
 
     %i[v1 v2 v3].each do |version|

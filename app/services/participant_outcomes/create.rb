@@ -35,7 +35,9 @@ module ParticipantOutcomes
         @created_outcome = if outcome_already_exists?
                              latest_existing_outcome
                            else
-                             build_outcome.tap(&:save!)
+                             new_outcome = build_outcome.tap(&:save!)
+                             new_outcome.declaration.touch(time: new_outcome.updated_at)
+                             new_outcome
                            end
       end
 
