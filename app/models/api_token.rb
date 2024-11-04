@@ -1,7 +1,12 @@
 class APIToken < ApplicationRecord
-  belongs_to :lead_provider
+  belongs_to :lead_provider, optional: true
 
   validates :hashed_token, presence: true
+
+  enum scope: {
+    lead_provider: "lead_provider",
+    teacher_record_service: "teacher_record_service",
+  }
 
   def self.create_with_random_token!(**options)
     unhashed_token, hashed_token = Devise.token_generator.generate(APIToken, :hashed_token)
