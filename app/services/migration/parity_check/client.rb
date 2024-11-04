@@ -15,9 +15,14 @@ module Migration
     end
 
     def make_requests(&block)
+      raise UnsupportedIdOption, "Unsupported id option: #{options[:id]}" unless id_option_supported?
+
       loop do
-        ecf_result = timed_response { send("#{method}_request", app: :ecf) }
-        npq_result = timed_response { send("#{method}_request", app: :npq) }
+        ecf_thread = Thread.new { timed_response { send("#{method}_request", app: :ecf) } }
+        npq_thread = Thread.new { timed_response { send("#{method}_request", app: :npq) } }
+
+        ecf_result = ecf_thread.value
+        npq_result = npq_thread.value
 
         block.call(ecf_result, npq_result, formatted_path, page)
 
@@ -101,6 +106,10 @@ module Migration
     end
 
   private
+
+    def id_option_supported?
+      options[:id].blank? || respond_to?(options[:id], true)
+    end
 
     def next_page?(ecf_response, npq_response)
       return false unless paginate?
@@ -188,9 +197,7 @@ module Migration
     def path_id
       return nil unless options[:id]
 
-      raise UnsupportedIdOption, "Unsupported id option: #{options[:id]}" unless respond_to?(options[:id], true)
-
-      send(options[:id]).to_s
+      @path_id ||= send(options[:id]).to_s
     end
 
     def application_ecf_id
