@@ -5,7 +5,7 @@ RSpec.describe APIToken, type: :model do
   let(:unhashed_token) { "XXX123" }
 
   describe "associations" do
-    it { is_expected.to belong_to(:lead_provider) }
+    it { is_expected.to belong_to(:lead_provider).optional }
   end
 
   describe "validations" do
