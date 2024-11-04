@@ -1,8 +1,10 @@
 FactoryBot.define do
+  sequence(:trn, 1_000_000) { |n| n }
+
   factory :user do
     sequence(:full_name) { |n| "John Doe #{n}" }
     sequence(:email) { Faker::Internet.email(name: full_name) }
-    trn { "1234567" }
+    trn { generate(:trn) }
     date_of_birth { 30.years.ago }
     ecf_id { SecureRandom.uuid }
 

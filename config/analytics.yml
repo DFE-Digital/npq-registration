@@ -272,3 +272,10 @@ shared:
     - email_updates_status
     - email_updates_unsubscribe_key
     - archived_at
+  :legacy_passed_participant_outcomes:
+    - id
+    - trn
+    - course_short_code
+    - completion_date
+    - created_at
+    - updated_at
