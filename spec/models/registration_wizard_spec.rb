@@ -6,7 +6,7 @@ RSpec.describe RegistrationWizard do
   let(:store) { {} }
   let(:session) { {} }
   let(:request) { ActionController::TestRequest.new({}, session, ApplicationController) }
-  let(:user) { create(:user) }
+  let(:user) { create(:user, trn: "1234567") }
   let(:current_step) { "share_provider" }
 
   before { create(:course, :additional_support_offer) }
