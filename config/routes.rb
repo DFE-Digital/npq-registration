@@ -152,6 +152,8 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      resources :qualifications, path: "npq-qualifications", only: %i[show], param: :trn
     end
 
     namespace :v2, defaults: { format: :json }, constraints: -> { Feature.ecf_api_disabled? } do
