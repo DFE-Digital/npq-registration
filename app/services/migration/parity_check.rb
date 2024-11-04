@@ -79,7 +79,7 @@ module Migration
         npq_response_body: npq_result[:response].body,
         ecf_response_time_ms: ecf_result[:response_ms],
         npq_response_time_ms: npq_result[:response_ms],
-        exclude: options[:exclude],
+        exclude: options&.dig(:exclude),
         page:,
       })
     end

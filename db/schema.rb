@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_04_105054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -282,7 +282,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
   create_table "itt_providers", force: :cascade do |t|
     t.text "legal_name"
     t.text "operating_name"
-    t.datetime "removed_at", precision: nil
+    t.date "removed_at"
     t.boolean "approved"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -403,8 +403,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
     t.string "request_method", null: false
     t.integer "ecf_response_status_code", null: false
     t.integer "npq_response_status_code", null: false
-    t.string "ecf_response_body"
-    t.string "npq_response_body"
+    t.text "ecf_response_body"
+    t.text "npq_response_body"
     t.integer "ecf_response_time_ms", null: false
     t.integer "npq_response_time_ms", null: false
     t.bigint "lead_provider_id", null: false
@@ -526,10 +526,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
     t.boolean "active_alert", default: false
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
+    t.string "feature_flag_id"
     t.string "provider"
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
-    t.string "feature_flag_id"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"

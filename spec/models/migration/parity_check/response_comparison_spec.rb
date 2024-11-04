@@ -43,14 +43,6 @@ RSpec.describe Migration::ParityCheck::ResponseComparison, type: :model do
       expect(response_comparison.npq_response_body).to be_nil
     end
 
-    it "converts CSV response bodies to a hexdigest" do
-      response_comparison = build(:response_comparison, request_path: "/path.csv", ecf_response_body: "ecf_response", npq_response_body: "npq_response")
-      response_comparison.valid?
-
-      expect(response_comparison.ecf_response_body).to eq("051e069f1405735e3c348cae238eaee95a20c898e950e23c63f118df1518327e")
-      expect(response_comparison.npq_response_body).to eq("bdbfa59f301e06b4598976d83df868f62b2c1ce3aad679ee9034370fdaf9ea31")
-    end
-
     it "performs a deep sort on JSON response bodies" do
       response_comparison = build(:response_comparison, ecf_response_body: %({ "foo": "bar", "baz": [2, 1] }), npq_response_body: %({ "foo": "baz", "bar": [5, 1, 4] }))
       response_comparison.valid?

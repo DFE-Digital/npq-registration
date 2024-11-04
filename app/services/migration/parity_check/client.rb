@@ -134,7 +134,7 @@ module Migration
     end
 
     def get_request(app:)
-      HTTParty.get(url(app:), query:, headers:)
+      HTTParty.get(url(app:), query:, headers:, timeout: 5.minutes)
     end
 
     def post_request(app:)

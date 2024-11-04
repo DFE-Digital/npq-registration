@@ -2,7 +2,7 @@ module Migration
   class ParityCheck::ResponseComparison < ApplicationRecord
     attr_accessor :exclude
 
-    before_validation :digest_csv_response_bodies, :format_json_response_bodies, :populate_response_body_ids, :clear_response_bodies_when_equal
+    before_validation :format_json_response_bodies, :populate_response_body_ids, :clear_response_bodies_when_equal
 
     belongs_to :lead_provider
 
@@ -103,13 +103,6 @@ module Migration
       @npq_response_body_hash ||= deep_remove_keys(JSON.parse(npq_response_body).deep_sort, exclude)
     rescue JSON::ParserError, TypeError
       nil
-    end
-
-    def digest_csv_response_bodies
-      return unless request_path&.include?(".csv")
-
-      self.ecf_response_body = Digest::SHA2.hexdigest(ecf_response_body) if ecf_response_body
-      self.npq_response_body = Digest::SHA2.hexdigest(npq_response_body) if npq_response_body
     end
 
     def clear_response_bodies_when_equal
