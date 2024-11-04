@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.shared_examples "a application accept action" do
+RSpec.shared_examples "an application accept action" do
   context "when accepting an application" do
     let(:cohort) { create(:cohort, :current, funding_cap: true) }
     let(:course) { create(:course, :senior_leadership) }
@@ -22,7 +22,7 @@ RSpec.shared_examples "a application accept action" do
   end
 end
 
-RSpec.shared_examples "a application reject action" do
+RSpec.shared_examples "an application reject action" do
   context "when rejecting an application" do
     it "returns the updated attributes" do
       api_post(path(resource_id))
@@ -33,7 +33,7 @@ RSpec.shared_examples "a application reject action" do
   end
 end
 
-RSpec.shared_examples "a application change funded place action" do
+RSpec.shared_examples "an application change funded place action" do
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
   let(:course) { create(:course, :senior_leadership) }
   let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group: course.course_group, cohort:) }
