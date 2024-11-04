@@ -12,3 +12,5 @@
   lead_provider = LeadProvider.where("name LIKE ?", "#{name}%").first!
   APIToken.create_with_known_token!(token, lead_provider:)
 end
+
+APIToken.create_with_known_token!("trs-token", scope: "teacher_record_service")

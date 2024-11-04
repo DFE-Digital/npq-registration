@@ -92,6 +92,14 @@ class ParticipantOutcome < ApplicationRecord
             sent_to_qualified_teachers_api_at: nil)
   end
 
+  def trn
+    user.trn
+  end
+
+  def course_short_code
+    course.short_code
+  end
+
 private
 
   def completion_date_not_in_the_future
