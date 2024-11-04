@@ -48,3 +48,11 @@ else
   echo "Fail: database is not populated"
   exit 1
 fi
+
+html_page_response=$(curl -sL --fail $url/)
+if [[ -n $html_page_response ]]; then
+  echo "✅ HTML response is successful"
+else
+  echo "Fail: HTML response is unsuccessful"
+  exit 1
+fi
