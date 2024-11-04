@@ -19,6 +19,7 @@ module Applications
       return false unless valid?
 
       application.update!(funded_place:)
+      application.reload
     end
 
   private
