@@ -85,7 +85,12 @@ module Migration::Migrators
 
         application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
         application.version_note = "Changes migrated from ECF to NPQ"
-        application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES).merge(skip_touch_user_if_changed: true))
+
+        attrs = ecf_npq_application.attributes.slice(*ATTRIBUTES).merge(skip_touch_user_if_changed: true)
+
+        attrs[:updated_at] = Time.zone.now if provider_only_in_npq?(application, ecf_npq_application)
+
+        application.update!(attrs)
       end
 
       run_once { backfill_ecf_ids }
@@ -94,6 +99,11 @@ module Migration::Migrators
     end
 
   private
+
+    def provider_only_in_npq?(application, ecf_npq_application)
+      ecf_npq_application.itt_provider.nil? && application.itt_provider_including_disabled.present? ||
+        ecf_npq_application.private_childcare_provider_urn.nil? && application.private_childcare_provider_including_disabled.present?
+    end
 
     def report_applications_not_in_ecf_as_failures
       applications_not_in_ecf = ::Application.where.not(ecf_id: self.class.ecf_npq_applications.pluck(:id)).select(:id)

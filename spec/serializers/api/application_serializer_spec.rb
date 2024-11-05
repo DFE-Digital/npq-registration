@@ -116,7 +116,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
 
       subject(:attributes) { JSON.parse(described_class.render(application.reload))["attributes"] }
 
-      context "when the `itt_provider`` is set" do
+      context "when the `itt_provider` is set" do
         let(:itt_provider) { create(:itt_provider) }
 
         it "serializes the `itt_provider`" do
