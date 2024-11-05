@@ -110,9 +110,18 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     end
 
     describe "itt_provider serialization" do
-      it "serializes the `itt_provider`" do
-        itt_provider.legal_name = "provider"
-        expect(attributes["itt_provider"]).to eq(itt_provider.legal_name)
+      # We need to persist and then reload the application
+      # to ensure the default scope is applied/accounted for.
+      before { application.save! }
+
+      subject(:attributes) { JSON.parse(described_class.render(application.reload))["attributes"] }
+
+      context "when the `itt_provider`` is set" do
+        let(:itt_provider) { create(:itt_provider) }
+
+        it "serializes the `itt_provider`" do
+          expect(attributes["itt_provider"]).to eq(itt_provider.legal_name)
+        end
       end
 
       context "when `itt_provider` is `nil`" do
@@ -122,10 +131,9 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       end
 
       context "when the `itt_provider` is disabled" do
-        let(:itt_provider) { build(:itt_provider, :disabled) }
+        let(:itt_provider) { create(:itt_provider, :disabled, legal_name: "disabled provider") }
 
         it "serializes the `itt_provider`" do
-          itt_provider.legal_name = "provider"
           expect(attributes["itt_provider"]).to eq(itt_provider.legal_name)
         end
       end
@@ -158,9 +166,18 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
     end
 
     describe "private_childcare_provider serialization" do
-      it "serializes the `private_childcare_provider_urn`" do
-        private_childcare_provider.provider_urn = "2345678"
-        expect(attributes["private_childcare_provider_urn"]).to eq(private_childcare_provider.provider_urn)
+      # We need to persist and then reload the application
+      # to ensure the default scope is applied/accounted for.
+      before { application.save! }
+
+      subject(:attributes) { JSON.parse(described_class.render(application.reload))["attributes"] }
+
+      context "when the `private_childcare_provider` is set" do
+        let(:private_childcare_provider) { create(:private_childcare_provider) }
+
+        it "serializes the `private_childcare_provider_urn`" do
+          expect(attributes["private_childcare_provider_urn"]).to eq(private_childcare_provider.provider_urn)
+        end
       end
 
       context "when `private_childcare_provider` is `nil`" do
@@ -170,10 +187,9 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       end
 
       context "when the `private_childcare_provider` is disabled" do
-        let(:private_childcare_provider) { build(:private_childcare_provider, :disabled) }
+        let(:private_childcare_provider) { create(:private_childcare_provider, :disabled, provider_urn: "disabled urn") }
 
-        it "serializes the `private_childcare_provider_urn`" do
-          private_childcare_provider.provider_urn = "2345678"
+        it "serializes the `private_childcare_provider`" do
           expect(attributes["private_childcare_provider_urn"]).to eq(private_childcare_provider.provider_urn)
         end
       end

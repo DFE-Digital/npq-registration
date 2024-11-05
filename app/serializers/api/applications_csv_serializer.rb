@@ -65,7 +65,7 @@ module API
         application.user.trn_verified,
         application.school&.urn,
         application.ukprn,
-        application.private_childcare_provider&.provider_urn,
+        application.private_childcare_provider_including_disabled&.provider_urn,
         application.headteacher_status,
         application.eligible_for_funding,
         application.funded_place,
@@ -83,7 +83,7 @@ module API
         teacher_catchment(application),
         application.teacher_catchment_country,
         application.teacher_catchment_iso_country_code,
-        application.itt_provider&.legal_name,
+        application.itt_provider_including_disabled&.legal_name,
         application.lead_mentor,
       ]
     end
