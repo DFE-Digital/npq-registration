@@ -33,7 +33,7 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
-          url: "https://npq-registration-separation-web.teacherservices.cloud/",
+          url: "http://0.0.0.0:3000", # Replaced in hosted environments by config/initializers/swagger_server_url.rb
         },
       ],
       components: {

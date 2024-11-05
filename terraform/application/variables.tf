@@ -31,7 +31,9 @@ variable "azure_maintenance_window" {
   })
   default = null
 }
-
+variable "config" {
+  description = "Long name of the environment configuration, e.g. review, development, production..."
+}
 variable "config_short" {
   description = "Short name of the environment configuration, e.g. dv, st, pd..."
 }
@@ -129,7 +131,11 @@ variable "postgres_enable_high_availability" {
 }
 variable "enable_logit" { default = false }
 locals {
+  environment_variables = yamldecode(file("${path.module}/config/${var.config}.yml"))
+
   azure_credentials = try(jsondecode(var.azure_credentials_json), null)
+  access_domain          = "${var.service_name}-${var.environment}${var.pull_request_number}-web.${module.cluster_data.ingress_domain}"
+  access_external_domain = try(local.environment_variables["ACCESS_EXTERNAL_DOMAIN"], local.access_domain)
 
   postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
 }
