@@ -40,7 +40,10 @@ class Statement < ApplicationRecord
   state_machine :state, initial: :open do
     state :open
     state :payable
-    state :paid
+
+    state :paid do
+      validates :marked_as_paid_at, presence: true
+    end
 
     event :mark_payable do
       transition [:open] => :payable
