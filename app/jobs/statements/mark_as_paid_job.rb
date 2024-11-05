@@ -2,6 +2,10 @@
 
 module Statements
   class MarkAsPaidJob < ApplicationJob
+    discard_on StandardError do |_job, exception|
+      Sentry.capture_exception(exception)
+    end
+
     def perform(statement_id:)
       return unless statement_id
 

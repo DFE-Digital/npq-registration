@@ -146,6 +146,7 @@ RSpec.configure do |config|
     end
   end
 
+  config.include ActiveJob::TestHelper, type: :job
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
