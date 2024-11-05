@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::SchoolsController, type: :request do
+RSpec.describe NpqSeparation::Admin::SchoolsController, :ecf_api_disabled, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   before { sign_in_as_admin }

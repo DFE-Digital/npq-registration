@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing statements", type: :feature do
+RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   let(:statements_per_page) { Pagy::DEFAULT[:limit] }

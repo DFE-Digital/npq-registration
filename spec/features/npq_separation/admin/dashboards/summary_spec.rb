@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Viewing summary dashboard", type: :feature do
+RSpec.feature "Viewing summary dashboard", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   before do

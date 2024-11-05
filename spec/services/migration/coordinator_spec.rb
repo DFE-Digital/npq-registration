@@ -3,10 +3,9 @@ require "rails_helper"
 RSpec.describe Migration::Coordinator do
   include ActiveJob::TestHelper
 
-  let(:migration_enabled) { true }
   let(:instance) { described_class.new }
 
-  before { allow(Rails.application.config).to receive(:npq_separation) { { migration_enabled: } } }
+  before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
 
   describe ".prepare_for_migration" do
     it "calls prepare! on each migrator" do
@@ -29,7 +28,7 @@ RSpec.describe Migration::Coordinator do
     end
 
     context "when migration is disabled" do
-      let(:migration_enabled) { false }
+      before { allow(Feature).to receive(:ecf_api_disabled?).and_return(false) }
 
       it { expect { migrate }.to raise_error(described_class::UnsupportedEnvironmentError, "The migration functionality is disabled for this environment") }
     end

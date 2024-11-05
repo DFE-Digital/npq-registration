@@ -25,9 +25,7 @@ module Migration
   private
 
     def check_environment!
-      migration_enabled = Rails.application.config.npq_separation[:migration_enabled]
-
-      raise UnsupportedEnvironmentError, "The migration functionality is disabled for this environment" unless migration_enabled
+      raise UnsupportedEnvironmentError, "The migration functionality is disabled for this environment" unless Feature.ecf_api_disabled?
     end
 
     def run_migration

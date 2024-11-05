@@ -104,4 +104,12 @@ RSpec.describe Feature do
       it { is_expected.not_to be_maintenance_banner_enabled }
     end
   end
+
+  describe "#enable_ecf_api_disabled!" do
+    it "enables ecf_api_disabled feature" do
+      expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(false)
+      Feature.enable_ecf_api_disabled!
+      expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(true)
+    end
+  end
 end

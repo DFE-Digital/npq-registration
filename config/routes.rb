@@ -109,7 +109,7 @@ Rails.application.routes.draw do
   get "/admin", to: "admin#show"
 
   namespace :api do
-    constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
+    constraints -> { Feature.ecf_api_disabled? } do
       get :guidance, to: "guidance#index"
       get "guidance/*page", to: "guidance#show", as: :guidance_page
       get "docs/:version", to: "documentation#index", as: :documentation
@@ -120,7 +120,7 @@ Rails.application.routes.draw do
         resource :webhook_messages, only: %i[create]
       end
 
-      constraints -> { Rails.application.config.npq_separation[:api_enabled] } do
+      constraints -> { Feature.ecf_api_disabled? } do
         defaults format: :json do
           resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
             member do
@@ -154,7 +154,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :v2, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
+    namespace :v2, defaults: { format: :json }, constraints: -> { Feature.ecf_api_disabled? } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         member do
           post :reject, path: "reject"
@@ -187,7 +187,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :v3, defaults: { format: :json }, constraints: ->(_request) { Rails.application.config.npq_separation[:api_enabled] } do
+    namespace :v3, defaults: { format: :json }, constraints: -> { Feature.ecf_api_disabled? } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         member do
           post :reject, path: "reject"
@@ -222,7 +222,7 @@ Rails.application.routes.draw do
   end
 
   namespace :npq_separation, path: "npq-separation" do
-    constraints(->(_request) { Rails.application.config.npq_separation[:admin_portal_enabled] }) do
+    constraints(-> { Feature.ecf_api_disabled? }) do
       get "admin", to: "admin/dashboards/summary#show"
       namespace :admin do
         namespace :dashboards do
@@ -256,7 +256,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :migration, constraints: ->(_request) { Rails.application.config.npq_separation[:migration_enabled] } do
+    namespace :migration, constraints: -> { Feature.ecf_api_disabled? } do
       resources :migrations, only: %i[index create] do
         get "download_report/:model", on: :collection, action: :download_report, as: :download_report
       end

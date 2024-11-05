@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Migration", :in_memory_rails_cache, :rack_test_driver, type: :feature do
+RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
 
   context "when not authenticated" do

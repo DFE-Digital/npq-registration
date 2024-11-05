@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Maintenance banner" do
+RSpec.feature "Maintenance banner", :ecf_api_disabled do
   before do
     Flipper.enable(Feature::MAINTENANCE_BANNER)
     stub_const("Banners::MaintenanceComponent::MAINTENANCE_WINDOW", 1.day.ago..1.day.from_now)
