@@ -21,11 +21,11 @@ RSpec.describe Migration::Migrators::School do
         expect { instance.call }.to change { data_migration.reload.processed_count }.by(Migration::Ecf::School.count - 1)
       end
 
-      it "records a failure when the school matches on URN but not name" do
+      it "returns school based on urn even if name is different" do
         ecf_school = create(:ecf_migration_school, :with_applications)
         create(:school, urn: ecf_school.urn, name: "Different Name")
         instance.call
-        expect(failure_manager).to have_received(:record_failure).with(ecf_school, /Couldn't find School/)
+        expect(failure_manager).not_to have_received(:record_failure).with(ecf_school, /Couldn't find School/)
       end
     end
   end
