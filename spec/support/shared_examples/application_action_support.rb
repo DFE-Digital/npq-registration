@@ -13,6 +13,8 @@ RSpec.shared_examples "an application accept action" do
     let(:attributes) { { funded_place: true, schedule_identifier: schedule.identifier } }
 
     it "returns the updated attributes" do
+      expect_any_instance_of(Application).to receive(:reload).and_call_original
+
       api_post(path(resource_id), params:)
       expect(response.status).to eq 200
       expect(parsed_response["data"]["id"]).to eq(resource_id)
@@ -25,6 +27,8 @@ end
 RSpec.shared_examples "an application reject action" do
   context "when rejecting an application" do
     it "returns the updated attributes" do
+      expect_any_instance_of(Application).to receive(:reload).and_call_original
+
       api_post(path(resource_id))
       expect(response.status).to eq 200
       expect(parsed_response["data"]["id"]).to eq(resource_id)
@@ -44,6 +48,8 @@ RSpec.shared_examples "an application change funded place action" do
 
   context "when changing funded place for a application" do
     it "returns the updated attributes" do
+      expect_any_instance_of(Application).to receive(:reload).and_call_original
+
       schedule
       api_put(path(resource_id), params:)
       expect(response.status).to eq 200
