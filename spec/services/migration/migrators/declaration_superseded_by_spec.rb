@@ -26,6 +26,15 @@ RSpec.describe Migration::Migrators::DeclarationSupersededBy do
         superseded_by_declaration = Declaration.find_by(ecf_id: ecf_resource1.superseded_by_id)
         expect(declaration.superseded_by_id).to eq(superseded_by_declaration.id)
       end
+
+      it "does not update the timestamp on the declarations" do
+        declaration = Declaration.find_by(ecf_id: ecf_resource1.id)
+        declaration_updated_at = declaration.updated_at
+
+        instance.call
+
+        expect(declaration_updated_at).to eq(declaration.reload.updated_at)
+      end
     end
   end
 end
