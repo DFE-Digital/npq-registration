@@ -130,12 +130,24 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when from payable to paid" do
-      let(:statement) { create(:statement, :payable, marked_as_paid_at: 1.week.ago) }
+      let(:statement) { create(:statement, :payable) }
 
-      it "transitions state to payable" do
-        expect(statement).to be_payable
-        statement.mark_paid!
-        expect(statement).to be_paid
+      context "with mark_as_paid_at set" do
+        before { statement.update(marked_as_paid_at: Time.zone.now) }
+
+        it "transitions state to payable" do
+          expect(statement).to be_payable
+          statement.mark_paid!
+          expect(statement).to be_paid
+        end
+      end
+
+      context "without mark_as_paid_at being set" do
+        it "raises an error" do
+          expect(statement.reload).to be_payable
+          expect { statement.mark_paid! }.to raise_error(StateMachines::InvalidTransition)
+          expect(statement.reload).to be_payable
+        end
       end
     end
 
