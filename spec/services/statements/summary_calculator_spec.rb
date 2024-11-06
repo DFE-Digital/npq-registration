@@ -244,6 +244,18 @@ RSpec.describe Statements::SummaryCalculator do
         expect(subject.total_voided).to eq(1)
       end
     end
+
+    context "when there are multiple declarations for the same application" do
+      before do
+        create(:declaration, :voided, application: application, lead_provider: lead_provider).tap { create(:statement_item, declaration: _1, statement:) }
+        create(:declaration, :voided, application: application, lead_provider: lead_provider).tap { create(:statement_item, declaration: _1, statement:) }
+        create(:declaration, :voided, lead_provider: lead_provider).tap { create(:statement_item, declaration: _1, statement:) }
+      end
+
+      it "counts them" do
+        expect(subject.total_voided).to eq(2)
+      end
+    end
   end
 
   context "when there exists contracts over multiple cohorts" do

@@ -43,6 +43,21 @@ RSpec.describe Statements::CourseCalculator do
       expect(subject.billable_declarations_count_for_declaration_type("retained")).to eql(4)
       expect(subject.billable_declarations_count_for_declaration_type("completed")).to eql(2)
     end
+
+    context "when there are multiple declarations from same application and same type" do
+      before do
+        Declaration.update_all(application_id: application.id)
+      end
+
+      it "they are counted once per application", :aggregate_failures do
+        # expect(subject.billable_declarations_count_for_declaration_type("started")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: "started").count)
+        # expect(subject.billable_declarations_count_for_declaration_type("retained")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: %w[retained-1 retained-2]).count)
+        # expect(subject.billable_declarations_count_for_declaration_type("completed")).to eql(ParticipantDeclaration::NPQ.where(declaration_type: "completed").count)
+        expect(subject.billable_declarations_count_for_declaration_type("started")).to eql(1)
+        expect(subject.billable_declarations_count_for_declaration_type("retained")).to eql(2)
+        expect(subject.billable_declarations_count_for_declaration_type("completed")).to eql(1)
+      end
+    end
   end
 
   describe "#billable_declarations_count" do
