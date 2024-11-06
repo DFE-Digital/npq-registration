@@ -502,6 +502,20 @@ RSpec.describe Application do
             expect(user.updated_at).to eq(Time.zone.now)
           end
         end
+
+        context "when skip_touch_user_if_changed is true" do
+          it "does not update user.updated_at" do
+            freeze_time do
+              expect(user.updated_at).to be_within(1.second).of(old_datetime)
+              expect(application.updated_at).to be_within(1.second).of(old_datetime)
+
+              application.update!(lead_provider_approval_status: "rejected", skip_touch_user_if_changed: true)
+
+              expect(application.updated_at).to eq(Time.zone.now)
+              expect(user.updated_at).to be_within(1.second).of(old_datetime)
+            end
+          end
+        end
       end
 
       context "when lead_provider_approval_status is not changed" do

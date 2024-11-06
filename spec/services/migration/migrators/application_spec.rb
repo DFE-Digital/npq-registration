@@ -161,6 +161,15 @@ RSpec.describe Migration::Migrators::Application do
         end
       end
 
+      it "does not touch the user updated_at when the application has a different lead_provider_approval_status in ECF" do
+        ecf_application = travel_to(3.days.ago) { create_ecf_resource }
+        application = create_npq_resource(ecf_application).tap { |a| a.update!(lead_provider_approval_status: :rejected) }
+
+        expect(application.lead_provider_approval_status).not_to eq(ecf_application.lead_provider_approval_status)
+
+        expect { instance.call }.not_to(change { application.reload.user.updated_at })
+      end
+
       context "when backfilling existing applications" do
         it "sets `ecf_id`" do
           application = create(:application, ecf_id: nil)
