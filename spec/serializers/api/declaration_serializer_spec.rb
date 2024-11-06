@@ -55,16 +55,6 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
             end
           end
 
-          context "when participant_outcome is the latest" do
-            before do
-              declaration.participant_outcomes.first.update!(updated_at: latest_datetime)
-            end
-
-            it "returns participant_outcome's `updated_at`" do
-              expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
-            end
-          end
-
           context "when a linked statement item is moved to another statement" do
             let!(:statement_item) { create(:statement_item, declaration:) }
 

@@ -8,7 +8,11 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
   let(:course_identifier) { described_class::PERMITTED_COURSES.sample }
   let(:course) { Course.find_by(identifier: course_identifier) }
   let(:state) { described_class::STATES.sample }
-  let(:completed_declaration) { create(:declaration, :completed, :payable, course:) }
+  let!(:completed_declaration) do
+    travel_to(2.days.ago) do
+      create(:declaration, :completed, :payable, course:)
+    end
+  end
   let(:instance) { described_class.new(lead_provider:, participant_id:, completion_date:, state:, course_identifier:) }
 
   describe "validations" do
@@ -150,9 +154,25 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
           end
         end
       end
+
+      it "does not update the completed declaration `updated_at`" do
+        freeze_time do
+          expect(completed_declaration.updated_at).to be_within(1.second).of(2.days.ago)
+
+          create_outcome
+
+          expect(completed_declaration.updated_at).to be_within(1.second).of(2.days.ago)
+        end
+      end
     end
 
-    context "when an existing participant outcome does not exist" do
+    context "when a participant outcome does not exist" do
+      let!(:completed_declaration) do
+        travel_to(2.days.ago) do
+          create(:declaration, :completed, :payable, course:)
+        end
+      end
+
       it { is_expected.to be(true) }
 
       it "creates a new participant outcome, assigning it to created_outcome" do
@@ -165,6 +185,14 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
         })
 
         expect(created_outcome.ecf_id).to be_present
+      end
+
+      it "updates the completed declaration `updated_at`" do
+        freeze_time do
+          create_outcome
+
+          expect(completed_declaration.reload.updated_at).to eq(Time.zone.now)
+        end
       end
     end
 

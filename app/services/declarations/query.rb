@@ -38,8 +38,7 @@ module Declarations
       return if ignore?(filter: updated_since)
 
       declarations_updated_since = Declaration.where(updated_at: updated_since..)
-      participant_outcomes_updated_since = Declaration.where(participant_outcomes: { updated_at: updated_since.. })
-      scope.merge!(declarations_updated_since.or(participant_outcomes_updated_since))
+      scope.merge!(declarations_updated_since)
     end
 
     def where_participant_ids_in(participant_ids)
