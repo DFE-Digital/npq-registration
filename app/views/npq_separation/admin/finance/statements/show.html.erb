@@ -147,7 +147,8 @@
   </div>
 </div>
 
-<% @statement.contracts.each do |contract| %>
+<% @statement.contracts.joins(:course).order(identifier: :asc).each do |contract| %>
+  <p>&darr; Contract ID <%= contract.id %></p>
   <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
 <% end %>
 
@@ -163,7 +164,7 @@
       end
 
       table.with_body do |body|
-        @statement.contracts.each do |contract|
+        @statement.contracts.joins(:course).order(identifier: :asc).each do |contract|
           body.with_row do |row|
             row.with_cell(text: contract.course.name)
             row.with_cell(text: contract.contract_template.recruitment_target)

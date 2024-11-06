@@ -45,10 +45,10 @@ private
   helper_method :current_admin
 
   def set_feature_flag_users
-    return unless Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED)
+    # return unless Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED)
 
-    users = User.where(email: ClosedRegistrationUser.pluck(:email))
-    users.each { |u| Flipper.enable_actor(Feature::REGISTRATION_OPEN, u) }
+    # users = User.where(email: ClosedRegistrationUser.pluck(:email))
+    # users.each { |u| Flipper.enable_actor(Feature::REGISTRATION_OPEN, u) }
   end
 
   def initialize_store

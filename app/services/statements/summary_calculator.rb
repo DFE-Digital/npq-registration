@@ -86,7 +86,10 @@ module Statements
 
     def voided_declarations
       # statement.participant_declarations.voided.unique_id
-      statement.declarations.where(state: 'voided').distinct(:application_id)
+      statement.declarations
+               .select(:application_id)
+               .distinct(:application_id)
+               .where(state: 'voided')
     end
 
     def statement_declarations_per_contract(contract)

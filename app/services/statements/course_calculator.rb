@@ -102,6 +102,8 @@ module Statements
       scope = statement_items
         .billable
         .joins(:declaration)
+        .select('(application_id, declaration_type::text)')
+        .distinct('(application_id, declaration_type::text)')
 
       scope = if declaration_type == "retained"
                 scope.where(declaration: { declaration_type: ["retained-1", "retained-2"] })
@@ -124,7 +126,7 @@ module Statements
     end
 
     def allowed_declaration_types
-      course.schedule_for(cohort:).allowed_declaration_types
+      course.schedule_for(cohort:).allowed_declaration_types.sort_by { Schedule::DECLARATION_TYPES.index(_1) }
     end
 
     # def declaration_count_for_milestone(milestone)
