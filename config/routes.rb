@@ -75,6 +75,8 @@ Rails.application.routes.draw do
 
     resources :schools, only: %i[index show]
 
+    resources :features, only: %i[index]
+
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
 
@@ -82,9 +84,9 @@ Rails.application.routes.draw do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
 
-    constraints HasFlipperAccess do
-      mount Flipper::UI.app(Flipper) => "/feature_flags"
-    end
+    # constraints HasFlipperAccess do
+    #   mount Flipper::UI.app(Flipper) => "/feature_flags"
+    # end
 
     resources "settings"
     resources :closed_registration_users do
