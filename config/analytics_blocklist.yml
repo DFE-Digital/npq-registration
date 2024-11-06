@@ -1,0 +1,125 @@
+---
+shared:
+  :versions:
+    - id
+    - item_type
+    - item_id
+    - event
+    - whodunnit
+    - object
+    - object_changes
+    - note
+    - created_at
+  :delayed_jobs:
+    - id
+    - priority
+    - attempts
+    - handler
+    - last_error
+    - run_at
+    - locked_at
+    - failed_at
+    - locked_by
+    - queue
+    - created_at
+    - updated_at
+    - cron
+  :sessions:
+    - id
+    - session_id
+    - data
+    - created_at
+    - updated_at
+  :get_an_identity_webhook_messages:
+    - id
+    - raw
+    - message
+    - message_id
+    - message_type
+    - status
+    - status_comment
+    - sent_at
+    - processed_at
+    - created_at
+    - updated_at
+  :reports:
+    - id
+    - identifier
+    - data
+    - created_at
+    - updated_at
+  :api_tokens:
+    - id
+    - lead_provider_id
+    - hashed_token
+    - last_used_at
+    - created_at
+    - updated_at
+  :admins:
+    - id
+    - email
+    - full_name
+    - super_admin
+    - otp_hash
+    - otp_expires_at
+    - created_at
+    - updated_at
+  :flipper_gates:
+    - id
+    - feature_key
+    - key
+    - value
+    - created_at
+    - updated_at
+  :flipper_features:
+    - id
+    - key
+    - created_at
+    - updated_at
+  :ecf_sync_request_logs:
+    - id
+    - syncable_id
+    - syncable_type
+    - status
+    - sync_type
+    - error_messages
+    - response_body
+    - created_at
+    - updated_at
+  :closed_registration_users:
+    - id
+    - email
+    - created_at
+    - updated_at
+  :users:
+    - email
+    - trn
+    - full_name
+    - date_of_birth
+    - national_insurance_number
+    - archived_email
+    - raw_tra_provider_data
+  :applications:
+    - raw_application_data
+    - DEPRECATED_school_urn
+  :contract_templates:
+    - id
+    - recruitment_target
+    - service_fee_installments
+    - service_fee_percentage
+    - per_participant
+    - number_of_payment_periods
+    - output_payment_percentage
+    - monthly_service_fee
+    - targeted_delivery_funding_per_participant
+    - special_course
+    - ecf_id
+    - created_at
+    - updated_at
+  :contracts:
+    - id
+    - statement_id
+    - course_id
+    - contract_template_id
+    - created_at
+    - updated_at
