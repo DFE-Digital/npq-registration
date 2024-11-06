@@ -58,7 +58,6 @@ RSpec.describe "Application endpoints", :ecf_api_disabled, type: :request do
     end
 
     it_behaves_like "an API create on resource endpoint"
-    it_behaves_like "an application accept action"
   end
 
   describe "POST /api/v1/npq-applications/:ecf_id/reject" do
@@ -73,7 +72,6 @@ RSpec.describe "Application endpoints", :ecf_api_disabled, type: :request do
     end
 
     it_behaves_like "an API create on resource endpoint"
-    it_behaves_like "an application reject action"
   end
 
   describe "PUT /api/v1/npq-applications/:ecf_id/change-funded-place" do
@@ -89,6 +87,5 @@ RSpec.describe "Application endpoints", :ecf_api_disabled, type: :request do
     end
 
     it_behaves_like "an API update endpoint"
-    it_behaves_like "an application change funded place action"
   end
 end

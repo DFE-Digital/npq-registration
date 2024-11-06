@@ -67,6 +67,12 @@ RSpec.describe Declarations::Void, type: :model do
 
     it { is_expected.to be(true) }
 
+    it "reloads declaration after action" do
+      allow(instance.declaration).to receive(:reload)
+      void
+      expect(instance.declaration).to have_received(:reload)
+    end
+
     Declaration::VOIDABLE_STATES.each do |declaration_state|
       context "when voiding a #{declaration_state} declaration" do
         before { declaration.update!(state: declaration_state) }
