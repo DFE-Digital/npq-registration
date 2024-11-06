@@ -4,7 +4,7 @@ module API
       qualifications = participant_outcomes.map do |participant_outcome|
         {
           award_date: participant_outcome.completion_date,
-          npq_type: participant_outcome.course.short_code, # TODO: check for courses with null short_code
+          npq_type: participant_outcome.course_short_code,
         }
       end
       {

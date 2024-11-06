@@ -13,13 +13,43 @@ RSpec.describe Qualifications::Query do
     let!(:older_passed_participant_outcome_different_user_same_trn) { create(:participant_outcome, :passed, user: different_user_with_same_trn, completion_date: 1.month.ago, course: older_passed_participant_outcome.course) }
 
     it "returns the latest passed participant outcomes for the given TRN" do
-      expected_outcomes = [
+      expect(subject).to eq [
         latest_passed_participant_outcome,
         older_passed_participant_outcome_different_user_same_trn,
         older_passed_participant_outcome_different_declaration,
         older_passed_participant_outcome,
       ]
-      expect(subject).to eq expected_outcomes
+    end
+
+    context "when there are matching entries in legacy participant outcomes" do
+      let!(:older_legacy_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 2.years.ago) }
+      let!(:less_old_legacy_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 2.weeks.ago) }
+
+      it "includes the legacy outcomes" do
+        expect(subject).to eq [
+          latest_passed_participant_outcome,
+          less_old_legacy_participant_outcome,
+          older_passed_participant_outcome_different_user_same_trn,
+          older_passed_participant_outcome_different_declaration,
+          older_passed_participant_outcome,
+          older_legacy_participant_outcome,
+        ]
+      end
+    end
+
+    context "when there are matching entries in participant outcomes that are duplicates of legacy participant outcomes" do
+      before do
+        create(:legacy_passed_participant_outcome, trn:, course_short_code: older_passed_participant_outcome.course.short_code, completion_date: older_passed_participant_outcome.completion_date)
+      end
+
+      it "does not include duplicates" do
+        expect(subject).to eq [
+          latest_passed_participant_outcome,
+          older_passed_participant_outcome_different_user_same_trn,
+          older_passed_participant_outcome_different_declaration,
+          older_passed_participant_outcome,
+        ]
+      end
     end
 
     context "when there are no users with the specified TRN" do

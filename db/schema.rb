@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_04_164154) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_05_145235) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -298,6 +298,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_04_164154) do
     t.uuid "ecf_id"
     t.string "hint"
     t.index ["ecf_id"], name: "index_lead_providers_on_ecf_id", unique: true
+  end
+
+  create_table "legacy_passed_participant_outcomes", force: :cascade do |t|
+    t.string "trn", null: false
+    t.string "course_short_code"
+    t.date "completion_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trn"], name: "index_legacy_passed_participant_outcomes_on_trn"
   end
 
   create_table "local_authorities", force: :cascade do |t|

@@ -6,6 +6,7 @@ RSpec.describe "Qualifications endpoint", type: :request do
 
     context "when the TRN exists" do
       let!(:participant_outcome) { create(:participant_outcome, :passed) }
+      let!(:legacy_passed_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 1.year.ago) }
       let(:trn) { User.last.trn }
 
       context "when authorized" do
@@ -15,8 +16,10 @@ RSpec.describe "Qualifications endpoint", type: :request do
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
           expect(parsed_response["data"]["trn"]).to eq(trn)
-          expect(parsed_response["data"]["qualifications"].first["award_date"]).to eq(participant_outcome.completion_date.to_fs(:db))
-          expect(parsed_response["data"]["qualifications"].first["npq_type"]).to eq(participant_outcome.course.short_code)
+          expect(parsed_response["data"]["qualifications"][0]["award_date"]).to eq(participant_outcome.completion_date.to_fs(:db))
+          expect(parsed_response["data"]["qualifications"][0]["npq_type"]).to eq(participant_outcome.course.short_code)
+          expect(parsed_response["data"]["qualifications"][1]["award_date"]).to eq(legacy_passed_participant_outcome.completion_date.to_fs(:db))
+          expect(parsed_response["data"]["qualifications"][1]["npq_type"]).to eq(legacy_passed_participant_outcome.course_short_code)
         end
       end
 
