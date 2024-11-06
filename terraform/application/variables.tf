@@ -129,6 +129,7 @@ variable "postgres_enable_high_availability" {
   type = bool
   default = false
 }
+
 variable "enable_logit" { default = false }
 locals {
   environment_variables = yamldecode(file("${path.module}/config/${var.config}.yml"))
@@ -138,4 +139,9 @@ locals {
   access_external_domain = try(local.environment_variables["ACCESS_EXTERNAL_DOMAIN"], local.access_domain)
 
   postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
+}
+
+variable "send_traffic_to_maintenance_page" {
+  default     = false
+  description = "During a maintenance operation, keep sending traffic to the maintenance page instead of resetting the ingress"
 }
