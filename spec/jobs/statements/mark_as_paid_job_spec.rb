@@ -45,7 +45,7 @@ RSpec.describe Statements::MarkAsPaidJob, type: :job do
       it "logs a warning" do
         expect(Rails.logger)
           .to have_received(:warn)
-              .with("Statement could not be found - statement_id: #{statement_id}")
+              .with("Statement could not be found or is not payable - statement_id: #{statement_id}")
       end
     end
 

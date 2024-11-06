@@ -14,7 +14,7 @@ module Statements
       if statement.present? && statement.payable?
         MarkAsPaid.new(statement).mark
       else
-        Rails.logger.warn("Statement could not be found - statement_id: #{statement_id}")
+        Rails.logger.warn("Statement could not be found or is not payable - statement_id: #{statement_id}")
       end
     end
   end
