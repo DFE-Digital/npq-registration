@@ -71,7 +71,7 @@ module "worker_application" {
 
   docker_image = var.docker_image
 
-  command       = ["/bin/sh", "-c", "QUEUES=default,low_priority,participant_outcomes bundle exec rake jobs:work"]
+  command       = ["/bin/sh", "-c", "QUEUES=default,low_priority,dfe_analytics,participant_outcomes bundle exec rake jobs:work"]
   probe_command = ["pgrep", "-f", "rake"]
 
   replicas   = var.worker_replicas
