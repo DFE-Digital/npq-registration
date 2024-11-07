@@ -197,4 +197,32 @@ RSpec.describe Statement, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#authorising_for_payment?" do
+    subject { statement.authorising_for_payment? }
+
+    context "with payable statement with marked_as_paid_at set" do
+      let(:statement) { build(:statement, :payable, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with payable statement without marked_as_paid_at set" do
+      let(:statement) { build(:statement, :payable, marked_as_paid_at: nil) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with paid statement with marked_as_paid_at set" do
+      let(:statement) { build(:statement, :paid, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with open statement with marked_as_paid_at_set" do
+      let(:statement) { build(:statement, :open, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be false }
+    end
+  end
 end

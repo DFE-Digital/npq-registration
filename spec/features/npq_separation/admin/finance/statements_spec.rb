@@ -70,6 +70,26 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
     expect(page).to have_css(".govuk-tag", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)
   end
 
+  scenario "marking a statement as paid before job has run" do
+    statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
+    declaration = create(:declaration)
+    create(:statement_item, statement:, declaration:)
+
+    visit(npq_separation_admin_finance_statement_path(statement))
+    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    click_link "Authorise for payment"
+
+    expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
+    expect(page).to have_css(".statement-details-component", text: "Output payment")
+
+    check "Yes, I'm ready to authorise this for payment", visible: :all
+    click_button "Authorise for payment"
+
+    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css(".govuk-notification-banner__title", text: "Authorising for payment")
+    expect(page).to have_css(".govuk-notification-banner__content", text: /Requested at \d\d?:\d\d[ap]m/)
+  end
+
   describe "ECF legacy spec for show statement", :js do
     let(:cohort)              { create(:cohort, :current) }
     let(:course)              { create(:course, :leading_literacy) }
