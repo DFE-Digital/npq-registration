@@ -86,6 +86,8 @@ Rails.application.configure do
   config.npq_separation = {
     parity_check: {
       enabled: true,
+      npq_url: "https://npq-registration-migration-web.teacherservices.cloud",
+      ecf_url: "https://cpd-ecf-migration-web.teacherservices.cloud",
     },
   }
 
