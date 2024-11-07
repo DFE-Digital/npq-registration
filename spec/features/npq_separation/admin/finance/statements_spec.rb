@@ -48,4 +48,25 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
       expect(summary_list).to have_summary_item("Status", statement.state.humanize)
     end
   end
+
+  scenario "marking a statement as paid" do
+    statement = Statement.order(payment_date: :asc).first
+    statement_name = Date.new(statement.year, statement.month).strftime("%B %Y")
+
+    visit(npq_separation_admin_finance_statement_path(statement))
+    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+
+    # FIXME: Drop visit and enable click_button when navigating from previous page
+    # click_button "Authorise for payment"
+    visit new_npq_separation_admin_finance_payment_authorisation_path(statement)
+    expect(page).to have_css("h1", text: "Check #{statement_name} statement details")
+    expect(page).to have_css(".statement-details-component", text: "Output payment")
+
+    check "Yes, I'm ready to authorise this for payment", visible: :all
+    click_button "Authorise for payment"
+
+    pending("Integration with statement details page")
+    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css(".govuk-tag", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)
+  end
 end

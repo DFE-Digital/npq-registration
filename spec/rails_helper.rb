@@ -146,9 +146,16 @@ RSpec.configure do |config|
     end
   end
 
+  config.include ActiveJob::TestHelper, type: :job
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
+  end
+
+  config.before(:each, type: :view) do
+    allow(ActionView::Base)
+      .to receive(:default_form_builder)
+          .and_return GOVUKDesignSystemFormBuilder::FormBuilder
   end
 
   config.around(:each, :in_memory_rails_cache) do |example|

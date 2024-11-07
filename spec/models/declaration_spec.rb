@@ -431,6 +431,12 @@ RSpec.describe Declaration, type: :model do
           expect(described_class.billable_or_voidable).to match_array(billable_or_voidable)
         end
       end
+
+      describe ".awaiting_clawback" do
+        it "returns declarations which are in the awaiting_clawback state" do
+          expect(described_class.awaiting_clawback.pluck(:state)).to all eq("awaiting_clawback")
+        end
+      end
     end
 
     describe ".with_lead_provider" do

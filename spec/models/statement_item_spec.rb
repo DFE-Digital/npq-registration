@@ -39,6 +39,42 @@ RSpec.describe StatementItem, type: :model do
         expect(described_class.refundable.pluck(:state).sort).to eql(%w[awaiting_clawback clawed_back].sort)
       end
     end
+
+    describe ".eligible" do
+      it "returns only eligible records" do
+        expect(described_class.eligible.pluck(:state)).to all eq("eligible")
+      end
+    end
+
+    describe ".payable" do
+      it "returns only payable records" do
+        expect(described_class.payable.pluck(:state)).to all eq("payable")
+      end
+    end
+
+    describe ".paid" do
+      it "returns only paid records" do
+        expect(described_class.paid.pluck(:state)).to all eq("paid")
+      end
+    end
+
+    describe ".voided" do
+      it "returns only voided records" do
+        expect(described_class.voided.pluck(:state)).to all eq("voided")
+      end
+    end
+
+    describe ".awaiting_clawback" do
+      it "returns only records awaiting clawback" do
+        expect(described_class.awaiting_clawback.pluck(:state)).to all eq("awaiting_clawback")
+      end
+    end
+
+    describe ".clawed_back" do
+      it "returns only clawed_back records" do
+        expect(described_class.clawed_back.pluck(:state)).to all eq("clawed_back")
+      end
+    end
   end
 
   describe "State transition" do

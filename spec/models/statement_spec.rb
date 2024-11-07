@@ -7,6 +7,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to belong_to(:cohort).required }
     it { is_expected.to belong_to(:lead_provider).required }
     it { is_expected.to have_many(:statement_items) }
+    it { is_expected.to have_many(:declarations) }
     it { is_expected.to have_many(:contracts) }
     it { is_expected.to have_many(:declarations).through(:statement_items) }
   end
@@ -95,9 +96,31 @@ RSpec.describe Statement, type: :model do
     end
   end
 
+  describe "paper_trail" do
+    subject { create(:statement, :open) }
+
+    it "enables paper trail" do
+      expect(subject).to be_versioned
+    end
+
+    it "creates a version with a note" do
+      with_versioning do
+        expect(PaperTrail).to be_enabled
+
+        subject.update!(
+          state: :payable,
+          version_note: "This is a test",
+        )
+        version = subject.versions.last
+        expect(version.note).to eq("This is a test")
+        expect(version.object_changes["state"]).to eq(%w[open payable])
+      end
+    end
+  end
+
   describe "State transition" do
     context "when from open to payable" do
-      let(:statement) { create(:statement, state: "open") }
+      let(:statement) { create(:statement, :open) }
 
       it "transitions state to payable" do
         expect(statement).to be_open
@@ -107,7 +130,7 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when from payable to paid" do
-      let(:statement) { create(:statement, state: "payable") }
+      let(:statement) { create(:statement, :payable, marked_as_paid_at: 1.week.ago) }
 
       it "transitions state to payable" do
         expect(statement).to be_payable
@@ -117,12 +140,31 @@ RSpec.describe Statement, type: :model do
     end
 
     context "when from paid to payable" do
-      let(:statement) { create(:statement, state: "paid") }
+      let(:statement) { create(:statement, :paid) }
 
       it "raises error" do
         expect(statement).to be_paid
         expect { statement.mark_payable! }.to raise_error(StateMachines::InvalidTransition)
       end
+    end
+  end
+
+  describe "#mark_as_paid_at!" do
+    it "sets marked_as_paid_at" do
+      expect { subject.tap(&:mark_as_paid_at!).reload }
+        .to change(subject, :marked_as_paid_at)
+    end
+  end
+
+  describe "#marked_as_paid?" do
+    context "with a statement marked as paid" do
+      subject { create(:statement, :paid) }
+
+      it { is_expected.to be_marked_as_paid }
+    end
+
+    context "with a statement not marked as paid" do
+      it { is_expected.not_to be_marked_as_paid }
     end
   end
 end

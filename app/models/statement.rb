@@ -1,7 +1,11 @@
 class Statement < ApplicationRecord
+  has_paper_trail meta: { note: :version_note }
+  attr_accessor :version_note
+
   belongs_to :cohort
   belongs_to :lead_provider
   has_many :statement_items
+  has_many :declarations, through: :statement_items
   has_many :contracts
   has_many :declarations, through: :statement_items
 
@@ -45,6 +49,14 @@ class Statement < ApplicationRecord
     event :mark_paid do
       transition [:payable] => :paid
     end
+  end
+
+  def mark_as_paid_at!
+    update!(marked_as_paid_at: Time.zone.now)
+  end
+
+  def marked_as_paid?
+    marked_as_paid_at.present? && paid?
   end
 
 private
