@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/slawosz/dfe-analytics.git
+  revision: cb1c8180af77973af9d26162a661dd3aa183466e
+  branch: allow-to-exclude-models
+  specs:
+    dfe-analytics (1.14.2)
+      google-cloud-bigquery (~> 1.38)
+      httparty (~> 0.21)
+      multi_xml (~> 0.6.0)
+      request_store_rails (~> 2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -324,8 +335,7 @@ GEM
     minitest (5.25.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multi_xml (0.7.1)
-      bigdecimal (~> 3.1)
+    multi_xml (0.6.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.2.0)
@@ -470,6 +480,8 @@ GEM
       uber (< 0.2.0)
     request_store (1.7.0)
       rack (>= 1.4)
+    request_store_rails (2.0.0)
+      concurrent-ruby (~> 1.0)
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -692,6 +704,7 @@ DEPENDENCIES
   delayed_job_active_record
   delayed_job_web
   devise (~> 4.9)
+  dfe-analytics!
   diffy
   dotenv-rails
   email_validator
