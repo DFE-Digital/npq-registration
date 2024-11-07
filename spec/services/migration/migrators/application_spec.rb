@@ -17,7 +17,7 @@ RSpec.describe Migration::Migrators::Application do
       school = create(:school, urn: ecf_resource.school_urn, ukprn: ecf_resource.school_ukprn)
       course = create(:course, identifier: ecf_resource.npq_course.identifier, ecf_id: ecf_resource.npq_course_id)
       lead_provider = create(:lead_provider, ecf_id: ecf_resource.npq_lead_provider_id)
-      user = create(:user, ecf_id: ecf_resource.user.id)
+      user = create(:user, ecf_id: ecf_resource.user.id, trn: ecf_resource.user.teacher_profile.trn)
       create(:application, ecf_id: ecf_resource.id, school:, course:, lead_provider:, user:)
     end
 
@@ -28,13 +28,15 @@ RSpec.describe Migration::Migrators::Application do
 
     describe "#call" do
       it "sets the attributes from the ECF NPQApplication on the NPQ application" do
-        instance.call
-        application = Application.find_by!(ecf_id: ecf_resource1.id)
-        expect(application.attributes).to include(ecf_resource1.attributes.slice(*described_class::ATTRIBUTES))
-        expect(application.training_status).to eq(ecf_resource1.profile.training_status)
-        expect(application.ukprn).to eq(ecf_resource1.school_ukprn)
-        expect(application.user.ecf_id).to eq(ecf_resource1.user.id)
-        expect(application.accepted_at).to eq(ecf_resource1.profile.created_at)
+        freeze_time do
+          instance.call
+          application = Application.find_by!(ecf_id: ecf_resource1.id)
+          expect(application.attributes).to include(ecf_resource1.attributes.slice(*described_class::ATTRIBUTES))
+          expect(application.training_status).to eq(ecf_resource1.profile.training_status)
+          expect(application.ukprn).to eq(ecf_resource1.school_ukprn)
+          expect(application.user.ecf_id).to eq(ecf_resource1.user.id)
+          expect(application.accepted_at).to eq(ecf_resource1.profile.created_at)
+        end
       end
 
       it "sets ukprn from ECF NPQApplication even if its different from school_urn" do
@@ -190,6 +192,41 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.lead_provider_approval_status).not_to eq(ecf_application.lead_provider_approval_status)
 
         expect { instance.call }.not_to(change { application.reload.user.updated_at })
+      end
+
+      context "when setting timestamps from ECF" do
+        let(:created_at) { 2.months.ago }
+        let(:updated_at) { 1.month.ago }
+
+        context "when application is accepted" do
+          it "sets updated_at to now" do
+            ecf_resource1.update!(created_at:, updated_at:, lead_provider_approval_status: "accepted")
+            user = ::User.find_by_ecf_id!(ecf_resource1.user.id)
+            user.update!(trn: "12345678")
+
+            freeze_time do
+              instance.call
+
+              application = ::Application.find_by_ecf_id!(ecf_resource1.id)
+              expect(application.created_at.to_s).to eq(created_at.to_s)
+              expect(application.updated_at.to_s).to eq(Time.zone.now.to_s)
+            end
+          end
+        end
+
+        context "when application is rejected" do
+          it "sets updated_at to now" do
+            ecf_resource1.update!(created_at:, updated_at:, lead_provider_approval_status: "rejected", teacher_reference_number: "12345678")
+
+            freeze_time do
+              instance.call
+
+              application = ::Application.find_by_ecf_id!(ecf_resource1.id)
+              expect(application.created_at.to_s).to eq(created_at.to_s)
+              expect(application.updated_at.to_s).to eq(Time.zone.now.to_s)
+            end
+          end
+        end
       end
 
       context "when backfilling existing applications" do

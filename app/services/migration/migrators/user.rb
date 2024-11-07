@@ -57,7 +57,7 @@ module Migration::Migrators
           version_note: "Changes migrated from ECF to NPQ",
         }
 
-        if changed_ecf_user_attrs?(attrs, ecf_user)
+        if touch_updated_at?(attrs, npq_application)
           attrs[:updated_at] = Time.zone.now
         end
 
@@ -98,9 +98,20 @@ module Migration::Migrators
       raise ActiveRecord::RecordInvalid, user
     end
 
-    def changed_ecf_user_attrs?(attrs, ecf_user)
-      attrs[:trn] != ecf_user.teacher_profile&.trn ||
-        attrs[:email] != ecf_user.email
+    def touch_updated_at?(attrs, npq_application)
+      if attrs[:email] != npq_application&.participant_identity&.email
+        return true
+      end
+
+      if npq_application&.profile && attrs[:email] != npq_application&.profile&.participant_identity&.email
+        return true
+      end
+
+      if attrs[:trn_verified] != npq_application&.teacher_reference_number_verified
+        return true
+      end
+
+      false
     end
 
     def backfill_ecf_ids

@@ -217,8 +217,8 @@ RSpec.describe Migration::Migrators::User do
       end
 
       context "when setting timestamps from ECF" do
-        let(:created_at) { 10.days.ago }
-        let(:updated_at) { 3.days.ago }
+        let(:created_at) { 2.months.ago }
+        let(:updated_at) { 1.month.ago }
 
         it "sets the timestamps from the ECF User" do
           ecf_resource1.update!(created_at:, updated_at:)
@@ -239,45 +239,52 @@ RSpec.describe Migration::Migrators::User do
           end
         end
 
-        it "sets updated_at to now if trn has changed" do
-          ecf_resource1.update!(created_at:, updated_at:)
-          ecf_resource1.teacher_profile.update!(trn: nil)
+        context "when email has changed" do
+          before do
+            ecf_resource1.update!(created_at:, updated_at:)
+          end
 
-          freeze_time do
-            with_versioning do
-              expect(PaperTrail).to be_enabled
+          context "when not matching `npq_application.participant_identity.email`" do
+            it "sets updated_at to now" do
+              ecf_resource1.npq_applications.first.participant_identity.update!(email: ecf_resource1.npq_applications.first.participant_identity.email.upcase)
 
-              instance.call
+              freeze_time do
+                instance.call
 
-              user = ::User.find_by_ecf_id!(ecf_resource1.id)
-              expect(user.created_at.to_s).to eq(created_at.to_s)
-              expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
+                user = ::User.find_by_ecf_id!(ecf_resource1.id)
+                expect(user.created_at.to_s).to eq(created_at.to_s)
+                expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
+              end
+            end
+          end
 
-              version = user.versions.last
-              expect(version.note).to eq("Changes migrated from ECF to NPQ")
-              expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
-              expect(version.object_changes["updated_at"].last).to eq(Time.zone.now.iso8601(3))
+          context "when not matching `npq_application.profile participant_identity.email`" do
+            it "sets updated_at to now" do
+              ecf_resource1.npq_applications.first.profile.update!(participant_identity: create(:ecf_migration_participant_identity, email: "some@thing.com"))
+
+              freeze_time do
+                instance.call
+
+                user = ::User.find_by_ecf_id!(ecf_resource1.id)
+                expect(user.created_at.to_s).to eq(created_at.to_s)
+                expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
+              end
             end
           end
         end
 
-        it "sets updated_at to now if email has changed" do
-          ecf_resource1.update!(created_at:, updated_at:, email: "some@thing.com")
+        context "when trn_verified has changed" do
+          it "sets updated_at to now" do
+            ecf_resource1.update!(created_at:, updated_at:)
+            ecf_resource1.teacher_profile.update!(trn: "12345678")
+            ecf_resource1.npq_applications.update!(teacher_reference_number_verified: false)
 
-          freeze_time do
-            with_versioning do
-              expect(PaperTrail).to be_enabled
-
+            freeze_time do
               instance.call
 
               user = ::User.find_by_ecf_id!(ecf_resource1.id)
               expect(user.created_at.to_s).to eq(created_at.to_s)
               expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
-
-              version = user.versions.last
-              expect(version.note).to eq("Changes migrated from ECF to NPQ")
-              expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
-              expect(version.object_changes["updated_at"].last).to eq(Time.zone.now.iso8601(3))
             end
           end
         end
