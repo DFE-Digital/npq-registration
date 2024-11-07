@@ -90,7 +90,7 @@
 
     sl.with_row do |row|
       row.with_key(text: 'School UKPRN')
-      row.with_value(text: @application.school.ukprn || "-")
+      row.with_value(text: @application.school&.ukprn || "-")
     end
 
     sl.with_row do |row|
