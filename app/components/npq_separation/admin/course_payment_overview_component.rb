@@ -9,7 +9,7 @@ module NpqSeparation
       end
 
       def calculator
-        @calculator ||= Statements::CourseCalculator.new(
+        @calculator ||= ::Statements::CourseCalculator.new(
           statement:,
           contract:,
         )

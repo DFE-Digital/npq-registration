@@ -3,6 +3,7 @@ FactoryBot.define do
     transient do
       user { create(:user) }
       course { create(:course) }
+      statement { nil }
     end
 
     application { association :application, :accepted, user:, course: }
@@ -12,6 +13,10 @@ FactoryBot.define do
     declaration_date { Date.current }
     state { "submitted" }
     ecf_id { SecureRandom.uuid }
+
+    after(:build) do |declaration, evaluator|
+      declaration.statement_items << build(:statement_item, statement: evaluator.statement) if evaluator.statement
+    end
 
     trait :submitted_or_eligible do
       state do

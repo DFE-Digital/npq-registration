@@ -1,12 +1,11 @@
-<section class="govuk-!-margin-bottom-5 govuk-!-padding-3 bg-light-grey" style="background-color: #f3f2f1;">
+<section class="govuk-!-margin-bottom-5 govuk-!-padding-3 app-statement-block">
   <h2 class="govuk-heading-m"><%= contract.course.name %></h2>
 
-  <header class="app-application-card__header">
+  <header class="app-statement-block__declaration-types">
     <% calculator.allowed_declaration_types.each do |declaration_type| %>
       <span class="govuk-body-s">
         <%= declaration_type.titleize %>
         <br>
-        <%#= calculator.declaration_count_for_declaration_type(declaration_type) %>
         <%= calculator.declaration_count_for_declaration_type(declaration_type) %>
       </span>
     <% end %>
