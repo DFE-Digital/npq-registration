@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# require "payment_calculator/npq/service_fees"
-# require "payment_calculator/npq/output_payment"
-
 module Statements
   class SummaryCalculator
     attr_reader :statement
@@ -14,37 +11,22 @@ module Statements
     end
 
     def total_output_payment
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).output_payment_subtotal
-      # end
       course_calulators.sum(&:output_payment_subtotal)
     end
 
     def total_targeted_delivery_funding
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).targeted_delivery_funding_subtotal
-      # end
       course_calulators.sum(&:targeted_delivery_funding_subtotal)
     end
 
     def total_service_fees
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).monthly_service_fees
-      # end
       course_calulators.sum(&:monthly_service_fees)
     end
 
     def clawback_payments
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).clawback_payment
-      # end
       course_calulators.sum(&:clawback_payment)
     end
 
     def total_targeted_delivery_funding_refundable
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).targeted_delivery_funding_refundable_subtotal
-      # end
       course_calulators.sum(&:targeted_delivery_funding_refundable_subtotal)
     end
 
@@ -53,95 +35,41 @@ module Statements
     end
 
     def total_payment
-      # total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount + total_targeted_delivery_funding
       total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount + total_targeted_delivery_funding
     end
 
     def total_starts
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("started")
-      # end
       course_calulators.sum { _1.billable_declarations_count_for_declaration_type("started") }
     end
 
     def total_retained
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("retained")
-      # end
       course_calulators.sum { _1.billable_declarations_count_for_declaration_type("retained") }
     end
 
     def total_completed
-      # contracts.sum do |contract|
-      #   CourseCalculator.new(statement:, contract:).billable_declarations_count_for_declaration_type("completed")
-      # end
       course_calulators.sum { _1.billable_declarations_count_for_declaration_type("completed") }
     end
 
     def total_voided
-      voided_declarations.count
+      statement.declarations
+               .joins(:application)
+               .select(:user_id)
+               .distinct(:user_id)
+               .where(state: 'voided')
+               .count
     end
 
   private
 
-    def voided_declarations
-      # statement.participant_declarations.voided.unique_id
-      statement.declarations
-               .select(:application_id)
-               .distinct(:application_id)
-               .where(state: 'voided')
-    end
-
-    def statement_declarations_per_contract(contract)
-      statement_declarations
-        .for_course_identifier(contract.course_identifier)
-        # .unique_id
-        .distinct(:application_id)
-        .count
-    end
-
-    def statement_declarations
-      statement.billable_participant_declarations
-    end
-
-    def output_payments
-      contracts.map do |contract|
-        PaymentCalculator::NPQ::OutputPayment.call(
-          contract:,
-          total_participants: statement_declarations_per_contract(contract),
-        )
-      end
-    end
-
-    def service_fees
-      contracts.map { |contract| PaymentCalculator::NPQ::ServiceFees.call(contract:) }.compact
+    def course_calulators
+      @course_calculators ||= contracts.map { CourseCalculator.new(statement:, contract: _1) }
     end
 
     def contracts
-      @contracts ||= statement.contracts
-                              .joins(:contract_template, :course)
-                              .where(contract_template: { special_course: false})
-                              .order('courses.identifier')
-      # npq_lead_provider
-      #   .npq_contracts
-      #   .where(version: statement.contract_version)
-      #   .where(cohort: statement.cohort)
-      #   .where(special_course: false)
-      #   .order(course_identifier: :asc)
-    end
-
-    # def cpd_lead_provider
-    #   statement.cpd_lead_provider
-    # end
-
-    # def npq_lead_provider
-    #   statement.lead_provider
-    # end
-
-    def course_calulators
-      contracts.map do |contract|
-        CourseCalculator.new(statement:, contract:)
-      end
+      statement.contracts
+        .joins(:contract_template, :course)
+        .where(contract_template: { special_course: false })
+        .order('courses.identifier')
     end
   end
 end

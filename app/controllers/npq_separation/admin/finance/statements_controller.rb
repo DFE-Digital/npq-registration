@@ -4,12 +4,14 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
                      .where(statement_params)
                      .order(payment_date: :asc)
 
-    if scope.one?
-      redirect_to action: :show, id: scope.first.id
-    else
-      scope = scope.unscope(where: %i[year month]) if scope.none?
-      @pagy, @statements = pagy(scope)
+    redirect_to action: :show, id: scope.first.id and return if scope.one?
+
+    if scope.none?
+      flash.now[:error] = 'No statements matched all the filters, showing all statement periods instead'
+      scope = scope.unscope(where: %i[year month])
     end
+
+    @pagy, @statements = pagy(scope)
   end
 
   def show
@@ -19,7 +21,11 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
                               ])
 
     @statement = scope.find(params[:id])
-    @npq_special_contracts = []
+    @calculator = Statements::SummaryCalculator.new(statement: @statement)
+
+    contracts = @statement.contracts.joins(:contract_template, :course).order(identifier: :asc)
+    @contracts = contracts.where(contract_template: { special_course: false })
+    @special_contracts = contracts.where(contract_template: { special_course: true })
   end
 
   private

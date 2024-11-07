@@ -1,4 +1,4 @@
-<%= form_with url: npq_separation_admin_finance_statements_path, method: :get, class: 'statement-selector' do |f| %>
+<%= form_with url: npq_separation_admin_finance_statements_path, method: :get, class: 'app-statement-selector' do |f| %>
   <%= f.govuk_collection_select :lead_provider_id,
     lead_providers,
     :id,
@@ -21,8 +21,8 @@
     periods,
     :period,
     :name,
-    label: { text: "View a different statement" },
-    options: { selected: period, include_blank: "All", },
+    label: { text: "View a different period" },
+    options: { selected: period },
     form_group: { class: "govuk-form-group govuk-!-width-one-quarter" }
   %>
 

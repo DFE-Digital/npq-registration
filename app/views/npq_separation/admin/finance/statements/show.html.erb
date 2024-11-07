@@ -1,6 +1,6 @@
 <%= tag.h1("Statement #{@statement.id}", class: "govuk-heading-l") %>
 
-<%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement) %>
+<%= render NpqSeparation::Admin::Statements::SelectorComponent.new(@statement) %>
 
 <%=
   govuk_summary_list do |summary_list|
@@ -31,24 +31,17 @@
   end
 %>
 
-<% @calculator = Statements::SummaryCalculator.new(statement: @statement) %>
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <% if @npq_special_contracts.any? %>
-      <div class="govuk-warning-text app-application__standalone-course">
-        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <strong class="govuk-warning-text__text">
-          <span class="govuk-warning-text__assistive">Warning</span>
-          <%= @npq_special_contracts.map{|c| t(c.course_identifier, scope: "npq_courses") }.join(", ") %>
-          has standalone payments.
-          <br/>
-          <%= govuk_link_to "View payments for this course", '#standalone_payments' %>
-        </strong>
-      </div>
+    <% if @special_contracts.any? %>
+      <%= govuk_warning_text(icon_fallback_text: "Warning") do %>
+        <%= @special_contracts.map { _1.course.name }.to_sentence %> has standalone payments.
+        <br/>
+        <%= govuk_link_to "View payments for this course", '#standalone_payments' %>
+      <% end %>
     <% end %>
 
-    <div class="govuk-!-padding-3 bg-light-grey">
+    <div class="govuk-!-padding-3 app-statement-block">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
           <h4 class="govuk-heading-m govuk-!-margin-bottom-2"><%= t("finance.totals") %></h4>
@@ -110,46 +103,54 @@
           <p class="govuk-heading-m govuk-!-padding-top-0">
             <%= @calculator.total_voided %>
             <br>
-            <!--<p class="govuk-body-s"><%#= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@statement.lead_provider.id, @statement)) %></p>-->
+            <p class="govuk-body-s"><%= govuk_link_to( t("finance.view") , finance_npq_lead_provider_statement_voided_path(@statement.lead_provider.id, @statement)) if false %></p>
           </p>
         </div>
       </div>
-    </div>
 
-    <!-- TODO -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <div class="app-application__panel__actions">
-          <div class="duvet">
-            <div class="govuk-grid-column-one-half govuk-!-text-align-left">
-              <% if false && authorise_for_payment_button_visible?(@statement) %>
-                <%= button_to t("finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
-              <% elsif @statement.marked_as_paid_at.present? %>
-                <%= govuk_tag(text: t("finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
-              <% else %>
-                &nbsp;
-              <% end %>
-            </div>
-            <div class="govuk-grid-column-one-half govuk-!-text-align-right">
-              <p class="govuk-body-s">
-                <%=
-                  govuk_link_to "Save as PDF", "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: "#{@statement.lead_provider.name} #{@statement.name} NPQ Statement (#{@statement.cohort.start_year} Cohort)" }
-                %>
-              </p>
-              <p class="govuk-body-s">
-                <%#= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) %>
-              </p>
-            </div>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <hr class="govuk-section-break govuk-section-break--visible">
+        </div>
+      </div>
+
+      <div class="govuk-grid-row govuk-!-padding-top-3">
+        <div class="govuk-grid-column-one-half govuk-!-text-align-left">
+          <% if false && authorise_for_payment_button_visible?(@statement) %>
+            <%= button_to t("finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
+          <% elsif @statement.marked_as_paid_at.present? %>
+            <%= govuk_tag(text: t("finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </div>
+
+        <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+          <p class="govuk-body-s">
+            <%=
+              govuk_link_to "Save as PDF", "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: "#{@statement.lead_provider.name} #{@statement.name} NPQ Statement (#{@statement.cohort.start_year} Cohort)" }
+            %>
+          </p>
+          <p class="govuk-body-s">
+            <%= govuk_link_to "Download declarations (CSV)", finance_npq_statement_assurance_report_path(@statement, format: :csv) if false %>
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<% @statement.contracts.joins(:course).order(identifier: :asc).each do |contract| %>
-  <p>&darr; Contract ID <%= contract.id %></p>
+<br>
+
+<% @contracts.each do |contract| %>
   <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+<% end %>
+
+<% if @special_contracts.any? %>
+  <h4 id="standalone_payments" class="govuk-heading-l govuk-!-margin-top-9 govuk-!-margin-bottom-7">Standalone payments</h4>
+  <% @special_contracts.each do |contract| %>
+    <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+  <% end %>
 <% end %>
 
 <%=
@@ -164,7 +165,7 @@
       end
 
       table.with_body do |body|
-        @statement.contracts.joins(:course).order(identifier: :asc).each do |contract|
+        @contracts.each do |contract|
           body.with_row do |row|
             row.with_cell(text: contract.course.name)
             row.with_cell(text: contract.contract_template.recruitment_target)

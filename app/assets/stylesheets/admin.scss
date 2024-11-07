@@ -119,22 +119,7 @@
   padding: govuk-spacing(2) govuk-spacing(3) govuk-spacing(2) 0;
 }
 
-.app-application-card__header {
-  align-items: baseline;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.bg-light-grey {
-  background-color: govuk-colour("light-grey");
-}
-
-.float-right {
-  float: right;
-}
-
-.statement-selector {
+.app-statement-selector {
   margin-bottom: 30px;
 
   .govuk-form-group {
@@ -159,4 +144,19 @@
     margin-bottom: 0;
     vertical-align: bottom;
   }
+}
+
+.app-statement-block {
+  background-color: govuk-colour("light-grey");
+}
+
+.app-statement-block__declaration-types {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.float-right {
+  float: right;
 }

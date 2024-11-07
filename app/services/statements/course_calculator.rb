@@ -1,14 +1,8 @@
 # frozen_string_literal: true
 
-# require "payment_calculator/npq/service_fees"
-# require "payment_calculator/npq/output_payment"
-
 module Statements
   class CourseCalculator
     attr_reader :statement, :contract
-
-    # delegate :npq_lead_provider,
-    #          to: :cpd_lead_provider
 
     delegate :cohort, :show_targeted_delivery_funding?,
              to: :statement
@@ -24,86 +18,28 @@ module Statements
     def statement_items
       statement.statement_items
                .joins(declaration: :application)
+               .merge(Declaration.select("DISTINCT (user_id, declaration_type)"))
                .where(application: { course_id: contract.course_id })
     end
 
     def billable_declarations_count
-      # statement
-      #   .billable_statement_line_items
-      #   .joins(:participant_declaration)
-      #   .where(participant_declarations: { course_identifier: course.identifier })
-      #   .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-      #   .count
-      statement_items
-        .billable
-        .joins(:declaration)
-        .merge(Declaration.select("DISTINCT (application_id, declaration_type)"))
-        .count
+      statement_items.billable.count
     end
 
     def refundable_declarations_count
-      # statement
-      #   .refundable_statement_line_items
-      #   .joins(:participant_declaration)
-      #   .where(participant_declarations: { course_identifier: course.identifier })
-      #   .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-      #   .count
-      statement_items
-        .refundable
-        .count
+      statement_items.refundable.count
     end
 
     def not_eligible_declarations_count
-      # statement
-      #   .statement_line_items
-      #   .where(statement_line_items: { state: %w[ineligible voided] })
-      #   .joins(:participant_declaration)
-      #   .where(participant_declarations: { course_identifier: course.identifier })
-      #   .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-      #   .count
-      statement_items
-        .not_eligible
-        .count
+      statement_items.not_eligible.count
     end
 
     def refundable_declarations_by_type_count
-      # statement
-      #   .refundable_statement_line_items
-      #   .joins(:participant_declaration)
-      #   .where(participant_declarations: { course_identifier: course.identifier })
-      #   .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-      #   .group(:declaration_type)
-      #   .count
-      statement_items
-        .refundable
-        # .joins(:declaration)
-        # .joins(declaration: :course)
-        # .where(courses: { identifier: course.identifier })
-        .merge(Declaration.select("DISTINCT (application_id, declaration_type)"))
-        .group(:declaration_type)
-        .count
+      statement_items.refundable.group(:declaration_type).count
     end
 
     def billable_declarations_count_for_declaration_type(declaration_type)
-      # scope = statement
-      #   .billable_statement_line_items
-      #   .joins(:participant_declaration)
-      #   .where(participant_declarations: { course_identifier: course.identifier })
-      #   .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-
-      # scope = if declaration_type == "retained"
-      #           scope.where("participant_declarations.declaration_type LIKE ?", "retained-%")
-      #         else
-      #           scope.where(participant_declarations: { declaration_type: })
-      #         end
-
-      # scope.count
-
-      scope = statement_items
-        .billable
-        .joins(:declaration)
-        .select('(application_id, declaration_type::text)')
-        .distinct('(application_id, declaration_type::text)')
+      scope = statement_items.billable
 
       scope = if declaration_type == "retained"
                 scope.where(declaration: { declaration_type: ["retained-1", "retained-2"] })
@@ -129,11 +65,7 @@ module Statements
       course.schedule_for(cohort:).allowed_declaration_types.sort_by { Schedule::DECLARATION_TYPES.index(_1) }
     end
 
-    # def declaration_count_for_milestone(milestone)
     def declaration_count_for_declaration_type(declaration_type)
-      # statement.declarations.where(declaration_type:).count
-
-      # declaration_count_by_type.fetch(milestone.declaration_type, 0)
       declaration_count_by_type.fetch(declaration_type, 0)
     end
 
@@ -164,8 +96,6 @@ module Statements
 
     def course_has_targeted_delivery_funding?
       show_targeted_delivery_funding? && !course.ehco? && !course.aso?
-      # show_targeted_delivery_funding? &&
-        # !(::Finance::Schedule::NPQEhco::IDENTIFIERS + ::Finance::Schedule::NPQSupport::IDENTIFIERS).compact.include?(course.identifier)
     end
 
     def targeted_delivery_funding_declarations_count
@@ -191,7 +121,7 @@ module Statements
               declaration: { declaration_type: "started" },
               application: { course_id: course.id, targeted_delivery_funding_eligibility: true, eligible_for_funding: true },
             )
-            .merge(Declaration.select("DISTINCT (application_id, declaration_type)"))
+            # .merge(Declaration.select("DISTINCT (user_id, declaration_type)"))
             .count
     end
 
@@ -222,7 +152,7 @@ module Statements
               declaration: { declaration_type: "started" },
               application: { course_id: course.id, targeted_delivery_funding_eligibility: true, eligible_for_funding: true },
             )
-            .merge(Declaration.select("DISTINCT (application_id, declaration_type)"))
+            # .merge(Declaration.select("DISTINCT (user_id, declaration_type)"))
             .count
     end
 
@@ -231,6 +161,8 @@ module Statements
     end
 
   private
+
+    delegate :service_fee_percentage, :service_fee_installments, :per_participant, to: :contract
 
     def calculated_service_fee_per_participant_derived_from_monthly_service_fee
       return unless contract.monthly_service_fee
@@ -246,8 +178,6 @@ module Statements
       service_fees[:monthly]
     end
 
-    delegate :service_fee_percentage, :service_fee_installments, :per_participant, to: :contract
-
     def service_fees
       # @service_fees ||= PaymentCalculator::NPQ::ServiceFees.call(contract:)
 
@@ -262,30 +192,8 @@ module Statements
       end
     end
 
-    # def course
-    #   @course ||= contract.npq_course
-    # end
-
-    # def declaration_count_by_type
-    #   @declaration_count_by_type ||= statement
-    #     .billable_statement_line_items
-    #     .joins(:participant_declaration)
-    #     .where(participant_declarations: { course_identifier: course.identifier })
-    #     .merge(ParticipantDeclaration.select("DISTINCT (user_id, declaration_type)"))
-    #     .group(:declaration_type)
-    #     .count
-    # end
     def declaration_count_by_type
-      @declaration_count_by_type ||= statement_items
-        .billable
-        .joins(:declaration)
-        .merge(Declaration.select("DISTINCT (application_id, declaration_type)"))
-        .group(:declaration_type)
-        .count
+      @declaration_count_by_type ||= statement_items.billable.group(:declaration_type).count
     end
-
-    # def cpd_lead_provider
-    #   statement.cpd_lead_provider
-    # end
   end
 end
