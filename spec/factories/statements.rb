@@ -1,11 +1,21 @@
 FactoryBot.define do
   factory :statement do
+    transient do
+      declaration {}
+    end
+
+    after(:create) do |statement, evaluator|
+      if evaluator.declaration
+        create(:statement_item, declaration: evaluator.declaration, statement:)
+      end
+    end
+
     month { Faker::Number.between(from: 1, to: 12) }
     year { Faker::Number.between(from: 2021, to: 2024) }
     deadline_date { Faker::Date.forward(days: 30) }
     payment_date { Faker::Date.forward(days: 30) }
     cohort { create(:cohort, :current) }
-    lead_provider
+    lead_provider { declaration&.lead_provider || build(:lead_provider) }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
     state { "open" }
     ecf_id { SecureRandom.uuid }

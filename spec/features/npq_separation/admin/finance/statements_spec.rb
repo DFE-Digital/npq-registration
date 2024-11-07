@@ -50,21 +50,21 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
   end
 
   scenario "marking a statement as paid" do
-    statement = Statement.order(payment_date: :asc).first
-    statement_name = Date.new(statement.year, statement.month).strftime("%B %Y")
+    statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
+    declaration = create(:declaration)
+    create(:statement_item, statement:, declaration:)
 
     visit(npq_separation_admin_finance_statement_path(statement))
     expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    click_link "Authorise for payment"
 
-    # TODO: CPDNPQ-2142
-    # FIXME: Drop visit and enable click_button when navigating from previous page
-    # click_button "Authorise for payment"
-    visit new_npq_separation_admin_finance_payment_authorisation_path(statement)
-    expect(page).to have_css("h1", text: "Check #{statement_name} statement details")
+    expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
     expect(page).to have_css(".statement-details-component", text: "Output payment")
 
-    check "Yes, I'm ready to authorise this for payment", visible: :all
-    click_button "Authorise for payment"
+    perform_enqueued_jobs do
+      check "Yes, I'm ready to authorise this for payment", visible: :all
+      click_button "Authorise for payment"
+    end
 
     expect(page).to have_css("h1", text: "Statement #{statement.id}")
     expect(page).to have_css(".govuk-tag", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)

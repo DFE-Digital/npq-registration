@@ -113,11 +113,12 @@
 
       <div class="govuk-grid-row govuk-!-padding-top-3">
         <div class="govuk-grid-column-one-half govuk-!-text-align-left">
-          <%# TODO: CPDNPQ-2142 %>
-          <% if false && authorise_for_payment_button_visible?(@statement) %>
-            <%= button_to t("npq_separation.admin.finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
-          <% elsif @statement.marked_as_paid_at.present? %>
-            <%= govuk_tag(text: t("npq_separation.admin.finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
+          <% if @statement.allow_marking_as_paid? %>
+            <%= govuk_button_link_to t("npq_separation.admin.finance.statements.payment_authorisations.new.button"),
+                                     new_npq_separation_admin_finance_payment_authorisation_path(@statement) %>
+          <% elsif @statement.marked_as_paid? %>
+            <%= govuk_tag(text: t("npq_separation.admin.finance.statements.payment_authorisations.tag.content",
+                                  statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
           <% else %>
             &nbsp;
           <% end %>

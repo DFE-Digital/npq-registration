@@ -58,6 +58,10 @@ class Statement < ApplicationRecord
     marked_as_paid_at.present? && paid?
   end
 
+  def allow_marking_as_paid?
+    output_fee && payable? && !marked_as_paid_at? && declarations.any?
+  end
+
   def show_targeted_delivery_funding?
     cohort.start_year >= 2022
   end

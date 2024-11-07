@@ -167,4 +167,34 @@ RSpec.describe Statement, type: :model do
       it { is_expected.not_to be_marked_as_paid }
     end
   end
+
+  describe "#allow_marking_as_paid?" do
+    subject { statement.allow_marking_as_paid? }
+
+    let(:declaration) { create(:declaration, :payable) }
+
+    context "with payable statement with declarations" do
+      let(:statement) { create(:statement, :next_output_fee, :payable, declaration:) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with non output fee statement" do
+      let(:statement) { create(:statement, :payable, output_fee: false, declaration:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with statement not in payable state" do
+      let(:statement) { create(:statement, :open, :next_output_fee, declaration:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with statement without declarations" do
+      let(:statement) { create(:statement, :next_output_fee, :payable) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
