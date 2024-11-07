@@ -2,7 +2,7 @@
 
 set -eu
 
-NAMESPACE=$(jq -r '.namespace' terraform/application/workspace_variables/${CONFIG}.tfvars.json)
+NAMESPACE=$(jq -r '.namespace' terraform/application/config/${CONFIG}.tfvars.json)
 
 echo Reset internal ingress
 kubectl -n ${NAMESPACE} apply -f maintenance_page/manifests/${CONFIG}/ingress_internal_to_main.yml
