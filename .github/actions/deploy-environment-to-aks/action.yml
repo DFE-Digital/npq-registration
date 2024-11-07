@@ -14,10 +14,6 @@ inputs:
   pull-request-number:
     description: The pull request number which triggered this deploy. If set, this will automatically seed the database.
     required: false
-  # smoke-test-credentials-required:
-  #   description: Whether to run the smoke test with support credentials
-  #   required: false
-  #   default: "true"
   current-commit-sha:
     description: The commit sha for the current commit
     required: true
@@ -68,7 +64,7 @@ runs:
       env:
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
-    # - uses: ./.github/actions/smoke-test
-    #   with:
-    #     url: ${{ steps.apply-terraform.outputs.url }}
-    #     current-commit-sha: ${{ inputs.current-commit-sha }}
+    - uses: ./.github/actions/smoke-test
+      with:
+        url: ${{ steps.apply-terraform.outputs.url }}
+        current-commit-sha: ${{ inputs.current-commit-sha }}
