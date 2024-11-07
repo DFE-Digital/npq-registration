@@ -34,7 +34,7 @@ class Application < ApplicationRecord
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
 
-  attr_accessor :version_note
+  attr_accessor :version_note, :skip_touch_user_if_changed
 
   validate :schedule_cohort_matches
   # TODO: remove "if" and "allow_nil" and add constraints into the DB after separation
@@ -232,6 +232,7 @@ private
   end
 
   def touch_user_if_changed
+    return if skip_touch_user_if_changed
     return unless saved_change_to_lead_provider_approval_status?
 
     user.touch(time: updated_at)

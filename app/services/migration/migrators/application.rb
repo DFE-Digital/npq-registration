@@ -85,7 +85,7 @@ module Migration::Migrators
 
         application.user_id = find_user_id!(ecf_id: ecf_npq_application.user.id)
         application.version_note = "Changes migrated from ECF to NPQ"
-        application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES))
+        application.update!(ecf_npq_application.attributes.slice(*ATTRIBUTES).merge(skip_touch_user_if_changed: true))
       end
 
       run_once { backfill_ecf_ids }
