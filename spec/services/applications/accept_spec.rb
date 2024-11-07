@@ -32,6 +32,12 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
       )
     end
 
+    it "reloads application after action" do
+      allow(service.application).to receive(:reload)
+      service.accept
+      expect(service.application).to have_received(:reload)
+    end
+
     describe "validations" do
       it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
 

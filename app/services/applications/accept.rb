@@ -26,6 +26,8 @@ module Applications
         reject_other_applications_in_same_cohort!
       end
 
+      application.reload
+
       true
     end
 

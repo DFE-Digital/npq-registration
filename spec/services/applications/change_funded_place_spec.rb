@@ -26,6 +26,15 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
     let(:lead_provider) { create(:lead_provider) }
     let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
+    it "reloads application after action" do
+      params.merge!(funded_place: true)
+      application.update!(funded_place: false)
+
+      allow(service.application).to receive(:reload)
+      service.change
+      expect(service.application).to have_received(:reload)
+    end
+
     context "when application funded_place is false" do
       before do
         params.merge!(funded_place: true)

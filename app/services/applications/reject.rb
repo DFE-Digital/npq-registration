@@ -13,6 +13,7 @@ module Applications
       return false unless valid?
 
       application.update!(lead_provider_approval_status: "rejected")
+      application.reload
 
       true
     end

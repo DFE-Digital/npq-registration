@@ -26,5 +26,11 @@ RSpec.describe Applications::Reject, type: :model do
     it "marks the lead provider approval status as rejected" do
       expect { service.reject }.to change { application.reload.lead_provider_approval_status }.from("pending").to("rejected")
     end
+
+    it "reloads application after action" do
+      allow(service.application).to receive(:reload)
+      service.reject
+      expect(service.application).to have_received(:reload)
+    end
   end
 end
