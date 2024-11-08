@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_08_132334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -357,6 +357,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
     t.index ["ecf_id"], name: "index_participant_outcomes_on_ecf_id", unique: true
   end
 
+  create_table "pghero_query_stats", force: :cascade do |t|
+    t.text "database"
+    t.text "user"
+    t.text "query"
+    t.bigint "query_hash"
+    t.float "total_time"
+    t.bigint "calls"
+    t.datetime "captured_at", precision: nil
+    t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
+  end
+
   create_table "private_childcare_providers", force: :cascade do |t|
     t.text "provider_urn", null: false
     t.text "provider_name"
@@ -403,8 +414,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_30_181047) do
     t.string "request_method", null: false
     t.integer "ecf_response_status_code", null: false
     t.integer "npq_response_status_code", null: false
-    t.string "ecf_response_body"
-    t.string "npq_response_body"
+    t.text "ecf_response_body"
+    t.text "npq_response_body"
     t.integer "ecf_response_time_ms", null: false
     t.integer "npq_response_time_ms", null: false
     t.bigint "lead_provider_id", null: false

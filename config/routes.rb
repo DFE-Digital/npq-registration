@@ -278,6 +278,7 @@ Rails.application.routes.draw do
 
   constraints(->(request) { Admin.find_by(id: request.session[:admin_id])&.super_admin? }) do
     mount DelayedJobWeb, at: "/delayed_job"
+    mount PgHero::Engine, at: "pghero"
   end
 
   get "/development_login", to: "registration_wizard#development_login"

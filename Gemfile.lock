@@ -250,6 +250,18 @@ GEM
     google-cloud-env (2.1.1)
       faraday (>= 1.0, < 3.a)
     google-cloud-errors (1.4.0)
+    google-protobuf (4.28.3)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-arm64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-x86_64-linux)
+      bigdecimal
+      rake (>= 13)
     googleauth (1.11.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
@@ -396,9 +408,13 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
+    pg_query (5.1.0)
+      google-protobuf (>= 3.22.3)
     pg_search (2.3.7)
       activerecord (>= 6.1)
       activesupport (>= 6.1)
+    pghero (3.6.1)
+      activerecord (>= 6.1)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -736,7 +752,9 @@ DEPENDENCIES
   paper_trail (~> 15.2)
   parallel_tests (~> 4.7)
   pg (>= 0.18, < 2.0)
+  pg_query (>= 2)
   pg_search
+  pghero
   pry-byebug
   pry-rails
   puma (~> 6.4.3)
