@@ -112,6 +112,10 @@ module Migration::Migrators
         return true
       end
 
+      if ecf_npq_application.profile&.school_urn.presence != ecf_npq_application.school_urn
+        return true
+      end
+
       user_trn = find_user_trn(ecf_id: ecf_npq_application.user.id)
 
       if ecf_npq_application.lead_provider_approval_status == "accepted"
@@ -123,12 +127,6 @@ module Migration::Migrators
       end
 
       false
-    end
-
-    def touch_updated_at?(application, ecf_npq_application)
-      ecf_npq_application.profile&.school_urn.presence != ecf_npq_application.school_urn ||
-        application.ineligible_for_funding_reason != ecf_npq_application.ineligible_for_funding_reason ||
-        provider_only_in_npq?(application, ecf_npq_application)
     end
 
     def ecf_profile_school_urn_or_ecf_npq_application_school_urn?(ecf_npq_application)

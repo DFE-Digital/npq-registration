@@ -84,27 +84,6 @@ RSpec.describe Migration::Migrators::Application do
         expect(application.updated_at).to be_within(1.second).of(5.days.ago)
       end
 
-      context "when `ineligible_for_funding_reason` is updated" do
-        before do
-          create(
-            :ecf_migration_npq_application,
-            :accepted,
-            participant_identity: ecf_resource1.participant_identity,
-            eligible_for_funding: true,
-            funded_place: nil,
-            npq_course: ecf_resource1.npq_course,
-            npq_lead_provider: ecf_resource1.npq_lead_provider,
-          )
-        end
-
-        it "updates the `updated_at` of the application to now" do
-          instance.call
-
-          application = Application.find_by!(ecf_id: ecf_resource1.id)
-          expect(application.updated_at).to be_within(1.second).of(Time.zone.now)
-        end
-      end
-
       context "when setting the school" do
         before do
           ecf_school = create(:ecf_migration_school)
