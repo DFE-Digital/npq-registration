@@ -44,7 +44,21 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :redis_cache_store,
+                       {
+                         url: ENV["REDIS_CACHE_URL"],
+                         connect_timeout: 30, # Defaults to 20 seconds
+                         reconnect_attempts: 1, # Defaults to 0
+                         error_handler: lambda { |method:, returning:, exception:|
+                                          # We get a few timeout errors/day from Redis; it may be that the cache is
+                                          # under heavy load, but we don't want to be alerted about it.
+                                          if exception.instance_of?(Redis::TimeoutError)
+                                            Rails.logger.warn("Redis timeout error #{exception}")
+                                          else
+                                            Sentry.capture_exception(exception, tags: { method:, returning: })
+                                          end
+                                        },
+                       }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :delayed_job
