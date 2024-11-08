@@ -143,6 +143,28 @@ RSpec.describe Migration::Migrators::Application do
         expect(failure_manager).to have_received(:record_failure).once.with(orphan_application2, /NPQApplication not found in ECF/)
       end
 
+      context "when a provider is set in NPQ reg but not ECF" do
+        it "updates the updated_at of the application to now if the private_childcare_provider is set" do
+          ecf_resource1.update!(updated_at: 10.days.ago, private_childcare_provider_urn: nil)
+          application = Application.find_by(ecf_id: ecf_resource1.id)
+          application.update!(private_childcare_provider: create(:private_childcare_provider, :disabled))
+
+          instance.call
+
+          expect(application.reload.updated_at).to be_within(5.seconds).of(Time.zone.now)
+        end
+
+        it "updates the updated_at of the application to now if the itt_provider is set" do
+          ecf_resource1.update!(updated_at: 10.days.ago, itt_provider: nil)
+          application = Application.find_by(ecf_id: ecf_resource1.id)
+          application.update!(itt_provider: create(:itt_provider, :disabled))
+
+          instance.call
+
+          expect(application.reload.updated_at).to be_within(5.seconds).of(Time.zone.now)
+        end
+      end
+
       context "when application does not exist on NPQ" do
         it "creates application" do
           created_at = 10.days.ago

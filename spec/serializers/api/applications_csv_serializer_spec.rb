@@ -82,5 +82,43 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         it { expect(parsed_updated_at_attribute).to be_within(1.second).of(first_application.user.updated_at) }
       end
     end
+
+    context "when providers are disabled" do
+      before do
+        first_application.itt_provider.update!(disabled_at: 1.day.ago)
+        first_application.private_childcare_provider.update!(disabled_at: 1.day.ago)
+
+        # Reload to ensure default scope is applied/account for.
+        applications.each(&:reload)
+      end
+
+      it "includes the providers" do
+        expect(first_row).to include({
+          private_childcare_provider_urn: first_application.private_childcare_provider_including_disabled.provider_urn,
+          itt_provider: first_application.itt_provider_including_disabled.legal_name,
+        })
+      end
+    end
+
+    context "when optional associations are nil" do
+      before do
+        first_application.update!(
+          private_childcare_provider: nil,
+          itt_provider: nil,
+          school: nil,
+          schedule: nil,
+          cohort: nil,
+        )
+      end
+
+      it "returns nil for these values" do
+        expect(first_row).to include({
+          private_childcare_provider_urn: nil,
+          itt_provider: nil,
+          school_urn: nil,
+          cohort: nil,
+        })
+      end
+    end
   end
 end
