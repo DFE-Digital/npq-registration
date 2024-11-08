@@ -88,7 +88,9 @@ module Migration::Migrators
 
         attrs = ecf_npq_application.attributes.slice(*ATTRIBUTES).merge(skip_touch_user_if_changed: true)
 
-        attrs[:updated_at] = Time.zone.now if provider_only_in_npq?(application, ecf_npq_application)
+        if touch_updated_at?(application, ecf_npq_application)
+          attrs["updated_at"] = Time.zone.now
+        end
 
         application.update!(attrs)
       end
@@ -100,9 +102,26 @@ module Migration::Migrators
 
   private
 
-    def provider_only_in_npq?(application, ecf_npq_application)
-      ecf_npq_application.itt_provider.nil? && application.itt_provider_including_disabled.present? ||
-        ecf_npq_application.private_childcare_provider_urn.nil? && application.private_childcare_provider_including_disabled.present?
+    def touch_updated_at?(application, ecf_npq_application)
+      if ecf_npq_application.itt_provider.nil? && application.itt_provider_including_disabled.present?
+        return true
+      end
+
+      if ecf_npq_application.private_childcare_provider_urn.nil? && application.private_childcare_provider_including_disabled.present?
+        return true
+      end
+
+      user_trn = find_user_trn(ecf_id: ecf_npq_application.user.id)
+
+      if ecf_npq_application.lead_provider_approval_status == "accepted"
+        if user_trn != ecf_npq_application&.user&.teacher_profile&.trn
+          return true
+        end
+      elsif user_trn != ecf_npq_application.teacher_reference_number
+        return true
+      end
+
+      false
     end
 
     def report_applications_not_in_ecf_as_failures

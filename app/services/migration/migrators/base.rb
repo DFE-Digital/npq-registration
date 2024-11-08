@@ -129,6 +129,10 @@ module Migration::Migrators
       user_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find User")
     end
 
+    def find_user_trn(ecf_id:)
+      user_trns_by_ecf_id[ecf_id]
+    end
+
     def find_schedule_id!(ecf_id:)
       schedule_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Schedule")
     end
@@ -174,6 +178,10 @@ module Migration::Migrators
 
     def user_ids_by_ecf_id
       @user_ids_by_ecf_id ||= ::User.pluck(:ecf_id, :id).to_h
+    end
+
+    def user_trns_by_ecf_id
+      @user_trns_by_ecf_id ||= ::User.pluck(:ecf_id, :trn).to_h
     end
 
     def cohort_ids_by_ecf_id
