@@ -5,7 +5,7 @@ class Admin::FeaturesController < AdminController
     end
 
     def show
-      @feature = Flipper.features
+      @feature = Flipper[params[:id]]
     end
   
-  end
+end

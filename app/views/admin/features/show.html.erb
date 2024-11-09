@@ -1,1 +1,19 @@
-<p>Hello world</p>
+<% content_for :before_content do %>
+  <%= render GovukComponent::BackLinkComponent.new(
+    text: "Back",
+    href: admin_features_path
+  ) %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl"><%= @feature.name %></h1>
+
+    <p class="govuk-body-l">Current state: <strong class="govuk-tag govuk-tag--green"><%= @feature.state %></strong></p>
+
+    <p class="govuk-body">When this feature is turned on, users can register for an NPQ as normal.</p>
+    
+    <p class="govuk-body">When this feature is turned off, users cannot register for an NPQ, unless you're using the 'Closed registration enabled' feature to allow some users to register. Learn about the 'Closed registration enabled' feature.</p>
+
+  </div>
+</div>
