@@ -329,6 +329,7 @@ GEM
       rack (>= 2.1.4.1)
     marcel (1.0.4)
     matrix (0.4.2)
+    memory_profiler (1.1.0)
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
@@ -417,6 +418,8 @@ GEM
     rack (2.2.10)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
+    rack-mini-profiler (3.3.1)
+      rack (>= 1.2.0)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
     rack-session (1.0.2)
@@ -619,6 +622,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
+    stackprof (0.2.26)
     state_machines (0.6.0)
     state_machines-activemodel (0.9.0)
       activemodel (>= 6.0)
@@ -725,6 +729,7 @@ DEPENDENCIES
   knapsack
   listen (>= 3.0.5, < 3.10)
   mail-notify
+  memory_profiler
   net-imap (~> 0.5.0)
   net-pop
   net-smtp (~> 0.5.0)
@@ -741,6 +746,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 6.4.3)
   rack-attack
+  rack-mini-profiler
   rails (~> 7)
   rails_semantic_logger
   redis
@@ -763,6 +769,7 @@ DEPENDENCIES
   site_prism (~> 5.0)
   sprockets (~> 4.2.0)
   sprockets-rails
+  stackprof
   state_machines-activerecord
   stimulus-rails
   tzinfo-data
