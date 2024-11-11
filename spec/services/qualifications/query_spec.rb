@@ -7,12 +7,19 @@ RSpec.describe Qualifications::Query do
     let(:user) { create(:user) }
     let(:trn) { user.trn }
     let(:different_user_with_same_trn) { create(:user, trn:) }
-    let!(:passed_participant_outcome_1) { create(:participant_outcome, :passed, user:) }
-    let!(:passed_participant_outcome_2) { create(:participant_outcome, :passed, user:) }
-    let!(:passed_participant_outcome_3) { create(:participant_outcome, :passed, user: different_user_with_same_trn) }
+    let!(:older_passed_participant_outcome) { create(:participant_outcome, :passed, user:, completion_date: 1.year.ago) }
+    let!(:latest_passed_participant_outcome) { create(:participant_outcome, :passed, user:, declaration: older_passed_participant_outcome.declaration, course: older_passed_participant_outcome.course) }
+    let!(:older_passed_participant_outcome_different_declaration) { create(:participant_outcome, :passed, user:, completion_date: 6.months.ago, course: older_passed_participant_outcome.course) }
+    let!(:older_passed_participant_outcome_different_user_same_trn) { create(:participant_outcome, :passed, user: different_user_with_same_trn, completion_date: 1.month.ago, course: older_passed_participant_outcome.course) }
 
-    it "returns the passed participant outcomes for the given TRN" do
-      expect(subject).to include(passed_participant_outcome_1, passed_participant_outcome_2, passed_participant_outcome_3)
+    it "returns the latest passed participant outcomes for the given TRN" do
+      expected_outcomes = [
+        latest_passed_participant_outcome,
+        older_passed_participant_outcome_different_user_same_trn,
+        older_passed_participant_outcome_different_declaration,
+        older_passed_participant_outcome,
+      ]
+      expect(subject).to eq expected_outcomes
     end
 
     context "when there are no users with the specified TRN" do
