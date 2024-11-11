@@ -29,7 +29,9 @@ module API
       end
 
       def to_json(obj)
-        StatementSerializer.render(obj, root: "data")
+        Rack::MiniProfiler.step("Blueprinter serialization") do
+          StatementSerializer.render(obj, root: "data")
+        end
       end
     end
   end
