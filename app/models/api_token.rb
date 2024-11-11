@@ -17,7 +17,6 @@ class APIToken < ApplicationRecord
     # token = Rails.cache.read(cache_key)
 
     # if token.nil?
-    hashed_token = nil
 
     Rack::MiniProfiler.step("Generating token digest") do
       hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
