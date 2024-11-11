@@ -12,12 +12,22 @@ class APIToken < ApplicationRecord
   def self.find_by_unhashed_token(unhashed_token)
     hashed_token = token = nil
 
-    Rack::MiniProfiler.step("Generating token digest") do
-      hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
-    end
+    cache_key = "api_token:#{unhashed_token}"
 
-    Rack::MiniProfiler.step("API token authentication") do
-      token = find_by(hashed_token:)
+    token = Rails.cache.read(cache_key)
+
+    if token.nil?
+      hashed_token = nil
+
+      Rack::MiniProfiler.step("Generating token digest") do
+        hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
+      end
+
+      Rack::MiniProfiler.step("API token authentication") do
+        token = find_by(hashed_token:)
+      end
+
+      Rails.cache.write(cache_key, token, expires_in: 10.minutes)
     end
 
     token
