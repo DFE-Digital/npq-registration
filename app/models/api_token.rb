@@ -10,8 +10,17 @@ class APIToken < ApplicationRecord
   end
 
   def self.find_by_unhashed_token(unhashed_token)
-    hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
-    find_by(hashed_token:)
+    hashed_token = token = nil
+
+    Rack::MiniProfiler.step("Generating token digest") do
+      hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
+    end
+
+    Rack::MiniProfiler.step("API token authentication") do
+      token = find_by(hashed_token:)
+    end
+
+    token
   end
 
   def self.create_with_known_token!(token, **options)

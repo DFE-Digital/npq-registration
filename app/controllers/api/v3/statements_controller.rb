@@ -5,14 +5,10 @@ module API
       include FilterByDate
 
       def index
-        statements = results = json = nil
+        results = json = nil
 
-        Rack::MiniProfiler.step("Query statements") do
-          statements = statements_query.statements
-        end
-
-        Rack::MiniProfiler.step("Paginate statements") do
-          results = paginate(statements)
+        Rack::MiniProfiler.step("Query/paginate statements") do
+          results = paginate(statements_query.statements).to_a
         end
 
         Rack::MiniProfiler.step("Blueprinter serialization") do
