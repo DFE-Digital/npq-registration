@@ -7,7 +7,7 @@ module NpqSeparation
 
       def initialize(statement:)
         @statement = statement
-        @calculator = ::Statements::SummaryCalculator.new(statement: @statement)
+        @calculator = ::Statements::SummaryCalculator.new(statement:)
       end
     end
   end

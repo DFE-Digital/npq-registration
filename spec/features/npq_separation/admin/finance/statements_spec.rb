@@ -51,8 +51,7 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
 
   scenario "marking a statement as paid" do
     statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
-    declaration = create(:declaration)
-    create(:statement_item, statement:, declaration:)
+    create(:declaration, statement:)
 
     visit(npq_separation_admin_finance_statement_path(statement))
     expect(page).to have_css("h1", text: "Statement #{statement.id}")
@@ -72,8 +71,7 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
 
   scenario "marking a statement as paid before job has run" do
     statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
-    declaration = create(:declaration)
-    create(:statement_item, statement:, declaration:)
+    create(:declaration, statement:)
 
     visit(npq_separation_admin_finance_statement_path(statement))
     expect(page).to have_css("h1", text: "Statement #{statement.id}")
