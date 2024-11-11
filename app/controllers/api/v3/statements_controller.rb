@@ -5,7 +5,21 @@ module API
       include FilterByDate
 
       def index
-        render json: to_json(paginate(statements_query.statements))
+        statements = results = json = nil
+
+        Rack::MiniProfiler.step("Query statements") do
+          statements = statements_query.statements
+        end
+
+        Rack::MiniProfiler.step("Paginate statements") do
+          results = paginate(statements)
+        end
+
+        Rack::MiniProfiler.step("Blueprinter serialization") do
+          json = to_json(results)
+        end
+
+        render json:
       end
 
       def show
@@ -29,9 +43,7 @@ module API
       end
 
       def to_json(obj)
-        Rack::MiniProfiler.step("Blueprinter serialization") do
-          StatementSerializer.render(obj, root: "data")
-        end
+        StatementSerializer.render(obj, root: "data")
       end
     end
   end
