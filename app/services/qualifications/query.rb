@@ -6,6 +6,7 @@ module Qualifications
         .where(state: "passed")
         .joins(declaration: [application: :user])
         .where("users.trn": trn)
+        .order(completion_date: :desc)
     end
   end
 end
