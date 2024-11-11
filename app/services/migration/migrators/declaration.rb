@@ -26,6 +26,12 @@ module Migration::Migrators
       migrate(self.class.ecf_declarations) do |ecf_declaration|
         declaration = ::Declaration.find_or_initialize_by(ecf_id: ecf_declaration.id)
         latest_declaration_state = ecf_declaration.declaration_states.detect(&:ineligible?)
+        application_id = ecf_declaration.participant_profile&.npq_application&.id
+
+        if application_id.nil?
+          declaration.errors.add(:base, "Couldn't find application")
+          raise ActiveRecord::RecordInvalid, declaration
+        end
 
         declaration.update!(
           created_at: ecf_declaration.created_at,
