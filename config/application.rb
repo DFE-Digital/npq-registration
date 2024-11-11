@@ -33,11 +33,11 @@ module NpqRegistration
     }
 
     # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
-    require "middleware/time_traveler"
-    config.middleware.use Middleware::TimeTraveler
+    # require "middleware/time_traveler"
+    # config.middleware.use Middleware::TimeTraveler
 
     # Used to stream API requests to BigQuery
-    require "middleware/api_request_middleware"
-    config.middleware.use Middleware::ApiRequestMiddleware
+    # require "middleware/api_request_middleware"
+    # config.middleware.use Middleware::ApiRequestMiddleware
   end
 end
