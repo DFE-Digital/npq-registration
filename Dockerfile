@@ -68,6 +68,8 @@ RUN apk add --update --no-cache libpq tzdata ${EXTRA_PACKAGES} && \
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
+RUN RAILS_ENV=production bundle exec bootsnap precompile --gemfile app/ lib/
+
 ARG COMMIT_SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
     COMMIT_SHA=${COMMIT_SHA}
