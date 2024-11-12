@@ -9,6 +9,7 @@ import institutionPicker from "./institution-picker";
 import countryPicker from "./country-picker";
 import ittProviderPicker from "./itt-provider-picker.js";
 import cookieBanner from "./cookie-banner";
+import print from "./print";
 import mermaid from 'mermaid';
 import svgPanZoom from 'svg-pan-zoom';
 
