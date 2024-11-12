@@ -8,6 +8,10 @@ FactoryBot.define do
       state { "eligible" }
     end
 
+    trait :ineligible do
+      state { "ineligible" }
+    end
+
     trait :voided do
       state { "voided" }
     end

@@ -23,7 +23,7 @@ RSpec.describe StatementItem, type: :model do
 
   describe "scopes" do
     before do
-      %i[eligible payable paid awaiting_clawback clawed_back].each do |trait|
+      %i[eligible payable paid awaiting_clawback clawed_back ineligible voided].each do |trait|
         create(:statement_item, trait)
       end
     end
@@ -37,6 +37,12 @@ RSpec.describe StatementItem, type: :model do
     describe ".refundable" do
       it "returns only refundable records" do
         expect(described_class.refundable.pluck(:state).sort).to eql(%w[awaiting_clawback clawed_back].sort)
+      end
+    end
+
+    describe ".not_eligible" do
+      it "returns only not eligible records" do
+        expect(described_class.not_eligible.pluck(:state).sort).to eql(%w[ineligible voided].sort)
       end
     end
 
