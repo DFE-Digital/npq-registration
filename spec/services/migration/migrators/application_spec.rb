@@ -85,8 +85,9 @@ RSpec.describe Migration::Migrators::Application do
       end
 
       context "when setting the school" do
+        let(:ecf_school) { create(:ecf_migration_school) }
+
         before do
-          ecf_school = create(:ecf_migration_school)
           create(:school, urn: ecf_school.urn)
           ecf_resource1.profile.update!(school_urn: ecf_school.urn)
         end
@@ -124,6 +125,16 @@ RSpec.describe Migration::Migrators::Application do
 
             application = Application.find_by!(ecf_id: ecf_resource1.id)
             expect(application.school.urn).to eq(ecf_resource1.school_urn)
+          end
+        end
+
+        context "when school is not found" do
+          before { School.find_by(urn: ecf_school.urn).destroy! }
+
+          it "does not record a failure" do
+            instance.call
+
+            expect(failure_manager).not_to have_received(:record_failure)
           end
         end
       end

@@ -70,7 +70,7 @@ module Migration::Migrators
 
         school_urn = ecf_profile_school_urn_or_ecf_npq_application_school_urn?(ecf_npq_application)
         if school_urn
-          application.school_id = find_school_id!(urn: school_urn)
+          application.school_id = find_school_id(urn: school_urn)
         end
 
         application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
