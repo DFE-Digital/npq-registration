@@ -10,7 +10,7 @@ module Qualifications
 
     def participant_outcomes(trn:)
       ParticipantOutcome
-        .includes(declaration: [application: [:course]])
+        .includes(declaration: [application: %i[course user]])
         .where(state: "passed")
         .joins(declaration: [application: :user])
         .where("users.trn": trn)
