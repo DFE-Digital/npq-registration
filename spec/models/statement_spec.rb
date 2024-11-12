@@ -186,13 +186,25 @@ RSpec.describe Statement, type: :model do
     end
 
     context "with statement not in payable state" do
-      let(:statement) { create(:statement, :open, :next_output_fee, declaration:) }
+      let :statement do
+        create(:statement, :open, :next_output_fee, declaration:,
+                                                    deadline_date: Time.zone.yesterday)
+      end
 
       it { is_expected.to be false }
     end
 
     context "with statement without declarations" do
       let(:statement) { create(:statement, :next_output_fee, :payable) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with statement with future deadline date" do
+      let :statement do
+        create(:statement, :next_output_fee, :payable, declaration:,
+                                                       deadline_date: Time.zone.today)
+      end
 
       it { is_expected.to be false }
     end

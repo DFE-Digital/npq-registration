@@ -32,7 +32,11 @@ FactoryBot.define do
     end
 
     trait(:open) { state { "open" } }
-    trait(:payable) { state { "payable" } }
+
+    trait :payable do
+      state { "payable" }
+      deadline_date { Time.zone.yesterday }
+    end
 
     trait(:with_existing_lead_provider) do
       lead_provider { LeadProvider.all.sample }

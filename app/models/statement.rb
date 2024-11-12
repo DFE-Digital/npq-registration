@@ -59,7 +59,11 @@ class Statement < ApplicationRecord
   end
 
   def allow_marking_as_paid?
-    output_fee && payable? && !marked_as_paid_at? && declarations.any?
+    output_fee &&
+      payable? &&
+      deadline_date.past? &&
+      !marked_as_paid_at? &&
+      declarations.any?
   end
 
   def authorising_for_payment?

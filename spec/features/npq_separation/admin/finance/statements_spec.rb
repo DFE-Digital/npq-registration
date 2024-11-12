@@ -50,7 +50,7 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
   end
 
   scenario "marking a statement as paid" do
-    statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
+    statement = create(:statement, :payable)
     create(:declaration, statement:)
 
     visit(npq_separation_admin_finance_statement_path(statement))
@@ -70,7 +70,7 @@ RSpec.feature "Listing and viewing statements", :ecf_api_disabled, type: :featur
   end
 
   scenario "marking a statement as paid before job has run" do
-    statement = Statement.order(payment_date: :asc).first.tap(&:mark_payable!)
+    statement = create(:statement, :payable)
     create(:declaration, statement:)
 
     visit(npq_separation_admin_finance_statement_path(statement))
