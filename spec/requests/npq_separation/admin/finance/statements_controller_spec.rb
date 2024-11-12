@@ -34,7 +34,7 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, :ecf_api_dis
         {
           lead_provider_id: statement.lead_provider_id,
           cohort_id: statement.cohort_id,
-          period: "#{statement.year}-#{statement.month}",
+          statement: "#{statement.year}-#{statement.month}",
         }
       end
 
@@ -54,12 +54,12 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, :ecf_api_dis
       it { is_expected.to have_http_status(:ok) }
     end
 
-    context "with params matching no statement period" do
+    context "with params matching no statement statement" do
       let(:params) do
         {
           lead_provider_id: statement.lead_provider_id,
           cohort_id: statement.cohort_id,
-          period: "2000-01",
+          statement: "2000-01",
         }
       end
 

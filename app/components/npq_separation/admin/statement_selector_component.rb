@@ -3,10 +3,15 @@
 module NpqSeparation
   module Admin
     class StatementSelectorComponent < BaseComponent
-      attr_reader :lead_provider_id, :cohort_id, :period
+      StatementOption = Struct.new(:name, :value)
+
+      include StatementHelper
+
+      attr_reader :lead_provider_id, :cohort_id, :selection
 
       def initialize(selection)
-        @lead_provider_id, @cohort_id, @period = selection.values_at(:lead_provider_id, :cohort_id, :period)
+        @selection = selection
+        @lead_provider_id, @cohort_id = selection.values_at(:lead_provider_id, :cohort_id)
       end
 
       def lead_providers
@@ -17,12 +22,17 @@ module NpqSeparation
         Cohort.all.order(:start_year)
       end
 
-      def periods
+      def statements
         scope = Statement.order(:year, :month)
         scope = scope.where(lead_provider_id:) if lead_provider_id.present?
         scope = scope.where(cohort_id:) if cohort_id.present?
 
-        [OpenStruct.new(name: "All", value: "")] + scope.uniq(&:period)
+        options = [["All", ""]] + scope.map { [statement_name(_1), statement_period(_1)] }
+        options.map { StatementOption.new(*_1) }.uniq(&:value)
+      end
+
+      def selected_statement
+        selection[:statement].presence || selection.values_at(:year, :month).join("-")
       end
     end
   end

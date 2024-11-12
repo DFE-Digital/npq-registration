@@ -21,7 +21,7 @@
 
     summary_list.with_row do |row|
       row.with_key(text: "Statement period")
-      row.with_value(text: @statement.name)
+      row.with_value(text: statement_name(@statement))
     end
 
     summary_list.with_row do |row|
@@ -126,7 +126,7 @@
         <div class="govuk-grid-column-one-half govuk-!-text-align-right">
           <p class="govuk-body-s">
             <%=
-              govuk_link_to "Save as PDF", "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: "#{@statement.lead_provider.name} #{@statement.name} NPQ Statement (#{@statement.cohort.start_year} Cohort)" }
+              govuk_link_to "Save as PDF", "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: "#{@statement.lead_provider.name} #{statement_name(@statement)} NPQ Statement (#{@statement.cohort.start_year} Cohort)" }
             %>
           </p>
           <p class="govuk-body-s">

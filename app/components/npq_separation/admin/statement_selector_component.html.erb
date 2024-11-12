@@ -17,12 +17,12 @@
     form_group: { class: "govuk-form-group govuk-!-width-one-quarter" }
   %>
 
-  <%= f.govuk_collection_select :period,
-    periods,
-    :period,
+  <%= f.govuk_collection_select :statement,
+    statements,
+    :value,
     :name,
-    label: { text: "View a different period" },
-    options: { selected: period },
+    label: { text: "View a different statement" },
+    options: { selected: selected_statement },
     form_group: { class: "govuk-form-group govuk-!-width-one-quarter" }
   %>
 

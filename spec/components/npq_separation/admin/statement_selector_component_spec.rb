@@ -3,6 +3,8 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :component do
+  include StatementHelper
+
   let(:lead_provider)    { create :lead_provider }
   let!(:statement)       { create(:statement, lead_provider:) }
   let(:cohort)           { statement.cohort }
@@ -23,9 +25,9 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     expect(rendered).to have_selector("select#cohort-id-field option[value='#{cohort.id}']", text: cohort.start_year)
   end
 
-  it "has dropdown with period" do
-    expect(rendered).to have_selector("select#period-field")
-    expect(rendered).to have_selector("select#period-field option[value='#{statement.period}']", text: statement.name)
+  it "has dropdown with statement" do
+    expect(rendered).to have_selector("select#statement-field")
+    expect(rendered).to have_selector("select#statement-field option[value='#{statement_period(statement)}']", text: statement_name(statement))
   end
 
   it "has submit button" do
@@ -40,7 +42,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     expect(rendered).to have_selector("select#cohort-id-field option[selected]", text: statement.cohort.start_year, visible: :all)
   end
 
-  it "defaults to selected period" do
-    expect(rendered).to have_selector("select#period-field option[selected]", text: statement.name, visible: :all)
+  it "defaults to selected statement" do
+    expect(rendered).to have_selector("select#statement-field option[selected]", text: statement_name(statement), visible: :all)
   end
 end

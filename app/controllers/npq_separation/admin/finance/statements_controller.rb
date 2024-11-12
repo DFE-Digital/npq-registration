@@ -31,13 +31,13 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
 private
 
   def statement_params
-    params.permit(:lead_provider_id, :cohort_id, :period)
+    params.permit(:lead_provider_id, :cohort_id, :statement)
           .tap { extract_period _1 }
           .select { _2.present? }
   end
 
   def extract_period(params)
-    return unless (period = params.delete(:period))
+    return unless (period = params.delete(:statement))
 
     params[:year], params[:month] = period.split("-")
   end
