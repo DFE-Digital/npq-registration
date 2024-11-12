@@ -158,7 +158,7 @@ GEM
       railties (>= 6.0.0)
     csv (3.3.0)
     daemons (1.4.1)
-    date (3.3.4)
+    date (3.4.0)
     declarative (0.0.20)
     deepsort (0.5.0)
     delayed_cron_job (0.9.0)
@@ -341,7 +341,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.5.0)
+    net-imap (0.5.1)
       date
       net-protocol
     net-pop (0.1.2)
@@ -725,7 +725,7 @@ DEPENDENCIES
   knapsack
   listen (>= 3.0.5, < 3.10)
   mail-notify
-  net-imap (~> 0.5.0)
+  net-imap (~> 0.5.1)
   net-pop
   net-smtp (~> 0.5.0)
   oj
