@@ -4,7 +4,7 @@ module "redis-cache" {
   namespace                 = var.namespace
   environment               = local.environment
   azure_resource_prefix     = var.azure_resource_prefix
-  service_name              = local.service_name
+  service_name              = var.service_name
   service_short             = var.service_short
   config_short              = var.config_short
   azure_capacity            = var.redis_cache_capacity
