@@ -1,1 +1,31 @@
-TODO
+<%= govuk_back_link href: npq_separation_admin_application_path(@application) %>
+
+<h1 class="govuk-heading-l">
+  Are you sure you want to change the status to pending?
+</h1>
+
+<div class="govuk-inset-text">
+  <p class="govuk-body">
+    Lead provider approval status:
+    <br />
+    <strong><%= @application.lead_provider_approval_status&.humanize %></strong>
+  </p>
+</div>
+
+<%= form_for @revert_to_pending_form,
+             url: npq_separation_admin_applications_revert_to_pending_path(@application) do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_collection_radio_buttons :change_status_to_pending,
+                                       %w[yes no],
+                                       :to_s,
+                                       :humanize,
+                                       legend: {
+                                          text: "Change the status to pending?"
+                                       } %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit "Change status to Pending" %>
+    <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_path(@application) %>
+  </div>
+<% end %>

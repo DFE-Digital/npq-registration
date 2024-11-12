@@ -261,6 +261,12 @@ en:
         checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
+        applications/revert_to_pending_form:
+          attributes:
+            change_status_to_pending:
+              inclusion: Confirm you wish to change the status back to pending
+            lead_provider_approval_status:
+              inclusion: Current lead provider approval status is not Accepted
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:
