@@ -22,6 +22,10 @@ class APIToken < ApplicationRecord
       hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
     end
 
+    # "name": "Generating token digest",
+    # "duration_milliseconds": 165.6870422884822,
+    # "duration_without_children_milliseconds": 165.6870422884822,
+
     Rack::MiniProfiler.step("API token authentication") do
       token = find_by(hashed_token:)
     end
