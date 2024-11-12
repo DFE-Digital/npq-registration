@@ -68,8 +68,9 @@ module Migration::Migrators
         application.private_childcare_provider_id = find_private_childcare_provider_id!(provider_urn: ecf_npq_application.private_childcare_provider_urn) if ecf_npq_application.private_childcare_provider_urn
         application.ukprn = ecf_npq_application.school_ukprn
 
-        if ecf_npq_application.school_urn.present?
-          application.school_id = find_school_id!(urn: ecf_npq_application.school_urn)
+        school_urn = ecf_profile_school_urn_or_ecf_npq_application_school_urn?(ecf_npq_application)
+        if school_urn
+          application.school_id = find_school_id(urn: school_urn)
         end
 
         application.lead_provider_id = find_lead_provider_id!(ecf_id: ecf_npq_application.npq_lead_provider_id)
@@ -111,6 +112,10 @@ module Migration::Migrators
         return true
       end
 
+      if ecf_npq_application.profile&.school_urn.presence != ecf_npq_application.school_urn
+        return true
+      end
+
       user_trn = find_user_trn(ecf_id: ecf_npq_application.user.id)
 
       if ecf_npq_application.lead_provider_approval_status == "accepted"
@@ -122,6 +127,10 @@ module Migration::Migrators
       end
 
       false
+    end
+
+    def ecf_profile_school_urn_or_ecf_npq_application_school_urn?(ecf_npq_application)
+      ecf_npq_application.profile&.school_urn.presence || ecf_npq_application.school_urn
     end
 
     def report_applications_not_in_ecf_as_failures

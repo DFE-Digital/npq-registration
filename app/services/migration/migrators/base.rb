@@ -113,8 +113,12 @@ module Migration::Migrators
       course_ids_by_ecf_id[ecf_id] || raise(ActiveRecord::RecordNotFound, "Couldn't find Course") if ecf_id
     end
 
+    def find_school_id(urn:)
+      school_ids_by_urn[urn]
+    end
+
     def find_school_id!(urn:)
-      school_ids_by_urn[urn] || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
+      find_school_id(urn:) || raise(ActiveRecord::RecordNotFound, "Couldn't find School")
     end
 
     def find_itt_provider_id!(itt_provider:)
