@@ -40,7 +40,7 @@ DfE::Analytics.configure do |config|
   # A proc which returns true or false depending on whether you want to
   # enable analytics. You might want to hook this up to a feature flag or
   # environment variable.
-  config.enable_analytics = proc { Rails.env.staging? }
+  config.enable_analytics = proc { Rails.env.staging? || Rails.env.separation? }
 
   # The environment we’re running in. This value will be attached
   # to all events we send to BigQuery.
