@@ -98,8 +98,8 @@ module Applications
           :user,
           :school,
           :cohort,
-          :private_childcare_provider,
-          :itt_provider,
+          :private_childcare_provider_including_disabled,
+          :itt_provider_including_disabled,
           :schedule,
         )
     end
