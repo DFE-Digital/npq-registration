@@ -18,7 +18,7 @@ module API
       end
 
       def to_json(participant_outcomes)
-        QualificationsSerializer.render(participant_outcomes, root: "data", trn:)
+        QualificationsSerializer.render(trn, root: "data", participant_outcomes:)
       end
     end
   end

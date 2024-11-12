@@ -4,7 +4,7 @@ RSpec.describe API::QualificationsSerializer, type: :serializer do
   let(:outcome) { create(:participant_outcome, :passed) }
   let(:trn) { outcome.declaration.application.user.trn }
 
-  subject(:response) { JSON.parse(described_class.render([outcome], root: "data", trn:)) }
+  subject(:response) { JSON.parse(described_class.render(trn, root: "data", participant_outcomes: [outcome])) }
 
   it "serializes the `trn`" do
     expect(response["data"]["trn"]).to eq(trn)
