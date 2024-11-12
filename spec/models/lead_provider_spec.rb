@@ -51,7 +51,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -68,7 +68,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -85,7 +85,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -102,7 +102,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -119,7 +119,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -136,7 +136,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -153,7 +153,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -167,7 +167,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -181,7 +181,7 @@ RSpec.describe LeadProvider do
           "National Institute of Teaching",
           "Teacher Development Trust",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
@@ -197,7 +197,7 @@ RSpec.describe LeadProvider do
           "LLSE",
           "National Institute of Teaching",
           "Teach First",
-          "University College London (UCL) Institute of Education",
+          "UCL Institute of Education",
         ])
       end
     end
