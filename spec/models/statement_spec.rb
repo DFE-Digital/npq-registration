@@ -200,10 +200,18 @@ RSpec.describe Statement, type: :model do
       it { is_expected.to be false }
     end
 
-    context "with statement with future deadline date" do
+    context "with future deadline date" do
       let :statement do
         create(:statement, :next_output_fee, :payable, declaration:,
                                                        deadline_date: Time.zone.today)
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "with nil deadline date" do
+      let :statement do
+        create(:statement, :next_output_fee, :payable, declaration:, deadline_date: nil)
       end
 
       it { is_expected.to be false }
