@@ -3,7 +3,7 @@ module StatementHelper
     Date.new(statement.year, statement.month).strftime("%B %Y")
   end
 
-  def number_to_pounds(number)
-    number_to_currency number, precision: 2, unit: "£"
+  def statement_period(statement)
+    "#{statement.year}-#{statement.month}"
   end
 end

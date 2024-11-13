@@ -20,6 +20,7 @@ module NpqSeparation
           "ID",
           ("Lead provider" if show_lead_provider),
           "Cohort",
+          "Statement",
           "Status",
           govuk_visually_hidden("Action"),
         ].compact
@@ -31,6 +32,7 @@ module NpqSeparation
             id_link(statement),
             lead_provider_link(statement.lead_provider),
             cohort_link(statement),
+            helpers.statement_name(statement),
             statement_tag(statement),
             view_link(statement),
           ].compact

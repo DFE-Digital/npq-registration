@@ -248,6 +248,7 @@ Rails.application.routes.draw do
             member do
               resource :assurance_report, controller: "statements/assurance_reports", only: "show"
               resource :payment_authorisation, controller: "statements/payment_authorisations", only: %i[new create]
+              resources :voided, controller: "statements/voided", only: :index
             end
           end
         end

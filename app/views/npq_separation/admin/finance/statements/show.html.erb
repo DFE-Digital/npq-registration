@@ -1,5 +1,7 @@
 <%= tag.h1("Statement #{@statement.id}", class: "govuk-heading-l") %>
 
+<%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement) %>
+
 <%=
   govuk_summary_list do |summary_list|
     summary_list.with_row do |row|
@@ -18,8 +20,163 @@
     end
 
     summary_list.with_row do |row|
+      row.with_key(text: "Statement period")
+      row.with_value(text: statement_name(@statement))
+    end
+
+    summary_list.with_row do |row|
       row.with_key(text: "Status")
       row.with_value(text: govuk_tag(text: @statement.state.capitalize))
     end
+  end
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <% if @special_contracts.any? %>
+      <%= govuk_warning_text(icon_fallback_text: "Warning") do %>
+        <%= @special_contracts.map { _1.course.name }.to_sentence %> has standalone payments.
+        <br/>
+        <%= govuk_link_to "View payments for this course", '#standalone_payments' %>
+      <% end %>
+    <% end %>
+
+    <div class="govuk-!-padding-3 app-statement-block">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <h4 class="govuk-heading-m govuk-!-margin-bottom-2"><%= t("finance.totals") %></h4>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            <%= t("finance.output_payment.label") %>
+            <span class="float-right"><%= number_to_currency(@calculator.total_output_payment) %></span>
+          </p>
+
+          <% if @calculator.show_targeted_delivery_funding? %>
+            <p class="govuk-body-s govuk-!-margin-bottom-2">
+              <%= t("finance.targeted_delivery_funding.caption") %>
+              <span class="float-right"><%= number_to_currency(@calculator.total_targeted_delivery_funding) %></span>
+            </p>
+          <% end %>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            <%= t("finance.clawbacks.caption") %>
+            <span class="float-right"><%= number_to_currency(-@calculator.total_clawbacks) %></span>
+          </p>
+
+          <% unless @calculator.total_service_fees.zero? %>
+            <p class="govuk-body-s govuk-!-margin-bottom-2">
+              <%= t("finance.service_fee.caption") %>
+              <span class="float-right"><%= number_to_currency(@calculator.total_service_fees) %></span>
+            </p>
+          <% end %>
+
+          <hr/>
+
+          <p class="govuk-body-s govuk-!-margin-bottom-2">
+            <strong><%= t("finance.total_net_vat") %></strong>
+            <strong class="float-right"><span><%= number_to_currency(@calculator.total_payment) %></span></strong>
+          </p>
+        </div>
+
+        <div class="govuk-grid-column-one-half">
+          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cut_off_date.caption") %></strong>
+          <p class="govuk-body-l govuk-!-font-weight-bold"><%= @statement.deadline_date.to_fs(:govuk) %></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row govuk-!-margin-top-3">
+        <div class="govuk-grid-column-one-quarter">
+          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_starts") %></p>
+          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_starts %></p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_retained") %></p>
+          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_retained %></p>
+        </div>
+        <div class="govuk-grid-column-one-quarter">
+          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_completed") %></p>
+          <div class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_completed %></div>
+        </div>
+
+        <div class="govuk-grid-column-one-quarter">
+          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_voids") %></p>
+          <p class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0"><%= @calculator.total_voided %></p>
+          <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t("finance.view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
+        </div>
+      </div>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <hr class="govuk-section-break govuk-section-break--visible">
+        </div>
+      </div>
+
+      <div class="govuk-grid-row govuk-!-padding-top-3">
+        <div class="govuk-grid-column-one-half govuk-!-text-align-left">
+          <%# TODO: CPDNPQ-2142 %>
+          <% if false && authorise_for_payment_button_visible?(@statement) %>
+            <%= button_to t("npq_separation.admin.finance.statements.payment_authorisations.button"), new_finance_statement_payment_authorisation_path(@statement), method: :get, class: "govuk-button govuk-button--primary" %>
+          <% elsif @statement.marked_as_paid_at.present? %>
+            <%= govuk_tag(text: t("npq_separation.admin.finance.statements.payment_authorisations.tag.content", statement_marked_as_paid_at: @statement.marked_as_paid_at.in_time_zone("London").strftime("%-I:%M%P on %-e %b %Y"))) %>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </div>
+
+        <div class="govuk-grid-column-one-half govuk-!-text-align-right">
+          <p class="govuk-body-s">
+            <%=
+              govuk_link_to "Save as PDF", "javascript:void(0)", onclick: "window.formattedPrint(this)", data: { filename: "#{@statement.lead_provider.name} #{statement_name(@statement)} NPQ Statement (#{@statement.cohort.start_year} Cohort)" }
+            %>
+          </p>
+          <p class="govuk-body-s">
+            <%= govuk_link_to "Download declarations (CSV)", npq_separation_admin_finance_assurance_report_path(@statement, format: :csv) %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<% @contracts.each do |contract| %>
+  <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+<% end %>
+
+<% if @special_contracts.any? %>
+  <h4 id="standalone_payments" class="govuk-heading-l govuk-!-margin-top-9 govuk-!-margin-bottom-7">Standalone payments</h4>
+  <% @special_contracts.each do |contract| %>
+    <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+  <% end %>
+<% end %>
+
+<%=
+  govuk_details(summary_text: "Contract Information") do
+    govuk_table do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: "Course")
+          row.with_cell(text: "Recruitment target")
+          row.with_cell(text: "Payment amount per participant")
+        end
+      end
+
+      table.with_body do |body|
+        @contracts.each do |contract|
+          body.with_row do |row|
+            row.with_cell(text: contract.course.name)
+            row.with_cell(text: contract.contract_template.recruitment_target)
+            row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
+          end
+        end
+      end
+    end
+  end
+%>
+
+<%=
+  govuk_details(summary_text: t("finance.calculation_rounding_message.title")) do
+    tag.p t("finance.calculation_rounding_message.content")
   end
 %>

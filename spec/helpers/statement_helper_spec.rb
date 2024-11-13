@@ -9,19 +9,11 @@ RSpec.describe StatementHelper, type: :helper do
     it { is_expected.to eq("March 2024") }
   end
 
-  describe "#number_to_pounds" do
-    subject { number_to_pounds(number) }
+  describe "#statement_period" do
+    subject { statement_period(statement) }
 
-    context "with integer" do
-      let(:number) { 10 }
+    let(:statement) { build(:statement, month: 3, year: 2024) }
 
-      it { is_expected.to eq "£10.00" }
-    end
-
-    context "with long float" do
-      let(:number) { 9.87654321 }
-
-      it { is_expected.to eq "£9.88" }
-    end
+    it { is_expected.to eq("2024-3") }
   end
 end

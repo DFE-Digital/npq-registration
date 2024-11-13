@@ -25,6 +25,11 @@ RSpec.describe Course do
     it { expect(described_class.npqeyl).to eq(described_class.find_by(identifier: "npq-early-years-leadership")) }
   end
 
+  describe "#aso?" do
+    it { expect(described_class.new(identifier: "npq-additional-support-offer")).to be_aso }
+    it { expect(described_class.new(identifier: "other")).not_to be_aso }
+  end
+
   describe "#eyl?" do
     it { expect(described_class.new(identifier: "npq-early-years-leadership")).to be_eyl }
     it { expect(described_class.new(identifier: "other")).not_to be_eyl }

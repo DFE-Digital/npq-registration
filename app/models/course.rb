@@ -106,6 +106,10 @@ class Course < ApplicationRecord
     identifier == NPQ_SENCO
   end
 
+  def aso?
+    identifier == NPQ_ADDITIONAL_SUPPORT_OFFER
+  end
+
   def only_pp50?
     ONLY_PP50.include?(identifier)
   end
