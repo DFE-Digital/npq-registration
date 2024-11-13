@@ -90,8 +90,8 @@ class Declaration < ApplicationRecord
   attr_accessor :skip_declaration_date_within_schedule_validation
 
   validates :declaration_date, :declaration_type, presence: true
-  validate :validate_declaration_date_within_schedule, if: -> { !skip_declaration_date_within_schedule_validation }
-  validate :validate_declaration_date_not_in_the_future
+  # validate :validate_declaration_date_within_schedule, if: -> { !skip_declaration_date_within_schedule_validation }
+  # validate :validate_declaration_date_not_in_the_future
   validates :ecf_id, uniqueness: { case_sensitive: false }
 
   def billable_statement
