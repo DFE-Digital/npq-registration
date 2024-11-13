@@ -15,7 +15,13 @@ FactoryBot.define do
     ecf_id { SecureRandom.uuid }
 
     after(:create) do |declaration, evaluator|
-      create(:statement_item, declaration:, statement: evaluator.statement) if evaluator.statement
+      if !declaration.voided? || !declaration.submitted?
+        create(:statement_item, declaration:, statement: evaluator.statement, state: declaration.state) if evaluator.statement
+        if declaration.awaiting_clawback? || declaration.clawed_back?
+          paid_statement = declaration.lead_provider.statements.paid.order(:created_at).last
+          create(:statement_item, declaration:, statement: paid_statement, state: :paid)
+        end
+      end
     end
 
     trait :submitted_or_eligible do
