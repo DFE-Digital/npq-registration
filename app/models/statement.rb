@@ -5,7 +5,6 @@ class Statement < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   has_many :statement_items
-  has_many :declarations, through: :statement_items
   has_many :contracts
   has_many :declarations, through: :statement_items
 
@@ -57,6 +56,18 @@ class Statement < ApplicationRecord
 
   def marked_as_paid?
     marked_as_paid_at.present? && paid?
+  end
+
+  def allow_marking_as_paid?
+    output_fee &&
+      payable? &&
+      !!deadline_date&.past? &&
+      !marked_as_paid_at? &&
+      declarations.any?
+  end
+
+  def authorising_for_payment?
+    payable? && marked_as_paid_at?
   end
 
   def show_targeted_delivery_funding?

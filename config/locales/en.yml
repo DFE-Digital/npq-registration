@@ -675,9 +675,9 @@ en:
               checks_done_legend: Have all necessary assurance checks been done?
             tag:
               content: "Authorised for payment at %{statement_marked_as_paid_at}"
-            # banner:
-            #   title: "Authorising for payment"
-            #   content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
+            banner:
+              title: "Authorising for payment"
+              content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."

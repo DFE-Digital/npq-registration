@@ -20,9 +20,9 @@ RSpec.describe NpqSeparation::Admin::StatementDetailsComponent, type: :component
 
   it { is_expected.to have_css "h4", text: "Totals" }
   it { is_expected.to have_css "p", text: "Output payment" }
-  it { is_expected.not_to have_css "p", text: "Targeted delivery funding" }
+  it { is_expected.to have_css "p", text: "Targeted delivery funding" }
   it { is_expected.to have_css "p", text: "Clawbacks" }
-  it { is_expected.to have_css "p", text: "Service fee" }
+  it { is_expected.not_to have_css "p", text: "Service fee" }
   it { is_expected.to have_css "p", text: "Total net VAT" }
   it { is_expected.to have_css "ul li strong", text: "Output payment cut off date" }
   it { is_expected.to have_css "ul li strong", text: "Total starts" }
@@ -33,9 +33,11 @@ RSpec.describe NpqSeparation::Admin::StatementDetailsComponent, type: :component
   context "with targeted delivery funding" do
     before do
       allow(instance.calculator)
-        .to receive(:show_targeted_delivery_funding?).and_return(true)
+        .to receive_messages(show_targeted_delivery_funding?: false,
+                             total_service_fees: 10.0)
     end
 
-    it { is_expected.to have_css "p", text: "Targeted delivery funding" }
+    it { is_expected.not_to have_css "p", text: "Targeted delivery funding" }
+    it { is_expected.to have_css "p", text: "Service fee" }
   end
 end

@@ -167,4 +167,82 @@ RSpec.describe Statement, type: :model do
       it { is_expected.not_to be_marked_as_paid }
     end
   end
+
+  describe "#allow_marking_as_paid?" do
+    subject { statement.allow_marking_as_paid? }
+
+    let(:declaration) { create(:declaration, :payable) }
+
+    context "with payable statement with declarations" do
+      let(:statement) { create(:statement, :next_output_fee, :payable, declaration:) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with non output fee statement" do
+      let(:statement) { create(:statement, :payable, output_fee: false, declaration:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with statement not in payable state" do
+      let :statement do
+        create(:statement, :open, :next_output_fee, declaration:,
+                                                    deadline_date: Time.zone.yesterday)
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "with statement without declarations" do
+      let(:statement) { create(:statement, :next_output_fee, :payable) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with future deadline date" do
+      let :statement do
+        create(:statement, :next_output_fee, :payable, declaration:,
+                                                       deadline_date: Time.zone.today)
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context "with nil deadline date" do
+      let :statement do
+        create(:statement, :next_output_fee, :payable, declaration:, deadline_date: nil)
+      end
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe "#authorising_for_payment?" do
+    subject { statement.authorising_for_payment? }
+
+    context "with payable statement with marked_as_paid_at set" do
+      let(:statement) { build(:statement, :payable, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be true }
+    end
+
+    context "with payable statement without marked_as_paid_at set" do
+      let(:statement) { build(:statement, :payable, marked_as_paid_at: nil) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with paid statement with marked_as_paid_at set" do
+      let(:statement) { build(:statement, :paid, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be false }
+    end
+
+    context "with open statement with marked_as_paid_at_set" do
+      let(:statement) { build(:statement, :open, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
