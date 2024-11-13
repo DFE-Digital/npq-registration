@@ -67,4 +67,14 @@ n.b. to run parallel tests, you need to explicitly set RAILS_ENV e.g.: `docker c
 
 If you need to rebuild the image (e.g. `Gemfile.lock` changed), add `--build`: `docker compose up -d --build`
 
+### ops service
+
 The `ops` service (`docker compose run ops`) starts a bash shell with `make`, `az` and `kubectl` ready to use.
+
+You can also use this service to run konduit:
+
+1. After installing with `make install-konduit` as normal, edit konduit.sh:
+    1. In `open_tunnels()` change `kubectl port-forward [...]` to `kubectl port-forward --address 0.0.0.0 [...]`
+    2. In `set_db_psql()`, edit `DB_URL=` replacing `127.0.0.1:${LOCAL_PORT}` with `konduit:${LOCAL_PORT}`
+
+2. To create the tunnel, `docker compose run --rm --name konduit ops make <target environment> konduit`
