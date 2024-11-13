@@ -5,6 +5,9 @@ REGION=UK South
 SERVICE_NAME=npq-registration
 SERVICE_SHORT=cpdnpq
 
+# Handle BSD and GNU sed differences
+SED_INPLACE ?= $(shell if sed --version >/dev/null 2>&1; then echo "-i"; else echo "-i ''"; fi)
+
 help:
 	@grep -E '^[a-zA-Z\._\-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
@@ -200,7 +203,7 @@ action-group-resources: set-azure-account # make env_aks action-group-resources 
 
 # Removes explicit postgres database URLs from database.yml
 konduit-cleanup:
-	sed -i '' -e '/url\: "postgres/d' config/database.yml; \
+	sed $(SED_INPLACE) -e '/url\: "postgres/d' config/database.yml; \
 	exit 0
 
 define KONDUIT_CONNECT
@@ -211,7 +214,7 @@ define KONDUIT_CONNECT
 		(tail -f -n0 "$$tmp_file" & ) | grep -q "postgres://"; \
 		postgres_url=$$(grep -o 'postgres://[^ ]*' "$$tmp_file"); \
 		echo "$$postgres_url"; \
-		sed -i '' -e "s|npq_registration_development|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
+		sed $(SED_INPLACE) -e "s|npq_registration_development|&\\n    url: \"$$postgres_url\"|g" config/database.yml; \
 	} & \
 	bin/konduit.sh -d
 endef

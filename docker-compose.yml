@@ -31,7 +31,7 @@ services:
         FROM mcr.microsoft.com/azure-cli:cbl-mariner2.0
         RUN mkdir /app
         WORKDIR /app
-        RUN yum install -y git make tar unzip
+        RUN yum install -y awk git jq make postgresql tar unzip
         RUN az aks install-cli
         RUN curl -O https://releases.hashicorp.com/terraform/1.5.4/terraform_1.5.4_linux_amd64.zip && \
           unzip terraform_1.5.4_linux_amd64.zip && \
