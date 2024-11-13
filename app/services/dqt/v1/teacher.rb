@@ -14,7 +14,11 @@ module Dqt
         }
         query[:nino] = nino if nino
 
+        Rails.logger.info("DQT API request started")
+
         response = get(path, query:)
+
+        Rails.logger.info("DQT API response: #{response.code}")
 
         if response.success?
           response.slice(

@@ -63,6 +63,9 @@ RSpec.describe Dqt::V1::Teacher do
     it "returns teacher record" do
       stub_api_request
 
+      expect(Rails.logger).to receive(:info).with("DQT API request started")
+      expect(Rails.logger).to receive(:info).with("DQT API response: 200")
+
       record = subject.find(trn:, birthdate:)
 
       expect(record["trn"]).to eq(trn)
@@ -78,6 +81,9 @@ RSpec.describe Dqt::V1::Teacher do
       it "returns nil" do
         stub_api_404_request
 
+        expect(Rails.logger).to receive(:info).with("DQT API request started")
+        expect(Rails.logger).to receive(:info).with("DQT API response: 404")
+
         record = subject.find(trn:, birthdate:)
 
         expect(record).to be_nil
@@ -89,6 +95,9 @@ RSpec.describe Dqt::V1::Teacher do
 
       it "returns correct record" do
         stub_api_different_record_request
+
+        expect(Rails.logger).to receive(:info).with("DQT API request started")
+        expect(Rails.logger).to receive(:info).with("DQT API response: 200")
 
         record = subject.find(trn: incorrect_trn, birthdate:, nino:)
 
