@@ -9,9 +9,25 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-xl"><%= @feature.name %></h1>
 
-    <p class="govuk-body-l">Current state: <strong class="govuk-tag govuk-tag--green"><%= @feature.state %></strong></p>
+    <p class="govuk-body-l">
+      Current state: 
+      <strong class="govuk-tag <%= @feature.enabled? ? 'govuk-tag--green' : 'govuk-tag--red' %>">
+        <%= @feature.state %>
+      </strong>
+    </p>
+
 
     <%= t(".#{@feature.name.parameterize(separator: '_')}_html") %>
+
+    <%= form_with url: admin_feature_path(@feature.key), method: :patch, local: true do %>
+      <button type="submit" class="govuk-button" data-module="govuk-button">
+        <% if @feature.enabled? %>
+          Turn off
+        <% else %>
+          Turn on
+        <% end %>
+      </button>
+    <% end %>
 
   </div>
 </div>

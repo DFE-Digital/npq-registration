@@ -13,13 +13,13 @@
       </thead>
 
       <tbody class="govuk-table__body">
-          <% @features.each do |feature| %>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><%= feature.name %></td>
-              <td class="govuk-table__cell"><%= feature.state %></td>
-              <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature.name)) %></td>
-            </tr>
-          <% end %>
+        <% @features.each do |feature| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= feature.name %></td>
+            <td class="govuk-table__cell"><strong class="govuk-tag <%= feature.enabled? ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= feature.state %></strong></td>
+            <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature.name)) %></td>
+          </tr>
+        <% end %>
       </tbody>
 
     </table>

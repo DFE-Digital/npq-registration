@@ -576,7 +576,7 @@ en:
         targeted_support_funding_html: | 
           <p class="govuk-body">Targeted support funding</p>
           <p class="govuk-body">Hello</p>
-        npq_separation_ecf-api_disabled_html: |
+        npq_separation_ecf_api_disabled_html: |
           <p class="govuk-body">NPQ separation ECF API disabled</p>
           <p class="govuk-body">Hello</p>
     application_submissions:
