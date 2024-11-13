@@ -11,9 +11,7 @@
 
     <p class="govuk-body-l">Current state: <strong class="govuk-tag govuk-tag--green"><%= @feature.state %></strong></p>
 
-    <p class="govuk-body">When this feature is turned on, users can register for an NPQ as normal.</p>
-    
-    <p class="govuk-body">When this feature is turned off, users cannot register for an NPQ, unless you're using the 'Closed registration enabled' feature to allow some users to register. Learn about the 'Closed registration enabled' feature.</p>
+    <%= t(".#{@feature.name.parameterize(separator: '_')}_html") %>
 
   </div>
 </div>

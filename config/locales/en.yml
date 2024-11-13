@@ -562,6 +562,23 @@ en:
       pural_title: "Your NPQ registrations"
 
   admin:
+    features:
+      show: 
+        registration_open_html: | 
+          <p class="govuk-body">Registration open</p>
+          <p class="govuk-body">Hello</p>
+        senco_enabled_html: | 
+          <p class="govuk-body">Senco enabled</p>
+          <p class="govuk-body">Hello</p>
+        closed_registration_enabled_html: | 
+          <p class="govuk-body">Closed registration enabled</p>
+          <p class="govuk-body">Hello</p>
+        targeted_support_funding_html: | 
+          <p class="govuk-body">Targeted support funding</p>
+          <p class="govuk-body">Hello</p>
+        npq_separation_ecf-api_disabled_html: |
+          <p class="govuk-body">NPQ separation ECF API disabled</p>
+          <p class="govuk-body">Hello</p>
     application_submissions:
       ecf_sync_request_log:
         sync_type:
