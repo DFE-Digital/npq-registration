@@ -84,6 +84,7 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper, type: :feature
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponent::SystemTestHelpers, type: :component
+  config.include Helpers::I18nHelper, type: :component
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
   config.include Helpers::SwaggerExampleParser, type: :request

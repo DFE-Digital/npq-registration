@@ -52,28 +52,14 @@ en:
       content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
     clawbacks:
       caption: Clawbacks
-    course:
-      participants: Participants
-      payment_per_participant: Payment per participant
-    course_total: Course total
     cut_off_date:
       caption: Output payment cut off date
-    output_payment:
-      label: Output payment
-    payment_type: Payment type
-    service_fee:
-      caption: Service fee
-    targeted_delivery_funding:
-      caption: Targeted delivery funding
-    total: Total
     total_completed: Total completed
     total_net_vat: Total net VAT
-    total_not_eligible_for_funding: Total not eligible for funding
     total_retained: Total retained
     total_starts: Total starts
     total_voids: Total voids
     totals: Totals
-    total_declarations: Total declarations
     view: View
 
   funded_place: &funded_place
@@ -676,6 +662,17 @@ en:
 
   npq_separation:
     admin:
+      course_payment_overview_component:
+        course_total: Course total
+        output_payment: Output payment
+        participants: Participants
+        payment_per_participant: Payment per participant
+        payment_type: Payment type
+        service_fee: Service fee
+        targeted_delivery_funding: Targeted delivery funding
+        total_declarations: Total declarations
+        total_not_eligible_for_funding: Total not eligible for funding
+        total: Total
       finance:
         statements:
           payment_authorisations:
