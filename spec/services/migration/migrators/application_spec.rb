@@ -126,6 +126,13 @@ RSpec.describe Migration::Migrators::Application do
             application = Application.find_by!(ecf_id: ecf_resource1.id)
             expect(application.school.urn).to eq(ecf_resource1.school_urn)
           end
+
+          it "does not update the `updated_at` of the application" do
+            instance.call
+
+            application = Application.find_by!(ecf_id: ecf_resource1.id)
+            expect(application.updated_at).to be_within(1.second).of(5.days.ago)
+          end
         end
 
         context "when school is not found" do

@@ -112,7 +112,7 @@ module Migration::Migrators
         return true
       end
 
-      if ecf_npq_application.profile&.school_urn.presence != ecf_npq_application.school_urn
+      if ecf_npq_application.profile.present? && (ecf_npq_application.profile.school_urn != ecf_npq_application.school_urn)
         return true
       end
 
