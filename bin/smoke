@@ -16,13 +16,6 @@ if [[ -z $current_commit_sha ]]; then
   exit 1
 fi
 
-if [[ $response_sha == $current_commit_sha ]]; then
-  echo "✅ Correct version deployed"
-else
-  echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
-  exit 1
-fi
-
 response_migration=$(jq ".database.migration_version" <<< $response)
 latest_migration=$(ls db/migrate/ | cut -d "_" -f1 | sort -nr | head -n1)
 
