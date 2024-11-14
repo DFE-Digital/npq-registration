@@ -1,0 +1,25 @@
+attributes:
+  - content
+  - foreign_keys
+disconnected: true
+filename: docs/content_editors/images/erd
+filetype: png
+indirect: false
+inheritance: false
+markup: false
+notation: simple
+orientation: vertical
+polymorphism: false
+sort: true
+warn: true
+title: "Entity-Relationship Diagram (ERD)"
+exclude: "Migration::ParityCheck::ResponseComparison, GetAnIdentity::WebhookMessage, PaperTrail::Version, EcfSyncRequestLog, Migration::Ecf::Finance::Statement, Migration::Ecf::Finance::StatementLineItem, Migration::Ecf::CpdLeadProvider, Migration::Ecf::ParticipantProfileState, Migration::Ecf::ParticipantDeclaration, Migration::Ecf::DeclarationState, Migration::Ecf::ParticipantOutcomeAPIRequest, Migration::Ecf::ParticipantOutcome::Npq, Migration::Ecf::User, Migration::Ecf::ParticipantIdChange, Migration::Ecf::ParticipantIdentity, Migration::Ecf::TeacherProfile, NullUser, Migration::Ecf::Finance::Schedule, Migration::Ecf::Finance::Milestone, Migration::Ecf::Finance::ScheduleMilestone, Migration::Ecf::Cohort, Setting, Report, RegistrationInterest, Migration::Ecf::Finance::Schedule::NpqSupport, Migration::Ecf::Finance::Schedule::NpqSpecialist, Migration::Ecf::Finance::Schedule::NpqLeadership, Migration::Ecf::Finance::Schedule::NpqEhco, Migration::Ecf::Finance::Schedule::Npq, Migration::Ecf::School, Migration::Ecf::NpqContract, Migration::Ecf::NpqLeadProvider, Migration::Ecf::NpqCourse, Migration::Ecf::ParticipantProfile, Migration::Ecf::NpqApplication, Admin, ActiveRecord::SessionStore::Session, ClosedRegistrationUser, Delayed::Backend::ActiveRecord::Job, Flipper::Adapters::ActiveRecord::Gate, Flipper::Adapters::ActiveRecord::Feature, Migration::DataMigration"
+only: null
+only_recursion_depth: null
+prepend_primary: false
+cluster: false
+splines: spline
+fonts:
+ normal: "Arial"
+ bold: "Arial Bold"
+ italic: "Arial Italic"
