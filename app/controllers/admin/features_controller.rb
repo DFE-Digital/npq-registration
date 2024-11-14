@@ -14,7 +14,7 @@ class Admin::FeaturesController < AdminController
       # To check if the flag is enabled:
       # Flipper.enabled? "some name"
       # Example usage using map:  Feature::FEATURE_FLAG_KEYS.map { |flag| Flipper.enabled? flag }
-      @features = Flipper.features
+      @features = Feature::FEATURE_FLAG_KEYS
     end
 
     def show

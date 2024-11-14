@@ -15,9 +15,9 @@
       <tbody class="govuk-table__body">
         <% @features.each do |feature| %>
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><%= feature.name %></td>
-            <td class="govuk-table__cell"><strong class="govuk-tag <%= feature.enabled? ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= feature.state %></strong></td>
-            <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature.name)) %></td>
+            <td class="govuk-table__cell"><%= feature %></td>
+            <td class="govuk-table__cell"><strong class="govuk-tag <%= Flipper.enabled?(feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(feature) ? 'On' : 'Off' %></strong></td>
+            <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature)) %></td>
           </tr>
         <% end %>
       </tbody>
