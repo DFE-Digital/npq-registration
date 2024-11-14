@@ -195,14 +195,16 @@ RSpec.feature "ECF legacy spec for course payment breakdown", :ecf_api_disabled,
   end
 
   def then_i_should_see_correct_overall_payments
-    within first(".app-statement-block") do
-      expect(page).to have_content("Output payment\n#{number_to_currency total_output_payment}")
+    within all(".app-statement-block")[0] do
+      expect(page).to have_content("Output payment")
+      expect(page).to have_content(number_to_currency(total_output_payment))
     end
   end
 
   def then_i_should_see_correct_total_service_fees
-    within first(".app-statement-block") do
-      expect(page).to have_content("Service fee\n#{number_to_currency total_service_fees_monthly}")
+    within all(".app-statement-block")[0] do
+      expect(page).to have_content("Service fee")
+      expect(page).to have_content(number_to_currency(total_service_fees_monthly))
     end
   end
 
