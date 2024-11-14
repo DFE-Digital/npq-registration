@@ -56,6 +56,22 @@ RSpec.describe Declaration, type: :model do
 
       it { is_expected.to be_valid }
     end
+
+    context "when declaration has two or fewer statement items" do
+      it "is valid" do
+        create_list(:statement_item, 2, declaration: subject)
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when declaration has more than two statement items" do
+      it "is not valid" do
+        create_list(:statement_item, 3, declaration: subject)
+
+        expect(subject).not_to be_valid
+        expect(subject).to have_error(:statement_items, :more_than_two_statement_items, "There cannot be more than two items per declaration")
+      end
+    end
   end
 
   describe "delegations" do

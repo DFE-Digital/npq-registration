@@ -210,6 +210,8 @@ en:
               *declaration_type
             ecf_id:
               *ecf_id
+            statement_items:
+              more_than_two_statement_items: There cannot be more than two items per declaration
         lead_provider:
           attributes:
             ecf_id:

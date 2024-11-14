@@ -19,24 +19,6 @@ RSpec.describe Statement, type: :model do
     it { is_expected.not_to allow_value(nil).for(:output_fee).with_message("Choose yes or no for output fee") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
-    describe "Validation for statement items count" do
-      context "when the statement has two or fewer statement items" do
-        it "is valid" do
-          create_list(:statement_item, 2, statement:)
-          expect(statement.valid?).to be true
-        end
-      end
-
-      context "when the statement has more than two statement items" do
-        it "is not valid" do
-          create_list(:statement_item, 3, statement:)
-
-          expect(statement.valid?).to be false
-          expect(statement.errors[:statement_items]).to include("There cannot be more than two items per statement")
-        end
-      end
-    end
-
     describe "State validation" do
       context "when setting invalid state" do
         let(:statement) { build(:statement, state: "madeup") }
