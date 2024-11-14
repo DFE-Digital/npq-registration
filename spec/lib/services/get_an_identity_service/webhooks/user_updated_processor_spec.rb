@@ -47,7 +47,7 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
         user.reload.slice(:email, :trn, :full_name, :date_of_birth, :updated_from_tra_at).as_json
       }.from(
         "email" => old_email,
-        "trn" => "1234567",
+        "trn" => user.trn,
         "full_name" => "John Doe",
         "date_of_birth" => old_date_of_birth.as_json,
         "updated_from_tra_at" => nil,
@@ -93,7 +93,7 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
           user.reload.slice(:email, :trn, :full_name, :date_of_birth, :updated_from_tra_at).as_json
         }.from(
           "email" => old_email,
-          "trn" => "1234567",
+          "trn" => user.trn,
           "full_name" => "John Doe",
           "date_of_birth" => old_date_of_birth.as_json,
           "updated_from_tra_at" => nil,
