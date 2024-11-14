@@ -4,6 +4,7 @@ FactoryBot.define do
       user { create(:user) }
       course { create(:course) }
       statement { nil }
+      paid_statement { nil }
     end
 
     application { association :application, :accepted, user:, course: }
@@ -15,7 +16,15 @@ FactoryBot.define do
     ecf_id { SecureRandom.uuid }
 
     after(:create) do |declaration, evaluator|
-      create(:statement_item, declaration:, statement: evaluator.statement) if evaluator.statement
+      if evaluator.statement && declaration.state != "submitted"
+        if declaration.state.in? %w[awaiting_clawback clawed_back]
+          raise ArgumentError, "Declaration state #{declaration.state} also requires paid_statement" if evaluator.paid_statement.nil?
+
+          create(:statement_item, declaration:, state: "paid", statement: evaluator.paid_statement)
+        end
+
+        create(:statement_item, declaration:, state: declaration.state, statement: evaluator.statement)
+      end
     end
 
     trait :submitted_or_eligible do

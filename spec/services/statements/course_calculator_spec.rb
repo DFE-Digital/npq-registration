@@ -345,7 +345,7 @@ RSpec.describe Statements::CourseCalculator do
       before do
         travel_to statement.deadline_date do
           create(:statement_item, declaration: application.declarations.first, statement:)
-          create(:declaration, course:, lead_provider:, declaration_type: "retained-1", cohort:, statement:, application: create(:application, user: application.user))
+          create(:declaration, :payable, course:, lead_provider:, declaration_type: "retained-1", cohort:, statement:, application: create(:application, user: application.user))
         end
       end
 
