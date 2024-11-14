@@ -21,11 +21,7 @@
 
     <%= form_with url: admin_feature_path(@feature.key), method: :patch, local: true do %>
       <button type="submit" class="govuk-button" data-module="govuk-button">
-        <% if @feature.enabled? %>
-          Turn off
-        <% else %>
-          Turn on
-        <% end %>
+        Change state
       </button>
     <% end %>
 

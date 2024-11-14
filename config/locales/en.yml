@@ -565,14 +565,14 @@ en:
     features:
       show: 
         registration_open_html: | 
-          <p class="govuk-body">Registration open</p>
-          <p class="govuk-body">Hello</p>
+          <p class="govuk-body">When this feature is turned on, registration is open. This means that users can register for an NPQ as normal.</p>
+          <p class="govuk-body">When this feature is turned off, registration is closed. This means that users cannot register for an NPQ, unless you’re using the <a href="/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature to allow some users to register.</p>
         senco_enabled_html: | 
           <p class="govuk-body">Senco enabled</p>
           <p class="govuk-body">Hello</p>
         closed_registration_enabled_html: | 
-          <p class="govuk-body">Closed registration enabled</p>
-          <p class="govuk-body">Hello</p>
+          <p class="govuk-body">When this feature is turned on, you can allow some users to register even when the service is closed. (The service is closed when <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> is turned off.)</p>
+          <p class="govuk-body">When this feature is turned off, and <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> is also turned off, no one can register.</p>
         targeted_support_funding_html: | 
           <p class="govuk-body">Targeted support funding</p>
           <p class="govuk-body">Hello</p>
