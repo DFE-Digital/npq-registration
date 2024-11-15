@@ -43,6 +43,6 @@ private
   end
 
   def migration_version
-    ApplicationRecord.connection.migration_context.current_version
+    ApplicationRecord.connection.migration_context.current_version # test
   end
 end
