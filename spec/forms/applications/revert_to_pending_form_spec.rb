@@ -37,5 +37,18 @@ RSpec.describe Applications::RevertToPendingForm, type: :model do
 
       it { is_expected.to be false }
     end
+
+    context "with failure from service" do
+      before { declaration }
+
+      let(:declaration) { create(:declaration, :submitted, application:) }
+
+      it { is_expected.to be false }
+
+      it "propogates errors" do
+        expect(instance.tap(&:save).errors.full_messages)
+          .to include(/cannot revert/i)
+      end
+    end
   end
 end

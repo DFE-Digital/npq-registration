@@ -20,6 +20,9 @@ module Applications
       return false unless valid?
 
       RevertToPending.new(application).call
+    rescue RevertToPending::RevertToPendingError => e
+      errors.add(:base, e.message)
+      false
     end
   end
 end
