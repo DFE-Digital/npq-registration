@@ -33,7 +33,7 @@ RSpec.describe RegistrationWizard do
     before do
       mock_previous_funding_api_request(
         course_identifier: "npq-additional-support-offer",
-        trn: "1234567",
+        trn: user.trn,
         response: ecf_funding_lookup_response(previously_funded: false),
       )
     end

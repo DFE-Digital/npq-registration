@@ -60,8 +60,8 @@ RSpec.describe Migration::Migrators::User do
         end
 
         it "uses the teacher profile TRN if there are multiple/verified TRNs for the user's NPQApplications in ECF and there is also a teacher profile TRN" do
-          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: "1234567") }
-          create(:ecf_migration_npq_application, teacher_reference_number: "123456", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
+          ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn: "4587452") }
+          create(:ecf_migration_npq_application, teacher_reference_number: "4587412", teacher_reference_number_verified: true, participant_identity: ecf_user.participant_identities.first)
           instance.call
           expect(failure_manager).not_to have_received(:record_failure)
           user = User.find_by(ecf_id: ecf_user.id)
@@ -125,6 +125,16 @@ RSpec.describe Migration::Migrators::User do
           instance.call
           expect(failure_manager).not_to have_received(:record_failure)
           expect(existing_user.reload).to have_attributes(trn: "332245", trn_verified: false)
+        end
+
+        described_class::PLACEHOLDER_TRNS.each do |trn|
+          it "sets TRN as unverified if it is the placeholder TRN #{trn}" do
+            ecf_user = create(:ecf_migration_user, :npq).tap { |u| u.teacher_profile.update!(trn:) }
+            instance.call
+            user = User.find_by(ecf_id: ecf_user.id)
+            expect(user.trn).to eq(trn)
+            expect(user).not_to be_trn_verified
+          end
         end
       end
 

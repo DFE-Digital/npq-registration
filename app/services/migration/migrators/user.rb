@@ -1,5 +1,7 @@
 module Migration::Migrators
   class User < Base
+    PLACEHOLDER_TRNS = %w[0000000 1234567].freeze
+
     class << self
       def record_count
         ecf_users.count
@@ -43,15 +45,18 @@ module Migration::Migrators
         ecf_verified_trn = ecf_user.teacher_profile&.trn || application_trns_by_verified[true]&.first
         ecf_unverified_trn = application_trns_by_verified[false]&.first
 
+        trn = ecf_verified_trn || ecf_unverified_trn || user.trn
+        trn_verified = !placeholder_trn?(trn) && (ecf_verified_trn.present? || (ecf_unverified_trn.blank? && user&.trn_verified))
+
         attrs = {
-          trn: ecf_verified_trn || ecf_unverified_trn || user.trn,
+          trn:,
           full_name: ecf_user.full_name || user.full_name,
           email:,
           uid: ecf_user.get_an_identity_id || user.uid,
           date_of_birth: npq_application.date_of_birth || user.date_of_birth,
           national_insurance_number: npq_application.nino || user.national_insurance_number,
           active_alert: npq_application.active_alert || user.active_alert,
-          trn_verified: ecf_verified_trn.present? || (ecf_unverified_trn.blank? && user&.trn_verified),
+          trn_verified:,
           created_at: ecf_user.created_at,
           updated_at: ecf_user.updated_at,
           version_note: "Changes migrated from ECF to NPQ",
@@ -70,6 +75,10 @@ module Migration::Migrators
     end
 
   private
+
+    def placeholder_trn?(trn)
+      trn.in?(PLACEHOLDER_TRNS)
+    end
 
     def application_trns_by_verified(ecf_user)
       ecf_user.npq_applications
