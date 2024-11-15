@@ -93,6 +93,7 @@ class Declaration < ApplicationRecord
   validate :validate_declaration_date_within_schedule, if: -> { !skip_declaration_date_within_schedule_validation }
   validate :validate_declaration_date_not_in_the_future
   validates :ecf_id, uniqueness: { case_sensitive: false }
+  validate :validate_max_statement_items_count
 
   def billable_statement
     statement_items.find(&:billable?)&.statement
@@ -153,5 +154,11 @@ private
 
   def validate_declaration_date_not_in_the_future
     errors.add(:declaration_date, :future_declaration_date) if declaration_date&.future?
+  end
+
+  def validate_max_statement_items_count
+    if statement_items.count > 2
+      errors.add(:statement_items, :more_than_two_statement_items)
+    end
   end
 end

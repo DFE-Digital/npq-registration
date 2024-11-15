@@ -11,7 +11,11 @@ RSpec.describe Statements::MarkAsPayable do
 
   before do
     create(:statement_item, :eligible, statement:, declaration:)
+    create(:statement_item, :eligible, statement:)
+    create(:statement_item, :eligible, statement:)
     create(:statement_item, :voided, statement:, declaration: voided_declaration)
+    create(:statement_item, :voided, statement:)
+    create(:statement_item, :voided, statement:)
   end
 
   describe "#mark" do

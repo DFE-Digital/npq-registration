@@ -12,7 +12,10 @@ RSpec.describe Statements::MarkAsPaid do
   let :statement do
     create(:statement, statement_state, lead_provider:) do |statement|
       create(:statement_item, :payable, statement:, declaration:)
+      create(:statement_item, :payable, statement:, declaration: create(:declaration, :payable, lead_provider:))
+      create(:statement_item, :payable, statement:, declaration: create(:declaration, :payable, lead_provider:))
       create(:statement_item, :awaiting_clawback, statement:, declaration: clawback_declaration)
+      create(:statement_item, :awaiting_clawback, statement:, declaration: create(:declaration, :awaiting_clawback, lead_provider:))
     end
   end
 
@@ -30,28 +33,28 @@ RSpec.describe Statements::MarkAsPaid do
       describe "declarations" do
         it "transitions the payable to paid" do
           expect { service.mark && statement.reload }
-            .to change(statement.declarations.payable_state, :count).from(1).to(0)
-            .and change(statement.declarations.paid_state, :count).from(0).to(1)
+            .to change(statement.declarations.payable_state, :count).from(3).to(0)
+            .and change(statement.declarations.paid_state, :count).from(0).to(3)
         end
 
         it "transitions the awaiting_clawback to clawed_back" do
           expect { service.mark && statement.reload }
-            .to change(statement.declarations.clawed_back_state, :count).from(0).to(1)
-            .and change(statement.declarations.awaiting_clawback_state, :count).from(1).to(0)
+            .to change(statement.declarations.clawed_back_state, :count).from(0).to(2)
+            .and change(statement.declarations.awaiting_clawback_state, :count).from(2).to(0)
         end
       end
 
       describe "statement items" do
         it "transitions the payable to paid" do
           expect { service.mark && statement.reload }
-            .to change(statement.statement_items.payable, :count).from(1).to(0)
-            .and change(statement.statement_items.paid, :count).from(0).to(1)
+            .to change(statement.statement_items.payable, :count).from(3).to(0)
+            .and change(statement.statement_items.paid, :count).from(0).to(3)
         end
 
         it "transitions the awaiting_clawback to clawed_back" do
           expect { service.mark && statement.reload }
-            .to change(statement.statement_items.awaiting_clawback, :count).from(1).to(0)
-            .and change(statement.statement_items.clawed_back, :count).from(0).to(1)
+            .to change(statement.statement_items.awaiting_clawback, :count).from(2).to(0)
+            .and change(statement.statement_items.clawed_back, :count).from(0).to(2)
         end
       end
 
