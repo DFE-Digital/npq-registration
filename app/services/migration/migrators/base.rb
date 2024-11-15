@@ -74,8 +74,8 @@ module Migration::Migrators
       finalise_migration!
     end
 
-    def run_once
-      yield if worker.zero?
+    def run_once_post_migration
+      # Override to run any post migration tasks.
     end
 
     def failure_manager
@@ -243,14 +243,16 @@ module Migration::Migrators
     end
 
     def finalise_migration!
+      last_worker_to_finish = Migration::DataMigration.incomplete.where(model: self.class.model).one?
+
+      run_once_post_migration if last_worker_to_finish
+
       data_migration.update!(completed_at: 1.second.from_now)
       log_info("Migration completed")
 
-      return unless Migration::DataMigration.incomplete.where(model: self.class.model).none?
-
       # Queue a follow up migration to migrate any
       # dependent models.
-      MigrationJob.perform_later
+      MigrationJob.perform_later if last_worker_to_finish
     end
   end
 end

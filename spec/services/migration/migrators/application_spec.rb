@@ -193,15 +193,24 @@ RSpec.describe Migration::Migrators::Application do
         expect(failure_manager).not_to have_received(:record_failure)
       end
 
-      it "records a failure if applications exist in NPQ reg but not in ECF, but only on the first run" do
+      it "records a failure if applications exist in NPQ reg but not in ECF, but only on the last worker to finish" do
+        # Simulate two workers
+        allow(described_class).to receive(:record_count).and_return(records_per_worker + 1)
+
+        # Create two orphan applications that will fail the check.
         orphan_application1 = create(:application)
         orphan_application2 = create(:application)
 
+        # Stub the failure manager for the last worker.
+        data_migration = create(:data_migration, model: :application, worker: 1)
+        allow(Migration::FailureManager).to receive(:new).with(data_migration:) { failure_manager }
+
+        # Ensure first worker does not record a failure.
         described_class.new(worker: 0).call
+        expect(failure_manager).not_to have_received(:record_failure)
 
-        create(:data_migration, model: :application, worker: 1)
+        # Only the last worker should record the failures.
         described_class.new(worker: 1).call
-
         expect(failure_manager).to have_received(:record_failure).once.with(orphan_application1, /NPQApplication not found in ECF/)
         expect(failure_manager).to have_received(:record_failure).once.with(orphan_application2, /NPQApplication not found in ECF/)
       end

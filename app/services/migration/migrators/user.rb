@@ -63,8 +63,10 @@ module Migration::Migrators
 
         user.update!(attrs)
       end
+    end
 
-      run_once { backfill_ecf_ids }
+    def run_once_post_migration
+      backfill_ecf_ids
     end
 
   private

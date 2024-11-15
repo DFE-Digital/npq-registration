@@ -54,8 +54,6 @@ module Migration::Migrators
     end
 
     def call
-      run_once { report_applications_not_in_ecf_as_failures }
-
       applications_by_ecf_id = ::Application.where(ecf_id: self.class.ecf_npq_applications.pluck(:id)).index_by(&:ecf_id)
 
       migrate(self.class.ecf_npq_applications) do |ecf_npq_application|
@@ -95,10 +93,13 @@ module Migration::Migrators
 
         application.update!(attrs)
       end
+    end
 
-      run_once { backfill_ecf_ids }
-      run_once { backfill_cohorts }
-      run_once { backfill_lead_provider_approval_statuses }
+    def run_once_post_migration
+      report_applications_not_in_ecf_as_failures
+      backfill_ecf_ids
+      backfill_cohorts
+      backfill_lead_provider_approval_statuses
     end
 
   private
