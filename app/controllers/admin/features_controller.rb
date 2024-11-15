@@ -15,7 +15,7 @@ class Admin::FeaturesController < AdminController
       # Flipper.enabled? "some name"
       # Example usage using map:  Feature::FEATURE_FLAG_KEYS.map { |flag| Flipper.enabled? flag }
       @features = Feature::FEATURE_FLAG_KEYS
-      @features_not_in_use = Flipper::Adapters::ActiveRecord::Feature.all
+      @features_not_in_use = Flipper::Adapters::ActiveRecord::Feature.where.not(key: Feature::FEATURE_FLAG_KEYS)
     end
 
     def show
