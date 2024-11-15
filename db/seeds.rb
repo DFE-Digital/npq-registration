@@ -15,13 +15,16 @@ end
 
 Rails.logger.info("Seeding database")
 
+# Ensure course/course group are first so the replant for
+# review apps doesn't cause the container to go into an
+# unhealthy state for too long (as courses are loaded in healthcheck).
 [
+  "add_course_groups.rb",
+  "add_courses.rb",
   "add_feature_flags.rb",
   "add_cohorts.rb",
   "add_childcare_providers.rb",
   "add_schools.rb",
-  "add_course_groups.rb",
-  "add_courses.rb",
   "add_schedules.rb",
   "add_lead_providers.rb",
   "add_itt_providers.rb",
