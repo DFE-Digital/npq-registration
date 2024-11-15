@@ -20,6 +20,7 @@ module Applications
           raise RevertToPendingError, "Cannot revert to pending, Application has Declarations"
         end
 
+        @application.application_states.destroy_all
         @application.declarations.destroy_all
         @application.funded_place = nil
         @application.pending_lead_provider_approval_status!

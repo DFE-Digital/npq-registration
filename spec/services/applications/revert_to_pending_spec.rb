@@ -3,7 +3,11 @@ require "rails_helper"
 RSpec.describe Applications::RevertToPending do
   subject(:instance) { described_class.new(application) }
 
-  let(:application) { create(:application, :accepted) }
+  let :application do
+    create(:application, :accepted) do |application|
+      create(:application_state, application:)
+    end
+  end
 
   describe ".call" do
     subject(:call_service) { described_class.call(application) && application.reload }
@@ -20,6 +24,13 @@ RSpec.describe Applications::RevertToPending do
         .to change { application.reload.funded_place }
                    .from(false)
                    .to(nil)
+    end
+
+    it "removes Application states" do
+      expect { call_service }
+        .to change { application.application_states.count }
+                   .from(1)
+                   .to(0)
     end
 
     context "when already pending" do
