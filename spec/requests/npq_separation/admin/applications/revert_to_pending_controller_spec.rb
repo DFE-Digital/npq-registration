@@ -24,7 +24,7 @@ RSpec.describe NpqSeparation::Admin::Applications::RevertToPendingController, :e
 
       context "with valid form params" do
         let :params do
-          { applications_revert_to_pending_form: { change_status_to_pending: "yes" } }
+          { applications_revert_to_pending: { change_status_to_pending: "yes" } }
         end
 
         it { is_expected.to redirect_to npq_separation_admin_application_path(application) }
@@ -32,7 +32,7 @@ RSpec.describe NpqSeparation::Admin::Applications::RevertToPendingController, :e
 
       context "with invalid form params" do
         let :params do
-          { statements_payment_authorisation_form: { change_status_to_pending: "no" } }
+          { statements_payment_authorisation: { change_status_to_pending: "no" } }
         end
 
         it { is_expected.to have_http_status :unprocessable_entity }

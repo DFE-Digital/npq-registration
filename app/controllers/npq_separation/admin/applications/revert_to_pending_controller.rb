@@ -18,12 +18,12 @@ module NpqSeparation
       private
 
         def set_revert_to_pending_form
-          @revert_to_pending_form = ::Applications::RevertToPendingForm
+          @revert_to_pending_form = ::Applications::RevertToPending
             .new(@application, form_params)
         end
 
         def form_params
-          params.fetch(:applications_revert_to_pending_form, {})
+          params.fetch(:applications_revert_to_pending, {})
                 .permit(:change_status_to_pending)
         end
 

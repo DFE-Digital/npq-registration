@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Applications::RevertToPending do
+RSpec.describe Applications::RevertToPending, type: :model do
   subject(:instance) { described_class.new(application) }
 
   let :application do
@@ -49,8 +49,7 @@ RSpec.describe Applications::RevertToPending do
 
           it "raises an exception" do
             expect { call_service }
-              .to raise_exception(Applications::RevertToPending::RevertToPendingError)
-              .and(not_change { application.reload.lead_provider_approval_status })
+              .to not_change { application.reload.lead_provider_approval_status }
               .and(not_change { application.declarations.count })
           end
         end
@@ -72,12 +71,61 @@ RSpec.describe Applications::RevertToPending do
     end
   end
 
-  describe "#call" do
-    it "updates lead provider approval status" do
-      expect { instance.call }
-        .to change { application.reload.lead_provider_approval_status }
-                   .from("accepted")
-                   .to("pending")
+  describe "#valid?" do
+    it { is_expected.to validate_inclusion_of(:change_status_to_pending).in_array(%w[yes]) }
+
+    context "with lead_provider_approval_status attribute" do
+      subject { instance.tap(&:valid?).errors.messages[:lead_provider_approval_status] }
+
+      context "with accepted application" do
+        it { is_expected.to be_empty }
+      end
+
+      context "with pending application" do
+        let(:application) { create(:application, :pending) }
+
+        it { is_expected.not_to be_empty }
+      end
+    end
+
+    context "with declarations" do
+      subject { instance.tap(&:valid?).errors.full_messages }
+
+      context "when they prevent reverting to pending" do
+        before { create(:declaration, :submitted, application:) }
+
+        it { is_expected.to include(/cannot revert/i) }
+      end
+
+      context "when they do not prevent reverting to pending" do
+        before { create(:declaration, :eligible, application:) }
+
+        it { is_expected.not_to include(/cannot revert/i) }
+      end
+    end
+  end
+
+  describe "#save" do
+    subject(:instance) { described_class.new(application, change_status_to_pending:) }
+
+    context "with valid form" do
+      let(:change_status_to_pending) { "yes" }
+
+      it "updates lead provider approval status" do
+        expect { instance.save }
+          .to change { application.reload.lead_provider_approval_status }
+                     .from("accepted")
+                     .to("pending")
+      end
+    end
+
+    context "with invalid form" do
+      let(:change_status_to_pending) { "no" }
+
+      it "does not update the lead provider approval status" do
+        expect { instance.save }
+          .to(not_change { application.reload.lead_provider_approval_status })
+      end
     end
   end
 end
