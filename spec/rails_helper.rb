@@ -21,6 +21,8 @@ require "view_component/test_helpers"
 require "view_component/system_test_helpers"
 require "capybara/rspec"
 require "paper_trail/frameworks/rspec"
+require "dfe/analytics/testing"
+require "dfe/analytics/rspec/matchers"
 
 Capybara.register_driver :headless_chrome do |app|
   version = Capybara::Selenium::Driver.load_selenium

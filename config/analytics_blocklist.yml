@@ -93,7 +93,6 @@ shared:
     - updated_at
   :users:
     - email
-    - trn
     - full_name
     - date_of_birth
     - national_insurance_number
@@ -102,6 +101,8 @@ shared:
   :applications:
     - raw_application_data
     - DEPRECATED_school_urn
+    - DEPRECATED_private_childcare_provider_urn
+    - DEPRECATED_itt_provider
   :contract_templates:
     - id
     - recruitment_target
@@ -123,3 +124,22 @@ shared:
     - contract_template_id
     - created_at
     - updated_at
+  :settings:
+    - id
+    - course_start_date
+    - created_at
+    - updated_at
+  :statements:
+    - reconcile_amount
+  :courses:
+    - position
+  :schools:
+    - la_code
+    - la_name
+    - establishment_status_code
+    - establishment_status_name
+    - establishment_type_code
+    - establishment_type_name
+    - number_of_pupils
+    - phase_type
+    - phase_name

@@ -8,4 +8,5 @@ Delayed::Worker.queue_attributes = {
   participant_outcomes: { priority: 5 },
   low_priority: { priority: 10 },
   migration: { priority: 0 },
+  dfe_analytics: { priority: 0 },
 }

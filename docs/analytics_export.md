@@ -6,6 +6,10 @@
 
 For the purpuse of analytics team, we send data to their database.
 
+## DfE analytics
+
+NPQ app is using [DfE Analytics](https://github.com/DFE-Digital/dfe-analytics)
+The `config.entity_table_checks_enabled` config option is on and `CheckAnalyticsEntity` job is responsible for synchronisation.
 
 ## Data exporting
 

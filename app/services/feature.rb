@@ -8,6 +8,7 @@ class Feature
   SENCO_ENABLED = "Senco enabled".freeze
 
   ECF_API_DISABLED = "NPQ Separation ECF API disabled".freeze
+  DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
 
   MAINTENANCE_BANNER = "Maintenance banner".freeze
 
@@ -17,6 +18,7 @@ class Feature
     SENCO_ENABLED,
     ECF_API_DISABLED,
     MAINTENANCE_BANNER,
+    DFE_ANALYTICS_ENABLED,
   ].freeze
 
   class << self
@@ -68,6 +70,10 @@ class Feature
 
     def enable_ecf_api_disabled!
       Flipper.enable(ECF_API_DISABLED)
+    end
+
+    def dfe_analytics_enabled?
+      Flipper.enabled?(DFE_ANALYTICS_ENABLED)
     end
   end
 end

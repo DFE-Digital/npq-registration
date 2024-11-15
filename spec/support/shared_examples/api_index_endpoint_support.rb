@@ -18,6 +18,14 @@ RSpec.shared_examples "an API index endpoint" do
         expect(response_ids).to contain_exactly(resource1[resource_id_key], resource2[resource_id_key])
       end
 
+      context "when DfE Analytics are active" do
+        before { Flipper.enable(Feature::DFE_ANALYTICS_ENABLED) }
+
+        it "sends requests to dfe analytics" do
+          expect { api_get(path) }.to have_sent_analytics_event_types(:web_request)
+        end
+      end
+
       it "calls the correct query/serializer" do
         serializer_params = { root: "data" }
         serializer_params[:view] = serializer_version if defined?(serializer_version)
