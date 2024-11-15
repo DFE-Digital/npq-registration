@@ -2,6 +2,8 @@
     <div class="govuk-grid-column-full">
     <%= render "admin/layout", title: "Feature flags" %>
 
+    <h1 class="govuk-heading-m">In use</h1>
+
     <table class="govuk-table">
 
       <thead class="govuk-table__head">
@@ -24,6 +26,26 @@
 
     </table>
       <%# only display this section if there is flag in DB that is not in the Feature::FEATURE_FLAG_KEYS %>
+
+    <h1 class="govuk-heading-m">No longer in use</h1>
+
+    <table class="govuk-table">
+
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Feature name</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        <% @features_not_in_use.each do |feature_not_in_use| %>
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><%= feature_not_in_use.key %></td>
+        <% end %>
+      </tbody>
+
+    </table>
+
     <hr/>
     <h2></h2>
     </hr>

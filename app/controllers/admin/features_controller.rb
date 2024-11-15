@@ -15,22 +15,23 @@ class Admin::FeaturesController < AdminController
       # Flipper.enabled? "some name"
       # Example usage using map:  Feature::FEATURE_FLAG_KEYS.map { |flag| Flipper.enabled? flag }
       @features = Feature::FEATURE_FLAG_KEYS
+      @features_not_in_use = Flipper::Adapters::ActiveRecord::Feature.all
     end
 
     def show
-      @feature = Flipper[params[:id]]
+      @feature = params[:id]
     end
 
     def update
-      @feature = Flipper[params[:id]]
+      @feature = params[:id]
 
-      if @feature.enabled?
-        @feature.disable
+      if Flipper.enabled?(@feature)
+        Flipper.disable(@feature)
       else
-        @feature.enable
+        Flipper.enable(@feature)
       end
 
-      redirect_back fallback_location: admin_features_path, notice: "Feature '#{@feature.name}' has been updated."
+      redirect_back fallback_location: admin_features_path
     end
 
 end

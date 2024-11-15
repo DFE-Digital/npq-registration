@@ -7,19 +7,15 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl"><%= @feature.name %></h1>
+    <h1 class="govuk-heading-xl"><%= @feature %></h1>
 
     <p class="govuk-body-l">
-      Current state: 
-      <strong class="govuk-tag <%= @feature.enabled? ? 'govuk-tag--green' : 'govuk-tag--red' %>">
-        <%= @feature.state %>
-      </strong>
+      Current state: <strong class="govuk-tag <%= Flipper.enabled?(@feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(@feature) ? 'On' : 'Off' %></strong>
     </p>
 
+    <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
 
-    <%= t(".#{@feature.name.parameterize(separator: '_')}_html") %>
-
-    <%= form_with url: admin_feature_path(@feature.key), method: :patch, local: true do %>
+    <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do %>
       <button type="submit" class="govuk-button" data-module="govuk-button">
         Change state
       </button>
