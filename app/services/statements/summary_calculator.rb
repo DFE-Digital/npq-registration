@@ -62,7 +62,7 @@ module Statements
   private
 
     def course_calulators
-      @course_calulators ||= contracts.map { CourseCalculator.new(statement:, contract: _1) }
+      @course_calulators ||= contracts.map { CourseCalculator.new(contract: _1) }
     end
 
     def contracts

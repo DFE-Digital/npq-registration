@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :component do
   subject { render_inline component }
 
-  let(:component) { described_class.new(statement:, contract:) }
-  let(:calculator) { ::Statements::CourseCalculator.new(statement:, contract:) }
+  let(:component) { described_class.new(contract:) }
+  let(:calculator) { ::Statements::CourseCalculator.new(contract:) }
   let(:statement) { create(:statement) }
   let(:paid_statement) { create(:statement, :paid) }
   let(:course) { create(:course, :senior_leadership) }

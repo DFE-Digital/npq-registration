@@ -2,16 +2,19 @@
 
 module Statements
   class CourseCalculator
-    attr_reader :statement, :contract
+    attr_reader :contract
 
-    delegate :cohort, :show_targeted_delivery_funding?,
-             to: :statement
-
-    delegate :course, :recruitment_target, :targeted_delivery_funding_per_participant,
+    delegate :course,
+             :recruitment_target,
+             :statement,
+             :targeted_delivery_funding_per_participant,
              to: :contract
 
-    def initialize(statement:, contract:)
-      @statement = statement
+    delegate :cohort,
+             :show_targeted_delivery_funding?,
+             to: :statement
+
+    def initialize(contract:)
       @contract = contract
     end
 

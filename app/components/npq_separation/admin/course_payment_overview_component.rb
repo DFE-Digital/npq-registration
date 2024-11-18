@@ -1,20 +1,16 @@
 module NpqSeparation
   module Admin
     class CoursePaymentOverviewComponent < ViewComponent::Base
-      attr_reader :statement, :contract
+      attr_reader :contract
 
       delegate_missing_to :calculator
 
-      def initialize(statement:, contract:)
-        @statement = statement
+      def initialize(contract:)
         @contract = contract
       end
 
       def calculator
-        @calculator ||= ::Statements::CourseCalculator.new(
-          statement:,
-          contract:,
-        )
+        @calculator ||= ::Statements::CourseCalculator.new(contract:)
       end
 
       def course_name
