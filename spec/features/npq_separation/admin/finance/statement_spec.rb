@@ -37,6 +37,9 @@ RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
       expect(summary_list).to have_summary_item("Status", statement.state.humanize)
     end
 
+    component = NpqSeparation::Admin::StatementDetailsComponent.new(statement:)
+    expect(page).to have_component(component)
+
     expect(page).to have_css("a", text: "Save as PDF")
 
     contracts.each do |contract|

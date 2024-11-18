@@ -658,6 +658,19 @@ en:
         total_declarations: Total declarations
         total_not_eligible_for_funding: Total not eligible for funding
         total: Total
+      statement_details_component:
+        clawbacks: Clawbacks
+        cut_off_date: Output payment cut off date
+        output_payment: Output payment
+        service_fee: Service fee
+        targeted_delivery_funding: Targeted delivery funding
+        total_completed: Total completed
+        total_net_vat: Total net VAT
+        total_retained: Total retained
+        total_starts: Total starts
+        total_voids: Total voids
+        totals: Totals
+        view: View
       finance:
         statements:
           payment_authorisations:
@@ -674,18 +687,6 @@ en:
             calculation_rounding_message:
               title: Calculation rounding errors
               content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
-            clawbacks: Clawbacks
-            cut_off_date: Output payment cut off date
-            output_payment: Output payment
-            service_fee: Service fee
-            targeted_delivery_funding: Targeted delivery funding
-            total_completed: Total completed
-            total_retained: Total retained
-            total_starts: Total starts
-            total_voids: Total voids
-            total_net_vat: Total net VAT
-            totals: Totals
-            view: View
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."

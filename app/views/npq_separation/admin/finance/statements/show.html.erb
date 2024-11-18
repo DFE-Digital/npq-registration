@@ -46,70 +46,9 @@
       <% end %>
     <% end %>
 
+    <%= render NpqSeparation::Admin::StatementDetailsComponent.new(statement: @statement) %>
+
     <div class="govuk-!-padding-3 app-statement-block">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-          <h4 class="govuk-heading-m govuk-!-margin-bottom-2"><%= t(".totals") %></h4>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t(".output_payment") %>
-            <span class="float-right"><%= number_to_currency(@calculator.total_output_payment) %></span>
-          </p>
-
-          <% if @calculator.show_targeted_delivery_funding? %>
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              <%= t(".targeted_delivery_funding") %>
-              <span class="float-right"><%= number_to_currency(@calculator.total_targeted_delivery_funding) %></span>
-            </p>
-          <% end %>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t(".clawbacks") %>
-            <span class="float-right"><%= number_to_currency(-@calculator.total_clawbacks) %></span>
-          </p>
-
-          <% unless @calculator.total_service_fees.zero? %>
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              <%= t(".service_fee") %>
-              <span class="float-right"><%= number_to_currency(@calculator.total_service_fees) %></span>
-            </p>
-          <% end %>
-
-          <hr/>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <strong><%= t(".total_net_vat") %></strong>
-            <strong class="float-right"><span><%= number_to_currency(@calculator.total_payment) %></span></strong>
-          </p>
-        </div>
-
-        <div class="govuk-grid-column-one-half">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".cut_off_date") %></strong>
-          <p class="govuk-body-l govuk-!-font-weight-bold"><%= @statement.deadline_date.to_fs(:govuk) %></p>
-        </div>
-      </div>
-
-      <div class="govuk-grid-row govuk-!-margin-top-3">
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_starts") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_starts %></p>
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_retained") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_retained %></p>
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_completed") %></p>
-          <div class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_completed %></div>
-        </div>
-
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_voids") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0"><%= @calculator.total_voided %></p>
-          <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t(".view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
-        </div>
-      </div>
-
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
           <hr class="govuk-section-break govuk-section-break--visible">

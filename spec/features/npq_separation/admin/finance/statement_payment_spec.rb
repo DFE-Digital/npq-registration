@@ -6,6 +6,7 @@ RSpec.feature "Statement payment", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement, :payable) }
+  let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:) }
 
   before do
     create(:declaration, :payable, statement:)
@@ -18,7 +19,7 @@ RSpec.feature "Statement payment", :ecf_api_disabled, type: :feature do
     click_link "Authorise for payment"
 
     expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
-    expect(page).to have_css(".statement-details-component", text: "Output payment")
+    expect(page).to have_component(component)
 
     perform_enqueued_jobs do
       check "Yes, I'm ready to authorise this for payment", visible: :all
@@ -34,7 +35,7 @@ RSpec.feature "Statement payment", :ecf_api_disabled, type: :feature do
     click_link "Authorise for payment"
 
     expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
-    expect(page).to have_css(".statement-details-component", text: "Output payment")
+    expect(page).to have_component(component)
 
     check "Yes, I'm ready to authorise this for payment", visible: :all
     click_button "Authorise for payment"

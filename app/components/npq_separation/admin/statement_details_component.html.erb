@@ -1,108 +1,64 @@
-<div class="app-application__panel__summary statement-details-component">
-  <div class="govuk-!-margin-right-4">
-    <h4 class="govuk-heading-l govuk-!-margin-bottom-2"><%= t("statements.totals.heading") %></h4>
+<div class="govuk-!-padding-3 app-statement-block">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h4 class="govuk-heading-m govuk-!-margin-bottom-2"><%= t(".totals") %></h4>
 
-    <p class="govuk-body-s govuk-!-margin-bottom-2">
-      <%= t("statements.totals.output_payment") %>
-      <span><%= helpers.number_to_currency(@calculator.total_output_payment) %></span>
-    </p>
-
-    <% if @calculator.show_targeted_delivery_funding? %>
       <p class="govuk-body-s govuk-!-margin-bottom-2">
-        <%= t("statements.totals.targeted_delivery_funding") %>
-        <span><%= helpers.number_to_currency(@calculator.total_targeted_delivery_funding) %></span>
+        <%= t(".output_payment") %>
+        <span class="float-right"><%= number_to_currency(@calculator.total_output_payment) %></span>
       </p>
-    <% end %>
 
-    <p class="govuk-body-s govuk-!-margin-bottom-2">
-      <%= t("statements.totals.clawbacks") %>
-      <span><%= helpers.number_to_currency(-@calculator.total_clawbacks) %></span>
-    </p>
+      <% if @calculator.show_targeted_delivery_funding? %>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          <%= t(".targeted_delivery_funding") %>
+          <span class="float-right"><%= number_to_currency(@calculator.total_targeted_delivery_funding) %></span>
+        </p>
+      <% end %>
 
-    <% unless @calculator.total_service_fees.zero? %>
       <p class="govuk-body-s govuk-!-margin-bottom-2">
-        <%= t("statements.totals.service_fee") %>
-        <span><%= helpers.number_to_currency(@calculator.total_service_fees) %></span>
+        <%= t(".clawbacks") %>
+        <span class="float-right"><%= number_to_currency(-@calculator.total_clawbacks) %></span>
       </p>
-    <% end %>
 
-    <hr/>
+      <% unless @calculator.total_service_fees.zero? %>
+        <p class="govuk-body-s govuk-!-margin-bottom-2">
+          <%= t(".service_fee") %>
+          <span class="float-right"><%= number_to_currency(@calculator.total_service_fees) %></span>
+        </p>
+      <% end %>
 
-    <p class="govuk-body-s govuk-!-margin-bottom-2">
-      <strong><%= t("statements.totals.total_net_vat") %></strong>
-      <strong><span><%= helpers.number_to_currency(@calculator.total_payment) %></span></strong>
-    </p>
+      <hr>
+
+      <p class="govuk-body-s govuk-!-margin-bottom-2">
+        <strong><%= t(".total_net_vat") %></strong>
+        <strong class="float-right"><span><%= number_to_currency(@calculator.total_payment) %></span></strong>
+      </p>
+    </div>
+
+    <div class="govuk-grid-column-one-half">
+      <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".cut_off_date") %></p>
+      <p class="govuk-body-l govuk-!-font-weight-bold"><%= @statement.deadline_date.to_fs(:govuk) %></p>
+    </div>
   </div>
 
-  <ul class="first govuk-list govuk-!-margin-bottom-0">
-    <li>
-      <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("statements.cut_off_date") %></strong>
-      <div class="number-group">
-        <div class="number-container govuk-!-padding-right-4">
-          <div class="float tooltip">
-            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-              <span><%= @statement.deadline_date.to_fs(:govuk) %></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
-  <ul class="second govuk-list govuk-!-margin-bottom-0">
-    <li>
-      <strong class="float govuk-body-s govuk-!-margin-bottom-0"><%= t("statements.total_starts") %></strong>
-      <div class="number-group">
-        <div class="number-container govuk-!-padding-right-4">
-          <div class="float tooltip">
-            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-              <span><%= @calculator.total_starts %></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
-  <ul class="booster govuk-list govuk-!-margin-bottom-0">
-    <li>
-      <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("statements.total_retained") %></strong>
-      <div class="number-group">
-        <div class="number-container govuk-!-padding-right-4">
-          <div class="float tooltip">
-            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-              <span><%= @calculator.total_retained %></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
-  <ul class="fourth govuk-list govuk-!-margin-bottom-0">
-      <li class="empty">
-        <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("statements.total_completed") %></strong>
-        <div class="number-group">
-          <div class="number-container govuk-!-padding-right-4">
-            <div class="float tooltip">
-              <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-                <span><%= @calculator.total_completed %></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-  </ul>
+  <div class="govuk-grid-row govuk-!-margin-top-3">
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_starts") %></p>
+      <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_starts %></p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_retained") %></p>
+      <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_retained %></p>
+    </div>
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_completed") %></p>
+      <div class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_completed %></div>
+    </div>
 
-  <ul class="fifth govuk-list govuk-!-margin-bottom-0">
-    <li class="empty">
-      <strong class="govuk-body-s float govuk-!-margin-bottom-0"><%= t("statements.total_voids") %></strong>
-      <div class="number-group">
-        <div class="number-container govuk-!-padding-right-4">
-          <div class="float tooltip">
-            <div class="float govuk-heading-m govuk-!-margin-bottom-0 govuk-!-padding-top-0">
-              <span><%= @calculator.total_voided %></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
+    <div class="govuk-grid-column-one-quarter">
+      <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_voids") %></p>
+      <p class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0"><%= @calculator.total_voided %></p>
+      <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t(".view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
+    </div>
+  </div>
 </div>
