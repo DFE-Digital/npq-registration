@@ -28,7 +28,10 @@
           What's new
         </h2>
         <p class="govuk-body">
-          <%= @latest_release_note.date %>: <%= @latest_release_note.content %>
+          <%= govuk_link_to(@latest_release_note.date, api_guidance_page_path(page: "release-notes", anchor: @latest_release_note.date.parameterize)) %>
+        </p>
+        <p class="govuk-body">
+          <%= @latest_release_note.content %>
         </p>
         <p class="govuk-body">
           <%= govuk_link_to("Browse our latest release notes", api_guidance_page_path(page: "release-notes")) %>
