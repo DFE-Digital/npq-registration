@@ -47,10 +47,12 @@ RSpec.describe Applications::RevertToPending, type: :model do
         context "with #{declaration_state} state" do
           let(:application) { create(:declaration, declaration_state).application }
 
-          it "raises an exception" do
+          it "updates the state" do
             expect { call_service }
-              .to not_change { application.reload.lead_provider_approval_status }
-              .and(not_change { application.declarations.count })
+              .to change { application.reload.lead_provider_approval_status }
+                  .from("accepted")
+                  .to("pending")
+              .and change { application.declarations.count }.to(0)
           end
         end
       end
@@ -59,12 +61,10 @@ RSpec.describe Applications::RevertToPending, type: :model do
         context "with #{declaration_state} state" do
           let(:application) { create(:declaration, declaration_state).application }
 
-          it "updates the state" do
+          it "does not change the state" do
             expect { call_service }
-              .to change { application.reload.lead_provider_approval_status }
-                  .from("accepted")
-                  .to("pending")
-              .and change { application.declarations.count }.to(0)
+              .to not_change { application.reload.lead_provider_approval_status }
+              .and(not_change { application.declarations.count })
           end
         end
       end
@@ -92,13 +92,13 @@ RSpec.describe Applications::RevertToPending, type: :model do
       subject { instance.tap(&:valid?).errors.full_messages }
 
       context "when they prevent reverting to pending" do
-        before { create(:declaration, :submitted, application:) }
+        before { create(:declaration, :eligible, application:) }
 
         it { is_expected.to include(/cannot revert/i) }
       end
 
       context "when they do not prevent reverting to pending" do
-        before { create(:declaration, :eligible, application:) }
+        before { create(:declaration, :ineligible, application:) }
 
         it { is_expected.not_to include(/cannot revert/i) }
       end

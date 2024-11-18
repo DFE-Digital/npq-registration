@@ -1,6 +1,6 @@
 module Applications
   class RevertToPending
-    BLOCKING_DECLARATION_STATES = %w[submitted voided ineligible].freeze
+    REMOVEABLE_DECLARATION_STATES = %w[submitted voided ineligible].freeze
 
     include ActiveModel::Model
     include ActiveModel::Attributes
@@ -12,7 +12,7 @@ module Applications
 
     validates :change_status_to_pending, inclusion: { in: %w[yes] }
     validates :lead_provider_approval_status, inclusion: { in: %w[accepted] }
-    validate :application_has_no_declarations
+    validate :application_has_no_unremoveable_declarations
 
     class << self
       def call(application)
@@ -41,8 +41,8 @@ module Applications
 
   private
 
-    def application_has_no_declarations
-      if @application.declarations.where(state: BLOCKING_DECLARATION_STATES).any?
+    def application_has_no_unremoveable_declarations
+      if @application.declarations.where.not(state: REMOVEABLE_DECLARATION_STATES).any?
         errors.add :base, "Cannot revert to pending, Application has Declarations"
       end
     end
