@@ -340,4 +340,25 @@ RSpec.describe Statements::CourseCalculator do
       expect(subject.clawback_payment).to be_a(Numeric)
     end
   end
+
+  describe "#course_total" do
+    it "includes monthly_service_fees" do
+      expect {
+        contract.contract_template.update!(monthly_service_fee: 10)
+      }.to change(subject, :course_total).by(10)
+    end
+
+    {
+      output_payment_subtotal: 10,
+      clawback_payment: -10,
+      targeted_delivery_funding_subtotal: 10,
+      targeted_delivery_funding_refundable_subtotal: -10,
+    }.each do |method, stubbed_value|
+      it "includes #{method}" do
+        expect {
+          allow(calculator).to receive(method).and_return(stubbed_value)
+        }.to change(subject, :course_total).by(10)
+      end
+    end
+  end
 end

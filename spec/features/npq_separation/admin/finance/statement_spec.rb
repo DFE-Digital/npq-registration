@@ -41,6 +41,7 @@ RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
     expect(page).to have_component(component)
 
     expect(page).to have_css("a", text: "Save as PDF")
+    expect(page).to have_link("Download declarations (CSV)", href: npq_separation_admin_finance_assurance_report_path(statement, format: :csv))
 
     contracts.each do |contract|
       component = NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:)
@@ -48,6 +49,8 @@ RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
     end
 
     expect(page).not_to have_text("Standalone payments")
+
+    expect(page).to be_accessible
   end
 
   scenario "see special course details" do
@@ -69,6 +72,8 @@ RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
       component = NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:)
       expect(page).to have_component(component)
     end
+
+    expect(page).to be_accessible
   end
 
   scenario "see the contract information for all courses of a statement" do
@@ -82,5 +87,7 @@ RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
         expect(page).to have_content(number_to_currency(contract.per_participant))
       end
     end
+
+    expect(page).to be_accessible
   end
 end
