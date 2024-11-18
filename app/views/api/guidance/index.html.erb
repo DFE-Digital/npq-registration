@@ -24,7 +24,7 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
-        <h2 class="govuk-heading-m">
+<h2 class="govuk-heading-l">
           What's new
         </h2>
         <p class="govuk-body">
@@ -108,12 +108,28 @@
     <div class="govuk-grid-column-full-from-desktop">
       <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
       <div class="govuk-grid-column-two-thirds ">
-        <h2 class="govuk-heading-l">API previous versions</h2>
+        <h2 class="govuk-heading-l">Previous versions of the API</h2>
         <p class="govuk-body">Access the first and second versions of the NPQs data management API documentation for lead providers.</p>
         <ul class="govuk-list">
           <li><%= govuk_link_to("View API version 2", "/api/docs/v2", class: "govuk-!-font-weight-bold") %></li>
           <li><%= govuk_link_to("View API version 1", "/api/docs/v1", class: "govuk-!-font-weight-bold") %></li>
         </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-from-desktop">
+      <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+      <div class="govuk-grid-column-two-thirds ">
+        <h2 class="govuk-heading-l">API process diagrams</h2>
+        <p class="govuk-body">
+          We've created diagrams to clarify some of the more intricate processes involved in integrating with this API.</p>
+        <p class="govuk-body">
+          <%= govuk_link_to("View particpant training journey diagrams", api_guidance_page_path(page: "participant-training-journey-diagrams"), class: "govuk-!-font-weight-bold") %>
+        </p>
       </div>
     </div>
   </div>

@@ -25,7 +25,12 @@ module NpqSeparation
           Node.new(
             name: "How-to guides",
             href: api_guidance_page_path(page: "/", anchor: "how-to-guides"),
-            prefix: "/api/guidance/",
+            prefix: "/api/guidance/how-to-guides",
+          ) => [],
+          Node.new(
+            name: "API process diagrams",
+            href: api_guidance_page_path(page: "api-process-diagrams"),
+            prefix: "/api/guidance/api-process-diagrams",
           ) => [],
         }
       end

@@ -4,7 +4,9 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 ## 13 August 2024
 
-We’ve released a minimum viable product (MVP) version of the standalone National Professional Qualifications (NPQ) API for providers to test ahead of its full launch at the end of November 2024. We plan to run this test phase until the end of October and will support providers via regular dedicated meetings to ensure testing is going smoothly.
+We’ve released a minimum viable product (MVP) version of the standalone National Professional Qualifications (NPQ) API for providers to test ahead of its full launch at the end of November 2024. 
+
+We plan to run this test phase until the end of October and will support providers via regular dedicated meetings to ensure testing is going smoothly.
 
 ### Get started in the test environments
 
