@@ -26,9 +26,18 @@ RSpec.describe NpqSeparation::Admin::Applications::TrainingStatusesController, :
         patch npq_separation_admin_applications_training_status_path(application, params:)
       end
 
-      let(:params) { {} }
+      context "with valid update" do
+        let(:params) { { update_training_status: { training_status: :deferred } } }
 
-      it { is_expected.to redirect_to npq_separation_admin_application_path(application) }
+        it { is_expected.to redirect_to npq_separation_admin_application_path(application) }
+      end
+
+      context "with invalid update" do
+        let(:params) { { update_training_status: { training_status: "unexpected" } } }
+
+        it { is_expected.to have_http_status :unprocessable_entity }
+        xit { is_expected.to have_attributes body: /Update.*training status/i }
+      end
     end
   end
 
@@ -48,5 +57,3 @@ RSpec.describe NpqSeparation::Admin::Applications::TrainingStatusesController, :
     end
   end
 end
-
-
