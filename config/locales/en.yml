@@ -264,9 +264,11 @@ en:
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
-              inclusion: Confirm you wish to change the status back to pending
+              inclusion: Confirm you wish to change the status to Pending
             lead_provider_approval_status:
               inclusion: Current lead provider approval status is not Accepted
+            base:
+              pending_unremoveable_declarations: Cannot revert to pending, Application has unremoveable Declarations
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:

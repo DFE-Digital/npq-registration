@@ -9,68 +9,6 @@ RSpec.describe Applications::RevertToPending, type: :model do
     end
   end
 
-  describe ".call" do
-    subject(:call_service) { described_class.call(application) && application.reload }
-
-    it "updates lead provider approval status" do
-      expect { call_service }
-        .to change { application.reload.lead_provider_approval_status }
-                   .from("accepted")
-                   .to("pending")
-    end
-
-    it "empties the funded_place attribute" do
-      expect { call_service }
-        .to change { application.reload.funded_place }
-                   .from(false)
-                   .to(nil)
-    end
-
-    it "removes Application states" do
-      expect { call_service }
-        .to change { application.application_states.count }
-                   .from(1)
-                   .to(0)
-    end
-
-    context "when already pending" do
-      let(:application) { create(:application, :pending) }
-
-      it "succeeds but does not change the approval status" do
-        expect { call_service }
-          .to not_change(application, :lead_provider_approval_status)
-      end
-    end
-
-    context "when Application already has declarations" do
-      %i[submitted voided ineligible].each do |declaration_state|
-        context "with #{declaration_state} state" do
-          let(:application) { create(:declaration, declaration_state).application }
-
-          it "updates the state" do
-            expect { call_service }
-              .to change { application.reload.lead_provider_approval_status }
-                  .from("accepted")
-                  .to("pending")
-              .and change { application.declarations.count }.to(0)
-          end
-        end
-      end
-
-      %i[eligible payable paid awaiting_clawback clawed_back].each do |declaration_state|
-        context "with #{declaration_state} state" do
-          let(:application) { create(:declaration, declaration_state).application }
-
-          it "does not change the state" do
-            expect { call_service }
-              .to not_change { application.reload.lead_provider_approval_status }
-              .and(not_change { application.declarations.count })
-          end
-        end
-      end
-    end
-  end
-
   describe "#valid?" do
     it { is_expected.to validate_inclusion_of(:change_status_to_pending).in_array(%w[yes]) }
 
@@ -105,26 +43,100 @@ RSpec.describe Applications::RevertToPending, type: :model do
     end
   end
 
-  describe "#save" do
+  describe "#revert" do
     subject(:instance) { described_class.new(application, change_status_to_pending:) }
 
-    context "with valid form" do
-      let(:change_status_to_pending) { "yes" }
+    let(:change_status_to_pending) { "yes" }
+
+    context "when valid" do
+      it "returns true" do
+        expect(instance.revert).to be true
+      end
 
       it "updates lead provider approval status" do
-        expect { instance.save }
+        expect { instance.revert }
           .to change { application.reload.lead_provider_approval_status }
                      .from("accepted")
                      .to("pending")
       end
+
+      it "empties the funded_place attribute" do
+        expect { instance.revert }
+          .to change { application.reload.funded_place }
+                     .from(false)
+                     .to(nil)
+      end
+
+      it "removes Application states" do
+        expect { instance.revert }
+          .to change { application.application_states.count }
+                     .from(1)
+                     .to(0)
+      end
     end
 
-    context "with invalid form" do
-      let(:change_status_to_pending) { "no" }
+    context "when already pending" do
+      let :application do
+        create(:application, :pending, funded_place: true).tap do |application|
+          create(:declaration, :submitted, application:)
+          create(:application_state, application:)
+        end
+      end
 
-      it "does not update the lead provider approval status" do
-        expect { instance.save }
-          .to(not_change { application.reload.lead_provider_approval_status })
+      it "returns false" do
+        expect(instance.revert).to be false
+      end
+
+      it "succeeds but does not change the attributes" do
+        expect { instance.revert }
+          .to not_change { application.reload.lead_provider_approval_status }
+              .and not_change(application, :funded_place)
+      end
+
+      it "succeeds but does not remove application_states" do
+        expect { instance.revert }
+          .to not_change(application.application_states, :count)
+      end
+
+      it "succeeds but does not remove declarations" do
+        expect { instance.revert }
+          .to not_change(application.declarations, :count)
+      end
+    end
+
+    context "when Application already has declarations" do
+      %i[submitted voided ineligible].each do |declaration_state|
+        context "with #{declaration_state} state" do
+          let(:application) { create(:declaration, declaration_state).application }
+
+          it "returns true" do
+            expect(instance.revert).to be true
+          end
+
+          it "updates the state" do
+            expect { instance.revert }
+              .to change { application.reload.lead_provider_approval_status }
+                  .from("accepted")
+                  .to("pending")
+              .and change { application.declarations.count }.to(0)
+          end
+        end
+      end
+
+      %i[eligible payable paid awaiting_clawback clawed_back].each do |declaration_state|
+        context "with #{declaration_state} state" do
+          let(:application) { create(:declaration, declaration_state).application }
+
+          it "returns false" do
+            expect(instance.revert).to be false
+          end
+
+          it "does not change the lead provider approval status" do
+            expect { instance.revert }
+              .to not_change { application.reload.lead_provider_approval_status }
+              .and(not_change { application.declarations.count })
+          end
+        end
       end
     end
   end

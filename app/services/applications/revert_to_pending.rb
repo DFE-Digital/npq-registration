@@ -14,19 +14,12 @@ module Applications
     validates :lead_provider_approval_status, inclusion: { in: %w[accepted] }
     validate :application_has_no_unremoveable_declarations
 
-    class << self
-      def call(application)
-        new(application, change_status_to_pending: "yes").save
-      end
-    end
-
     def initialize(application, ...)
       @application = application
       super(...)
     end
 
-    def save
-      return true if @application.pending_lead_provider_approval_status?
+    def revert
       return false unless valid?
 
       Application.transaction do
@@ -43,7 +36,7 @@ module Applications
 
     def application_has_no_unremoveable_declarations
       if @application.declarations.where.not(state: REMOVEABLE_DECLARATION_STATES).any?
-        errors.add :base, "Cannot revert to pending, Application has Declarations"
+        errors.add :base, :pending_unremoveable_declarations
       end
     end
   end

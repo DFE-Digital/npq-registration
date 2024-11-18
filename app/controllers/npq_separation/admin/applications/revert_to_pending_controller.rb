@@ -8,7 +8,7 @@ module NpqSeparation
         def new; end
 
         def create
-          if @revert_to_pending_form.save
+          if @revert_to_pending_form.revert
             redirect_to npq_separation_admin_application_path(@application)
           else
             render :new, status: :unprocessable_entity
