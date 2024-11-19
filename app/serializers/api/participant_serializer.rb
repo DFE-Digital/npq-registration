@@ -145,7 +145,7 @@ module API
           (
             (user.participant_id_changes || []).map(&:updated_at) +
             (user.applications || []).map(&:updated_at) +
-            [user.updated_at]
+            [user.significantly_updated_at]
           ).compact.max
         end
       end

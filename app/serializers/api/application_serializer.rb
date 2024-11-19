@@ -35,7 +35,7 @@ module API
       field(:created_at)
       field(:updated_at) do |a|
         [
-          a.user.updated_at,
+          a.user.significantly_updated_at,
           a.updated_at,
         ].compact.max
       end
