@@ -10,7 +10,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
   end
 
   describe "#valid?" do
-    it { is_expected.to validate_inclusion_of(:change_status_to_pending).in_array(%w[yes]) }
+    it { is_expected.to validate_inclusion_of(:change_status_to_pending).in_array(%w[yes no]) }
 
     context "with lead_provider_approval_status attribute" do
       subject { instance.tap(&:valid?).errors.messages[:lead_provider_approval_status] }
@@ -78,6 +78,37 @@ RSpec.describe Applications::RevertToPending, type: :model do
           .to change { application.application_states.count }
                      .from(1)
                      .to(0)
+      end
+    end
+
+    context "when status set to no" do
+      let :application do
+        create(:application, :accepted, funded_place: true).tap do |application|
+          create(:declaration, :submitted, application:)
+          create(:application_state, application:)
+        end
+      end
+
+      let(:change_status_to_pending) { "no" }
+
+      it "returns true" do
+        expect(instance.revert).to be true
+      end
+
+      it "succeeds but does not change the attributes" do
+        expect { instance.revert }
+          .to not_change { application.reload.lead_provider_approval_status }
+              .and not_change(application, :funded_place)
+      end
+
+      it "succeeds but does not remove application_states" do
+        expect { instance.revert }
+          .to not_change(application.application_states, :count)
+      end
+
+      it "succeeds but does not remove declarations" do
+        expect { instance.revert }
+          .to not_change(application.declarations, :count)
       end
     end
 
