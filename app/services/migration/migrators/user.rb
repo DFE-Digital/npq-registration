@@ -65,7 +65,6 @@ module Migration::Migrators
 
         if touch_updated_at?(attrs, npq_application)
           attrs[:significantly_updated_at] = Time.zone.now
-          attrs[:updated_at] = Time.zone.now
         end
 
         user.update!(attrs.merge(skip_touch_significantly_updated_at: true))
