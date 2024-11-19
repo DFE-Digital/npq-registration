@@ -97,7 +97,7 @@ RSpec.describe User do
   end
 
   describe "touch_significantly_updated_at" do
-    let(:user) { travel_to(1.day.ago) { create(:user) } }
+    let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }
     let(:insignificant_change) { { raw_tra_provider_data: { foo: :bar } } }
 

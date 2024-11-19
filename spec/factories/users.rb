@@ -5,6 +5,11 @@ FactoryBot.define do
     trn { sprintf("%07i", Random.random_number(9_999_999)) }
     date_of_birth { 30.years.ago }
     ecf_id { SecureRandom.uuid }
+    significantly_updated_at { Time.zone.now }
+
+    trait :without_significantly_updated_at do
+      significantly_updated_at { nil }
+    end
 
     trait :with_get_an_identity_id do
       transient do
