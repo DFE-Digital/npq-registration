@@ -9,13 +9,14 @@ module Applications
     attribute :application
     delegate :lead_provider_approval_status, to: :application
 
-    validates :change_status_to_pending, inclusion: { in: %w[yes] }
+    validates :change_status_to_pending, inclusion: { in: %w[yes no] }
     validates :lead_provider_approval_status, inclusion: { in: %w[accepted] }, if: :application
     validates :application, presence: true
     validate :application_has_no_unremoveable_declarations, if: :application
 
     def revert
-      return false unless valid?
+      return true if change_status_to_pending == "no"
+      return false if invalid?
 
       Application.transaction do
         application.application_states.destroy_all

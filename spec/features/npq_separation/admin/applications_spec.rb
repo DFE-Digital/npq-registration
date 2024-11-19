@@ -204,7 +204,6 @@ RSpec.feature "Listing and viewing applications", :ecf_api_disabled, type: :feat
     end
 
     expect(page).to have_css("h1", text: "Are you sure you want to change the status to Pending?")
-    choose "No", visible: :all
     click_button "Change status to Pending"
 
     expect(page).to have_css(".govuk-error-message", text: "Confirm you wish to change the status to Pending")
