@@ -7,6 +7,5 @@ Delayed::Worker.queue_attributes = {
   default: { priority: 0 },
   participant_outcomes: { priority: 5 },
   low_priority: { priority: 10 },
-  migration: { priority: 0 },
   dfe_analytics: { priority: 0 },
 }

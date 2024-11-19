@@ -42,7 +42,6 @@ There are three permanent environments for NPQ and a fourth set of transient env
 - Part of the `production` Azure space.
 - Temporary environment for NPQ separation work.
 - Used internally by team members as a production-like environment with NPQ separation features enabled.
-- Migration feature (for NPQ separation) will pull from the migration ECF environment.
 - https://npq-registration-migration-web.teacherservices.cloud
 - [View deployed commit](https://npq-registration-migration-web.teacherservices.cloud/healthcheck.json)
 
