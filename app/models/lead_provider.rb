@@ -8,7 +8,7 @@ class LeadProvider < ApplicationRecord
     "School-Led Network" => "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0",
     "Teacher Development Trust" => "30fd937e-b93c-4f81-8fff-3c27544193f1",
     "Teach First" => "a02ae582-f939-462f-90bc-cebf20fa8473",
-    "University College London (UCL) Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
+    "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
 
   NPQH_SL_LT_LTD_LBC_PROVIDERS = [
@@ -19,7 +19,7 @@ class LeadProvider < ApplicationRecord
     "National Institute of Teaching",
     "Teacher Development Trust",
     "Teach First",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
   ].freeze
 
   NPQH_EHCO_PROVIDERS = [
@@ -30,7 +30,7 @@ class LeadProvider < ApplicationRecord
     "Teach First",
     "LLSE",
     "Teacher Development Trust",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
   ].freeze
 
   EYL_LL_PROVIDERS = [
@@ -38,7 +38,7 @@ class LeadProvider < ApplicationRecord
     "National Institute of Teaching",
     "Teacher Development Trust",
     "Teach First",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
   ].freeze
 
   EL_PROVIDERS = [
@@ -48,7 +48,7 @@ class LeadProvider < ApplicationRecord
     "LLSE",
     "National Institute of Teaching",
     "Teach First",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
   ].freeze
 
   LPM_PROVIDERS = [
@@ -56,7 +56,7 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "LLSE",
     "Teach First",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
     "National Institute of Teaching",
   ].freeze
 
@@ -66,7 +66,7 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "National Institute of Teaching",
     "Teach First",
-    "University College London (UCL) Institute of Education",
+    "UCL Institute of Education",
   ].freeze
 
   # TODO: Move all of this mapping into the database
