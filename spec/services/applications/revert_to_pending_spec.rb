@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Applications::RevertToPending, type: :model do
-  subject(:instance) { described_class.new(application) }
+  subject(:instance) { described_class.new(application:) }
 
   let :application do
     create(:application, :accepted) do |application|
@@ -44,7 +44,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
   end
 
   describe "#revert" do
-    subject(:instance) { described_class.new(application, change_status_to_pending:) }
+    subject(:instance) { described_class.new(application:, change_status_to_pending:) }
 
     let(:change_status_to_pending) { "yes" }
 

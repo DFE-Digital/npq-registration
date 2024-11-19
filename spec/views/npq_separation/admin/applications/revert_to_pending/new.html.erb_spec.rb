@@ -9,7 +9,7 @@ RSpec.describe "npq_separation/admin/applications/revert_to_pending/new", type: 
   end
 
   let(:application) { build_stubbed(:application, :accepted) }
-  let(:revert_form) { Applications::RevertToPending.new(application) }
+  let(:revert_form) { Applications::RevertToPending.new(application:) }
   let(:form_path) { npq_separation_admin_applications_revert_to_pending_path(application) }
 
   it { is_expected.to have_css("h1", text: /Are you sure/) }
