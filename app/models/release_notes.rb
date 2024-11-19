@@ -19,7 +19,7 @@ private
   end
 
   def regexp
-    /^## (.*?)\n\n(.*?)(?=\n##|\z)/m
+    /## (\d{1,2} [A-Za-z]+ \d{4})\n\n([^\n]+)/
   end
 
   def file_content

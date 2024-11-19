@@ -8,11 +8,13 @@ RSpec.describe ReleaseNotes do
 
         If you have any questions or comments...
 
-        ## 2021-10-10
+        ## 13 August 2024
 
-        First note
+        First paragraph
 
-        ## 2021-10-09
+        Second paragraph
+
+        ## 10 August 2024
 
         Second note
 
@@ -20,8 +22,8 @@ RSpec.describe ReleaseNotes do
     )
 
     latest = release_notes.latest
-    expect(latest.date).to eq("2021-10-10")
-    expect(latest.content).to eq("First note")
+    expect(latest.date).to eq("13 August 2024")
+    expect(latest.content).to eq("First paragraph")
   end
 
   it "parses release notes from a file" do
