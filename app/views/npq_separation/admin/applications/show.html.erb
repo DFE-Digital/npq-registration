@@ -61,7 +61,7 @@
       row.with_key(text: "Lead provider approval status")
       row.with_value(text: @application.lead_provider_approval_status&.humanize)
 
-      if @application.lead_provider_approval_status == "pending"
+      if @application.pending_lead_provider_approval_status?
         row.with_action(text: :none)
       else
         row.with_action(
