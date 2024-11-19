@@ -258,3 +258,4 @@ shared:
     - email_updates_status
     - email_updates_unsubscribe_key
     - archived_at
+    - significantly_updated_at

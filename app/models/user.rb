@@ -1,4 +1,15 @@
 class User < ApplicationRecord
+  INSIGNIFICANT_ATTRIBUTES = %w[
+    raw_tra_provider_data
+    feature_flag_id
+    get_an_identity_id_synced_to_ecf
+    updated_from_tra_at
+    trn_lookup_status
+    notify_user_for_future_reg
+    email_updates_status
+    email_updates_unsubscribe_key
+  ].freeze
+
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
   has_paper_trail meta: { note: :version_note }, ignore: [:raw_tra_provider_data]
@@ -26,6 +37,8 @@ class User < ApplicationRecord
   before_validation do
     self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
   end
+
+  after_commit :touch_significantly_updated_at
 
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
@@ -198,5 +211,19 @@ class User < ApplicationRecord
 
   def archived?
     archived_email.present?
+  end
+
+private
+
+  def touch_significantly_updated_at
+    changed_attributes = saved_changes.keys
+
+    explicitly_updating_significantly_updated_at = changed_attributes.include?("significantly_updated_at")
+    return if explicitly_updating_significantly_updated_at
+
+    updated_at_touched = changed_attributes == %w[updated_at]
+    significant_change = (changed_attributes - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any?
+
+    update_column(:significantly_updated_at, updated_at) if updated_at_touched || significant_change
   end
 end
