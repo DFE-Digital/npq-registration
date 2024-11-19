@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   before_action :set_feature_flag_users
   before_action :initialize_store
 
+  include DfE::Analytics::Requests
+
 private
 
   def authenticate_user!

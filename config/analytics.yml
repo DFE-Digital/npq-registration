@@ -18,25 +18,15 @@ shared:
     - cohort_id
     - lead_provider_id
     - marked_as_paid_at
-    - reconcile_amount
     - state
     - created_at
     - updated_at
     - ecf_id
-  :settings:
-    - id
-    - course_start_date
-    - created_at
-    - updated_at
   :schools:
     - id
     - urn
-    - la_code
-    - la_name
     - establishment_number
     - name
-    - establishment_status_code
-    - establishment_status_name
     - close_date
     - ukprn
     - last_changed_date
@@ -52,14 +42,9 @@ shared:
     - country
     - created_at
     - updated_at
-    - establishment_type_code
-    - establishment_type_name
     - high_pupil_premium
     - postcode_without_spaces
-    - number_of_pupils
     - eyl_funding_eligible
-    - phase_type
-    - phase_name
   :schedules:
     - id
     - course_group_id
@@ -187,7 +172,6 @@ shared:
     - updated_at
     - ecf_id
     - description
-    - position
     - display
     - identifier
     - course_group_id
@@ -225,7 +209,6 @@ shared:
     - works_in_school
     - employer_name
     - employment_role
-    - DEPRECATED_private_childcare_provider_urn
     - works_in_nursery
     - works_in_childcare
     - kind_of_nursery
@@ -234,7 +217,6 @@ shared:
     - work_setting
     - teacher_catchment_synced_to_ecf
     - employment_type
-    - DEPRECATED_itt_provider
     - lead_mentor
     - primary_establishment
     - number_of_pupils
@@ -260,6 +242,7 @@ shared:
     - updated_at
     - ecf_id
     - trn_verified
+    - trn
     - active_alert
     - trn_auto_verified
     - feature_flag_id

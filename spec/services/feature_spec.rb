@@ -112,4 +112,20 @@ RSpec.describe Feature do
       expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(true)
     end
   end
+
+  describe ".dfe_analytics_enabled?" do
+    context "when disabled" do
+      it "returns false" do
+        expect(Feature).not_to be_dfe_analytics_enabled
+      end
+    end
+
+    context "when enabled" do
+      before { Flipper.enable(Feature::DFE_ANALYTICS_ENABLED) }
+
+      it "returns true" do
+        expect(Feature).to be_dfe_analytics_enabled
+      end
+    end
+  end
 end

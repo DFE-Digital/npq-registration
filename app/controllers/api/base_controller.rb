@@ -6,6 +6,8 @@ module API
     include ActionController::MimeResponds
     include API::LoggerPayload
 
+    include DfE::Analytics::Requests
+
     rescue_from ActionController::UnpermittedParameters, with: :unpermitted_parameter_response
     rescue_from ActionController::BadRequest, with: :bad_request_response
     rescue_from ArgumentError, with: :bad_request_response

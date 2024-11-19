@@ -40,7 +40,7 @@ DfE::Analytics.configure do |config|
   # A proc which returns true or false depending on whether you want to
   # enable analytics. You might want to hook this up to a feature flag or
   # environment variable.
-  config.enable_analytics = proc { Rails.env.staging? || Rails.env.separation? }
+  config.enable_analytics = proc { Feature.dfe_analytics_enabled? }
 
   # The environment we’re running in. This value will be attached
   # to all events we send to BigQuery.
@@ -55,4 +55,6 @@ DfE::Analytics.configure do |config|
 
   # if part of any model name is migration, it wont be loaded
   config.excluded_models_proc = proc { |x| x.to_s =~ /Migration::/ }
+
+  config.entity_table_checks_enabled = true
 end
