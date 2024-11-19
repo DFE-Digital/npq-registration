@@ -19,6 +19,12 @@ RSpec.describe Applications::RevertToPending, type: :model do
         it { is_expected.to be_empty }
       end
 
+      context "with rejected application" do
+        let(:application) { create(:application, :rejected) }
+
+        it { is_expected.to be_empty }
+      end
+
       context "with pending application" do
         let(:application) { create(:application, :pending) }
 
