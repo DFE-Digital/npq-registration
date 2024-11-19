@@ -32,13 +32,13 @@ RSpec.describe Applications::RevertToPending, type: :model do
       context "when they prevent reverting to pending" do
         before { create(:declaration, :eligible, application:) }
 
-        it { is_expected.to include(/cannot revert/i) }
+        it { is_expected.to include(/already declarations/i) }
       end
 
       context "when they do not prevent reverting to pending" do
         before { create(:declaration, :ineligible, application:) }
 
-        it { is_expected.not_to include(/cannot revert/i) }
+        it { is_expected.not_to include(/already declarations/i) }
       end
     end
   end
