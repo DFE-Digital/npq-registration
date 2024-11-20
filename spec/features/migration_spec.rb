@@ -3,6 +3,22 @@ require "rails_helper"
 RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
 
+  # As jobs are ran sequentially in the test environment and the coordinator/migrators
+  # now use locking while re-queueing jobs we need to simulate a bit of async job running
+  # here to avoid issues.
+  def run_migration_and_wait_for_jobs_to_complete
+    perform_enqueued_jobs(only: MigrationJob) do
+      click_button "Run migration"
+    end
+
+    loop do
+      perform_enqueued_jobs
+      break if enqueued_jobs.empty?
+    end
+
+    visit current_path
+  end
+
   context "when not authenticated" do
     scenario "viewing the migrations page" do
       visit npq_separation_migration_migrations_path
@@ -39,9 +55,9 @@ RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test
     scenario "viewing the completed migration" do
       visit npq_separation_migration_migrations_path
 
-      perform_enqueued_jobs do
-        click_button "Run migration"
-      end
+      run_migration_and_wait_for_jobs_to_complete
+
+      visit npq_separation_migration_migrations_path
 
       expect(page).not_to have_content("A migration is currently in-progress")
       expect(page).not_to have_content("It was started less than a minute ago.")
@@ -77,11 +93,9 @@ RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test
       scenario "viewing the completed migration" do
         visit npq_separation_migration_migrations_path
 
-        perform_enqueued_jobs do
-          click_button "Run migration"
-        end
+        run_migration_and_wait_for_jobs_to_complete
 
-        within ".data-migration-lead_provider" do
+        within first(".data-migration-lead_provider") do
           expect(page).to have_css(".total-count", text: 3)
           expect(page).to have_css(".failure-count", text: 1)
           expect(page).to have_css(".percentage-successfully-migrated", text: "66%")
@@ -117,9 +131,7 @@ RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test
       scenario "viewing the completed migration" do
         visit npq_separation_migration_migrations_path
 
-        perform_enqueued_jobs do
-          click_button "Run migration"
-        end
+        run_migration_and_wait_for_jobs_to_complete
 
         within ".data-migration-cohort" do
           expect(page).to have_css(".total-count", text: 3)
@@ -163,9 +175,7 @@ RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test
       scenario "viewing the completed migration" do
         visit npq_separation_migration_migrations_path
 
-        perform_enqueued_jobs do
-          click_button "Run migration"
-        end
+        run_migration_and_wait_for_jobs_to_complete
 
         within ".data-migration-statement" do
           expect(page).to have_css(".total-count", text: 3)
@@ -206,9 +216,7 @@ RSpec.feature "Migration", :ecf_api_disabled, :in_memory_rails_cache, :rack_test
       scenario "viewing the completed migration" do
         visit npq_separation_migration_migrations_path
 
-        perform_enqueued_jobs do
-          click_button "Run migration"
-        end
+        run_migration_and_wait_for_jobs_to_complete
 
         within ".data-migration-user" do
           expect(page).to have_css(".total-count", text: 3)

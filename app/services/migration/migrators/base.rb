@@ -243,16 +243,25 @@ module Migration::Migrators
     end
 
     def finalise_migration!
-      last_worker_to_finish = Migration::DataMigration.incomplete.where(model: self.class.model).one?
+      last_worker_to_finish = false
 
-      run_once_post_migration if last_worker_to_finish
+      Delayed::Job.with_advisory_lock("last_worker_#{self.class.model}") do
+        last_worker_to_finish = !other_incomplete_migrators.exists?
+        data_migration.update!(completed_at: 1.second.from_now)
+      end
 
-      data_migration.update!(completed_at: 1.second.from_now)
       log_info("Migration completed")
 
       # Queue a follow up migration to migrate any
       # dependent models.
       MigrationJob.perform_later if last_worker_to_finish
+
+      # Run any post-migration tasks.
+      run_once_post_migration if last_worker_to_finish
+    end
+
+    def other_incomplete_migrators
+      Migration::DataMigration.incomplete.where(model: self.class.model).where.not(id: data_migration.id)
     end
   end
 end

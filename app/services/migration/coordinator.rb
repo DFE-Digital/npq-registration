@@ -29,11 +29,13 @@ module Migration
     end
 
     def run_migration
-      next_runnable_migrator = self.class.migrators.select(&:runnable?).first
+      Delayed::Job.with_advisory_lock("queue_next_migrators") do
+        next_runnable_migrators = self.class.migrators.select(&:runnable?)
 
-      return unless next_runnable_migrator
+        return unless next_runnable_migrators.any?
 
-      next_runnable_migrator.queue
+        next_runnable_migrators.each(&:queue)
+      end
     end
   end
 end

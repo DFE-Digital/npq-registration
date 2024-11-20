@@ -18,11 +18,14 @@ RSpec.describe Migration::Coordinator do
   describe "#migrate!" do
     subject(:migrate) { instance.migrate! }
 
-    it "runs the next runnable migrator" do
+    it "queues the next runnable migrators" do
       allow(described_class.migrators.first).to receive(:runnable?).and_return(false)
       allow(described_class.migrators.second).to receive(:runnable?).and_return(true)
+      allow(described_class.migrators.last).to receive(:runnable?).and_return(true)
 
+      expect(described_class.migrators.first).not_to receive(:queue)
       expect(described_class.migrators.second).to receive(:queue)
+      expect(described_class.migrators.last).to receive(:queue)
 
       migrate
     end
