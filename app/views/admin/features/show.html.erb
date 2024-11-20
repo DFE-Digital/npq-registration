@@ -21,5 +21,11 @@
       </button>
     <% end %>
 
+    <h2 class="govuk-heading-m">Actors</h2>
+
+    <p class="govuk-body-m">
+      <%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").count %>
+    </p>
+    
   </div>
 </div>
