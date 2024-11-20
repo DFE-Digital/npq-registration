@@ -57,4 +57,5 @@ DfE::Analytics.configure do |config|
   config.excluded_models_proc = proc { |x| x.to_s =~ /Migration::/ }
 
   config.entity_table_checks_enabled = true
+  config.excluded_paths = ["/healthcheck"]
 end
