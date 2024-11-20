@@ -1,3 +1,43 @@
-<h1 class="govuk-heading-l">
-  TBD
-</h1>
+<%= govuk_back_link href: npq_separation_admin_application_path(@application) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      Change training status
+    </h1>
+
+    <div class="govuk-inset-text">
+      <p class="govuk-body">
+        <strong>User ID / Participant ID</strong>
+        <br/>
+        <%= @application.user.id %>
+      </p>
+      <p class="govuk-body">
+        <strong>Training status</strong>
+        <br/>
+        <%= @application.training_status.humanize %>
+      </p>
+    </div>
+
+    <%= form_for @change_training_status,
+                 url: npq_separation_admin_applications_change_training_status_path(@application) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_collection_radio_buttons :training_status,
+                                           f.object.training_status_options,
+                                           :to_s,
+                                           :humanize,
+                                           legend: { tag: 'h1', size: 'm' } %>
+
+      <%= f.govuk_select(:reason, label: { tag: 'h1', size: 'm' },
+                                  options: { include_blank: true }) do %>
+        <%= grouped_options_for_select(f.object.reason_options, f.object.reason)  %>
+      <% end %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Continue" %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_path(@application) %>
+      </div>
+    <% end %>
+  </div>
+</div>

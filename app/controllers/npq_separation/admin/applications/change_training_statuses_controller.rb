@@ -30,7 +30,7 @@ module NpqSeparation
         end
 
         def training_status_params
-          params.require(:change_training_status).permit(:training_status)
+          params.fetch(:change_training_status, {}).permit(:training_status, :reason)
         end
       end
     end

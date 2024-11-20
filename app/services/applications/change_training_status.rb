@@ -3,27 +3,67 @@
 module Applications
   class ChangeTrainingStatus
     include ActiveModel::Model
+    include ActiveModel::Attributes
+    include ActiveModel::Validations::Callbacks
 
-    attr_accessor :application
-    attr_writer :training_status
+    REASON_OPTIONS = {
+      "deferred" => Participants::Defer::DEFERRAL_REASONS,
+      "withdrawn" => Participants::Withdraw::WITHDRAWAL_REASONS,
+    }.freeze
+
+    attribute :application
+    attribute :reason
+    attribute :training_status
 
     delegate :lead_provider, to: :application
 
     validates :application, presence: true
     validates :training_status, inclusion: Application.training_statuses.values
+    validates :reason, inclusion: { in: :valid_reasons }, if: :reason_required?
+    validate :do_not_defer_if_without_declarations, if: :application
 
-    def training_status
-      @training_status || application&.training_status
-    end
+    before_validation(unless: :reason_required?) { self.reason = nil }
 
     def change_training_status
       Application.transaction do
         return false if invalid?
+        return true if status_unchanged?
 
-        ApplicationState.create!(application:, lead_provider:, state: training_status)
+        ApplicationState.create!(application:, lead_provider:, state: training_status, reason:)
         application.update!(training_status:)
 
         true
+      end
+    end
+
+    def training_status_options
+      Application.training_statuses.values.without(application&.training_status)
+    end
+
+    def reason_options
+      REASON_OPTIONS
+    end
+
+  private
+
+    def reason_required?
+      training_status.present? && training_status != "active"
+    end
+
+    def valid_reasons
+      reason_options[training_status] || []
+    end
+
+    def status_unchanged?
+      training_status == application&.training_status
+    end
+
+    def do_not_defer_if_without_declarations
+      return unless training_status == "deferred"
+      return unless application.accepted_lead_provider_approval_status?
+
+      if application.declarations.empty?
+        errors.add(:training_status, :invalid_deferral_no_declarations)
       end
     end
   end

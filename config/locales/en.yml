@@ -232,6 +232,11 @@ en:
         checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
+        applications/change_training_status:
+          attributes:
+            training_status:
+              inclusion: Choose a valid training status
+              invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
@@ -774,6 +779,8 @@ en:
         funding_eligibility_senco: "Funding"
 
     legend:
+      applications_change_training_status:
+        training_status: Choose a different training status
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"
@@ -803,6 +810,9 @@ en:
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
     hint:
+      applications_change_training_status:
+        reason: Required for deferred or withdrawn
+
       registration_wizard:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
@@ -848,7 +858,11 @@ en:
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
         senco_start_date: For example, 1 2024
         work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
+
     label:
+      applications_change_training_status:
+        reason: Reason for change
+
       statements_payment_authorisation_form:
         checks_done_options:
           1: Yes, I'm ready to authorise this for payment
