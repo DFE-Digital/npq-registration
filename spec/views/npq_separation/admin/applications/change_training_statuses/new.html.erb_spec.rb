@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "npq_separation/admin/applications/training_statuses/edit", type: :view do
+RSpec.describe "npq_separation/admin/applications/change_training_statuses/new", type: :view do
   subject { render }
 
   before do
@@ -10,7 +10,7 @@ RSpec.describe "npq_separation/admin/applications/training_statuses/edit", type:
   end
 
   let(:application) { build_stubbed(:application, :accepted) }
-  let(:form_path) { npq_separation_admin_applications_training_status_path(application) }
+  let(:form_path) { npq_separation_admin_applications_change_training_status_path(application) }
 
   it { is_expected.to have_css("h1") }
   xit { is_expected.to have_css(%(form[action="#{form_path}"]), count: 1) }

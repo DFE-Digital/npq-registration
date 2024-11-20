@@ -234,7 +234,7 @@ Rails.application.routes.draw do
           member do
             namespace :applications, path: nil do
               resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
-              resource :training_status, only: %i[edit update]
+              resource :change_training_status, only: %i[new create]
             end
           end
         end

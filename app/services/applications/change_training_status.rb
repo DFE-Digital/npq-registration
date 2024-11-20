@@ -1,25 +1,22 @@
 # frozen_string_literal: true
 
 module Applications
-  class UpdateTrainingStatus
+  class ChangeTrainingStatus
     include ActiveModel::Model
 
-    attr_reader :application
+    attr_accessor :application
     attr_writer :training_status
 
     delegate :lead_provider, to: :application
+
+    validates :application, presence: true
     validates :training_status, inclusion: Application.training_statuses.values
 
-    def initialize(application, ...)
-      @application = application
-      super(...)
-    end
-
     def training_status
-      @training_status || application.training_status
+      @training_status || application&.training_status
     end
 
-    def save
+    def change_training_status
       Application.transaction do
         return false if invalid?
 
