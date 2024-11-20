@@ -12,6 +12,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
       feature_flag_id: session["feature_flag_id"],
     )
 
+    if user_has_email_change_that_will_clash_with_existing_users
+      Users::ArchiveByEmail.new(user: @user).call
+    end
+
     # @user.persisted? checks that it exists and has been persisted to the database
     # @user.save checks that any changes made to an existing record have been persisted to that persisted record
     if @user.persisted? && @user.save
@@ -99,6 +103,10 @@ private
     request.env["omniauth.auth"].uid
   rescue StandardError
     "unknown-provider-uid"
+  end
+
+  def user_has_email_change_that_will_clash_with_existing_users
+    @user.changes[:email] && User.where(email: @user.changes[:email].last).any?
   end
 end
 
