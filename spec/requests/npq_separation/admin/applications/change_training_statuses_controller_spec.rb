@@ -18,7 +18,7 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeTrainingStatusesControl
       end
 
       it { is_expected.to have_http_status :success }
-      xit { is_expected.to have_attributes body: /Update.*training status/i }
+      it { is_expected.to have_attributes body: /Change.*training status/i }
     end
 
     describe "#create" do
@@ -27,7 +27,14 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeTrainingStatusesControl
       end
 
       context "with valid update" do
-        let(:params) { { change_training_status: { training_status: :deferred } } }
+        let :params do
+          {
+            change_training_status: {
+              training_status: :withdrawn,
+              reason: Applications::ChangeTrainingStatus::REASON_OPTIONS["withdrawn"].first,
+            },
+          }
+        end
 
         it { is_expected.to redirect_to npq_separation_admin_application_path(application) }
       end
@@ -36,7 +43,7 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeTrainingStatusesControl
         let(:params) { { change_training_status: { training_status: "unexpected" } } }
 
         it { is_expected.to have_http_status :unprocessable_entity }
-        xit { is_expected.to have_attributes body: /Update.*training status/i }
+        it { is_expected.to have_attributes body: /Change.*training status/i }
       end
     end
   end
