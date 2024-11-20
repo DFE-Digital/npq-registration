@@ -27,19 +27,17 @@
       There are currently <%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").count %> actors for this feature.
     </p>
 
-    <% actor_values = Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").pluck(:value) %>
-
-    <% if actor_values.any? %>
+    <% if @actors.any? %>
       <table class="govuk-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Actor Value</th>
+            <th scope="col" class="govuk-table__header">Actor</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
-          <% actor_values.each do |actor_value| %>
+          <% @actors.each do |actor| %>
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><%= actor_value %></td>
+              <td class="govuk-table__cell"><%= actor.full_name %></td>
             </tr>
           <% end %>
         </tbody>
