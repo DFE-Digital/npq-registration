@@ -236,10 +236,9 @@ shared:
     - schedule_id
     - referred_by_return_to_teaching_adviser
     - accepted_at
-    - raw_application_data
     - senco_in_role
     - senco_start_date
-    - application_trn
+    - on_submission_trn
   :users:
     - id
     - created_at

@@ -100,9 +100,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_082433) do
     t.boolean "tsf_primary_plus_eligibility", default: false
     t.enum "lead_provider_approval_status", enum_type: "lead_provider_approval_statuses"
     t.text "participant_outcome_state"
-    t.bigint "school_id"
     t.bigint "private_childcare_provider_id"
     t.bigint "itt_provider_id"
+    t.bigint "school_id"
     t.string "teacher_catchment_iso_country_code", limit: 3
     t.boolean "targeted_support_funding_eligibility", default: false
     t.string "notes"
@@ -114,7 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_082433) do
     t.datetime "accepted_at"
     t.string "senco_in_role"
     t.date "senco_start_date"
-    t.string "application_trn"
+    t.string "on_submission_trn"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
@@ -529,10 +529,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_082433) do
     t.boolean "active_alert", default: false
     t.text "national_insurance_number"
     t.boolean "trn_auto_verified", default: false
+    t.string "feature_flag_id"
     t.string "provider"
     t.string "uid"
     t.jsonb "raw_tra_provider_data"
-    t.string "feature_flag_id"
     t.boolean "get_an_identity_id_synced_to_ecf", default: false
     t.datetime "updated_from_tra_at", precision: nil
     t.string "trn_lookup_status"

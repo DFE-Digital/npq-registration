@@ -2,6 +2,6 @@ class AddSencoInRoleSencoStartDateApplicationTrnToApplications < ActiveRecord::M
   def change
     add_column :applications, :senco_in_role, :string
     add_column :applications, :senco_start_date, :date
-    add_column :applications, :application_trn, :string
+    add_column :applications, :on_submission_trn, :string
   end
 end
