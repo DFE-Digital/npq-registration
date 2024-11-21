@@ -598,4 +598,46 @@ RSpec.describe Application do
       end
     end
   end
+
+  describe "dfe analytics" do
+    before do
+      Flipper.enable(Feature::DFE_ANALYTICS_ENABLED)
+    end
+
+    let(:unfiltered_raw_application_data) do
+      {
+        "senco_in_role" => "yes",
+        "senco_in_role_status" => "senco",
+        "senco_start_date" => "2024-01-23",
+        "trn" => "1234567",
+        "name" => "John Doe",
+        "email" => "john@example.com",
+      }
+    end
+
+    let(:filtered_raw_application_data) do
+      {
+        "senco_in_role" => "yes",
+        "senco_in_role_status" => "senco",
+        "senco_start_date" => "2024-01-23",
+        "trn" => "1234567",
+      }
+    end
+
+    let(:expected_job_data) do
+      array_including(
+        hash_including(
+          "event_type" => "create_entity",
+          "entity_table_name" => "applications",
+          "data" => array_including({ "key" => "raw_application_data", "value" => [filtered_raw_application_data.to_json] }),
+        ),
+      )
+    end
+
+    it "sends the filtered record" do
+      expect {
+        create(:application, raw_application_data: unfiltered_raw_application_data)
+      }.to have_enqueued_job(DfE::Analytics::SendEvents).with(expected_job_data).on_queue("dfe_analytics")
+    end
+  end
 end

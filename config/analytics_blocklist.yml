@@ -99,7 +99,6 @@ shared:
     - archived_email
     - raw_tra_provider_data
   :applications:
-    - raw_application_data
     - DEPRECATED_school_urn
     - DEPRECATED_private_childcare_provider_urn
     - DEPRECATED_itt_provider
