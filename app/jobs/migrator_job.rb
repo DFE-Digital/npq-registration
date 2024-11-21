@@ -1,8 +1,8 @@
 class MigratorJob < ApplicationJob
   queue_as :migration
 
-  def max_attempts
-    1
+  discard_on StandardError do |_job, exception|
+    Sentry.capture_exception(exception)
   end
 
   def perform(migrator:, worker:)
