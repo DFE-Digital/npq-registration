@@ -4,7 +4,7 @@ module Migration
 
     attr_reader :lead_provider, :method, :path, :options, :page
 
-    PAGINATION_PER_PAGE = 10
+    PAGINATION_PER_PAGE = 3_000
 
     def initialize(lead_provider:, method:, path:, options:)
       @lead_provider = lead_provider
@@ -104,7 +104,8 @@ module Migration
 
     def next_page?(ecf_response, npq_response)
       return false unless paginate?
-      return false unless responses_match?(ecf_response, npq_response)
+
+      # return false unless responses_match?(ecf_response, npq_response)
 
       pages_remain?(ecf_response, npq_response)
     end
