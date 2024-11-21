@@ -199,6 +199,14 @@ class Application < ApplicationRecord
     declarations.completed.billable_or_voidable.latest_first.first&.participant_outcomes&.latest&.state
   end
 
+  def send_event(type, data)
+    allowed_attributes = %w[senco_in_role senco_in_role_status senco_start_date trn]
+    filtered_data = data[:data]["raw_application_data"].slice(*allowed_attributes)
+    data[:data]["raw_application_data"] = filtered_data
+
+    super
+  end
+
 private
 
   def funding_eligibility(with_funded_place:)
