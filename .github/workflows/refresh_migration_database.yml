@@ -9,8 +9,9 @@ on:
         options:
           - production
         required: true
-  schedule:
-    - cron: "0 0 * * *" # Run at midnight.
+  # TEMP: disable while we do parity check analysis
+  # schedule:
+  #   - cron: "0 0 * * *" # Run at midnight.
 
 jobs:
   refresh-migration-db:

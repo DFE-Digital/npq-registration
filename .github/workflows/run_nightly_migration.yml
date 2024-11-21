@@ -10,8 +10,9 @@ on:
         options:
           - production
         required: true
-  schedule:
-    - cron: "30 0 * * *" # Run at 12:30am, daily
+  # TEMP: disable while we do parity check analysis
+  # schedule:
+  #   - cron: "30 0 * * *" # Run at 12:30am, daily
 
 jobs:
   run_migration:
