@@ -160,6 +160,9 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "works_in_nursery" => nil,
       "works_in_school" => true,
       "work_setting" => "a_school",
+      "senco_in_role" => nil,
+      "senco_start_date" => nil,
+      "on_submission_trn" => nil,
       "raw_application_data" => {
         "email_template" => "not_england_wrong_catchment",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,

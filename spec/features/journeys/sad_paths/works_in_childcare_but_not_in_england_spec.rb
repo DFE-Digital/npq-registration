@@ -154,6 +154,9 @@ RSpec.feature "Sad journeys", type: :feature do
       "works_in_childcare" => true,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
+      "senco_in_role" => nil,
+      "senco_start_date" => nil,
+      "on_submission_trn" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",

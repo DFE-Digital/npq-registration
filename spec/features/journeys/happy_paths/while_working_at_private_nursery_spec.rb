@@ -182,6 +182,9 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_nursery" => nil,
       "works_in_school" => false,
       "work_setting" => "early_years_or_childcare",
+      "senco_in_role" => nil,
+      "senco_start_date" => nil,
+      "on_submission_trn" => nil,
       "raw_application_data" => {
         "targeted_delivery_funding_eligibility" => false,
         "email_template" => "eligible_scholarship_funding_not_tsf",

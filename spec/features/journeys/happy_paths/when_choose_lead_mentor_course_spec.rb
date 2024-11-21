@@ -192,6 +192,9 @@ RSpec.feature "Happy journeys", type: :feature do
       "lead_provider_approval_status" => nil,
       "participant_outcome_state" => nil,
       "itt_provider_id" => approved_itt_provider_legal_name.present? && IttProvider.find_by(legal_name: approved_itt_provider_legal_name).id,
+      "senco_in_role" => nil,
+      "senco_start_date" => nil,
+      "on_submission_trn" => nil,
       "raw_application_data" => {
         "targeted_delivery_funding_eligibility" => false,
         "email_template" => "eligible_scholarship_funding_not_tsf",

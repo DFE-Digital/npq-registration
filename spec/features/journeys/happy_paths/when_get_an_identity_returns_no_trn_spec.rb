@@ -224,6 +224,9 @@ RSpec.feature "Happy journeys", type: :feature do
       "works_in_school" => true,
       "works_in_nursery" => nil,
       "work_setting" => "a_school",
+      "senco_in_role" => nil,
+      "senco_start_date" => nil,
+      "on_submission_trn" => nil,
       "raw_application_data" => {
         "active_alert" => false,
         "can_share_choices" => "1",
