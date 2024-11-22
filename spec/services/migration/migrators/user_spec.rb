@@ -240,20 +240,14 @@ RSpec.describe Migration::Migrators::User do
 
             user = ::User.find_by_ecf_id!(ecf_resource1.id)
             expect(user.created_at.to_s).to eq(created_at.to_s)
-<<<<<<< HEAD
             expect(user.updated_at.to_s).to eq(updated_at.to_s)
-=======
->>>>>>> 13940a56 (Switch `User` migrator to populate `significantly_updated_at`)
             expect(user.significantly_updated_at.to_s).to eq(updated_at.to_s)
 
             version = user.versions.last
             expect(version.note).to eq("Changes migrated from ECF to NPQ")
             expect(version.object_changes["created_at"].last).to eq(created_at.iso8601(3))
             expect(version.object_changes["significantly_updated_at"].last).to eq(updated_at.iso8601(3))
-<<<<<<< HEAD
             expect(version.object_changes["updated_at"].last).to eq(updated_at.iso8601(3))
-=======
->>>>>>> 13940a56 (Switch `User` migrator to populate `significantly_updated_at`)
           end
         end
 
@@ -272,10 +266,7 @@ RSpec.describe Migration::Migrators::User do
                 user = ::User.find_by_ecf_id!(ecf_resource1.id)
                 expect(user.created_at.to_s).to eq(created_at.to_s)
                 expect(user.significantly_updated_at.to_s).to eq(Time.zone.now.to_s)
-<<<<<<< HEAD
                 expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
-=======
->>>>>>> 13940a56 (Switch `User` migrator to populate `significantly_updated_at`)
               end
             end
           end
@@ -290,10 +281,7 @@ RSpec.describe Migration::Migrators::User do
                 user = ::User.find_by_ecf_id!(ecf_resource1.id)
                 expect(user.created_at.to_s).to eq(created_at.to_s)
                 expect(user.significantly_updated_at.to_s).to eq(Time.zone.now.to_s)
-<<<<<<< HEAD
                 expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
-=======
->>>>>>> 13940a56 (Switch `User` migrator to populate `significantly_updated_at`)
               end
             end
           end
@@ -311,6 +299,7 @@ RSpec.describe Migration::Migrators::User do
               user = ::User.find_by_ecf_id!(ecf_resource1.id)
               expect(user.created_at.to_s).to eq(created_at.to_s)
               expect(user.significantly_updated_at.to_s).to eq(Time.zone.now.to_s)
+              expect(user.updated_at.to_s).to eq(Time.zone.now.to_s)
             end
           end
         end
