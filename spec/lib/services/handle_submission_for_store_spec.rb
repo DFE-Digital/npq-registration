@@ -51,6 +51,9 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment" => "england",
           "work_setting" => "a_school",
           "referred_by_return_to_teaching_adviser" => "no",
+          "senco_in_role" => nil,
+          "senco_start_date" => nil,
+          "on_submission_trn" => nil,
         }
       end
 
@@ -145,6 +148,9 @@ RSpec.describe HandleSubmissionForStore do
           "raw_application_data" => store.except("current_user"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
+          "senco_in_role" => nil,
+          "senco_start_date" => nil,
+          "on_submission_trn" => nil,
         })
       end
     end
@@ -163,6 +169,9 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment" => "england",
           "work_setting" => "early_years_or_childcare",
           "referred_by_return_to_teaching_adviser" => "no",
+          "senco_in_role" => nil,
+          "senco_start_date" => nil,
+          "on_submission_trn" => nil,
         }
       end
 
@@ -257,6 +266,9 @@ RSpec.describe HandleSubmissionForStore do
           "raw_application_data" => store.except("current_user"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
+          "senco_in_role" => nil,
+          "senco_start_date" => nil,
+          "on_submission_trn" => nil,
         })
       end
     end
@@ -421,6 +433,7 @@ RSpec.describe HandleSubmissionForStore do
           "private_childcare_provider_id" => nil,
           "DEPRECATED_private_childcare_provider_urn" => nil,
           "cohort_id" => cohort.id,
+          "accepted_at" => nil,
           "school_id" => school.id,
           "targeted_delivery_funding_eligibility" => false,
           "targeted_support_funding_eligibility" => false,
@@ -441,7 +454,9 @@ RSpec.describe HandleSubmissionForStore do
           "work_setting" => "a_school",
           "raw_application_data" => store.except("current_user"),
           "referred_by_return_to_teaching_adviser" => "no",
-          "accepted_at" => nil,
+          "senco_in_role" => nil,
+          "senco_start_date" => nil,
+          "on_submission_trn" => nil,
         })
       end
 
@@ -459,6 +474,9 @@ RSpec.describe HandleSubmissionForStore do
             "teacher_catchment_country" => "spain",
             "work_setting" => "early_years_or_childcare",
             "referred_by_return_to_teaching_adviser" => "no",
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           }
         end
 
@@ -509,6 +527,9 @@ RSpec.describe HandleSubmissionForStore do
             "raw_application_data" => store.except("current_user"),
             "referred_by_return_to_teaching_adviser" => "no",
             "accepted_at" => nil,
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           })
         end
       end
@@ -527,6 +548,9 @@ RSpec.describe HandleSubmissionForStore do
             "teacher_catchment_country" => nil,
             "work_setting" => "early_years_or_childcare",
             "referred_by_return_to_teaching_adviser" => "no",
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           }
         end
 
@@ -577,6 +601,9 @@ RSpec.describe HandleSubmissionForStore do
             "raw_application_data" => store.except("current_user"),
             "referred_by_return_to_teaching_adviser" => "no",
             "accepted_at" => nil,
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           })
         end
       end
@@ -599,6 +626,9 @@ RSpec.describe HandleSubmissionForStore do
             "teacher_catchment_country" => "wonderland",
             "work_setting" => "early_years_or_childcare",
             "referred_by_return_to_teaching_adviser" => "no",
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           }
         end
 
@@ -655,6 +685,9 @@ RSpec.describe HandleSubmissionForStore do
             "raw_application_data" => store.except("current_user"),
             "referred_by_return_to_teaching_adviser" => "no",
             "accepted_at" => nil,
+            "senco_in_role" => nil,
+            "senco_start_date" => nil,
+            "on_submission_trn" => nil,
           })
         end
       end
