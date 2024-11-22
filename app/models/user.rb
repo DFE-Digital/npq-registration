@@ -54,7 +54,7 @@ class User < ApplicationRecord
 
   enum email_updates_status: EMAIL_UPDATES_ALL_STATES, _suffix: true
 
-  attr_accessor :version_note
+  attr_accessor :version_note, :skip_touch_significantly_updated_at
 
   def latest_participant_outcome(lead_provider, course_identifier)
     declarations.eligible_for_outcomes(lead_provider, course_identifier)
@@ -216,6 +216,8 @@ class User < ApplicationRecord
 private
 
   def touch_significantly_updated_at
+    return if skip_touch_significantly_updated_at
+
     changed_attributes = saved_changes.keys
 
     explicitly_updating_significantly_updated_at = changed_attributes.include?("significantly_updated_at")

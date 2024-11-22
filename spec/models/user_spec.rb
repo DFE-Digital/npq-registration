@@ -129,6 +129,14 @@ RSpec.describe User do
       user.update!(significant_change.merge(significantly_updated_at:))
       expect(user.significantly_updated_at).to be_within(1.second).of(significantly_updated_at)
     end
+
+    context "when skip_touch_user_if_changed is true" do
+      before { user.skip_touch_significantly_updated_at = true }
+
+      it "does not update significantly_updated_at" do
+        expect { user.touch(time: 1.day.from_now) }.not_to(change { user.reload.significantly_updated_at })
+      end
+    end
   end
 
   describe ".latest_participant_outcome" do

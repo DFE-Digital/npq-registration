@@ -68,7 +68,7 @@ module Migration::Migrators
           attrs[:updated_at] = Time.zone.now
         end
 
-        user.update!(attrs)
+        user.update!(attrs.merge(skip_touch_significantly_updated_at: true))
       end
     end
 
