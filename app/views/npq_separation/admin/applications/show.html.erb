@@ -60,6 +60,15 @@
     sl.with_row do |row|
       row.with_key(text: "Lead provider approval status")
       row.with_value(text: @application.lead_provider_approval_status&.humanize)
+
+      if @application.pending_lead_provider_approval_status?
+        row.with_action(text: :none)
+      else
+        row.with_action(
+          text: "Change to pending",
+          visually_hidden_text: "",
+          href: new_npq_separation_admin_applications_revert_to_pending_path(@application))
+      end
     end
 
     sl.with_row do |row|

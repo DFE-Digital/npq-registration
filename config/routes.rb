@@ -224,12 +224,20 @@ Rails.application.routes.draw do
   namespace :npq_separation, path: "npq-separation" do
     constraints(-> { Feature.ecf_api_disabled? }) do
       get "admin", to: "admin/dashboards/summary#show"
+
       namespace :admin do
         namespace :dashboards do
           resource :summary, only: :show, controller: "summary"
         end
 
-        resources :applications, only: %i[index show]
+        resources :applications, only: %i[index show] do
+          member do
+            namespace :applications, path: nil do
+              resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
+            end
+          end
+        end
+
         resources :schools, only: %i[index show]
         resources :courses, only: %i[index show]
         resources :users, only: %i[index show]

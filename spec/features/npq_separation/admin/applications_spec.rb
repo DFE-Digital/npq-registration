@@ -188,4 +188,32 @@ RSpec.feature "Listing and viewing applications", :ecf_api_disabled, type: :feat
     expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
     expect(page).to have_css(".govuk-notification-banner--success", text: /rescheduled/i)
   end
+
+  scenario "changing lead provider approval status" do
+    application = create(:application, :accepted)
+
+    visit npq_separation_admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+
+    within(".govuk-summary-list:first-of-type") do |summary_list|
+      expect(summary_list).to have_summary_item("Lead provider approval status", "Accepted")
+      expect(summary_list).to have_link("Change to pending")
+
+      click_link("Change to pending")
+    end
+
+    expect(page).to have_css("h1", text: "Are you sure you want to change the status to Pending?")
+    click_button "Change status to Pending"
+
+    expect(page).to have_css(".govuk-error-message", text: "Confirm you wish to change the status to Pending")
+    choose "Yes", visible: :all
+    click_button "Change status to Pending"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:first-of-type") do |summary_list|
+      expect(summary_list).to have_summary_item("Lead provider approval status", "Pending")
+      expect(summary_list).not_to have_link("Change to pending")
+    end
+  end
 end
