@@ -58,12 +58,14 @@ module Migration::Migrators
           active_alert: npq_application.active_alert || user.active_alert,
           trn_verified:,
           created_at: ecf_user.created_at,
+          updated_at: ecf_user.updated_at,
           significantly_updated_at: ecf_user.updated_at,
           version_note: "Changes migrated from ECF to NPQ",
         }
 
         if touch_updated_at?(attrs, npq_application)
           attrs[:significantly_updated_at] = Time.zone.now
+          attrs[:updated_at] = Time.zone.now
         end
 
         user.update!(attrs)
