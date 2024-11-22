@@ -38,8 +38,8 @@ module Participants
       return if ignore?(filter: updated_since)
 
       users_updated_since = User.where(significantly_updated_at: updated_since..)
-      applications_updated_since = User.where(applications: { updated_at: updated_since.. })
-      participant_id_changes_updated_since = User.where(participant_id_changes: { updated_at: updated_since.. })
+      applications_updated_since = User.where(id: Application.where(updated_at: updated_since..).select(:user_id))
+      participant_id_changes_updated_since = User.where(id: ParticipantIdChange.where(updated_at: updated_since..).select(:user_id))
       scope.merge!(users_updated_since.or(applications_updated_since).or(participant_id_changes_updated_since))
     end
 

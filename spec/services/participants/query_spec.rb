@@ -116,6 +116,22 @@ RSpec.describe Participants::Query do
           end
         end
 
+        context "when a participant was not updated within the time-frame and they have applications that have been updated both inside and outside the time-frame" do
+          let(:participant1) { create(:user) }
+          let!(:application_outside_time_frame) { travel_to(4.days.ago) { create(:application, :accepted, lead_provider:, user: participant1) } }
+          let!(:application_inside_time_frame) { travel_to(2.days.ago) { create(:application, :accepted, lead_provider:, user: participant1) } }
+          let(:participant2) { travel_to(10.days.ago) { create(:user) } }
+
+          let(:params) { { updated_since: 3.days.ago } }
+
+          before { participant1.update!(updated_at: 5.days.ago) }
+
+          it "returns both the user and all of their applications" do
+            expect(query.participants).to contain_exactly(participant1)
+            expect(query.participants.map(&:applications).flatten).to contain_exactly(application_outside_time_frame, application_inside_time_frame)
+          end
+        end
+
         context "when application was updated recently" do
           let!(:participant1) { travel_to(1.day.ago) { create(:user, :with_application, lead_provider:) } }
           let!(:participant2) { travel_to(2.days.ago) { create(:user, :with_application, lead_provider:) } }
@@ -129,6 +145,25 @@ RSpec.describe Participants::Query do
             participant3.applications.first.update!(updated_at: Time.zone.now)
             participant3.update!(updated_at: 5.days.ago) # to account for touch model changes
             expect(query.participants).to contain_exactly(participant2, participant1, participant3)
+          end
+        end
+
+        context "when a participant was not updated within the time-frame and they have id changes that have been updated both inside and outside the time-frame" do
+          let(:participant1) { create(:user) }
+          let!(:id_change_outside_time_frame) { travel_to(4.days.ago) { create(:participant_id_change, user: participant1) } }
+          let!(:id_change_inside_time_frame) { travel_to(2.days.ago) { create(:participant_id_change, user: participant1) } }
+          let(:participant2) { travel_to(10.days.ago) { create(:user) } }
+
+          let(:params) { { updated_since: 3.days.ago } }
+
+          before do
+            travel_to(4.days.ago) { create(:application, :accepted, lead_provider:, user: participant1) }
+            participant1.update!(updated_at: 5.days.ago)
+          end
+
+          it "returns both the user and all of their applications" do
+            expect(query.participants).to contain_exactly(participant1)
+            expect(query.participants.map(&:participant_id_changes).flatten).to contain_exactly(id_change_outside_time_frame, id_change_inside_time_frame)
           end
         end
 
