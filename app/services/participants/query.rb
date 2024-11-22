@@ -50,7 +50,7 @@ module Participants
         raise API::Errors::FilterValidationError, I18n.t(:invalid_training_status, valid_training_status: Application.training_statuses.keys)
       end
 
-      scope.merge!(Application.where(training_status:))
+      scope.merge!(User.includes(:applications).where(applications: { training_status: }))
     end
 
     def where_from_participant_id_is(from_participant_id)
