@@ -28,7 +28,7 @@ but you may need to re-authenticate every once in a while.
    az login
    ```
 
-   You'll be asked to select development, test or production.
+   You'll be asked to select development, test (used for review apps) or production.
 
 3. Install kubetctl:
 
