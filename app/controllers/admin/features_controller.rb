@@ -20,8 +20,8 @@ class Admin::FeaturesController < AdminController
 
     def show
       @feature = params[:id]
-      user_ids = Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").pluck(:value).map{|value| value.split(";")[1]}
-      @actors = User.where(id: user_ids)
+      @actors = Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key:
+ "actors")
     end
 
     def update
