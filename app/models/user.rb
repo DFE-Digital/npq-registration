@@ -72,7 +72,7 @@ class User < ApplicationRecord
 
     if user.persisted?
       unless user.valid?
-        Rails.logger.info("[GAI] User persisted BUT not valid, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, archiving account with clashing email")
+        Rails.logger.info("[GAI] User persisted BUT not valid, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}")
         Users::ArchiveByEmail.new(user:).call if user.changes[:email] && User.where(email: user.changes[:email].last).any?
       end
 

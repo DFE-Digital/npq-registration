@@ -18,6 +18,7 @@ module Users
         end
       end
       users_with_matching_email.each do |user_with_matching_email|
+        Rails.logger.info("Archiving user with clashing email address ID=#{user_with_matching_email.id}")
         Users::Archiver.new(user: user_with_matching_email).archive!
       end
     end
