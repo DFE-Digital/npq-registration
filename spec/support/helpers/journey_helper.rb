@@ -9,11 +9,11 @@ module Helpers
     end
 
     def retrieve_latest_application_user_data
-      latest_application_user&.as_json(except: %i[id feature_flag_id created_at updated_at updated_from_tra_at email_updates_status email_updates_unsubscribe_key])
+      latest_application_user&.as_json(except: %i[id feature_flag_id created_at updated_at significantly_updated_at updated_from_tra_at email_updates_status email_updates_unsubscribe_key])
     end
 
     def retrieve_latest_application_data
-      latest_application&.as_json(except: %i[id created_at updated_at user_id DEPRECATED_school_urn DEPRECATED_private_childcare_provider_urn DEPRECATED_itt_provider])
+      latest_application&.as_json(except: %i[id created_at updated_at significantly_updated_at user_id DEPRECATED_school_urn DEPRECATED_private_childcare_provider_urn DEPRECATED_itt_provider])
     end
 
     def deep_compare_application_data(expected_data)

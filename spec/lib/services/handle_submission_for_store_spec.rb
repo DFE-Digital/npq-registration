@@ -37,7 +37,7 @@ RSpec.describe HandleSubmissionForStore do
 
   describe "#call" do
     def stable_as_json(record)
-      record.as_json(except: %i[id created_at updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key])
+      record.as_json(except: %i[id created_at updated_at significantly_updated_at updated_from_tra_at DEPRECATED_school_urn email_updates_status email_updates_unsubscribe_key])
     end
 
     context "when store includes information from the school path" do

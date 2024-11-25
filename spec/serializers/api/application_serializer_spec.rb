@@ -230,6 +230,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       end
 
       it "serializes the `updated_at`" do
+        user.significantly_updated_at = Time.utc(2023, 7, 2, 11, 0, 0)
         application.updated_at = Time.utc(2023, 7, 2, 12, 0, 0)
 
         expect(attributes["updated_at"]).to eq("2023-07-02T12:00:00Z")
@@ -238,7 +239,7 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       context "when the user was updated after the application" do
         it "serializes the `updated_at` as the user's updated_at" do
           application.updated_at = Time.utc(2023, 7, 2, 12, 0, 0)
-          user.updated_at = Time.utc(2024, 7, 2, 12, 0, 0)
+          user.significantly_updated_at = Time.utc(2024, 7, 2, 12, 0, 0)
 
           expect(attributes["updated_at"]).to eq("2024-07-02T12:00:00Z")
         end

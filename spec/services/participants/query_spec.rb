@@ -89,6 +89,9 @@ RSpec.describe Participants::Query do
           it "filters by updated since" do
             travel_to(2.days.ago) do
               create(:user, :with_application, lead_provider:)
+              # User where the updated_at is in the filter range, but the
+              # significantly_updated_at is not.
+              create(:user).tap { |user| user.update_column(:updated_at, 2.days.from_now) }
             end
 
             expect(query.participants).to contain_exactly(participant1, participant2)

@@ -59,14 +59,16 @@ module Migration::Migrators
           trn_verified:,
           created_at: ecf_user.created_at,
           updated_at: ecf_user.updated_at,
+          significantly_updated_at: ecf_user.updated_at,
           version_note: "Changes migrated from ECF to NPQ",
         }
 
         if touch_updated_at?(attrs, npq_application)
+          attrs[:significantly_updated_at] = Time.zone.now
           attrs[:updated_at] = Time.zone.now
         end
 
-        user.update!(attrs)
+        user.update!(attrs.merge(skip_touch_significantly_updated_at: true))
       end
     end
 

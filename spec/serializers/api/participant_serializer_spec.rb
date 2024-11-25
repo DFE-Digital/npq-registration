@@ -79,7 +79,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "serializes the `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: latest_datetime)
+            participant.update!(significantly_updated_at: latest_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -89,7 +89,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns application's `updated_at`" do
             application.update!(updated_at: latest_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -99,7 +99,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns participant_id_change's `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -142,7 +142,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "serializes the `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: latest_datetime)
+            participant.update!(significantly_updated_at: latest_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -152,7 +152,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns application's `updated_at`" do
             application.update!(updated_at: latest_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -162,7 +162,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns participant_id_change's `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -226,7 +226,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "serializes the `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: latest_datetime)
+            participant.update!(significantly_updated_at: latest_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -236,7 +236,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns application's `updated_at`" do
             application.update!(updated_at: latest_datetime)
             participant_id_change.update!(updated_at: old_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end
@@ -246,7 +246,7 @@ RSpec.describe API::ParticipantSerializer, type: :serializer do
           it "returns participant_id_change's `updated_at`" do
             application.update!(updated_at: old_datetime)
             participant_id_change.update!(updated_at: latest_datetime)
-            participant.update!(updated_at: old_datetime)
+            participant.update!(significantly_updated_at: old_datetime)
 
             expect(attributes["updated_at"]).to eq(latest_datetime.rfc3339)
           end

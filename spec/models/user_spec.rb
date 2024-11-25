@@ -96,6 +96,49 @@ RSpec.describe User do
     it { expect(User.new).not_to be_null_user }
   end
 
+  describe "touch_significantly_updated_at" do
+    let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
+    let(:significant_change) { { full_name: "New Name" } }
+    let(:insignificant_change) { { raw_tra_provider_data: { foo: :bar } } }
+
+    it "sets significantly_updated_at on creation" do
+      expect(user.significantly_updated_at).to be_present
+    end
+
+    it "sets significantly_updated_at when a significant change is made" do
+      expect { user.update!(significant_change) }.to(change { user.reload.significantly_updated_at })
+      expect(user.significantly_updated_at).to eq(user.updated_at)
+    end
+
+    it "sets significantly_updated_at when a significant change is made alongside an insignificant change" do
+      expect { user.update!(significant_change.merge(insignificant_change)) }.to(change { user.reload.significantly_updated_at })
+      expect(user.significantly_updated_at).to eq(user.updated_at)
+    end
+
+    it "does not update significantly_updated_at when an insignificant change is made" do
+      expect { user.update!(insignificant_change) }.not_to(change { user.reload.significantly_updated_at })
+    end
+
+    it "updates significantly_updated_at when touched" do
+      expect { user.touch(time: 1.day.from_now) }.to(change { user.reload.significantly_updated_at })
+      expect(user.significantly_updated_at).to eq(user.updated_at)
+    end
+
+    it "does not override significantly_updated_at when setting it explicitly" do
+      significantly_updated_at = 1.month.from_now
+      user.update!(significant_change.merge(significantly_updated_at:))
+      expect(user.significantly_updated_at).to be_within(1.second).of(significantly_updated_at)
+    end
+
+    context "when skip_touch_user_if_changed is true" do
+      before { user.skip_touch_significantly_updated_at = true }
+
+      it "does not update significantly_updated_at" do
+        expect { user.touch(time: 1.day.from_now) }.not_to(change { user.reload.significantly_updated_at })
+      end
+    end
+  end
+
   describe ".latest_participant_outcome" do
     let(:user) { create(:user) }
     let(:lead_provider) { participant_outcome.lead_provider }

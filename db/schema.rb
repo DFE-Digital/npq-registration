@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_20_082433) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -541,9 +541,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_20_082433) do
     t.string "email_updates_unsubscribe_key"
     t.string "archived_email"
     t.datetime "archived_at"
+    t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
+    t.index ["significantly_updated_at"], name: "index_users_on_significantly_updated_at"
     t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
