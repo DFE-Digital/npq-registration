@@ -22,7 +22,9 @@ module Users
   private
 
     def users_with_matching_email
-      @users_with_matching_email = User.where(email: user.email).all
+      return [] unless user.email
+
+      @users_with_matching_email = User.where(email: user.email).where.not(id: user.id).all
     end
 
     def move_applications(from_user:, to_user:)
