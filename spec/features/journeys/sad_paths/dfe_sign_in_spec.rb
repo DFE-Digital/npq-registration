@@ -22,6 +22,24 @@ RSpec.feature "DfE sign in", :ecf_api_disabled, type: :feature do
     end
   end
 
+  context "when there is an existing user with DfE Identity UID, and the email in DfE Identity has changed" do
+    include_context "Stub Get An Identity Omniauth Responses" do
+      let(:user_email) { "user@example.com" }
+      let(:user_uid) { user_with_dfe_id.uid }
+    end
+
+    let!(:user_with_dfe_id) { create(:user, :with_get_an_identity_id, email: "old@example.com", full_name: "old name") }
+
+    scenario "the user should be updated with new email from DfE Identity" do
+      navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+        page.click_button("Start now")
+      end
+
+      expect_page_to_have(path: "/registration/course-start-date", submit_form: true)
+      expect(user_with_dfe_id.reload.email).to eq "user@example.com"
+    end
+  end
+
   context "when there is another account that matches the DfE Identity email but it doesn't have a DfE Identity UID" do
     include_context "Stub Get An Identity Omniauth Responses" do
       let(:user_email) { "user@example.com" }
