@@ -6,6 +6,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
   let(:request) { Rack::MockRequest.new(subject) }
   let(:headers) { { "HEADER" => "Yeah!" } }
   let(:mock_response) { ["Hellowwworlds!"] }
+  let(:now) { Time.zone.now.to_s }
 
   let(:mock_app) do
     lambda do |env|
@@ -14,7 +15,11 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
     end
   end
 
-  subject { described_class.new(mock_app) }
+  subject do
+    freeze_time do
+      described_class.new(mock_app)
+    end
+  end
 
   before do
     allow(Rails).to receive(:env) { environment.inquiry }
@@ -42,7 +47,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
   end
 
   context "when running in allowed environments" do
-    let(:environment) { "separation" }
+    let(:environment) { "production" }
 
     describe "#call on a non-API path" do
       it "does not fire StreamAPIRequestsToBigQueryJob" do
@@ -57,7 +62,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
         request.get "/api/v1/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+          hash_including("path" => "/api/v1/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), { "body" => "", "headers" => { "HEADER" => "Yeah!" } }, 200, now
         )
       end
     end
@@ -67,7 +72,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
         request.get "/api/v3/participants/npq", params: { foo: "bar" }
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v3/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), anything, 200, anything
+          hash_including("path" => "/api/v3/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), { "body" => "", "headers" => { "HEADER" => "Yeah!" } }, 200, now
         )
       end
     end
@@ -77,7 +82,7 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
         request.post "/api/v1/participant-declarations", as: :json, params: { foo: "bar" }.to_json
 
         expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
-          hash_including("path" => "/api/v1/participant-declarations", "body" => '{"foo":"bar"}', "method" => "POST"), anything, 200, anything
+          hash_including("path" => "/api/v1/participant-declarations", "body" => '{"foo":"bar"}', "method" => "POST"), { "body" => "", "headers" => { "HEADER" => "Yeah!" } }, 200, now
         )
       end
     end
@@ -90,6 +95,18 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
         request.get "/api/v1/participants/npq"
 
         expect(Rails.logger).to have_received(:warn)
+      end
+    end
+
+    describe "#call on an API path when response code is not successful" do
+      let(:status) { 404 }
+
+      it "fires an StreamAPIRequestsToBigQueryJob with response body included" do
+        request.get "/api/v1/participants/npq", params: { foo: "bar" }
+
+        expect(StreamAPIRequestsToBigQueryJob).to have_received(:perform_later).with(
+          hash_including("path" => "/api/v1/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), { "body" => "Hellowwworlds!", "headers" => { "HEADER" => "Yeah!" } }, 404, now
+        )
       end
     end
   end

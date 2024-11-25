@@ -27,29 +27,34 @@ module Middleware
 
     def _call(env)
       @request = Rack::Request.new(env)
-      status, @headers, @response = @app.call(env)
+      @status, @headers, @response = @app.call(env)
 
       begin
         if trace_request?
-          StreamAPIRequestsToBigQueryJob.perform_later(request_data.stringify_keys, response_data.stringify_keys, status, Time.zone.now.to_s)
+          StreamAPIRequestsToBigQueryJob.perform_later(request_data.stringify_keys, response_data.stringify_keys, @status, Time.zone.now.to_s)
         end
       rescue StandardError => e
         Rails.logger.warn e.message
         Sentry.capture_exception(e)
       end
 
-      [status, @headers, @response]
+      [@status, @headers, @response]
     end
 
   private
 
-    def response_data
+    def response_body
+      return "" unless @status > 299
+
       body = @response.respond_to?(:body) ? @response.body : @response.join
       body = body.join if body.is_a?(Array)
+      body
+    end
 
+    def response_data
       {
         headers: @headers,
-        body:,
+        body: response_body,
       }
     end
 
