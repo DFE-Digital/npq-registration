@@ -362,4 +362,41 @@ RSpec.describe User do
       end
     end
   end
+
+  describe ".find_or_create_from_provider_data" do
+    subject { described_class.find_or_create_from_provider_data(provider_data, feature_flag_id:) }
+
+    let(:provider) { "example_provider" }
+    let(:uid) { "example_uid" }
+    let(:provider_data) do
+      OpenStruct.new(
+        provider:,
+        uid:,
+        info: OpenStruct.new(
+          email: "clashing@example.com",
+          email_verified: true,
+          name: "Example User",
+        ),
+      )
+    end
+    let(:feature_flag_id) { 1 }
+
+    context "when the email has changed in the provider but clashes with an existing user" do
+      let!(:user) { create(:user, email: "old@example.com", provider:, uid:) }
+      let!(:clashing_user) { create(:user, :with_get_an_identity_id, email: "clashing@example.com") }
+
+      it "archives the clashing user" do
+        subject
+        expect(clashing_user.reload).to be_archived
+      end
+
+      it "returns the user" do
+        expect(subject).to eq user
+      end
+
+      it "the returned user has unsaved changes" do
+        expect(subject.changed?).to be true
+      end
+    end
+  end
 end
