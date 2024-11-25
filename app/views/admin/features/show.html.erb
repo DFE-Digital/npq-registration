@@ -21,23 +21,23 @@
       </button>
     <% end %>
 
-    <h2 class="govuk-heading-m">Actors</h2>
+    <h2 class="govuk-heading-m">Users</h2>
 
     <p class="govuk-body-m">
-      There are currently <%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").count %> actors for this feature.
+      There are currently <%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: @feature, key: "actors").count %> users for this feature.
     </p>
 
     <% if @actors.any? %>
       <table class="govuk-table">
         <thead class="govuk-table__head">
           <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Actor</th>
+            <th scope="col" class="govuk-table__header">Users</th>
           </tr>
         </thead>
         <tbody class="govuk-table__body">
           <% @actors.each do |actor| %>
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><%= actor.value %></td>
+              <td class="govuk-table__cell"><%= display_feature_flag_user(actor.value) %></td>
             </tr>
           <% end %>
         </tbody>
