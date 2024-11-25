@@ -159,6 +159,20 @@ RSpec.describe Participants::Query do
           end
         end
 
+        context "when the participant has multiple applications with different training statuses" do
+          let(:params) { { training_status: "withdrawn" } }
+
+          before do
+            participant1.applications.first.update!(training_status: ApplicationState.states[:withdrawn])
+            create(:application, :accepted, user: participant1, lead_provider:, training_status: :active)
+          end
+
+          it "filters the users by training status and only returns applications with the matching training status" do
+            expect(query.participants).to contain_exactly(participant1)
+            expect(query.participants.map(&:applications).flatten.map(&:training_status)).to all(eq("withdrawn"))
+          end
+        end
+
         context "when a training status is not supplied" do
           it "does not filter by training status" do
             condition_string = %("training_status")
@@ -195,6 +209,17 @@ RSpec.describe Participants::Query do
 
           it "filters by from participant id" do
             expect(query.participants).to contain_exactly(participant1)
+          end
+        end
+
+        context "when the participant has multiple id changes with different from_participant_id values" do
+          let(:params) { { from_participant_id: } }
+
+          before { create(:participant_id_change, user: participant1, to_participant_id: participant1.ecf_id) }
+
+          it "filters the users by from_participant_id and only returns id changes with the matching from_participant_id" do
+            expect(query.participants).to contain_exactly(participant1)
+            expect(query.participants.map(&:participant_id_changes).flatten.map(&:from_participant_id)).to all(eq(from_participant_id))
           end
         end
 
