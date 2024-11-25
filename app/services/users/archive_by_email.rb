@@ -11,7 +11,10 @@ module Users
       ApplicationRecord.transaction do
         users_with_matching_email.each do |user_with_matching_email|
           move_applications(from_user: user_with_matching_email, to_user: user)
-          user.participant_id_changes.create!(from_participant_id: user_with_matching_email.ecf_id, to_participant_id: user.ecf_id) if Feature.ecf_api_disabled?
+          if Feature.ecf_api_disabled?
+            move_participant_id_changes(from_user: user_with_matching_email, to_user: user)
+            user.participant_id_changes.find_or_create_by!(from_participant_id: user_with_matching_email.ecf_id, to_participant_id: user.ecf_id)
+          end
         end
       end
       users_with_matching_email.each do |user_with_matching_email|
@@ -31,6 +34,10 @@ module Users
       from_user.applications.each do |application|
         application.update!(user: to_user)
       end
+    end
+
+    def move_participant_id_changes(from_user:, to_user:)
+      from_user.participant_id_changes.update!(user: to_user)
     end
   end
 end
