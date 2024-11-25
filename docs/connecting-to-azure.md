@@ -68,6 +68,23 @@ To get a rails console on production, run the following:
 make ci production aks-console
 ```
 
+### Privileged Identity Management requests
+
+Accessing resources in the production environment requires elevated privileges.
+We do this through Microsoft Entra Privileged Identity Management (PIM) request system.
+
+To make a PIM request:
+
+1. Visit
+   [this page](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ActivationMenuBlade/~/aadgroup).
+2. Activate the 'Member' role for the `s189 CPD production PIM` group.
+3. Give a reason for your request and submit.
+4. The request must now be approved by another team member
+
+You can view all pending requests
+[here](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ApproveRequestMenuBlade/~/aadmigratedroles).
+
+
 ### Environments
 
 There are other environments apart from review apps and production, documented in [Environments](environments.md).
