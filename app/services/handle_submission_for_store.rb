@@ -37,6 +37,9 @@ class HandleSubmissionForStore
         itt_provider: itt_provider.present? && IttProvider.find_by(legal_name: itt_provider),
         referred_by_return_to_teaching_adviser: store["referred_by_return_to_teaching_adviser"],
         raw_application_data: raw_application_data.except("current_user"),
+        senco_in_role: store["senco_in_role"],
+        senco_start_date: store["senco_start_date"],
+        on_submission_trn: store["trn"],
       )
 
       if Feature.ecf_api_disabled?
