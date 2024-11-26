@@ -4,7 +4,7 @@ RSpec.describe Users::ArchiveByEmail do
   describe ".call" do
     subject { described_class.new(user:).call }
 
-    context "when there are matching users with the same email" do
+    context "when there is a matching user with the same email" do
       let!(:user) { create(:user, :with_get_an_identity_id, email: "user@example.com") }
       let(:matching_user) { create(:user, :with_get_an_identity_id, email: "match@example.com") }
       let!(:application_for_matching_user) { create(:application, :accepted, user: matching_user) }
@@ -14,12 +14,12 @@ RSpec.describe Users::ArchiveByEmail do
         user.email = "match@example.com"
       end
 
-      it "moves applications from the matching users" do
+      it "moves applications from the matching user" do
         subject
         expect(application_for_matching_user.reload.user).to eq user
       end
 
-      it "archives users matching the email" do
+      it "archives the user matching the email" do
         subject
         expect(matching_user.reload).to be_archived
       end
