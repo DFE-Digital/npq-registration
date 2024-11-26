@@ -8,16 +8,14 @@ module Users
     attribute :user
 
     def call
-      ApplicationRecord.transaction do
-        users_with_matching_email.each do |user_with_matching_email|
+      if user_with_matching_email
+        ApplicationRecord.transaction do
           move_applications(from_user: user_with_matching_email, to_user: user)
           if Feature.ecf_api_disabled?
             move_participant_id_changes(from_user: user_with_matching_email, to_user: user)
             user.participant_id_changes.find_or_create_by!(from_participant_id: user_with_matching_email.ecf_id, to_participant_id: user.ecf_id)
           end
         end
-      end
-      users_with_matching_email.each do |user_with_matching_email|
         Rails.logger.info("Archiving user with clashing email address ID=#{user_with_matching_email.id}")
         Users::Archiver.new(user: user_with_matching_email).archive!
       end
@@ -25,10 +23,10 @@ module Users
 
   private
 
-    def users_with_matching_email
-      return [] unless user.email
+    def user_with_matching_email
+      return unless user.email
 
-      @users_with_matching_email = User.where(email: user.email).where.not(id: user.id)
+      @user_with_matching_email ||= User.where(email: user.email).where.not(id: user.id).first
     end
 
     def move_applications(from_user:, to_user:)
