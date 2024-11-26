@@ -12,7 +12,7 @@ module Helpers
           expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
 
           within ".npq-js-reveal" do
-            page.fill_in "What’s the name of your workplace?", with: name
+            page.fill_in "What is the name of your workplace?", with: name
           end
 
           expect(page).to have_content("open #{location} school")
@@ -24,7 +24,7 @@ module Helpers
           expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
 
           within ".npq-js-hidden" do
-            page.fill_in "What’s the name of your workplace?", with: name
+            page.fill_in "What is the name of your workplace?", with: name
           end
 
           page.click_button("Continue")
@@ -38,10 +38,10 @@ module Helpers
     def choose_a_childcare_provider(js:, location:, name:)
       if js
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_text("What’s the name of your workplace?")
+          expect(page).to have_text("What is the name of your workplace?")
           expect(page).to have_text("Search for your workplace in #{location}")
           within ".npq-js-reveal" do
-            page.fill_in "What’s the name of your workplace?", with: "open"
+            page.fill_in "What is the name of your workplace?", with: "open"
           end
 
           expect(page).to have_content("open #{location} school")
@@ -52,7 +52,7 @@ module Helpers
           expect(page).to have_text("Search for your workplace in #{location}")
 
           within ".npq-js-hidden" do
-            page.fill_in "What’s the name of your workplace?", with: name
+            page.fill_in "What is the name of your workplace?", with: name
           end
 
           page.click_button("Continue")
@@ -74,7 +74,7 @@ module Helpers
 
       if js
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
-          expect(page).to have_text("Enter your or your employer’s URN")
+          expect(page).to have_text("Enter your or your employer’s unique reference number (URN)")
 
           within ".npq-js-reveal" do
             page.fill_in "private-childcare-provider-picker", with: provider.urn
@@ -87,7 +87,7 @@ module Helpers
       else
         expect_page_to_have(path: "/registration/choose-private-childcare-provider", submit_form: true) do
           within(".npq-js-hidden") do
-            page.fill_in("Enter your or your employer’s URN", with: provider.urn)
+            page.fill_in("Enter your or your employer’s unique reference number (URN)", with: provider.urn)
           end
         end
 
