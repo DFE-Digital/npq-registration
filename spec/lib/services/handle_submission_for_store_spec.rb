@@ -51,9 +51,9 @@ RSpec.describe HandleSubmissionForStore do
           "teacher_catchment" => "england",
           "work_setting" => "a_school",
           "referred_by_return_to_teaching_adviser" => "no",
-          "senco_in_role" => nil,
-          "senco_start_date" => nil,
-          "on_submission_trn" => nil,
+          "senco_in_role" => "yes",
+          "senco_start_date" => "2024-12-12",
+          "trn" => "1234321",
         }
       end
 
@@ -148,9 +148,9 @@ RSpec.describe HandleSubmissionForStore do
           "raw_application_data" => store.except("current_user"),
           "referred_by_return_to_teaching_adviser" => "no",
           "accepted_at" => nil,
-          "senco_in_role" => nil,
-          "senco_start_date" => nil,
-          "on_submission_trn" => nil,
+          "senco_in_role" => "yes",
+          "senco_start_date" => "2024-12-12",
+          "on_submission_trn" => "1234321",
         })
       end
     end
