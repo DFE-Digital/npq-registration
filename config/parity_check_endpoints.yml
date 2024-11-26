@@ -3,8 +3,6 @@ get:
     paginate: true
   "/api/v2/npq-applications":
     paginate: true
-  "/api/v3/npq-applications":
-    paginate: true
 
   "/api/v1/npq-applications?filter[cohort]=2023":
     paginate: true
