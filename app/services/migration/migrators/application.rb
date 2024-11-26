@@ -87,9 +87,9 @@ module Migration::Migrators
 
         attrs = ecf_npq_application.attributes.slice(*ATTRIBUTES).merge(skip_touch_user_if_changed: true)
 
-        # if touch_updated_at?(application, ecf_npq_application)
-        #   attrs["updated_at"] = Time.zone.now
-        # end
+        if touch_updated_at?(application, ecf_npq_application)
+          attrs["updated_at"] = Time.zone.now
+        end
 
         application.update!(attrs)
       end

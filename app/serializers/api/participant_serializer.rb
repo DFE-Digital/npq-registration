@@ -142,7 +142,11 @@ module API
         end
 
         def updated_at(user)
-          user.significantly_updated_at
+          (
+            (user.participant_id_changes || []).map(&:updated_at) +
+            (user.applications || []).map(&:updated_at) +
+            [user.significantly_updated_at]
+          ).compact.max
         end
       end
     end
