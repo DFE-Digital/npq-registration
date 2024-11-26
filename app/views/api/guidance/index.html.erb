@@ -49,11 +49,11 @@
         <h2 class="govuk-heading-l" id="how-to-guides">How-to guides</h2>
         <p class="govuk-body">Guidance on how lead providers can integrate with this API so they can view, submit and update data.</p>
         <ul class="govuk-list">
-          <li><%= govuk_link_to("How NPQs work", '/api/guidance/how-npqs-work', class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View, accept or reject applications", api_guidance_page_path(page: "view-accept-or-reject-applications"), class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View and update participant data", api_guidance_page_path(page: "view-and-update-participant-data"), class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("View payments information", api_guidance_page_path(page: "view-payments-information"), class: "govuk-!-font-weight-bold") %></li>
-          <li><%= govuk_link_to("Submit, view and void declarations", api_guidance_page_path(page: "submit-view-and-void-declarations"), class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("How NPQs work", api_guidance_page_path(page: "how-to-guides/how-npqs-work"), class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View, accept or reject applications", api_guidance_page_path(page: "how-to-guides/view-accept-or-reject-applications"), class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View and update participant data", api_guidance_page_path(page: "how-to-guides/view-and-update-participant-data"), class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("View payments information", api_guidance_page_path(page: "how-to-guides/view-payments-information"), class: "govuk-!-font-weight-bold") %></li>
+          <li><%= govuk_link_to("Submit, view and void declarations", api_guidance_page_path(page: "how-to-guides/submit-view-and-void-declarations"), class: "govuk-!-font-weight-bold") %></li>
         </ul>
       </div>
     </div>
@@ -129,7 +129,7 @@
           We've created diagrams to clarify some of the more intricate processes involved in integrating with this API.
         </p>
         <p class="govuk-body">
-          <%= govuk_link_to("View particpant training journey diagrams", api_guidance_page_path(page: "participant-training-journey-diagrams"), class: "govuk-!-font-weight-bold") %>
+          <%= govuk_link_to("View particpant training journey diagrams", api_guidance_page_path(page: "process-diagrams/participant-training-journey-diagrams"), class: "govuk-!-font-weight-bold") %>
         </p>
       </div>
     </div>
