@@ -376,4 +376,12 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     expect(page).to have_current_path(root_path)
     expect(page).not_to have_link("Sign out")
   end
+
+  scenario "when logged in and ecf_api_disabled feature flag is enabled, it shows links to legacy and npq-separation admin" do
+    Feature.enable_ecf_api_disabled!
+    sign_in_as_admin
+
+    expect(page).to have_link("Legacy Admin", href: admin_path)
+    expect(page).to have_link("Separation Admin", href: npq_separation_admin_path)
+  end
 end
