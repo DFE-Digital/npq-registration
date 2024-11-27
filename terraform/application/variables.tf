@@ -111,11 +111,6 @@ variable "worker_replicas" {
   default = 1
 }
 
-variable "migration_worker_replicas" {
-  type = number
-  default = 0
-}
-
 variable "postgres_flexible_server_sku" {
   type = string
   default = "B_Standard_B1ms"

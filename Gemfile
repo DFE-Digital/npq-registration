@@ -59,7 +59,6 @@ gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "whenever"
-gem "with_advisory_lock"
 
 gem "net-imap", "~> 0.5.1", require: false
 gem "net-pop", require: false

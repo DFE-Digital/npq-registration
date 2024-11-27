@@ -71,35 +71,10 @@ module "worker_application" {
 
   docker_image = var.docker_image
 
-  command       = ["/bin/sh", "-c", "QUEUES=default,low_priority,dfe_analytics,participant_outcomes bundle exec rake jobs:work"]
+  command       = ["/bin/sh", "-c", "bundle exec rake jobs:work"]
   probe_command = ["pgrep", "-f", "rake"]
 
   replicas   = var.worker_replicas
-  max_memory = var.worker_memory_max
-
-  enable_logit = var.enable_logit
-}
-
-module "migration_worker_application" {
-  source = "./vendor/modules/aks//aks/application"
-
-  is_web = false
-
-  name = "migration-worker"
-  namespace    = var.namespace
-  environment  = local.environment
-  service_name = var.service_name
-
-  cluster_configuration_map  = module.cluster_data.configuration_map
-  kubernetes_config_map_name = module.application_configuration.kubernetes_config_map_name
-  kubernetes_secret_name     = module.application_configuration.kubernetes_secret_name
-
-  docker_image = var.docker_image
-
-  command       = ["/bin/sh", "-c", "QUEUE=migration bundle exec rake jobs:work"]
-  probe_command = ["pgrep", "-f", "rake"]
-
-  replicas   = var.migration_worker_replicas
   max_memory = var.worker_memory_max
 
   enable_logit = var.enable_logit

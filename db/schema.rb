@@ -193,19 +193,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
     t.index ["identifier"], name: "index_courses_on_identifier", unique: true
   end
 
-  create_table "data_migrations", force: :cascade do |t|
-    t.string "model", null: false
-    t.integer "processed_count", default: 0, null: false
-    t.integer "failure_count", default: 0, null: false
-    t.datetime "started_at"
-    t.datetime "completed_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "total_count"
-    t.datetime "queued_at"
-    t.integer "worker"
-  end
-
   create_table "declarations", force: :cascade do |t|
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.bigint "application_id", null: false
