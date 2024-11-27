@@ -2,6 +2,35 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 27 November 2024
+
+We've launched the live standalone National Professional Qualifications (NPQs) API following a 3-month test phase.
+
+We’ve migrated NPQ data from the combined ECF/NPQs API to the new environment, so providers must now make all NPQ-related calls from this API.
+
+To make requests in the new live environment, providers must use the bearer tokens that we’ve sent them via Galaxkey.
+
+The base URL is:
+
+- [https://register-national-professional-qualifications.education.gov.uk/](https://register-national-professional-qualifications.education.gov.uk/)
+
+Providers can add the required API version and endpoint depending on what they want to do. For example, they’d add `/api/v3/npq-applications` to the base URL if they want to retrieve multiple applications.
+
+We’ve also created documentation for the new live environment endpoints:
+
+- [NPQ API v1 documentation](https://register-national-professional-qualifications.education.gov.uk/api/docs/v1)
+- [NPQ API v2 documentation](https://register-national-professional-qualifications.education.gov.uk/api/docs/v2)
+- [NPQ API v3 documentation](https://register-national-professional-qualifications.education.gov.uk/api/docs/v3)
+
+To ensure everything runs smoothly, we recommend providers take the following post-separation actions:
+
+- check their integration supports NPQ calls independently
+- make sure all data flows and integrations continue to work as expected
+- test internal processes to verify that data from the NPQ environment is being handled appropriately
+- conduct full data syncs within their allocated window so that data is up to date and accurate
+
+Providers can contact us via their dedicated DfE Slack channel if they’ve got any suggestions or concerns.
+
 ## 13 August 2024
 
 We’ve released a minimum viable product (MVP) version of the standalone National Professional Qualifications (NPQ) API for providers to test ahead of its full launch at the end of November 2024. 
