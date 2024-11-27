@@ -61,9 +61,9 @@ RSpec.describe Statement, type: :model do
     end
 
     describe ".next_output_fee_statements" do
-      let(:next_output_fee_statement_1) { create(:statement, :next_output_fee, deadline_date: 5.days.from_now) }
-      let(:next_output_fee_statement_2) { create(:statement, :next_output_fee, deadline_date: 1.day.from_now) }
-      let(:next_output_fee_statement_3) { create(:statement, :next_output_fee, deadline_date: 2.days.from_now) }
+      let(:next_output_fee_statement_1) { create(:statement, :open, :next_output_fee, deadline_date: 5.days.from_now) }
+      let(:next_output_fee_statement_2) { create(:statement, :open, :next_output_fee, deadline_date: 1.day.from_now) }
+      let(:next_output_fee_statement_3) { create(:statement, :open, :next_output_fee, deadline_date: 2.days.from_now) }
 
       before do
         # Not output fee
@@ -75,6 +75,17 @@ RSpec.describe Statement, type: :model do
       subject { described_class.next_output_fee_statements }
 
       it { is_expected.to eq([next_output_fee_statement_2, next_output_fee_statement_3, next_output_fee_statement_1]) }
+
+      context "with statements that aren't open" do
+        before do
+          # Paid
+          create(:statement, :next_output_fee, :paid, deadline_date: 1.hour.from_now)
+          # Payable
+          create(:statement, :next_output_fee, :payable, deadline_date: 3.days.from_now)
+        end
+
+        it { is_expected.to eq([next_output_fee_statement_2, next_output_fee_statement_3, next_output_fee_statement_1]) }
+      end
     end
   end
 
