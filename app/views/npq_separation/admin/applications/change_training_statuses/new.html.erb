@@ -20,7 +20,8 @@
     </div>
 
     <%= form_for @change_training_status,
-                 url: npq_separation_admin_applications_change_training_status_path(@application) do |f| %>
+                 url: npq_separation_admin_applications_change_training_status_path(@application),
+                 as: :change_training_status do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_collection_radio_buttons :training_status,
@@ -30,7 +31,7 @@
                                            legend: { tag: 'h1', size: 'm' } %>
 
       <%= f.govuk_select(:reason, label: { tag: 'h1', size: 'm' },
-                                  options: { include_blank: true }) do %>
+                                  options: { include_blank: "- no reason -" }) do %>
         <%= grouped_options_for_select(f.object.reason_options, f.object.reason)  %>
       <% end %>
 
