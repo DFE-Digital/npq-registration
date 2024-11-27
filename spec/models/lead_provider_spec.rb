@@ -19,6 +19,10 @@ RSpec.describe LeadProvider do
     before do
       # Not output fee
       create(:statement, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now)
+      # Paid
+      create(:statement, :paid, :next_output_fee, cohort:, lead_provider:, deadline_date: 2.hours.from_now)
+      # Payable
+      create(:statement, :payable, :next_output_fee, cohort:, lead_provider:, deadline_date: 3.hours.from_now)
       # Deadline is later
       create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now)
       # Wrong cohort
