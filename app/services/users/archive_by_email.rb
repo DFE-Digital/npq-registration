@@ -6,6 +6,7 @@ module Users
     include ActiveModel::Attributes
 
     attribute :user
+    private :user
 
     def call
       if user_with_matching_email
@@ -17,7 +18,7 @@ module Users
           end
         end
         Rails.logger.info("Archiving user with clashing email address ID=#{user_with_matching_email.id}")
-        Users::Archiver.new(user: user_with_matching_email).archive!
+        Users::Archiver.new(user: user_with_matching_email.reload).archive!
       end
     end
 
@@ -26,7 +27,7 @@ module Users
     def user_with_matching_email
       return unless user.email
 
-      @user_with_matching_email ||= User.where(email: user.email).where.not(id: user.id).first
+      @user_with_matching_email ||= Users::Query.new(user:).user_with_matching_email
     end
 
     def move_applications(from_user:, to_user:)

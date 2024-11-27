@@ -1,22 +1,34 @@
 require "rails_helper"
 
 RSpec.describe Users::ArchiveByEmail do
+  let!(:user) { create(:user, :with_get_an_identity_id, email: "user@example.com") }
+
+  it "does not expose internal attributes" do
+    expect { described_class.new(user:).user }.to raise_error(NameError)
+  end
+
   describe ".call" do
     subject { described_class.new(user:).call }
 
     context "when there is a matching user with the same email" do
-      let!(:user) { create(:user, :with_get_an_identity_id, email: "user@example.com") }
       let(:matching_user) { create(:user, :with_get_an_identity_id, email: "match@example.com") }
       let!(:application_for_matching_user) { create(:application, :accepted, user: matching_user) }
       let!(:existing_participant_id_change) { create(:participant_id_change, user: matching_user) }
 
-      before do
-        user.email = "match@example.com"
-      end
+      before { user.email = "match@example.com" }
 
       it "moves applications from the matching user" do
         subject
         expect(application_for_matching_user.reload.user).to eq user
+      end
+
+      it "reloads the matching user before archiving" do
+        matching_user_double = instance_double(User, applications: [], id: 1)
+        query_double = instance_double(Users::Query, user_with_matching_email: matching_user_double)
+        allow(Users::Query).to receive(:new) { query_double }
+        allow(Users::Archiver).to receive(:new) { instance_double(Users::Archiver, archive!: nil) }
+        expect(matching_user_double).to receive(:reload)
+        subject
       end
 
       it "archives the user matching the email" do
