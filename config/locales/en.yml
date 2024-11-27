@@ -237,6 +237,8 @@ en:
             training_status:
               inclusion: Choose a valid training status
               invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
+            reason:
+              inclusion: Choose a valid reason for the training status change
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
