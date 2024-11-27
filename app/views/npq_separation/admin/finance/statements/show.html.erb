@@ -10,6 +10,11 @@
     end
 
     summary_list.with_row do |row|
+      row.with_key(text: "ECF ID")
+      row.with_value(text: @statement.ecf_id)
+    end
+
+    summary_list.with_row do |row|
       row.with_key(text: "Lead provider")
       row.with_value(text: @statement.lead_provider.name)
     end
