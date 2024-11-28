@@ -61,6 +61,11 @@ class Rack::Attack
     auth_token(request) if api_request?(request) && !public_api_path?(request)
   end
 
+  # Throttle public /api requests by ip (300 requests per 5 minutes)
+  throttle("public API requests by ip", limit: 300, period: 5.minutes) do |request|
+    request.ip if public_api_path?(request)
+  end
+
   # Throttle non-api requests (300 requests per 5 minutes)
   throttle("non-API requests by ip", limit: 300, period: 5.minutes) do |request|
     request.ip unless api_request?(request)

@@ -17,7 +17,7 @@ RSpec.describe "Rate limiting", :ecf_api_disabled do
     context "when requesting the public API path #{public_api_path}" do
       let(:path) { public_api_path }
 
-      it_behaves_like "a rate limited endpoint", "catch all requests by ip" do
+      it_behaves_like "a rate limited endpoint", "public API requests by ip" do
         def perform_request
           get path
         end
