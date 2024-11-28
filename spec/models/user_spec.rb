@@ -399,4 +399,29 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#try_to_enable_closed_registration" do
+    before do
+      Flipper.enable(Feature::CLOSED_REGISTRATION_ENABLED)
+      Flipper.disable(Feature::REGISTRATION_OPEN)
+    end
+
+    let(:user) { create(:user) }
+
+    context "when user is on the ClosedRegistrationUser list" do
+      before do
+        ClosedRegistrationUser.create!(email: user.email)
+      end
+
+      it "can be added" do
+        expect { user.try_to_enable_closed_registration }.to change { Feature.registration_closed?(user) }.from(true).to(false)
+      end
+    end
+
+    context "when user is not on the ClosedRegistrationUser list" do
+      it "can not be added" do
+        expect { user.try_to_enable_closed_registration }.not_to change { Feature.registration_closed?(user) }.from(true)
+      end
+    end
+  end
 end

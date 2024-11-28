@@ -17,6 +17,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
     if @user.persisted? && @user.save
       session["user_id"] = @user.id
       EcfUserUpdaterJob.perform_later(user: @user)
+      @user.try_to_enable_closed_registration
 
       sign_in_and_redirect @user
     else

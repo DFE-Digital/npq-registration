@@ -214,6 +214,12 @@ class User < ApplicationRecord
     archived_email.present?
   end
 
+  def try_to_enable_closed_registration
+    if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) && ClosedRegistrationUser.find_by(email:)
+      Flipper.enable_actor(Feature::REGISTRATION_OPEN, self)
+    end
+  end
+
 private
 
   def touch_significantly_updated_at
