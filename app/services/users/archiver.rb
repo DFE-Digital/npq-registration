@@ -14,6 +14,8 @@ module Users
         user.archived_email = user.email
         user.archived_at = Time.zone.now
         user.email = "archived-#{user.email}"
+        user.uid = nil
+        user.provider = nil
         user.save!
       end
     end
