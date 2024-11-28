@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_28_140324) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -501,7 +501,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["ecf_id"], name: "index_statements_on_ecf_id", unique: true
+    t.index ["lead_provider_id", "output_fee"], name: "index_statements_on_lead_provider_id_and_output_fee"
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
+    t.index ["payment_date"], name: "index_statements_on_payment_date"
   end
 
   create_table "users", force: :cascade do |t|
