@@ -265,12 +265,6 @@ Rails.application.routes.draw do
         resources :admins, only: %i[index]
       end
     end
-
-    namespace :migration, constraints: -> { Feature.ecf_api_disabled? } do
-      resources :parity_checks, only: %i[index create] do
-        get "response_comparisons/:id", on: :collection, action: :response_comparison, as: :response_comparison
-      end
-    end
   end
 
   resource :csp_reports, only: %i[create]
