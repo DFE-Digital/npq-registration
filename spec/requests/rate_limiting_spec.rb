@@ -8,16 +8,6 @@ RSpec.describe "Rate limiting", :ecf_api_disabled do
 
   before { set_request_ip(ip) }
 
-  it_behaves_like "a rate limited endpoint", "general requests by ip" do
-    def perform_request
-      get root_path
-    end
-
-    def change_condition
-      set_request_ip(other_ip)
-    end
-  end
-
   [
     "/api/guidance",
     "/api/docs/v1",
@@ -27,7 +17,7 @@ RSpec.describe "Rate limiting", :ecf_api_disabled do
     context "when requesting the public API path #{public_api_path}" do
       let(:path) { public_api_path }
 
-      it_behaves_like "a rate limited endpoint", "general requests by ip" do
+      it_behaves_like "a rate limited endpoint", "catch all requests by ip" do
         def perform_request
           get path
         end
@@ -92,6 +82,26 @@ RSpec.describe "Rate limiting", :ecf_api_disabled do
 
     def change_condition
       set_auth_token(other_auth_token)
+    end
+  end
+
+  it_behaves_like "a rate limited endpoint", "non-API requests by ip" do
+    def perform_request
+      get root_path
+    end
+
+    def change_condition
+      set_request_ip(other_ip)
+    end
+  end
+
+  it_behaves_like "a rate limited endpoint", "catch all requests by ip" do
+    def perform_request
+      get root_path
+    end
+
+    def change_condition
+      set_request_ip(other_ip)
     end
   end
 
