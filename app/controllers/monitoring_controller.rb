@@ -1,5 +1,5 @@
 class MonitoringController < ApplicationController
-  skip_before_action :set_feature_flag_users, :set_sentry_user, :initialize_store
+  skip_before_action :set_sentry_user, :initialize_store
 
   def healthcheck
     render status:, json: {
