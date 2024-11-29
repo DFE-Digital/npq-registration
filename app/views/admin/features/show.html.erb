@@ -1,49 +1,52 @@
 <% content_for :before_content do %>
-  <%= render GovukComponent::BackLinkComponent.new(
+<%= render GovukComponent::BackLinkComponent.new(
     text: "Back",
     href: admin_features_path
   ) %>
 <% end %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h1 class="govuk-heading-xl"><%= @feature %></h1>
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl"><%= @feature %></h1>
 
-    <p class="govuk-body-l">
-      Current state: <strong class="govuk-tag <%= Flipper.enabled?(@feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(@feature) ? 'On' : 'Off' %></strong>
-    </p>
+        <p class="govuk-body-l">
+            <span class="govuk-body-m">Current state:</span>
+            <span class="govuk-tag <%= Flipper.enabled?(@feature) ? 'govuk-tag--green' : 'govuk-tag--red' %> govuk-!-margin-left-2">
+                <%= Flipper.enabled?(@feature) ? 'On' : 'Off' %>
+            </span>
+        </p>
 
-    <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
+        <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
 
-    <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do %>
-      <button type="submit" class="govuk-button" data-module="govuk-button">
-        Change state
-      </button>
-    <% end %>
+        <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do %>
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+            Change state
+        </button>
+        <% end %>
 
-    <h2 class="govuk-heading-m">Users</h2>
+        <h2 class="govuk-heading-m">Users</h2>
 
-    <p class="govuk-body-m">
-      There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %> <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
-    </p>
+        <p class="govuk-body-m">
+            There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %> <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
+        </p>
 
-    <% if @users.any? %>
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Users</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          <% @users.each do |user| %>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell"><%= user.full_name %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% end %>
+        <% if @users.any? %>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">Users</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <% @users.each do |user| %>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell"><%= user.full_name %></td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+        <% end %>
 
 
-  </div>
+    </div>
 </div>

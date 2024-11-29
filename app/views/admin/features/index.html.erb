@@ -10,7 +10,7 @@
         <tr class="govuk-table__row">
           <th scope="col" class="govuk-table__header">Feature name</th>
           <th scope="col" class="govuk-table__header">Current state</th>
-          <th scope="col" class="govuk-table__header">Actors</th>
+          <th scope="col" class="govuk-table__header">Users</th>
           <th scope="col" class="govuk-table__header"></th>
         </tr>
       </thead>
@@ -45,7 +45,7 @@
         <% @features_not_in_use.each do |feature| %>
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"><%= feature.key %></td>
-            <td class="govuk-table__cell"><%= button_to 'Delete', admin_feature_path(feature), method: :delete, class: 'govuk-button govuk-button--warning' %></td>
+            <td class="govuk-table__cell"><%= button_to 'Delete', admin_feature_path(feature), method: :delete, class: 'govuk-button govuk-button--warning govuk-!-margin-bottom-0' %></td>
         <% end %>
       </tbody>
 
