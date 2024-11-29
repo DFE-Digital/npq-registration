@@ -29,7 +29,7 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeTrainingStatusesControl
       context "with valid update" do
         let :params do
           {
-            change_training_status: {
+            applications_change_training_status: {
               training_status: :withdrawn,
               reason: Applications::ChangeTrainingStatus::REASON_OPTIONS["withdrawn"].first,
             },

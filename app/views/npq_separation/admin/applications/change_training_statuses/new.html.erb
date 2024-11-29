@@ -15,13 +15,12 @@
       <p class="govuk-body">
         <strong>Training status</strong>
         <br/>
-        <%= @application.training_status.humanize %>
+        <%= @application.training_status&.humanize || "- not set - " %>
       </p>
     </div>
 
     <%= form_for @change_training_status,
-                 url: npq_separation_admin_applications_change_training_status_path(@application),
-                 as: :change_training_status do |f| %>
+                 url: npq_separation_admin_applications_change_training_status_path(@application) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_collection_radio_buttons :training_status,
