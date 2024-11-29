@@ -8,8 +8,10 @@
 
 <%= govuk_details(summary_text: "My URN is not listed") do %>
   <p>
-    If you or your employer have an Ofsted URN but it is not listed, we will need to manually review your eligibility.
-    <%= mail_to "continuing-professional-development@digital.education.gov.uk", "Contact us", target: "_blank" %>
+    If the URN is not listed, double check the details you’ve entered.
+  </p>
+  <p>
+    If it’s still not listed, <%= mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
     for support.
   </p>
 <% end %>

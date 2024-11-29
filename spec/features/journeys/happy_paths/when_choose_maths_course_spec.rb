@@ -61,7 +61,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
 
       within ".npq-js-reveal" do
-        page.fill_in "What’s the name of your workplace?", with: "open"
+        page.fill_in "What is the name of your workplace?", with: "open"
       end
 
       expect(page).to have_content("open manchester school")
