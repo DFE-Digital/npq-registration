@@ -23,7 +23,6 @@ module GetAnIdentityService
         end
 
         if user.update(update_params)
-          sync_user_changes_to_ecf
           webhook_message.make_processed!
         else
           record_error(user.errors.full_messages.join(", "))
@@ -80,10 +79,6 @@ module GetAnIdentityService
           email: decorated_message.email,
           updated_from_tra_at: decorated_message.sent_at,
         }
-      end
-
-      def sync_user_changes_to_ecf
-        Ecf::EcfUserUpdater.call(user:)
       end
     end
   end

@@ -140,12 +140,6 @@ class User < ApplicationRecord
     External::GetAnIdentity::User.find(get_an_identity_id)
   end
 
-  def ecf_user
-    return if ecf_id.blank? || Feature.ecf_api_disabled?
-
-    External::EcfAPI::Npq::User.find(ecf_id).first
-  end
-
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end
@@ -173,15 +167,6 @@ class User < ApplicationRecord
 
   def applications_synced_to_ecf?
     applications.map(&:synced_to_ecf?).all?
-  end
-
-  def ecf_sync_jobs
-    arel_table = Delayed::Job.arel_table
-    job_name_query = arel_table[:handler].matches("%ApplicationSubmissionJob%")
-    user_id_query = arel_table[:handler].matches("%_aj_globalid: gid://npq-registration/User/#{id}%")
-    Delayed::Job.where(job_name_query)
-                .where(user_id_query)
-                .order(run_at: :asc)
   end
 
   def flipper_id

@@ -6,16 +6,11 @@ class GetAnIdentityDataSyncJob < ApplicationJob
     return if user.get_an_identity_id.blank?
 
     update_user_from_get_an_identity(user)
-    sync_user_update_to_ecf(user)
   end
 
 private
 
   def update_user_from_get_an_identity(user)
     GetAnIdentityService::UserUpdater.call(user:)
-  end
-
-  def sync_user_update_to_ecf(user)
-    Ecf::EcfUserUpdater.call(user:)
   end
 end

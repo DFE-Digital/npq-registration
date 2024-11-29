@@ -24,13 +24,12 @@ module Helpers
       expect(latest_application_data["raw_application_data"]).to match(expected_data["raw_application_data"])
     end
 
-    def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", full_name: "John Doe", nino: "AB123456C", response: {})
-      stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+    def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", nino: "AB123456C", response: {})
+      stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
         .with(
           headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            "Authorization" => "Bearer test-apikey",
           },
-          body: { trn:, date_of_birth:, full_name:, nino: },
         )
         .to_return(status: 200, body: participant_validator_response(**response), headers: {})
     end
