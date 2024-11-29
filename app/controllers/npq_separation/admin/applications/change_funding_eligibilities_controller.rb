@@ -30,7 +30,7 @@ module NpqSeparation
         end
 
         def funding_eligibility_params
-          params.fetch(:change_funding_eligibility, {}).permit(:eligible_for_funding)
+          params.fetch(:applications_change_funding_eligibility, {}).permit(:eligible_for_funding)
         end
       end
     end
