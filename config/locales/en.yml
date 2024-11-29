@@ -533,6 +533,9 @@ en:
 
   shared:
     cancel: Cancel
+    continue: Continue
+    "yes": "Yes"
+    "no": "No"
 
   accounts:
     show:
@@ -783,6 +786,8 @@ en:
     legend:
       applications_change_training_status:
         training_status: Choose a different training status
+      applications_change_funding_eligibility:
+        eligible_for_funding: Is eligible for funding?
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"

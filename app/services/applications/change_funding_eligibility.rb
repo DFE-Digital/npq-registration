@@ -5,18 +5,25 @@ module Applications
     include ActiveModel::Model
     include ActiveModel::Attributes
 
+    OPTIONS = {
+      true => I18n.t("shared.yes"),
+      false => I18n.t("shared.no"),
+    }.freeze
+
     attribute :application
     attribute :eligible_for_funding, :boolean
 
-    validates :eligible_for_funding, inclusion: [true, false]
     validates :application, presence: true
+    validates :eligible_for_funding, inclusion: OPTIONS.keys
+
+    def eligible_for_funding_options
+      OPTIONS
+    end
 
     def change_funding_eligibility
-      Application.transaction do
-        return false if invalid?
+      return false if invalid?
 
-        application.update!(eligible_for_funding:)
-      end
+      application.update!(eligible_for_funding:)
     end
   end
 end

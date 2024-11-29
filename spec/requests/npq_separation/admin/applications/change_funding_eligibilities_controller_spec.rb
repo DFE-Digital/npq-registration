@@ -18,7 +18,7 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeFundingEligibilitiesCon
       end
 
       it { is_expected.to have_http_status :success }
-      it { is_expected.to have_attributes body: /Change funding eligibility/i }
+      it { is_expected.to have_attributes body: /eligible for funding/i }
     end
 
     describe "#create" do
@@ -26,7 +26,7 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeFundingEligibilitiesCon
         post npq_separation_admin_applications_change_funding_eligibility_path(application, params:)
       end
 
-      let(:params) { { change_funding_eligibility: { eligible_for_funding: "1" } } }
+      let(:params) { { applications_change_funding_eligibility: { eligible_for_funding: "1" } } }
 
       it { is_expected.to redirect_to npq_separation_admin_application_path(application) }
     end
