@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rake"
-
 namespace :one_off do
   # Bulk change NPQ applications to pending.
   # Accepts a CSV of application (ecf) IDs (without a header row) and a dry run
@@ -21,7 +19,7 @@ namespace :one_off do
     dry_run = args[:dry_run] != "false"
     unless File.exist?(csv_file_path)
       logger.error "File not found: #{csv_file_path}"
-      return
+      exit 1
     end
 
     application_ecf_ids = CSV.read(csv_file_path, headers: false).flatten

@@ -14,7 +14,7 @@ module OneOff
         result = application_ecf_ids.each_with_object({}) do |application_ecf_id, hash|
           application = Application.find_by(ecf_id: application_ecf_id)
           revert_to_pending = Applications::RevertToPending.new(application:, change_status_to_pending: "yes")
-          success = application && revert_to_pending.revert
+          success = revert_to_pending.revert
           hash[application_ecf_id] = outcome(success, application, revert_to_pending.errors)
         end
 
@@ -30,7 +30,7 @@ module OneOff
       return "Not found" if application.nil?
       return "Changed to pending" if success
 
-      errors.map(&:message).join(", ")
+      errors.full_messages.to_sentence
     end
   end
 end
