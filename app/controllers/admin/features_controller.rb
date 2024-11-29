@@ -28,10 +28,11 @@ class Admin::FeaturesController < AdminController
 
       if Flipper.enabled?(@feature)
         Flipper.disable(@feature)
+        flash[:success] = "You have successfully turned the #{@feature} feature flag off."
       else
         Flipper.enable(@feature)
+        flash[:success] = "You have successfully turned the #{@feature} feature flag on."
       end
-
       redirect_back fallback_location: admin_features_path
     end
 

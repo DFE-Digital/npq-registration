@@ -24,7 +24,7 @@
     <h2 class="govuk-heading-m">Users</h2>
 
     <p class="govuk-body-m">
-      There are currently <%= @users.count %> users for this feature.
+      There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %> <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
     </p>
 
     <% if @users.any? %>
