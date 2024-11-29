@@ -75,7 +75,7 @@ Rails.application.routes.draw do
 
     resources :schools, only: %i[index show]
 
-    resources :features, only: %i[index show update]
+    resources :features, only: %i[index show update destroy]
 
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]

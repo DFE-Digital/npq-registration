@@ -35,4 +35,10 @@ class Admin::FeaturesController < AdminController
       redirect_back fallback_location: admin_features_path
     end
 
+    def destroy
+      @feature = params[:id]
+      Flipper::Adapters::ActiveRecord::Feature.where(id: @feature).destroy_all
+
+      redirect_back fallback_location: admin_features_path
+    end
 end
