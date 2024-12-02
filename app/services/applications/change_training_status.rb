@@ -29,10 +29,15 @@ module Applications
         return false if invalid?
         return true if status_unchanged?
 
-        ApplicationState.create!(application:, lead_provider:, state: training_status, reason:)
-        application.update!(training_status:)
+        service = build_delegated_service
 
-        true
+        if service.call
+          application.reload
+          true
+        else
+          service.errors.messages.values.flatten.each { |m| errors.add(:base, m) }
+          false
+        end
       end
     end
 
@@ -45,6 +50,25 @@ module Applications
     end
 
   private
+
+    def build_delegated_service
+      service_attrs = {
+        lead_provider: application.lead_provider,
+        participant_id: application.user.ecf_id,
+        course_identifier: application.course.identifier,
+      }
+
+      service_attrs[:reason] = reason if reason_required?
+
+      case training_status
+      when "deferred"
+        Participants::Defer.new(service_attrs)
+      when "active"
+        Participants::Resume.new(service_attrs)
+      when "withdrawn"
+        Participants::Withdraw.new(service_attrs)
+      end
+    end
 
     def reason_required?
       training_status.present? && training_status != "active"

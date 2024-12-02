@@ -7,7 +7,11 @@ RSpec.describe NpqSeparation::Admin::Applications::ChangeTrainingStatusesControl
 
   subject { response }
 
-  let(:application) { create(:application, :accepted) }
+  let :application do
+    create(:application, :accepted).tap do |application|
+      create(:declaration, application:)
+    end
+  end
 
   context "when logged in" do
     before { sign_in_as_admin }
