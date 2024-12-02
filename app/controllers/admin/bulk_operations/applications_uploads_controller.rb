@@ -1,0 +1,9 @@
+module Admin::BulkOperations
+  class ApplicationsUploadsController < AdminController
+    def create
+      file_upload = FileUpload.create! admin: current_admin
+      file_upload.file.attach(params[:file])
+      redirect_to :index
+    end
+  end
+end

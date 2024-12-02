@@ -41,6 +41,10 @@
     <%= "Closed registration users" %>
   <% end %>
 
+  <% component.with_nav_item(path: "/admin/bulk_operations") do %>
+    <%= t(".bulk_operations") %>
+  <% end %>
+
   <% if super_admin? %>
     <% component.with_nav_item(path: admin_admins_path) do %>
       <%= t(".admins") %>

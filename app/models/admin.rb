@@ -1,4 +1,6 @@
 class Admin < ApplicationRecord
+  has_many :file_uploads
+
   validates :full_name,
             presence: { message: "Enter a full name" },
             length: { maximum: 64, message: "Full name must be shorter than 64 characters" }
