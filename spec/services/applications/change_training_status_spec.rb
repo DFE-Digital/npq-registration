@@ -116,7 +116,10 @@ RSpec.describe Applications::ChangeTrainingStatus, type: :model do
     subject(:change_training_status) { service.change_training_status }
 
     context "when withdrawing" do
-      before { allow(Participants::Withdraw).to receive(:new).and_call_original }
+      before do
+        allow(Participants::Withdraw).to receive(:new).and_call_original
+        create(:declaration, application:)
+      end
 
       let(:training_status) { "withdrawn" }
       let(:reason) { Participants::Withdraw::WITHDRAWAL_REASONS.first }

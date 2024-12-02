@@ -117,6 +117,8 @@ FactoryBot.define do
     end
 
     trait :withdrawn do
+      lead_provider_approval_status { :accepted }
+
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:withdrawn])
 
@@ -128,6 +130,8 @@ FactoryBot.define do
     end
 
     trait :deferred do
+      lead_provider_approval_status { :accepted }
+
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:deferred])
 
