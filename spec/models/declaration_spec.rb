@@ -124,6 +124,12 @@ RSpec.describe Declaration, type: :model do
 
         it { expect { declaration.mark_eligible! }.to raise_error(StateMachines::InvalidTransition) }
       end
+
+      context "when payable" do
+        let(:state) { :payable }
+
+        it { expect { declaration.mark_eligible }.to change(declaration, :state).from("payable").to("eligible") }
+      end
     end
 
     describe ".mark_payable" do

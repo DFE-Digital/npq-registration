@@ -156,6 +156,25 @@ RSpec.describe StatementItem, type: :model do
       end
     end
 
+    describe ".mark_eligible" do
+      let(:statement_item) { create(:statement_item, :payable) }
+
+      it "transitions state to eligible" do
+        expect(statement_item).to be_payable
+        statement_item.mark_eligible!
+        expect(statement_item).to be_eligible
+      end
+
+      context "with unsupported state" do
+        let(:statement_item) { create(:statement_item, :paid) }
+
+        it "raises error" do
+          expect(statement_item).to be_paid
+          expect { statement_item.mark_eligible! }.to raise_error(StateMachines::InvalidTransition)
+        end
+      end
+    end
+
     context "when from paid to payable" do
       let(:statement_item) { create(:statement_item, :paid) }
 
