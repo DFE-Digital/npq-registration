@@ -5,6 +5,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
     let(:api_call_trn) { user_trn }
@@ -166,7 +167,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => User.find_by(email: "user@example.com").ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -183,10 +184,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => Application.last.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => "Big company",
       "employment_role" => nil,
@@ -195,7 +196,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "funding_eligiblity_status_code" => "no_institution",
       "headteacher_status" => nil,
@@ -208,8 +209,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,
