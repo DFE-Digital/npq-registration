@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :cohort do
     start_year { Faker::Number.between(from: 2021, to: 2029) }
     registration_start_date { Date.new(start_year, 4, 3) }
+    funding_cap { start_year == 2024 }
 
     initialize_with do
       Cohort.find_or_create_by(start_year:)
