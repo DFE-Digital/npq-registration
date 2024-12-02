@@ -75,7 +75,7 @@ group :development, :test do
   gem "parallel_tests", "~> 4.7"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 7.0.1"
+  gem "rspec-rails", "~> 7.1.0"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
