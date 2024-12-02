@@ -5,6 +5,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -106,7 +107,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => User.find_by(email: "user@example.com").ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -122,10 +123,10 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
     )
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => Application.last.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
@@ -134,7 +135,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "funding_choice" => "school",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "funding_eligiblity_status_code" => "not_in_england",
       "headteacher_status" => nil,
