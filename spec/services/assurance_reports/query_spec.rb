@@ -13,10 +13,12 @@ RSpec.describe AssuranceReports::Query do
   let(:lead_provider)       { create(:lead_provider) }
   let(:other_lead_provider) { create(:lead_provider) }
   let(:statement)           { create(:statement, lead_provider:) }
+  let(:training_status)     { :active }
 
   let :declaration do
     travel_to(statement.deadline_date) do
       create(:declaration, lead_provider:) do |declaration|
+        declaration.application.update!(training_status:)
         create(:statement_item, statement:, declaration:)
       end
     end
@@ -85,9 +87,9 @@ RSpec.describe AssuranceReports::Query do
       it { is_expected.to have_attributes targeted_delivery_funding: declaration.application.targeted_delivery_funding_eligibility }
 
       context "when last status update was 'withdrawn'" do
-        before do
-          declaration.application.update! training_status: "withdrawn"
+        let(:training_status) { :withdrawn }
 
+        before do
           create(:application_state, :withdrawn, application: declaration.application,
                                                  lead_provider: declaration.lead_provider)
         end
@@ -101,10 +103,9 @@ RSpec.describe AssuranceReports::Query do
 
             travel_to(statement.deadline_date) do
               create(:declaration, lead_provider:) do |declaration|
-                create(:statement_item, statement:, declaration:)
-
                 declaration.application.update! training_status: "withdrawn"
 
+                create(:statement_item, statement:, declaration:)
                 create(:application_state, :withdrawn, application: declaration.application,
                                                        lead_provider: declaration.lead_provider,
                                                        reason: "a different reason")
@@ -118,9 +119,9 @@ RSpec.describe AssuranceReports::Query do
       end
 
       context "when last status update was 'deferred'" do
-        before do
-          declaration.application.update! training_status: "deferred"
+        let(:training_status) { :deferred }
 
+        before do
           create(:application_state, :deferred, application: declaration.application,
                                                 lead_provider: declaration.lead_provider)
         end
