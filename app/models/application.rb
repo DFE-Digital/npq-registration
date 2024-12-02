@@ -87,12 +87,9 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }, _suffix: true
 
-  validates :funded_place,
-            inclusion: { in: [true, false] },
-            if: :validate_funded_place?,
-            on: :npq_separation
-  validate :eligible_for_funded_place, on: :npq_separation
-  validate :validate_permitted_schedule_for_course, on: :npq_separation
+  validates :funded_place, inclusion: { in: [true, false] }, if: :validate_funded_place?
+  validate :eligible_for_funded_place
+  validate :validate_permitted_schedule_for_course
 
   # `eligible_for_dfe_funding?`  takes into consideration what we know
   # about user eligibility plus if it has been previously funded. We need
