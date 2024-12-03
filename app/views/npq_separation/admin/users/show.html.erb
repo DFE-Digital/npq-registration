@@ -31,7 +31,7 @@
 
     sl.with_row do |row|
       row.with_key(text: "Date of Birth")
-      row.with_value(text: @user.date_of_birth.to_fs(:govuk_short))
+      row.with_value(text: @user.date_of_birth.try(:to_fs, :govuk_short))
     end
 
     sl.with_row do |row|
