@@ -39,7 +39,7 @@ class Application < ApplicationRecord
   attr_accessor :version_note, :skip_touch_user_if_changed
 
   validate :schedule_cohort_matches
-  validates :ecf_id, presence: true, uniqueness: { case_sensitive: false }
+  validates :ecf_id, uniqueness: { case_sensitive: false }
 
   after_commit :touch_user_if_changed
 
