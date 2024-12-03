@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe "Rate limiting", :ecf_api_disabled do
+RSpec.describe "Rate limiting" do
   let(:ip) { "1.2.3.4" }
   let(:other_ip) { "9.8.7.6" }
 
