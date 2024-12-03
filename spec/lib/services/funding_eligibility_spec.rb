@@ -26,17 +26,6 @@ RSpec.describe FundingEligibility do
   let(:new_headteacher) { true }
   let(:query_store) { nil }
 
-  before do
-    unless Feature.ecf_api_disabled?
-      mock_previous_funding_api_request(
-        course_identifier:,
-        get_an_identity_id:,
-        trn:,
-        response: ecf_funding_lookup_response(previously_funded:),
-      )
-    end
-  end
-
   describe ".funded? && .funding_eligiblity_status_code" do
     context "in the special URN list" do
       let(:institution) { create(:school, :funding_eligible_establishment_type_code, urn: "100000") }
@@ -48,15 +37,6 @@ RSpec.describe FundingEligibility do
           it "returns true" do
             expect(subject).to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :funded
-          end
-
-          context "when External::EcfAPI is disabled" do
-            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-            it "returns true" do
-              expect(subject).to be_funded
-              expect(subject.funding_eligiblity_status_code).to eq :funded
-            end
           end
         end
       end
@@ -77,22 +57,14 @@ RSpec.describe FundingEligibility do
           context "when previously funded" do
             let(:previously_funded) { true }
 
+            before do
+              user = create(:user, trn:)
+              create(:application, :previously_funded, user:, course:)
+            end
+
             it "is ineligible" do
               expect(subject.funded?).to be false
               expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-            end
-
-            context "when External::EcfAPI is disabled" do
-              before do
-                allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
-                user = create(:user, trn:)
-                create(:application, :previously_funded, user:, course:)
-              end
-
-              it "is ineligible" do
-                expect(subject.funded?).to be false
-                expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-              end
             end
           end
 
@@ -239,15 +211,6 @@ RSpec.describe FundingEligibility do
           expect(subject).to be_funded
           expect(subject.funding_eligiblity_status_code).to eq :funded
         end
-
-        context "when External::EcfAPI is disabled" do
-          before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-          it "is eligible" do
-            expect(subject).to be_funded
-            expect(subject.funding_eligiblity_status_code).to eq :funded
-          end
-        end
       end
 
       context "and the course is not NPQLTD or NPQS" do
@@ -257,15 +220,6 @@ RSpec.describe FundingEligibility do
           it "is not eligible for #{course.identifier}" do
             expect(subject).not_to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :not_lead_mentor_course
-          end
-
-          context "when External::EcfAPI is disabled" do
-            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-            it "is not eligible for #{course.identifier}" do
-              expect(subject).not_to be_funded
-              expect(subject.funding_eligiblity_status_code).to eq :not_lead_mentor_course
-            end
           end
         end
       end
@@ -279,34 +233,17 @@ RSpec.describe FundingEligibility do
         expect(subject.funding_eligiblity_status_code).to eq :funded
       end
 
-      context "when External::EcfAPI is disabled" do
-        before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-        it "is eligible" do
-          expect(subject).to be_funded
-          expect(subject.funding_eligiblity_status_code).to eq :funded
-        end
-      end
-
       context "when previously funded" do
         let(:previously_funded) { true }
+
+        before do
+          user = create(:user, trn:)
+          create(:application, :previously_funded, user:, course:)
+        end
 
         it "is ineligible" do
           expect(subject.funded?).to be false
           expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-        end
-
-        context "when External::EcfAPI is disabled" do
-          before do
-            allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
-            user = create(:user, trn:)
-            create(:application, :previously_funded, user:, course:)
-          end
-
-          it "is ineligible" do
-            expect(subject.funded?).to be false
-            expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-          end
         end
       end
     end
@@ -320,22 +257,14 @@ RSpec.describe FundingEligibility do
         context "when previously funded" do
           let(:previously_funded) { true }
 
+          before do
+            user = create(:user, trn:)
+            create(:application, :previously_funded, user:, course:)
+          end
+
           it "is ineligible" do
             expect(subject.funded?).to be false
             expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-          end
-
-          context "when External::EcfAPI is disabled" do
-            before do
-              allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
-              user = create(:user, trn:)
-              create(:application, :previously_funded, user:, course:)
-            end
-
-            it "is ineligible" do
-              expect(subject.funded?).to be false
-              expect(subject.funding_eligiblity_status_code).to eq :previously_funded
-            end
           end
         end
 
@@ -349,18 +278,6 @@ RSpec.describe FundingEligibility do
           it "is not eligible" do
             expect(subject.funded?).to be false
           end
-
-          context "when External::EcfAPI is disabled" do
-            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-            it "returns status code :not_in_england" do
-              expect(subject.funding_eligiblity_status_code).to eq :not_in_england
-            end
-
-            it "is not eligible" do
-              expect(subject.funded?).to be false
-            end
-          end
         end
 
         context "when NPQ course is not Early Year Leadership" do
@@ -373,18 +290,6 @@ RSpec.describe FundingEligibility do
           it "is not eligible" do
             expect(subject.funded?).to be false
           end
-
-          context "when External::EcfAPI is disabled" do
-            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-            it "returns status code :early_years_invalid_npq" do
-              expect(subject.funding_eligiblity_status_code).to eq :early_years_invalid_npq
-            end
-
-            it "is not eligible" do
-              expect(subject.funded?).to be false
-            end
-          end
         end
 
         context "when institution is not on early years register" do
@@ -394,15 +299,6 @@ RSpec.describe FundingEligibility do
           it "is not eligible" do
             expect(subject.funded?).to be false
             expect(subject.funding_eligiblity_status_code).to eq :not_entitled_ey_institution
-          end
-
-          context "when External::EcfAPI is disabled" do
-            before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-            it "is not eligible" do
-              expect(subject.funded?).to be false
-              expect(subject.funding_eligiblity_status_code).to eq :not_entitled_ey_institution
-            end
           end
         end
       end
@@ -416,15 +312,6 @@ RSpec.describe FundingEligibility do
       it "is ineligible" do
         expect(subject.funded?).to be false
         expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
-      end
-
-      context "when External::EcfAPI is disabled" do
-        before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
-        it "is ineligible" do
-          expect(subject.funded?).to be false
-          expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
-        end
       end
     end
   end
