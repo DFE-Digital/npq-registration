@@ -23,11 +23,10 @@ RSpec.describe Users::ArchiveByEmail do
       end
 
       it "reloads the matching user before archiving" do
-        matching_user_double = instance_double(User, applications: [], id: 1)
-        query_double = instance_double(Users::Query, user_with_matching_email: matching_user_double)
+        query_double = instance_double(Users::Query, user_with_matching_email: matching_user)
         allow(Users::Query).to receive(:new) { query_double }
         allow(Users::Archiver).to receive(:new) { instance_double(Users::Archiver, archive!: nil) }
-        expect(matching_user_double).to receive(:reload)
+        expect(matching_user).to receive(:reload)
         subject
       end
 
@@ -36,28 +35,22 @@ RSpec.describe Users::ArchiveByEmail do
         expect(matching_user.reload).to be_archived
       end
 
-      context "when feature flag ecf_api_disabled? is enabled" do
-        before do
-          Flipper.enable(Feature::ECF_API_DISABLED)
-        end
+      it "creates a participant id change" do
+        subject
+        expect(user.participant_id_changes.first).to have_attributes(from_participant_id: matching_user.ecf_id, to_participant_id: user.ecf_id)
+      end
 
-        it "creates a participant id change" do
+      it "moves existing participant id changes" do
+        subject
+        expect(existing_participant_id_change.reload.user).to eq user
+      end
+
+      context "when there is already a participant id change" do
+        let!(:participant_id_change_on_user) { create(:participant_id_change, user:, from_participant_id: matching_user.ecf_id, to_participant_id: user.ecf_id) }
+
+        it "does not create a duplicate participant id change" do
           subject
-          expect(user.participant_id_changes.first).to have_attributes(from_participant_id: matching_user.ecf_id, to_participant_id: user.ecf_id)
-        end
-
-        it "moves existing participant id changes" do
-          subject
-          expect(existing_participant_id_change.reload.user).to eq user
-        end
-
-        context "when there is already a participant id change" do
-          let!(:participant_id_change_on_user) { create(:participant_id_change, user:, from_participant_id: matching_user.ecf_id, to_participant_id: user.ecf_id) }
-
-          it "does not create a duplicate participant id change" do
-            subject
-            expect(user.participant_id_changes).to contain_exactly(existing_participant_id_change, participant_id_change_on_user)
-          end
+          expect(user.participant_id_changes).to contain_exactly(existing_participant_id_change, participant_id_change_on_user)
         end
       end
 
