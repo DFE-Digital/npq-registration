@@ -5,7 +5,10 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
       .with(
         headers: {
+          "Accept" => "*/*",
+          "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
           "Authorization" => "Bearer test-apikey",
+          "User-Agent" => "Ruby",
         },
       )
       .to_return(status: response_code, body: response_body, headers: {})
@@ -194,7 +197,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
           trn: "1234567",
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: participant_validator_response,
+          response_body: dqt_response_body,
         )
       end
 
@@ -281,7 +284,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
           trn: "1234567",
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: participant_validator_response,
+          response_body: dqt_response_body,
         )
 
         subject.next_step
@@ -333,7 +336,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
           trn: "1234567",
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: participant_validator_response(active_alert: true),
+          response_body: dqt_response_body(active_alert: true),
         )
 
         subject.next_step
@@ -385,7 +388,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
           trn: "1234567",
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: participant_validator_response(trn: "1111111"),
+          response_body: dqt_response_body(trn: "1111111"),
         )
 
         subject.next_step
