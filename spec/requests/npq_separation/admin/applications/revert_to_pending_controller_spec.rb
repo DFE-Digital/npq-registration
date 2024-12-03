@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::Applications::RevertToPendingController, :ecf_api_disabled, type: :request do
+RSpec.describe NpqSeparation::Admin::Applications::RevertToPendingController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   subject { response }

@@ -1,7 +1,7 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "Statements endpoint", :ecf_api_disabled, :exceptions_app, openapi_spec: "v3/swagger.yaml", type: :request do
+RSpec.describe "Statements endpoint", :exceptions_app, openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:statement) { create(:statement, lead_provider:) }
