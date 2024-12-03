@@ -8,16 +8,25 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
   let(:application) { create(:application, :accepted) }
 
   describe "#change_funding_eligibility" do
+    subject(:make_change) { service.change_funding_eligibility }
+
     before { service.eligible_for_funding = true }
 
     context "with valid update" do
-      it "returns true" do
-        expect(service.change_funding_eligibility).to be true
-      end
+      it { is_expected.to be true }
 
       it "changes eligibility_for_funding" do
-        expect { service.change_funding_eligibility }
-          .to change { application.reload.eligible_for_funding }.from(false).to(true)
+        expect { make_change }
+          .to change { application.reload.eligible_for_funding }
+                .from(false)
+                .to(true)
+      end
+
+      it "sets funding_eligibility_status_code" do
+        expect { make_change }
+          .to change { application.reload.funding_eligiblity_status_code }
+                .from(nil)
+                .to("marked_funded_by_policy")
       end
     end
 
