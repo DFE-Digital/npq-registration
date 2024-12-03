@@ -28,10 +28,13 @@ module Helpers
       stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
         .with(
           headers: {
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
             "Authorization" => "Bearer test-apikey",
+            "User-Agent" => "Ruby",
           },
         )
-        .to_return(status: 200, body: participant_validator_response(**response), headers: {})
+        .to_return(status: 200, body: dqt_response_body(**response), headers: {})
     end
 
     def stub_env_variables_for_gai(stubbed_url: "https://tra-domain.com", stubbed_client_id: "register-for-npq")
