@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -15,7 +15,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
+    let(:trn) { user_trn }
   end
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -58,15 +58,6 @@ RSpec.feature "Happy journeys", type: :feature do
     expect_page_to_have(path: "/registration/have-ofsted-urn", submit_form: true) do
       expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
       page.choose("Yes", visible: :all)
-    end
-
-    %w[npq-early-headship-coaching-offer npq-early-years-leadership].each do |identifier|
-      mock_previous_funding_api_request(
-        course_identifier: identifier,
-        trn: "1234567",
-        get_an_identity_id: user_uid,
-        response: ecf_funding_lookup_response(previously_funded: true),
-      )
     end
 
     choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
@@ -124,8 +115,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
-
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
@@ -168,7 +157,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "schedule_id" => nil,
       "ecf_id" => nil,
@@ -180,7 +169,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => "self",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "funding_eligiblity_status_code" => "previously_funded",
       "headteacher_status" => "yes_in_first_five_years",
@@ -193,8 +182,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,

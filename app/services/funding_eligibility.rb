@@ -151,11 +151,7 @@ class FundingEligibility
   end
 
   def previously_received_targeted_funding_support?
-    if Feature.ecf_api_disabled?
-      accepted_applications.with_targeted_delivery_funding_eligibility.any?
-    else
-      ecf_api_funding_lookup["previously_received_targeted_funding_support"] == true
-    end
+    accepted_applications.with_targeted_delivery_funding_eligibility.any?
   end
 
   def ineligible_institution_type?
@@ -189,14 +185,6 @@ private
     course.npqlpm? || course.npqs?
   end
 
-  def ecf_api_funding_lookup
-    @ecf_api_funding_lookup = External::EcfAPI::Npq::PreviousFunding.find_for(
-      trn:,
-      get_an_identity_id:,
-      npq_course_identifier: course.identifier,
-    )
-  end
-
   def users
     get_an_identity_id_users.or(trn_users).distinct
   end
@@ -214,11 +202,7 @@ private
   end
 
   def previously_funded?
-    if Feature.ecf_api_disabled?
-      accepted_applications.any?
-    else
-      ecf_api_funding_lookup["previously_funded"] == true
-    end
+    accepted_applications.any?
   end
 
   def accepted_applications
