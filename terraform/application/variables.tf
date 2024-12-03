@@ -140,3 +140,13 @@ variable "send_traffic_to_maintenance_page" {
   default     = false
   description = "During a maintenance operation, keep sending traffic to the maintenance page instead of resetting the ingress"
 }
+
+variable "uploads_storage_account_name" {
+  type    = string
+  default = null
+}
+
+variable "uploads_container_delete_retention_days" {
+  default = 7
+  type    = number
+}
