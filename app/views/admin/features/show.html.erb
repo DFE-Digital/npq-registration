@@ -7,31 +7,41 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl"><%= @feature %></h1>
 
-        <p class="govuk-body-l">
-            <span class="govuk-body-m">Current state:</span>
-            <span class="govuk-tag <%= Flipper.enabled?(@feature) ? 'govuk-tag--green' : 'govuk-tag--red' %> govuk-!-margin-left-2">
+        <div>
+            <span class="govuk-caption-xl">Feature flags</span>
+            <h1 class="govuk-heading-xl"><%= @feature %></h1>
+        </div>
+
+        <div class="govuk-inset-text">
+            <h2 class="govuk-heading-s govuk-!-margin-bottom-0">Current state</h2>
+            <span class="govuk-tag <%= Flipper.enabled?(@feature) ? 'govuk-tag--green' : 'govuk-tag--red' %> govuk-!-margin-top-1">
                 <%= Flipper.enabled?(@feature) ? 'On' : 'Off' %>
             </span>
-        </p>
+        </div>
 
-        <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
+        <div>
+            <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
+        </div>
 
-        <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do |f| %>
-        <%= f.govuk_text_field :feature_flag_name, label: { text: 'Write the name of the feature flag to change the state' } %>
-        
-        <%= f.govuk_submit 'Change state' %>
-        <% end %>
+        <div class="govuk-!-margin-top-8">
+            <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do |f| %>
+            <%= f.govuk_text_field :feature_flag_name, 
+          label: { text: 'Confirm the feature flag name to change the state', tag: 'h2', size: 'm', class: 'govuk-!-margin-bottom-2' },
+          hint: { text: 'Write the feature name exactly as it appears, including any capitalisation.' } %>
+            <%= f.govuk_submit 'Change state' %>
+            <% end %>
+        </div>
 
-        <h2 class="govuk-heading-m">Users</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-7">Users</h2>
 
         <p class="govuk-body-m">
-            There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %> <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
+            There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %>
+            <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
         </p>
 
         <% if @users.any? %>
-        <table class="govuk-table">
+        <table class="govuk-table govuk-!-margin-top-3">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Users</th>
@@ -46,7 +56,6 @@
             </tbody>
         </table>
         <% end %>
-
-
+        
     </div>
 </div>
