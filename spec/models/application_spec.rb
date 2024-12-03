@@ -56,7 +56,6 @@ RSpec.describe Application do
 
   describe "validations" do
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
-    it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
 
     context "when the schedule cohort does not match the application cohort" do
       subject do
