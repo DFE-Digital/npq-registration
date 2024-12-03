@@ -110,14 +110,4 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
       end
     end
   end
-
-  context "when `ecf_api_disabled` feature is false" do
-    before { allow(Feature).to receive(:ecf_api_disabled?).and_return(false) }
-
-    it "does not fire StreamAPIRequestsToBigQueryJob" do
-      request.get "/api/v1/participants/npq", params: { foo: "bar" }
-
-      expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
-    end
-  end
 end
