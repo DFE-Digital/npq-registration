@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::ParticipantOutcomesController, :ecf_api_disabled, type: :request do
+RSpec.describe NpqSeparation::Admin::ParticipantOutcomesController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   describe "/npq_separation/admin/participant_outcomes/:id/resend" do
