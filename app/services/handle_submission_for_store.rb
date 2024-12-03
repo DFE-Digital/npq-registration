@@ -40,16 +40,11 @@ class HandleSubmissionForStore
         senco_in_role: store["senco_in_role"],
         senco_start_date: store["senco_start_date"],
         on_submission_trn: store["trn"],
+        teacher_catchment_country:,
+        teacher_catchment_iso_country_code:,
+        cohort: Cohort.current,
+        lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
       )
-
-      if Feature.ecf_api_disabled?
-        application.update!(
-          teacher_catchment_country:,
-          teacher_catchment_iso_country_code:,
-          cohort: Cohort.current,
-          lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
-        )
-      end
 
       enqueue_job(application)
     end
@@ -170,11 +165,7 @@ private
   end
 
   def enqueue_job(application)
-    if Feature.ecf_api_disabled?
-      SendApplicationSubmissionEmailJob.perform_later(application:, email_template:)
-    else
-      ApplicationSubmissionJob.perform_later(user:, email_template:)
-    end
+    SendApplicationSubmissionEmailJob.perform_later(application:, email_template:)
   end
 
   def funding_eligibility_service
