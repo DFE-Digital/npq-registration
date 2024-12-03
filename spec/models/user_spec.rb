@@ -41,7 +41,7 @@ RSpec.describe User do
     it { is_expected.to validate_uniqueness_of(:ecf_id).allow_blank.case_insensitive.with_message("ECF ID must be unique") }
 
     it "does not allow a uid to change once set" do
-      user = create(:user, uid: "123")
+      user = create(:user, uid: SecureRandom.uuid)
       user.uid = "456"
 
       expect(user).to be_invalid(:npq_separation)
@@ -65,18 +65,6 @@ RSpec.describe User do
         application = build(:application, ecf_id:)
         application.valid?
         expect(application.ecf_id).to eq(ecf_id)
-      end
-    end
-
-    context "when ecf_api_disabled flag is toggled off" do
-      before { Flipper.disable(Feature::ECF_API_DISABLED) }
-
-      it { is_expected.not_to validate_presence_of(:ecf_id) }
-
-      it "ensures ecf_id is not automatically populated" do
-        application = build(:application, ecf_id: nil)
-        application.valid?
-        expect(application.ecf_id).to be_nil
       end
     end
   end
@@ -181,7 +169,7 @@ RSpec.describe User do
   describe "#update_email_updates_status" do
     let(:user) { create(:user) }
     let(:form) { EmailUpdates.new(email_updates_status: :senco) }
-    let(:uuid) { "123" }
+    let(:uuid) { "7d023b82-e0eb-4ae2-b613-0a4a51bacf8f" }
 
     before do
       allow(SecureRandom).to receive(:uuid) { uuid }
@@ -225,34 +213,6 @@ RSpec.describe User do
       expect {
         user.unsubscribe_from_email_updates
       }.to change { user.reload.email_updates_unsubscribe_key }.from("432").to(nil)
-    end
-  end
-
-  describe "#ecf_user" do
-    subject(:user) { build(:user) }
-
-    before { allow(External::EcfAPI::Npq::User).to receive(:find).and_return(%w[anything]) }
-
-    it "calls the correct ECF API service" do
-      expect(External::EcfAPI::Npq::User).to receive(:find).with(user.ecf_id)
-
-      user.ecf_user
-    end
-
-    context "when ecf_id is nil" do
-      before { user.update!(ecf_id: nil) }
-
-      it "returns nil" do
-        expect(user.ecf_user).to be_nil
-      end
-    end
-
-    context "when ecf_api_disabled flag is toggled on" do
-      before { Flipper.enable(Feature::ECF_API_DISABLED) }
-
-      it "returns nil" do
-        expect(user.ecf_user).to be_nil
-      end
     end
   end
 
