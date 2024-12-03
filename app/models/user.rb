@@ -139,12 +139,6 @@ class User < ApplicationRecord
     External::GetAnIdentity::User.find(get_an_identity_id)
   end
 
-  def ecf_user
-    return if ecf_id.blank? || Feature.ecf_api_disabled?
-
-    External::EcfAPI::Npq::User.find(ecf_id).first
-  end
-
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end
