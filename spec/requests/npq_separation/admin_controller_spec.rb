@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::AdminController, :ecf_api_disabled, type: :request do
+RSpec.describe NpqSeparation::AdminController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   context "when admin is not logged in" do

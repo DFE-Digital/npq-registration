@@ -1,7 +1,7 @@
 require "rails_helper"
 require "middleware/api_request_middleware"
 
-RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :request do
+RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
   let(:status) { 200 }
   let(:request) { Rack::MockRequest.new(subject) }
   let(:headers) { { "HEADER" => "Yeah!" } }

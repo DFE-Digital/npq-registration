@@ -1,7 +1,7 @@
 require "rails_helper"
 require "api/version"
 
-RSpec.feature "API documentation", :ecf_api_disabled, type: :feature do
+RSpec.feature "API documentation", type: :feature do
   API::Version.all.each do |version|
     scenario "viewing the #{version} API documentation" do
       visit "/api/docs/#{version}"
