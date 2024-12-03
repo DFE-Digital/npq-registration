@@ -5,6 +5,7 @@ RSpec.feature "Sad journeys", type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
     let(:api_call_trn) { user_trn }
@@ -77,8 +78,6 @@ RSpec.feature "Sad journeys", type: :feature do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
-
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
@@ -99,7 +98,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -116,10 +115,10 @@ RSpec.feature "Sad journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => latest_application.cohort_id,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
@@ -135,7 +134,7 @@ RSpec.feature "Sad journeys", type: :feature do
       "school_id" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
       "targeted_delivery_funding_eligibility" => false,
