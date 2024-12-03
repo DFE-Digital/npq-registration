@@ -4,8 +4,6 @@ class SendApplicationSubmissionEmailJob < ApplicationJob
   queue_as :default
 
   def perform(application:, email_template:)
-    return unless Feature.ecf_api_disabled?
-
     ApplicationSubmissionMailer.application_submitted_mail(
       email_template,
       to: application.user.email,
