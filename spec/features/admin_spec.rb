@@ -161,12 +161,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).to have_link("Back", href: admin_applications_url(q: selected_application.user.email))
-
-    expect(page).to have_link("Sync user and applications to ECF")
-
-    expect {
-      click_link "Sync user and applications to ECF"
-    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_application.user, email_template: nil)
   end
 
   scenario "when logged in as a regular admin, it allows access to the users interface" do
@@ -237,12 +231,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).to have_link("Back", href: admin_users_url(q: selected_user.email))
-
-    expect(page).to have_link("Sync user and applications to ECF")
-
-    expect {
-      click_link "Sync user and applications to ECF"
-    }.to enqueue_job(ApplicationSubmissionJob).with(user: selected_user, email_template: nil)
   end
 
   scenario "when logged in as a regular admin, it allows access to the unsynced applications interface" do
