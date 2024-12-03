@@ -96,10 +96,11 @@ RSpec.describe HandleSubmissionForStore do
           "uid" => nil,
         })
         expect(user.applications.reload.count).to eq 1
-        expect(stable_as_json(user.applications.last)).to match({
+        last_application = user.applications.last
+        expect(stable_as_json(last_application)).to match({
           "course_id" => course.id,
           "schedule_id" => nil,
-          "ecf_id" => user.applications.last.ecf_id,
+          "ecf_id" => last_application.ecf_id,
           "eligible_for_funding" => true,
           "employer_name" => nil,
           "employment_type" => nil,
@@ -118,7 +119,7 @@ RSpec.describe HandleSubmissionForStore do
           "notes" => nil,
           "private_childcare_provider_id" => nil,
           "DEPRECATED_private_childcare_provider_urn" => nil,
-          "cohort_id" => cohort.id,
+          "cohort_id" => last_application.cohort_id,
           "school_id" => school.id,
           "targeted_delivery_funding_eligibility" => false,
           "targeted_support_funding_eligibility" => false,
@@ -170,7 +171,7 @@ RSpec.describe HandleSubmissionForStore do
       it "stores data from store" do
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
-          "ecf_id" => nil,
+          "ecf_id" => user.ecf_id,
           "trn" => "0012345",
           "full_name" => "John Doe",
           "provider" => nil,
@@ -195,7 +196,7 @@ RSpec.describe HandleSubmissionForStore do
 
         expect(stable_as_json(user.reload)).to match({
           "email" => user.email,
-          "ecf_id" => nil,
+          "ecf_id" => user.ecf_id,
           "trn" => "0012345",
           "full_name" => "John Doe",
           "date_of_birth" => 30.years.ago.to_date.to_s,
@@ -214,10 +215,11 @@ RSpec.describe HandleSubmissionForStore do
           "uid" => nil,
         })
         expect(user.applications.reload.count).to eq 1
-        expect(stable_as_json(user.applications.last)).to match({
+        last_application = user.applications.last
+        expect(stable_as_json(last_application)).to match({
           "course_id" => course.id,
           "schedule_id" => nil,
-          "ecf_id" => nil,
+          "ecf_id" => last_application.ecf_id,
           "eligible_for_funding" => false,
           "employer_name" => nil,
           "employment_type" => nil,
@@ -236,7 +238,7 @@ RSpec.describe HandleSubmissionForStore do
           "kind_of_nursery" => "private_nursery",
           "private_childcare_provider_id" => private_childcare_provider.id,
           "DEPRECATED_private_childcare_provider_urn" => nil,
-          "cohort_id" => cohort.id,
+          "cohort_id" => last_application.cohort_id,
           "school_id" => nil,
           "targeted_delivery_funding_eligibility" => false,
           "targeted_support_funding_eligibility" => false,
