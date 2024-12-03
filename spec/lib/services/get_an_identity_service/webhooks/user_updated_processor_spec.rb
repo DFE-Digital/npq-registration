@@ -38,6 +38,26 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     let(:new_trn) { rand(1_000_000..9_999_999).to_s }
     let(:new_trn_status) { "found" }
 
+    it "updates user data and sends it to ECF" do
+      expect {
+        described_class.call(webhook_message:)
+      }.to change {
+        user.reload.slice(:email, :trn, :full_name, :date_of_birth, :updated_from_tra_at).as_json
+      }.from(
+        "email" => old_email,
+        "trn" => user.trn,
+        "full_name" => "John Doe",
+        "date_of_birth" => old_date_of_birth.as_json,
+        "updated_from_tra_at" => nil,
+      ).to({
+        "email" => new_email,
+        "trn" => new_trn,
+        "full_name" => "#{new_first_name} #{new_last_name}",
+        "date_of_birth" => new_date_of_birth,
+        "updated_from_tra_at" => sent_at.as_json,
+      })
+    end
+
     context "when the new email is already in use" do
       before do
         create(:user, email: new_email)
