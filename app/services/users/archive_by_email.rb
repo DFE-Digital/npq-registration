@@ -12,10 +12,8 @@ module Users
       if user_with_matching_email
         ApplicationRecord.transaction do
           move_applications(from_user: user_with_matching_email, to_user: user)
-          if Feature.ecf_api_disabled?
-            move_participant_id_changes(from_user: user_with_matching_email, to_user: user)
-            user.participant_id_changes.find_or_create_by!(from_participant_id: user_with_matching_email.ecf_id, to_participant_id: user.ecf_id)
-          end
+          move_participant_id_changes(from_user: user_with_matching_email, to_user: user)
+          user.participant_id_changes.find_or_create_by!(from_participant_id: user_with_matching_email.ecf_id, to_participant_id: user.ecf_id)
         end
         Rails.logger.info("Archiving user with clashing email address ID=#{user_with_matching_email.id}")
         Users::Archiver.new(user: user_with_matching_email.reload).archive!
