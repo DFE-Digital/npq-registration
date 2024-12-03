@@ -63,6 +63,15 @@ RSpec.feature "User administration", :ecf_api_disabled, type: :feature do
       end
     end
 
+    scenario "renders when attributes with method chains are nil" do
+      user.update!(date_of_birth: nil)
+      visit npq_separation_admin_user_path(user)
+
+      within(first(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Date of Birth", "")
+      end
+    end
+
     scenario "shows a message if the user has no applications" do
       visit npq_separation_admin_user_path(user)
 
