@@ -82,12 +82,6 @@ Rails.application.routes.draw do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
 
-    resources :bulk_operations, only: %i[index]
-
-    namespace :bulk_operations do
-      resources :applications_uploads, only: %i[create]
-    end
-
     constraints HasFlipperAccess do
       mount Flipper::UI.app(Flipper) => "/feature_flags"
     end
@@ -269,6 +263,11 @@ Rails.application.routes.draw do
 
         resources :lead_providers, only: %i[index show], path: "lead-providers"
         resources :admins, only: %i[index]
+
+        resources :bulk_operations, only: %i[index], path: "bulk-operations"
+        namespace :bulk_operations, path: "bulk-operations" do
+          resources :applications_uploads, only: %i[create], path: "applications-uploads"
+        end
       end
     end
 

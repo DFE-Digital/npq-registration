@@ -1,0 +1,28 @@
+<h1 class="govuk-heading-l">Bulk operations</h1>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">Filename</th>
+    <th scope="col" class="govuk-table__header">Created at</th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% @uploaded_files.each do |file_upload| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= govuk_link_to file_upload.file.filename, url_for(file_upload.file) %></td>
+        <td class="govuk-table__cell"><%= file_upload.created_at.to_formatted_s(:govuk_short) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= form_with url: npq_separation_admin_bulk_operations_applications_uploads_path, multipart: true do |f| %>
+  <div class="govuk-form-group">
+    <%= f.label "file", "Upload a CSV file", class: "govuk-label" %>
+
+    <%= f.file_field "file", class: "govuk-file-upload" %>
+  </div>
+  <%= f.submit "Upload", class: "govuk-button", data: {module: "govuk-button"} %>
+<% end %>
