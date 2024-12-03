@@ -23,7 +23,10 @@ module Applications
     def change_funding_eligibility
       return false if invalid?
 
-      application.update!(eligible_for_funding:)
+      funding_eligiblity_status_code =
+        (eligible_for_funding ? :marked_funded_by_policy : :marked_ineligible_by_policy)
+
+      application.update!(eligible_for_funding:, funding_eligiblity_status_code:)
     end
   end
 end
