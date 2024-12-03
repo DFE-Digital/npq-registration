@@ -18,10 +18,10 @@
 
         <%= t(".#{@feature.parameterize(separator: '_')}_html") %>
 
-        <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do %>
-        <button type="submit" class="govuk-button" data-module="govuk-button">
-            Change state
-        </button>
+        <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do |f| %>
+        <%= f.govuk_text_field :feature_flag_name, label: { text: 'Write the name of the feature flag to change the state' } %>
+        
+        <%= f.govuk_submit 'Change state' %>
         <% end %>
 
         <h2 class="govuk-heading-m">Users</h2>
