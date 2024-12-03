@@ -61,7 +61,7 @@ class Feature
     end
 
     def ecf_api_disabled?
-      true
+      Flipper.enabled?(ECF_API_DISABLED)
     end
 
     def maintenance_banner_enabled?
