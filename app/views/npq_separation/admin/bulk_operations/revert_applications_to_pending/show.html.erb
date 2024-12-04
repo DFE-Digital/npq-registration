@@ -1,0 +1,39 @@
+<h1 class="govuk-heading-l">Revert Applications to Pending</h1>
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">Filename</th>
+    <th scope="col" class="govuk-table__header">Rows</th>
+    <th scope="col" class="govuk-table__header">Created at</th>
+    <th scope="col" class="govuk-table__header"></th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% @bulk_operations.each do |bulk_operation| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= govuk_link_to bulk_operation.file.filename, url_for(bulk_operation.file) %></td>
+        <td class="govuk-table__cell"><%= bulk_operation.rows %></td>
+        <td class="govuk-table__cell"><%= bulk_operation.created_at.to_formatted_s(:govuk_short) %></td>
+        <td class="govuk-table__cell">
+          <% if bulk_operation.ran? %>
+            <code class="language-json"><%= bulk_operation.result %></code>
+          <% else %>
+            <%= form_with url: revert_applications_to_pending_npq_separation_admin_bulk_operation_path(bulk_operation) do |f| %>
+              <%= f.submit "Revert Applications to Pending", class: "govuk-button", data: {module: "govuk-button"} %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= form_with url: npq_separation_admin_bulk_operations_applications_uploads_path, multipart: true do |f| %>
+  <div class="govuk-form-group">
+    <%= f.label "file", "Upload a CSV file", class: "govuk-label" %>
+
+    <%= f.file_field "file", class: "govuk-file-upload" %>
+  </div>
+  <%= f.submit "Upload", class: "govuk-button", data: {module: "govuk-button"} %>
+<% end %>
