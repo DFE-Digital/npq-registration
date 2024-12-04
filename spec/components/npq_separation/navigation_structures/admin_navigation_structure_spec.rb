@@ -13,6 +13,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Finance" => "/npq-separation/admin/finance/statements",
       "Schools" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
+      "Bulk operations" => "/npq-separation/admin/bulk-operations",
       "Settings" => "#",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do

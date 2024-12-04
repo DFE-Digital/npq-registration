@@ -63,6 +63,11 @@ module NpqSeparation
             prefix: "/npq-separation/admin/lead_providers",
           ) => [],
           Node.new(
+            name: "Bulk operations",
+            href: npq_separation_admin_bulk_operations_path,
+            prefix: "/npq-separation/admin/bulk_operations",
+          ) => [],
+          Node.new(
             name: "Settings",
             href: "#",
             prefix: "/npq-separation/admin/settings",
