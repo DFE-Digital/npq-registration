@@ -20,7 +20,6 @@ class HandleSubmissionForStore
         funding_eligiblity_status_code:,
         funding_choice:,
         teacher_catchment:,
-        teacher_catchment_country: store["teacher_catchment_country"].presence,
         works_in_school: store["works_in_school"] == "yes",
         employer_name:,
         employment_role:,
