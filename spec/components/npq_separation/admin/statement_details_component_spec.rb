@@ -39,6 +39,12 @@ RSpec.describe NpqSeparation::Admin::StatementDetailsComponent, type: :component
   it { is_expected.to have_text(/#{t('.total_voids')}\s+#{calculator.total_voided}/) }
   it { is_expected.to have_link t(".view", href: npq_separation_admin_finance_voided_index_path(statement)) }
 
+  context "when link_to_voids is false" do
+    subject(:rendered) { render_inline described_class.new(statement:, link_to_voids: false) }
+
+    it { is_expected.not_to have_link t(".view", href: npq_separation_admin_finance_voided_index_path(statement)) }
+  end
+
   context "without targeted delivery funding" do
     it { is_expected.not_to have_text t(".targeted_delivery_funding") }
   end

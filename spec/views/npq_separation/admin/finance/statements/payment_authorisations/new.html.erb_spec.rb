@@ -9,7 +9,7 @@ RSpec.describe "npq_separation/admin/finance/statements/payment_authorisations/n
   end
 
   let(:statement) { build_stubbed(:statement, month: 3, year: 2024) }
-  let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:) }
+  let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:, link_to_voids: false) }
   let(:auth_form) { Statements::PaymentAuthorisationForm.new(statement, {}) }
   let(:form_path) { npq_separation_admin_finance_payment_authorisation_path(statement) }
 

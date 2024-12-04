@@ -6,7 +6,7 @@ RSpec.feature "Statement payment", :ecf_api_disabled, type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement, :payable) }
-  let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:) }
+  let(:component) { NpqSeparation::Admin::StatementDetailsComponent.new(statement:, link_to_voids: false) }
 
   before do
     create(:declaration, :payable, statement:)

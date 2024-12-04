@@ -58,7 +58,9 @@
     <div class="govuk-grid-column-one-quarter">
       <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t(".total_voids") %></p>
       <p class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0"><%= @calculator.total_voided %></p>
-      <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t(".view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
+      <% if link_to_voids %>
+        <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t(".view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
+      <% end %>
     </div>
   </div>
 </div>

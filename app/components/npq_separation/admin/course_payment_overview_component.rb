@@ -19,7 +19,7 @@ module NpqSeparation
 
       def counts
         allowed_declaration_types.inject({}) { |m, dt|
-          m.merge(dt.titleize => billable_declarations_count_for_declaration_type(dt))
+          m.merge(dt.titleize => declaration_count_for_declaration_type(dt))
         }.merge({
           t(".total_declarations") => billable_declarations_count,
           t(".total_not_eligible_for_funding") => not_eligible_declarations_count,
