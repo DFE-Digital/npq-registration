@@ -263,6 +263,18 @@ Rails.application.routes.draw do
 
         resources :lead_providers, only: %i[index show], path: "lead-providers"
         resources :admins, only: %i[index]
+
+        resources :bulk_operations, only: %i[index], path: "bulk-operations"
+        namespace :bulk_operations, path: "bulk-operations" do
+          resources :applications_uploads, only: %i[create], path: "applications-uploads"
+          resource :applications_revert_to_pending, controller: "applications_revert_to_pending", only: %i[create], path: "applications-revert-to-pending"
+        end
+      end
+    end
+
+    namespace :migration, constraints: -> { Feature.ecf_api_disabled? } do
+      resources :parity_checks, only: %i[index create] do
+        get "response_comparisons/:id", on: :collection, action: :response_comparison, as: :response_comparison
       end
     end
   end
