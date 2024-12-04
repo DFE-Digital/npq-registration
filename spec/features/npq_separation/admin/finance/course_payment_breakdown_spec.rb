@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "ECF legacy spec for course payment breakdown", :ecf_api_disabled, :js, type: :feature do
+RSpec.feature "ECF legacy spec for course payment breakdown", :js, type: :feature do
   include ActionView::Helpers::NumberHelper
   include Helpers::AdminLogin
 

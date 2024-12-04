@@ -24,15 +24,17 @@ module Helpers
       expect(latest_application_data["raw_application_data"]).to match(expected_data["raw_application_data"])
     end
 
-    def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", full_name: "John Doe", nino: "AB123456C", response: {})
-      stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+    def stub_participant_validation_request(trn: "1234567", date_of_birth: "1980-12-13", nino: "AB123456C", response: {})
+      stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
         .with(
           headers: {
-            "Authorization" => "Bearer ECFAPPBEARERTOKEN",
+            "Accept" => "*/*",
+            "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "Authorization" => "Bearer test-apikey",
+            "User-Agent" => "Ruby",
           },
-          body: { trn:, date_of_birth:, full_name:, nino: },
         )
-        .to_return(status: 200, body: participant_validator_response(**response), headers: {})
+        .to_return(status: 200, body: dqt_response_body(**response), headers: {})
     end
 
     def stub_env_variables_for_gai(stubbed_url: "https://tra-domain.com", stubbed_client_id: "register-for-npq")

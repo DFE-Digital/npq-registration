@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "ECF legacy spec for NPQ view contract", :ecf_api_disabled do
+RSpec.feature "ECF legacy spec for NPQ view contract" do
   include Helpers::AdminLogin
   include ActionView::Helpers::NumberHelper
 
