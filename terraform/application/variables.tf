@@ -134,6 +134,11 @@ locals {
   access_external_domain = try(local.environment_variables["ACCESS_EXTERNAL_DOMAIN"], local.access_domain)
 
   postgres_ssl_mode = var.enable_postgres_ssl ? "require" : "disable"
+
+  pr_number = replace(var.pull_request_number, "-", "")
+  uploads_storage_account_name = "${var.azure_resource_prefix}${var.service_short}${var.config_short}${local.pr_number}sa"
+  # e.g. s189t01cpdnpqrv2044sa
+  # name can only consist of lowercase letters and numbers, and must be between 3 and 24 characters long
 }
 
 variable "send_traffic_to_maintenance_page" {
