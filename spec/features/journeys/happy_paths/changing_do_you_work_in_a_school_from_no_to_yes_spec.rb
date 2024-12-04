@@ -97,13 +97,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("A school", visible: :all)
     end
 
-    mock_previous_funding_api_request(
-      course_identifier: "npq-senior-leadership",
-      get_an_identity_id: user_uid,
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
     choose_a_school(js:, location: "manchester", name: "open")
 
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do

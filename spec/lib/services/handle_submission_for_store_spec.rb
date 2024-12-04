@@ -27,11 +27,6 @@ RSpec.describe HandleSubmissionForStore do
   end
 
   before do
-    mock_previous_funding_api_request(
-      course_identifier: course.identifier,
-      trn: "0012345",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
     travel_to(Date.new(cohort.start_year, 9, 26))
   end
 
@@ -356,14 +351,6 @@ RSpec.describe HandleSubmissionForStore do
             "ehco_headteacher" => "yes",
             "ehco_new_headteacher" => "no",
           }
-        end
-
-        before do
-          mock_previous_funding_api_request(
-            course_identifier: "npq-early-headship-coaching-offer",
-            trn: "0012345",
-            response: ecf_funding_lookup_response(previously_funded: false),
-          )
         end
 
         it "returns headteacher_status as yes_over_five_years" do

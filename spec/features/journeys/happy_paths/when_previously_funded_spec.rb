@@ -13,6 +13,7 @@ RSpec.feature "Happy journeys", type: :feature do
     scenario("registration journey when previously funded (without JS)") { run_scenario(js: false) }
   end
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub previously funding check for all courses" do
     let(:api_call_trn) { user_trn }
@@ -20,7 +21,7 @@ RSpec.feature "Happy journeys", type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   def run_scenario(js:)
-    stub_participant_validation_request
+    stub_participant_validation_request(trn: user_trn, response: { trn: user_trn, date_of_birth: "1980-12-13" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -60,14 +61,7 @@ RSpec.feature "Happy journeys", type: :feature do
       page.choose("Yes", visible: :all)
     end
 
-    %w[npq-early-headship-coaching-offer npq-early-years-leadership].each do |identifier|
-      mock_previous_funding_api_request(
-        course_identifier: identifier,
-        trn: "1234567",
-        get_an_identity_id: user_uid,
-        response: ecf_funding_lookup_response(previously_funded: true),
-      )
-    end
+    mock_previous_funding(previously_funded: true)
 
     choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
@@ -149,7 +143,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -166,10 +160,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => latest_application.cohort_id,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
@@ -178,7 +172,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "funding_choice" => "self",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "funding_eligiblity_status_code" => "previously_funded",
       "headteacher_status" => "yes_in_first_five_years",
@@ -191,8 +185,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,
