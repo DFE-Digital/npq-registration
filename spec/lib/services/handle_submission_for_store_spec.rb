@@ -25,7 +25,9 @@ RSpec.describe HandleSubmissionForStore do
     }
   end
 
-  before { travel_to(Date.new(cohort.start_year, 9, 26)) }
+  before do
+    travel_to(Date.new(cohort.start_year, 9, 26))
+  end
 
   describe "#call" do
     def stable_as_json(record)
