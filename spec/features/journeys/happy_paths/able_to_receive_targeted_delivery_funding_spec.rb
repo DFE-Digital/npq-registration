@@ -61,22 +61,10 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
 
     choose_a_school(js:, location: "manchester", name: "open")
 
-    mock_previous_funding_api_request(
-      course_identifier: "npq-senior-leadership",
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
       page.choose("Senior leadership", visible: :all)
     end
-
-    mock_previous_funding_api_request(
-      course_identifier: "npq-headship",
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
 
     expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
       expect(page).to have_text("Funding")
