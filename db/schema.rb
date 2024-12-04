@@ -159,6 +159,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
     t.integer "admin_id"
     t.integer "rows"
     t.text "result"
+    t.string "type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
