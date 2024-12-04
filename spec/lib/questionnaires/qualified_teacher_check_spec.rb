@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
-  def stub_api_request(trn:, date_of_birth:, full_name:, nino:, response_code: 200, response_body: "")
+  def stub_api_request(trn:, date_of_birth:, nino:, response_code: 200, response_body: "")
     stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
       .with(
         headers: {
