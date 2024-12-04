@@ -7,10 +7,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
   include_context "with default schedules"
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    # In this situation we fallback to a non-pilot set of checks
-    let(:api_call_trn) { manually_entered_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   # This controls what is returned from the Get An Identity API

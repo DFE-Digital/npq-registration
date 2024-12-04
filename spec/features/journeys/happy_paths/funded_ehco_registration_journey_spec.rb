@@ -7,9 +7,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
 
   include_context "with default schedules"
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   context "when JavaScript is enabled", :js do
