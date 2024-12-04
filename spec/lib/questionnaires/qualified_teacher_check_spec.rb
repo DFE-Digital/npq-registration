@@ -196,7 +196,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Doe",
           nino: "AB123456C",
           response_body: dqt_response_body,
         )
@@ -217,7 +216,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Doe",
           nino: "AB123456C",
           response_code: 404,
         )
@@ -285,7 +283,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: dqt_response_body,
         )
@@ -338,7 +335,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: dqt_response_body(active_alert: true),
         )
@@ -391,7 +387,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: dqt_response_body(trn: "1111111"),
         )
@@ -445,7 +440,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_code: 404,
         )
