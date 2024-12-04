@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Disable in migration environment
-Rack::Attack.enabled = !Rails.env.migration?
-
 # Throttle general requests by IP
 class Rack::Attack
   PROTECTED_ROUTES = [
