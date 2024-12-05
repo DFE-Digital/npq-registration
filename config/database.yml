@@ -14,34 +14,27 @@ default_primary: &default_primary
   url: <%= ENV.fetch("DATABASE_URL", "postgres://localhost:5432") %>
 
 development:
-  primary:
-    <<: *default_primary
-    database: npq_registration_development
+  <<: *default_primary
+  database: npq_registration_development
 
 review:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
 
 test:
-  primary:
-    <<: *default_primary
-    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
+  <<: *default_primary
+  database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 staging:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
+
 sandbox:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
 
 migration:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
 
 separation:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
 
 production:
-  primary:
-    <<: *default_primary
+  <<: *default_primary
