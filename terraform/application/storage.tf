@@ -2,7 +2,7 @@ resource "azurerm_storage_account" "uploads" {
   name                              = local.uploads_storage_account_name
   resource_group_name               = "${var.azure_resource_prefix}-${var.service_short}-${var.config_short}-rg"
   location                          = "UK South"
-  account_replication_type          = "LRS" # probably need GRS for production
+  account_replication_type          = var.environment != "production" ? "LRS" : "GRS"
   account_tier                      = "Standard"
   account_kind                      = "StorageV2"
   min_tls_version                   = "TLS1_2"
