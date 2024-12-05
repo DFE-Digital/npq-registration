@@ -1,0 +1,47 @@
+<%= govuk_back_link href: npq_separation_admin_cohort_path(@schedule.cohort) %>
+
+<h1 class="govuk-heading-l">Schedule</h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Cohort")
+      row.with_value(text: format_cohort(@schedule.cohort))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @schedule.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Identifier")
+      row.with_value(text: @schedule.identifier)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Course group")
+      row.with_value(text: @schedule.course_group.name)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Applies from")
+      row.with_value(text: @schedule.applies_from.to_date.to_fs(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Applies to")
+      row.with_value(text: @schedule.applies_to.to_date.to_fs(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Declaration types")
+      row.with_value(text: @schedule.allowed_declaration_types.join(', '))
+    end
+  end
+%>
+
+<% if current_admin.super_admin? && @schedule.editable? %>
+  <%= govuk_button_link_to 'Edit schedule details', edit_npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule) %>
+  <%= govuk_button_link_to 'Delete schedule', npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), method: :delete, warning: true %>
+<% end %>
