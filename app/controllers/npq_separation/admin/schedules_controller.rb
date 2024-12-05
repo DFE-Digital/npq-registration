@@ -1,0 +1,50 @@
+class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
+  def show
+    @schedule = schedule
+  end
+
+  def new
+    @schedule = cohort.schedules.new
+    render :form
+  end
+
+  def create
+    @schedule = cohort.schedules.new(schedule_params)
+
+    if @schedule.save
+      flash[:success] = "Schedule #{@schedule.name} created"
+      redirect_to npq_separation_admin_cohort_path(cohort)
+    else
+      render :form, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    @schedule = schedule
+    render :form
+  end
+
+  def update
+    if schedule.update(schedule_params)
+      flash[:success] = "Schedule #{schedule.name} updated"
+      redirect_to npq_separation_admin_cohort_path(cohort)
+    else
+      @schedule = schedule
+      render :form, status: :unprocessable_entity
+    end
+  end
+
+private
+
+  def schedule_params
+    params.require(:schedule).permit(:course_group_id, :name, :identifier, :applies_from, :applies_to, allowed_declaration_types: [])
+  end
+
+  def schedule
+    @schedule ||= cohort.schedules.find(params[:id])
+  end
+
+  def cohort
+    @cohort ||= Cohort.find(params[:cohort_id])
+  end
+end
