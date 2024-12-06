@@ -48,7 +48,7 @@ class Declaration < ApplicationRecord
 
   state_machine :state, initial: :submitted do
     event :mark_eligible do
-      transition %i[payable submitted] => :eligible
+      transition %i[submitted] => :eligible
     end
 
     event :mark_payable do
@@ -73,6 +73,10 @@ class Declaration < ApplicationRecord
 
     event :mark_voided do
       transition %i[submitted eligible payable ineligible] => :voided
+    end
+
+    event :revert_to_eligible do
+      transition %i[payable] => :eligible
     end
   end
 

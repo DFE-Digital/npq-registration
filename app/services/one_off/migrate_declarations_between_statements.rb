@@ -176,8 +176,8 @@ module OneOff
       return unless payable_declarations.any?
 
       record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement")
-      payable_declarations.each(&:mark_eligible!)
-      statement_items.select(&:payable?).map(&:mark_eligible!)
+      payable_declarations.each(&:revert_to_eligible!)
+      statement_items.select(&:payable?).map(&:revert_to_eligible!)
     end
 
     def record_summary_info(dry_run)

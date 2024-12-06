@@ -53,7 +53,7 @@ class StatementItem < ApplicationRecord
       transition [:eligible] => :ineligible
     end
 
-    event :mark_eligible do
+    event :revert_to_eligible do
       transition [:payable] => :eligible
     end
   end
