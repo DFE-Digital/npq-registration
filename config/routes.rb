@@ -66,18 +66,11 @@ Rails.application.routes.draw do
       end
     end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
-
-    resources :users, only: %i[index show] do
-      resources :application_submissions, only: %i[create]
-    end
-
+    resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
-
     resources :schools, only: %i[index show]
-
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
-
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end

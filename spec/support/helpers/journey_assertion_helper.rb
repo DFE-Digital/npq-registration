@@ -36,9 +36,6 @@ module Helpers
         expect(page).to have_text("Registration successfully submitted")
         expect(page).to have_link("Register for another NPQ", href: /\/registration\/provider_check/)
       end
-
-      expect(User.count).to be(1)
-      expect(Application.count).to be(1)
     end
   end
 end

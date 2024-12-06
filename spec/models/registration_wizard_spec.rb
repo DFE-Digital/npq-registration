@@ -30,14 +30,6 @@ RSpec.describe RegistrationWizard do
   describe "#answers" do
     let(:school) { create(:school, establishment_type_code: "1") }
 
-    before do
-      mock_previous_funding_api_request(
-        course_identifier: "npq-additional-support-offer",
-        trn: user.trn,
-        response: ecf_funding_lookup_response(previously_funded: false),
-      )
-    end
-
     context "when working in Local authority maintained nursery" do
       let(:store) do
         {
