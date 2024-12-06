@@ -46,70 +46,9 @@
       <% end %>
     <% end %>
 
+    <%= render NpqSeparation::Admin::StatementDetailsComponent.new(statement: @statement) %>
+
     <div class="govuk-!-padding-3 app-statement-block">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-          <h4 class="govuk-heading-m govuk-!-margin-bottom-2"><%= t("finance.totals") %></h4>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t("finance.output_payment.label") %>
-            <span class="float-right"><%= number_to_currency(@calculator.total_output_payment) %></span>
-          </p>
-
-          <% if @calculator.show_targeted_delivery_funding? %>
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              <%= t("finance.targeted_delivery_funding.caption") %>
-              <span class="float-right"><%= number_to_currency(@calculator.total_targeted_delivery_funding) %></span>
-            </p>
-          <% end %>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <%= t("finance.clawbacks.caption") %>
-            <span class="float-right"><%= number_to_currency(-@calculator.total_clawbacks) %></span>
-          </p>
-
-          <% unless @calculator.total_service_fees.zero? %>
-            <p class="govuk-body-s govuk-!-margin-bottom-2">
-              <%= t("finance.service_fee.caption") %>
-              <span class="float-right"><%= number_to_currency(@calculator.total_service_fees) %></span>
-            </p>
-          <% end %>
-
-          <hr/>
-
-          <p class="govuk-body-s govuk-!-margin-bottom-2">
-            <strong><%= t("finance.total_net_vat") %></strong>
-            <strong class="float-right"><span><%= number_to_currency(@calculator.total_payment) %></span></strong>
-          </p>
-        </div>
-
-        <div class="govuk-grid-column-one-half">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.cut_off_date.caption") %></strong>
-          <p class="govuk-body-l govuk-!-font-weight-bold"><%= @statement.deadline_date.to_fs(:govuk) %></p>
-        </div>
-      </div>
-
-      <div class="govuk-grid-row govuk-!-margin-top-3">
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_starts") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_starts %></p>
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_retained") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_retained %></p>
-        </div>
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_completed") %></p>
-          <div class="govuk-heading-m govuk-!-padding-top-0"><%= @calculator.total_completed %></div>
-        </div>
-
-        <div class="govuk-grid-column-one-quarter">
-          <p class="govuk-body-s govuk-!-margin-bottom-0"><%= t("finance.total_voids") %></p>
-          <p class="govuk-heading-m govuk-!-padding-top-0 govuk-!-margin-bottom-0"><%= @calculator.total_voided %></p>
-          <p class="govuk-body-s govuk-!-margin-top-0"><%= govuk_link_to( t("finance.view") , npq_separation_admin_finance_voided_index_path(@statement)) %></p>
-        </div>
-      </div>
-
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
           <hr class="govuk-section-break govuk-section-break--visible">
@@ -147,13 +86,13 @@
 <br>
 
 <% @contracts.each do |contract| %>
-  <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+  <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:) %>
 <% end %>
 
 <% if @special_contracts.any? %>
   <h4 id="standalone_payments" class="govuk-heading-l govuk-!-margin-top-9 govuk-!-margin-bottom-7">Standalone payments</h4>
   <% @special_contracts.each do |contract| %>
-    <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(statement: @statement, contract:) %>
+    <%= render NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:) %>
   <% end %>
 <% end %>
 
@@ -182,7 +121,7 @@
 %>
 
 <%=
-  govuk_details(summary_text: t("finance.calculation_rounding_message.title")) do
-    tag.p t("finance.calculation_rounding_message.content")
+  govuk_details(summary_text: t(".calculation_rounding_message.title")) do
+    tag.p t(".calculation_rounding_message.content")
   end
 %>

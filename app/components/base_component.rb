@@ -2,7 +2,7 @@
 
 class BaseComponent < ViewComponent::Base
   def self.translation_key
-    @translation_key ||= name.snakecase.gsub("/", ".")
+    @translation_key ||= name.underscore.gsub("/", ".")
   end
 
   def t(key, **options)

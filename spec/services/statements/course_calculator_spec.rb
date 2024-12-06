@@ -3,34 +3,38 @@
 require "rails_helper"
 
 RSpec.describe Statements::CourseCalculator do
-  let(:cohort)              { create(:cohort, :current) }
-  let(:course)              { create(:course, :leading_literacy) }
-  let(:schedule)            { course.schedule_for(cohort:) }
-  let(:statement)           { create(:statement, :next_output_fee, cohort:) }
-  let(:lead_provider)       { statement.lead_provider }
-  let(:application)         { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:) }
-  let!(:contract)           { create(:contract, course:, statement:) }
+  subject { calculator }
+
+  let(:calculator)     { described_class.new(contract:) }
+  let(:cohort)         { create(:cohort, :current) }
+  let(:course)         { create(:course, :leading_literacy) }
+  let(:schedule)       { course.schedule_for(cohort:) }
+  let(:statement)      { create(:statement, :next_output_fee, cohort:) }
+  let(:paid_statement) { create(:statement, :paid, lead_provider:) }
+  let(:lead_provider)  { statement.lead_provider }
+  let(:application)    { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:) }
+  let!(:contract)      { create(:contract, course:, statement:) }
 
   before do
     create(:schedule, :npq_leadership_autumn, cohort:)
     create(:schedule, :npq_specialist_autumn, cohort:)
   end
 
-  subject { described_class.new(statement:, contract:) }
-
   describe "#billable_declarations_count_for_declaration_type" do
+    %i[started retained completed].each do |declaration_type|
+      let(declaration_type) { subject.billable_declarations_count_for_declaration_type(declaration_type.to_s) }
+    end
+
     before do
-      travel_to statement.deadline_date do
-        %w[started retained-1 retained-2 completed].flat_map do |declaration_type|
-          create_list(:declaration, 2, state: :eligible, declaration_type:, course:, lead_provider:, cohort:, statement:)
-        end
+      %w[started retained-1 retained-2 completed].each do |declaration_type|
+        create_list(:declaration, 2, state: :eligible, declaration_type:, course:, lead_provider:, cohort:, statement:)
       end
     end
 
     it "can count different declaration types", :aggregate_failures do
-      expect(subject.billable_declarations_count_for_declaration_type("started")).to be(2)
-      expect(subject.billable_declarations_count_for_declaration_type("retained")).to be(4)
-      expect(subject.billable_declarations_count_for_declaration_type("completed")).to be(2)
+      expect(started).to be(2)
+      expect(retained).to be(4)
+      expect(completed).to be(2)
     end
 
     context "when there are multiple declarations from same user and same type" do
@@ -40,46 +44,43 @@ RSpec.describe Statements::CourseCalculator do
       end
 
       it "they are counted once per user", :aggregate_failures do
-        expect(subject.billable_declarations_count_for_declaration_type("started")).to be(1)
-        expect(subject.billable_declarations_count_for_declaration_type("retained")).to be(2)
-        expect(subject.billable_declarations_count_for_declaration_type("completed")).to be(1)
+        expect(started).to be(1)
+        expect(retained).to be(2)
+        expect(completed).to be(1)
       end
     end
   end
 
   describe "#billable_declarations_count" do
+    subject { calculator.billable_declarations_count }
+
     context "when there are zero declarations" do
-      it do
-        expect(subject.billable_declarations_count).to be_zero
-      end
+      it { is_expected.to be_zero }
     end
 
     context "when there are billable declarations" do
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:)
-        end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:)
       end
 
-      it "is counted" do
-        expect(subject.billable_declarations_count).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
 
     context "when multiple declarations from same user and same type" do
       let(:declaration) { create(:declaration, :eligible, application:, course:, lead_provider:, cohort:, statement:) }
 
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, application:, statement:).tap do |d|
-            d.application.update!(user: declaration.application.user)
-          end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, application:, statement:).tap do |d|
+          d.application.update!(user: declaration.application.user)
         end
       end
 
-      it "is counted once" do
-        expect(subject.billable_declarations_count).to be(1)
+      it "has two declarations" do
+        expect(Declaration.count).to be(2)
+        expect(calculator.statement.statement_items.count).to be(2)
       end
+
+      it { is_expected.to be(1) }
     end
 
     context "when multiple declarations from same user of multiple types" do
@@ -96,20 +97,16 @@ RSpec.describe Statements::CourseCalculator do
       end
 
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
-            d.application.update!(user: started_declaration.application.user)
-          end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
+          d.application.update!(user: started_declaration.application.user)
+        end
 
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
-            d.application.update!(user: retained_1_declaration.application.user)
-          end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
+          d.application.update!(user: retained_1_declaration.application.user)
         end
       end
 
-      it "counts each type once" do
-        expect(subject.billable_declarations_count).to be(2)
-      end
+      it { is_expected.to be(2) }
     end
   end
 
@@ -121,17 +118,8 @@ RSpec.describe Statements::CourseCalculator do
     end
 
     context "when there are refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) do
-        paid_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
-        travel_to paid_statement.deadline_date do
-          create(:declaration, :paid, course:, lead_provider:, cohort:, statement: paid_statement)
-        end
-      end
-
       before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
-        end
+        create(:declaration, :awaiting_clawback, course:, lead_provider:, cohort:, statement:, paid_statement:)
       end
 
       it "is counted" do
@@ -141,16 +129,10 @@ RSpec.describe Statements::CourseCalculator do
   end
 
   describe "#refundable_declarations_by_type_count" do
-    let(:eligible_statement) { create(:statement, :next_output_fee, :paid, deadline_date: statement.deadline_date - 1.month, lead_provider:) }
-
     before do
-      create(:declaration, :eligible, :paid, course:, lead_provider:, cohort:, statement: eligible_statement)
-      create_list(:declaration, 2, :eligible, :paid, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement: eligible_statement)
-      create_list(:declaration, 3, :eligible, :paid, declaration_type: "retained-2", course:, lead_provider:, cohort:, statement: eligible_statement)
-
-      travel_to statement.deadline_date do
-        Declaration.find_each { Declarations::Void.new(declaration: _1).void }
-      end
+      create(:declaration, :awaiting_clawback, course:, lead_provider:, cohort:, statement:, paid_statement:)
+      create_list(:declaration, 2, :awaiting_clawback, declaration_type: "retained-1", course:, lead_provider:, cohort:, statement:, paid_statement:)
+      create_list(:declaration, 3, :awaiting_clawback, declaration_type: "retained-2", course:, lead_provider:, cohort:, statement:, paid_statement:)
     end
 
     it "returns counts of refunds by type" do
@@ -167,10 +149,7 @@ RSpec.describe Statements::CourseCalculator do
   describe "#not_eligible_declarations" do
     context "when there are voided declarations" do
       before do
-        travel_to statement.deadline_date do
-          d = create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:)
-          Declarations::Void.new(declaration: d).void
-        end
+        create(:declaration, :voided, course:, lead_provider:, cohort:, statement:)
       end
 
       it "is counted" do
@@ -180,42 +159,36 @@ RSpec.describe Statements::CourseCalculator do
   end
 
   describe "#declaration_count_for_milestone" do
+    subject { calculator.declaration_count_for_declaration_type("started") }
+
     context "when there are no declarations" do
-      it do
-        expect(subject.declaration_count_for_declaration_type("started")).to be_zero
-      end
+      it { is_expected.to be_zero }
     end
 
     context "when there are declarations" do
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:)
-        end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:)
       end
 
-      it do
-        expect(subject.declaration_count_for_declaration_type("started")).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
 
     context "when there are multiple declarations from same user and same type" do
       let(:declaration) { create(:declaration, :eligible, course:, lead_provider:, statement:) }
 
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
-            d.application.update!(user: declaration.application.user)
-          end
+        create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:).tap do |d|
+          d.application.update!(user: declaration.application.user)
         end
       end
 
-      it "is counted once" do
-        expect(subject.declaration_count_for_declaration_type("started")).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
   end
 
   describe "#monthly_service_fees" do
+    subject { calculator.monthly_service_fees }
+
     before do
       contract.contract_template.update!(monthly_service_fee:)
     end
@@ -223,29 +196,25 @@ RSpec.describe Statements::CourseCalculator do
     context "when monthly_service_fee on contract set to nil" do
       let(:monthly_service_fee) { nil }
 
-      it "returns calculated service fee" do
-        expect(subject.monthly_service_fees).to eql(BigDecimal("0.1212631578947368421052631578947368421064e4"))
-      end
+      it { is_expected.to eql(BigDecimal("0.1212631578947368421052631578947368421064e4")) }
     end
 
     context "when monthly_service_fee present on contract" do
       let(:monthly_service_fee) { 5432.10 }
 
-      it "returns monthly_service_fee from contract" do
-        expect(subject.monthly_service_fees).to eql(monthly_service_fee)
-      end
+      it { is_expected.to eql(monthly_service_fee) }
     end
 
     context "when monthly_service_fee on contract set to 0.0" do
       let(:monthly_service_fee) { 0.0 }
 
-      it "returns zero monthly_service_fee from contract" do
-        expect(subject.monthly_service_fees).to eql(monthly_service_fee)
-      end
+      it { is_expected.to eql(monthly_service_fee) }
     end
   end
 
   describe "#service_fees_per_participant" do
+    subject { calculator.service_fees_per_participant }
+
     before do
       contract.contract_template.update!(monthly_service_fee:, recruitment_target: 438)
     end
@@ -253,49 +222,41 @@ RSpec.describe Statements::CourseCalculator do
     context "when monthly_service_fee on contract set to nil" do
       let(:monthly_service_fee) { nil }
 
-      it "returns calculated service_fees_per_participant" do
-        expect(subject.service_fees_per_participant).to eql(BigDecimal("0.16842105263157894736842105263157894737e2"))
-      end
+      it { is_expected.to eql(BigDecimal("0.16842105263157894736842105263157894737e2")) }
     end
 
     context "when monthly_service_fee present on contract" do
       let(:monthly_service_fee) { 5432.10 }
 
-      it "returns value calulated from monthly_service_fee from contract" do
-        expected = BigDecimal("0.12402054794520547945205479452054794521e2")
-
-        expect(subject.service_fees_per_participant).to eql(expected)
-      end
+      it { is_expected.to eql(BigDecimal("0.12402054794520547945205479452054794521e2")) }
     end
   end
 
   describe "#course_has_targeted_delivery_funding?" do
+    subject { calculator.course_has_targeted_delivery_funding? }
+
     context "with early headship coaching offer" do
       let(:course) { create(:course, :early_headship_coaching_offer) }
 
-      it do
-        expect(subject.course_has_targeted_delivery_funding?).to be false
-      end
+      it { is_expected.to be false }
     end
 
     context "with additional support offer" do
       let(:course) { create(:course, :additional_support_offer) }
 
-      it do
-        expect(subject.course_has_targeted_delivery_funding?).to be false
-      end
+      it { is_expected.to be false }
     end
 
     context "with leadership course" do
       let(:course) { create(:course, :early_years_leadership) }
 
-      it do
-        expect(subject.course_has_targeted_delivery_funding?).to be true
-      end
+      it { is_expected.to be true }
     end
   end
 
   describe "#targeted_delivery_funding_declarations_count" do
+    subject { calculator.targeted_delivery_funding_declarations_count }
+
     let(:application) do
       create(
         :application,
@@ -310,21 +271,15 @@ RSpec.describe Statements::CourseCalculator do
     end
 
     context "when there are zero declarations" do
-      it do
-        expect(subject.targeted_delivery_funding_declarations_count).to be_zero
-      end
+      it { is_expected.to be_zero }
     end
 
     context "when there are targeted delivery funding declarations" do
       before do
-        travel_to statement.deadline_date do
-          create(:declaration, :eligible, course:, lead_provider:, application:, cohort:, statement:)
-        end
+        create(:declaration, :eligible, course:, lead_provider:, application:, cohort:, statement:)
       end
 
-      it "is counted" do
-        expect(subject.targeted_delivery_funding_declarations_count).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
 
     context "when multiple declarations from same user of one type" do
@@ -343,60 +298,34 @@ RSpec.describe Statements::CourseCalculator do
       end
 
       before do
-        travel_to statement.deadline_date do
-          create(:statement_item, declaration: application.declarations.first, statement:)
-          create(:declaration, :payable, course:, lead_provider:, declaration_type: "retained-1", cohort:, statement:, application: create(:application, user: application.user))
-        end
+        create(:statement_item, declaration: application.declarations.first, statement:)
+        create(:declaration, :payable, course:, lead_provider:, declaration_type: "retained-1", cohort:, statement:, application: create(:application, user: application.user))
       end
 
       it "has two declarations" do
         expect(Declaration.count).to be(2)
-        expect(subject.statement.statement_items.count).to be(2)
+        expect(calculator.statement.statement_items.count).to be(2)
       end
 
-      it "has one targeted delivery funding declaration" do
-        expect(subject.targeted_delivery_funding_declarations_count).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
   end
 
   describe "#targeted_delivery_funding_refundable_declarations_count" do
-    let(:application) do
-      create(
-        :application,
-        :accepted,
-        :eligible_for_funding,
-        course:,
-        lead_provider:,
-        cohort:,
-        eligible_for_funding: true,
-        targeted_delivery_funding_eligibility: true,
-      )
-    end
+    subject { calculator.targeted_delivery_funding_refundable_declarations_count }
+
+    before { application.update! targeted_delivery_funding_eligibility: true }
 
     context "when there are zero declarations" do
-      it do
-        expect(subject.targeted_delivery_funding_refundable_declarations_count).to be_zero
-      end
+      it { is_expected.to be_zero }
     end
 
     context "when there are targeted delivery funding refundable declarations" do
-      let!(:to_be_awaiting_clawed_back) do
-        output_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
-        travel_to output_statement.deadline_date do
-          create(:declaration, :paid, course:, lead_provider:, application:, cohort:, statement:)
-        end
-      end
-
       before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
-        end
+        create :declaration, :awaiting_clawback, course:, lead_provider:, application:, cohort:, statement:, paid_statement:
       end
 
-      it "has one targeted delivery funding refundable declaration" do
-        expect(subject.targeted_delivery_funding_refundable_declarations_count).to be(1)
-      end
+      it { is_expected.to be(1) }
     end
   end
 
@@ -409,6 +338,27 @@ RSpec.describe Statements::CourseCalculator do
   describe "#clawback_payment" do
     it "is a number" do
       expect(subject.clawback_payment).to be_a(Numeric)
+    end
+  end
+
+  describe "#course_total" do
+    it "includes monthly_service_fees" do
+      expect {
+        contract.contract_template.update!(monthly_service_fee: 10)
+      }.to change(subject, :course_total).by(10)
+    end
+
+    {
+      output_payment_subtotal: 10,
+      clawback_payment: -10,
+      targeted_delivery_funding_subtotal: 10,
+      targeted_delivery_funding_refundable_subtotal: -10,
+    }.each do |method, stubbed_value|
+      it "includes #{method}" do
+        expect {
+          allow(calculator).to receive(method).and_return(stubbed_value)
+        }.to change(subject, :course_total).by(10)
+      end
     end
   end
 end
