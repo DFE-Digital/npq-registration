@@ -31,9 +31,23 @@
 
 <%= form_with url: npq_separation_admin_bulk_operations_applications_uploads_path, multipart: true do |f| %>
   <div class="govuk-form-group">
-    <%= f.label "file", "Upload a CSV file", class: "govuk-label" %>
-
+    <%= f.label "file", "Upload an application list file", class: "govuk-label" %>
     <%= f.file_field "file", class: "govuk-file-upload" %>
   </div>
+
+  <%= govuk_details(summary_text: "Example file") do %>
+    <p>
+      The file is a list of application IDs, one ID per row, with no header row.
+    </p>
+    <p>
+      e.g.
+      <pre>
+2f581c80-b5bb-4404-bcaf-4044d9c0c674
+21fe9549-28f0-492c-ae3a-d52969b40536
+e7e8a629-f75f-4d98-b157-269136110099
+      </pre>
+    </p>
+  <% end %>
+
   <%= f.submit "Upload", class: "govuk-button", data: {module: "govuk-button"} %>
 <% end %>
