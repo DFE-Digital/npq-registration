@@ -28,6 +28,7 @@ module Participants
 
       true
     end
+    alias_method :call, :defer
 
   private
 

@@ -50,6 +50,7 @@
     sl.with_row do |row|
       row.with_key { "Training status" }
       row.with_value { @application.training_status || '-' }
+      row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_training_status_path(@application))
     end
 
     sl.with_row do |row|
