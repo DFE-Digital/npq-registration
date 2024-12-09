@@ -12,15 +12,15 @@
 RSpec/ContextWording:
   Exclude:
     - 'spec/jobs/get_an_identity_id_sync_job_spec.rb'
-    - 'spec/lib/questionnaires/choose_your_npq_spec.rb'
-    - 'spec/lib/questionnaires/choose_your_provider_spec.rb'
-    - 'spec/lib/questionnaires/qualified_teacher_check_spec.rb'
-    - 'spec/lib/questionnaires/registration_interest_notification_spec.rb'
-    - 'spec/lib/services/admin_service/dashboard_stats_spec.rb'
-    - 'spec/lib/services/funding_eligibility_spec.rb'
-    - 'spec/lib/services/handle_submission_for_store_spec.rb'
-    - 'spec/lib/services/importers/import_private_childcare_providers_spec.rb'
-    - 'spec/lib/services/report_service_spec.rb'
+    - 'spec/forms/questionnaires/choose_your_npq_spec.rb'
+    - 'spec/forms/questionnaires/choose_your_provider_spec.rb'
+    - 'spec/forms/questionnaires/qualified_teacher_check_spec.rb'
+    - 'spec/forms/questionnaires/registration_interest_notification_spec.rb'
+    - 'spec/services/admin_service/dashboard_stats_spec.rb'
+    - 'spec/services/funding_eligibility_spec.rb'
+    - 'spec/services/handle_submission_for_store_spec.rb'
+    - 'spec/services/importers/import_private_childcare_providers_spec.rb'
+    - 'spec/services/report_service_spec.rb'
     - 'spec/models/school_spec.rb'
     - 'spec/support/shared_contexts/retrieve_latest_application_data.rb'
     - 'spec/support/shared_contexts/stub_course_ecf_to_identifier_mappings.rb'
@@ -34,7 +34,7 @@ RSpec/ExpectInHook:
 # Offense count: 2
 RSpec/ExpectOutput:
   Exclude:
-    - 'spec/lib/services/importers/manual_validation_spec.rb'
+    - 'spec/services/importers/manual_validation_spec.rb'
 
 # Offense count: 430
 # Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
@@ -46,15 +46,15 @@ RSpec/NamedSubject:
 RSpec/StubbedMock:
   Exclude:
     - 'spec/jobs/application_submission_job_spec.rb'
-    - 'spec/lib/services/ecf/npq_profile_mass_updater_spec.rb'
+    - 'spec/services/ecf/npq_profile_mass_updater_spec.rb'
 
 # Offense count: 1
 RSpec/SubjectStub:
   Exclude:
-    - 'spec/lib/questionnaires/choose_private_childcare_provider_spec.rb'
+    - 'spec/forms/questionnaires/choose_private_childcare_provider_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:
   Exclude:
-    - 'spec/lib/services/ecf/npq_profile_mass_updater_spec.rb'
+    - 'spec/services/ecf/npq_profile_mass_updater_spec.rb'
