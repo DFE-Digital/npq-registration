@@ -15,6 +15,7 @@ module Participants
 
       true
     end
+    alias_method :call, :resume
 
   private
 
