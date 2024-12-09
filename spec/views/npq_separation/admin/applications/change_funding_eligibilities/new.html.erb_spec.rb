@@ -21,8 +21,6 @@ RSpec.describe "npq_separation/admin/applications/change_funding_eligibilities/n
   it { is_expected.to have_css(%(form[action="#{form_path}"]), count: 1) }
   it { is_expected.to have_css(%(.govuk-form-group fieldset label), text: "Yes") }
   it { is_expected.to have_css(%(.govuk-form-group fieldset label), text: "No") }
-  # it { is_expected.to have_css("optgroup", count: 2) }
-  # it { is_expected.to have_css("optgroup option") }
 
   context "when there are form errors" do
     before { change_funding_eligibility.valid? }
