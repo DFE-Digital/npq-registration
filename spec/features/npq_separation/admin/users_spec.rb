@@ -99,5 +99,24 @@ RSpec.feature "User administration", type: :feature do
         end
       end
     end
+
+    scenario "changing a user's TRN" do
+      visit npq_separation_admin_user_path(user)
+      click_link "Change"
+
+      expect(page).to have_css("h1", text: "Change TRN")
+      within(first(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Participant ID", user.ecf_id)
+        expect(summary_list).to have_summary_item("TRN", user.trn)
+      end
+      fill_in("New TRN", with: "2345678")
+      click_on("Continue")
+
+      expect(page).to have_css("h1", text: "Participant")
+      within(first(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("TRN", "2345678")
+      end
+      expect(user.reload.trn).to eq "2345678"
+    end
   end
 end
