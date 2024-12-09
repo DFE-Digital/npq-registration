@@ -241,7 +241,7 @@ RSpec.describe Application do
 
   describe "versioning", :versioning do
     context "when changing versioned fields" do
-      let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
+      let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil, funded_place: false) }
 
       before do
         application.update!(lead_provider_approval_status: "accepted", participant_outcome_state: "passed")
@@ -292,6 +292,8 @@ RSpec.describe Application do
     let(:previous_application) { user.applications.where.not(id: application.id).first! }
 
     subject { application }
+
+    before { application.cohort.update!(funding_cap: false) }
 
     context "when the application has been previously funded" do
       it { is_expected.to be_previously_funded }
