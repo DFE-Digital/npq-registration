@@ -69,19 +69,6 @@ module Questionnaires
       wizard.store.present? && query_store.current_user.present?
     end
 
-    def validate_processed_trn
-      if FORBIDDEN_TRNS.include?(processed_trn)
-        errors.add(:trn, :not_real)
-      end
-      if processed_trn !~ /\A\d+\z/
-        errors.add(:trn, :invalid)
-      elsif processed_trn.length < 7
-        errors.add(:trn, :too_short, count: 7)
-      elsif processed_trn.length > 7
-        errors.add(:trn, :too_long, count: 7)
-      end
-    end
-
     def processed_trn
       @processed_trn ||= trn || ""
     end
@@ -181,6 +168,19 @@ module Questionnaires
   private
 
     attr_reader :verified_trn
+
+    def validate_processed_trn
+      if FORBIDDEN_TRNS.include?(processed_trn)
+        errors.add(:trn, :not_real)
+      end
+      if processed_trn !~ /\A\d+\z/
+        errors.add(:trn, :invalid)
+      elsif processed_trn.length < 7
+        errors.add(:trn, :too_short, count: 7)
+      elsif processed_trn.length > 7
+        errors.add(:trn, :too_long, count: 7)
+      end
+    end
 
     def trn_to_store
       if trn_verified? && verified_trn.present?

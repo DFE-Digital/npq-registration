@@ -116,6 +116,11 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
 
     describe "#processed_trn" do
+      it "returns an empty string for nil TRNs" do
+        subject.trn = nil
+        expect(subject.processed_trn).to eql("")
+      end
+
       it "doesn't permit legacy style TRNs" do
         subject.trn = "RP99/12345"
         subject.valid?
@@ -258,7 +263,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
   describe "#after_save" do
     subject do
       described_class.new(
-        trn: "1234567",
+        trn: trn,
         full_name: "Jane Smith",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
@@ -268,6 +273,8 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
 
     let(:store) { {} }
     let(:request) { nil }
+    let(:trn) { "1234567" }
+    let(:dqt_check_trn) { trn }
 
     let(:wizard) do
       RegistrationWizard.new(
@@ -281,10 +288,10 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     context "trn has been verified" do
       before do
         stub_api_request(
-          trn: "1234567",
+          trn: dqt_check_trn,
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: dqt_response_body,
+          response_body: dqt_response_body(trn:),
         )
 
         subject.next_step
@@ -327,6 +334,38 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
             "trn_verified" => true,
           },
         )
+      end
+
+      context "TRN is less than 7 characters long" do
+        let(:trn) { "12345" }
+        let(:dqt_check_trn) { "0012345" }
+
+        it "pads the TRN when persisting to store" do
+          expect {
+            subject.after_save
+          }.to change {
+            current_user.reload.slice(
+              :trn,
+              :trn_auto_verified,
+              :trn_lookup_status,
+              :trn_verified,
+            )
+          }.from(
+            {
+              "trn" => nil,
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          ).to(
+            {
+              "trn" => "0012345",
+              "trn_auto_verified" => true,
+              "trn_lookup_status" => "Found",
+              "trn_verified" => true,
+            },
+          )
+        end
       end
     end
 
@@ -438,7 +477,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     context "trn has not been verified" do
       before do
         stub_api_request(
-          trn: "1234567",
+          trn: dqt_check_trn,
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
           response_code: 404,
@@ -484,6 +523,38 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
             "trn_verified" => false,
           },
         )
+      end
+
+      context "TRN is less than 7 characters long" do
+        let(:trn) { "12345" }
+        let(:dqt_check_trn) { "0012345" }
+
+        it "pads the TRN when persisting to store" do
+          expect {
+            subject.after_save
+          }.to change {
+            current_user.reload.slice(
+              :trn,
+              :trn_auto_verified,
+              :trn_lookup_status,
+              :trn_verified,
+            )
+          }.from(
+            {
+              "trn" => nil,
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          ).to(
+            {
+              "trn" => "0012345",
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          )
+        end
       end
     end
   end
