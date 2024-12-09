@@ -1,4 +1,6 @@
 class Cohort < ApplicationRecord
+  has_many :schedules
+
   validates :start_year,
             presence: true,
             numericality: {
