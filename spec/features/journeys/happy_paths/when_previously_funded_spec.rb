@@ -14,6 +14,9 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   end
 
   include_context "retrieve latest application data"
+  include_context "Stub previously funding check for all courses" do
+    let(:trn) { user_trn }
+  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   def run_scenario(js:)
@@ -56,8 +59,6 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect(page).to have_text("Do you or your employer have an Ofsted unique reference number (URN)?")
       page.choose("Yes", visible: :all)
     end
-
-    mock_previous_funding(previously_funded: true)
 
     choose_a_private_childcare_provider(js:, urn: "EY123456", name: "searchable childcare provider")
 
