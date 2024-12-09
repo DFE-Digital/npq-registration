@@ -243,11 +243,6 @@ RSpec.describe FundingEligibility do
             create(:application, :previously_funded, user:, course:)
           end
 
-          before do
-            user = create(:user, trn:)
-            create(:application, :previously_funded, user:, course:)
-          end
-
           it "is ineligible" do
             expect(subject.funded?).to be false
             expect(subject.funding_eligiblity_status_code).to eq :previously_funded
