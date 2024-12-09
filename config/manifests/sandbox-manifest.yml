@@ -18,8 +18,6 @@ applications:
     - npq-registration-sandbox-db
   env:
     DOCKER_IMAGE_ID: ((DOCKER_IMAGE_ID))
-    ECF_APP_BASE_URL: "https://sb.manage-training-for-early-career-teachers.education.gov.uk/"
-    ECF_APP_BEARER_TOKEN: ((ECF_APP_BEARER_TOKEN))
     ENV: $HOME/.profile
     GET_AN_IDENTITY_WEBHOOK_SECRET: ((GET_AN_IDENTITY_WEBHOOK_SECRET))
     GOOGLE_ANALYTICS_ID: "G-G3823VRN6N"
