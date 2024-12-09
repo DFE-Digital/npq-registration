@@ -67,28 +67,6 @@ RSpec.describe Feature do
     end
   end
 
-  describe "#ecf_api_disabled?" do
-    context "when enabled" do
-      before do
-        Flipper.enable(Feature::ECF_API_DISABLED)
-      end
-
-      it "returns true" do
-        expect(Feature.ecf_api_disabled?).to be(true)
-      end
-    end
-
-    context "when disabled" do
-      before do
-        Flipper.disable(Feature::ECF_API_DISABLED)
-      end
-
-      it "returns false" do
-        expect(Feature.ecf_api_disabled?).to be(false)
-      end
-    end
-  end
-
   describe "#maintenance_banner" do
     subject { Feature }
 
@@ -102,13 +80,6 @@ RSpec.describe Feature do
       before { Flipper.disable(Feature::MAINTENANCE_BANNER) }
 
       it { is_expected.not_to be_maintenance_banner_enabled }
-    end
-  end
-
-  describe "#enable_ecf_api_disabled!" do
-    it "enables ecf_api_disabled feature" do
-      Feature.enable_ecf_api_disabled!
-      expect(Flipper.enabled?(Feature::ECF_API_DISABLED)).to be(true)
     end
   end
 
