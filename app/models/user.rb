@@ -28,14 +28,8 @@ class User < ApplicationRecord
             notify_email: true
 
   validates :uid, uniqueness: { allow_blank: true }
-  # TODO: add constraints into the DB after separation
-  validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
-  validates :ecf_id, uniqueness: { allow_blank: true }
-
-  # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
-  before_validation do
-    self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
-  end
+  validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
+  validates :ecf_id, uniqueness: { case_sensitive: false }
 
   after_commit :touch_significantly_updated_at
 
