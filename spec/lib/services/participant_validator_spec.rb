@@ -31,8 +31,6 @@ RSpec.describe ParticipantValidator do
     end
 
     before do
-      allow(Feature).to receive(:ecf_api_disabled?).and_return(true)
-
       service = instance_double(Dqt::RecordCheck)
       allow(service).to receive(:call).and_return(dqt_result)
 

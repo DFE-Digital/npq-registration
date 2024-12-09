@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::Finance::Statements::PaymentAuthorisationsController, :ecf_api_disabled, type: :request do
+RSpec.describe NpqSeparation::Admin::Finance::Statements::PaymentAuthorisationsController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   subject { response }

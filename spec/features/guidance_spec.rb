@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Guidance", :ecf_api_disabled, type: :feature do
+RSpec.feature "Guidance", type: :feature do
   describe "Back link navigation" do
     it "renders a working back link on non-index guidance pages" do
       visit "/api/guidance"

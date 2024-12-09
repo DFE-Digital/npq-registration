@@ -5,6 +5,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -147,7 +148,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => User.find_by(email: "user@example.com").ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -167,7 +168,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => Application.last.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,

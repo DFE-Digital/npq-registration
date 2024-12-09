@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_09_112415) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -71,7 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
     t.text "DEPRECATED_school_urn"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "ecf_id"
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.enum "headteacher_status", enum_type: "headteacher_statuses"
     t.boolean "eligible_for_funding", default: false, null: false
     t.enum "funding_choice", enum_type: "funding_choices"
@@ -508,7 +508,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_155145) do
     t.string "email", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "ecf_id"
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.text "trn"
     t.text "full_name"
     t.date "date_of_birth"
