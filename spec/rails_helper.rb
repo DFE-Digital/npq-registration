@@ -129,7 +129,6 @@ RSpec.configure do |config|
 
   config.before do
     Flipper.enable(Feature::REGISTRATION_OPEN)
-    Feature.enable_ecf_api_disabled!
   end
 
   config.before(:each, :exceptions_app) do
