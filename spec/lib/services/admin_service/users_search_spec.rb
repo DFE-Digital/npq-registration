@@ -37,11 +37,6 @@ RSpec.describe AdminService::UsersSearch do
     context "when application#ecf_id match" do
       let(:q) { application.ecf_id }
 
-      before do
-        user.ecf_id = nil
-        user.save!
-      end
-
       it "returns the hit" do
         expect(subject.call).to include(user)
       end
