@@ -101,7 +101,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:trn) }
+    it { is_expected.to validate_presence_of(:trn).with_message("Teacher reference number cannot be blank") }
     it { is_expected.to validate_presence_of(:full_name) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(128) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
@@ -111,7 +111,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       it "can only contain numbers" do
         subject.trn = "123456a"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
     end
 
@@ -124,32 +124,32 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       it "doesn't permit legacy style TRNs" do
         subject.trn = "RP99/12345"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
         expect(subject.processed_trn).not_to eql("9912345")
       end
 
       it "denies trns over 7 characters" do
         subject.trn = "99123456"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is at most 7 digits long"]
       end
 
       it "denies trns under 7 characters" do
         subject.trn = "1234"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is at least 7 digits long"]
       end
 
       it "denies trns with other letters" do
         subject.trn = "AA99/12345"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
 
       it "denies fake trn 0000000" do
         subject.trn = "0000000"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["You must enter a valid teacher reference number (TRN)"]
       end
     end
 
