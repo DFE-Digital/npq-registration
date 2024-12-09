@@ -29,7 +29,7 @@ RSpec.describe Dqt::RecordCheck do
 
   subject { described_class.new(**kwargs) }
 
-  context "when trn and national insurance number are blank" do
+  context "when TRN and national insurance number are blank" do
     let(:trn) { "" }
     let(:nino) { "" }
 
@@ -54,7 +54,7 @@ RSpec.describe Dqt::RecordCheck do
         it("#trn_matches is true") { expect(subject.call.trn_matches).to be(true) }
       end
 
-      context "when same after non-digits removed and padding added" do
+      context "when TRN same after non-digits removed and padding added" do
         let(:trn) { "123-45" }
         let(:padded_trn) { "0012345" }
 
@@ -222,7 +222,7 @@ RSpec.describe Dqt::RecordCheck do
         allow_any_instance_of(Dqt::RecordCheck).to receive(:check_record).and_call_original
       end
 
-      it "sets trn to 0000001 and calls check_record again" do
+      it "sets TRN to 0000001 and calls check_record again" do
         allow(Dqt::V1::Teacher).to(receive(:find).with(trn: "0000001", birthdate: date_of_birth, nino:).and_return(fake_api_response || default_api_response))
 
         expect(subject.send(:trn)).to eq(trn)
