@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Voided declarations", :ecf_api_disabled, type: :feature do
+RSpec.feature "Voided declarations", type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement) }

@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Statement payment", :ecf_api_disabled, type: :feature do
+RSpec.feature "Statement payment", type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement, :payable) }

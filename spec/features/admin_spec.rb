@@ -54,7 +54,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
 
     sign_in_as_super_admin
 
-    page.click_link("Admin")
+    page.click_link("Legacy Admin")
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
     expect(page).to have_link("Admin Users", href: "/admin/admins")
@@ -64,7 +64,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
   scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
     sign_in_as_super_admin
 
-    page.click_link("Admin")
+    page.click_link("Legacy Admin")
     page.click_link("Admin Users")
 
     expect {
@@ -95,7 +95,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
 
     sign_in_as_admin
 
-    page.click_link("Admin")
+    page.click_link("Legacy Admin")
     expect(page).to have_current_path("/admin")
 
     expect(page).to have_link("Applications", href: admin_applications_path)
@@ -233,117 +233,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     expect(page).to have_link("Back", href: admin_users_url(q: selected_user.email))
   end
 
-  scenario "when logged in as a regular admin, it allows access to the unsynced applications interface" do
-    sign_in_as_admin
-
-    expect(page).to have_link("Unsynced applications", href: admin_unsynced_applications_path)
-    page.click_link("Unsynced applications")
-    expect(page).to have_current_path(admin_unsynced_applications_path)
-    expect(page).to have_content("All applications have been successfuly linked with an ECF user.")
-
-    # when there are some unsynced records
-    unsynced_applications = create_list(:application, 2, ecf_id: nil)
-    create_list(:application, 1) # synced applications
-
-    page.click_link("Unsynced applications")
-
-    unsynced_applications.each do |app|
-      expect(page).to have_content(app.user.email)
-    end
-
-    expect(page.find_all("table tbody tr").size).to eql(unsynced_applications.size)
-
-    unsynced_application_to_view = unsynced_applications.first
-
-    failed_sync_log = unsynced_application_to_view.ecf_sync_request_logs.create!(
-      status: :failed,
-      sync_type: :application_creation,
-      error_messages: %w[foobar],
-      created_at: 16.days.ago,
-    )
-
-    # viewing an unsynced record
-    page.click_link unsynced_application_to_view.user.email
-    expect(page).to have_current_path("/admin/applications/#{unsynced_application_to_view.id}")
-
-    expect(page).to have_content(unsynced_application_to_view.user.full_name)
-
-    expect(page).to have_link("ECF Sync Log", href: "#ecf-sync-log")
-
-    click_link "ECF Sync Log"
-    within "#log-row-#{failed_sync_log.id}" do
-      expect(page.text).to eq [
-        "Application Creation",
-        failed_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Failed",
-        failed_sync_log.error_messages.join(", "),
-      ].join(" ")
-    end
-
-    expect(page).to have_link("Back", href: admin_unsynced_applications_url)
-  end
-
-  scenario "when logged in as a regular admin, it allows access to the unsynced users interface" do
-    sign_in_as_admin
-
-    expect(page).to have_link("Unsynced users", href: admin_unsynced_users_path)
-    page.click_link("Unsynced users")
-    expect(page).to have_current_path(admin_unsynced_users_path)
-    expect(page).to have_content("All users have been successfuly linked with an ECF user.")
-
-    # An unsynced user without applications shouldn't appear in the list
-    unsynced_without_application = create(:user, ecf_id: nil)
-    # A synced user shouldn't appear in the list
-    synced_user = create(:user)
-    create(:application, user: synced_user)
-
-    # Unsynced users with applications should appear in the list.
-    unsynced_users = create_list(:user, 2, ecf_id: nil)
-    unsynced_users.each do |unsynced_user|
-      create_list(:application, 2, user: unsynced_user)
-    end
-
-    page.click_link("Unsynced users")
-
-    expect(page).not_to have_content(unsynced_without_application.email)
-    expect(page).not_to have_content(synced_user.email)
-
-    unsynced_users.each do |user|
-      expect(page).to have_content(user.email)
-    end
-
-    expect(page.find_all("table tbody tr").size).to eql(unsynced_users.size)
-
-    unsynced_user_to_view = unsynced_users.first
-
-    failed_sync_log = unsynced_user_to_view.ecf_sync_request_logs.create!(
-      status: :failed,
-      sync_type: :user_creation,
-      error_messages: %w[foobar],
-      created_at: 16.days.ago,
-    )
-
-    # viewing an unsynced record
-    page.click_link unsynced_user_to_view.email
-    expect(page).to have_current_path("/admin/users/#{unsynced_user_to_view.id}")
-
-    expect(page).to have_content(unsynced_user_to_view.full_name)
-
-    expect(page).to have_link("ECF Sync Log", href: "#ecf-sync-log")
-
-    click_link "ECF Sync Log"
-    within "#log-row-#{failed_sync_log.id}" do
-      expect(page.text).to eq [
-        "User Creation",
-        failed_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Failed",
-        failed_sync_log.error_messages.join(", "),
-      ].join(" ")
-    end
-
-    expect(page).to have_link("Back", href: admin_unsynced_users_url)
-  end
-
   scenario "when logged in as a regular admin, it allows access to the schools interface" do
     create_list :application, 4
 
@@ -365,8 +254,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     expect(page).not_to have_link("Sign out")
   end
 
-  scenario "when logged in and ecf_api_disabled feature flag is enabled, it shows links to legacy and npq-separation admin" do
-    Feature.enable_ecf_api_disabled!
+  scenario "when logged in it shows links to legacy and npq-separation admin" do
     sign_in_as_admin
 
     expect(page).to have_link("Legacy Admin", href: admin_path)

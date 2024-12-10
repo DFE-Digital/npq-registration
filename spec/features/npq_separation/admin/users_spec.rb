@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "User administration", :ecf_api_disabled, type: :feature do
+RSpec.feature "User administration", type: :feature do
   include Helpers::AdminLogin
 
   let(:users_per_page) { Pagy::DEFAULT[:limit] }

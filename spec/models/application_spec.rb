@@ -55,7 +55,7 @@ RSpec.describe Application do
   end
 
   describe "validations" do
-    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+    it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 
     context "when the schedule cohort does not match the application cohort" do
       subject do
@@ -97,39 +97,6 @@ RSpec.describe Application do
 
           expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course")
         end
-      end
-    end
-
-    context "when ecf_api_disabled flag is toggled on" do
-      before { Flipper.enable(Feature::ECF_API_DISABLED) }
-
-      # TODO: uncomment this when `before_validation` is removed from model, as `before_validation` is adding ecf_id regardless
-      # it { is_expected.to validate_presence_of(:ecf_id).with_message("Enter an ECF ID") }
-      it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
-
-      it "ensures ecf_id is automatically populated" do
-        application = build(:application, ecf_id: nil)
-        application.valid?
-        expect(application.ecf_id).not_to be_nil
-      end
-
-      it "ensures ecf_id does not change on validation" do
-        ecf_id = SecureRandom.uuid
-        application = build(:application, ecf_id:)
-        application.valid?
-        expect(application.ecf_id).to eq(ecf_id)
-      end
-    end
-
-    context "when ecf_api_disabled flag is toggled off" do
-      before { Flipper.disable(Feature::ECF_API_DISABLED) }
-
-      it { is_expected.not_to validate_presence_of(:ecf_id) }
-
-      it "ensures ecf_id is not automatically populated" do
-        application = build(:application, ecf_id: nil)
-        application.valid?
-        expect(application.ecf_id).to be_nil
       end
     end
   end
@@ -555,46 +522,34 @@ RSpec.describe Application do
     let(:declaration) { create(:declaration, :completed, application:) }
     let!(:participant_outcome) { create(:participant_outcome, declaration:) }
 
-    context "when ecf_api_disabled flag is toggled off" do
-      before { Flipper.disable(Feature::ECF_API_DISABLED) }
+    it "returns the state from latest outcome" do
+      expect(subject).to eq("passed")
+    end
 
-      it "returns the attribute value" do
-        expect(subject).to eq("anything")
+    context "when no completed declaration exists" do
+      before { declaration.update!(application: create(:application)) }
+
+      it "returns nil" do
+        expect(subject).to be_nil
       end
     end
 
-    context "when ecf_api_disabled flag is toggled on" do
-      before { Flipper.enable(Feature::ECF_API_DISABLED) }
+    context "when other type of declaration exists" do
+      before { declaration.update!(declaration_type: "retained-1") }
 
-      it "returns the state from latest outcome" do
-        expect(subject).to eq("passed")
+      it "returns nil" do
+        expect(subject).to be_nil
+      end
+    end
+
+    context "when completed declaration is voided" do
+      before do
+        declaration.update!(state: "voided")
+        participant_outcome.update!(state: "voided")
       end
 
-      context "when no completed declaration exists" do
-        before { declaration.update!(application: create(:application)) }
-
-        it "returns nil" do
-          expect(subject).to be_nil
-        end
-      end
-
-      context "when other type of declaration exists" do
-        before { declaration.update!(declaration_type: "retained-1") }
-
-        it "returns nil" do
-          expect(subject).to be_nil
-        end
-      end
-
-      context "when completed declaration is voided" do
-        before do
-          declaration.update!(state: "voided")
-          participant_outcome.update!(state: "voided")
-        end
-
-        it "returns nil" do
-          expect(subject).to be_nil
-        end
+      it "returns nil" do
+        expect(subject).to be_nil
       end
     end
   end
