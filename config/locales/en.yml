@@ -286,8 +286,7 @@ en:
           attributes:
             trn:
               blank: Teacher reference number cannot be blank
-              too_short: Teacher reference number is at least %{count} digits long
-              too_long: Teacher reference number is at most %{count} digits long
+              wrong_length: Teacher reference number is %{count} digits long
               invalid: Teacher reference number must only contain numbers
               not_real: You must enter a valid teacher reference number (TRN)
             full_name:

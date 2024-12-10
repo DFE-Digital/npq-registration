@@ -46,13 +46,13 @@ RSpec.describe ValidTrnValidator do
   it "does not allow TRNs over 7 characters" do
     subject.trn = "99123456"
     subject.valid?
-    expect(subject.errors[:trn]).to eq ["is too long (maximum is 7 characters)"]
+    expect(subject.errors[:trn]).to eq ["is the wrong length (should be 7 characters)"]
   end
 
   it "does not allow TRNs under 7 characters" do
     subject.trn = "1234"
     subject.valid?
-    expect(subject.errors[:trn]).to eq ["is too short (minimum is 7 characters)"]
+    expect(subject.errors[:trn]).to eq ["is the wrong length (should be 7 characters)"]
   end
 
   it "does not allow TRNs with other letters" do

@@ -11,10 +11,8 @@ class ValidTrnValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :blank)
     elsif value !~ /\A\d+\z/
       record.errors.add(attribute, :invalid)
-    elsif value.length < 7
-      record.errors.add(attribute, :too_short, count: 7)
-    elsif value.length > 7
-      record.errors.add(attribute, :too_long, count: 7)
+    elsif value.length != 7
+      record.errors.add(attribute, :wrong_length, count: 7)
     end
   end
 end

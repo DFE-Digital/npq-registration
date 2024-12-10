@@ -135,13 +135,13 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
       it "denies trns over 7 characters" do
         subject.trn = "99123456"
         subject.valid?
-        expect(subject.errors[:trn]).to eq ["Teacher reference number is at most 7 digits long"]
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
       it "denies trns under 7 characters" do
         subject.trn = "1234"
         subject.valid?
-        expect(subject.errors[:trn]).to eq ["Teacher reference number is at least 7 digits long"]
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
       it "denies trns with other letters" do
