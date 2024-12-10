@@ -12,7 +12,6 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
       create_list(:application, 2,
                   :accepted,
                   :with_private_childcare_provider,
-                  :eligible_for_funding,
                   employer_name: "Employer Name",
                   employment_role: "Employment Role",
                   funded_place: true)
@@ -22,7 +21,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
     let(:first_row) { rows.first.to_hash.symbolize_keys }
 
     it { expect(rows.count).to eq(applications.count) }
-    it { expect(first_row.except(:ineligible_for_funding_reason).values).to all(be_present) }
+    it { expect(first_row.values).to all(be_present) }
 
     it "returns expected data", :aggregate_failures do
       expect(first_row).to eq({
