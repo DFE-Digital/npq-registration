@@ -34,9 +34,9 @@ RSpec.describe User do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:full_name).with_message("Enter a full name") }
-    it { is_expected.to validate_presence_of(:email).on(:npq_separation).with_message("Enter an email address") }
+    it { is_expected.to validate_presence_of(:email).with_message("Enter an email address") }
     it { is_expected.to validate_uniqueness_of(:email).case_insensitive.with_message("Email address must be unique") }
-    it { is_expected.not_to allow_value("invalid-email").for(:email).on(:npq_separation) }
+    it { is_expected.not_to allow_value("invalid-email").for(:email) }
     it { is_expected.to validate_uniqueness_of(:uid).allow_blank }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
   end
