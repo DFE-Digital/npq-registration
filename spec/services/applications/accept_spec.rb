@@ -19,8 +19,8 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     let(:course_group) { create(:course_group, name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let(:lead_provider) { create(:lead_provider) }
-    let(:cohort) { create(:cohort, :current, funding_cap: false) }
-    let(:cohort_next) { create(:cohort, :next, funding_cap: false) }
+    let(:cohort) { create(:cohort, :current) }
+    let(:cohort_next) { create(:cohort, :next) }
 
     let(:application) do
       create(
@@ -291,7 +291,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         end
 
         context "when funding_cap is false" do
-          let(:cohort) { create(:cohort, :current, funding_cap: false) }
+          let(:cohort) { create(:cohort, :current) }
 
           it "does not validate funded_place" do
             service.accept
@@ -340,7 +340,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
     end
 
     describe "changing schedule on accept" do
-      let(:cohort) { create(:cohort, :current, funding_cap: false) }
+      let(:cohort) { create(:cohort, :current) }
       let(:course_group) { create(:course_group, name: "leadership") }
       let(:course) { create(:course, :senior_leadership, course_group:) }
 
