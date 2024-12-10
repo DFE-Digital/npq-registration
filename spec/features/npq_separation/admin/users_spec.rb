@@ -109,6 +109,11 @@ RSpec.feature "User administration", type: :feature do
         expect(summary_list).to have_summary_item("Participant ID", user.ecf_id)
         expect(summary_list).to have_summary_item("TRN", user.trn)
       end
+
+      # blank TRN
+      click_on("Continue")
+      expect(page).to have_content "can't be blank"
+
       fill_in("New TRN", with: "2345678")
       click_on("Continue")
 
