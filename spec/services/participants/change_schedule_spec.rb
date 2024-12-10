@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Participants::ChangeSchedule, type: :model do
-  let(:cohort) { create(:cohort, :current, funding_cap: false) }
+  let(:cohort) { create(:cohort, :current) }
   let(:params) do
     {
       lead_provider:,
