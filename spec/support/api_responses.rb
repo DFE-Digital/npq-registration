@@ -13,21 +13,13 @@ def dqt_response_body(trn: "1234567", date_of_birth: "1960-12-13", active_alert:
   }.to_json
 end
 
-def participant_validator_response(trn: "1234567", active_alert: false)
+def participant_validator_response(state_name: "Active", trn: "1234567", name: "Jane Smith", ni_number: "AB123456C", dob: "1960-12-13", active_alert: false)
   {
-    data: {
-      attributes: {
-        trn:,
-        qts: true,
-        active_alert:,
-      },
-    },
-  }.to_json
-end
-
-def ecf_funding_lookup_response(previously_funded:, previously_received_targeted_funding_support: false)
-  {
-    previously_funded:,
-    previously_received_targeted_funding_support:,
+    state_name:,
+    trn:,
+    name:,
+    ni_number:,
+    dob:,
+    active_alert:,
   }.to_json
 end

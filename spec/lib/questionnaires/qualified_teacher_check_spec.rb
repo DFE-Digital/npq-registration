@@ -1,17 +1,11 @@
 require "rails_helper"
 
 RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
-  def stub_api_request(trn:, date_of_birth:, full_name:, nino:, response_code: 200, response_body: "")
-    stub_request(:post, "https://ecf-app.gov.uk/api/v1/participant-validation")
+  def stub_api_request(trn:, date_of_birth:, nino:, response_code: 200, response_body: "")
+    stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{date_of_birth}&nino=#{nino}")
       .with(
         headers: {
-          "Authorization" => "Bearer ECFAPPBEARERTOKEN",
-        },
-        body: {
-          trn:,
-          date_of_birth:,
-          full_name:,
-          nino:,
+          "Authorization" => "Bearer test-apikey",
         },
       )
       .to_return(status: response_code, body: response_body, headers: {})
@@ -199,7 +193,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Doe",
           nino: "AB123456C",
           response_body: participant_validator_response,
         )
@@ -220,7 +213,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Doe",
           nino: "AB123456C",
           response_code: 404,
         )
@@ -288,7 +280,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response,
         )
@@ -341,7 +332,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response(active_alert: true),
         )
@@ -394,7 +384,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_body: participant_validator_response(trn: "1111111"),
         )
@@ -448,7 +437,6 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         stub_api_request(
           trn: "1234567",
           date_of_birth: "1960-12-13",
-          full_name: "Jane Smith",
           nino: "AB123456C",
           response_code: 404,
         )
