@@ -1,7 +1,7 @@
 <%= govuk_back_link href: npq_separation_admin_user_path(@user) %>
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-column-full">
     <h1 class="govuk-heading-l">
       Change TRN
     </h1>
@@ -21,7 +21,7 @@
 
     <%= form_for @change_trn,
                  url: npq_separation_admin_users_change_trn_path(@user) do |f| %>
-      <%= f.govuk_text_field :trn, label: { text: 'New TRN' } %>
+      <%= f.govuk_text_field :trn, label: { text: 'New TRN' }, width: 'one-quarter' %>
 
       <div class="govuk-button-group">
         <%= f.govuk_submit "Continue" %>
