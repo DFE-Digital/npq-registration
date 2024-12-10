@@ -149,15 +149,19 @@ module OneOff
       record_info("Migrating #{statement_items.size} declarations for #{from_statement.lead_provider.name}")
       statement_items.update!(statement_id: to_statement.id)
 
-      make_eligible_declarations_payable_for_to_statement(to_statement, statement_items)
-      make_payable_declarations_eligible_for_to_statement(to_statement, statement_items)
+      if to_statement.payable?
+        make_eligible_declarations_payable_for_to_statement(to_statement, statement_items)
+      end
+
+      if !to_statement.payable? && !to_statement.paid?
+        make_payable_declarations_eligible_for_to_statement(to_statement, statement_items)
+      end
     end
 
     def make_eligible_declarations_payable_for_to_statement(to_statement, statement_items)
       declarations = statement_items.map(&:declaration).uniq
       eligible_declarations = declarations.select(&:eligible?)
 
-      return unless to_statement.payable?
       return unless eligible_declarations.any?
 
       service = Declarations::MarkAsPayable.new(statement: to_statement)
@@ -170,7 +174,6 @@ module OneOff
       declarations = statement_items.map(&:declaration).uniq
       payable_declarations = declarations.select(&:payable?)
 
-      return if to_statement.payable? || to_statement.paid?
       return unless payable_declarations.any?
 
       record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement")
