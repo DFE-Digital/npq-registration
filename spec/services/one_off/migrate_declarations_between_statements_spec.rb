@@ -63,8 +63,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
         expect(logged_output)
           .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 1 declarations for #{lead_provider.name}")
-                .and include("Migrating 1 declarations for #{lead_provider2.name}")
+                .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
       end
 
       context "when restrict_to_lead_providers is provided" do
@@ -82,7 +82,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 1 providers")
-                .and include("Migrating 1 declarations for #{lead_provider.name}")
+                .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
         end
       end
 
@@ -101,8 +101,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 1 declarations for #{lead_provider.name}")
-                .and include("Migrating 0 declarations for #{lead_provider2.name}")
+                .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("Migrating 0 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
 
         context "when restrict_to_declaration_types contains a string" do
@@ -132,8 +132,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 0 declarations for #{lead_provider.name}")
-                .and include("Migrating 1 declarations for #{lead_provider2.name}")
+                .and include("Migrating 0 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
 
         context "when restrict_to_declaration_types contains a string" do
@@ -180,8 +180,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           expect(logged_output)
             .to include("~~~ DRY RUN ~~~")
                   .and include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                  .and include("Migrating 1 declarations for #{lead_provider.name}")
-                  .and include("Migrating 1 declarations for #{lead_provider2.name}")
+                  .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                  .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
       end
 
@@ -200,8 +200,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(logged_output)
             .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 2 providers")
-                .and include("Migrating 0 declarations for #{lead_provider.name}")
-                .and include("Migrating 1 declarations for #{lead_provider2.name}")
+                .and include("Migrating 0 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+                .and include("Migrating 1 declarations for #{lead_provider2.name} - from statement #{from_statement2.id} to statement #{to_statement2.id}")
         end
       end
     end
@@ -226,8 +226,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
         expect(logged_output)
           .to include("Migrating declarations from #{from_year}-#{from_month} to #{to_year}-#{to_month} for 1 providers")
-              .and include("Migrating 1 declarations for #{lead_provider.name}")
-              .and include("Marking 1 eligible declarations as payable for #{to_year}-#{to_month} statement")
+              .and include("Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
+              .and include("Marking 1 eligible declarations as payable for #{to_year}-#{to_month} statement: #{to_statement.id}")
       end
 
       context "when there are declarations awaiting_clawback" do
@@ -287,8 +287,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
         expect(logged_output).to eq([
           "Migrating declarations from #{from_statement.year}-#{from_statement.month} to #{to_statement.year}-#{to_statement.month} for 1 providers",
-          "Migrating 1 declarations for #{lead_provider.name}",
-          "Marking 1 payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement",
+          "Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}",
+          "Marking 1 payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement: #{to_statement.id}",
         ])
       end
     end

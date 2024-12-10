@@ -146,7 +146,7 @@ module OneOff
     def migrate_statement_items!(from_statement, to_statement)
       statement_items = filter_statement_items(from_statement.statement_items)
 
-      record_info("Migrating #{statement_items.size} declarations for #{from_statement.lead_provider.name}")
+      record_info("Migrating #{statement_items.size} declarations for #{from_statement.lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
       statement_items.update!(statement_id: to_statement.id)
 
       if to_statement.payable?
@@ -166,7 +166,7 @@ module OneOff
 
       service = Declarations::MarkAsPayable.new(statement: to_statement)
 
-      record_info("Marking #{eligible_declarations.size} eligible declarations as payable for #{to_statement.year}-#{to_statement.month} statement")
+      record_info("Marking #{eligible_declarations.size} eligible declarations as payable for #{to_statement.year}-#{to_statement.month} statement: #{to_statement.id}")
       eligible_declarations.each { |declaration| service.mark(declaration:) }
     end
 
@@ -176,7 +176,7 @@ module OneOff
 
       return unless payable_declarations.any?
 
-      record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement")
+      record_info("Marking #{payable_declarations.size} payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement: #{to_statement.id}")
       payable_declarations.each(&:revert_to_eligible!)
       statement_items.select(&:payable?).map(&:revert_to_eligible!)
     end
