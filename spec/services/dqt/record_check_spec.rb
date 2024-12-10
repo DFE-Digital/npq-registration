@@ -5,10 +5,11 @@ require "rails_helper"
 RSpec.describe Dqt::RecordCheck do
   shared_context "with fake DQT response" do
     before do
-      allow(Dqt::V1::Teacher).to(receive(:find).with(trn:, birthdate: date_of_birth, nino:).and_return(fake_api_response || default_api_response))
+      allow(Dqt::V1::Teacher).to(receive(:find).with(trn: padded_trn, birthdate: date_of_birth, nino:).and_return(fake_api_response || default_api_response))
     end
   end
 
+  let(:padded_trn) { trn }
   let(:trn) { "1234567" }
   let(:nino) { "QQ123456A" }
   let(:date_of_birth) { 25.years.ago.to_date }
@@ -17,7 +18,7 @@ RSpec.describe Dqt::RecordCheck do
   let(:default_api_response) do
     {
       "state_name" => "Active",
-      "trn" => trn,
+      "trn" => padded_trn,
       "name" => full_name,
       "ni_number" => nino,
       "dob" => 25.years.ago.to_date,
@@ -28,7 +29,7 @@ RSpec.describe Dqt::RecordCheck do
 
   subject { described_class.new(**kwargs) }
 
-  context "when trn and national insurance number are blank" do
+  context "when TRN and national insurance number are blank" do
     let(:trn) { "" }
     let(:nino) { "" }
 
@@ -48,6 +49,15 @@ RSpec.describe Dqt::RecordCheck do
   context "when active" do
     describe "matching on TRN" do
       context "when exact" do
+        include_context "with fake DQT response"
+
+        it("#trn_matches is true") { expect(subject.call.trn_matches).to be(true) }
+      end
+
+      context "when TRN same after non-digits removed and padding added" do
+        let(:trn) { "123-45" }
+        let(:padded_trn) { "0012345" }
+
         include_context "with fake DQT response"
 
         it("#trn_matches is true") { expect(subject.call.trn_matches).to be(true) }
@@ -212,7 +222,7 @@ RSpec.describe Dqt::RecordCheck do
         allow_any_instance_of(Dqt::RecordCheck).to receive(:check_record).and_call_original
       end
 
-      it "sets trn to 0000001 and calls check_record again" do
+      it "sets TRN to 0000001 and calls check_record again" do
         allow(Dqt::V1::Teacher).to(receive(:find).with(trn: "0000001", birthdate: date_of_birth, nino:).and_return(fake_api_response || default_api_response))
 
         expect(subject.send(:trn)).to eq(trn)
