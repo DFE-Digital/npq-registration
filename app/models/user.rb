@@ -28,7 +28,6 @@ class User < ApplicationRecord
             notify_email: true
 
   validates :uid, uniqueness: { allow_blank: true }
-  validates :uid, inclusion: { in: ->(user) { [user.uid_was] } }, on: :npq_separation, if: -> { uid_was.present? }
   validates :ecf_id, uniqueness: { case_sensitive: false }
 
   after_commit :touch_significantly_updated_at
