@@ -107,25 +107,29 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_length_of(:national_insurance_number).is_at_most(9) }
 
-    describe "#trn" do
+    describe "TRN validations" do
       it "can only contain numbers" do
         subject.trn = "123456a"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
-    end
 
-    describe "#processed_trn" do
-      it "returns an empty string for nil TRNs" do
+      it "doesn't permit nil TRN" do
         subject.trn = nil
-        expect(subject.processed_trn).to eql("")
+        subject.valid?
+        expect(subject.errors[:trn]).to eq ["Teacher reference number cannot be blank"]
+      end
+
+      it "doesn't permit empty TRN" do
+        subject.trn = ""
+        subject.valid?
+        expect(subject.errors[:trn]).to eq ["Teacher reference number cannot be blank"]
       end
 
       it "doesn't permit legacy style TRNs" do
         subject.trn = "RP99/12345"
         subject.valid?
         expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
-        expect(subject.processed_trn).not_to eql("9912345")
       end
 
       it "denies trns over 7 characters" do

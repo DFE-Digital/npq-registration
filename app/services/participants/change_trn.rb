@@ -2,8 +2,6 @@
 
 module Participants
   class ChangeTrn
-    FORBIDDEN_TRNS = %w[0000000].freeze
-
     include ActiveModel::Model
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
@@ -13,9 +11,7 @@ module Participants
 
     before_validation :strip_trn_whitespace
 
-    validates :trn, presence: true, length: { is: 7 }
-    validates :trn, exclusion: FORBIDDEN_TRNS
-    validates :trn, format: { with: /\A\d+\z/ }
+    validates :trn, valid_trn: true
 
     def call
       return false if invalid?
