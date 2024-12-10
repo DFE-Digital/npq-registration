@@ -118,7 +118,7 @@ module OneOff
       lead_provider = restrict_to_lead_providers || LeadProvider.all
 
       Statement
-        .includes(:cohort, :declarations, :lead_provider)
+        .includes(:declarations, :lead_provider)
         .where(cohort:, year:, month:, lead_provider:)
         .group_by(&:lead_provider)
         .transform_values(&:first)
@@ -138,22 +138,22 @@ module OneOff
     end
 
     def migrate_declarations_between_statements!
-      each_statements_by_provider do |provider, from_statement, to_statement|
-        migrate_statement_items!(provider, from_statement, to_statement)
+      each_statements_by_provider do |_provider, from_statement, to_statement|
+        migrate_statement_items!(from_statement, to_statement)
       end
     end
 
-    def migrate_statement_items!(provider, from_statement, to_statement)
+    def migrate_statement_items!(from_statement, to_statement)
       statement_items = filter_statement_items(from_statement.statement_items)
 
-      record_info("Migrating #{statement_items.size} declarations for #{provider.name}")
+      record_info("Migrating #{statement_items.size} declarations for #{from_statement.lead_provider.name}")
       statement_items.update!(statement_id: to_statement.id)
 
-      make_eligible_declaration_payable_for_to_statement(to_statement, statement_items)
-      make_payable_declaration_eligible_for_to_statement(to_statement, statement_items)
+      make_eligible_declarations_payable_for_to_statement(to_statement, statement_items)
+      make_payable_declarations_eligible_for_to_statement(to_statement, statement_items)
     end
 
-    def make_eligible_declaration_payable_for_to_statement(to_statement, statement_items)
+    def make_eligible_declarations_payable_for_to_statement(to_statement, statement_items)
       declarations = statement_items.map(&:declaration).uniq
       eligible_declarations = declarations.select(&:eligible?)
 
@@ -161,14 +161,12 @@ module OneOff
       return unless eligible_declarations.any?
 
       service = Declarations::MarkAsPayable.new(statement: to_statement)
-      action = service.class.to_s.underscore.humanize.split.last
 
-      record_info("Marking #{eligible_declarations.size} eligible declarations as #{action} for #{to_statement.year}-#{to_statement.month} statement")
-
+      record_info("Marking #{eligible_declarations.size} eligible declarations as payable for #{to_statement.year}-#{to_statement.month} statement")
       eligible_declarations.each { |declaration| service.mark(declaration:) }
     end
 
-    def make_payable_declaration_eligible_for_to_statement(to_statement, statement_items)
+    def make_payable_declarations_eligible_for_to_statement(to_statement, statement_items)
       declarations = statement_items.map(&:declaration).uniq
       payable_declarations = declarations.select(&:payable?)
 
