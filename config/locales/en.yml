@@ -17,6 +17,9 @@ en:
     ecf_id: &ecf_id
       blank: "Enter an ECF ID"
       taken: "ECF ID must be unique"
+    attributes:
+      trn:
+        not_real: You must enter a valid teacher reference number (TRN)
 
   application: &application
     blank: The entered '#/%{parameterized_attribute}' is missing from your request. Check details and try again.
