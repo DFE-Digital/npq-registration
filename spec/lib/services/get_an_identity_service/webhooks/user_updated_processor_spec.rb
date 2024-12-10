@@ -38,7 +38,7 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
     let(:new_trn) { rand(1_000_000..9_999_999).to_s }
     let(:new_trn_status) { "found" }
 
-    it "updates user data and sends it to ECF" do
+    it "updates user data" do
       expect {
         described_class.call(webhook_message:)
       }.to change {
