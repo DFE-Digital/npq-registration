@@ -52,6 +52,10 @@ class StatementItem < ApplicationRecord
     event :mark_ineligible do
       transition [:eligible] => :ineligible
     end
+
+    event :revert_to_eligible do
+      transition [:payable] => :eligible
+    end
   end
 
   def billable?

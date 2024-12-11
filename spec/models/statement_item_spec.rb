@@ -88,9 +88,10 @@ RSpec.describe StatementItem, type: :model do
       let(:statement_item) { create(:statement_item, :eligible) }
 
       it "transitions state to payable" do
-        expect(statement_item).to be_eligible
-        statement_item.mark_payable!
-        expect(statement_item).to be_payable
+        expect { statement_item.mark_payable! }
+          .to change { statement_item.reload.state }
+                .from("eligible")
+                .to("payable")
       end
     end
 
@@ -98,9 +99,10 @@ RSpec.describe StatementItem, type: :model do
       let(:statement_item) { create(:statement_item, :payable) }
 
       it "transitions state to paid" do
-        expect(statement_item).to be_payable
-        statement_item.mark_paid!
-        expect(statement_item).to be_paid
+        expect { statement_item.mark_paid! }
+          .to change { statement_item.reload.state }
+                .from("payable")
+                .to("paid")
       end
     end
 
@@ -109,9 +111,10 @@ RSpec.describe StatementItem, type: :model do
         let(:statement_item) { create(:statement_item, :payable) }
 
         it "transitions state to voided" do
-          expect(statement_item).to be_payable
-          statement_item.mark_voided!
-          expect(statement_item).to be_voided
+          expect { statement_item.mark_voided! }
+          .to change { statement_item.reload.state }
+                .from("payable")
+                .to("voided")
         end
       end
 
@@ -119,9 +122,10 @@ RSpec.describe StatementItem, type: :model do
         let(:statement_item) { create(:statement_item, :eligible) }
 
         it "transitions state to voided" do
-          expect(statement_item).to be_eligible
-          statement_item.mark_voided!
-          expect(statement_item).to be_voided
+          expect { statement_item.mark_voided! }
+          .to change { statement_item.reload.state }
+                .from("eligible")
+                .to("voided")
         end
       end
     end
@@ -130,9 +134,10 @@ RSpec.describe StatementItem, type: :model do
       let(:statement_item) { create(:statement_item, :paid) }
 
       it "transitions state to paid" do
-        expect(statement_item).to be_paid
-        statement_item.mark_awaiting_clawback!
-        expect(statement_item).to be_awaiting_clawback
+        expect { statement_item.mark_awaiting_clawback! }
+          .to change { statement_item.reload.state }
+                .from("paid")
+                .to("awaiting_clawback")
       end
     end
 
@@ -140,9 +145,10 @@ RSpec.describe StatementItem, type: :model do
       let(:statement_item) { create(:statement_item, :awaiting_clawback) }
 
       it "transitions state to clawed_back" do
-        expect(statement_item).to be_awaiting_clawback
-        statement_item.mark_clawed_back!
-        expect(statement_item).to be_clawed_back
+        expect { statement_item.mark_clawed_back! }
+          .to change { statement_item.reload.state }
+                .from("awaiting_clawback")
+                .to("clawed_back")
       end
     end
 
@@ -150,9 +156,10 @@ RSpec.describe StatementItem, type: :model do
       let(:statement_item) { create(:statement_item, :eligible) }
 
       it "transitions state to ineligible" do
-        expect(statement_item).to be_eligible
-        statement_item.mark_ineligible!
-        expect(statement_item).to be_ineligible
+        expect { statement_item.mark_ineligible! }
+          .to change { statement_item.reload.state }
+                .from("eligible")
+                .to("ineligible")
       end
     end
 
@@ -162,6 +169,26 @@ RSpec.describe StatementItem, type: :model do
       it "raises error" do
         expect(statement_item).to be_paid
         expect { statement_item.mark_payable! }.to raise_error(StateMachines::InvalidTransition)
+      end
+    end
+
+    describe ".revert_to_eligible" do
+      let(:statement_item) { create(:statement_item, :payable) }
+
+      it "transitions state to eligible" do
+        expect { statement_item.revert_to_eligible! }
+          .to change { statement_item.reload.state }
+                .from("payable")
+                .to("eligible")
+      end
+
+      context "with unsupported state" do
+        let(:statement_item) { create(:statement_item, :paid) }
+
+        it "raises error" do
+          expect(statement_item).to be_paid
+          expect { statement_item.revert_to_eligible! }.to raise_error(StateMachines::InvalidTransition)
+        end
       end
     end
   end

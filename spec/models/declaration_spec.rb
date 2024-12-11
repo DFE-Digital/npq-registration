@@ -219,6 +219,24 @@ RSpec.describe Declaration, type: :model do
         it { expect { declaration.mark_voided! }.to raise_error(StateMachines::InvalidTransition) }
       end
     end
+
+    describe ".revert_to_eligible" do
+      let(:state) { :payable }
+
+      it { expect { declaration.revert_to_eligible }.to change(declaration, :state).from("payable").to("eligible") }
+
+      context "when not payable" do
+        let(:state) { :paid }
+
+        it { expect { declaration.revert_to_eligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+
+      context "when submitted" do
+        let(:state) { :submitted } # valid transition, but wrong event name
+
+        it { expect { declaration.revert_to_eligible! }.to raise_error(StateMachines::InvalidTransition) }
+      end
+    end
   end
 
   describe "#uplift_paid?" do
