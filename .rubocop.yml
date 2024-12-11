@@ -84,7 +84,6 @@ Rails/UnknownEnv:
     - sandbox
     - staging
     - test
-    - migration
     - separation
 
 RSpec/IndexedLet:

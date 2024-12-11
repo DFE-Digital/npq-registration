@@ -45,10 +45,8 @@ RSpec.describe ApplicationHelper, type: :helper do
       "development" => otp_snippet,
       "staging" => otp_snippet,
       "review" => otp_snippet,
-
       "sandbox" => nil,
       "production" => nil,
-      "migration" => nil,
     }.each do |environment, expected_result|
       specify "#{environment}: #{expected_result}" do
         expect(show_otp_code_in_ui(environment, admin)).to eq(expected_result)
