@@ -14,11 +14,10 @@
         end
         sl.with_row do |row|
           row.with_key(text: "TRN")
-          row.with_value(text: @user.trn || "<em>- not set -</em>".html_safe)
+          row.with_value(text: @user.trn || tag.em("- not set -"))
         end
       end
     %>
-
     <%= form_for @change_trn,
                  url: npq_separation_admin_users_change_trn_path(@user) do |f| %>
       <%= f.govuk_text_field :trn, label: { text: 'New TRN' }, width: 'one-quarter' %>
