@@ -98,7 +98,7 @@ group :test do
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
-group :development, :test, :review, :separation do
+group :development, :test, :review, :sandbox do
   gem "factory_bot_rails"
   gem "faker", "~> 3.5"
 end
