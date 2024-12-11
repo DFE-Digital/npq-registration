@@ -13,7 +13,7 @@ module Participants
 
     validates :trn, valid_trn: true
 
-    def call
+    def change_trn
       return false if invalid?
 
       user.update(trn:) # rubocop:disable Rails/SaveBang - return value is used by caller

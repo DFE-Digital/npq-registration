@@ -31,8 +31,8 @@ RSpec.describe Participants::ChangeTrn, type: :model do
     end
   end
 
-  describe "#call" do
-    subject { described_class.new(trn: trn, user: user).call }
+  describe "#change_trn" do
+    subject { described_class.new(trn: trn, user: user).change_trn }
 
     it "updates the user's TRN" do
       expect { subject }.to change(user, :trn).from(original_trn).to(trn)

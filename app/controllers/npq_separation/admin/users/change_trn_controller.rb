@@ -7,7 +7,7 @@ module NpqSeparation
         before_action :set_user, :set_service
 
         def create
-          if @change_trn.call
+          if @change_trn.change_trn
             redirect_to npq_separation_admin_user_path(@user)
           else
             render :show, status: :unprocessable_entity
