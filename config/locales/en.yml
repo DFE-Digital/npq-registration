@@ -19,7 +19,10 @@ en:
       taken: "ECF ID must be unique"
     attributes:
       trn:
-        not_real: You must enter a valid teacher reference number (TRN)
+        blank: TRN can't be blank
+        invalid: TRN must only contain numbers
+        not_real: You must enter a valid TRN
+        wrong_length: TRN is the wrong length (should be %{count} characters)
 
   application: &application
     blank: The entered '#/%{parameterized_attribute}' is missing from your request. Check details and try again.

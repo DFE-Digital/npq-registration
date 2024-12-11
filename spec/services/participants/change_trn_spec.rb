@@ -11,23 +11,23 @@ RSpec.describe Participants::ChangeTrn, type: :model do
 
   describe "validations" do
     it "does not allow a blank TRN" do
-      expect(subject).to validate_presence_of(:trn).with_message(:blank).with_message("can't be blank")
+      expect(subject).to validate_presence_of(:trn).with_message(:blank).with_message("TRN can't be blank")
     end
 
     it "does not allow forbidden TRNs" do
-      expect(subject).not_to allow_value("0000000").for(:trn)
+      expect(subject).not_to allow_value("0000000").for(:trn).with_message("You must enter a valid TRN")
     end
 
     it "does not allow non-numeric characters" do
-      expect(subject).not_to allow_value("AA99/12345").for(:trn)
+      expect(subject).not_to allow_value("AA99/12345").for(:trn).with_message("TRN must only contain numbers")
     end
 
     it "does not allow less than 7 characters" do
-      expect(subject).not_to allow_value("1234").for(:trn)
+      expect(subject).not_to allow_value("1234").for(:trn).with_message("TRN is the wrong length (should be 7 characters)")
     end
 
     it "does not allow more than 7 characters" do
-      expect(subject).not_to allow_value("99123456").for(:trn)
+      expect(subject).not_to allow_value("99123456").for(:trn).with_message("TRN is the wrong length (should be 7 characters)")
     end
   end
 
