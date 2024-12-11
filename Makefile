@@ -138,7 +138,7 @@ domains-infra-plan: domains domains-infra-init
 domains-infra-apply: domains domains-infra-init
 	terraform -chdir=terraform/domains/infrastructure apply -var-file config/zones.tfvars.json ${AUTO_APPROVE}
 
-domains-init: domains-composed-variables domains set-azure-account
+domains-init: domains domains-composed-variables set-azure-account
 	rm -rf terraform/domains/environment_domains/vendor/modules/domains
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/domains/environment_domains/vendor/modules/domains
 
