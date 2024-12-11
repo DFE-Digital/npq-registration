@@ -7,7 +7,7 @@ on:
         required: true
         type: choice
         options:
-        - migration
+        - sandbox
         - production
       mode:
         required: true
