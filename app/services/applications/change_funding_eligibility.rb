@@ -35,8 +35,8 @@ module Applications
   private
 
     def validate_funding_eligiblity_status_code_change
-      if declared_as_billable? && eligible_for_funding == false
-        errors.add(:base, :billable_declaration_exists)
+      if declared_as_billable_or_changeable? && eligible_for_funding == false
+        errors.add(:base, :declaration_exists)
       end
     end
 
@@ -46,8 +46,8 @@ module Applications
       end
     end
 
-    def declared_as_billable?
-      application.declarations.billable.count.positive?
+    def declared_as_billable_or_changeable?
+      application.declarations.billable_or_changeable.count.positive?
     end
   end
 end

@@ -21,7 +21,21 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
         end
       end
 
-      it { is_expected.to include(/billable declaration exists/i) }
+      it { is_expected.to include(/billable or submitted declaration exists/i) }
+    end
+
+    context "with application with submitted declarations" do
+      subject { service.tap(&:valid?).errors.full_messages }
+
+      let(:service) { described_class.new(application:, eligible_for_funding: false) }
+
+      let :application do
+        create(:application, :accepted, eligible_for_funding: false).tap do |application|
+          create(:declaration, :submitted, application:)
+        end
+      end
+
+      it { is_expected.to include(/billable or submitted declaration exists/i) }
     end
 
     context "with application with funded place" do

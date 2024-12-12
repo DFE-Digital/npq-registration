@@ -242,7 +242,7 @@ en:
         applications/change_funding_eligibility:
           attributes:
             base:
-              billable_declaration_exists: "Eligibility can not be changed because billable declaration exists"
+              declaration_exists: "Eligibility can not be changed because a billable or submitted declaration exists"
               funded_application: "Eligibility can not be changed because the application is funded"
             eligible_for_funding:
               inclusion: Choose whether the Application is eligible for funding
