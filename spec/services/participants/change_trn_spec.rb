@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Participants::ChangeTrn, type: :model do
   subject { described_class.new(trn: trn, user: user) }
 
-  let(:user) { create(:user, trn: original_trn) }
+  let(:user) { create(:user, :with_verified_trn, trn: original_trn) }
   let(:original_trn) { "1234567" }
   let(:trn) { "2345678" }
 
@@ -55,6 +55,14 @@ RSpec.describe Participants::ChangeTrn, type: :model do
 
       it "returns false" do
         expect(subject).to be false
+      end
+    end
+
+    context "when trn_verified is false" do
+      let(:user) { create(:user, trn: original_trn) }
+
+      it "updates trn_verified to true" do
+        expect { subject }.to change(user, :trn_verified).from(false).to(true)
       end
     end
   end
