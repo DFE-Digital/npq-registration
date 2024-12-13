@@ -39,8 +39,6 @@ class RegistrationWizardController < ApplicationController
     user_email = ENV["DEV_USER_EMAIL_FOR_LOGIN"]
     user = User.find_by!(email: user_email)
     session["user_id"] = user.id
-    EcfUserUpdaterJob.perform_later(user:)
-
     sign_in user
     wizard = RegistrationWizard.new(
       current_step: :get_an_identity_callback,

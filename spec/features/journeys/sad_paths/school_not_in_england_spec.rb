@@ -1,13 +1,10 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", type: :feature do
+RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   context "when JavaScript is enabled", :js do

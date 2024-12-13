@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
+RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
@@ -49,13 +49,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
 
     choose_a_school(js:, location: "manchester", name: "open")
 
-    mock_previous_funding_api_request(
-      course_identifier: "npq-headship",
-      get_an_identity_id: user_uid,
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
       page.choose("Headship", visible: :all)
@@ -84,8 +77,6 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)
     end
-
-    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
 
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
@@ -140,7 +131,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "schedule_id" => nil,
       "ecf_id" => nil,
@@ -155,7 +146,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
@@ -165,8 +156,8 @@ RSpec.feature "Happy journeys", :rack_test_driver, type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,

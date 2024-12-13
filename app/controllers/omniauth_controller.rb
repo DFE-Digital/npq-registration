@@ -16,9 +16,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
     # @user.save checks that any changes made to an existing record have been persisted to that persisted record
     if @user.persisted? && @user.save
       session["user_id"] = @user.id
-      EcfUserUpdaterJob.perform_later(user: @user)
       @user.set_closed_registration_feature_flag
-
       sign_in_and_redirect @user
     else
       send_error_to_sentry(

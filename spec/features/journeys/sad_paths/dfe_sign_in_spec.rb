@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "DfE sign in", :ecf_api_disabled, type: :feature do
+RSpec.feature "DfE sign in", :ecf_api_disabled, :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
 
   let(:user) { User.find_by(email: "user@example.com") }
