@@ -73,7 +73,7 @@ module Middleware
     end
 
     def trace_request?
-      Feature.ecf_api_disabled? && Rails.env.in?(%w[migration review sandbox separation staging production]) && vendor_api_path?
+      Rails.env.in?(%w[migration review sandbox separation staging production]) && vendor_api_path?
     end
 
     def vendor_api_path?

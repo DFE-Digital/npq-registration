@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe "API documentation", type: :request do
-  before { allow(Feature).to receive(:ecf_api_disabled?).and_return(true) }
-
   describe "GET /api/docs/:version" do
     subject(:perform_request) do
       get "/api/docs/#{version}"
@@ -17,12 +15,6 @@ RSpec.describe "API documentation", type: :request do
       let(:version) { :v0 }
 
       it { expect { perform_request }.to raise_error(ActionController::RoutingError, "Not found") }
-    end
-
-    context "when ecf_api_disabled feature is false" do
-      before { allow(Feature).to receive(:ecf_api_disabled?).and_return(false) }
-
-      it { expect { perform_request }.to raise_error(ActionController::RoutingError) }
     end
   end
 end

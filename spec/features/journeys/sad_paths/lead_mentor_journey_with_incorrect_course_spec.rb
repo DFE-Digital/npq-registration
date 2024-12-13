@@ -144,7 +144,7 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -161,10 +161,10 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => Cohort.current.id,
+      "cohort_id" => latest_application.cohort_id,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => "lead_mentor_for_accredited_itt_provider",

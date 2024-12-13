@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Statements endpoint", :ecf_api_disabled, type: "request" do
+RSpec.describe "Statements endpoint", type: "request" do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Statements::Query }
   let(:serializer) { API::StatementSerializer }

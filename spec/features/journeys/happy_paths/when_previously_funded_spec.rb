@@ -20,7 +20,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
   def run_scenario(js:)
-    stub_participant_validation_request
+    stub_participant_validation_request(trn: user_trn, response: { trn: user_trn, date_of_birth: "1980-12-13" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -141,7 +141,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => User.last.ecf_id,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -158,10 +158,10 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => Cohort.current.id,
+      "cohort_id" => latest_application.cohort_id,
       "course_id" => Course.find_by(identifier: "npq-early-headship-coaching-offer").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
