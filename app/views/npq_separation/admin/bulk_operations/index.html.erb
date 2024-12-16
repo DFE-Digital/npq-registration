@@ -1,12 +1,6 @@
 <h1 class="govuk-heading-l">Bulk operations</h1>
 
-<%=
-  govuk_table do |table|
-    table.with_body do |body|
-      body.with_row do |row|
-        row.with_cell(text: govuk_link_to("Revert applications to pending", npq_separation_admin_bulk_operations_revert_applications_to_pending_path))
-      end
-    end
-  end
-%>
-
+<ul class="govuk-list govuk-list--bullet">
+  <%= tag.li( govuk_link_to("Revert applications to pending", npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path, no_visited_state: true,)) %>
+  <%= tag.li( govuk_link_to("Reject applications", npq_separation_admin_bulk_operations_reject_applications_path, no_visited_state: true,)) %>
+</ul>

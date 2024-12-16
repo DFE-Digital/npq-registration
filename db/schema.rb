@@ -159,6 +159,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_112415) do
     t.integer "rows"
     t.text "result"
     t.string "type"
+    t.datetime "ran_at"
+    t.datetime "finished_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
