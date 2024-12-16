@@ -16,7 +16,7 @@ Cohort.all.find_each do |cohort|
     # Void some declarations on the previous paid output fee statement to create clawbacks on the latest statement
     helpers.travel_to latest_statement.deadline_date - 1.day do
       claw_back_from_statement = statement_scope.with_output_fee.where("deadline_date < ?", latest_statement.deadline_date).first
-      claw_back_from_statement.declarations.limit(2).each do |declaration|
+      claw_back_from_statement.declarations.where.not(state: "voided").limit(2).each do |declaration|
         errors = Declarations::Void.new(declaration:).tap(&:void).errors
         fail(errors.full_messages.join(", ")) if errors.any?
       end
