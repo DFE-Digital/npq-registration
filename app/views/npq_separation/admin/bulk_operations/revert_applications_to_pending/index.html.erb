@@ -1,3 +1,4 @@
+<%= govuk_back_link(href: url_for(:back)) %>
 <h1 class="govuk-heading-l">Revert Applications to Pending</h1>
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -29,7 +30,8 @@
   </tbody>
 </table>
 
-<%= form_with url: npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path, multipart: true do |f| %>
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path, method: :post, multipart: true do |f| %>
+  <%= f.govuk_error_summary %>
   <div class="govuk-form-group">
     <%= f.label "file", "Upload an application list file", class: "govuk-label" %>
     <%= f.file_field "file", class: "govuk-file-upload" %>
