@@ -34,16 +34,9 @@ class Admin::FeaturesController < AdminController
           flash[:success] = "You have turned the #{@feature} feature flag on."
         end
         redirect_back fallback_location: admin_features_path
-      # else
-      #   flash[:error] = "There was an error updating the feature flag."
-      #   redirect_back fallback_location: admin_features_path
+      else
+        flash[:error] = "There was an error updating the feature flag."
+        redirect_back fallback_location: admin_features_path
       end
-    end
-
-    def destroy
-      @feature = params[:id]
-      Flipper::Adapters::ActiveRecord::Feature.where(id: @feature).destroy_all
-
-      redirect_back fallback_location: admin_features_path
     end
 end
