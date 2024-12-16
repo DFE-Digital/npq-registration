@@ -29,7 +29,8 @@
   </tbody>
 </table>
 
-<%= form_with url: npq_separation_admin_bulk_operations_reject_applications_path, multipart: true do |f| %>
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_reject_applications_path, method: :post, multipart: true do |f| %>
+  <%= f.govuk_error_summary %>
   <div class="govuk-form-group">
     <%= f.label "file", "Upload an application list file", class: "govuk-label" %>
     <%= f.file_field "file", class: "govuk-file-upload" %>

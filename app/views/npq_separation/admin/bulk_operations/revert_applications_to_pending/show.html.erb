@@ -42,10 +42,12 @@
       govuk_table do |table|
         table.with_caption(size: 'm', text: 'Result')
         table.with_body do |body|
-          JSON.parse(@bulk_operation.result.gsub('=>', ':')).each do |ecf_id, result|
-            body.with_row do |row|
-              row.with_cell(text: ecf_id)
-              row.with_cell(text: result)
+          if @bulk_operation.result
+            JSON.parse(@bulk_operation.result.gsub('=>', ':')).each do |ecf_id, result|
+              body.with_row do |row|
+                row.with_cell(text: ecf_id)
+                row.with_cell(text: result)
+              end
             end
           end
         end
