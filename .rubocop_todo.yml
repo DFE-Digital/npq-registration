@@ -11,7 +11,6 @@
 # Prefixes: when, with, without
 RSpec/ContextWording:
   Exclude:
-    - 'spec/jobs/get_an_identity_id_sync_job_spec.rb'
     - 'spec/lib/questionnaires/choose_your_npq_spec.rb'
     - 'spec/lib/questionnaires/choose_your_provider_spec.rb'
     - 'spec/lib/questionnaires/qualified_teacher_check_spec.rb'
@@ -23,7 +22,6 @@ RSpec/ContextWording:
     - 'spec/lib/services/report_service_spec.rb'
     - 'spec/models/school_spec.rb'
     - 'spec/support/shared_contexts/retrieve_latest_application_data.rb'
-    - 'spec/support/shared_contexts/stub_course_ecf_to_identifier_mappings.rb'
     - 'spec/support/shared_contexts/stub_gai_oauth.rb'
 
 # Offense count: 2
@@ -42,19 +40,7 @@ RSpec/ExpectOutput:
 RSpec/NamedSubject:
   Enabled: false
 
-# Offense count: 13
-RSpec/StubbedMock:
-  Exclude:
-    - 'spec/jobs/application_submission_job_spec.rb'
-    - 'spec/lib/services/ecf/npq_profile_mass_updater_spec.rb'
-
 # Offense count: 1
 RSpec/SubjectStub:
   Exclude:
     - 'spec/lib/questionnaires/choose_private_childcare_provider_spec.rb'
-
-# Offense count: 1
-# Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
-RSpec/VerifiedDoubles:
-  Exclude:
-    - 'spec/lib/services/ecf/npq_profile_mass_updater_spec.rb'
