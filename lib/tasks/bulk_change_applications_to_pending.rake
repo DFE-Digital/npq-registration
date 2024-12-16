@@ -26,7 +26,7 @@ namespace :one_off do
 
     logger.info "Bulk changing #{application_ecf_ids.size} applications to pending#{' (dry run)' if dry_run}..."
 
-    result = OneOff::BulkChangeApplicationsToPending.new(application_ecf_ids:).run!(dry_run:)
+    result = BulkOperation::BulkChangeApplicationsToPending.new(application_ecf_ids:).run!(dry_run:)
 
     logger.info JSON.pretty_generate(result)
   end

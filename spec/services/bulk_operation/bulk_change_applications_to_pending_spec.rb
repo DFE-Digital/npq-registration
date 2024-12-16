@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe OneOff::BulkChangeApplicationsToPending do
+RSpec.describe BulkOperation::BulkChangeApplicationsToPending do
   let(:application_ecf_ids) { [application.ecf_id] }
   let(:instance) { described_class.new(application_ecf_ids:) }
 

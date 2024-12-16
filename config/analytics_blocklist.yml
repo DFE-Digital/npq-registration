@@ -178,3 +178,5 @@ shared:
   - result
   - created_at
   - updated_at
+  - ran_at
+  - finished_at

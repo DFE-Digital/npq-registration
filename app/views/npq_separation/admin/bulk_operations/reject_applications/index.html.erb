@@ -1,0 +1,53 @@
+<h1 class="govuk-heading-l">Reject Applications</h1>
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header">Filename</th>
+    <th scope="col" class="govuk-table__header">Rows</th>
+    <th scope="col" class="govuk-table__header">Created at</th>
+    <th scope="col" class="govuk-table__header"></th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+    <% @bulk_operations.each do |bulk_operation| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= govuk_link_to bulk_operation.file.filename, url_for(bulk_operation.file) %></td>
+        <td class="govuk-table__cell"><%= bulk_operation.rows %></td>
+        <td class="govuk-table__cell"><%= bulk_operation.created_at.to_formatted_s(:govuk_short) %></td>
+        <td class="govuk-table__cell">
+          <% if bulk_operation.ran? %>
+            <code class="language-json"><%= bulk_operation.result %></code>
+          <% else %>
+            <%= form_with url: run_npq_separation_admin_bulk_operations_reject_application_path(bulk_operation) do |f| %>
+              <%= f.submit "Reject Applications", class: "govuk-button", data: {module: "govuk-button"} %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= form_with url: npq_separation_admin_bulk_operations_reject_applications_path, multipart: true do |f| %>
+  <div class="govuk-form-group">
+    <%= f.label "file", "Upload an application list file", class: "govuk-label" %>
+    <%= f.file_field "file", class: "govuk-file-upload" %>
+  </div>
+
+  <%= govuk_details(summary_text: "Example file") do %>
+    <p>
+      The file is a list of application IDs, one ID per row, with no header row.
+    </p>
+    <p>
+      e.g.
+      <pre>
+2f581c80-b5bb-4404-bcaf-4044d9c0c674
+21fe9549-28f0-492c-ae3a-d52969b40536
+e7e8a629-f75f-4d98-b157-269136110099
+      </pre>
+    </p>
+  <% end %>
+
+  <%= f.submit "Upload", class: "govuk-button", data: {module: "govuk-button"} %>
+<% end %>

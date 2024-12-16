@@ -7,14 +7,13 @@ RSpec.feature "revert applications to pending", :rack_test_driver, type: :featur
   let(:admin) { create(:admin) }
 
   before do
-    Flipper.enable(Feature::ECF_API_DISABLED)
     sign_in_as_admin
     create(:application, :accepted)
     create(:application, :accepted)
   end
 
   scenario "reverting applications to pending" do
-    visit npq_separation_admin_bulk_operations_revert_applications_to_pending_path
+    visit npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path
     attach_file "file", applications_file.path
     click_button "Upload"
     click_button "Revert Applications to Pending"
