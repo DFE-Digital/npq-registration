@@ -8,7 +8,7 @@
              url: npq_separation_admin_finance_payment_authorisation_path(@statement) do |f| %>
   <%= f.govuk_error_summary %>
 
-  <%= render NpqSeparation::Admin::StatementDetailsComponent.new(statement: @statement) %>
+  <%= render NpqSeparation::Admin::StatementDetailsComponent.new(statement: @statement, link_to_voids: false) %>
 
   <p class="govuk-body">
     <%= f.govuk_check_boxes_fieldset(

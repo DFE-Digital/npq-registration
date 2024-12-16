@@ -39,16 +39,9 @@ class Application < ApplicationRecord
   attr_accessor :version_note, :skip_touch_user_if_changed
 
   validate :schedule_cohort_matches
-  # TODO: remove "if" and "allow_nil" and add constraints into the DB after separation
-  validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
-  validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: !Feature.ecf_api_disabled?
+  validates :ecf_id, uniqueness: { case_sensitive: false }
 
   after_commit :touch_user_if_changed
-
-  # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
-  before_validation do
-    self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
-  end
 
   enum kind_of_nursery: {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
@@ -87,12 +80,9 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }, _suffix: true
 
-  validates :funded_place,
-            inclusion: { in: [true, false] },
-            if: :validate_funded_place?,
-            on: :npq_separation
-  validate :eligible_for_funded_place, on: :npq_separation
-  validate :validate_permitted_schedule_for_course, on: :npq_separation
+  validates :funded_place, inclusion: { in: [true, false] }, if: :validate_funded_place?
+  validate :eligible_for_funded_place
+  validate :validate_permitted_schedule_for_course
 
   # `eligible_for_dfe_funding?`  takes into consideration what we know
   # about user eligibility plus if it has been previously funded. We need
@@ -194,8 +184,6 @@ class Application < ApplicationRecord
   end
 
   def latest_participant_outcome_state
-    return participant_outcome_state unless Feature.ecf_api_disabled?
-
     declarations.completed.billable_or_voidable.latest_first.first&.participant_outcomes&.latest&.state
   end
 

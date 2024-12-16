@@ -19,13 +19,13 @@
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^5.4.0",
     "isomorphic-fetch": "^3.0.0",
-    "mermaid": "^11.4.0",
+    "mermaid": "^11.4.1",
     "rails-ujs": "^5.2.8",
-    "sass": "^1.81.0",
+    "sass": "^1.82.0",
     "serialize-javascript": "^6.0.2",
     "svg-pan-zoom": "^3.6.2",
     "swagger-ui-dist": "^5.18.2",
-    "webpack": "^5.96.1",
+    "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {

@@ -1,10 +1,11 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
+  include_context "with default schedules"
   include_context "retrieve latest application data"
   include_context "Stub Get An Identity Omniauth Responses"
 
@@ -62,13 +63,6 @@ RSpec.feature "Happy journeys", type: :feature do
 
     choose_a_childcare_provider(js:, location: "manchester", name: "open")
 
-    mock_previous_funding_api_request(
-      course_identifier: "npq-senior-leadership",
-      get_an_identity_id: user_uid,
-      trn: "1234567",
-      response: ecf_funding_lookup_response(previously_funded: false),
-    )
-
     expect_page_to_have(path: "/registration/choose-your-npq", submit_form: true) do
       expect(page).to have_text("Which NPQ do you want to do?")
       page.choose("Senior leadership", visible: :all) # Needs changing to an early years course once added
@@ -98,8 +92,6 @@ RSpec.feature "Happy journeys", type: :feature do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
-
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
@@ -122,7 +114,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
       "full_name" => "John Doe",
       "get_an_identity_id_synced_to_ecf" => false,
@@ -139,10 +131,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => Cohort.current.id,
       "course_id" => Course.find_by(identifier: "npq-senior-leadership").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
@@ -153,7 +145,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "headteacher_status" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "kind_of_nursery" => public_kind_of_nursery_key,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
@@ -164,8 +156,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,
@@ -204,7 +196,6 @@ RSpec.feature "Happy journeys", type: :feature do
         "work_setting" => "early_years_or_childcare",
         "works_in_childcare" => "yes",
         "works_in_school" => "no",
-
       },
     )
   end

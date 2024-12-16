@@ -84,12 +84,12 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper, type: :feature
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponent::SystemTestHelpers, type: :component
+  config.include Helpers::I18nHelper, type: :component
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
   config.include Helpers::SwaggerExampleParser, type: :request
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
-  config.include MigrationHelper, type: %i[feature request model]
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -129,10 +129,6 @@ RSpec.configure do |config|
 
   config.before do
     Flipper.enable(Feature::REGISTRATION_OPEN)
-  end
-
-  config.before(:each, :ecf_api_disabled) do
-    Feature.enable_ecf_api_disabled!
   end
 
   config.before(:each, :exceptions_app) do

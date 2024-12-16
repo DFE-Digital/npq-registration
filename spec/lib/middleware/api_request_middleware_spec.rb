@@ -1,7 +1,7 @@
 require "rails_helper"
 require "middleware/api_request_middleware"
 
-RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :request do
+RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
   let(:status) { 200 }
   let(:request) { Rack::MockRequest.new(subject) }
   let(:headers) { { "HEADER" => "Yeah!" } }
@@ -108,16 +108,6 @@ RSpec.describe Middleware::ApiRequestMiddleware, :ecf_api_disabled, type: :reque
           hash_including("path" => "/api/v1/participants/npq", "params" => { "foo" => "bar" }, "method" => "GET"), { "body" => "Hellowwworlds!", "headers" => { "HEADER" => "Yeah!" } }, 404, now
         )
       end
-    end
-  end
-
-  context "when `ecf_api_disabled` feature is false" do
-    before { allow(Feature).to receive(:ecf_api_disabled?).and_return(false) }
-
-    it "does not fire StreamAPIRequestsToBigQueryJob" do
-      request.get "/api/v1/participants/npq", params: { foo: "bar" }
-
-      expect(StreamAPIRequestsToBigQueryJob).not_to have_received(:perform_later)
     end
   end
 end

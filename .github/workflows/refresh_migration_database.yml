@@ -42,13 +42,3 @@ jobs:
       - name: Set AKS credentials (migration)
         shell: bash
         run: make ci migration get-cluster-credentials
-
-      - name: Generate known keys
-        shell: bash
-        run: |
-          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Migration::ParityCheck::TokenProvider.new.generate!\""
-
-      - name: Enable 'ecf_api_disabled' feature
-        shell: bash
-        run: |
-          kubectl -n cpd-production exec -ti --tty deployment/npq-registration-migration-web -- /bin/sh -c "cd /app && bundle exec rails runner \"Feature.enable_ecf_api_disabled!\""

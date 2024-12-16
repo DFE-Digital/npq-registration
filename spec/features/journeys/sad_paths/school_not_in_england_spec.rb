@@ -1,13 +1,10 @@
 require "rails_helper"
 
-RSpec.feature "Sad journeys", type: :feature do
+RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    let(:api_call_trn) { user_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   context "when JavaScript is enabled", :js do
@@ -58,7 +55,7 @@ RSpec.feature "Sad journeys", type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
-      expected_text = js ? "What’s the name of your workplace?" : "Select your school or 16 to 19 educational setting in wrexham"
+      expected_text = js ? "What is the name of your workplace?" : "Select your school or 16 to 19 educational setting in wrexham"
       expect(page).to have_text(expected_text)
     end
 

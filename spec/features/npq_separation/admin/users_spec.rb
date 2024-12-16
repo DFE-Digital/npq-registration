@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "User administration", :ecf_api_disabled, type: :feature do
+RSpec.feature "User administration", type: :feature do
   include Helpers::AdminLogin
 
   let(:users_per_page) { Pagy::DEFAULT[:limit] }
@@ -60,6 +60,15 @@ RSpec.feature "User administration", :ecf_api_disabled, type: :feature do
         expect(summary_list).to have_summary_item("TRN", user.trn)
         expect(summary_list).to have_summary_item("TRN validated", "No")
         expect(summary_list).to have_summary_item("Get an Identity ID", user.get_an_identity_id)
+      end
+    end
+
+    scenario "renders when attributes with method chains are nil" do
+      user.update!(date_of_birth: nil)
+      visit npq_separation_admin_user_path(user)
+
+      within(first(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item("Date of Birth", "")
       end
     end
 

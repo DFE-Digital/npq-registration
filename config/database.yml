@@ -13,64 +13,28 @@ default_primary: &default_primary
   port: "<%= ENV['DB_PORT'] %>"
   url: <%= ENV.fetch("DATABASE_URL", "postgres://localhost:5432") %>
 
-default_ecf: &default_ecf
-  <<: *shared_db_settings
-  migrations_paths: db/ecf_migrate # Set to ensure its different but not used.
-  database: "<%= ENV['ECF_DB_DATABASE'] %>"
-  username: "<%= ENV['ECF_DB_USERNAME'] %>"
-  password: "<%= ENV['ECF_DB_PASSWORD'] %>"
-  host: "<%= ENV['ECF_DB_HOST'] %>"
-  port: "<%= ENV['ECF_DB_PORT'] %>"
-  url: <%= ENV.fetch("ECF_DATABASE_URL", "postgres://localhost:5432") %>
-
 development:
-  primary:
-    <<: *default_primary
-    database: npq_registration_development
-  ecf:
-    <<: *default_ecf
-    database: early_careers_framework_development
+  <<: *default_primary
+  database: npq_registration_development
 
 review:
-  primary:
-    <<: *default_primary
-  # The ECF database is not used in review
+  <<: *default_primary
 
 test:
-  primary:
-    <<: *default_primary
-    database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
-  ecf:
-    <<: *default_ecf
-    <<: *default_primary # We share the database in the test environment
-    database: early_careers_framework_test<%= ENV['TEST_ENV_NUMBER'] %>
+  <<: *default_primary
+  database: npq_registration_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 staging:
-  primary:
-    <<: *default_primary
-  ecf:
-    <<: *default_ecf
+  <<: *default_primary
 
 sandbox:
-  primary:
-    <<: *default_primary
-  ecf:
-    <<: *default_ecf
+  <<: *default_primary
 
 migration:
-  primary:
-    <<: *default_primary
-  ecf:
-    <<: *default_ecf
+  <<: *default_primary
 
 separation:
-  primary:
-    <<: *default_primary
-  ecf:
-    <<: *default_ecf
+  <<: *default_primary
 
 production:
-  primary:
-    <<: *default_primary
-  ecf:
-    <<: *default_ecf
+  <<: *default_primary

@@ -76,18 +76,6 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
             store:,
             request:, current_user: create(:user)
           )
-
-          mock_previous_funding_api_request(
-            course_identifier: "npq-headship",
-            trn: "1234567",
-            response: ecf_funding_lookup_response(previously_funded: false),
-          )
-
-          mock_previous_funding_api_request(
-            course_identifier: "npq-leading-teaching",
-            trn: "1234567",
-            response: ecf_funding_lookup_response(previously_funded: false),
-          )
         end
 
         context "when lead provider is valid for new course" do
