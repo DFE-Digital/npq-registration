@@ -23,5 +23,9 @@ module NpqSeparation::Admin::BulkOperations
       bulk_operation.update!(result:)
       redirect_to :npq_separation_admin_bulk_operations_revert_applications_to_pending_index
     end
+
+    def show
+      @bulk_operation = BulkOperations::RevertApplicationsToPending.find(params[:id])
+    end
   end
 end

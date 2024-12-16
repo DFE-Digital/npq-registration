@@ -271,10 +271,10 @@ Rails.application.routes.draw do
       resources :bulk_operations, only: %i[index], path: "bulk-operations"
 
       namespace :bulk_operations, path: "bulk-operations" do
-        resources :revert_applications_to_pending, controller: "revert_applications_to_pending", only: %i[index create] do
+        resources :revert_applications_to_pending, controller: "revert_applications_to_pending", only: %i[index create show] do
           post "run", on: :member
         end
-        resources :reject_applications, controller: "reject_applications", only: %i[index create] do
+        resources :reject_applications, controller: "reject_applications", only: %i[index create show] do
           post "run", on: :member
         end
       end

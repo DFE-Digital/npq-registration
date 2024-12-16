@@ -17,7 +17,9 @@ RSpec.feature "reject applications", :rack_test_driver, type: :feature do
     attach_file "file", applications_file.path
     click_button "Upload"
     click_button "Reject Applications"
-    expect(page).to have_content %({"#{Application.first.ecf_id}"=>"Changed to rejected", "#{Application.last.ecf_id}"=>"Changed to rejected"})
+    click_link File.basename(applications_file.path)
+    expect(page).to have_content "#{Application.first.ecf_id}Changed to rejected"
+    expect(page).to have_content "#{Application.last.ecf_id}Changed to rejected"
     expect(page).not_to have_button("Reject Applications")
     expect(Application.all.pluck(:lead_provider_approval_status)).to eq %w[rejected rejected]
   end

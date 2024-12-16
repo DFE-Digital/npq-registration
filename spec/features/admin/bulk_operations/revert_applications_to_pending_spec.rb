@@ -17,7 +17,9 @@ RSpec.feature "revert applications to pending", :rack_test_driver, type: :featur
     attach_file "file", applications_file.path
     click_button "Upload"
     click_button "Revert Applications to Pending"
-    expect(page).to have_content %({"#{Application.first.ecf_id}"=>"Changed to pending", "#{Application.last.ecf_id}"=>"Changed to pending"})
+    click_link File.basename(applications_file.path)
+    expect(page).to have_content "#{Application.first.ecf_id}Changed to pending"
+    expect(page).to have_content "#{Application.last.ecf_id}Changed to pending"
     expect(page).not_to have_button("Revert Applications to Pending")
     expect(Application.all.pluck(:lead_provider_approval_status)).to eq %w[pending pending]
   end
