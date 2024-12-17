@@ -146,6 +146,11 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        bulk_operation:
+          attributes:
+            file:
+              empty: Uploaded file is empty
+              invalid: Uploaded file is wrong format
         cohort:
           attributes:
             ecf_id:
