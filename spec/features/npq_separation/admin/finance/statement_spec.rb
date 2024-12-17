@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Statement", :ecf_api_disabled, type: :feature do
+RSpec.feature "Statement", type: :feature do
   include Helpers::AdminLogin
   include ActionView::Helpers::NumberHelper
 

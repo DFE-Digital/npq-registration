@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing applications", :ecf_api_disabled, type: :feature do
+RSpec.feature "Listing and viewing applications", type: :feature do
   include Helpers::AdminLogin
 
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }
@@ -214,6 +214,94 @@ RSpec.feature "Listing and viewing applications", :ecf_api_disabled, type: :feat
     within(".govuk-summary-list:first-of-type") do |summary_list|
       expect(summary_list).to have_summary_item("Lead provider approval status", "Pending")
       expect(summary_list).not_to have_link("Change to pending")
+    end
+  end
+
+  scenario "changing training status" do
+    application = create(:application, :accepted)
+    create(:declaration, application:)
+
+    visit npq_separation_admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+
+    application_details = page.find("h2", text: "Application details", exact_text: true)
+                              .sibling(".govuk-summary-list:first-of-type")
+
+    within(application_details) do |summary_list|
+      expect(summary_list).to have_summary_item("Training status", "active")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Change training status")
+    choose "Defer", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css(".govuk-error-message", text: "Choose a valid reason for the training status change")
+    select Applications::ChangeTrainingStatus::REASON_OPTIONS["deferred"].first
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    application_details = page.find("h2", text: "Application details", exact_text: true)
+                              .sibling(".govuk-summary-list:first-of-type")
+
+    within(application_details) do |summary_list|
+      expect(summary_list).to have_summary_item("Training status", "deferred")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Change training status")
+    choose "Active", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    application_details = page.find("h2", text: "Application details", exact_text: true)
+                              .sibling(".govuk-summary-list:first-of-type")
+
+    within(application_details) do |summary_list|
+      expect(summary_list).to have_summary_item("Training status", "active")
+    end
+  end
+
+  scenario "changing eligibility for funding" do
+    application = create(:application, :accepted)
+
+    visit npq_separation_admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "No")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+    click_button "Continue"
+
+    expect(page).to have_css(".govuk-error-message", text: "Choose whether the Application is eligible for funding")
+    choose "Yes", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+    choose "No", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "No")
     end
   end
 end

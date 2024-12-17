@@ -7,21 +7,6 @@
 
 <h1 class="govuk-heading-l"><%= title ||= t(".title") %></h1>
 
-<% unless @user.synced_to_ecf? && @user.applications_synced_to_ecf? %>
-  <%=
-    unsynced_message = if @user.synced_to_ecf?
-                         "This user's applications have not been synced to ECF yet"
-                       else
-                         "This user has not been synced to ECF yet"
-                       end
-    render(
-      "admin/application_submissions/ecf_sync_actions",
-      user: @user,
-      unsynced_message:
-    )
-  %>
-<% end %>
-
 <%= govuk_tabs(title: t(".tabs")) do |c| %>
   <%= c.with_tab(label: t(".details")) do %>
     <div class="govuk-grid-row">

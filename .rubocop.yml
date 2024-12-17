@@ -12,7 +12,6 @@ AllCops:
   Exclude:
     - 'bin/*'
     - 'db/schema.rb'
-    - 'db/ecf_schema.rb'
     - 'node_modules/**/*'
     - 'config/application.rb'
     - 'config/puma.rb'
@@ -57,13 +56,6 @@ RSpec/EmptyExampleGroup:
   Exclude:
     - 'spec/requests/api/docs/**/*'
 
-Rails/SaveBang:
-  Exclude:
-    - "app/models/external/ecf_api/base.rb"
-    - "app/services/ecf/ecf_user_creator.rb"
-    - "app/services/ecf/npq_profile_creator.rb"
-    - "app/services/ecf/npq_profile_updater.rb"
-
 Rails/Output:
   Exclude:
     - "app/services/importers/*"
@@ -92,8 +84,6 @@ Rails/UnknownEnv:
     - sandbox
     - staging
     - test
-    - migration
-    - separation
 
 RSpec/IndexedLet:
   Enabled: false

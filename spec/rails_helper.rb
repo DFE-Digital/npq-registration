@@ -131,10 +131,6 @@ RSpec.configure do |config|
     Flipper.enable(Feature::REGISTRATION_OPEN)
   end
 
-  config.before(:each, :ecf_api_disabled) do
-    Feature.enable_ecf_api_disabled!
-  end
-
   config.before(:each, :exceptions_app) do
     # Make the app behave how it does in non dev/test environments and use the
     # ErrorsController via config.exceptions_app = routes in config/application.rb

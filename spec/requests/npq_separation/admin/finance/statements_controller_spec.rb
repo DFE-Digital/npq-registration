@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::Finance::StatementsController, :ecf_api_disabled, type: :request do
+RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   let(:cohort) { create(:cohort, start_year: 2024) }

@@ -1,14 +1,13 @@
 x-app: &app
   build:
     args:
-      - BUNDLE_WITHOUT=production review separation
+      - BUNDLE_WITHOUT=production review
       - EXTRA_PACKAGES=chromium chromium-chromedriver gcompat yarn
     context: .
   depends_on:
     - db
   environment:
     - DATABASE_URL=postgresql://postgres@db:5432/
-    - ECF_DATABASE_URL=postgresql://postgres@db:5432/
     - RAILS_ENV=development
     - RAILS_LOG_TO_STDOUT=true
     - RAILS_SERVE_STATIC_FILES=true

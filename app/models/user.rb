@@ -28,14 +28,7 @@ class User < ApplicationRecord
             notify_email: true
 
   validates :uid, uniqueness: { allow_blank: true }
-  # TODO: add constraints into the DB after separation
-  validates :ecf_id, presence: true, if: -> { Feature.ecf_api_disabled? }
-  validates :ecf_id, uniqueness: { allow_blank: true }
-
-  # TODO: remove this and add default: "gen_random_uuid()" in the DB after separation
-  before_validation do
-    self.ecf_id ||= SecureRandom.uuid if Feature.ecf_api_disabled? && ecf_id.blank?
-  end
+  validates :ecf_id, uniqueness: { case_sensitive: false }
 
   after_commit :touch_significantly_updated_at
 
@@ -139,12 +132,6 @@ class User < ApplicationRecord
     External::GetAnIdentity::User.find(get_an_identity_id)
   end
 
-  def ecf_user
-    return if ecf_id.blank? || Feature.ecf_api_disabled?
-
-    External::EcfAPI::Npq::User.find(ecf_id).first
-  end
-
   def get_an_identity_provider?
     provider == "tra_openid_connect"
   end
@@ -172,15 +159,6 @@ class User < ApplicationRecord
 
   def applications_synced_to_ecf?
     applications.map(&:synced_to_ecf?).all?
-  end
-
-  def ecf_sync_jobs
-    arel_table = Delayed::Job.arel_table
-    job_name_query = arel_table[:handler].matches("%ApplicationSubmissionJob%")
-    user_id_query = arel_table[:handler].matches("%_aj_globalid: gid://npq-registration/User/#{id}%")
-    Delayed::Job.where(job_name_query)
-                .where(user_id_query)
-                .order(run_at: :asc)
   end
 
   def flipper_id

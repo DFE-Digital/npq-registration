@@ -66,18 +66,11 @@ Rails.application.routes.draw do
       end
     end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
-
-    resources :users, only: %i[index show] do
-      resources :application_submissions, only: %i[create]
-    end
-
+    resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
-
     resources :schools, only: %i[index show]
-
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
-
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
@@ -109,52 +102,48 @@ Rails.application.routes.draw do
   get "/admin", to: "admin#show"
 
   namespace :api do
-    constraints -> { Feature.ecf_api_disabled? } do
-      get :guidance, to: "guidance#index"
-      get "guidance/*page", to: "guidance#show", as: :guidance_page
-      get "docs/:version", to: "documentation#index", as: :documentation
-    end
+    get :guidance, to: "guidance#index"
+    get "guidance/*page", to: "guidance#show", as: :guidance_page
+    get "docs/:version", to: "documentation#index", as: :documentation
 
     namespace :v1 do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
       end
 
-      constraints -> { Feature.ecf_api_disabled? } do
-        defaults format: :json do
-          resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
-            member do
-              post :reject, path: "reject"
-              post :accept, path: "accept"
-              put :change_funded_place, path: "change-funded-place"
+      defaults format: :json do
+        resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
+          member do
+            post :reject, path: "reject"
+            post :accept, path: "accept"
+            put :change_funded_place, path: "change-funded-place"
+          end
+        end
+
+        resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
+        resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+          member do
+            put :change_schedule, path: "change-schedule"
+            put :defer
+            put :resume
+            put :withdraw
+
+            scope module: :participants do
+              resources :outcomes, only: %i[create index], as: :participants_outcomes
             end
           end
+        end
 
-          resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
-
-          resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
-            member do
-              put :change_schedule, path: "change-schedule"
-              put :defer
-              put :resume
-              put :withdraw
-
-              scope module: :participants do
-                resources :outcomes, only: %i[create index], as: :participants_outcomes
-              end
-            end
-          end
-
-          resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
-            member do
-              put :void, path: "void"
-            end
+        resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+          member do
+            put :void, path: "void"
           end
         end
       end
     end
 
-    namespace :v2, defaults: { format: :json }, constraints: -> { Feature.ecf_api_disabled? } do
+    namespace :v2, defaults: { format: :json } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         member do
           post :reject, path: "reject"
@@ -187,7 +176,7 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :v3, defaults: { format: :json }, constraints: -> { Feature.ecf_api_disabled? } do
+    namespace :v3, defaults: { format: :json } do
       resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
         member do
           post :reject, path: "reject"
@@ -222,52 +211,52 @@ Rails.application.routes.draw do
   end
 
   namespace :npq_separation, path: "npq-separation" do
-    constraints(-> { Feature.ecf_api_disabled? }) do
-      get "admin", to: "admin/dashboards/summary#show"
+    get "admin", to: "admin/dashboards/summary#show"
 
-      namespace :admin do
-        namespace :dashboards do
-          resource :summary, only: :show, controller: "summary"
-        end
-
-        resources :applications, only: %i[index show] do
-          member do
-            namespace :applications, path: nil do
-              resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
-            end
-          end
-        end
-
-        resources :cohorts do
-          resources :schedules, except: :index
-        end
-
-        resources :schools, only: %i[index show]
-        resources :courses, only: %i[index show]
-        resources :users, only: %i[index show]
-
-        resources :participant_outcomes, only: %i[] do
-          member { post :resend }
-        end
-
-        namespace :finance do
-          resources :statements, only: %i[index show] do
-            collection do
-              resources :unpaid, controller: "statements/unpaid", only: "index"
-              resources :paid, controller: "statements/paid", only: "index"
-            end
-
-            member do
-              resource :assurance_report, controller: "statements/assurance_reports", only: "show"
-              resource :payment_authorisation, controller: "statements/payment_authorisations", only: %i[new create]
-              resources :voided, controller: "statements/voided", only: :index
-            end
-          end
-        end
-
-        resources :lead_providers, only: %i[index show], path: "lead-providers"
-        resources :admins, only: %i[index]
+    namespace :admin do
+      namespace :dashboards do
+        resource :summary, only: :show, controller: "summary"
       end
+
+      resources :applications, only: %i[index show] do
+        member do
+          namespace :applications, path: nil do
+            resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
+            resource :change_training_status, only: %i[new create]
+            resource :change_funding_eligibility, only: %i[new create]
+          end
+        end
+      end
+
+      resources :cohorts do
+        resources :schedules, except: :index
+      end
+
+      resources :schools, only: %i[index show]
+      resources :courses, only: %i[index show]
+      resources :users, only: %i[index show]
+
+      resources :participant_outcomes, only: %i[] do
+        member { post :resend }
+      end
+
+      namespace :finance do
+        resources :statements, only: %i[index show] do
+          collection do
+            resources :unpaid, controller: "statements/unpaid", only: "index"
+            resources :paid, controller: "statements/paid", only: "index"
+          end
+
+          member do
+            resource :assurance_report, controller: "statements/assurance_reports", only: "show"
+            resource :payment_authorisation, controller: "statements/payment_authorisations", only: %i[new create]
+            resources :voided, controller: "statements/voided", only: :index
+          end
+        end
+      end
+
+      resources :lead_providers, only: %i[index show], path: "lead-providers"
+      resources :admins, only: %i[index]
     end
   end
 

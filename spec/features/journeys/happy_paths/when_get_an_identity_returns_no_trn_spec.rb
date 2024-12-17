@@ -1,15 +1,11 @@
 require "rails_helper"
 
-RSpec.feature "Happy journeys", type: :feature do
+RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
   include ApplicationHelper
 
   include_context "retrieve latest application data"
-  include_context "Stub previously funding check for all courses" do
-    # In this situation we fallback to a non-pilot set of checks
-    let(:api_call_trn) { manually_entered_trn }
-  end
   include_context "Stub Get An Identity Omniauth Responses"
 
   # This controls what is returned from the Get An Identity API
@@ -25,7 +21,7 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   def run_scenario(js:)
-    stub_participant_validation_request(trn: manually_entered_trn, response: { trn: manually_entered_trn })
+    stub_participant_validation_request(trn: manually_entered_trn, response: { trn: manually_entered_trn, date_of_birth: "1980-12-13" })
 
     navigate_to_page(path: "/", submit_form: false, axe_check: false) do
       expect(page).to have_text("Before you start")
@@ -52,7 +48,7 @@ RSpec.feature "Happy journeys", type: :feature do
       expect(page).to have_text("Check your details")
 
       page.fill_in "Teacher reference number (TRN)", with: manually_entered_trn
-      page.fill_in "Full name", with: "John Doe"
+      page.fill_in "Full name", with: "Jane Smith"
       page.fill_in "Day", with: "13"
       page.fill_in "Month", with: "12"
       page.fill_in "Year", with: "1980"
@@ -108,13 +104,11 @@ RSpec.feature "Happy journeys", type: :feature do
       page.check("Yes, I agree to share my information", visible: :all)
     end
 
-    allow(ApplicationSubmissionJob).to receive(:perform_later).with(anything)
-
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
           "Course start" => "Before #{application_course_start_date}",
-          "Full name" => "John Doe",
+          "Full name" => "Jane Smith",
           "Teacher reference number (TRN)" => manually_entered_trn,
           "Date of birth" => "13 December 1980",
           "National Insurance number" => "AB123456C",
@@ -132,7 +126,7 @@ RSpec.feature "Happy journeys", type: :feature do
 
     User.last.tap do |user|
       expect(user.email).to eql("user@example.com")
-      expect(user.full_name).to eql("John Doe")
+      expect(user.full_name).to eql("Jane Smith")
       expect(user.trn).to eql(manually_entered_trn)
       expect(user.trn_verified).to be_truthy
       expect(user.trn_auto_verified).to be_truthy
@@ -169,9 +163,9 @@ RSpec.feature "Happy journeys", type: :feature do
       "archived_email" => nil,
       "archived_at" => nil,
       "date_of_birth" => "1980-12-13",
-      "ecf_id" => nil,
+      "ecf_id" => latest_application_user.ecf_id,
       "email" => "user@example.com",
-      "full_name" => "John Doe",
+      "full_name" => "Jane Smith",
       "get_an_identity_id_synced_to_ecf" => false,
       "national_insurance_number" => nil,
       "notify_user_for_future_reg" => false,
@@ -186,10 +180,10 @@ RSpec.feature "Happy journeys", type: :feature do
 
     deep_compare_application_data(
       "accepted_at" => nil,
-      "cohort_id" => nil,
+      "cohort_id" => latest_application.cohort_id,
       "course_id" => Course.find_by(identifier: "npq-headship").id,
       "schedule_id" => nil,
-      "ecf_id" => nil,
+      "ecf_id" => latest_application.ecf_id,
       "eligible_for_funding" => false,
       "employer_name" => nil,
       "employment_type" => nil,
@@ -201,7 +195,7 @@ RSpec.feature "Happy journeys", type: :feature do
       "headteacher_status" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
-      "lead_provider_approval_status" => nil,
+      "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
       "notes" => nil,
@@ -211,8 +205,8 @@ RSpec.feature "Happy journeys", type: :feature do
       "targeted_delivery_funding_eligibility" => false,
       "targeted_support_funding_eligibility" => false,
       "teacher_catchment" => "england",
-      "teacher_catchment_country" => nil,
-      "teacher_catchment_iso_country_code" => nil,
+      "teacher_catchment_country" => "United Kingdom of Great Britain and Northern Ireland",
+      "teacher_catchment_iso_country_code" => "GBR",
       "teacher_catchment_synced_to_ecf" => false,
       "training_status" => nil,
       "ukprn" => nil,
@@ -236,7 +230,7 @@ RSpec.feature "Happy journeys", type: :feature do
         "course_identifier" => "npq-headship",
         "date_of_birth" => "1980-12-13",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
-        "full_name" => "John Doe",
+        "full_name" => "Jane Smith",
         "funding" => "trust",
         "funding_amount" => nil,
         "funding_eligiblity_status_code" => "ineligible_establishment_type",

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Enrolment endpoints", :ecf_api_disabled, type: :request do
+RSpec.describe "Enrolment endpoints", type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Applications::Query }
 
