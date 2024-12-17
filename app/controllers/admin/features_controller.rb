@@ -7,8 +7,12 @@ class Admin::FeaturesController < AdminController
 
     def show
       @feature = params[:id]
-      @users = User.with_feature_flag_enabled(@feature)
-    end
+      if Feature::FEATURE_FLAG_KEYS.include?(@feature)
+        @users = User.with_feature_flag_enabled(@feature)
+      else
+        redirect_back fallback_location: admin_features_path
+      end
+    end    
 
     def update
       @feature = params[:id]
