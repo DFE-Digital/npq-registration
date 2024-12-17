@@ -1,106 +1,64 @@
 # frozen_string_literal: true
 
-helpers = Class.new { include ActiveSupport::Testing::TimeHelpers }.new
+helpers            = Class.new { include ActiveSupport::Testing::TimeHelpers }.new
+lead_providers     = LeadProvider.alphabetical.limit(2) # it's very slow to do this for all lead providers
+application_count  = 1
 
-LeadProvider.find_each do |lead_provider|
-  quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
-
-  quantity.times do
-    # Application with a started declaration
-    application1 = FactoryBot.create(
-      :application,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
-    )
-    %w[started].each do |declaration_type|
-      helpers.travel_to application1.schedule.applies_from do
-        FactoryBot.create(
-          :declaration,
-          :submitted_or_eligible,
-          application: application1,
-          declaration_type:,
+lead_providers.each do |lead_provider|
+  Schedule.find_each do |schedule|
+    schedule.courses.each do |course|
+      application_count.times do
+        application = FactoryBot.create(
+          :application,
+          :eligible_for_funded_place,
+          :with_random_user,
+          :with_random_work_setting,
+          cohort: schedule.cohort,
+          lead_provider:,
+          course:,
+          schedule:,
         )
-      end
-    end
 
-    # Application with a started and retained-1 declaration
-    application2 = FactoryBot.create(
-      :application,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
-    )
-    %w[started retained-1].each do |declaration_type|
-      helpers.travel_to application2.schedule.applies_from do
-        FactoryBot.create(
-          :declaration,
-          :submitted_or_eligible,
-          application: application2,
-          declaration_type:,
-        )
-      end
-    end
+        schedule.allowed_declaration_types.each.with_index do |declaration_type, i|
+          declaration = nil
+          date        = schedule.applies_from + (application_count * i * 2).months
 
-    # Application with a started, retained-1 and retained-2 declaration
-    application3 = FactoryBot.create(
-      :application,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
-    )
-    %w[started retained-1 retained-2].each do |declaration_type|
-      helpers.travel_to application3.schedule.applies_from do
-        FactoryBot.create(
-          :declaration,
-          :submitted_or_eligible,
-          application: application3,
-          declaration_type:,
-        )
-      end
-    end
+          next if date.future?
 
-    # Application with a started, retained-1, retained-2 and completed declaration
-    application4 = FactoryBot.create(
-      :application,
-      :eligible_for_funded_place,
-      :with_random_user,
-      :with_random_work_setting,
-      lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
-    )
-    %w[started retained-1 retained-2 completed].each do |declaration_type|
-      declaration = helpers.travel_to(application4.schedule.applies_from) do
-        FactoryBot.create(
-          :declaration,
-          :submitted_or_eligible,
-          application: application4,
-          declaration_type:,
-        )
-      end
+          helpers.travel_to date do
+            declaration = FactoryBot.create(
+              :declaration,
+              :submitted_or_eligible,
+              application:,
+              declaration_type:,
+            )
 
-      next unless declaration_type == "completed"
+            Declarations::StatementAttacher.new(declaration:).attach
 
-      ParticipantOutcomes::Create::STATES.reverse.each do |state|
-        helpers.travel_to declaration.declaration_date do
-          FactoryBot.create(:participant_outcome,
-                            declaration:,
-                            state:,
-                            completion_date: declaration.declaration_date.to_s)
+            if declaration_type == "completed"
+              ParticipantOutcomes::Create::STATES.reverse.each do |state|
+                FactoryBot.create(:participant_outcome,
+                                  declaration:,
+                                  state:,
+                                  completion_date: declaration.declaration_date.to_s)
+
+                break if Faker::Boolean.boolean(true_ratio: 0.3)
+              end
+            end
+          end
+
+          # create some voided declarations
+          if schedule.allowed_declaration_types.count < 4 && declaration_type == "retained-1"
+            voidable_statement = declaration.statements.first
+            helpers.travel_to voidable_statement.deadline_date + 1.month do
+              Declarations::Void.new(declaration:).void
+            end
+          end
         end
-
-        break if Faker::Boolean.boolean(true_ratio: 0.3)
       end
+
+      application_count += 1
+      application_count = 1 if application_count > 3
     end
   end
 end

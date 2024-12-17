@@ -35,7 +35,10 @@ Rails.logger.info("Seeding database")
   "add_contracts.rb",
   "add_declarations.rb",
   "add_api_tokens.rb",
+  "process_statements.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
-  load_base_file(seed_file)
+  ApplicationRecord.transaction do
+    load_base_file(seed_file)
+  end
 end
