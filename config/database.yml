@@ -30,8 +30,5 @@ staging:
 sandbox:
   <<: *default_primary
 
-separation:
-  <<: *default_primary
-
 production:
   <<: *default_primary
