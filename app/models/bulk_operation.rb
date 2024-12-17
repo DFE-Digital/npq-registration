@@ -16,8 +16,6 @@ class BulkOperation < ApplicationRecord
     errors.add(:file, "is empty") unless file.blob.byte_size.positive?
     if attachment_changes["file"]
       check_format(attachment_changes["file"].attachable.read)
-    else
-      check_format(file.blob.open(&:read))
     end
   end
 

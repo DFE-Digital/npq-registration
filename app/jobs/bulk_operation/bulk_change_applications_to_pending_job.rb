@@ -2,7 +2,7 @@
 
 class BulkOperation::BulkChangeApplicationsToPendingJob < ApplicationJob
   def perform(bulk_operation_id:)
-    bulk_operation = BulkOperations::RevertApplicationsToPending.find(bulk_operation_id)
+    bulk_operation = BulkOperation::RevertApplicationsToPending.find(bulk_operation_id)
     application_ecf_ids = CSV.parse(bulk_operation.file.download, headers: false).flatten
     Rails.logger.info("Bulk Operation started - bulk_operation_id: #{bulk_operation_id}")
     result = BulkOperation::BulkChangeApplicationsToPending.new(application_ecf_ids:).run!(dry_run: false)
