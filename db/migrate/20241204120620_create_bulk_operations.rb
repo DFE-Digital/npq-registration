@@ -7,6 +7,7 @@ class CreateBulkOperations < ActiveRecord::Migration[7.1]
       t.string "type"
       t.datetime "ran_at"
       t.datetime "finished_at"
+      t.integer "ran_by_admin_id"
 
       t.timestamps
     end
