@@ -30,9 +30,6 @@ staging:
 sandbox:
   <<: *default_primary
 
-migration:
-  <<: *default_primary
-
 separation:
   <<: *default_primary
 

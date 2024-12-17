@@ -8,7 +8,6 @@ There are three permanent environments for NPQ and a fourth set of transient env
   - [Review Apps](#review-apps)
   - [Staging](#staging)
   - [Sandbox](#sandbox)
-  - [Migration](#migration)
   - [Separation](#separation)
   - [Production](#production)
 
@@ -35,15 +34,6 @@ There are three permanent environments for NPQ and a fourth set of transient env
 - Submitted applications are pushed to the sandbox ECF environment.
 - https://npq-registration-sandbox-web.teacherservices.cloud
 - [View deployed commit](https://npq-registration-sandbox-web.teacherservices.cloud/healthcheck.json)
-
-## Migration
-
-- Deployed on merging to `main`.
-- Part of the `production` Azure space.
-- Temporary environment for NPQ separation work.
-- Used internally by team members as a production-like environment with NPQ separation features enabled.
-- https://npq-registration-migration-web.teacherservices.cloud
-- [View deployed commit](https://npq-registration-migration-web.teacherservices.cloud/healthcheck.json)
 
 ## Separation
 

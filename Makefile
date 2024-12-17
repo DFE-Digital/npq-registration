@@ -38,10 +38,7 @@ staging: test-cluster
 
 sandbox: production-cluster
 	$(eval include global_config/sandbox.sh)
-
-migration: production-cluster
-	$(eval include global_config/migration.sh)
-
+	
 separation: production-cluster
 	$(eval include global_config/separation.sh)
 
