@@ -13,7 +13,7 @@ class BulkOperation < ApplicationRecord
   def file_valid
     return unless file.attached?
 
-    errors.add(:file, "is empty") unless file.blob.byte_size.positive?
+    errors.add(:file, :empty) unless file.blob.byte_size.positive?
     if attachment_changes["file"]
       check_format(attachment_changes["file"].attachable.read)
     end
@@ -24,7 +24,7 @@ private
   def check_format(string)
     CSV.parse(string) do |row|
       if row.size > 1
-        errors.add(:file, "is wrong format")
+        errors.add(:file, :invalid)
         break
       end
     end
