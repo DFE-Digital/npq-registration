@@ -4,17 +4,17 @@ module NpqSeparation::Admin::BulkOperations
     before_action :find_bulk_operation, only: %i[run show]
 
     def create
-      if params[:bulk_operations_reject_applications] && params[:bulk_operations_reject_applications][:file]
-        BulkOperations::RejectApplications.where(type: "BulkOperations::RejectApplications").not_ran.destroy_all
-        @bulk_operation.file.attach(params[:bulk_operations_reject_applications][:file])
+      if params[:bulk_operation_reject_applications] && params[:bulk_operation_reject_applications][:file]
+        BulkOperation::RejectApplications.not_ran.destroy_all
+        @bulk_operation.file.attach(params[:bulk_operation_reject_applications][:file])
         if @bulk_operation.valid?
           @bulk_operation.save!
           @bulk_operation.update!(rows: @bulk_operation.file.download.lines.count)
-          redirect_to :npq_separation_admin_bulk_operations_reject_applications
-        else
-          render :index, status: :unprocessable_entity
+          return redirect_to :npq_separation_admin_bulk_operations_reject_applications
         end
       end
+
+      render :index, status: :unprocessable_entity
     end
 
     def run
@@ -23,20 +23,22 @@ module NpqSeparation::Admin::BulkOperations
       redirect_to :npq_separation_admin_bulk_operations_reject_applications
     end
 
-    def show; end
+    def show
+      # empty method, because rubocop will complain in the before_action otherwise
+    end
 
   private
 
     def set_bulk_operations
-      @bulk_operations = BulkOperations::RejectApplications.all.includes([file_attachment: :blob]).order(:created_at)
+      @bulk_operations = BulkOperation::RejectApplications.all.includes([file_attachment: :blob]).order(:created_at)
     end
 
     def set_bulk_operation
-      @bulk_operation = BulkOperations::RejectApplications.new admin: current_admin
+      @bulk_operation = BulkOperation::RejectApplications.new admin: current_admin
     end
 
     def find_bulk_operation
-      @bulk_operation = BulkOperations::RejectApplications.find(params[:id])
+      @bulk_operation = BulkOperation::RejectApplications.find(params[:id])
     end
   end
 end
