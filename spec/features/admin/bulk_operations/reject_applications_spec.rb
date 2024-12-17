@@ -16,7 +16,9 @@ RSpec.feature "reject applications", :rack_test_driver, type: :feature do
     visit npq_separation_admin_bulk_operations_reject_applications_path
     attach_file "file", applications_file.path
     click_button "Upload"
-    click_button "Reject Applications"
+    perform_enqueued_jobs do
+      click_button "Reject Applications"
+    end
     click_link File.basename(applications_file.path)
     expect(page).to have_content "#{Application.first.ecf_id}Changed to rejected"
     expect(page).to have_content "#{Application.last.ecf_id}Changed to rejected"

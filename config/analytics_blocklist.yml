@@ -180,3 +180,4 @@ shared:
   - updated_at
   - ran_at
   - finished_at
+  - ran_by_admin_id
