@@ -239,6 +239,13 @@ en:
               invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
             reason:
               inclusion: Choose a valid reason for the training status change
+        applications/change_funding_eligibility:
+          attributes:
+            base:
+              declaration_exists: "Eligibility can not be changed because a billable or submitted declaration exists"
+              funded_application: "Eligibility can not be changed because the application is funded"
+            eligible_for_funding:
+              inclusion: Choose whether the Application is eligible for funding
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
@@ -533,6 +540,9 @@ en:
 
   shared:
     cancel: Cancel
+    continue: Continue
+    "yes": "Yes"
+    "no": "No"
 
   accounts:
     show:
@@ -783,6 +793,8 @@ en:
     legend:
       applications_change_training_status:
         training_status: Choose a different training status
+      applications_change_funding_eligibility:
+        eligible_for_funding: Is eligible for funding?
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"
