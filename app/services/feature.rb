@@ -68,6 +68,4 @@ class Feature
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
     end
   end
-
-  
 end
