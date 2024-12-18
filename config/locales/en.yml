@@ -17,6 +17,12 @@ en:
     ecf_id: &ecf_id
       blank: "Enter an ECF ID"
       taken: "ECF ID must be unique"
+    attributes:
+      trn:
+        blank: TRN can't be blank
+        invalid: TRN must only contain numbers
+        not_real: You must enter a valid TRN
+        wrong_length: TRN is the wrong length (should be %{count} characters)
 
   application: &application
     blank: The entered '#/%{parameterized_attribute}' is missing from your request. Check details and try again.
@@ -290,8 +296,7 @@ en:
           attributes:
             trn:
               blank: Teacher reference number cannot be blank
-              too_short: Teacher reference number is at least %{count} digits long
-              too_long: Teacher reference number is at most %{count} digits long
+              wrong_length: Teacher reference number is %{count} digits long
               invalid: Teacher reference number must only contain numbers
               not_real: You must enter a valid teacher reference number (TRN)
             full_name:
