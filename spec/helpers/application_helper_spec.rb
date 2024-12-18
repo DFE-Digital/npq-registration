@@ -43,8 +43,8 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     {
       "development" => otp_snippet,
-      "staging" => otp_snippet,
       "review" => otp_snippet,
+      "staging" => nil,
       "sandbox" => nil,
       "production" => nil,
     }.each do |environment, expected_result|
