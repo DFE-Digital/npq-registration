@@ -45,6 +45,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).not_to have_link("Feature Flags", href: "/admin/features")
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
     expect(page).not_to have_link("Settings", href: "/admin/settings")
   end
@@ -57,8 +58,15 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     page.click_link("Legacy Admin")
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).to have_link("New Feature Flags", href: "/admin/features")
     expect(page).to have_link("Admin Users", href: "/admin/admins")
     expect(page).to have_link("Settings", href: "/admin/settings")
+  end
+
+  scenario "when logged in as a super admin, it allows access to the new feature flags interface" do
+    sign_in_as_super_admin
+    page.click_link("New Feature Flags")
+    expect(page).to have_current_path("/admin/features")
   end
 
   scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
