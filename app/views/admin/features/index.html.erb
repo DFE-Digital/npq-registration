@@ -21,7 +21,7 @@
                     <td class="govuk-table__cell"><%= feature %></td>
                     <td class="govuk-table__cell"><strong class="govuk-tag <%= Flipper.enabled?(feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(feature) ? 'On' : 'Off' %></strong></td>
                     <td class="govuk-table__cell"><%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: feature, key: "actors").count %></td>
-                    <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature)) %></td>
+                    <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature)) %><span class="govuk-visually-hidden"><%= ' '  + feature %></span></td>
                 </tr>
                 <% end %>
             </tbody>
