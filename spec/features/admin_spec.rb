@@ -45,6 +45,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).not_to have_link("Feature Flags", href: "/admin/features")
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
     expect(page).not_to have_link("Settings", href: "/admin/settings")
   end
@@ -57,9 +58,34 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     page.click_link("Legacy Admin")
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).to have_link("New Feature Flags", href: "/admin/features")
     expect(page).to have_link("Admin Users", href: "/admin/admins")
     expect(page).to have_link("Settings", href: "/admin/settings")
   end
+
+  scenario "when logged in as a super admin, the user can access the new feature flags interface" do
+    sign_in_as_super_admin
+    page.click_link("New Feature Flags")
+    expect(page).to have_current_path("/admin/features")
+  end
+
+  # when logged in as a super admin, the user can:
+
+    # - click on the view link for the registration open feature flag 
+    # page.click_link "View Registration open"
+
+    # - expect page to have text "Registration open"
+    # expect(page).to have_content("Registration open")
+
+    # - see that the registration open feature flag is currently set to true
+    # expect Flipper::Feature.get(:registration_open).enabled?
+
+
+    # - fill_in 'Confirm...', with: 'Registration open'
+    # - click on the change state button for the registration open feature flag
+    # - page.click_button "Change state"
+    # - expect page to have text "You have turned the Registration open feature flag off."
+    # - see that the registration open feature flag is currently set to false
 
   scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
     sign_in_as_super_admin
