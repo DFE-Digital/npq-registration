@@ -4,7 +4,7 @@ RSpec.describe BulkOperation::BulkRejectApplicationsJob do
   describe "#perform" do
     subject { described_class.new.perform(bulk_operation_id:) }
 
-    let(:bulk_operation) { create(:reject_applications, admin: create(:admin), file: uploaded_file) }
+    let(:bulk_operation) { create(:reject_applications_bulk_operation, admin: create(:admin), file: uploaded_file) }
     let(:bulk_operation_id) { bulk_operation.id }
     let(:file) do
       Tempfile.new.tap do |file|
@@ -13,7 +13,7 @@ RSpec.describe BulkOperation::BulkRejectApplicationsJob do
       end
     end
     let(:uploaded_file) { Rack::Test::UploadedFile.new(file.path) }
-    let(:application_ecf_ids) { [SecureRandom.uuid] }
+    let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
     it "calls BulkOperation::BulkRejectApplications" do
       expect(BulkOperation::BulkRejectApplications).to receive(:new).with(application_ecf_ids:).and_call_original

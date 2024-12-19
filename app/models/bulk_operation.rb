@@ -4,7 +4,7 @@ class BulkOperation < ApplicationRecord
 
   validate :file_valid
 
-  scope :not_ran, -> { where(result: nil) }
+  scope :not_started, -> { where(started_at: nil) }
 
   def started?
     started_at.present?

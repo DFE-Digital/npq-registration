@@ -5,7 +5,7 @@ module NpqSeparation::Admin::BulkOperations
 
     def create
       if (file = params.dig(:bulk_operation_revert_applications_to_pending, :file))
-        BulkOperation::RevertApplicationsToPending.not_ran.destroy_all
+        BulkOperation::RevertApplicationsToPending.not_started.destroy_all
         @bulk_operation.file.attach(file)
         if @bulk_operation.valid?
           @bulk_operation.save!
