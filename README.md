@@ -21,6 +21,7 @@
 1. [BigQuery Reports](docs/bigquery_reports.md)
 1. [Sending emails from application](docs/emails.md)
 1. [NPQ Contracts](docs/npq_contracts.md)
+1. [Funding](docs/funding.md)
 1. [Data Model](docs/data_model.md)
 
 ## Content Editors

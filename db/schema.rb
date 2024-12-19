@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_09_112415) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_18_101840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -238,6 +238,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_112415) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
+  end
+
+  create_table "financial_change_logs", force: :cascade do |t|
+    t.string "operation_description", null: false
+    t.json "data_changes", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -501,6 +508,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_112415) do
     t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
     t.index ["cohort_id"], name: "index_statements_on_cohort_id"
     t.index ["ecf_id"], name: "index_statements_on_ecf_id", unique: true
+    t.index ["lead_provider_id", "cohort_id", "year", "month"], name: "idx_on_lead_provider_id_cohort_id_year_month_2dece26c47", unique: true
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
   end
 

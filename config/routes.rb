@@ -234,7 +234,13 @@ Rails.application.routes.draw do
 
       resources :schools, only: %i[index show]
       resources :courses, only: %i[index show]
-      resources :users, only: %i[index show]
+      resources :users, only: %i[index show] do
+        member do
+          namespace :users, path: nil do
+            resource :change_trn, controller: "change_trn", only: %i[show create]
+          end
+        end
+      end
 
       resources :participant_outcomes, only: %i[] do
         member { post :resend }
