@@ -228,6 +228,10 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :cohorts do
+        resources :schedules, except: :index
+      end
+
       resources :schools, only: %i[index show]
       resources :courses, only: %i[index show]
       resources :users, only: %i[index show] do
