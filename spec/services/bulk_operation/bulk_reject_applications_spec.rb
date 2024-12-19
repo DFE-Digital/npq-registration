@@ -7,11 +7,6 @@ RSpec.describe BulkOperation::BulkRejectApplications do
   describe "#run!" do
     subject(:run) { instance.run! }
 
-    RSpec.shared_examples "changes to rejected" do |initial_state:|
-      it { expect { run }.to(change { application.reload.lead_provider_approval_status }.from(initial_state).to("rejected")) }
-      it { expect(run[application.ecf_id]).to eq("Changed to rejected") }
-    end
-
     RSpec.shared_examples "does not change to rejected" do |result|
       it { expect { run }.not_to(change { application.reload.lead_provider_approval_status }) }
       it { expect(run[application.ecf_id]).to match(result) }
@@ -32,7 +27,16 @@ RSpec.describe BulkOperation::BulkRejectApplications do
     context "when the application is lead_provider_approval_status: pending" do
       let(:application) { create(:application, :pending) }
 
-      it_behaves_like "changes to rejected", initial_state: "pending"
+      it { expect { run }.to(change { application.reload.lead_provider_approval_status }.from("pending").to("rejected")) }
+      it { expect(run[application.ecf_id]).to eq("Changed to rejected") }
+    end
+
+    context "when the application does not exist" do
+      let(:application_ecf_id) { SecureRandom.uuid }
+      let(:application_ecf_ids) { [application_ecf_id] }
+      let(:application) { nil }
+
+      it { expect(run[application_ecf_id]).to match(/Not found/) }
     end
   end
 end

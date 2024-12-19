@@ -17,22 +17,29 @@ RSpec.describe BulkOperation, type: :model do
       end
     end
 
+    subject(:bulk_operation) { described_class.new(admin:) }
+
     it "allows a valid file" do
-      bulk_operation = described_class.new(admin:)
       bulk_operation.file.attach(valid_file.open)
       expect(bulk_operation).to be_valid
     end
 
     it "does not allow empty file" do
-      bulk_operation = described_class.new
       bulk_operation.file.attach(empty_file.open)
       expect(bulk_operation).not_to be_valid
     end
 
     it "does not allow file with wrong format" do
-      bulk_operation = described_class.new
       bulk_operation.file.attach(wrong_format_file.open)
       expect(bulk_operation).not_to be_valid
     end
+  end
+
+  describe "scopes" do
+    context "not_ran" do
+    end
+  end
+
+  describe "#started?" do
   end
 end

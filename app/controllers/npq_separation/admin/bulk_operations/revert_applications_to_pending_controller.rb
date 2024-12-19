@@ -4,12 +4,12 @@ module NpqSeparation::Admin::BulkOperations
     before_action :find_bulk_operation, only: %i[run show]
 
     def create
-      if params[:bulk_operation_revert_applications_to_pending] && params[:bulk_operation_revert_applications_to_pending][:file]
+      if (file = params.dig(:bulk_operation_revert_applications_to_pending, :file))
         BulkOperation::RevertApplicationsToPending.not_ran.destroy_all
-        @bulk_operation.file.attach(params[:bulk_operation_revert_applications_to_pending][:file])
+        @bulk_operation.file.attach(file)
         if @bulk_operation.valid?
           @bulk_operation.save!
-          @bulk_operation.update!(rows: @bulk_operation.file.download.lines.count)
+          @bulk_operation.update!(row_count: @bulk_operation.file.download.lines.count)
           return redirect_to :npq_separation_admin_bulk_operations_revert_applications_to_pending_index
         end
       end
@@ -18,7 +18,7 @@ module NpqSeparation::Admin::BulkOperations
     end
 
     def run
-      @bulk_operation.update!(ran_at: Time.zone.now, ran_by_admin_id: current_admin.id)
+      @bulk_operation.update!(started_at: Time.zone.now, ran_by_admin_id: current_admin.id)
       BulkOperation::BulkChangeApplicationsToPendingJob.perform_later(bulk_operation_id: @bulk_operation.id)
       redirect_to :npq_separation_admin_bulk_operations_revert_applications_to_pending_index
     end

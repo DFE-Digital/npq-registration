@@ -11,14 +11,14 @@
           row.with_key(text: "Filename")
           row.with_value do
             govuk_details(summary_text: @bulk_operation.file.filename) do
-              tag.pre(@bulk_operation.file.blob.open {|file| file.read })
+              tag.pre(@bulk_operation.file.blob.open(&:read))
             end
           end
         end
 
         sl.with_row do |row|
           row.with_key(text: "Rows")
-          row.with_value(text: @bulk_operation.rows)
+          row.with_value(text: @bulk_operation.row_count)
         end
 
         sl.with_row do |row|
@@ -27,8 +27,8 @@
         end
 
         sl.with_row do |row|
-          row.with_key(text: "Ran At")
-          row.with_value(text: @bulk_operation.ran_at&.to_formatted_s(:govuk_short))
+          row.with_key(text: "Started At")
+          row.with_value(text: @bulk_operation.started_at&.to_formatted_s(:govuk_short))
         end
 
         sl.with_row do |row|
