@@ -80,7 +80,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
         log = FinancialChangeLog.first
         expect(log.operation_description).to eq("OneOff 2326")
-        expect(log.data_changes).to eq({ "updated_statement_id" => statement_1.id })
+        expect(log.data_changes).to eq({ "changes" => { "output_fee" => [true, false] }, "updated_statement_id" => statement_1.id })
       end
     end
 

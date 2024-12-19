@@ -37,8 +37,11 @@ module OneOff
 
             statement = statements.first
             if statement
-              statement.update!(output_fee: output_fee(row["output_fee"]))
-              FinancialChangeLog.log!(description: FinancialChangeLog::ONE_OFF_2326, data: { updated_statement_id: statement.id })
+              statement.output_fee = output_fee(row["output_fee"])
+              if statement.changed?
+                FinancialChangeLog.log!(description: FinancialChangeLog::ONE_OFF_2326, data: { updated_statement_id: statement.id, changes: statement.changes })
+                statement.save!
+              end
             else
               create_statement(row, lead_provider:)
             end
