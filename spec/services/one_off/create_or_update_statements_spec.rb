@@ -2,8 +2,6 @@ require "rails_helper"
 
 RSpec.describe OneOff::CreateOrUpdateStatements do
   describe ".call" do
-    let(:year) { 2024 }
-    let(:month) { 12 }
     let(:cohort_year) { 2021 }
     let(:csv_file) { Tempfile.new }
     let(:csv_path) { csv_file.path }
@@ -15,15 +13,15 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
     let(:statement_1) { create(:statement, year: 2025, month: 1, cohort: cohort, lead_provider: ambition, output_fee: true) }
     let(:contract_template_1) { create(:contract_template, per_participant: 100) }
     let(:contract_template_2) { create(:contract_template, per_participant: 200) }
-    let(:contract_1) { create(:contract, contract_template: contract_template_1, statement: statement_1, course: course_1) }
-    let(:contract_2) { create(:contract, contract_template: contract_template_2, statement: statement_1, course: course_2) }
 
     before do
       csv_file.write(csv_content)
       csv_file.rewind
 
-      contract_1
-      contract_2
+      create(:contract, contract_template: contract_template_1, statement: statement_1, course: course_1)
+      create(:contract, contract_template: contract_template_2, statement: statement_1, course: course_2)
+
+      LeadProvider.where.not(name: "Ambition Institute").map(&:destroy)
     end
 
     context "when statement can not be found" do
@@ -34,24 +32,20 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
         CSV
       end
 
-      before do
-        LeadProvider.where.not(name: "Ambition Institute").map(&:destroy)
-      end
-
       it "creates a new statement" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
         }.to change(Statement, :count).by(1)
       end
 
       it "creates a new contracts" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
         }.to change(Contract, :count).by(2)
       end
 
       it "creates log records" do
-        OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+        OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
 
         statement = Statement.order("created_at DESC").first
 
@@ -75,18 +69,14 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
         CSV
       end
 
-      before do
-        LeadProvider.where.not(name: "Ambition Institute").map(&:destroy)
-      end
-
       it "updates a statement" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
         }.to change { statement_1.reload.output_fee }.from(true).to(false)
       end
 
       it "creates log records" do
-        OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+        OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
 
         log = FinancialChangeLog.first
         expect(log.operation_description).to eq("OneOff 2326")
@@ -104,7 +94,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
       it "updates a statement" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
         }.to raise_error(ArgumentError)
       end
     end

@@ -30,6 +30,7 @@ module OneOff
         @cohort = Cohort.find_by!(start_year: cohort_year)
 
         csv_file.each do |row|
+          # NIoT has no 2021 cohort so its excluded
           LeadProvider.where.not(name: "National Institute of Teaching").find_each do |lead_provider|
             year, month = parse_date(row["name"])
             statements = Statement.where(year:, month:, cohort: @cohort, lead_provider: lead_provider)

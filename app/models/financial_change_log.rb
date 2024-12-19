@@ -14,6 +14,6 @@ class FinancialChangeLog < ApplicationRecord
   ONE_OFF_2326 = "OneOff 2326".freeze
 
   def self.log!(description:, data:)
-    FinancialChangeLog.create!(operation_description: description, data_changes: data)
+    create!(operation_description: description, data_changes: data)
   end
 end
