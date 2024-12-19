@@ -174,10 +174,10 @@ shared:
   - id
   - type
   - admin_id
-  - rows
+  - row_count
   - result
   - created_at
   - updated_at
-  - ran_at
+  - started_at
   - finished_at
   - ran_by_admin_id

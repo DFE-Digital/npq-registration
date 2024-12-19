@@ -3,14 +3,12 @@ require "rails_helper"
 RSpec.feature "reject applications", :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
   include Helpers::BulkOperations
-  include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin) }
 
   before do
     sign_in_as_admin
-    create(:application, :pending)
-    create(:application, :pending)
+    create_list(:application, 2, :pending)
   end
 
   scenario "reject applications" do

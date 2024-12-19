@@ -6,9 +6,11 @@ class BulkOperation < ApplicationRecord
 
   scope :not_ran, -> { where(result: nil) }
 
-  def ran?
-    result.present?
+  def started?
+    started_at.present?
   end
+
+private
 
   def file_valid
     return unless file.attached?
@@ -18,8 +20,6 @@ class BulkOperation < ApplicationRecord
       check_format(attachment_changes["file"].attachable.read)
     end
   end
-
-private
 
   def check_format(string)
     CSV.parse(string) do |row|

@@ -1,11 +1,11 @@
 class CreateBulkOperations < ActiveRecord::Migration[7.1]
   def change
     create_table :bulk_operations do |t|
-      t.integer "admin_id"
-      t.integer "rows"
+      t.integer "admin_id", null: false
+      t.integer "row_count"
       t.text "result"
-      t.string "type"
-      t.datetime "ran_at"
+      t.string "type", null: false
+      t.datetime "started_at"
       t.datetime "finished_at"
       t.integer "ran_by_admin_id"
 

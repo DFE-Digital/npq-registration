@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.feature "revert applications to pending", :rack_test_driver, type: :feature do
   include Helpers::AdminLogin
   include Helpers::BulkOperations
-  include_context "Stub Get An Identity Omniauth Responses"
 
   let(:admin) { create(:admin) }
 

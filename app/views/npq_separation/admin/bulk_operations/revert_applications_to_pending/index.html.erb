@@ -1,35 +1,38 @@
 <%= govuk_back_link(href: npq_separation_admin_bulk_operations_path) %>
 
 <h1 class="govuk-heading-l">Revert Applications to Pending</h1>
-<table class="govuk-table">
-  <thead class="govuk-table__head">
-  <tr class="govuk-table__row">
-    <th scope="col" class="govuk-table__header">Filename</th>
-    <th scope="col" class="govuk-table__header">Rows</th>
-    <th scope="col" class="govuk-table__header">Created at</th>
-    <th scope="col" class="govuk-table__header">Ran at</th>
-    <th scope="col" class="govuk-table__header"></th>
-  </tr>
-  </thead>
 
-  <tbody class="govuk-table__body">
-    <% @bulk_operations.each do |bulk_operation| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= govuk_link_to bulk_operation.file.filename, npq_separation_admin_bulk_operations_revert_applications_to_pending_path(bulk_operation) %></td>
-        <td class="govuk-table__cell"><%= bulk_operation.rows %></td>
-        <td class="govuk-table__cell"><%= bulk_operation.created_at.to_formatted_s(:govuk_short) %></td>
-        <td class="govuk-table__cell"><%= bulk_operation.ran_at&.to_formatted_s(:govuk_short) %></td>
-        <td class="govuk-table__cell">
-          <% unless bulk_operation.ran? %>
-            <%= form_with url: run_npq_separation_admin_bulk_operations_revert_applications_to_pending_path(bulk_operation) do |f| %>
-              <%= f.submit "Revert Applications to Pending", class: "govuk-button", data: {module: "govuk-button"} %>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Filename")
+        row.with_cell(text: "Rows")
+        row.with_cell(text: "Created at")
+        row.with_cell(text: "Started at")
+        row.with_cell
+      end
+    end
+
+    table.with_body do |body|
+      @bulk_operations.each do |bulk_operation|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_revert_applications_to_pending_path(bulk_operation)))
+          row.with_cell(text: bulk_operation.row_count)
+          row.with_cell(text: bulk_operation.created_at.to_formatted_s(:govuk_short))
+          row.with_cell(text: bulk_operation.started_at&.to_formatted_s(:govuk_short))
+          row.with_cell do
+            unless bulk_operation.started?
+              form_with url: run_npq_separation_admin_bulk_operations_revert_applications_to_pending_path(bulk_operation) do |f|
+                f.govuk_submit "Revert Applications to Pending"
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+%>
 
 <%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path, method: :post, multipart: true do |f| %>
   <%= f.govuk_error_summary %>
@@ -52,5 +55,5 @@ e7e8a629-f75f-4d98-b157-269136110099
     </p>
   <% end %>
 
-  <%= f.submit "Upload", class: "govuk-button", data: {module: "govuk-button"} %>
+  <%= f.govuk_submit "Upload" %>
 <% end %>

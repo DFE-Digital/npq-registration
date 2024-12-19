@@ -70,7 +70,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
   end
 
   create_table "api_tokens", force: :cascade do |t|
-    t.bigint "lead_provider_id", null: false
+    t.bigint "lead_provider_id"
     t.string "hashed_token", null: false
     t.datetime "last_used_at"
     t.datetime "created_at", null: false
@@ -156,11 +156,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
   end
 
   create_table "bulk_operations", force: :cascade do |t|
-    t.integer "admin_id"
-    t.integer "rows"
+    t.integer "admin_id", null: false
+    t.integer "row_count"
     t.text "result"
-    t.string "type"
-    t.datetime "ran_at"
+    t.string "type", null: false
+    t.datetime "started_at"
     t.datetime "finished_at"
     t.integer "ran_by_admin_id"
     t.datetime "created_at", null: false
@@ -335,6 +335,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
     t.uuid "ecf_id"
     t.string "hint"
     t.index ["ecf_id"], name: "index_lead_providers_on_ecf_id", unique: true
+  end
+
+  create_table "legacy_passed_participant_outcomes", force: :cascade do |t|
+    t.string "trn", null: false
+    t.string "course_short_code"
+    t.date "completion_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trn"], name: "index_legacy_passed_participant_outcomes_on_trn"
   end
 
   create_table "local_authorities", force: :cascade do |t|
@@ -551,6 +560,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
     t.index ["ecf_id"], name: "index_statements_on_ecf_id", unique: true
     t.index ["lead_provider_id", "cohort_id", "year", "month"], name: "idx_on_lead_provider_id_cohort_id_year_month_2dece26c47", unique: true
     t.index ["lead_provider_id"], name: "index_statements_on_lead_provider_id"
+  end
+
+  create_table "trs_data", force: :cascade do |t|
+    t.string "trn", null: false
+    t.string "npq_type"
+    t.date "awarded_date"
+    t.index ["trn"], name: "index_trs_data_on_trn"
   end
 
   create_table "users", force: :cascade do |t|
