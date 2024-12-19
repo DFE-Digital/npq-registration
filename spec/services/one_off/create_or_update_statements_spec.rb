@@ -84,6 +84,14 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
           OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
         }.to change { statement_1.reload.output_fee }.from(true).to(false)
       end
+
+      it "creates log records" do
+        OneOff::CreateOrUpdateStatements.new.call(cohort_year: 2021, csv_path:)
+
+        log = FinancialChangeLog.first
+        expect(log.operation_description).to eq("OneOff 2326")
+        expect(log.data_changes).to eq({ "updated_statement_id" => statement_1.id })
+      end
     end
 
     context "when data is incorrect" do
