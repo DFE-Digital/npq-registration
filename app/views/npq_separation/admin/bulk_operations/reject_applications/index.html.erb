@@ -1,0 +1,59 @@
+<%= govuk_back_link(href: npq_separation_admin_bulk_operations_path) %>
+
+<h1 class="govuk-heading-l">Reject Applications</h1>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Filename")
+        row.with_cell(text: "Rows")
+        row.with_cell(text: "Created at")
+        row.with_cell(text: "Started at")
+        row.with_cell
+      end
+    end
+
+    table.with_body do |body|
+      @bulk_operations.each do |bulk_operation|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_reject_application_path(bulk_operation)))
+          row.with_cell(text: bulk_operation.row_count)
+          row.with_cell(text: bulk_operation.created_at.to_formatted_s(:govuk_short))
+          row.with_cell(text: bulk_operation.started_at&.to_formatted_s(:govuk_short))
+          row.with_cell do
+            unless bulk_operation.started?
+              form_with url: run_npq_separation_admin_bulk_operations_reject_application_path(bulk_operation) do |f|
+                f.govuk_submit "Reject Applications"
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+%>
+
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_reject_applications_path, method: :post, multipart: true do |f| %>
+  <%= f.govuk_error_summary %>
+  <div class="govuk-form-group">
+    <%= f.label "file", "Upload an application list file", class: "govuk-label" %>
+    <%= f.file_field "file", class: "govuk-file-upload" %>
+  </div>
+
+  <%= govuk_details(summary_text: "Example file") do %>
+    <p>
+      The file is a list of application IDs, one ID per row, with no header row.
+    </p>
+    <p>
+      e.g.
+      <pre>
+2f581c80-b5bb-4404-bcaf-4044d9c0c674
+21fe9549-28f0-492c-ae3a-d52969b40536
+e7e8a629-f75f-4d98-b157-269136110099
+      </pre>
+    </p>
+  <% end %>
+
+  <%= f.govuk_submit "Upload" %>
+<% end %>
