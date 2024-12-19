@@ -68,6 +68,15 @@ To get a rails console on production, run the following:
 make ci production aks-console
 ```
 
+### Copy a file
+
+To copy a file from the `tmp` directory on a review app:
+```shell
+make review aks-download-tmp-file PULL_REQUEST_NUMBER=[PR_NUMBER] FILENAME=somefile.csv
+```
+
+The file ends up locally in a subdirectory matching the pod name.
+
 ### Privileged Identity Management requests
 
 Accessing resources in the production environment requires elevated privileges.
