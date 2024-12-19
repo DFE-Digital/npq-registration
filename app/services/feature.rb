@@ -11,6 +11,8 @@ class Feature
 
   MAINTENANCE_BANNER = "Maintenance banner".freeze
 
+  # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
+  # not included in this array. This approach will make tracking feature flags much easier.
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
     CLOSED_REGISTRATION_ENABLED,
