@@ -34,7 +34,6 @@ module OneOff
           LeadProvider.where.not(name: "National Institute of Teaching").find_each do |lead_provider|
             year, month = parse_date(row["name"])
             statements = Statement.where(year:, month:, cohort: @cohort, lead_provider: lead_provider)
-            return ArgumentError if statements.count > 1
 
             statement = statements.first
             if statement
@@ -79,7 +78,7 @@ module OneOff
     end
 
     def output_fee(value)
-      { "TRUE" => true, "FALSE" => false }[value]
+      { "TRUE" => true, "FALSE" => false }.fetch(value)
     end
   end
 end

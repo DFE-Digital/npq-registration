@@ -85,17 +85,34 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
     end
 
     context "when data is incorrect" do
-      let(:csv_content) do
-        <<~CSV
-          name,cohort,deadline_date,payment_date,output_fee
-          25-February,2021,25/01/2024,25/02/2024,FALSE
-        CSV
+      describe "when date is wrong" do
+        let(:csv_content) do
+          <<~CSV
+            name,cohort,deadline_date,payment_date,output_fee
+            25-February,2021,25/01/2024,25/02/2024,FALSE
+          CSV
+        end
+
+        it "throws an exception" do
+          expect {
+            OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+          }.to raise_error(ArgumentError)
+        end
       end
 
-      it "updates a statement" do
-        expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
-        }.to raise_error(ArgumentError)
+      describe "when date is wrong" do
+        let(:csv_content) do
+          <<~CSV
+            name,cohort,deadline_date,payment_date,output_fee
+            25-Feb,2021,25/01/2024,25/02/2024,TRU
+          CSV
+        end
+
+        it "throws an exception" do
+          expect {
+            OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+          }.to raise_error(KeyError)
+        end
       end
     end
   end
