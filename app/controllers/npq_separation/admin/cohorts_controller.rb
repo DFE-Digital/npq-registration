@@ -1,14 +1,13 @@
 class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
   before_action :ensure_super_admin, except: %i[index show]
+  before_action :cohort, only: %i[show edit update destroy]
   before_action :ensure_editable, only: %i[edit update destroy]
 
   def index
     @pagy, @cohorts = pagy(Cohort.all.order(start_year: :desc))
   end
 
-  def show
-    @cohort = cohort
-  end
+  def show; end
 
   def new
     @cohort = Cohort.new
@@ -27,27 +26,24 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
   end
 
   def edit
-    @cohort = cohort
     render :form
   end
 
   def update
-    if cohort.update(cohort_params)
+    if @cohort.update(cohort_params)
       flash[:success] = "Cohort updated"
-      redirect_to npq_separation_admin_cohort_path(cohort)
+      redirect_to npq_separation_admin_cohort_path(@cohort)
     else
-      @cohort = cohort
       render :form, status: :unprocessable_entity
     end
   end
 
   def destroy
     if params[:confirm].present?
-      cohort.destroy!
+      @cohort.destroy!
       flash[:success] = "Cohort deleted"
       redirect_to action: :index
     else
-      @cohort = cohort
       render :destroy
     end
   end
@@ -70,9 +66,9 @@ private
   end
 
   def ensure_editable
-    unless cohort.editable?
+    unless @cohort.editable?
       flash[:error] = "This cohort is not editable"
-      redirect_to npq_separation_admin_cohort_path(cohort)
+      redirect_to npq_separation_admin_cohort_path(@cohort)
     end
   end
 end

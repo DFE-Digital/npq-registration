@@ -1,10 +1,9 @@
 class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
   before_action :ensure_super_admin, except: :show
+  before_action :schedule, only: %i[show edit update destroy]
   before_action :ensure_editable, only: %i[edit update destroy]
 
-  def show
-    @schedule = schedule
-  end
+  def show; end
 
   def new
     @schedule = cohort.schedules.new
@@ -23,27 +22,24 @@ class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
   end
 
   def edit
-    @schedule = schedule
     render :form
   end
 
   def update
-    if schedule.update(schedule_params)
+    if @schedule.update(schedule_params)
       flash[:success] = "Schedule updated"
       redirect_to npq_separation_admin_cohort_path(cohort)
     else
-      @schedule = schedule
       render :form, status: :unprocessable_entity
     end
   end
 
   def destroy
     if params[:confirm].present?
-      schedule.destroy!
+      @schedule.destroy!
       flash[:success] = "Schedule deleted"
-      redirect_to npq_separation_admin_cohort_path(schedule.cohort)
+      redirect_to npq_separation_admin_cohort_path(@schedule.cohort)
     else
-      @schedule = schedule
       render :destroy
     end
   end
@@ -70,9 +66,9 @@ private
   end
 
   def ensure_editable
-    unless schedule.editable?
+    unless @schedule.editable?
       flash[:error] = "This schedule is not editable"
-      redirect_to npq_separation_admin_cohort_schedule_path(cohort, schedule)
+      redirect_to npq_separation_admin_cohort_schedule_path(cohort, @schedule)
     end
   end
 end
