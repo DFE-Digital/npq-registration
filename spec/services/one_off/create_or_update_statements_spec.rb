@@ -100,7 +100,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
         end
       end
 
-      describe "when date is wrong" do
+      describe "when output_fee is wrong" do
         let(:csv_content) do
           <<~CSV
             name,cohort,deadline_date,payment_date,output_fee

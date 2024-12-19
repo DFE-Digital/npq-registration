@@ -6,7 +6,7 @@ RSpec.describe FinancialChangeLog, type: :model do
 
     log = FinancialChangeLog.first
     expect(log.operation_description).to eq("Some description")
-    expect(log.data_changes).to eq({"foo" => "bar"})
+    expect(log.data_changes).to eq({ "foo" => "bar" })
   end
 
   it "requires proper operation_description present" do
