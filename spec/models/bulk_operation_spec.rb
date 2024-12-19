@@ -36,10 +36,31 @@ RSpec.describe BulkOperation, type: :model do
   end
 
   describe "scopes" do
-    context "not_ran" do
+    describe "not_started" do
+      let(:started_bulk_operation) { create(:reject_applications_bulk_operation, started_at: Time.zone.yesterday) }
+      let(:not_started_bulk_operation) { create(:reject_applications_bulk_operation, started_at: nil) }
+
+      it "returns not started bulk opeartions" do
+        expect(BulkOperation.not_started).to eq [not_started_bulk_operation]
+      end
     end
   end
 
   describe "#started?" do
+    context "when started_at present" do
+      let(:bulk_operation) { build(:reject_applications_bulk_operation, started_at: Time.zone.yesterday) }
+
+      it "returns true" do
+        expect(bulk_operation.started?).to be true
+      end
+    end
+
+    context "when started_at not present" do
+      let(:bulk_operation) { create(:reject_applications_bulk_operation, started_at: nil) }
+
+      it "returns false" do
+        expect(bulk_operation.started?).to be false
+      end
+    end
   end
 end

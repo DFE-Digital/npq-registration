@@ -13,7 +13,7 @@ RSpec.describe BulkOperation::BulkChangeApplicationsToPendingJob do
       end
     end
     let(:uploaded_file) { Rack::Test::UploadedFile.new(file.path) }
-    let(:application_ecf_ids) { [SecureRandom.uuid] }
+    let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
     it "calls BulkOperation::BulkChangeApplicationsToPending" do
       expect(BulkOperation::BulkChangeApplicationsToPending).to receive(:new).with(application_ecf_ids:).and_call_original
