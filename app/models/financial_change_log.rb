@@ -13,6 +13,9 @@
 class FinancialChangeLog < ApplicationRecord
   ONE_OFF_2326 = "OneOff 2326".freeze
 
+  validates :operation_description, presence: true, length: { minimum: 5 }
+  validates :data_changes, presence: true
+
   def self.log!(description:, data:)
     create!(operation_description: description, data_changes: data)
   end

@@ -241,8 +241,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_101840) do
   end
 
   create_table "financial_change_logs", force: :cascade do |t|
-    t.string "operation_description"
-    t.json "data_changes"
+    t.string "operation_description", null: false
+    t.json "data_changes", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
