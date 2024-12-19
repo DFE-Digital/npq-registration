@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Schedule, type: :model do
-  subject { build(:schedule, applies_from: 1.month.ago, applies_to: 1.month.from_now) }
+  let(:schedule) { build(:schedule, applies_from: 1.month.ago, applies_to: 1.month.from_now) }
+
+  subject { schedule }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:name) }
@@ -15,5 +17,21 @@ RSpec.describe Schedule, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:course_group) }
     it { is_expected.to belong_to(:cohort) }
+  end
+
+  describe "#editable?" do
+    subject { schedule.editable? }
+
+    context "when cohort#editable? is true" do
+      before { allow(schedule.cohort).to receive(:editable?).and_return(true) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when cohort#editable? is false" do
+      before { allow(schedule.cohort).to receive(:editable?).and_return(false) }
+
+      it { is_expected.to be false }
+    end
   end
 end

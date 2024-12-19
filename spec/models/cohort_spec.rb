@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  subject { build(:cohort) }
+  let(:cohort) { build(:cohort) }
+
+  subject { cohort }
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:registration_start_date) }
@@ -70,6 +72,34 @@ RSpec.describe Cohort, type: :model do
       it "raises an error" do
         expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
       end
+    end
+  end
+
+  describe "#editable?" do
+    subject { cohort.editable? }
+
+    context "when conditions are met" do
+      before { cohort.update! start_year: 2029, registration_start_date: Date.new(2029, 12, 31) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the cohort has declarations" do
+      before { create(:declaration, cohort:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the cohort has statements" do
+      before { create(:statement, cohort:) }
+
+      it { is_expected.to be false }
+    end
+
+    context "when registration_start_date is not in the future" do
+      before { cohort.update! start_year: Time.zone.today.year, registration_start_date: Date.yesterday }
+
+      it { is_expected.to be false }
     end
   end
 end
