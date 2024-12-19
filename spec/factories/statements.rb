@@ -11,9 +11,9 @@ FactoryBot.define do
     end
 
     month { Faker::Number.between(from: 1, to: 12) }
-    year { Faker::Number.between(from: 2021, to: 2024) }
-    deadline_date { Faker::Date.forward(days: 30) }
-    payment_date { Faker::Date.forward(days: 30) }
+    year { Faker::Number.between(from: 2022, to: 2024) }
+    deadline_date { Date.new(year, month, 1) - 6.days }
+    payment_date { Date.new(year, month, 25) }
     cohort { create(:cohort, :current) }
     lead_provider { declaration&.lead_provider || build(:lead_provider) }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }
@@ -22,7 +22,7 @@ FactoryBot.define do
     output_fee { true }
 
     trait(:next_output_fee) do
-      deadline_date { 1.day.from_now }
+      next_period
       output_fee { true }
     end
 

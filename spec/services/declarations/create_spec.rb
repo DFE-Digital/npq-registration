@@ -4,7 +4,7 @@ require "rails_helper"
 
 RSpec.describe Declarations::Create, type: :model do
   let(:lead_provider) { LeadProvider.all.sample }
-  let(:cohort) { create(:cohort, :current) }
+  let(:cohort) { create(:cohort, start_year: 2022) }
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
   let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
@@ -120,8 +120,12 @@ RSpec.describe Declarations::Create, type: :model do
       end
 
       context "with an fundable participant" do
-        let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:) }
         let(:existing_declaration) { Declaration.last }
+
+        before do
+          cohort.update! funding_cap: true
+          application.update! eligible_for_funding: true
+        end
 
         %w[eligible payable paid].each do |state|
           context "when the state is #{state}" do
@@ -248,7 +252,7 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "when there are no available output fee statements" do
-      before { lead_provider.next_output_fee_statement(cohort).update!(output_fee: false) }
+      before { lead_provider.next_output_fee_statement(cohort).try(:update!, { output_fee: false }) }
 
       context "when the declarations is submitted" do
         it { is_expected.to be_valid }
@@ -299,7 +303,9 @@ RSpec.describe Declarations::Create, type: :model do
       it "calls `StatementAttacher`" do
         expect_any_instance_of(Declarations::StatementAttacher).to receive(:attach)
 
-        subject
+        travel_to statement.deadline_date - 1.day do
+          subject
+        end
       end
     end
 
