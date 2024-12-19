@@ -19,9 +19,9 @@
 1. [Get an Identity](docs/get_an_identity.md)
 1. [Manual validation lifecycle](docs/manual_validation_lifecycle.md)
 1. [BigQuery Reports](docs/bigquery_reports.md)
-1. [Migration Environment](docs/migration_environment.md)
 1. [Sending emails from application](docs/emails.md)
 1. [NPQ Contracts](docs/npq_contracts.md)
+1. [Funding](docs/funding.md)
 1. [Data Model](docs/data_model.md)
 
 ## Content Editors

@@ -13,7 +13,7 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
   subject { described_class.new(lead_provider:, cohort:, number_of_participants: 30) }
 
   describe "#populate" do
-    context "when running in other environment other than separation or development" do
+    context "when running in other environment other than sandbox or development" do
       let(:environment) { "test" }
 
       it "returns nil" do
@@ -21,8 +21,8 @@ RSpec.describe ValidTestDataGenerators::ApplicationsPopulater, :with_default_sch
       end
     end
 
-    context "when running in development or separation environments" do
-      let(:environment) { "separation" }
+    context "when running in development or sandbox environments" do
+      let(:environment) { "sandbox" }
 
       it "creates users # given in the params" do
         # Prevents participant id changes from being created and their

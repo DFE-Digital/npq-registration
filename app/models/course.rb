@@ -119,14 +119,11 @@ class Course < ApplicationRecord
   end
 
   def rebranded_alternative_courses
-    case identifier
-    when NPQ_ADDITIONAL_SUPPORT_OFFER
-      [self, Course.find_by(identifier: NPQ_EARLY_HEADSHIP_COACHING_OFFER)]
-    when NPQ_EARLY_HEADSHIP_COACHING_OFFER
-      [self, Course.find_by(identifier: NPQ_ADDITIONAL_SUPPORT_OFFER)]
-    else
-      [self]
-    end
+    rebranded_identifiers = [NPQ_ADDITIONAL_SUPPORT_OFFER, NPQ_EARLY_HEADSHIP_COACHING_OFFER].freeze
+
+    return Course.where(identifier: rebranded_identifiers) if identifier.in?(rebranded_identifiers)
+
+    [self]
   end
 
   def npqs?

@@ -15,6 +15,7 @@ class Schedule < ApplicationRecord
 
   belongs_to :course_group
   belongs_to :cohort
+  has_many :courses, through: :course_group
 
   validates :name, presence: true
   validates :identifier, presence: true, uniqueness: { scope: :cohort_id }

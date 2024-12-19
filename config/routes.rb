@@ -223,13 +223,20 @@ Rails.application.routes.draw do
           namespace :applications, path: nil do
             resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
             resource :change_training_status, only: %i[new create]
+            resource :change_funding_eligibility, only: %i[new create]
           end
         end
       end
 
       resources :schools, only: %i[index show]
       resources :courses, only: %i[index show]
-      resources :users, only: %i[index show]
+      resources :users, only: %i[index show] do
+        member do
+          namespace :users, path: nil do
+            resource :change_trn, controller: "change_trn", only: %i[show create]
+          end
+        end
+      end
 
       resources :participant_outcomes, only: %i[] do
         member { post :resend }

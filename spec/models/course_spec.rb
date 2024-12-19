@@ -56,26 +56,26 @@ RSpec.describe Course do
   end
 
   describe "#rebranded_alternative_courses" do
-    let(:course) { described_class.new(identifier:) }
+    let(:course) { create(:course, identifier:) }
 
-    subject { course.rebranded_alternative_courses }
+    subject { course.rebranded_alternative_courses.map(&:identifier) }
 
     context "when the identifier is npq-additional-support-offer" do
       let(:identifier) { "npq-additional-support-offer" }
 
-      it { is_expected.to contain_exactly(course, described_class.find_by(identifier: "npq-early-headship-coaching-offer")) }
+      it { is_expected.to contain_exactly(identifier, "npq-early-headship-coaching-offer") }
     end
 
     context "when the identifier is npq-early-headship-coaching-offer" do
       let(:identifier) { "npq-early-headship-coaching-offer" }
 
-      it { is_expected.to contain_exactly(course, described_class.find_by(identifier: "npq-additional-support-offer")) }
+      it { is_expected.to contain_exactly(identifier, "npq-additional-support-offer") }
     end
 
     context "when the identifier is not npq-additional-support-offer or npq-early-headship-coaching-offer" do
       let(:identifier) { "other" }
 
-      it { is_expected.to contain_exactly(course) }
+      it { is_expected.to contain_exactly(identifier) }
     end
   end
 

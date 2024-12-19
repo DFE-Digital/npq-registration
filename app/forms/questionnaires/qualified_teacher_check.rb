@@ -2,8 +2,6 @@ module Questionnaires
   class QualifiedTeacherCheck < Base
     include ActiveRecord::AttributeAssignment
 
-    FORBIDDEN_TRNS = %w[0000000].freeze
-
     attr_accessor :trn, :full_name, :national_insurance_number
 
     attr_reader :date_of_birth
@@ -21,8 +19,7 @@ module Questionnaires
     before_validation :strip_ni_number_whitespace
     before_validation :strip_title_prefixes
 
-    validates :trn, presence: true
-    validate :validate_processed_trn
+    validates :trn, valid_trn: true
 
     validates :full_name, presence: true, length: { maximum: 128 }
 
@@ -67,23 +64,6 @@ module Questionnaires
     def requirements_met?
       # The user has to have logged in via GAI to reach this question
       wizard.store.present? && query_store.current_user.present?
-    end
-
-    def validate_processed_trn
-      if FORBIDDEN_TRNS.include?(processed_trn)
-        errors.add(:trn, :not_real)
-      end
-      if processed_trn !~ /\A\d+\z/
-        errors.add(:trn, :invalid)
-      elsif processed_trn.length < 7
-        errors.add(:trn, :too_short, count: 7)
-      elsif processed_trn.length > 7
-        errors.add(:trn, :too_long, count: 7)
-      end
-    end
-
-    def processed_trn
-      @processed_trn ||= trn || ""
     end
 
     def next_step

@@ -70,14 +70,5 @@ Rails.application.configure do
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: false, expire_after: 2.weeks
 
-  # Enable/disable aspects of the NPQ separation
-  config.npq_separation = {
-    parity_check: {
-      enabled: true,
-      npq_url: "http://ecf.example.com",
-      ecf_url: "http://npq.example.com",
-    },
-  }
-
   config.dotenv.autorestore = false if config.respond_to?(:dotenv)
 end

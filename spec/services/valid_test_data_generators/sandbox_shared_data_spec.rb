@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_schedules do
-  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/seeds/separation_shared_data.yml")) }
+RSpec.describe ValidTestDataGenerators::SandboxSharedData, :with_default_schedules do
+  let(:shared_users_data) { YAML.load_file(Rails.root.join("db/seeds/sandbox_shared_data.yml")) }
   let(:lead_provider) { create(:lead_provider, name: shared_users_data.keys.sample) }
   let(:user_params) { shared_users_data[lead_provider.name] }
   let(:cohort) { create(:cohort, :current) }
@@ -18,7 +18,7 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
   subject { described_class.new(lead_provider:, cohort:) }
 
   describe "#populate" do
-    context "when running in other environment other than separation or development" do
+    context "when running in other environment other than sandbox or development" do
       let(:environment) { "test" }
 
       it "returns nil" do
@@ -26,8 +26,8 @@ RSpec.describe ValidTestDataGenerators::SeparationSharedData, :with_default_sche
       end
     end
 
-    context "when running in development or separation environments" do
-      let(:environment) { "separation" }
+    context "when running in development or sandbox environments" do
+      let(:environment) { "sandbox" }
 
       it "creates 6 users" do
         # Prevents participant id changes from being created and their

@@ -82,13 +82,6 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  # Enable/disable aspects of the NPQ separation
-  config.npq_separation = {
-    parity_check: {
-      enabled: true,
-    },
-  }
-
   # Disable origin check for Cross-Site Request Forgery (CSRF) protection for codespaces.
   # I'm not sure why it doesn't work, but it doesn't.
   if ENV["CODESPACES"].present?

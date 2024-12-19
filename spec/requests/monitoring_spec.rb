@@ -40,13 +40,6 @@ RSpec.describe "Monitoring" do
 
       it { is_expected.to be_server_error }
       it { expect(response_body[:database]).to include({ connected: true, populated: false }) }
-
-      context "when the environment supports refreshing the database via a GitHub action" do
-        before { allow(Rails).to receive(:env) { "migration".inquiry } }
-
-        it { is_expected.to be_successful }
-        it { expect(response_body[:database]).to include({ connected: true, populated: false }) }
-      end
     end
   end
 end

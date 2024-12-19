@@ -3,7 +3,7 @@
 require "yaml"
 
 module ValidTestDataGenerators
-  class SeparationSharedData < ApplicationsPopulater
+  class SandboxSharedData < ApplicationsPopulater
     class << self
       def populate(lead_provider:, cohort:)
         new(lead_provider:, cohort:).populate
@@ -11,15 +11,15 @@ module ValidTestDataGenerators
     end
 
     def populate
-      return unless Rails.env.in?(%w[development review separation sandbox])
+      return unless Rails.env.in?(%w[development review sandbox])
 
-      logger.info "SeparationSharedData: Started!"
+      logger.info "SandboxSharedData: Started!"
 
       ActiveRecord::Base.transaction do
         create_participants!
       end
 
-      logger.info "SeparationSharedData: Finished!"
+      logger.info "SandboxSharedData: Finished!"
     end
 
   private
@@ -60,7 +60,7 @@ module ValidTestDataGenerators
     end
 
     def shared_users_data
-      @shared_users_data ||= YAML.load_file(Rails.root.join("db/seeds/separation_shared_data.yml"))
+      @shared_users_data ||= YAML.load_file(Rails.root.join("db/seeds/sandbox_shared_data.yml"))
     end
   end
 end

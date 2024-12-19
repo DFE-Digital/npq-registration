@@ -266,4 +266,42 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("Training status", "active")
     end
   end
+
+  scenario "changing eligibility for funding" do
+    application = create(:application, :accepted)
+
+    visit npq_separation_admin_application_path(application)
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "No")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+    click_button "Continue"
+
+    expect(page).to have_css(".govuk-error-message", text: "Choose whether the Application is eligible for funding")
+    choose "Yes", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list).to have_link("Change")
+
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+    choose "No", visible: :all
+    click_button "Continue"
+
+    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "No")
+    end
+  end
 end

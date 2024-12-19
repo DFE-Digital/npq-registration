@@ -43,11 +43,11 @@ The test environments feature all the NPQ API request endpoints and have been po
 
 The base URL for the API's test environments is:
 
-* [https://npq-registration-separation-web.teacherservices.cloud](https://npq-registration-separation-web.teacherservices.cloud)
+* [https://npq-registration-sandbox-web.teacherservices.cloud](https://npq-registration-sandbox-web.teacherservices.cloud)
 
 Providers can add the required API version and endpoint depending on what they want to test. For example, they’d add `/api/v3/npq-applications` to the test environment URL if they want to retrieve multiple applications.
 
-Providers can also create ‘dummy’ applications in the separation environment. This enables them to:
+Providers can also create ‘dummy’ applications in the sandbox environment. This enables them to:
 
 * generate individualised seed data
 * test specific scenarios that suit their needs

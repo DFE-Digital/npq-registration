@@ -1,7 +1,7 @@
 x-app: &app
   build:
     args:
-      - BUNDLE_WITHOUT=production review separation
+      - BUNDLE_WITHOUT=production review
       - EXTRA_PACKAGES=chromium chromium-chromedriver gcompat yarn
     context: .
   depends_on:

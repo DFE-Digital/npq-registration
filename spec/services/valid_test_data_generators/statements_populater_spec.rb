@@ -11,7 +11,7 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
   subject { described_class.new(lead_provider:, cohort:) }
 
   describe "#populate" do
-    context "when running in other environment other than separation or development" do
+    context "when running in other environment other than sandbox or development" do
       let(:environment) { "test" }
 
       it "returns nil" do
@@ -19,8 +19,8 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
       end
     end
 
-    context "when running in development or separation environments" do
-      let(:environment) { "separation" }
+    context "when running in development or sandbox environments" do
+      let(:environment) { "sandbox" }
 
       it "creates statements" do
         expect {

@@ -25,7 +25,7 @@ RSpec.describe AssuranceReports::Query do
   end
 
   let :other_statement do
-    create(:statement, lead_provider:, deadline_date: statement.deadline_date + 1.day)
+    create(:statement, :next_period, lead_provider:, deadline_date: statement.deadline_date + 1.day)
   end
 
   let :other_declaration do

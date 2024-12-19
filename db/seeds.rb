@@ -1,7 +1,7 @@
 require "faker"
 require "csv"
 
-return unless Rails.env.in?(%w[development review separation])
+return unless Rails.env.in?(%w[development review sandbox])
 
 PaperTrail.enabled = false
 
@@ -35,7 +35,10 @@ Rails.logger.info("Seeding database")
   "add_contracts.rb",
   "add_declarations.rb",
   "add_api_tokens.rb",
+  "process_statements.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
-  load_base_file(seed_file)
+  ApplicationRecord.transaction do
+    load_base_file(seed_file)
+  end
 end

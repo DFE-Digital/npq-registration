@@ -7,7 +7,7 @@ module ValidTestDataGenerators
     include ActiveSupport::Testing::TimeHelpers
 
     def populate
-      return unless Rails.env.in?(%w[development review separation])
+      return unless Rails.env.in?(%w[development review sandbox])
 
       logger.info "PendingApplicationsPopulater: Started!"
 

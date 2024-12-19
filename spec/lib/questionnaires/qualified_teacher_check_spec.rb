@@ -101,50 +101,59 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
   end
 
   describe "validations" do
-    it { is_expected.to validate_presence_of(:trn) }
+    it { is_expected.to validate_presence_of(:trn).with_message("Teacher reference number cannot be blank") }
     it { is_expected.to validate_presence_of(:full_name) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(128) }
     it { is_expected.to validate_presence_of(:date_of_birth) }
     it { is_expected.to validate_length_of(:national_insurance_number).is_at_most(9) }
 
-    describe "#trn" do
+    describe "TRN validations" do
       it "can only contain numbers" do
         subject.trn = "123456a"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
-    end
 
-    describe "#processed_trn" do
+      it "doesn't permit nil TRN" do
+        subject.trn = nil
+        subject.valid?
+        expect(subject.errors[:trn]).to eq ["Teacher reference number cannot be blank"]
+      end
+
+      it "doesn't permit empty TRN" do
+        subject.trn = ""
+        subject.valid?
+        expect(subject.errors[:trn]).to eq ["Teacher reference number cannot be blank"]
+      end
+
       it "doesn't permit legacy style TRNs" do
         subject.trn = "RP99/12345"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
-        expect(subject.processed_trn).not_to eql("9912345")
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
 
       it "denies trns over 7 characters" do
         subject.trn = "99123456"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
       it "denies trns under 7 characters" do
         subject.trn = "1234"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number is 7 digits long"]
       end
 
       it "denies trns with other letters" do
         subject.trn = "AA99/12345"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["Teacher reference number must only contain numbers"]
       end
 
       it "denies fake trn 0000000" do
         subject.trn = "0000000"
         subject.valid?
-        expect(subject.errors[:trn]).to be_present
+        expect(subject.errors[:trn]).to eq ["You must enter a valid teacher reference number (TRN)"]
       end
     end
 
@@ -258,7 +267,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
   describe "#after_save" do
     subject do
       described_class.new(
-        trn: "1234567",
+        trn: trn,
         full_name: "Jane Smith",
         date_of_birth: Date.parse("1960-12-13"),
         national_insurance_number: "AB123456C",
@@ -268,6 +277,8 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
 
     let(:store) { {} }
     let(:request) { nil }
+    let(:trn) { "1234567" }
+    let(:dqt_check_trn) { trn }
 
     let(:wizard) do
       RegistrationWizard.new(
@@ -281,10 +292,10 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     context "trn has been verified" do
       before do
         stub_api_request(
-          trn: "1234567",
+          trn: dqt_check_trn,
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
-          response_body: dqt_response_body,
+          response_body: dqt_response_body(trn:),
         )
 
         subject.next_step
@@ -327,6 +338,38 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
             "trn_verified" => true,
           },
         )
+      end
+
+      context "TRN is less than 7 characters long" do
+        let(:trn) { "12345" }
+        let(:dqt_check_trn) { "0012345" }
+
+        it "pads the TRN when persisting to store" do
+          expect {
+            subject.after_save
+          }.to change {
+            current_user.reload.slice(
+              :trn,
+              :trn_auto_verified,
+              :trn_lookup_status,
+              :trn_verified,
+            )
+          }.from(
+            {
+              "trn" => nil,
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          ).to(
+            {
+              "trn" => "0012345",
+              "trn_auto_verified" => true,
+              "trn_lookup_status" => "Found",
+              "trn_verified" => true,
+            },
+          )
+        end
       end
     end
 
@@ -438,7 +481,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     context "trn has not been verified" do
       before do
         stub_api_request(
-          trn: "1234567",
+          trn: dqt_check_trn,
           date_of_birth: "1960-12-13",
           nino: "AB123456C",
           response_code: 404,
@@ -484,6 +527,38 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
             "trn_verified" => false,
           },
         )
+      end
+
+      context "TRN is less than 7 characters long" do
+        let(:trn) { "12345" }
+        let(:dqt_check_trn) { "0012345" }
+
+        it "pads the TRN when persisting to store" do
+          expect {
+            subject.after_save
+          }.to change {
+            current_user.reload.slice(
+              :trn,
+              :trn_auto_verified,
+              :trn_lookup_status,
+              :trn_verified,
+            )
+          }.from(
+            {
+              "trn" => nil,
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          ).to(
+            {
+              "trn" => "0012345",
+              "trn_auto_verified" => false,
+              "trn_lookup_status" => "Failed",
+              "trn_verified" => false,
+            },
+          )
+        end
       end
     end
   end
