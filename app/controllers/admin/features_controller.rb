@@ -26,6 +26,6 @@ class Admin::FeaturesController < AdminController
     else
       flash[:error] = "There was an error updating the feature flag."
     end
-    redirect_back fallback_location: admin_features_path
+    redirect_to admin_feature_path(@feature)
   end
 end
