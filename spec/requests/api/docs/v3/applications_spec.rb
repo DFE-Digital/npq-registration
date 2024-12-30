@@ -8,6 +8,7 @@ RSpec.describe "NPQ Applications endpoint", openapi_spec: "v3/swagger.yaml", typ
   let(:course) { create(:course, :senior_leadership, course_group:) }
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
   let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+  let(:schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
   let(:application) do
     create(
       :application,
