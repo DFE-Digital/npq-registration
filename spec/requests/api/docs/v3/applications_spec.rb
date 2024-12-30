@@ -1,21 +1,18 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "NPQ Applications endpoint", openapi_spec: "v3/swagger.yaml", type: :request do
+RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
-  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
-  let(:schedule) { create(:schedule, :npq_leadership_spring, course_group:, cohort:) }
   let(:application) do
     create(
       :application,
       course:,
       lead_provider:,
       cohort:,
-      schedule:,
     )
   end
 
@@ -82,7 +79,7 @@ RSpec.describe "NPQ Applications endpoint", openapi_spec: "v3/swagger.yaml", typ
                     "The NPQ application after changing the funded place",
                     "#/components/schemas/ApplicationResponse",
                     "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
-      let(:application) { create(:application, :eligible_for_funded_place, lead_provider:, schedule:, cohort:, course:) }
+      let(:application) { create(:application, :eligible_for_funded_place, lead_provider:, cohort:, course:) }
       let(:resource) { application }
       let(:type) { "npq-application-change-funded-place" }
       let(:attributes) { { funded_place: true } }
