@@ -18,7 +18,9 @@ RSpec.feature "Statement", type: :feature do
 
   before do
     create(:schedule, :npq_leadership_autumn)
+    create(:schedule, :npq_leadership_spring)
     create(:schedule, :npq_specialist_autumn)
+    create(:schedule, :npq_specialist_spring)
 
     sign_in_as(create(:admin))
   end

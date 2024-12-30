@@ -47,9 +47,11 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
       end
 
       it "creates unpaid statements" do
-        expect {
-          subject.populate
-        }.to(change { Statement.unpaid.count })
+        travel_to(Date.new(cohort.start_year, 12, 26)) do
+          expect {
+            subject.populate
+          }.to(change { Statement.unpaid.count })
+        end
       end
     end
   end

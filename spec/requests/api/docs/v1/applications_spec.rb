@@ -1,12 +1,11 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "NPQ Applications endpoint", openapi_spec: "v1/swagger.yaml", type: :request do
+RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spec: "v1/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
-  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
   let(:cohort) { create(:cohort, :current, funding_cap: true) }
   let!(:application) do
     create(
@@ -14,7 +13,6 @@ RSpec.describe "NPQ Applications endpoint", openapi_spec: "v1/swagger.yaml", typ
       course:,
       lead_provider:,
       cohort:,
-      schedule:,
     )
   end
 
