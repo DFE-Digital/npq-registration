@@ -289,7 +289,7 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
 
       context "when using fallback_cohort" do
-        let(:cohort) { create(:cohort, start_year: (Date.current.year + 5)) }
+        let(:cohort) { create(:cohort, start_year: (Date.current.year + 1)) }
 
         context "when application has schedule" do
           before do
