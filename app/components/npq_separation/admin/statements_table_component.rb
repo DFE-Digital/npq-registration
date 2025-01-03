@@ -17,7 +17,6 @@ module NpqSeparation
 
       def head
         [
-          "ID",
           ("Lead provider" if show_lead_provider),
           "Cohort",
           "Statement",
@@ -29,7 +28,6 @@ module NpqSeparation
       def rows
         statements.map do |statement|
           [
-            id_link(statement),
             lead_provider_link(statement.lead_provider),
             cohort_link(statement),
             helpers.statement_name(statement),
@@ -37,10 +35,6 @@ module NpqSeparation
             view_link(statement),
           ].compact
         end
-      end
-
-      def id_link(statement)
-        govuk_link_to(statement.id.to_s, npq_separation_admin_finance_statement_path(statement), **metadata_link_arguments)
       end
 
       def view_link(statement)
