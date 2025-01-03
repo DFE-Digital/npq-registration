@@ -1,0 +1,57 @@
+<h1 class="govuk-heading-l">Cohort <%= format_cohort @cohort %></h1>
+
+<%=
+  govuk_summary_list do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Start year")
+      row.with_value(text: @cohort.start_year)
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Registration start date")
+      row.with_value(text: @cohort.registration_start_date.to_date.to_fs(:govuk))
+    end
+
+    sl.with_row do |row|
+      row.with_key(text: "Funding cap")
+      row.with_value(text: boolean_red_green_tag(@cohort.funding_cap))
+    end
+  end
+%>
+
+<% if current_admin.super_admin? && @cohort.editable? %>
+  <%= govuk_button_link_to('Edit cohort details', edit_npq_separation_admin_cohort_path(@cohort)) %>
+  <%= govuk_button_link_to('Delete cohort', npq_separation_admin_cohort_path(@cohort), method: :delete, warning: true) %>
+<% end %>
+
+<hr class="govuk-section-break govuk-section-break--l">
+
+<h2 class="govuk-heading-m">Schedules</h1>
+
+<% if current_admin.super_admin? && @cohort.editable? %>
+  <%= govuk_button_link_to('New schedule', new_npq_separation_admin_cohort_schedule_path(@cohort)) %>
+<% end %>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |head|
+      head.with_row do |row|
+        row.with_cell(text: 'Name')
+        row.with_cell(text: 'Applies from')
+        row.with_cell(text: 'Applies to')
+        row.with_cell(text: 'Declaration types')
+      end
+    end
+
+    table.with_body do |body|
+      @cohort.schedules.order(:name).each do |schedule|
+        body.with_row do |row|
+          row.with_cell(text: govuk_link_to(schedule.name, npq_separation_admin_cohort_schedule_path(@cohort, schedule)))
+          row.with_cell(text: schedule.applies_from.to_fs(:govuk_short))
+          row.with_cell(text: schedule.applies_to.to_fs(:govuk_short))
+          row.with_cell(text: schedule.allowed_declaration_types.count)
+        end
+      end
+    end
+  end
+%>
