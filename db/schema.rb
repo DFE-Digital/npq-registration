@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_18_101840) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -119,6 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_101840) do
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
     t.index ["itt_provider_id"], name: "index_applications_on_itt_provider_id"
+    t.index ["lead_provider_approval_status", "lead_provider_id"], name: "idx_on_lead_provider_approval_status_lead_provider__299e5bac06"
     t.index ["lead_provider_id"], name: "index_applications_on_lead_provider_id"
     t.index ["private_childcare_provider_id"], name: "index_applications_on_private_childcare_provider_id"
     t.index ["schedule_id"], name: "index_applications_on_schedule_id"
