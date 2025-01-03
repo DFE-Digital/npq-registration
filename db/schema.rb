@@ -538,6 +538,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_03_111630) do
     t.string "archived_email"
     t.datetime "archived_at"
     t.datetime "significantly_updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["ecf_id"], name: "index_users_on_ecf_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
