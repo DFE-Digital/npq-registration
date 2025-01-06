@@ -3,7 +3,7 @@ class CreateBulkOperations < ActiveRecord::Migration[7.1]
     create_table :bulk_operations do |t|
       t.integer "admin_id", null: false
       t.integer "row_count"
-      t.text "result"
+      t.jsonb "result"
       t.string "type", null: false
       t.datetime "started_at"
       t.datetime "finished_at"

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class BulkOperation::BulkRejectApplications
-  attr_reader :application_ecf_ids
+  attr_reader :application_ecf_ids, :bulk_operation
 
-  def initialize(application_ecf_ids:)
+  def initialize(application_ecf_ids:, bulk_operation:)
     @application_ecf_ids = application_ecf_ids
+    @bulk_operation = bulk_operation
   end
 
   def run!
@@ -16,6 +17,7 @@ class BulkOperation::BulkRejectApplications
         success = reject_service.reject
         hash[application_ecf_id] = outcome(success, application, reject_service.errors)
       end
+      bulk_operation.update!(result: result.to_json, finished_at: Time.zone.now)
     end
 
     result

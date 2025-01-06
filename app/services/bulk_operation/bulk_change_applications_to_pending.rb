@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class BulkOperation::BulkChangeApplicationsToPending
-  attr_reader :application_ecf_ids
+  attr_reader :application_ecf_ids, :bulk_operation
 
-  def initialize(application_ecf_ids:)
+  def initialize(application_ecf_ids:, bulk_operation:)
     @application_ecf_ids = application_ecf_ids
+    @bulk_operation = bulk_operation
   end
 
   def run!(dry_run: true)
@@ -16,6 +17,7 @@ class BulkOperation::BulkChangeApplicationsToPending
         success = revert_to_pending.revert
         hash[application_ecf_id] = outcome(success, application, revert_to_pending.errors)
       end
+      bulk_operation.update!(result: result.to_json, finished_at: Time.zone.now)
 
       raise ActiveRecord::Rollback if dry_run
     end

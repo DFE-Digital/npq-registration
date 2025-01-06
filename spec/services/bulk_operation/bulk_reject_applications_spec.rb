@@ -2,14 +2,19 @@ require "rails_helper"
 
 RSpec.describe BulkOperation::BulkRejectApplications do
   let(:application_ecf_ids) { [application.ecf_id] }
-  let(:instance) { described_class.new(application_ecf_ids:) }
+  let(:bulk_operation) { create(:reject_applications_bulk_operation, admin: create(:admin)) }
+  let(:instance) { described_class.new(application_ecf_ids:, bulk_operation:) }
 
   describe "#run!" do
     subject(:run) { instance.run! }
 
     RSpec.shared_examples "does not change to rejected" do |result|
       it { expect { run }.not_to(change { application.reload.lead_provider_approval_status }) }
-      it { expect(run[application.ecf_id]).to match(result) }
+
+      it "saves the result" do
+        run
+        expect(JSON.parse(bulk_operation.result)[application.ecf_id]).to match(result)
+      end
     end
 
     context "when the application has lead_provider_approval_status: accepted" do

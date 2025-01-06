@@ -16,7 +16,7 @@ RSpec.describe BulkOperation::BulkChangeApplicationsToPendingJob do
     let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
     it "calls BulkOperation::BulkChangeApplicationsToPending" do
-      expect(BulkOperation::BulkChangeApplicationsToPending).to receive(:new).with(application_ecf_ids:).and_call_original
+      expect(BulkOperation::BulkChangeApplicationsToPending).to receive(:new).with(application_ecf_ids:, bulk_operation:).and_call_original
       subject
     end
 
