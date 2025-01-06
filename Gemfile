@@ -31,7 +31,7 @@ gem "govuk_markdown"
 gem "httparty", "~> 0.22"
 gem "iconv"
 gem "jsbundling-rails", "~> 1.3"
-gem "mail-notify"
+gem "mail-notify", "~> 1.2"
 gem "oj"
 gem "omniauth"
 gem "omniauth-oauth2"
@@ -88,7 +88,7 @@ group :development do
 end
 
 group :test do
-  gem "axe-core-capybara", "~> 4.6"
+  gem "axe-core-capybara", "~> 4.6.1"
   gem "axe-core-rspec", "~> 4.10"
   gem "rspec-default_http_header"
   gem "selenium-webdriver"
