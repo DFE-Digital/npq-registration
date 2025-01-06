@@ -88,7 +88,7 @@ group :development do
 end
 
 group :test do
-  gem "axe-core-capybara", "~> 4.6.1"
+  gem "axe-core-capybara", "~> 4.7"
   gem "axe-core-rspec", "~> 4.10"
   gem "rspec-default_http_header"
   gem "selenium-webdriver"
