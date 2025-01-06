@@ -522,7 +522,7 @@ GEM
     rspec-sonarqube-formatter (1.6.2)
       htmlentities (~> 4.3)
       rspec (~> 3.0)
-    rspec-support (3.13.1)
+    rspec-support (3.13.2)
     rswag-specs (2.16.0)
       activesupport (>= 5.2, < 8.1)
       json-schema (>= 2.2, < 6.0)
@@ -751,7 +751,7 @@ DEPENDENCIES
   redis
   rouge
   rspec-default_http_header
-  rspec-rails (~> 7.1.0)
+  rspec-rails (~> 7.1)
   rspec-sonarqube-formatter
   rswag-specs
   rubocop-govuk
