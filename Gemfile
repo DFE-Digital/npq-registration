@@ -95,7 +95,6 @@ group :test do
   gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.0"
   gem "webmock", "~> 3.24"
-  gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
 group :development, :test, :review, :sandbox do
