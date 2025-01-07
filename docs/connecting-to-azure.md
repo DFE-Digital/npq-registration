@@ -30,7 +30,7 @@ but you may need to re-authenticate every once in a while.
 
    You'll be asked to select development, test (used for review apps) or production.
 
-3. Install kubetctl:
+3. Install kubectl:
 
    ```shell
    brew install Azure/kubelogin/kubelogin
@@ -46,6 +46,7 @@ To get shell access on a review app for a given PR_NUMBER, run the following:
 ```shell
 make review aks-ssh PULL_REQUEST_NUMBER=[PR_NUMBER]
 ```
+
 From there, the rake task can be run
 
 To get shell access on production, run:
@@ -62,10 +63,22 @@ To get a rails console on a review app for a given PR_NUMBER, run the following:
 make review aks-console PULL_REQUEST_NUMBER=[PR_NUMBER]
 ```
 
-To get a rails console on production, run the following:
+By default a shell will safely run with `--sandbox` providing read only access. To run with read-write, run the following:
+
+```shell
+make review aks-rw-console PULL_REQUEST_NUMBER=[PR_NUMBER]
+```
+
+To get a read-only rails console on production, run the following:
 
 ```shell
 make ci production aks-console
+```
+
+Likewise, for a read-write console, run the following
+
+```shell
+make ci production aks-rw-console
 ```
 
 ### Copy a file
