@@ -65,7 +65,10 @@ module Statements
     end
 
     def allowed_declaration_types
-      course.schedule_for(cohort:).allowed_declaration_types.sort_by { Schedule::DECLARATION_TYPES.index(_1) }
+      Schedule.where(cohort:, course_group: course.course_group)
+              .flat_map(&:allowed_declaration_types)
+              .uniq
+              .sort_by { Schedule::DECLARATION_TYPES.index(_1) }
     end
 
     def declaration_count_for_declaration_type(declaration_type)
