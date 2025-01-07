@@ -17,7 +17,8 @@ class CspReportsController < ApplicationController
   MAX_ENTRY_LENGTH = 2_000
 
   def create
-    json = JSON.parse(request.body.read)
+    request_body = request.body ? request.body.dup.tap(&:rewind).read : "{}"
+    json = JSON.parse(request_body)
     report = (json["csp-report"] || {})
                .slice(*CSP_KEYS)
                .transform_values { |v| v.truncate(MAX_ENTRY_LENGTH) }

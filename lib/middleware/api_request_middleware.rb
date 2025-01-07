@@ -62,10 +62,16 @@ module Middleware
       {
         path: @request.path,
         params: @request.params,
-        body: @request.body.read.dup.force_encoding("utf-8"),
+        body: request_body,
         headers: request_headers,
         method: @request.request_method,
       }
+    end
+
+    def request_body
+      return "" if @request.body.nil?
+
+      @request.body.dup.tap(&:rewind).read.force_encoding("utf-8")
     end
 
     def request_headers
