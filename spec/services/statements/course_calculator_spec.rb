@@ -329,6 +329,20 @@ RSpec.describe Statements::CourseCalculator do
     end
   end
 
+  describe "#allowed_declaration_types" do
+    let(:course_group) { course.course_group }
+
+    before do
+      course_group.schedules.destroy_all
+      create(:schedule, course_group:, cohort:, allowed_declaration_types: %w[started retained-1])
+      create(:schedule, course_group:, cohort:, allowed_declaration_types: %w[retained-1 completed])
+    end
+
+    it "is derived from schedules" do
+      expect(subject.allowed_declaration_types).to eql(%w[started retained-1 completed])
+    end
+  end
+
   describe "#output_payment" do
     it "is a hash" do
       expect(subject.output_payment).to be_a(Hash)
