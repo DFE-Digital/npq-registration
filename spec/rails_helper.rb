@@ -88,6 +88,7 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
   config.include Helpers::SwaggerExampleParser, type: :request
+  config.include Helpers::TempfileHelper
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
 
