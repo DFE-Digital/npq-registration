@@ -10,14 +10,12 @@ module Users
     def archive!
       raise ArgumentError, "User already archived" if user.archived?
 
-      ApplicationRecord.transaction do
-        user.archived_email = user.email
-        user.archived_at = Time.zone.now
-        user.email = "archived-#{user.email}"
-        user.uid = nil
-        user.provider = nil
-        user.save!
-      end
+      user.archived_email = user.email
+      user.archived_at = Time.zone.now
+      user.email = "archived-#{user.email}"
+      user.uid = nil
+      user.provider = nil
+      user.save!
     end
   end
 end
