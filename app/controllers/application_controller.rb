@@ -39,7 +39,9 @@ private
 
   # Use current_user instead!
   def logged_in_user
-    User.find_by(id: session[:user_id])
+    User.find_by(id: session[:user_id]).tap do |public_user|
+      PaperTrail.request.whodunnit = "Public User #{public_user.id}" if public_user
+    end
   end
 
   def current_admin

@@ -67,7 +67,26 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
   end
 
   describe "a public user making changes" do
-    it "records the users details"
+    subject(:change_author) { Application.last.versions.last.whodunnit }
+
+    before do
+      create(:cohort, :current)
+
+      allow_any_instance_of(RegistrationWizardController)
+        .to receive(:session).and_return({
+          "registration_store" => wizard_store,
+          :user_id => current_user.id,
+        })
+
+      patch registration_wizard_update_path(:check_answers)
+    end
+
+    let(:current_user) { create(:user) }
+    let(:wizard_store) { build(:registration_wizard_store, current_user:) }
+
+    it "records the lead providers details" do
+      expect(change_author).to eq "Public User #{current_user.id}"
+    end
   end
 
   describe "changes from the rails console" do
