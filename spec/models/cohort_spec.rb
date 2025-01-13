@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cohort, type: :model do
-  let(:cohort) { build(:cohort) }
+  let(:cohort) { create(:cohort) }
 
   subject { cohort }
 
