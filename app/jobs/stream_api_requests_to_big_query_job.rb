@@ -48,7 +48,7 @@ private
     return if auth_header.blank?
 
     token, _options = token_and_options(AuthorizationStruct.new(auth_header))
-    APIToken.find_by_unhashed_token(token)
+    APIToken.find_by_unhashed_token(token, scope: APIToken.scopes[:lead_provider])
   end
 
   def response_hash(response_body, status)

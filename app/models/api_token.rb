@@ -20,8 +20,8 @@ class APIToken < ApplicationRecord
     find_by(hashed_token:, scope: scope)
   end
 
-  def self.create_with_known_token!(token, **options)
+  def self.create_with_known_token!(token, scope: scopes[:lead_provider], **options)
     hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, token)
-    find_or_create_by!(hashed_token:, **options)
+    find_or_create_by!(hashed_token:, scope:, **options)
   end
 end

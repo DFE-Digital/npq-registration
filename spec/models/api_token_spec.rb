@@ -44,7 +44,7 @@ RSpec.describe APIToken, type: :model do
 
   describe ".create_with_known_token!" do
     it "creates an APIToken with using an unhashed token" do
-      APIToken.create_with_known_token!(unhashed_token, lead_provider:, scope:)
+      APIToken.create_with_known_token!(unhashed_token, lead_provider:)
       hashed_token = Devise.token_generator.digest(APIToken, :hashed_token, unhashed_token)
 
       at = APIToken.first
