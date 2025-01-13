@@ -5,8 +5,8 @@ namespace :api_token do
     task generate_token: :environment do
       scope = APIToken.scopes[:teacher_record_service]
       logger = Logger.new($stdout)
-      APIToken.create_with_random_token!(scope:)
-      logger.info "API Token created"
+      token = APIToken.create_with_random_token!(scope:)
+      logger.info "API Token created: #{token}"
     end
   end
 end
