@@ -12,6 +12,8 @@ module CourseGroups
     def schedule
       if autumn_schedule_2022?(schedule_date)
         schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
+      elsif autumn_schedule_2024?(schedule_date)
+        schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
       elsif spring_schedule?(schedule_date)
         schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
       elsif autumn_schedule?(schedule_date)
@@ -25,6 +27,11 @@ module CourseGroups
     def autumn_schedule_2022?(date)
       # Between: Jun 1 to Dec 25
       (Date.new(2022, 6, 1)..Date.new(2022, 12, 25)).include?(date)
+    end
+
+    def autumn_schedule_2024?(date)
+      # Between: Jun 28 to Feb 10
+      (Date.new(2024, 6, 28)..Date.new(2025, 2, 10)).include?(date)
     end
 
     def spring_schedule?(date)

@@ -19,7 +19,9 @@ RSpec.describe CourseGroups::Leadership do
       end
     end
 
-    context "when date is between December of cohort start year and April of the next year" do
+    context "when date is between December of cohort start year and April of 2026" do
+      let(:cohort) { create(:cohort, start_year: 2025) }
+
       it "returns Spring schedule" do
         travel_to Date.new(cohort.start_year, 12, 26) do
           expect(subject.schedule).to eq(spring_schedule)
@@ -42,6 +44,16 @@ RSpec.describe CourseGroups::Leadership do
         end
       end
     end
+
+    context "when date is spring 2025" do
+      let(:cohort) { create(:cohort, start_year: 2024) }
+
+      it "returns Autumn schedule" do
+        travel_to Date.new(2025, 1, 13) do
+          expect(subject.schedule).to eq(autumn_schedule)
+        end
+      end
+    end
   end
 
   describe "#autumn_schedule_2022?" do
@@ -56,6 +68,20 @@ RSpec.describe CourseGroups::Leadership do
         (("#{year}-12-26".to_date)..("#{year + 1}-05-31".to_date)).each do |date|
           expect(subject.autumn_schedule_2022?(date)).to be(false)
         end
+      end
+    end
+  end
+
+  describe "#autumn_schedule_2024?" do
+    it "returns true when date between Jun 28 2024 to Feb 10 2025" do
+      (("2024-06-28".to_date)..("2025-02-10".to_date)).each do |date|
+        expect(subject.autumn_schedule_2024?(date)).to be(true)
+      end
+    end
+
+    it "returns false when before Jun 28 2024" do
+      (("2022-01-01".to_date)..("2024-06-27".to_date)).each do |date|
+        expect(subject.autumn_schedule_2024?(date)).to be(false)
       end
     end
   end
