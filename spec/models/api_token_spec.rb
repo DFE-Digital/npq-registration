@@ -6,7 +6,7 @@ RSpec.describe APIToken, type: :model do
   let(:scope) { "lead_provider" }
 
   describe "associations" do
-    it { is_expected.to belong_to(:lead_provider).optional }
+    it { is_expected.to belong_to(:lead_provider).without_validating_presence }
   end
 
   describe "validations" do
@@ -22,6 +22,22 @@ RSpec.describe APIToken, type: :model do
       expect(
         APIToken.find_by_unhashed_token(unhashed_token, scope:),
       ).to eql(APIToken.order(:created_at).last)
+    end
+
+    context "when a lead provider is not specified" do
+      it "creates an APIToken without a lead provider" do
+        expect { APIToken.create_with_random_token!(scope:) }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
+
+    context "when the scope is teacher_record_service" do
+      let(:scope) { "teacher_record_service" }
+
+      context "when a lead provider is not specified" do
+        it "creates an APIToken without a lead provider" do
+          expect(APIToken.create_with_random_token!(scope:)).to be_present
+        end
+      end
     end
   end
 
