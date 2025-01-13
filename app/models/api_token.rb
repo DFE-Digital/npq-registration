@@ -8,7 +8,7 @@ class APIToken < ApplicationRecord
 
   validates :hashed_token, presence: true
   validates :scope, presence: true
-  validates :lead_provider, presence: true, if: -> { scope == "lead_provider" }
+  validates :lead_provider, presence: true, if: -> { scope == APIToken.scopes[:lead_provider] }
 
   def self.create_with_random_token!(**options)
     unhashed_token, hashed_token = Devise.token_generator.generate(APIToken, :hashed_token)
