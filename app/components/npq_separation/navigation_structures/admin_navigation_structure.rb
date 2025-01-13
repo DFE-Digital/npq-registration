@@ -2,6 +2,7 @@ module NpqSeparation
   module NavigationStructures
     class AdminNavigationStructure < NpqSeparation::NavigationStructure
       include Rails.application.routes.url_helpers
+      include AdminHelper
 
     private
 
@@ -19,6 +20,11 @@ module NpqSeparation
             href: npq_separation_admin_applications_path,
             prefix: "/npq-separation/admin/applications",
           ) => [],
+          Node.new(
+            name: "Cohorts",
+            href: npq_separation_admin_cohorts_path,
+            prefix: "/npq-separation/admin/cohorts",
+          ) => cohort_nodes,
           Node.new(
             name: "Courses",
             href: npq_separation_admin_courses_path,
@@ -62,6 +68,22 @@ module NpqSeparation
             prefix: "/npq-separation/admin/settings",
           ) => [],
         }
+      end
+
+      def cohort_nodes
+        [
+          Node.new(
+            name: "All cohorts",
+            href: npq_separation_admin_cohorts_path,
+            prefix: /\/npq-separation\/admin\/cohorts$/,
+          ),
+        ] + Cohort.order(start_year: :desc).map do |cohort|
+          Node.new(
+            name: "Cohort #{format_cohort(cohort)}",
+            href: npq_separation_admin_cohort_path(cohort),
+            prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
+          )
+        end
       end
     end
   end
