@@ -28,6 +28,6 @@ class Schedule < ApplicationRecord
   validates :applies_to, presence: true
 
   def self.allowed_declaration_types
-    connection.execute("SELECT unnest(enum_range(NULL::declaration_types))").values.flatten
+    Declaration.declaration_types.keys
   end
 end
