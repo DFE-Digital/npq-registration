@@ -20,6 +20,10 @@ module API
       def to_json(participant_outcomes)
         QualificationsSerializer.render(trn, root: "data", participant_outcomes:)
       end
+
+      def api_token_scope
+        APIToken.scopes[:teacher_record_service]
+      end
     end
   end
 end

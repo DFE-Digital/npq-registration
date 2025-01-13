@@ -42,7 +42,7 @@ module Helpers
       lead_provider = current_lead_provider if defined?(current_lead_provider)
       lead_provider ||= FactoryBot.create(:lead_provider)
 
-      APIToken.create_with_random_token!(lead_provider:)
+      APIToken.create_with_random_token!(lead_provider:, scope: "lead_provider")
     end
   end
 end

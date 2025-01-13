@@ -4,14 +4,16 @@ RSpec.describe "Qualifications endpoint", type: :request do
   describe "GET /api/teacher-record-service/npq-qualifications/:trn" do
     let(:path) { "/api/teacher-record-service/npq-qualifications/#{trn}" }
 
+    before { create(:api_token, :teacher_record_service) }
+
     context "when the TRN exists" do
       let!(:participant_outcome) { create(:participant_outcome, :passed) }
       let!(:legacy_passed_participant_outcome) { create(:legacy_passed_participant_outcome, trn:, completion_date: 1.year.ago) }
       let(:trn) { User.last.trn }
 
-      context "when authorized" do
+      context "when using a valid API token" do
         it "returns the qualifications" do
-          api_get(path)
+          api_get(path, token: "trs_token")
 
           expect(response.status).to eq 200
           expect(response.content_type).to eql("application/json")
@@ -23,7 +25,17 @@ RSpec.describe "Qualifications endpoint", type: :request do
         end
       end
 
-      context "when unauthorized" do
+      context "when using a lead provider token" do
+        it "returns 401 - unauthorized" do
+          api_get(path)
+
+          expect(response.status).to eq 401
+          expect(parsed_response["error"]).to eql("HTTP Token: Access denied")
+          expect(response.content_type).to eql("application/json")
+        end
+      end
+
+      context "when using a token that does not exist" do
         it "returns 401 - unauthorized" do
           api_get(path, token: "incorrect-token")
 
@@ -38,7 +50,7 @@ RSpec.describe "Qualifications endpoint", type: :request do
       let(:trn) { "0000000" }
 
       it "returns an empty array" do
-        api_get(path)
+        api_get(path, token: "trs_token")
 
         expect(parsed_response["data"]["qualifications"]).to be_empty
       end

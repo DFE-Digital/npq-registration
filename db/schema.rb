@@ -75,7 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.datetime "last_used_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "scope"
+    t.string "scope", default: "lead_provider", null: false
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
   end

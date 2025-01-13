@@ -1,7 +1,6 @@
 class AddScopeToAPITokens < ActiveRecord::Migration[7.1]
   def change
-    add_column :api_tokens, :scope, :string
-    change_column_null :api_tokens, :lead_provider_id, true
+    add_column :api_tokens, :scope, :string, default: "lead_provider", null: false
 
     reversible do |direction|
       direction.up do
