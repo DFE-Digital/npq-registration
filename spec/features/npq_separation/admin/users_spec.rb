@@ -53,8 +53,7 @@ RSpec.feature "User administration", type: :feature do
       expect(page).to have_css("h1", text: "Participant")
 
       within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("ID", user.id)
-        expect(summary_list).to have_summary_item("ECF ID", user.ecf_id)
+        expect(summary_list).to have_summary_item("Participant ID", user.ecf_id)
         expect(summary_list).to have_summary_item("Email", user.email)
         expect(summary_list).to have_summary_item("Name", user.full_name)
         expect(summary_list).to have_summary_item("TRN", user.trn)
