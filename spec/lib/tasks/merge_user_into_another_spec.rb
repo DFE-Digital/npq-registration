@@ -1,7 +1,5 @@
 require "rails_helper"
 
-Rails.application.load_tasks
-
 RSpec.describe "merge_user_into_another" do
   let(:merge_and_archive_service) { service_double }
   let(:user_to_merge) { create(:user, :with_get_an_identity_id) }

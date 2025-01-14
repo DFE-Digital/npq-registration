@@ -1,7 +1,5 @@
 require "rails_helper"
 
-Rails.application.load_tasks
-
 RSpec.describe "api_token:teacher_record_service:generate_token" do
   subject(:run_task) { Rake::Task["api_token:teacher_record_service:generate_token"].invoke }
 
