@@ -19,7 +19,7 @@ RSpec.describe CourseGroups::Leadership do
       end
     end
 
-    context "when date is between December of cohort start year and April of 2026" do
+    context "when date is between December and April of cohort start year" do
       let(:cohort) { create(:cohort, start_year: 2025) }
 
       it "returns Spring schedule" do
