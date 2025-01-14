@@ -228,6 +228,10 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :cohorts do
+        resources :schedules, except: :index
+      end
+
       resources :schools, only: %i[index show]
       resources :courses, only: %i[index show]
       resources :users, only: %i[index show] do
@@ -259,6 +263,19 @@ Rails.application.routes.draw do
 
       resources :lead_providers, only: %i[index show], path: "lead-providers"
       resources :admins, only: %i[index]
+
+      resources :bulk_operations, only: %i[index], path: "bulk-operations" do
+        post "revert_applications_to_pending", on: :member
+      end
+
+      namespace :bulk_operations, path: "bulk-operations" do
+        resources :revert_applications_to_pending, controller: "revert_applications_to_pending", only: %i[index create show] do
+          post "run", on: :member
+        end
+        resources :reject_applications, controller: "reject_applications", only: %i[index create show] do
+          post "run", on: :member
+        end
+      end
     end
   end
 

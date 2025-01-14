@@ -7,11 +7,13 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
     {
       "Dashboard" => "/npq-separation/admin",
       "Applications" => "/npq-separation/admin/applications",
+      "Cohorts" => "/npq-separation/admin/cohorts",
       "Courses" => "/npq-separation/admin/courses",
       "Participants" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
       "Schools" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
+      "Bulk operations" => "/npq-separation/admin/bulk-operations",
       "Settings" => "#",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
@@ -22,6 +24,26 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
   end
 
   describe "#sub_structure" do
+    describe "Cohorts" do
+      subject { NpqSeparation::NavigationStructures::AdminNavigationStructure.new.sub_structure("Cohorts") }
+
+      before do
+        (2026..2028).map { create :cohort, start_year: _1 }
+      end
+
+      it "the first entry is 'All cohorts'" do
+        expect(subject.first.name).to eql("All cohorts")
+      end
+
+      it "has an entry for each cohort" do
+        expect(subject.drop(1).map(&:name)).to eq([
+          "Cohort 2028/29",
+          "Cohort 2027/28",
+          "Cohort 2026/27",
+        ])
+      end
+    end
+
     describe "Finance" do
       subject { NpqSeparation::NavigationStructures::AdminNavigationStructure.new.sub_structure("Finance") }
 
