@@ -8,7 +8,7 @@ RSpec.describe "merge_user_into_another" do
   let(:user_to_keep) { create(:user) }
   let(:service_double) { instance_double(Users::MergeAndArchive) }
 
-  before { allow(Users::MergeAndArchive).to receive(:new).with(user_to_merge:, user_to_keep:, set_uid: true) { merge_and_archive_service } }
+  before { allow(Users::MergeAndArchive).to receive(:new).with(user_to_merge:, user_to_keep:, set_uid: true, logger: an_instance_of(Logger)) { merge_and_archive_service } }
   after { Rake::Task["merge_user_into_another"].reenable }
 
   subject(:run_task) { Rake::Task["merge_user_into_another"].invoke(user_to_merge.ecf_id, user_to_keep.ecf_id, dry_run) }
