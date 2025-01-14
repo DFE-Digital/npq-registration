@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NpqSeparation::Admin::Finance::Statements::PaymentAuthorisationsController, type: :request do
+RSpec.describe Admin::FeaturesController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
   before { Flipper.enable("test") }
@@ -19,7 +19,7 @@ RSpec.describe NpqSeparation::Admin::Finance::Statements::PaymentAuthorisationsC
     end
   end
 
-  context "when user is logged in" do
+  context "when user is not logged in" do
     it "redirects to the admin sign in page if not signed in" do
       patch "/admin/features/test", params: { feature_flag_name: "test" }
       expect(response).to redirect_to(sign_in_path)
