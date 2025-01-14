@@ -73,7 +73,7 @@ module Middleware
     end
 
     def trace_request?
-      Rails.env.in?(%w[migration review sandbox separation staging production]) && vendor_api_path?
+      Rails.env.in?(%w[review sandbox staging production]) && vendor_api_path?
     end
 
     def vendor_api_path?

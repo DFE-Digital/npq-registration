@@ -35,7 +35,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :microsoft
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -118,11 +118,4 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: true, expire_after: 2.weeks
-
-  # Enable/disable aspects of the NPQ separation
-  config.npq_separation = {
-    parity_check: {
-      enabled: false,
-    },
-  }
 end

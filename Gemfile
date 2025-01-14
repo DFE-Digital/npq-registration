@@ -4,6 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby File.read(".ruby-version").chomp
 
 gem "activerecord-session_store"
+gem "azure-blob"
 gem "blueprinter"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "canonical-rails"
@@ -98,7 +99,7 @@ group :test do
   gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
-group :development, :test, :review, :separation do
+group :development, :test, :review, :sandbox do
   gem "factory_bot_rails"
   gem "faker", "~> 3.5"
 end

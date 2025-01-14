@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Sentry.init do |config|
-  config.enabled_environments = %w[production separation]
+  config.enabled_environments = %w[production sandbox staging review]
   config.dsn = config.enabled_environments.include?(Rails.env) ? ENV["SENTRY_DSN"] : "disabled"
   config.breadcrumbs_logger = %i[active_support_logger http_logger]
   config.release = ENV["GIT_COMMIT_SHA"]

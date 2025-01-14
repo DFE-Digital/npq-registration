@@ -1,4 +1,3 @@
-TERRAFILE_VERSION=0.8
 ARM_TEMPLATE_TAG=1.1.6
 RG_TAGS={"Product" : "Register for National Professional Qualifications (NPQ)"}
 REGION=UK South
@@ -38,12 +37,6 @@ staging: test-cluster
 
 sandbox: production-cluster
 	$(eval include global_config/sandbox.sh)
-
-migration: production-cluster
-	$(eval include global_config/migration.sh)
-
-separation: production-cluster
-	$(eval include global_config/separation.sh)
 
 production: production-cluster
 	$(if $(or ${SKIP_CONFIRM}, ${CONFIRM_PRODUCTION}), , $(error Missing CONFIRM_PRODUCTION=yes))
@@ -145,7 +138,7 @@ domains-infra-plan: domains domains-infra-init
 domains-infra-apply: domains domains-infra-init
 	terraform -chdir=terraform/domains/infrastructure apply -var-file config/zones.tfvars.json ${AUTO_APPROVE}
 
-domains-init: domains-composed-variables domains set-azure-account
+domains-init: domains domains-composed-variables set-azure-account
 	rm -rf terraform/domains/environment_domains/vendor/modules/domains
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/domains/environment_domains/vendor/modules/domains
 
@@ -181,19 +174,23 @@ install-konduit: ## Install the konduit script, for accessing backend services
 
 aks-console: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails c"
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c --sandbox"
+
+aks-rw-console: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c"
 
 aks-runner: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
 
 aks-ssh: get-cluster-credentials
 	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
-	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh
-
-aks-worker-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh
+
+aks-web-ssh: get-cluster-credentials
+	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh
 
 action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
 	$(if $(ACTION_GROUP_EMAIL), , $(error Please specify a notification email for the action group))

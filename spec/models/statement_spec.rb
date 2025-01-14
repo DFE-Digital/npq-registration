@@ -18,6 +18,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to allow_value(%w[true false]).for(:output_fee).with_message("Output fee must be true or false") }
     it { is_expected.not_to allow_value(nil).for(:output_fee).with_message("Choose yes or no for output fee") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
+    it { is_expected.to validate_uniqueness_of(:lead_provider_id).scoped_to(:cohort_id, :year, :month).with_message("A statement for this lead provider, cohort, year and month already exists") }
 
     describe "State validation" do
       context "when setting invalid state" do

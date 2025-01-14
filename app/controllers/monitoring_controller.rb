@@ -15,17 +15,11 @@ class MonitoringController < ApplicationController
 private
 
   def status
-    if database_connected? && (database_supports_refreshing? || database_populated?)
+    if database_connected? && database_populated?
       :ok
     else
       :internal_server_error
     end
-  end
-
-  def database_supports_refreshing?
-    # As we can refresh the migration environment database via a GitHub action
-    # it can be empty and should still be considered healthy.
-    Rails.env.migration?
   end
 
   def database_connected?

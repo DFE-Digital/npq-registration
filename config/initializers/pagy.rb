@@ -1,3 +1,4 @@
+require "pagy/extras/countless"
 require "pagy/extras/overflow"
 
 Pagy::DEFAULT[:size] = [1, 1, 1, 1]

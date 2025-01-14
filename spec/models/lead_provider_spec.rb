@@ -14,21 +14,21 @@ RSpec.describe LeadProvider do
   describe "#next_output_fee_statement" do
     let(:cohort) { create(:cohort, :current) }
     let(:lead_provider) { next_output_fee_statement.lead_provider }
-    let(:next_output_fee_statement) { create(:statement, :next_output_fee, cohort:) }
+    let(:next_output_fee_statement) { create(:statement, :next_output_fee, cohort:, month: 7) }
 
     before do
       # Not output fee
-      create(:statement, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now)
+      create(:statement, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now, month: 1)
       # Paid
-      create(:statement, :paid, :next_output_fee, cohort:, lead_provider:, deadline_date: 2.hours.from_now)
+      create(:statement, :paid, :next_output_fee, cohort:, lead_provider:, deadline_date: 2.hours.from_now, month: 2)
       # Payable
-      create(:statement, :payable, :next_output_fee, cohort:, lead_provider:, deadline_date: 3.hours.from_now)
+      create(:statement, :payable, :next_output_fee, cohort:, lead_provider:, deadline_date: 3.hours.from_now, month: 3)
       # Deadline is later
-      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now)
+      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now, month: 4)
       # Wrong cohort
-      create(:statement, output_fee: true, cohort: create(:cohort, start_year: cohort.start_year + 1), lead_provider:, deadline_date: 1.hour.from_now)
+      create(:statement, output_fee: true, cohort: create(:cohort, start_year: cohort.start_year + 1), lead_provider:, deadline_date: 1.hour.from_now, month: 5)
       # In the past
-      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 1.day.ago)
+      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 1.day.ago, month: 6)
     end
 
     subject { lead_provider.next_output_fee_statement(cohort) }

@@ -1,0 +1,26 @@
+<h1 class="govuk-heading-l">
+  <% if @cohort.new_record? %>
+    New cohort
+  <% else %>
+    Edit cohort
+  <% end %>
+</h1>
+
+<%= form_with model: [:npq_separation, :admin, @cohort] do |f| %>
+  <%= f.govuk_number_field :start_year,
+                           label: { text: "Start year" },
+                           class: 'govuk-input--width-4' %>
+
+  <%= f.govuk_check_box :funding_cap,
+                        1,
+                        0,
+                        multiple: false,
+                        link_errors: true,
+                        label: { text: "Funding cap" } %>
+
+  <%= f.govuk_date_field :registration_start_date,
+                         legend: { text: 'Registration start date' },
+                         class: 'govuk-!-margin-top-5' %>
+
+  <%= f.govuk_submit @cohort.new_record? ? 'Create cohort' : 'Update cohort' %>
+<% end %>

@@ -12,6 +12,7 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
 
   before do
     create :schedule, :npq_leadership_autumn
+    create :schedule, :npq_leadership_spring
 
     create_list(:declaration, 2, :eligible, declaration_type: "started", course:, statement:)
     create_list(:declaration, 3, :eligible, declaration_type: "retained-1", course:, statement:)

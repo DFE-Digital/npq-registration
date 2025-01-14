@@ -6,10 +6,9 @@ on:
       environment:
         description: Environment to restore
         required: true
-        default: migration
+        default: production
         type: choice
         options:
-          - migration
           - production
       confirm-production:
         description: Must be set to true if restoring production

@@ -17,6 +17,12 @@ en:
     ecf_id: &ecf_id
       blank: "Enter an ECF ID"
       taken: "ECF ID must be unique"
+    attributes:
+      trn:
+        blank: TRN can't be blank
+        invalid: TRN must only contain numbers
+        not_real: You must enter a valid TRN
+        wrong_length: TRN is the wrong length (should be %{count} characters)
 
   application: &application
     blank: The entered '#/%{parameterized_attribute}' is missing from your request. Check details and try again.
@@ -140,6 +146,11 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        bulk_operation:
+          attributes:
+            file:
+              empty: Uploaded file is empty
+              invalid: Uploaded file is wrong format
         cohort:
           attributes:
             ecf_id:
@@ -239,6 +250,13 @@ en:
               invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
             reason:
               inclusion: Choose a valid reason for the training status change
+        applications/change_funding_eligibility:
+          attributes:
+            base:
+              declaration_exists: "Eligibility can not be changed because a billable or submitted declaration exists"
+              funded_application: "Eligibility can not be changed because the application is funded"
+            eligible_for_funding:
+              inclusion: Choose whether the Application is eligible for funding
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
@@ -283,8 +301,7 @@ en:
           attributes:
             trn:
               blank: Teacher reference number cannot be blank
-              too_short: Teacher reference number is at least %{count} digits long
-              too_long: Teacher reference number is at most %{count} digits long
+              wrong_length: Teacher reference number is %{count} digits long
               invalid: Teacher reference number must only contain numbers
               not_real: You must enter a valid teacher reference number (TRN)
             full_name:
@@ -533,6 +550,9 @@ en:
 
   shared:
     cancel: Cancel
+    continue: Continue
+    "yes": "Yes"
+    "no": "No"
 
   accounts:
     show:
@@ -577,6 +597,7 @@ en:
       feature_flags: "Feature Flags"
       new_feature_flags: "New Feature Flags"
       settings: "Settings"
+      bulk_operations: "Bulk operations"
 
     super_admins:
       update:
@@ -801,6 +822,8 @@ en:
     legend:
       applications_change_training_status:
         training_status: Choose a different training status
+      applications_change_funding_eligibility:
+        eligible_for_funding: Is eligible for funding?
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"

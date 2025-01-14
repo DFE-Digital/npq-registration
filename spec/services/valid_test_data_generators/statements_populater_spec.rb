@@ -11,7 +11,7 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
   subject { described_class.new(lead_provider:, cohort:) }
 
   describe "#populate" do
-    context "when running in other environment other than separation or development" do
+    context "when running in other environment other than sandbox or development" do
       let(:environment) { "test" }
 
       it "returns nil" do
@@ -19,8 +19,8 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
       end
     end
 
-    context "when running in development or separation environments" do
-      let(:environment) { "separation" }
+    context "when running in development or sandbox environments" do
+      let(:environment) { "sandbox" }
 
       it "creates statements" do
         expect {
@@ -47,9 +47,11 @@ RSpec.describe ValidTestDataGenerators::StatementsPopulater do
       end
 
       it "creates unpaid statements" do
-        expect {
-          subject.populate
-        }.to(change { Statement.unpaid.count })
+        travel_to(Date.new(cohort.start_year, 12, 26)) do
+          expect {
+            subject.populate
+          }.to(change { Statement.unpaid.count })
+        end
       end
     end
   end

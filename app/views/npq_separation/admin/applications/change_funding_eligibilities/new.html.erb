@@ -1,0 +1,25 @@
+<%= govuk_back_link href: npq_separation_admin_application_path(@application) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      <%= @application.user.full_name %>
+    </h1>
+
+    <%= form_for @funding_eligibility,
+                 url: npq_separation_admin_applications_change_funding_eligibility_path(@application) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_collection_radio_buttons :eligible_for_funding,
+                                           f.object.eligible_for_funding_options,
+                                           :first,
+                                           :last,
+                                           legend: { tag: "h1", size: "m" } %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit t("shared.continue") %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_path(@application) %>
+      </div>
+    <% end %>
+  </div>
+</div>

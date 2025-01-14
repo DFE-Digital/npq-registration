@@ -113,6 +113,8 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    azure-blob (0.5.4)
+      rexml
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
@@ -386,7 +388,7 @@ GEM
     orm_adapter (0.5.0)
     os (1.1.4)
     ostruct (0.6.1)
-    pagy (9.3.2)
+    pagy (9.3.3)
     paper_trail (15.2.0)
       activerecord (>= 6.1)
       request_store (~> 1.4)
@@ -692,6 +694,7 @@ DEPENDENCIES
   amazing_print
   axe-core-capybara (~> 4.6)
   axe-core-rspec (~> 4.10)
+  azure-blob
   blueprinter
   bootsnap (>= 1.1.0)
   brakeman
