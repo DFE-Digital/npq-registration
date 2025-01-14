@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Qualifications endpoint", type: :request do
-  describe "GET /api/teacher-record-service/npq-qualifications/:trn" do
-    let(:path) { "/api/teacher-record-service/npq-qualifications/#{trn}" }
+  describe "GET /api/teacher-record-service/v1/npq-qualifications/:trn" do
+    let(:path) { "/api/teacher-record-service/v1/npq-qualifications/#{trn}" }
 
     before { create(:api_token, :teacher_record_service) }
 
