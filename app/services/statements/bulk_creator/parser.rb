@@ -7,12 +7,18 @@ module Statements
         lines = CSV.read(csv_file, headers: true, encoding: "bom|utf-8") # encoding needed for some Excel CSVs
 
         if lines.none?
-          new.tap { _1.error = "No rows found" }
+          new_with_error "No rows found"
         elsif (missing_headers = row_class.attribute_names - lines.first.headers).any?
-          new.tap { _1.error = "Missing headers: #{missing_headers.join(", ")}" }
+          new_with_error "Missing headers: #{missing_headers.join(", ")}"
         else
           new lines.map { row_class.new(_1.to_h.slice(*row_class.attribute_names)) }
         end
+      rescue CSV::InvalidEncodingError
+        new_with_error "must be CSV format"
+      end
+
+      def self.new_with_error(error)
+        new.tap { _1.error = error }
       end
 
       def valid?

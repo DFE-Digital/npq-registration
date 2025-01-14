@@ -72,8 +72,6 @@ RSpec.describe Statements::BulkCreator do
     end
   end
 
-  # warn of superfluous columns in CSVs
-
   context "when a statement already exists" do
     before { Statement.create!(cohort:, lead_provider: LeadProvider.last, year: 2025, month: 4) }
 
@@ -81,6 +79,12 @@ RSpec.describe Statements::BulkCreator do
   end
 
   describe "statement CSV" do
+    context "when it is not a CSV" do
+      let(:statements_csv_id) { ActiveStorage::Blob.create_and_upload!(io: file_fixture("excel_file.xlsx").open, filename: "statements.xlsx").signed_id }
+
+      it { is_expected.to have_error :statements_csv, "must be CSV format" }
+    end
+
     context "with missing headers" do
       let(:statements_csv) do
         tempfile <<~CSV
@@ -151,6 +155,12 @@ RSpec.describe Statements::BulkCreator do
   end
 
   describe "contracts CSV" do
+    context "when it is not a CSV" do
+      let(:contracts_csv_id) { ActiveStorage::Blob.create_and_upload!(io: file_fixture("excel_file.xlsx").open, filename: "contracts.xlsx").signed_id }
+
+      it { is_expected.to have_error :contracts_csv, "must be CSV format" }
+    end
+
     context "with no rows" do
       let(:contracts_csv) do
         tempfile <<~CSV
