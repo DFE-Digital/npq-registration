@@ -19,7 +19,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     end
 
     it { is_expected.to have_css "h1", text: "Application for #{application.user.full_name}" }
-    it { is_expected.to have_summary_item "Application ID", application.id }
+    it { is_expected.to have_summary_item "Application ID", application.ecf_id }
     it { is_expected.to have_summary_item "TRN", application.user.trn }
     it { is_expected.to have_summary_item "Lead provider name", application.lead_provider.name }
     it { is_expected.to have_summary_item "Course name", application.course.name }
@@ -35,7 +35,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     let(:declarations) { [] }
 
     it { is_expected.to have_css "h1", text: "Application for #{application.user.full_name}" }
-    it { is_expected.to have_summary_item "Application ID", application.id }
+    it { is_expected.to have_summary_item "Application ID", application.ecf_id }
     it { is_expected.to have_summary_item "TRN", application.user.trn }
     it { is_expected.to have_summary_item "Lead provider name", application.lead_provider.name }
     it { is_expected.to have_summary_item "Course name", application.course.name }
