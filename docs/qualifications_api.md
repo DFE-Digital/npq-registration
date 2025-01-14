@@ -43,3 +43,10 @@ If no qualifications are found for the TRN, the response will be:
  }
 }
 ```
+
+## Authentication
+
+This API uses bearer token authentication. The bearer token is passed in the `Authorization` header:
+```
+Authorization: Bearer <token>
+```
