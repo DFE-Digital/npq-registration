@@ -1,8 +1,9 @@
 require "rails_helper"
 
-RSpec.describe OneOff::BulkChangeApplicationsToPending do
+RSpec.describe BulkOperation::BulkChangeApplicationsToPending do
   let(:application_ecf_ids) { [application.ecf_id] }
-  let(:instance) { described_class.new(application_ecf_ids:) }
+  let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin)) }
+  let(:instance) { described_class.new(application_ecf_ids:, bulk_operation:) }
 
   describe "#run!" do
     let(:dry_run) { false }
@@ -11,12 +12,20 @@ RSpec.describe OneOff::BulkChangeApplicationsToPending do
 
     RSpec.shared_examples "changes to pending" do |initial_state|
       it { expect { run }.to(change { application.reload.lead_provider_approval_status }.from(initial_state).to("pending")) }
-      it { expect(run[application.ecf_id]).to eq("Changed to pending") }
+
+      it "saves the result" do
+        run
+        expect(JSON.parse(bulk_operation.result)[application.ecf_id]).to eq("Changed to pending")
+      end
     end
 
     RSpec.shared_examples "does not change to pending" do |result|
       it { expect { run }.not_to(change { application.reload.lead_provider_approval_status }) }
-      it { expect(run[application.ecf_id]).to match(result) }
+
+      it "saves the result" do
+        run
+        expect(JSON.parse(bulk_operation.reload.result)[application.ecf_id]).to match(result)
+      end
     end
 
     context "when there is an accepted application" do
