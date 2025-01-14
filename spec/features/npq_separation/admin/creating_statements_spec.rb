@@ -5,6 +5,7 @@ RSpec.feature "Creating statements", type: :feature do
   include Helpers::StatementsHelper
 
   let(:cohort) { create(:cohort) }
+  let(:download_path) { Rails.root.join("tmp/capybara/downloads-#{Time.zone.now.to_i}") }
 
   before do
     sign_in_as admin
@@ -63,6 +64,24 @@ RSpec.feature "Creating statements", type: :feature do
       }.to change(Statement, :count).by(6)
           .and change(Contract, :count).by(9)
           .and change(ContractTemplate, :count).by(3)
+    end
+
+    scenario "downloading examples" do
+      page.driver.browser.download_path = download_path
+
+      click_on "Create statements"
+
+      find("summary", text: "Example statements CSV").click
+      click_on "Download empty statements template"
+      sleep 0.1
+      csv = CSV.read("#{download_path}/statements.csv")
+      expect(csv.count).to eq(1)
+
+      find("summary", text: "Example contracts CSV").click
+      click_on "Download empty contracts template"
+      sleep 0.1
+      csv = CSV.read("#{download_path}/contracts.csv")
+      expect(csv.count).to eq(1)
     end
   end
 end

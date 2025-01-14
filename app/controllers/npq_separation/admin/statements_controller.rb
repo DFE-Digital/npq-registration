@@ -25,6 +25,15 @@ class NpqSeparation::Admin::StatementsController < NpqSeparation::AdminControlle
     end
   end
 
+  def show
+    row_class = {
+      "statements" => Statements::BulkCreator::StatementRow,
+      "contracts" => Statements::BulkCreator::ContractRow,
+    }.fetch(params[:id])
+
+    render plain: row_class.example_csv.lines.first, content_type: "text/csv", filename: "#{params[:id]}.csv"
+  end
+
 private
 
   def set_cohort

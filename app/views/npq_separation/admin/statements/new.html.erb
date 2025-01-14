@@ -14,7 +14,7 @@
 <%= Statements::BulkCreator::StatementRow.example_csv %>
 </pre>
       <div class="govuk-button-group">
-        <%= govuk_link_to "Download empty template", "/blank-statements-csv.csv" %>
+        <%= govuk_link_to "Download empty statements template", npq_separation_admin_cohort_statement_path(@cohort, 'statements.csv') %>
       </div>
     <% end %>
   </div>
@@ -30,7 +30,7 @@
 <%= Statements::BulkCreator::ContractRow.example_csv %>
 </pre>
       <div class="govuk-button-group">
-        <%= govuk_link_to "Download empty template", "/blank-contracts-csv.csv" %>
+        <%= govuk_link_to "Download empty contracts template", npq_separation_admin_cohort_statement_path(@cohort, 'contracts.csv') %>
         <%= govuk_link_to "Find lead provider names", npq_separation_admin_lead_providers_path %>
         <%= govuk_link_to "Find course identifiers", npq_separation_admin_courses_path %>
       </div>
