@@ -269,6 +269,15 @@
         row.with_key(text: "Updated at")
         row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
       end
+
+      sl.with_row do |row|
+        row.with_key(text: "Statements")
+        row.with_value do
+          safe_join(declaration.statements.map do |statement|
+            tag.div govuk_link_to(statement_name(statement), npq_separation_admin_finance_statement_path(statement))
+          end)
+        end
+      end
     end)
 
     if declaration.participant_outcomes.any?
