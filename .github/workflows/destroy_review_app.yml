@@ -10,7 +10,7 @@ jobs:
     name: Delete Review App ${{ github.event.pull_request.number }}
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'dependencies') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: review
     steps:
       - uses: actions/checkout@v4

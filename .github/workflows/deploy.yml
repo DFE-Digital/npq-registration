@@ -24,13 +24,13 @@ jobs:
   all-checks-passed:
     name: All checks passed
     needs: [rspec]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - run: "echo 'Linting and tests passed, this branch is ready to be merged'"
 
   docker:
     name: Build and push Docker image
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.actor != 'dependabot[bot]' && github.event_name != 'merge_group'
     outputs:
       docker-image: ${{ steps.build-docker-image.outputs.image }}
@@ -49,7 +49,7 @@ jobs:
     concurrency: deploy_review_${{ github.event.pull_request.number }}
     if: github.actor != 'dependabot[bot]' && github.event_name == 'pull_request'
     needs: [docker]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment:
       name: review
     steps:
@@ -74,7 +74,7 @@ jobs:
   deploy-staging:
     name: Deploy staging
     needs: [docker, all-checks-passed]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     environment:
       name: staging
@@ -95,7 +95,7 @@ jobs:
   deploy-sandbox:
     name: Deploy sandbox
     needs: [deploy-staging]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     environment:
       name: sandbox
@@ -114,7 +114,7 @@ jobs:
   deploy-production:
     name: Deploy production
     needs: [deploy-staging]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     environment:
       name: production
