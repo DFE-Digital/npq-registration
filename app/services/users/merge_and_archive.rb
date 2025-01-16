@@ -5,11 +5,11 @@ module Users
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    attribute :user_to_merge
-    attribute :user_to_keep
+    attribute :user_ecf_id_to_merge
+    attribute :user_ecf_id_to_keep
     attribute :set_uid, :boolean, default: false
     attribute :logger, default: -> { Rails.logger }
-    private :user_to_merge, :user_to_keep, :set_uid
+    private :user_ecf_id_to_merge, :user_ecf_id_to_keep, :set_uid
 
     def call(dry_run: true)
       logger.info "Dry Run" if dry_run
@@ -33,6 +33,14 @@ module Users
     end
 
   private
+
+    def user_to_merge
+      @user_to_merge ||= User.find_by!(ecf_id: user_ecf_id_to_merge)
+    end
+
+    def user_to_keep
+      @user_to_keep ||= User.find_by!(ecf_id: user_ecf_id_to_keep)
+    end
 
     def move_applications(from_user:, to_user:)
       from_user.applications.each do |application|

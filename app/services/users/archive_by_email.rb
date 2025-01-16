@@ -10,7 +10,7 @@ module Users
 
     def call
       if user_with_matching_email
-        MergeAndArchive.new(user_to_merge: user_with_matching_email, user_to_keep: user).call(dry_run: false)
+        MergeAndArchive.new(user_ecf_id_to_merge: user_with_matching_email.ecf_id, user_ecf_id_to_keep: user.ecf_id).call(dry_run: false)
       end
     end
 
