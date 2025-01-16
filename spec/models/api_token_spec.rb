@@ -25,7 +25,7 @@ RSpec.describe APIToken, type: :model do
     end
 
     context "when a lead provider is not specified" do
-      it "creates an APIToken without a lead provider" do
+      it "does not create an APIToken without a lead provider" do
         expect { APIToken.create_with_random_token!(scope:) }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe APIToken, type: :model do
     end
 
     context "when token is in another scope" do
-      before { APIToken.create_with_known_token!(unhashed_token, lead_provider:, scope: "teacher_record_service") }
+      before { APIToken.create_with_known_token!(unhashed_token, scope: "teacher_record_service") }
 
       it "doesn't find the APIToken" do
         expect(APIToken.find_by_unhashed_token(unhashed_token, scope:)).to be_nil

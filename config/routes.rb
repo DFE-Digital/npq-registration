@@ -211,7 +211,7 @@ Rails.application.routes.draw do
 
     namespace :teacher_record_service, path: "teacher-record-service", defaults: { format: :json } do
       namespace :v1 do
-        resources :qualifications, path: "npq-qualifications", only: %i[show], param: :trn
+        resources :qualifications, only: %i[show], param: :trn
       end
     end
   end

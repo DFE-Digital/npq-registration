@@ -8,6 +8,8 @@ class ParticipantOutcome < ApplicationRecord
   validate :completion_date_not_in_the_future
 
   delegate :user, :lead_provider, :course, :application_id, to: :declaration
+  delegate :trn, to: :user
+  delegate :short_code, to: :course, prefix: true
 
   enum state: {
     passed: "passed",
@@ -90,14 +92,6 @@ class ParticipantOutcome < ApplicationRecord
 
     update!(qualified_teachers_api_request_successful: nil,
             sent_to_qualified_teachers_api_at: nil)
-  end
-
-  def trn
-    user.trn
-  end
-
-  def course_short_code
-    course.short_code
   end
 
 private

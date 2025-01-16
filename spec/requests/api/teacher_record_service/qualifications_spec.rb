@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "Qualifications endpoint", type: :request do
-  describe "GET /api/teacher-record-service/v1/npq-qualifications/:trn" do
-    let(:path) { "/api/teacher-record-service/v1/npq-qualifications/#{trn}" }
+  describe "GET /api/teacher-record-service/v1/qualifications/:trn" do
+    let(:path) { "/api/teacher-record-service/v1/qualifications/#{trn}" }
 
     before { create(:api_token, :teacher_record_service) }
 
@@ -52,7 +52,9 @@ RSpec.describe "Qualifications endpoint", type: :request do
       it "returns an empty array" do
         api_get(path, token: "trs_token")
 
+        expect(response.status).to eq 200
         expect(parsed_response["data"]["qualifications"]).to be_empty
+        expect(response.content_type).to eql("application/json")
       end
     end
   end

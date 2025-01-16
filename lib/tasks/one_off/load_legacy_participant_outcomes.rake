@@ -39,11 +39,13 @@ namespace :one_off do
             completion_date: Date.strptime(row[:awarded_date], "%m/%d/%Y"),
           )
         end
-        logger.info "Import finished"
-        logger.info "#{LegacyPassedParticipantOutcome.count} records imported"
 
+        logger.info "Rows loaded, now committing transaction (may take a few minutes)" unless dry_run
         raise ActiveRecord::Rollback if dry_run
       end
+
+      logger.info "Import finished"
+      logger.info "#{LegacyPassedParticipantOutcome.count} records imported"
     end
   end
 end

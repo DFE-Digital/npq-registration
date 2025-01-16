@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_16_121733) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -78,6 +78,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.string "scope", default: "lead_provider", null: false
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+    t.check_constraint "lead_provider_id IS NOT NULL AND scope::text = 'lead_provider'::text OR lead_provider_id IS NULL"
   end
 
   create_table "application_states", force: :cascade do |t|
@@ -340,8 +341,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
 
   create_table "legacy_passed_participant_outcomes", force: :cascade do |t|
     t.string "trn", null: false
-    t.string "course_short_code"
-    t.date "completion_date"
+    t.string "course_short_code", null: false
+    t.date "completion_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["trn"], name: "index_legacy_passed_participant_outcomes_on_trn"

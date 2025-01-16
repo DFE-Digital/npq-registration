@@ -15,7 +15,7 @@ It returns both qualifications that are currently held in NPQ registration and t
 
 To get qualifications for a TRN:
 
-`GET /api/teacher-record-service/v1/npq-qualifications/1000207`
+`GET /api/teacher-record-service/v1/qualifications/1000207`
 
 Example response:
 
