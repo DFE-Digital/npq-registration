@@ -14,16 +14,13 @@ RSpec.describe Users::MergeAndArchive do
 
   let!(:existing_participant_id_change) { create(:participant_id_change, user: user_to_merge) }
 
-  let(:user_ecf_id_to_keep) { user_to_keep.ecf_id }
-  let(:user_ecf_id_to_merge) { user_to_merge.ecf_id }
-
   it "does not expose internal attributes" do
-    expect { described_class.new(user_ecf_id_to_merge:, user_ecf_id_to_keep:).user_ecf_id_to_merge }.to raise_error(NameError)
-    expect { described_class.new(user_ecf_id_to_merge:, user_ecf_id_to_keep:).user_ecf_id_to_keep }.to raise_error(NameError)
+    expect { described_class.new(user_to_merge:, user_to_keep:).user_to_merge }.to raise_error(NameError)
+    expect { described_class.new(user_to_merge:, user_to_keep:).user_to_keep }.to raise_error(NameError)
   end
 
   describe ".call" do
-    subject { described_class.new(user_ecf_id_to_merge:, user_ecf_id_to_keep:).call(dry_run:) }
+    subject { described_class.new(user_to_merge:, user_to_keep:).call(dry_run:) }
 
     context "when dry run false" do
       let(:dry_run) { false }
@@ -58,20 +55,6 @@ RSpec.describe Users::MergeAndArchive do
         expect(existing_participant_id_change.reload.user).to eq user_to_keep
       end
 
-      it "reloads the user_to_merge prior to archiving" do
-        allow(User).to receive(:find_by!).with(ecf_id: user_to_merge.ecf_id).and_return(user_to_merge)
-        allow(User).to receive(:find_by!).with(ecf_id: user_to_keep.ecf_id).and_return(user_to_keep)
-        allow(user_to_merge).to receive(:reload).and_call_original
-
-        archiver_instance = instance_double(Users::Archiver, archive!: true)
-        allow(Users::Archiver).to receive(:new).with(user: user_to_merge).and_return(archiver_instance)
-
-        subject
-
-        expect(user_to_merge).to have_received(:reload).ordered
-        expect(archiver_instance).to have_received(:archive!).ordered
-      end
-
       context "when there is already a participant id change" do
         before { create(:participant_id_change, user: user_to_keep, from_participant_id: user_to_merge.ecf_id, to_participant_id: user_to_keep.ecf_id) }
 
@@ -92,24 +75,12 @@ RSpec.describe Users::MergeAndArchive do
         end
 
         context "when set_uid is true" do
-          subject { described_class.new(user_ecf_id_to_merge:, user_ecf_id_to_keep:, set_uid: true).call(dry_run:) }
+          subject { described_class.new(user_to_merge:, user_to_keep:, set_uid: true).call(dry_run:) }
 
           it "sets the user to keep uid to the one from the user to merge" do
             expect { subject }.to change { user_to_keep.reload.uid }.to(user_to_merge.uid)
           end
         end
-      end
-
-      context "when the user_ecf_id_to_merge cannot be found" do
-        let(:user_ecf_id_to_merge) { SecureRandom.uuid }
-
-        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find User/) }
-      end
-
-      context "when the user_ecf_id_to_keep cannot be found" do
-        let(:user_ecf_id_to_keep) { SecureRandom.uuid }
-
-        it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find User/) }
       end
     end
 

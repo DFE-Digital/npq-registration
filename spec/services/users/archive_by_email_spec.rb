@@ -22,6 +22,14 @@ RSpec.describe Users::ArchiveByEmail do
         expect(application_for_matching_user.reload.user).to eq user
       end
 
+      it "reloads the matching user before archiving" do
+        query_double = instance_double(Users::Query, user_with_matching_email: matching_user)
+        allow(Users::Query).to receive(:new) { query_double }
+        allow(Users::Archiver).to receive(:new) { instance_double(Users::Archiver, archive!: nil) }
+        expect(matching_user).to receive(:reload)
+        subject
+      end
+
       it "archives the user matching the email" do
         subject
         expect(matching_user.reload).to be_archived

@@ -9,8 +9,18 @@ desc "Merge a user into another user"
 task :merge_user_into_another, %i[user_ecf_id_to_merge user_ecf_id_to_keep dry_run] => :environment do |_task, args|
   logger = Logger.new($stdout)
   dry_run = args[:dry_run] != "false"
-  user_ecf_id_to_merge = args[:user_ecf_id_to_merge]
-  user_ecf_id_to_keep = args[:user_ecf_id_to_keep]
 
-  Users::MergeAndArchive.new(user_ecf_id_to_merge:, user_ecf_id_to_keep:, set_uid: true, logger:).call(dry_run:)
+  user_to_merge = User.find_by(ecf_id: args[:user_ecf_id_to_merge])
+  unless user_to_merge
+    logger.error "User to merge not found (ID: #{args[:user_ecf_id_to_merge]})"
+    exit 1
+  end
+
+  user_to_keep = User.find_by(ecf_id: args[:user_ecf_id_to_keep])
+  unless user_to_keep
+    logger.error "User to keep not found (ID: #{args[:user_ecf_id_to_keep]})"
+    exit 1
+  end
+
+  Users::MergeAndArchive.new(user_to_merge:, user_to_keep:, set_uid: true, logger:).call(dry_run:)
 end
