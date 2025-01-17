@@ -1,7 +1,5 @@
 require "rails_helper"
 
-Rails.application.load_tasks
-
 RSpec.describe "one_off:create_contract" do
   let(:csv_file) { Tempfile.new }
   let(:csv_file_path) { csv_file.path }
