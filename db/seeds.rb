@@ -15,6 +15,9 @@ end
 
 Rails.logger.info("Seeding database")
 
+# Due to migrations modifying the tables, we need to reset column informations before running seeds
+ApplicationRecord.descendants.each(&:reset_column_information)
+
 # Ensure course/course group are first so the replant for
 # review apps doesn't cause the container to go into an
 # unhealthy state for too long (as courses are loaded in healthcheck).
