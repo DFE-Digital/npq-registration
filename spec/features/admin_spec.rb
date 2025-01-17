@@ -45,7 +45,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
-    expect(page).not_to have_link("Feature Flags", href: "/admin/features")
+    expect(page).not_to have_link("New Feature Flags", href: "/admin/features")
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
     expect(page).not_to have_link("Settings", href: "/admin/settings")
   end

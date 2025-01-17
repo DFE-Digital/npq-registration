@@ -1,4 +1,4 @@
-class Admin::FeaturesController < AdminController
+class Admin::FeaturesController < SuperAdminController
   def index
     @features = Feature::FEATURE_FLAG_KEYS
     @features_not_in_use = Flipper::Adapters::ActiveRecord::Feature.where.not(key: Feature::FEATURE_FLAG_KEYS)
