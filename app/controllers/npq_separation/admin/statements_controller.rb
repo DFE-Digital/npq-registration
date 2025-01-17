@@ -18,7 +18,6 @@ class NpqSeparation::Admin::StatementsController < NpqSeparation::AdminControlle
       render :new
     elsif dry_run
       set_preview
-      render
     else
       flash[:success] = "#{@statements.count} statements created successfully"
       redirect_to npq_separation_admin_cohort_path(@cohort)
@@ -31,7 +30,7 @@ class NpqSeparation::Admin::StatementsController < NpqSeparation::AdminControlle
       "contracts" => Statements::BulkCreator::ContractRow,
     }.fetch(params[:id])
 
-    render plain: row_class.example_csv.lines.first, content_type: "text/csv", filename: "#{params[:id]}.csv"
+    send_data row_class.example_csv.lines.first, filename: "#{params[:id]}.csv", type: :csv
   end
 
 private
