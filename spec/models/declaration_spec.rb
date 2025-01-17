@@ -54,11 +54,7 @@ RSpec.describe Declaration, type: :model do
 
         let(:application) { create(:application, :accepted, user:, course:) }
 
-        subject do
-          d = build(:declaration, course:, user:, application:, declaration_date:)
-          d.save!(validate: false)
-          d
-        end
+        subject { build(:declaration, course:, user:, application:, declaration_date:).tap { |d| d.save!(validate: false) } }
 
         context "when declaration_date is not changed" do
           it { is_expected.to be_valid }
