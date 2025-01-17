@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 8 * * 1' # Monday at 8am
   workflow_dispatch: 
+  push:
 
 jobs:
   refresh_manifest:
