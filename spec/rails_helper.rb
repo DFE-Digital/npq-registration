@@ -69,6 +69,7 @@ end
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 Capybara.server = :puma, { Silent: true }
+Capybara.save_path = Rails.root.join("tmp/capybara/downloads-#{Time.zone.now.to_i}")
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -149,6 +150,7 @@ RSpec.configure do |config|
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
+    Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)
   end
 
   config.before(:each, type: :view) do
