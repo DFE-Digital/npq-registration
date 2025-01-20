@@ -19,8 +19,8 @@ RSpec.feature "Creating statements", type: :feature do
       expect(page).not_to have_selector(:link_or_button, "Create statements")
 
       visit(new_npq_separation_admin_cohort_statement_path(cohort))
-      expect(page).to have_current_path(npq_separation_admin_cohort_path(cohort))
-      expect(page).to have_text("You must be a super admin to create statements")
+      expect(page).to have_current_path(sign_in_path)
+      expect(page).to have_text("Unauthorized")
     end
   end
 

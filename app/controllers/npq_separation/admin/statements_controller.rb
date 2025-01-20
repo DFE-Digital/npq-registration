@@ -1,5 +1,5 @@
 class NpqSeparation::Admin::StatementsController < NpqSeparation::AdminController
-  before_action :ensure_super_admin
+  before_action :require_super_admin
   before_action :set_cohort
   before_action :store_uploads, only: :create
 
@@ -72,12 +72,5 @@ private
 
   def store_file(file)
     ActiveStorage::Blob.create_and_upload!(io: file, filename: file.original_filename).signed_id
-  end
-
-  def ensure_super_admin
-    unless current_admin.super_admin?
-      flash[:error] = "You must be a super admin to create statements"
-      redirect_to npq_separation_admin_cohort_path(params[:cohort_id])
-    end
   end
 end
