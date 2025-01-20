@@ -88,8 +88,4 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
       expect(change_author).to eq "Public User #{current_user.id}"
     end
   end
-
-  describe "changes from the rails console" do
-    it "assigns rails console to whodunnit"
-  end
 end
