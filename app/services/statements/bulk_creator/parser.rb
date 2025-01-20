@@ -22,10 +22,10 @@ module Statements
       end
 
       def valid?
-        error.nil? && present? && valid.count == count
+        error.nil? && present? && valid_rows.count == count
       end
 
-      def valid
+      def valid_rows
         select(&:valid?)
       end
 

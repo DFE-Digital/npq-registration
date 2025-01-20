@@ -44,11 +44,11 @@ module Statements
     def validate_statement_uniqueness
       return if statements_csv_id.blank? || contracts_csv_id.blank?
 
-      lead_providers = contract_parser.valid
+      lead_providers = contract_parser.valid_rows
                                       .uniq(&:lead_provider_name)
                                       .map { lead_provider_for _1 }
 
-      statement_parser.valid.each.with_index(2) do |statement, line_number|
+      statement_parser.valid_rows.each.with_index(2) do |statement, line_number|
         lead_providers.each do |lead_provider|
           next unless Statement.exists?(cohort:, lead_provider:, year: statement.year, month: statement.month)
 
