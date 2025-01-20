@@ -46,11 +46,20 @@ private
   def show_authorising_statement_message(statement)
     return unless statement.authorising_for_payment?
 
-    flash.now[:success_title] =
-      t("npq_separation.admin.finance.statements.payment_authorisations.banner.title")
+    if statement.delayed_payment_authorisation?
+      flash.now[:error_title] =
+        t("npq_separation.admin.finance.statements.payment_authorisations.banner.delayed_title")
 
-    flash.now[:success] =
-      t("npq_separation.admin.finance.statements.payment_authorisations.banner.content",
-        statement_marked_as_paid_at: statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))
+      flash.now[:error] =
+        t("npq_separation.admin.finance.statements.payment_authorisations.banner.delayed_content",
+          statement_marked_as_paid_at: statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))
+    else
+      flash.now[:success_title] =
+        t("npq_separation.admin.finance.statements.payment_authorisations.banner.title")
+
+      flash.now[:success] =
+        t("npq_separation.admin.finance.statements.payment_authorisations.banner.content",
+          statement_marked_as_paid_at: statement.marked_as_paid_at.strftime("%-I:%M%P on %-e %b %Y"))
+    end
   end
 end

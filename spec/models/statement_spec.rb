@@ -239,4 +239,49 @@ RSpec.describe Statement, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe ".with_delayed_authorisations" do
+    let!(:on_time_statement) { create(:statement, :payable, marked_as_paid_at: 1.minute.ago) }
+    let!(:delayed_statement) { create(:statement, :payable, marked_as_paid_at: 10.minutes.ago) }
+
+    before { stub_const("Statement::AUTHORISATION_GRACE_TIME", 5 * 60) } # 5 minutes grace time
+
+    it "includes statements marked as paid before the grace time" do
+      expect(Statement.with_delayed_authorisations).to include(delayed_statement)
+    end
+
+    it "excludes statements within the grace time" do
+      expect(Statement.with_delayed_authorisations).not_to include(on_time_statement)
+    end
+  end
+
+  describe "#delayed_payment_authorisation?" do
+    let(:statement) { build(:statement, :payable, marked_as_paid_at: marked_time) }
+
+    before { stub_const("Statement::AUTHORISATION_GRACE_TIME", 5 * 60) } # 5 minutes grace time
+
+    context "when marked_as_paid_at is outside the grace time" do
+      let(:marked_time) { 10.minutes.ago }
+
+      it "returns true" do
+        expect(statement.delayed_payment_authorisation?).to be true
+      end
+    end
+
+    context "when marked_as_paid_at is within the grace time" do
+      let(:marked_time) { 1.minute.ago }
+
+      it "returns false" do
+        expect(statement.delayed_payment_authorisation?).to be false
+      end
+    end
+
+    context "when marked_as_paid_at is nil" do
+      let(:statement) { build(:statement, :payable, marked_as_paid_at: nil) }
+
+      it "raises a NoMethodError" do
+        expect(statement.delayed_payment_authorisation?).to be false
+      end
+    end
+  end
 end

@@ -47,6 +47,7 @@ module NpqSeparation
               nodes: [
                 Node.new(name: "Unpaid statements", href: npq_separation_admin_finance_unpaid_index_path, prefix: "/npq-separation/admin/finance/statements/unpaid"),
                 Node.new(name: "Paid statements", href: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
+                Node.new(name: "Stalled statements (#{Statement.with_delayed_authorisations.count})", href: npq_separation_admin_finance_stale_index_path, prefix: "/npq-separation/admin/finance/statements/stale"),
               ],
             ),
             Node.new(name: "Declarations", href: "#", prefix: "/npq-separation/admin/finance/declarations"),

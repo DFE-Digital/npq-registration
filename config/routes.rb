@@ -253,6 +253,7 @@ Rails.application.routes.draw do
           collection do
             resources :unpaid, controller: "statements/unpaid", only: "index"
             resources :paid, controller: "statements/paid", only: "index"
+            resources :stale, controller: "statements/stale", only: "index"
           end
 
           member do

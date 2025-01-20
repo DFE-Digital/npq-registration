@@ -1,4 +1,6 @@
 class Statement < ApplicationRecord
+  AUTHORISATION_GRACE_TIME = 15 * 60
+
   has_paper_trail meta: { note: :version_note }
   attr_accessor :version_note
 
@@ -41,6 +43,7 @@ class Statement < ApplicationRecord
   scope :unpaid, -> { with_state(%w[open payable]) }
   scope :paid, -> { with_state("paid") }
   scope :next_output_fee_statements, -> { with_state("open").with_output_fee.order(:deadline_date).where("deadline_date >= ?", Date.current) }
+  scope :with_delayed_authorisations, -> { with_state("payable").where("marked_as_paid_at < ?", AUTHORISATION_GRACE_TIME.seconds.ago) }
 
   state_machine :state, initial: :open do
     state :open
@@ -74,6 +77,12 @@ class Statement < ApplicationRecord
 
   def authorising_for_payment?
     payable? && marked_as_paid_at?
+  end
+
+  def delayed_payment_authorisation?
+    return false if marked_as_paid_at.nil?
+
+    marked_as_paid_at < AUTHORISATION_GRACE_TIME.seconds.ago
   end
 
   def show_targeted_delivery_funding?
