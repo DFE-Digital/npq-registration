@@ -31,8 +31,7 @@ gem "govuk_markdown"
 gem "httparty", "~> 0.22"
 gem "iconv"
 gem "jsbundling-rails", "~> 1.3"
-gem "json_api_client", ">= 1.21.1"
-gem "mail-notify"
+gem "mail-notify", "~> 1.2"
 gem "oj"
 gem "omniauth"
 gem "omniauth-oauth2"
@@ -43,7 +42,7 @@ gem "pg", ">= 0.18", "< 2.0"
 gem "pg_search"
 gem "puma", "~> 6.5.0"
 gem "rack-attack"
-gem "rails", "~> 7"
+gem "rails", "~> 7.1.5"
 gem "rails_semantic_logger"
 gem "redis"
 gem "rouge"
@@ -72,7 +71,7 @@ group :development, :test do
   gem "parallel_tests", "~> 4.7"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "rspec-rails", "~> 7.1.0"
+  gem "rspec-rails", "~> 7.1"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
@@ -89,14 +88,13 @@ group :development do
 end
 
 group :test do
-  gem "axe-core-capybara", "~> 4.6"
+  gem "axe-core-capybara", "~> 4.7"
   gem "axe-core-rspec", "~> 4.10"
   gem "rspec-default_http_header"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.0"
   gem "webmock", "~> 3.24"
-  gem "with_model", "~> 2.1", ">= 2.1.7"
 end
 
 group :development, :test, :review, :sandbox do

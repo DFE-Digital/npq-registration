@@ -6,7 +6,6 @@ require "simplecov_json_formatter"
 SimpleCov.start "rails"
 
 require "webmock/rspec"
-require "with_model"
 require "support/helpers/journey_helper"
 require "support/helpers/journey_assertion_helper"
 require "support/helpers/journey_step_helper"
@@ -35,8 +34,6 @@ WebMock.disable_net_connect!(allow_localhost: true,
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.extend WithModel
-
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
