@@ -524,7 +524,7 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-sonarqube-formatter (1.6.2)
+    rspec-sonarqube-formatter (1.6.3)
       htmlentities (~> 4.3)
       rspec (~> 3.0)
     rspec-support (3.13.2)
