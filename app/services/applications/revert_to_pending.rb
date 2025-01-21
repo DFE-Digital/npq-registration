@@ -1,6 +1,6 @@
 module Applications
   class RevertToPending
-    REMOVEABLE_DECLARATION_STATES = %w[submitted voided ineligible].freeze
+    REVERTABLE_DECLARATION_STATES = %w[voided ineligible awaiting_clawback clawed_back].freeze
 
     include ActiveModel::Model
     include ActiveModel::Attributes
@@ -20,7 +20,6 @@ module Applications
 
       Application.transaction do
         application.application_states.destroy_all
-        application.declarations.destroy_all
         application.funded_place = nil
         application.pending_lead_provider_approval_status!
 
@@ -31,7 +30,7 @@ module Applications
   private
 
     def application_has_no_unremoveable_declarations
-      if application.declarations.where.not(state: REMOVEABLE_DECLARATION_STATES).any?
+      if application.declarations.where.not(state: REVERTABLE_DECLARATION_STATES).any?
         errors.add :base, :pending_unremoveable_declarations
       end
     end
