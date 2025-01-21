@@ -28,6 +28,7 @@ RSpec.describe Statements::BulkCreator do
         statement = Statement.find_by(attrs)
         expect(statement).to be_present
         expect(statement.contracts.count).to eq(2)
+        expect(statement.reconcile_amount).to eq(0)
 
         contract_template = statement.contracts.find_by(course: Course.first).contract_template
         expect(contract_template.recruitment_target).to eq(30)
@@ -58,6 +59,7 @@ RSpec.describe Statements::BulkCreator do
         statement = Statement.find_by(attrs)
         expect(statement).to be_present
         expect(statement.contracts.count).to eq(1)
+        expect(statement.reconcile_amount).to eq(0)
 
         contract_template = statement.contracts.find_by(course: Course.first).contract_template
         expect(contract_template.recruitment_target).to eq(20)

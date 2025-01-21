@@ -77,7 +77,7 @@ module Statements
     def statement_attributes_for(statement_row, contract_row)
       lead_provider = lead_provider_for(contract_row)
 
-      statement_row.attributes.merge(cohort:, lead_provider:)
+      statement_row.attributes.merge(cohort:, lead_provider:, reconcile_amount: 0)
     end
 
     def contract_attributes_for(contract_row)
