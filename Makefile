@@ -237,7 +237,7 @@ endef
 aks-download-tmp-file: get-cluster-credentials
 	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-download-tmp-file))
-	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
+	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
 
 # uploads the given file to the app/tmp directory of all
 # pods in the cluster.
@@ -245,7 +245,7 @@ aks-download-tmp-file: get-cluster-credentials
 aks-upload-tmp-file: get-cluster-credentials
 	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-upload-tmp-file))
-	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-web -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
+	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
 
 maintenance-image-push: ## Build and push maintenance page image: make production maintenance-image-push GITHUB_TOKEN=x [MAINTENANCE_IMAGE_TAG=y]
 	$(if ${GITHUB_TOKEN},, $(error Provide a valid Github token with write:packages permissions as GITHUB_TOKEN variable))
