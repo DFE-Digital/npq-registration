@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_16_121733) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_16_121733) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "api_token_scopes", ["lead_provider", "teacher_record_service"]
   create_enum "application_statuses", ["active", "deferred", "withdrawn"]
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
@@ -75,10 +76,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_16_121733) do
     t.datetime "last_used_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "scope", default: "lead_provider", null: false
+    t.enum "scope", default: "lead_provider", enum_type: "api_token_scopes"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
-    t.check_constraint "lead_provider_id IS NOT NULL AND scope::text = 'lead_provider'::text OR lead_provider_id IS NULL"
+    t.check_constraint "lead_provider_id IS NOT NULL AND scope = 'lead_provider'::api_token_scopes OR lead_provider_id IS NULL AND scope <> 'lead_provider'::api_token_scopes"
   end
 
   create_table "application_states", force: :cascade do |t|

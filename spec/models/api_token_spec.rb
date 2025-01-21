@@ -12,7 +12,7 @@ RSpec.describe APIToken, type: :model do
   describe "validations" do
     it { is_expected.to validate_presence_of(:hashed_token) }
     it { is_expected.to validate_presence_of(:scope) }
-    it { is_expected.to define_enum_for(:scope).with_values(lead_provider: "lead_provider", teacher_record_service: "teacher_record_service").backed_by_column_of_type(:string) }
+    it { is_expected.to define_enum_for(:scope).with_values(lead_provider: "lead_provider", teacher_record_service: "teacher_record_service").backed_by_column_of_type(:enum) }
   end
 
   describe ".create_with_random_token!" do
