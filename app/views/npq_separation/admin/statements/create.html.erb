@@ -1,0 +1,79 @@
+<%= govuk_back_link href: new_npq_separation_admin_cohort_statement_path %>
+
+<h1 class="govuk-heading-l">Confirm new cohort <%= format_cohort(@cohort) %> statements</h1>
+
+<p class="govuk-body govuk-body--l"><%= @preview[:statements].count %> statements will be created for <%= pluralize @preview[:lead_providers_count], 'lead provider' %> (<%= number_with_delimiter @statements.count %> statements in total).</p>
+
+<%=
+  govuk_details(summary_text: "Statement dates") do
+    govuk_table(classes: 'govuk-!-font-size-18') do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: "Statement")
+          row.with_cell(text: "Deadline date")
+          row.with_cell(text: "Payment date")
+          row.with_cell(text: "Output fee")
+        end
+      end
+
+      table.with_body do |body|
+        @preview[:statements].each do |statement|
+          body.with_row do |row|
+            row.with_cell(text: statement_name(statement))
+            row.with_cell(text: statement.deadline_date.to_fs(:govuk_short))
+            row.with_cell(text: statement.payment_date.to_fs(:govuk_short))
+            row.with_cell(text: boolean_red_green_tag(statement['output_fee']))
+          end
+        end
+      end
+    end
+  end
+%>
+
+<% @preview[:contracts].each do |lead_provider_name, contracts| %>
+  <%=
+    govuk_details(summary_text: "#{pluralize contracts.size, 'contract'} for #{lead_provider_name} statements", classes: 'govuk-!-padding-right-5') do
+      govuk_table(classes: 'govuk-!-font-size-18') do |table|
+        table.with_head do |head|
+          head.with_row do |row|
+            row.with_cell(text: "Course")
+            row.with_cell(text: "Recruitment target", numeric: true)
+            row.with_cell(text: "Per participant", numeric: true)
+            row.with_cell(text: "Service fee installments", numeric: true)
+            row.with_cell(text: "Special course", numeric: true)
+            row.with_cell(text: "Monthly service fee", numeric: true)
+          end
+        end
+
+        table.with_body do |body|
+          contracts.each do |contract|
+            body.with_row do |row|
+              row.with_cell(text: contract.course.name)
+              row.with_cell(text: contract.contract_template.recruitment_target, numeric: true)
+              row.with_cell(text: number_to_currency(contract.contract_template.per_participant).gsub('.00', ''), numeric: true)
+              row.with_cell(text: contract.contract_template.service_fee_installments, numeric: true)
+              row.with_cell(text: boolean_red_green_tag(contract.contract_template.special_course), numeric: true)
+              row.with_cell(text: number_to_currency(contract.contract_template.monthly_service_fee).gsub('.00', ''), numeric: true)
+            end
+          end
+        end
+      end
+    end
+  %>
+<% end %>
+
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+<div class="govuk-inset-text">
+  There will be a short delay while the files are processed.
+</div>
+
+<%= form_with model: @service, url: npq_separation_admin_cohort_statements_path(params[:cohort_id]) do |f| %>
+  <%= f.hidden_field :statements_csv_id %>
+  <%= f.hidden_field :contracts_csv_id %>
+  <%= f.hidden_field :confirm, value: '1' %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit "Create statements" %>
+    <%= govuk_button_link_to "Cancel", new_npq_separation_admin_cohort_statement_path, secondary: true %>
+<% end %>

@@ -230,6 +230,7 @@ Rails.application.routes.draw do
 
       resources :cohorts do
         resources :schedules, except: :index
+        resources :statements, only: %i[new create show]
       end
 
       resources :schools, only: %i[index show]
