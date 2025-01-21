@@ -1,6 +1,14 @@
 require "rails_helper"
 
-RSpec.describe DashboardReportJob do
+RSpec.describe Crons::GenerateDashboardReportJob do
+  describe "#schedule" do
+    it "enqueues job" do
+      expect {
+        described_class.schedule
+      }.to have_enqueued_job
+    end
+  end
+
   describe "#perform" do
     it "persists report record" do
       expect {

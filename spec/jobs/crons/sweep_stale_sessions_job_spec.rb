@@ -1,6 +1,14 @@
 require "rails_helper"
 
-RSpec.describe SweepStaleSessionsJob do
+RSpec.describe Crons::SweepStaleSessionsJob do
+  describe "#schedule" do
+    it "enqueues job" do
+      expect {
+        described_class.schedule
+      }.to have_enqueued_job
+    end
+  end
+
   describe "#perform" do
     it "deletes stale sessions" do
       ActiveRecord::SessionStore::Session.create!(data: "world", session_id: "1", updated_at: 16.days.ago)

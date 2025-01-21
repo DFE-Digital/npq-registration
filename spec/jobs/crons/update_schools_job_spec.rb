@@ -1,6 +1,14 @@
 require "rails_helper"
 
-RSpec.describe ImportGiasSchoolsJob, type: :job do
+RSpec.describe Crons::UpdateSchoolsJob, type: :job do
+  describe "#schedule" do
+    it "enqueues job" do
+      expect {
+        described_class.schedule
+      }.to have_enqueued_job
+    end
+  end
+
   describe "#perform_later" do
     it "enqueues job" do
       expect {

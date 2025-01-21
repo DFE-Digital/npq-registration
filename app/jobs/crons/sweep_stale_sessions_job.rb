@@ -7,6 +7,8 @@ class Crons::SweepStaleSessionsJob < CronJob
   sentry_monitor_check_ins slug: "sweep-stale-sessions"
 
   def perform
-    SweepStaleSessionsJob.perform_later
+    ActiveRecord::SessionStore::Session
+      .where("updated_at < ?", 15.days.ago)
+      .delete_all
   end
 end

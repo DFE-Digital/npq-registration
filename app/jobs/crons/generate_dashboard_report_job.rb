@@ -7,6 +7,7 @@ class Crons::GenerateDashboardReportJob < CronJob
   sentry_monitor_check_ins slug: "generate-dashboard"
 
   def perform
-    DashboardReportJob.perform_later
+    report = Report.find_or_initialize_by(identifier: "dashboard")
+    report.update!(data: ReportService.new.call)
   end
 end

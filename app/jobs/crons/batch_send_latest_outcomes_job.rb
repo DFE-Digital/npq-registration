@@ -8,12 +8,10 @@ class Crons::BatchSendLatestOutcomesJob < CronJob
 
   sentry_monitor_check_ins slug: "batch-send-latest-outcomes"
 
-  discard_on StandardError do |_job, exception|
-    Sentry.capture_exception(exception)
-  end
-
   def perform(batch_size = DEFAULT_BATCH_SIZE)
-    outcomes.first(batch_size).each { |outcome| SendToQualifiedTeachersAPIJob.perform_later(participant_outcome_id: outcome.id) }
+    outcomes.first(batch_size).each do |outcome|
+      SendToQualifiedTeachersAPIJob.perform_now(participant_outcome_id: outcome.id)
+    end
   end
 
   def queue_name
