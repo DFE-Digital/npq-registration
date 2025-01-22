@@ -41,7 +41,7 @@
   end
 %>
 
-<% if current_admin.super_admin? && @schedule.editable? %>
+<% if current_admin.super_admin? %>
   <%= govuk_button_link_to 'Edit schedule details', edit_npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule) %>
   <%= govuk_button_link_to 'Delete schedule', npq_separation_admin_cohort_schedule_path(@schedule.cohort, @schedule), method: :delete, warning: true %>
 <% end %>
