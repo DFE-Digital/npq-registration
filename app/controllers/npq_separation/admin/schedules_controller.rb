@@ -1,7 +1,6 @@
 class NpqSeparation::Admin::SchedulesController < NpqSeparation::AdminController
   before_action :ensure_super_admin, except: :show
   before_action :schedule, only: %i[show edit update destroy]
-  before_action :ensure_editable, only: %i[edit update destroy]
 
   def show; end
 
@@ -62,13 +61,6 @@ private
     unless current_admin.super_admin?
       flash[:error] = "You must be a super admin to change schedules"
       redirect_to npq_separation_admin_cohort_path(cohort)
-    end
-  end
-
-  def ensure_editable
-    unless @schedule.editable?
-      flash[:error] = "This schedule is not editable"
-      redirect_to npq_separation_admin_cohort_schedule_path(cohort, @schedule)
     end
   end
 end

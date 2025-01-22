@@ -74,32 +74,4 @@ RSpec.describe Cohort, type: :model do
       end
     end
   end
-
-  describe "#editable?" do
-    subject { cohort.editable? }
-
-    context "when conditions are met" do
-      before { cohort.update! start_year: 2029, registration_start_date: Date.new(2029, 12, 31) }
-
-      it { is_expected.to be true }
-    end
-
-    context "when the cohort has declarations" do
-      before { create(:declaration, cohort:) }
-
-      it { is_expected.to be false }
-    end
-
-    context "when the cohort has statements" do
-      before { create(:statement, cohort:) }
-
-      it { is_expected.to be false }
-    end
-
-    context "when registration_start_date is not in the future" do
-      before { cohort.update! start_year: Time.zone.today.year, registration_start_date: Date.yesterday }
-
-      it { is_expected.to be false }
-    end
-  end
 end

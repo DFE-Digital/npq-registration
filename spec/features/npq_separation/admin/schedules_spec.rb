@@ -56,63 +56,36 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
       admin.update! super_admin: true
     end
 
-    context "when the cohort is editable" do
-      before do
-        allow_any_instance_of(Cohort).to receive(:editable?).and_return(true)
-      end
+    scenario "creation" do
+      visit_cohort
+      click_on new_button_text
 
-      scenario "creation" do
-        visit_cohort
-        click_on new_button_text
+      fill_in_schedule_form(course_group)
 
-        fill_in_schedule_form(course_group)
+      expect { click_on "Create schedule" }.to change(Schedule, :count).by(1)
 
-        expect { click_on "Create schedule" }.to change(Schedule, :count).by(1)
-
-        schedule = Schedule.order(created_at: :desc).first
-        expect(page).to have_text("Schedule created")
-        expect_filled_in_schedule_attributes(schedule, course_group)
-      end
-
-      scenario "editing" do
-        navigate_to_schedule
-        click_on edit_button_text
-        fill_in_schedule_form(course_group)
-
-        expect { click_on "Update schedule" }.not_to(change(Schedule, :count))
-
-        schedule.reload
-        expect(page).to have_text("Schedule updated")
-        expect_filled_in_schedule_attributes(schedule, course_group)
-      end
-
-      scenario "deletion" do
-        navigate_to_schedule
-
-        click_on delete_button_text
-        expect { click_on "Confirm" }.to change(Schedule, :count).by(-1)
-      end
+      schedule = Schedule.order(created_at: :desc).first
+      expect(page).to have_text("Schedule created")
+      expect_filled_in_schedule_attributes(schedule, course_group)
     end
 
-    context "when the cohort is not editable" do
-      before do
-        allow_any_instance_of(Cohort).to receive(:editable?).and_return(false)
-      end
+    scenario "editing" do
+      navigate_to_schedule
+      click_on edit_button_text
+      fill_in_schedule_form(course_group)
 
-      scenario "cannot create" do
-        visit_cohort
-        expect(page).not_to have_link(new_button_text)
-      end
+      expect { click_on "Update schedule" }.not_to(change(Schedule, :count))
 
-      scenario "cannot edit" do
-        navigate_to_schedule
-        expect(page).not_to have_link(edit_button_text)
-      end
+      schedule.reload
+      expect(page).to have_text("Schedule updated")
+      expect_filled_in_schedule_attributes(schedule, course_group)
+    end
 
-      scenario "cannot delete" do
-        navigate_to_schedule
-        expect(page).not_to have_link(delete_button_text)
-      end
+    scenario "deletion" do
+      navigate_to_schedule
+
+      click_on delete_button_text
+      expect { click_on "Confirm" }.to change(Schedule, :count).by(-1)
     end
   end
 
