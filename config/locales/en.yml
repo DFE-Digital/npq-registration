@@ -264,7 +264,7 @@ en:
             lead_provider_approval_status:
               inclusion: Current lead provider approval status is not Accepted
             base:
-              pending_unremoveable_declarations: There are already declarations for this participant on this course, please ask provider to void and/or clawback any declarations they have made before attempting to reset the application.
+              pending_unremoveable_declarations: There are already declarations for this participant on this course, please ask the provider to void any declarations they have made before attempting to revert the application.
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:
