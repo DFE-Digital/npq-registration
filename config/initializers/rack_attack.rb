@@ -5,8 +5,13 @@ class Rack::Attack
   PROTECTED_ROUTES = [
     "/registration/qualified_teacher_check",
     "/registration/qualified_teacher_check/change",
+    "/registration/qualified-teacher-check",
+    "/registration/qualified-teacher-check/change",
     "/session/sign_in",
     "/session/sign_in_code",
+    "/session/sign-in",
+    "/session/sign-in-code",
+    "/session",
   ].freeze
 
   PUBLIC_API_PATH_PREFIXES = [
@@ -23,7 +28,7 @@ class Rack::Attack
   end
 
   def self.protected_path?(request)
-    PROTECTED_ROUTES.include?(request.path)
+    PROTECTED_ROUTES.any? { |route| request.path.starts_with?(route) }
   end
 
   def self.csp_report_path?(request)

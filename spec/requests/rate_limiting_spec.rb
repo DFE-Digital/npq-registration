@@ -29,7 +29,12 @@ RSpec.describe "Rate limiting" do
     end
   end
 
-  Rack::Attack::PROTECTED_ROUTES.each do |protected_path|
+  [
+    Rails.application.routes.url_helpers.registration_wizard_show_path("qualified-teacher-check"),
+    Rails.application.routes.url_helpers.registration_wizard_show_change_path("qualified-teacher-check"),
+    Rails.application.routes.url_helpers.session_wizard_show_path("sign-in"),
+    Rails.application.routes.url_helpers.session_wizard_show_path("sign-in-code"),
+  ].each do |protected_path|
     it_behaves_like "a rate limited endpoint", "protected routes (hitting external services)" do
       let(:path) { protected_path }
 
