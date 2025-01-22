@@ -10,6 +10,8 @@ class AdminService::ApplicationsSearch
 
     if q.present?
       chain = chain.where("users.email ilike ?", "%#{q}%")
+      chain = chain.or(default_scope.where("users.full_name ilike ?", "%#{q}%"))
+      chain = chain.or(default_scope.where("applications.employer_name ilike ? OR schools.name ilike ?", "%#{q}%", "%#{q}%"))
       chain = chain.or(default_scope.where(ecf_id: q))
       chain = chain.or(default_scope.where(users: { ecf_id: q }))
     end
@@ -20,6 +22,6 @@ class AdminService::ApplicationsSearch
 private
 
   def default_scope
-    Application.joins(:user).includes(:user, :course, :lead_provider).order(id: :asc)
+    Application.joins(:school, :user).includes(:course, :lead_provider, :school, :user).order(id: :asc)
   end
 end

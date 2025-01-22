@@ -19,7 +19,7 @@ module NpqSeparation
             name: "Applications",
             href: npq_separation_admin_applications_path,
             prefix: "/npq-separation/admin/applications",
-          ) => [],
+          ) => application_nodes,
           Node.new(
             name: "Cohorts",
             href: npq_separation_admin_cohorts_path,
@@ -73,6 +73,21 @@ module NpqSeparation
             prefix: "/npq-separation/admin/settings",
           ) => [],
         }
+      end
+
+      def application_nodes
+        [
+          Node.new(
+            name: "All applications",
+            href: npq_separation_admin_applications_path,
+            prefix: /\/npq-separation\/admin\/applications(?!\/reviews)$/,
+          ),
+          Node.new(
+            name: "In review",
+            href: npq_separation_admin_application_reviews_path,
+            prefix: "/npq-separation/admin/applications/reviews",
+          ),
+        ]
       end
 
       def cohort_nodes
