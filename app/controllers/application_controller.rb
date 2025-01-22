@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  MAX_ADMIN_SESSION = 12.hours
+
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :set_sentry_user
@@ -41,7 +43,14 @@ private
   end
 
   def current_admin
-    Admin.find_by(id: session[:admin_id])
+    return unless session[:admin_id]
+
+    if session[:admin_sign_in_at].nil? || session[:admin_sign_in_at] < MAX_ADMIN_SESSION.ago
+      reset_session
+      nil
+    else
+      Admin.find_by(id: session[:admin_id])
+    end
   end
   helper_method :current_admin
 
