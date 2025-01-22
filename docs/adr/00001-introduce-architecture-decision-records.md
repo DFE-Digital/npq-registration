@@ -1,4 +1,4 @@
-# Record architecture decisions
+# 1. Record architecture decisions
 
 Date: 2025-01-22
 
@@ -19,5 +19,4 @@ We will use Architecture Decision Records, as [described by Michael Nygard](http
 
 When we make decisions that affect the architecture of our application, we include an ADR document explaining that decision for future developers.
 
-For more information see Michael Nygard's article, linked above. 
-
+For more information see Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).
