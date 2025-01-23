@@ -10,6 +10,7 @@ RSpec.feature "Applications in review", type: :feature do
   let!(:application_for_hospital_school)            { create(:application, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
   let!(:application_for_la_supply_teacher)          { create(:application, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
   let!(:application_for_la_virtual_school)          { create(:application, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_lead_mentor)                { create(:application, employment_type: "local_authority_virtual_school") }
   let!(:application_for_young_offender_institution) { create(:application, employment_type: "young_offender_institution") }
   let!(:application_for_other)                      { create(:application, employment_type: "other") }
   let!(:application_for_rtta_yes)                   { create(:application, referred_by_return_to_teaching_adviser: "yes") }
@@ -26,6 +27,7 @@ RSpec.feature "Applications in review", type: :feature do
       application_for_hospital_school,
       application_for_la_supply_teacher,
       application_for_la_virtual_school,
+      application_for_lead_mentor,
       application_for_young_offender_institution,
       application_for_other,
       application_for_rtta_yes,

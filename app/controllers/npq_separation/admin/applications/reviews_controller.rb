@@ -20,6 +20,7 @@ module NpqSeparation
         def employment_types
           %w[
             hospital_school
+            lead_mentor_for_accredited_itt_provider
             local_authority_supply_teacher
             local_authority_virtual_school
             young_offender_institution
