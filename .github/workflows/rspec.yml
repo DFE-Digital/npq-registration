@@ -24,7 +24,7 @@ jobs:
     name: "Lint ruby"
     env:
       GOVUK_NOTIFY_API_KEY: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
     name: "Lint SCSS"
     env:
       GOVUK_NOTIFY_API_KEY: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
   rspec:
     name: Run Rspec
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     env:
       RAILS_ENV: test
@@ -161,7 +161,7 @@ jobs:
 
   sonar-scanner:
     name: Sonar Scanner
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ rspec, ruby_linting ]
     if: github.ref != 'refs/heads/main' && github.actor != 'dependabot[bot]'
     environment:

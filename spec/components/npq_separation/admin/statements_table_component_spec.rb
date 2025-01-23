@@ -7,9 +7,9 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
 
   let(:statements) { FactoryBot.create_list(:statement, 3) }
   let(:show_lead_provider) { true }
-  let(:expected_columns) { ["ID", "Lead provider", "Cohort", "Status"] }
+  let(:expected_columns) { ["Lead provider", "Cohort", "Status"] }
 
-  it "renders a table with ID, Lead provider, Cohort and Status columns" do
+  it "renders a table with Lead provider, Cohort and Status columns" do
     expected_columns.each do |heading|
       expect(rendered_content).to have_css("th", text: heading)
     end

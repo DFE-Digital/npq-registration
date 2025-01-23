@@ -19,16 +19,17 @@
   end
 %>
 
-<% if current_admin.super_admin? && @cohort.editable? %>
+<% if current_admin.super_admin? %>
   <%= govuk_button_link_to('Edit cohort details', edit_npq_separation_admin_cohort_path(@cohort)) %>
   <%= govuk_button_link_to('Delete cohort', npq_separation_admin_cohort_path(@cohort), method: :delete, warning: true) %>
+  <%= govuk_button_link_to('Create statements', new_npq_separation_admin_cohort_statement_path(@cohort), secondary: true) %>
 <% end %>
 
 <hr class="govuk-section-break govuk-section-break--l">
 
 <h2 class="govuk-heading-m">Schedules</h1>
 
-<% if current_admin.super_admin? && @cohort.editable? %>
+<% if current_admin.super_admin? %>
   <%= govuk_button_link_to('New schedule', new_npq_separation_admin_cohort_schedule_path(@cohort)) %>
 <% end %>
 

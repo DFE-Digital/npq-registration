@@ -18,20 +18,4 @@ RSpec.describe Schedule, type: :model do
     it { is_expected.to belong_to(:course_group) }
     it { is_expected.to belong_to(:cohort) }
   end
-
-  describe "#editable?" do
-    subject { schedule.editable? }
-
-    context "when cohort#editable? is true" do
-      before { allow(schedule.cohort).to receive(:editable?).and_return(true) }
-
-      it { is_expected.to be true }
-    end
-
-    context "when cohort#editable? is false" do
-      before { allow(schedule.cohort).to receive(:editable?).and_return(false) }
-
-      it { is_expected.to be false }
-    end
-  end
 end

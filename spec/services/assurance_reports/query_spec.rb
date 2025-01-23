@@ -12,7 +12,7 @@ RSpec.describe AssuranceReports::Query do
   let(:assurance_report)    { query.declarations.first }
   let(:lead_provider)       { create(:lead_provider) }
   let(:other_lead_provider) { create(:lead_provider) }
-  let(:statement)           { create(:statement, lead_provider:) }
+  let(:statement)           { create(:statement, :next_period, lead_provider:) }
   let(:training_status)     { :active }
 
   let :declaration do

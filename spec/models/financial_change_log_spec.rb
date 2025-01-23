@@ -20,9 +20,8 @@ RSpec.describe FinancialChangeLog, type: :model do
       FinancialChangeLog.log!(description: "Foo1", data: { foo: "bar" })
     }.to raise_error(ActiveRecord::RecordInvalid)
 
-    expect {
-      FinancialChangeLog.log!(description: "Foo12", data: { foo: "bar" })
-    }.not_to raise_error(ActiveRecord::RecordInvalid)
+    expect(FinancialChangeLog.log!(description: "Foo12", data: { foo: "bar" }))
+      .to be_persisted
   end
 
   it "requires data to be present" do

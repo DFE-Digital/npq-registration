@@ -37,17 +37,38 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "when declaration_date is before the schedule start" do
-      before { subject.declaration_date = subject.application.schedule.applies_from.prev_week }
+      let(:declaration_date) { application.schedule.applies_from.prev_week }
 
-      it "has a meaningful error" do
-        expect(subject).to be_invalid
-        expect(subject).to have_error(:declaration_date, :declaration_before_schedule_start, "Enter a '#/declaration_date' that's on or after the schedule start.")
+      context "when declaration is being created" do
+        before { subject.declaration_date = subject.application.schedule.applies_from.prev_week }
+
+        it "has a meaningful error" do
+          expect(subject).to be_invalid
+          expect(subject).to have_error(:declaration_date, :declaration_before_schedule_start, "Enter a '#/declaration_date' that's on or after the schedule start.")
+        end
       end
 
-      context "when `skip_declaration_date_within_schedule_validation` is set to true" do
-        before { subject.skip_declaration_date_within_schedule_validation = true }
+      context "when declaration already exists" do
+        let(:user) { create(:user) }
+        let(:course) { create(:course) }
 
-        it { is_expected.to be_valid }
+        let(:application) { create(:application, :accepted, user:, course:) }
+
+        subject { build(:declaration, course:, user:, application:, declaration_date:).tap { |d| d.save!(validate: false) } }
+
+        context "when declaration_date is not changed" do
+          it { is_expected.to be_valid }
+        end
+
+        context "when declaration_date is going to be changed" do
+          let(:declaration_date) { application.schedule.applies_from.next_week }
+          let(:new_declaration_date) { application.schedule.applies_from.prev_week }
+
+          it "is not valid" do
+            subject.declaration_date = new_declaration_date
+            expect(subject).not_to be_valid
+          end
+        end
       end
     end
 

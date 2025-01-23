@@ -31,8 +31,4 @@ class Cohort < ApplicationRecord
 
     errors.add(:registration_start_date, "year must match the start year") if registration_start_date.year != start_year
   end
-
-  def editable?
-    registration_start_date.future? && statements.none? && declarations.none?
-  end
 end

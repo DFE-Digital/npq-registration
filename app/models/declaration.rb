@@ -91,10 +91,8 @@ class Declaration < ApplicationRecord
     duplicate: "duplicate",
   }, _suffix: true
 
-  attr_accessor :skip_declaration_date_within_schedule_validation
-
   validates :declaration_date, :declaration_type, presence: true
-  validate :validate_declaration_date_within_schedule, if: -> { !skip_declaration_date_within_schedule_validation }
+  validate :validate_declaration_date_within_schedule
   validate :validate_declaration_date_not_in_the_future
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
@@ -150,6 +148,7 @@ private
   def validate_declaration_date_within_schedule
     return unless application&.schedule
     return unless declaration_date
+    return if persisted? && !declaration_date_changed?
 
     if declaration_date < application.schedule.applies_from
       errors.add(:declaration_date, :declaration_before_schedule_start)
