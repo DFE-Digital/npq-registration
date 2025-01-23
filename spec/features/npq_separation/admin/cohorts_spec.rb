@@ -63,54 +63,32 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
       expect(cohort.registration_start_date).to eq(Date.new(2029, 3, 2))
     end
 
-    context "with an editable cohort" do
-      before do
-        allow_any_instance_of(Cohort).to receive(:editable?).and_return(true)
-      end
+    scenario "editing" do
+      cohort.update! funding_cap: false
 
-      scenario "editing" do
-        cohort.update! funding_cap: false
+      navigate_to_cohort
+      click_on edit_button_text
 
-        navigate_to_cohort
-        click_on edit_button_text
+      fill_in "Start year", with: "2025"
+      check "Funding cap", visible: :all
+      fill_in "Day", with: "6"
+      fill_in "Month", with: "5"
+      fill_in "Year", with: "2025"
 
-        fill_in "Start year", with: "2025"
-        check "Funding cap", visible: :all
-        fill_in "Day", with: "6"
-        fill_in "Month", with: "5"
-        fill_in "Year", with: "2025"
+      expect { click_on "Update cohort" }.not_to(change(Cohort, :count))
+      expect(page).to have_text("Cohort updated")
 
-        expect { click_on "Update cohort" }.not_to(change(Cohort, :count))
-        expect(page).to have_text("Cohort updated")
-
-        cohort.reload
-        expect(cohort.start_year).to be(2025)
-        expect(cohort.funding_cap).to be(true)
-        expect(cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
-      end
-
-      scenario "deletion" do
-        navigate_to_cohort
-        click_on delete_button_text
-
-        expect { click_on "Confirm" }.to change(Cohort, :count).by(-1)
-      end
+      cohort.reload
+      expect(cohort.start_year).to be(2025)
+      expect(cohort.funding_cap).to be(true)
+      expect(cohort.registration_start_date.to_date).to eq(Date.new(2025, 5, 6))
     end
 
-    context "with a non-editable cohort" do
-      before do
-        allow_any_instance_of(Cohort).to receive(:editable?).and_return(false)
-      end
+    scenario "deletion" do
+      navigate_to_cohort
+      click_on delete_button_text
 
-      scenario "cannot edit" do
-        navigate_to_cohort
-        expect(page).not_to have_link(edit_button_text)
-      end
-
-      scenario "cannot delete" do
-        navigate_to_cohort
-        expect(page).not_to have_link(delete_button_text)
-      end
+      expect { click_on "Confirm" }.to change(Cohort, :count).by(-1)
     end
   end
 

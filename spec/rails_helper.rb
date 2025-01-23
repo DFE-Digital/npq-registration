@@ -24,7 +24,7 @@ require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
 
-Capybara.register_driver :headless_chrome do |app|
+capybara_browser_options = {}.tap do |browser_opts|
   version = Capybara::Selenium::Driver.load_selenium
   options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
   browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
@@ -36,7 +36,18 @@ Capybara.register_driver :headless_chrome do |app|
     opts.add_argument("--disable-site-isolation-trials")
   end
 
-  Capybara::Selenium::Driver.new(app, **{ :browser => :chrome, options_key => browser_options })
+  browser_opts[:browser] = :chrome
+  browser_opts[options_key] = browser_options
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  Capybara::Selenium::Driver.new(app, **capybara_browser_options)
+end
+
+AxeCapybara.configure(:chrome) do |config|
+  # see below for a full list of configuration
+  # c.jslib_path = "next-version/axe.js"
+  config.page = Capybara::Selenium::Driver.new(nil, **capybara_browser_options)
 end
 
 Capybara.default_driver = :headless_chrome
@@ -46,11 +57,6 @@ require "capybara-screenshot/rspec"
 
 Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
   driver.browser.save_screenshot path
-end
-
-AxeCapybara.configure(:headless_chrome) do
-  # see below for a full list of configuration
-  # c.jslib_path = "next-version/axe.js"
 end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -69,6 +75,7 @@ end
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 Capybara.server = :puma, { Silent: true }
+Capybara.save_path = Rails.root.join("tmp/capybara/downloads-#{Time.zone.now.to_i}")
 
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
@@ -88,6 +95,7 @@ RSpec.configure do |config|
   config.include Capybara::RSpecMatchers, type: :component
   config.include Helpers::APIHelpers, type: :request
   config.include Helpers::SwaggerExampleParser, type: :request
+  config.include Helpers::TempfileHelper
   config.include RSpec::DefaultHttpHeader, type: :request
   config.include AxeHelper, type: :feature
 
@@ -148,6 +156,7 @@ RSpec.configure do |config|
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
     stub_env_variables_for_gai
+    Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)
   end
 
   config.before(:each, type: :view) do

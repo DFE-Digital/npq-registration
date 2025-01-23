@@ -62,7 +62,7 @@ module ApplicationHelper
   end
 
   def show_otp_code_in_ui(current_env, admin)
-    return unless current_env.in?(%w[development review])
+    return unless current_env.in?(%w[development review staging])
 
     tag.p("OTP code: #{admin.otp_hash}")
   end

@@ -112,13 +112,16 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application = Application.order(created_at: :asc).first
     started_declaration = create(:declaration, :from_ecf, application:)
     completed_declaration = create(:declaration, :completed, application:)
+    payable_statement = create(:statement, :payable)
+    payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
+    paid_statement = create(:statement, :paid, declaration: payable_declaration)
 
     click_link(application.ecf_id)
 
     expect(page).to have_css("h2", text: "Declarations")
 
     summary_cards = all(".govuk-summary-card")
-    expect(summary_cards).to have_attributes(length: 2)
+    expect(summary_cards).to have_attributes(length: 3)
 
     within(summary_cards[0]) do |summary_card|
       expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started")
@@ -149,6 +152,24 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
       end
     end
+
+    within(summary_cards[2]) do
+      within(find(".govuk-summary-list")) do |summary_list|
+        expect(summary_list).to have_summary_item(
+          "Statements",
+          "#{Date::MONTHNAMES[payable_statement.month]} #{payable_statement.year}" \
+          "\n" \
+          "#{Date::MONTHNAMES[paid_statement.month]} #{paid_statement.year}",
+        )
+      end
+    end
+
+    click_link("#{Date::MONTHNAMES[payable_statement.month]} #{payable_statement.year}")
+    expect(page).to have_current_path(npq_separation_admin_finance_statement_path(payable_statement))
+
+    visit(npq_separation_admin_application_path(application))
+    click_link("#{Date::MONTHNAMES[paid_statement.month]} #{paid_statement.year}")
+    expect(page).to have_current_path(npq_separation_admin_finance_statement_path(paid_statement))
   end
 
   scenario "viewing participant details" do

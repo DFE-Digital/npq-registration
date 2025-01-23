@@ -18,17 +18,17 @@ RSpec.describe LeadProvider do
 
     before do
       # Not output fee
-      create(:statement, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now, month: 1)
+      create(:statement, :next_period, output_fee: false, cohort:, lead_provider:, deadline_date: 1.hour.from_now)
       # Paid
-      create(:statement, :paid, :next_output_fee, cohort:, lead_provider:, deadline_date: 2.hours.from_now, month: 2)
+      create(:statement, :next_period, :paid, :next_output_fee, cohort:, lead_provider:, deadline_date: 2.hours.from_now)
       # Payable
-      create(:statement, :payable, :next_output_fee, cohort:, lead_provider:, deadline_date: 3.hours.from_now, month: 3)
+      create(:statement, :next_period, :payable, :next_output_fee, cohort:, lead_provider:, deadline_date: 3.hours.from_now)
       # Deadline is later
-      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now, month: 4)
+      create(:statement, :next_period, output_fee: true, cohort:, lead_provider:, deadline_date: 2.days.from_now)
       # Wrong cohort
-      create(:statement, output_fee: true, cohort: create(:cohort, start_year: cohort.start_year + 1), lead_provider:, deadline_date: 1.hour.from_now, month: 5)
+      create(:statement, :next_period, output_fee: true, cohort: create(:cohort, start_year: cohort.start_year + 1), lead_provider:, deadline_date: 1.hour.from_now)
       # In the past
-      create(:statement, output_fee: true, cohort:, lead_provider:, deadline_date: 1.day.ago, month: 6)
+      create(:statement, :next_period, output_fee: true, cohort:, lead_provider:, deadline_date: 1.day.ago)
     end
 
     subject { lead_provider.next_output_fee_statement(cohort) }

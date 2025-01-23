@@ -17,8 +17,6 @@ class Schedule < ApplicationRecord
   belongs_to :cohort
   has_many :courses, through: :course_group
 
-  delegate :editable?, to: :cohort
-
   normalizes :allowed_declaration_types, with: ->(value) { value.reject(&:blank?) }
 
   validates :name, presence: true

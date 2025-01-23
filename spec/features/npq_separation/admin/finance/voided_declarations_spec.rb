@@ -20,7 +20,7 @@ RSpec.feature "Voided declarations", type: :feature do
     expect(page).to have_css("td:nth-child(1)", text: voided_declaration.id)
     expect(page).to have_css("td:nth-child(2)", text: voided_declaration.user.id)
     expect(page).to have_css("td:nth-child(3)", text: voided_declaration.declaration_type)
-    expect(page).to have_css("td:nth-child(4)", text: voided_declaration.course.name)
+    expect(page).to have_css("td:nth-child(4)", text: voided_declaration.reload.course.name)
 
     expect(page).not_to have_css("td:nth-child(1)", text: eligible_declaration.id)
     expect(page).not_to have_css("td:nth-child(1)", text: other_voided_declaration.id)
