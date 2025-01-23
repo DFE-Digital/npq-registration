@@ -3,18 +3,21 @@ require "csv"
 namespace :one_off do
   namespace :legacy_participant_outcomes do
     desc "Import DQT data from CSV file (has header: trn,npq_type,awarded_date and the date is in format m/d/Y)"
-    task :import, %i[file_path dry_run] => :environment do |_t, args|
+    task :import, %i[file_path truncate dry_run] => :environment do |_t, args|
       logger = Logger.new($stdout)
       file_path = args[:file_path]
       dry_run = args[:dry_run] != "false"
+      truncate = args[:truncate] == "true"
       unless File.exist?(file_path)
         logger.error "File not found: #{file_path}"
         exit 1
       end
 
       ActiveRecord::Base.transaction do
-        logger.info "Removing #{LegacyPassedParticipantOutcome.count} old records"
-        LegacyPassedParticipantOutcome.destroy_all
+        if truncate
+          logger.info "Removing #{LegacyPassedParticipantOutcome.count} old records"
+          LegacyPassedParticipantOutcome.destroy_all
+        end
 
         dqt_npq_type_id_to_npq_short_code = {
           "389040001" => "NPQH",

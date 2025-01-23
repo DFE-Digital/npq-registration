@@ -4,6 +4,7 @@ RSpec.describe "one_off:legacy_participant_outcomes:import" do
   let(:csv_file) { Tempfile.new }
   let(:csv_file_path) { csv_file.path }
   let(:dry_run_parameter) { "false" }
+  let(:truncate_parameter) { "true" }
 
   before do
     csv_file.write("trn,npq_type,awarded_date\n")
@@ -19,7 +20,7 @@ RSpec.describe "one_off:legacy_participant_outcomes:import" do
     Rake::Task["one_off:legacy_participant_outcomes:import"].reenable
   end
 
-  subject(:run_task) { Rake::Task["one_off:legacy_participant_outcomes:import"].invoke(csv_file_path, dry_run_parameter) }
+  subject(:run_task) { Rake::Task["one_off:legacy_participant_outcomes:import"].invoke(csv_file_path, truncate_parameter, dry_run_parameter) }
 
   context "when dry run not specified" do
     let(:dry_run_parameter) { nil }
@@ -45,6 +46,15 @@ RSpec.describe "one_off:legacy_participant_outcomes:import" do
     it "creates new LegacyPassedParticipantOutcomes" do
       run_task
       expect(LegacyPassedParticipantOutcome.pluck(:trn)).to eq %w[1000002 1000003]
+    end
+
+    context "when truncate false" do
+      let(:truncate_parameter) { "false" }
+
+      it "does not delete oldLegacyPassedParticipantOutcomes" do
+        run_task
+        expect(LegacyPassedParticipantOutcome.pluck(:trn)).to eq %w[1000000 1000001 1000002 1000003]
+      end
     end
   end
 
