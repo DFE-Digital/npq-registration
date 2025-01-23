@@ -274,7 +274,7 @@ RSpec.describe FundingEligibility do
         end
 
         context "when institution is not on early years register" do
-          let(:institution) { build(:private_childcare_provider, provider_urn: "100000", early_years_individual_registers: []) }
+          let(:institution) { build(:private_childcare_provider, provider_urn: "100001", early_years_individual_registers: []) }
           let(:query_store) { instance_double(RegistrationQueryStore, childminder?: false) }
 
           it "is not eligible" do
