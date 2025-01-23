@@ -42,7 +42,7 @@ RSpec.feature "Listing and viewing schools", type: :feature do
     expect(page).to have_css("h1", text: school.name)
 
     within(".govuk-summary-list") do |summary_list|
-      expect(summary_list).to have_summary_item("ID", school.id)
+      expect(summary_list).to have_summary_item("School ID", school.id)
       expect(summary_list).to have_summary_item("URN", school.urn)
       expect(summary_list).to have_summary_item("UKPRN", school.ukprn)
       expect(summary_list).to have_summary_item("Local authority", school.la_name)

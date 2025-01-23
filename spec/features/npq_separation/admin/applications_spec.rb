@@ -56,8 +56,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_css("h2", text: "Application details")
 
     within(summary_lists[0]) do |summary_list|
-      expect(summary_list).to have_summary_item("Application ID", application.id)
-      expect(summary_list).to have_summary_item("ECF ID", application.ecf_id)
+      expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
       expect(summary_list).to have_summary_item("User ID", application.user.id)
       expect(summary_list).to have_summary_item("Email", application.user.email)
       expect(summary_list).to have_summary_item("TRN", application.user.trn)
@@ -128,8 +127,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started")
 
       within(find(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("Declaration ID", started_declaration.id)
-        expect(summary_list).to have_summary_item("ECF ID", started_declaration.ecf_id)
+        expect(summary_list).to have_summary_item("Declaration ID", started_declaration.ecf_id)
         expect(summary_list).to have_summary_item("Declaration type", started_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", started_declaration.cohort.start_year)
@@ -144,8 +142,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_card).to have_css(".govuk-summary-card__title", text: "Completed")
 
       within(find(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("Declaration ID", completed_declaration.id)
-        expect(summary_list).to have_summary_item("ECF ID", "-")
+        expect(summary_list).to have_summary_item("Declaration ID", "-")
         expect(summary_list).to have_summary_item("Declaration type", completed_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)

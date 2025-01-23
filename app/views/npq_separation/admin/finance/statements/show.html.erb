@@ -4,13 +4,9 @@
 
 <%=
   govuk_summary_list do |summary_list|
-    summary_list.with_row do |row|
-      row.with_key(text: "ID")
-      row.with_value(text: @statement.id)
-    end
 
     summary_list.with_row do |row|
-      row.with_key(text: "ECF ID")
+      row.with_key(text: "Statement ID")
       row.with_value(text: @statement.ecf_id)
     end
 

@@ -32,8 +32,7 @@ RSpec.feature "Statement", type: :feature do
 
     within(".govuk-summary-list") do |summary_list|
       start_year = statement.cohort.start_year
-      expect(summary_list).to have_summary_item("ID", statement.id)
-      expect(summary_list).to have_summary_item("ECF ID", statement.ecf_id)
+      expect(summary_list).to have_summary_item("Statement ID", statement.ecf_id)
       expect(summary_list).to have_summary_item("Lead provider", statement.lead_provider.name)
       expect(summary_list).to have_summary_item("Cohort", "#{start_year}/#{start_year.next - 2000}")
       expect(summary_list).to have_summary_item("Status", statement.state.humanize)
