@@ -560,6 +560,23 @@ en:
       pural_title: "Your NPQ registrations"
 
   admin:
+    features:
+      show: 
+        registration_open_html: | 
+          <p class="govuk-body">When this feature is turned on, registration is open. Users can register for an NPQ as normal.</p>
+          <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
+        senco_enabled_html: | 
+          <p class="govuk-body">Senco enabled</p>
+          <p class="govuk-body">Hello</p>
+        closed_registration_enabled_html: | 
+          <p class="govuk-body">When this feature is turned on, you can allow some users to register even when the service is closed - that is, when <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> is turned off.</p>
+          <p class="govuk-body">When this feature is turned off, and Registration open is also turned off, no one can register.</p>
+        targeted_support_funding_html: | 
+          <p class="govuk-body">Targeted support funding</p>
+          <p class="govuk-body">Hello</p>
+        npq_separation_ecf_api_disabled_html: |
+          <p class="govuk-body">NPQ separation ECF API disabled</p>
+          <p class="govuk-body">Hello</p>
     application_submissions:
       ecf_sync_request_log:
         sync_type:
@@ -578,6 +595,7 @@ en:
       webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
+      new_feature_flags: "New Feature Flags"
       settings: "Settings"
       bulk_operations: "Bulk operations"
 

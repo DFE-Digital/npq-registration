@@ -45,6 +45,7 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).not_to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).not_to have_link("New Feature Flags", href: "/admin/features")
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
     expect(page).not_to have_link("Settings", href: "/admin/settings")
   end
@@ -57,8 +58,28 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     page.click_link("Legacy Admin")
 
     expect(page).to have_link("Feature Flags", href: "/admin/feature_flags")
+    expect(page).to have_link("New Feature Flags", href: "/admin/features")
     expect(page).to have_link("Admin Users", href: "/admin/admins")
     expect(page).to have_link("Settings", href: "/admin/settings")
+  end
+
+  scenario "when logged in a super admin, the user can access the new feature flags interface and change the state of a feature flag" do
+    sign_in_as_super_admin
+    page.click_link("New Feature Flags")
+    expect(page).to have_current_path("/admin/features")
+    within("tr", text: "Registration open") do
+      page.click_link("View")
+    end
+    expect(page).to have_current_path("/admin/features/Registration open")
+    expect(page).to have_content("Registration open")
+    expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(true)
+    fill_in "Confirm the feature flag name to change the state", with: "wrong answer"
+    page.click_button "Change state"
+    expect(page).to have_content("There was an error updating the feature flag.")
+    fill_in "Confirm the feature flag name to change the state", with: "Registration open"
+    page.click_button "Change state"
+    expect(page).to have_content("You have turned the Registration open feature flag off.")
+    expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(false)
   end
 
   scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
