@@ -19,7 +19,7 @@ RSpec.describe ImportGiasSchools do
       .to_return(status: 200, body: File.open(file_fixture("gias_sample.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
     end
 
-    it "creates not existent schools" do
+    it "creates schools that don't exist" do
       expect { subject.call }.to change(School, :count).by(99)
     end
 
@@ -80,11 +80,20 @@ RSpec.describe ImportGiasSchools do
     it "applies updates correctly" do
       described_class.new.call
 
-      expect {
-        described_class.new.call
-      }.not_to change(School, :count)
-
+      expect { described_class.new.call }.not_to change(School, :count)
       expect(School.first.name).to eql("The Aldgate School 2")
+    end
+
+    context "when there is a school with nil last_changed_date" do
+      before do
+        described_class.new.call
+        School.first.update!(last_changed_date: nil)
+      end
+
+      it "applies updates correctly" do
+        expect { described_class.new.call }.not_to change(School, :count)
+        expect(School.first.name).to eql("The Aldgate School 2")
+      end
     end
 
     context "with refresh_all flag" do
