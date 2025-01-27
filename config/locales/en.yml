@@ -903,7 +903,6 @@ en:
         work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
         teacher_catchment: Register using your current workplace details, even if they will change soon.
 
-
     label:
       applications_change_training_status:
         reason: Reason for change
