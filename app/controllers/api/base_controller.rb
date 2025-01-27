@@ -31,5 +31,9 @@ module API
     def filter_validation_error_response(exception)
       render json: { errors: API::Errors::Response.new(error: I18n.t(:unpermitted_parameters), params: exception.message).call }, status: :unprocessable_entity
     end
+
+    def api_token_scope
+      APIToken.scopes[:lead_provider]
+    end
   end
 end

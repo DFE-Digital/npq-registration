@@ -15,7 +15,7 @@ module API
 
     def authenticate_token
       authenticate_with_http_token do |unhashed_token|
-        @current_api_token = APIToken.find_by_unhashed_token(unhashed_token).tap do |api_token|
+        @current_api_token = APIToken.find_by_unhashed_token(unhashed_token, scope: api_token_scope).tap do |api_token|
           api_token.update!(last_used_at: Time.zone.now) if api_token
         end
       end

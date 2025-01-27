@@ -209,6 +209,12 @@ Rails.application.routes.draw do
 
       resources :statements, only: %i[index show], param: :ecf_id
     end
+
+    namespace :teacher_record_service, path: "teacher-record-service", defaults: { format: :json } do
+      namespace :v1 do
+        resources :qualifications, only: %i[show], param: :trn
+      end
+    end
   end
 
   namespace :npq_separation, path: "npq-separation" do

@@ -133,6 +133,7 @@ RSpec.configure do |config|
     Course::IDENTIFIERS.each do |identifier|
       FactoryBot.create(identifier)
     end
+    Rails.application.load_tasks
   end
 
   config.before do

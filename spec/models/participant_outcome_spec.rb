@@ -419,4 +419,16 @@ RSpec.describe ParticipantOutcome, type: :model do
       it { expect { resend }.not_to change(outcome.reload, :qualified_teachers_api_request_successful) }
     end
   end
+
+  describe "#trn" do
+    subject { instance.trn }
+
+    it { is_expected.to eq instance.user.trn }
+  end
+
+  describe "#course_short_code" do
+    subject { instance.course_short_code }
+
+    it { is_expected.to eq instance.course.short_code }
+  end
 end

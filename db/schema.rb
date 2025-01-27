@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "api_token_scopes", ["lead_provider", "teacher_record_service"]
   create_enum "application_statuses", ["active", "deferred", "withdrawn"]
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
@@ -70,13 +71,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
   end
 
   create_table "api_tokens", force: :cascade do |t|
-    t.bigint "lead_provider_id", null: false
+    t.bigint "lead_provider_id"
     t.string "hashed_token", null: false
     t.datetime "last_used_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.enum "scope", default: "lead_provider", enum_type: "api_token_scopes"
     t.index ["hashed_token"], name: "index_api_tokens_on_hashed_token", unique: true
     t.index ["lead_provider_id"], name: "index_api_tokens_on_lead_provider_id"
+    t.check_constraint "lead_provider_id IS NOT NULL AND scope = 'lead_provider'::api_token_scopes OR lead_provider_id IS NULL AND scope <> 'lead_provider'::api_token_scopes"
   end
 
   create_table "application_states", force: :cascade do |t|
@@ -335,6 +338,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.uuid "ecf_id"
     t.string "hint"
     t.index ["ecf_id"], name: "index_lead_providers_on_ecf_id", unique: true
+  end
+
+  create_table "legacy_passed_participant_outcomes", force: :cascade do |t|
+    t.string "trn", null: false
+    t.string "course_short_code", null: false
+    t.date "completion_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trn"], name: "index_legacy_passed_participant_outcomes_on_trn"
   end
 
   create_table "local_authorities", force: :cascade do |t|
