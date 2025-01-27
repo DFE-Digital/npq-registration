@@ -12,7 +12,6 @@ RSpec.feature "Stalled statements", type: :feature do
     create(:declaration, :payable, statement:)
     sign_in_as(create(:admin))
     visit(npq_separation_admin_finance_statement_path(statement))
-    stub_const("Statement::AUTHORISATION_GRACE_TIME", 5 * 60)
   end
 
   scenario "showing a stalled payments" do
@@ -27,12 +26,12 @@ RSpec.feature "Stalled statements", type: :feature do
 
     expect(page).to have_css("h1", text: "Statement #{statement.id}")
 
-    statement.update!(marked_as_paid_at: (Statement::AUTHORISATION_GRACE_TIME * 2).seconds.ago)
+    statement.update!(marked_as_paid_at: (Statement::AUTHORISATION_GRACE_TIME * 2).ago)
 
     click_link "Finance"
     click_link "Stalled statements (1)"
 
-    within("td:nth-of-type(6)") do
+    within("td:nth-of-type(5)") do
       click_link("View")
     end
     expect(page).to have_css(".govuk-notification-banner__title", text: "Authorising for payment delayed")
