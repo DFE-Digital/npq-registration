@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :school do
-    sequence(:name) { |n| "school #{n}" }
+    sequence(:name) { Faker::Educator.primary_school }
     sequence(:urn) { rand(100_000..999_999).to_s }
     sequence(:ukprn) { rand(10_000_000..99_999_999).to_s }
     establishment_status_code { %w[1 3 4].sample }

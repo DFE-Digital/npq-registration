@@ -220,6 +220,9 @@ Rails.application.routes.draw do
       end
 
       resources :applications, only: %i[index show] do
+        collection do
+          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index]
+        end
         member do
           namespace :applications, path: nil do
             resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
