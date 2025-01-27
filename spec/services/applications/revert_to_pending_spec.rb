@@ -84,7 +84,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
     context "when status set to no" do
       let :application do
         create(:application, :accepted, funded_place: true).tap do |application|
-          create(:declaration, :submitted, application:)
+          create(:declaration, :voided, application:)
           create(:application_state, application:)
         end
       end
@@ -115,7 +115,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
     context "when already pending" do
       let :application do
         create(:application, :pending, funded_place: true).tap do |application|
-          create(:declaration, :submitted, application:)
+          create(:declaration, :voided, application:)
           create(:application_state, application:)
         end
       end
@@ -141,9 +141,9 @@ RSpec.describe Applications::RevertToPending, type: :model do
       end
     end
 
-    context "when Application already has declarations" do
-      %i[submitted voided ineligible].each do |declaration_state|
-        context "with #{declaration_state} state" do
+    context "when application already has declarations" do
+      Applications::RevertToPending::REVERTABLE_DECLARATION_STATES.each do |declaration_state|
+        context "with a revertable state: #{declaration_state}" do
           let(:application) { create(:declaration, declaration_state).application }
 
           it "returns true" do
@@ -155,13 +155,13 @@ RSpec.describe Applications::RevertToPending, type: :model do
               .to change { application.reload.lead_provider_approval_status }
                   .from("accepted")
                   .to("pending")
-              .and change { application.declarations.count }.to(0)
+              .and(not_change { application.declarations.count })
           end
         end
       end
 
-      %i[eligible payable paid awaiting_clawback clawed_back].each do |declaration_state|
-        context "with #{declaration_state} state" do
+      Declaration.states.keys.excluding(Applications::RevertToPending::REVERTABLE_DECLARATION_STATES).each do |declaration_state|
+        context "with a state that cannot be reverted: #{declaration_state}" do
           let(:application) { create(:declaration, declaration_state).application }
 
           it "returns false" do
