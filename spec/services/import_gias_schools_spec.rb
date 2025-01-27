@@ -109,5 +109,23 @@ RSpec.describe ImportGiasSchools do
         expect(School.where(name: "foo").count).to be_zero
       end
     end
+
+    context "when the file has an invalid header" do
+      before do
+        stub_request(:get, "https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata#{date_string}.csv")
+          .with(
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Host" => "ea-edubase-api-prod.azurewebsites.net",
+              "User-Agent" => "Ruby",
+            },
+          ).to_return(status: 200, body: File.open(file_fixture("invalid_csv_header.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
+      end
+
+      it "raises a CSV::MalformedCSVError with the header line in the message" do
+        expect { subject.call }.to raise_error(CSV::MalformedCSVError).with_message(/line: "header one", "/)
+      end
+    end
   end
 end

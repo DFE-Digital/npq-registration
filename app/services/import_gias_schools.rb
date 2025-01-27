@@ -17,6 +17,8 @@ class ImportGiasSchools
         school.update!(attributes_from_row(row))
       end
     end
+  rescue CSV::MalformedCSVError => e
+    raise e, e.message + ", line: #{csv_file.gets}"
   ensure
     csv_file.close
     csv_file.unlink
