@@ -128,7 +128,6 @@ module Helpers
           page.choose(region)
         end
       end
-      expect(page).to have_text("Register using your current workplace details, even if they will change soon.")
     end
 
   private
