@@ -9,3 +9,18 @@ Delayed::Worker.queue_attributes = {
   low_priority: { priority: 10 },
   dfe_analytics: { priority: 0 },
 }
+
+# Non of our jobs should take longer than this and if they are they should be
+# broken up into multiple jobs
+Delayed::Worker.max_run_time = 30.minutes
+
+# The default of 25 is too high, instead we should retry less times and with
+# lower frequency
+Delayed::Worker.max_attempts = 8
+
+# Override backoff rate for retries
+ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper.class_eval do
+  def reschedule_at(db_time_now, attempts, ...)
+    db_time_now + (attempts**6) + 5
+  end
+end
