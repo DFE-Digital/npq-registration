@@ -92,6 +92,15 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
+      - name: Notify on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: failure
+          SLACK_TITLE: Failure deploying to staging
+          SLACK_MESSAGE: Failure deploying to staging - Docker tag ${{ needs.docker.outputs.docker-image }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
   deploy-sandbox:
     name: Deploy sandbox
     needs: [deploy-staging]
@@ -111,6 +120,15 @@ jobs:
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
+      - name: Notify on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: failure
+          SLACK_TITLE: Failure deploying to sandbox
+          SLACK_MESSAGE: Failure deploying to sandbox - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
   deploy-production:
     name: Deploy production
     needs: [deploy-staging]
@@ -129,3 +147,12 @@ jobs:
           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
           current-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_COLOR: failure
+          SLACK_TITLE: Failure deploying to production
+          SLACK_MESSAGE: Failure deploying to production - Docker tag ${{ needs.deploy-staging.outputs.docker-image }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
