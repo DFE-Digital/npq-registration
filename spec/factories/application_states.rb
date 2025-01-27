@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :application_state do
     application
-    lead_provider { LeadProvider.all.sample }
+    lead_provider { LeadProvider.first }
     state { "active" }
 
     trait :withdrawn do

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :cohort do
-    start_year { Faker::Number.between(from: 2021, to: 2029) }
+    sequence(:start_year, 0) { |n| 2021 + n % 9 }
     registration_start_date { Date.new(start_year, 4, 3) }
 
     initialize_with do

@@ -52,7 +52,7 @@ FactoryBot.define do
     end
 
     trait(:with_existing_lead_provider) do
-      lead_provider { LeadProvider.all.sample }
+      lead_provider { LeadProvider.first }
     end
   end
 end

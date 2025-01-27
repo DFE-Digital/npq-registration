@@ -3,13 +3,11 @@ FactoryBot.define do
     sequence(:name) { |n| Faker::Educator.primary_school + " #{n}" }
     sequence(:urn) { rand(100_000..999_999).to_s }
     sequence(:ukprn) { rand(10_000_000..99_999_999).to_s }
-    establishment_status_code { %w[1 3 4].sample }
+    establishment_status_code { "1" }
     last_changed_date { Date.new(2010, 1, 1) }
 
     trait :funding_eligible_establishment_type_code do
-      establishment_type_code do
-        %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].sample
-      end
+      establishment_type_code { "1" }
       eyl_funding_eligible { true }
     end
 

@@ -3,7 +3,7 @@ FactoryBot.define do
     transient do
       user { create(:user) }
       lead_provider { create(:lead_provider) }
-      course { Course.find_by!(identifier: ParticipantOutcomes::Create::PERMITTED_COURSES.sample) }
+      course { Course.find_by!(identifier: ParticipantOutcomes::Create::PERMITTED_COURSES.first) }
     end
 
     passed
