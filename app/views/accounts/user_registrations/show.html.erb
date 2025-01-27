@@ -25,6 +25,9 @@
 <% else %>
   <h1 class="govuk-heading-xl"><%= I18n.t("accounts.show.title") %></h1>
 <% end %>
+
+<p class="govuk-body"><strong>Application ID:</strong> <%= @application.ecf_id %></p>
+
 <%= render "accounts/course_details", application: @application %>
 <%= render "accounts/funding_details", application: @application %>
 <%= render "accounts/personal_details", application: @application %>
