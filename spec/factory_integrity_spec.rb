@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe "Factory integrity check" do
   FactoryBot.factories.each do |factory|
+    next if [Hash, "Hash"].include?(factory.build_class)
+
     describe factory.name do
       it { expect(create(factory.name)).to be_valid }
 
