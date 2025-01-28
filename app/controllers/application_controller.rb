@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  MAX_ADMIN_SESSION = 12.hours
-
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :set_sentry_user
@@ -47,7 +45,7 @@ private
   def current_admin
     return unless session[:admin_id]
 
-    if session[:admin_sign_in_at].nil? || session[:admin_sign_in_at] < MAX_ADMIN_SESSION.ago
+    if session[:admin_sign_in_at].nil? || session[:admin_sign_in_at] < Time.zone.now.beginning_of_day
       reset_session
       nil
     else
