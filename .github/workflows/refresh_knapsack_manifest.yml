@@ -1,0 +1,91 @@
+name: "Refresh Knapsack manifest"
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Monday at 8am
+  workflow_dispatch: 
+
+jobs:
+  refresh_manifest:
+    name: Refresh Knapsack manifest
+    runs-on: ubuntu-latest
+
+    env:
+      RAILS_ENV: test
+      DB_USERNAME: postgres
+      DB_PASSWORD: ""
+      DB_HOSTNAME: 127.0.0.1
+      DB_PORT: 5432
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432
+      SECRET_KEY_BASE: abc123
+      NODE_OPTIONS: --openssl-legacy-provider
+
+    services:
+      postgres:
+        image: postgres:14-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.15.1"
+
+      - name: Install gems
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Install yarn
+        run: npm install yarn -g
+
+      - name: Install node.js dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Create screenshots directory
+        run: mkdir -p tmp/capybara
+
+      - name: Set up test database
+        run: bin/rails db:setup
+
+      - name: Precompile assets
+        run: bundle exec rake assets:precompile
+
+      - name: Run tests
+        run: KNAPSACK_GENERATE_REPORT=true bundle exec rake knapsack:rspec
+
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Create pull request 
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+          branch: refresh-knapsack-manifest
+          delete-branch: true
+          add-paths: knapsack_rspec_report.json
+          base: main
+          commit-message: |
+            Refresh Knapsack manifest
+
+            We run the Knapsack manifest generation in CI on a schedule; once complete
+            it raises this commit in a PR so that we can keep our test suite optimal.
+          title: Refresh Knapsack manifest
+          body: |
+            We run the Knapsack manifest generation in CI on a schedule; once complete it raises this commit in a PR so that we can keep our test suite optimal.
