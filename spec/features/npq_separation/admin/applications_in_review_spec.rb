@@ -189,4 +189,19 @@ RSpec.feature "Applications in review", type: :feature do
     find("summary", text: "View registration as it appears on the Lead Provider API V3").click
     expect(page).to have_text JSON.pretty_generate(serialized_application)
   end
+
+  scenario "updating notes" do
+    click_on application_for_hospital_school.user.full_name
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Change"
+    end
+
+    fill_in "Notes about changes to this registration", with: "Some notes"
+    click_on "Update notes"
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Some notes")
+    end
+  end
 end

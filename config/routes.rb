@@ -234,6 +234,7 @@ Rails.application.routes.draw do
             resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
             resource :change_training_status, only: %i[new create]
             resource :change_funding_eligibility, only: %i[new create]
+            resource :notes, only: %i[edit update]
           end
         end
       end
