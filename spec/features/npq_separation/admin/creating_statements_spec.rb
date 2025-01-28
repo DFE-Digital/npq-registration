@@ -70,14 +70,24 @@ RSpec.feature "Creating statements", type: :feature do
 
       find("summary", text: "Example statements CSV").click
       click_on "Download empty statements template"
-      sleep 0.1
-      csv = CSV.read("#{Capybara.save_path}/statements.csv")
+
+      csv_file = "#{Capybara.save_path}/statements.csv"
+      1.upto(50) do
+        sleep 0.1
+        break if File.exist?(csv_file)
+      end
+      csv = CSV.read(csv_file)
       expect(csv.count).to eq(1)
 
       find("summary", text: "Example contracts CSV").click
       click_on "Download empty contracts template"
-      sleep 0.1
-      csv = CSV.read("#{Capybara.save_path}/contracts.csv")
+
+      csv_file = "#{Capybara.save_path}/contracts.csv"
+      1.upto(50) do
+        sleep 0.1
+        break if File.exist?(csv_file)
+      end
+      csv = CSV.read(csv_file)
       expect(csv.count).to eq(1)
     end
   end
