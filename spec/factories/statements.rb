@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :statement do
     transient do
       declaration {}
+      sequence(:months_from_start_of_2021) { |n| (n - 1) % 48 }
     end
 
     after(:create) do |statement, evaluator|
@@ -10,8 +11,8 @@ FactoryBot.define do
       end
     end
 
-    month { Faker::Number.between(from: 1, to: 12) }
-    year { Faker::Number.between(from: 2021, to: 2024) }
+    month { months_from_start_of_2021 % 12 + 1 }
+    year { 2021 + months_from_start_of_2021 / 12 }
     deadline_date { Faker::Date.forward(days: 30) }
     payment_date { Faker::Date.forward(days: 30) }
     cohort { create(:cohort, :current) }
