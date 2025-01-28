@@ -34,6 +34,7 @@ module Helpers
     def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1)
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}?success=true", submit_form: false) do
         expect(page).to have_text("Registration successfully submitted")
+        expect(page).to have_text("Application ID: #{latest_application.ecf_id}")
         expect(page).to have_link("Register for another NPQ", href: /\/registration\/provider_check/)
       end
 
