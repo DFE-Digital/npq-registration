@@ -1,0 +1,128 @@
+<h1 class="govuk-heading-l"><%= @application.user.full_name %></h1>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Applicant ID:</strong>
+  <%= @application.user.ecf_id %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Email:</strong>
+  <%= @application.user.email %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Date of birth:</strong>
+  <%= @application.user.date_of_birth.to_fs(:govuk_short) %>
+  |
+  <strong>National Insurance:</strong>
+  <%= @application.user.national_insurance_number.presence || 'Not provided' %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>TRN:</strong>
+  <%= @application.user.trn %>
+  <%= boolean_red_green_tag(@application.user.trn_verified?, @application.user.trn_verified? ? "Validated" : "Not validated") %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-6">
+  <strong>Get an Identity ID:</strong>
+  <%= @application.user.uid.presence || 'Not set' %>
+</p>
+
+<%=
+  govuk_summary_list(card: { title: "Course details" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "NPQ course")
+      row.with_value(text: "#{@application.course.name} (#{@application.course.short_code})")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Provider")
+      row.with_value(text: @application.lead_provider.name)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Provider approval status")
+      row.with_value(text: lead_provider_approval_status_badge(@application.lead_provider_approval_status))
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Funding details" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Eligible for funding")
+      row.with_value(text: boolean_red_green_tag(@application.eligible_for_funding))
+      row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_funding_eligibility_path(@application))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Funded place")
+      row.with_value(text: boolean_red_green_nil_tag(@application.funded_place))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Notes")
+      row.with_value(text: @application.notes)
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Work details" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Works in England")
+      row.with_value(text: boolean_red_green_tag(@application.teacher_catchment == "england"))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Work setting")
+      row.with_value(text: @application.work_setting.try(:humanize))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Employment type")
+      row.with_value(text: @application.employment_type.try(:humanize))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Employer name")
+      row.with_value(text: @application.employer_name_to_display)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Role")
+      row.with_value(text: @application.employment_role)
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Schedule" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Cohort")
+      row.with_value(text: @application.cohort.start_year)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Schedule identifier")
+      row.with_value(text: @application.schedule.try(:identifier))
+    end
+  end
+%>
+
+<%=
+  govuk_summary_list(card: { title: "Registration details" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Participant ID")
+      row.with_value(text: @application.user.ecf_id)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Application ID")
+      row.with_value(text: @application.ecf_id)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Registration submission date")
+      row.with_value(text: @application.created_at.to_fs(:govuk_short))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Last updated date")
+      row.with_value(text: @application.updated_at.to_fs(:govuk_short))
+    end
+  end
+%>
+
+<%= govuk_details(summary_text: "View registration as it appears on the Lead Provider API V3") do %>
+<pre class="govuk-!-font-size-16" style="overflow: auto;"><code><%= JSON.pretty_generate API::ApplicationSerializer.render_as_hash(@application, view: :v3, root: "data") %></code></pre>
+<% end %>

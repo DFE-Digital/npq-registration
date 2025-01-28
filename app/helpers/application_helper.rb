@@ -66,4 +66,14 @@ module ApplicationHelper
 
     tag.p("OTP code: #{admin.otp_hash}")
   end
+
+  def lead_provider_approval_status_badge(lead_provider_approval_status)
+    colour = {
+      pending: "blue",
+      accepted: "green",
+      rejected: "red",
+    }.fetch(lead_provider_approval_status.to_sym, "grey")
+
+    govuk_tag(text: lead_provider_approval_status.humanize, colour:)
+  end
 end

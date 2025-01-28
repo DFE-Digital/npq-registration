@@ -15,6 +15,10 @@ module NpqSeparation
           @pagy, @applications = pagy(applications, limit: 9)
         end
 
+        def show
+          @application = Application.find(params[:id])
+        end
+
       private
 
         def employment_types

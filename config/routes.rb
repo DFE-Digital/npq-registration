@@ -227,7 +227,7 @@ Rails.application.routes.draw do
 
       resources :applications, only: %i[index show] do
         collection do
-          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index]
+          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index show]
         end
         member do
           namespace :applications, path: nil do
