@@ -109,7 +109,7 @@ RSpec.describe Statements::SummaryCalculator do
           create(:declaration, :paid, declaration_type:, lead_provider:, application:, cohort:, statement: paid_statement)
         end
       end
-      let!(:statement) { create(:statement, :next_period, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
+      let!(:statement) { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
 
       before do
         travel_to statement.deadline_date do
@@ -153,7 +153,7 @@ RSpec.describe Statements::SummaryCalculator do
           create(:declaration, :paid, declaration_type: "retained-1", lead_provider:, application:, statement: paid_statement)
         end
       end
-      let!(:statement) { create(:statement, :next_period, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
+      let!(:statement) { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
 
       before do
         travel_to statement.deadline_date do
@@ -274,7 +274,7 @@ RSpec.describe Statements::SummaryCalculator do
       end
 
       let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:statement, :next_period, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
+        travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
           create(:declaration, :paid, declaration_type:, application:, lead_provider:)
         end
       end
@@ -307,7 +307,7 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     let!(:to_be_awaiting_clawed_back) do
-      travel_to create(:statement, :next_period, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
+      travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
         create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement:)
       end
     end

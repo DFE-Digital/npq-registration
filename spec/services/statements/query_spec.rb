@@ -132,7 +132,7 @@ RSpec.describe Statements::Query do
 
         it "filters by updated since" do
           create(:statement, lead_provider:, updated_at: 2.days.ago)
-          statement2 = create(:statement, :next_period, lead_provider:, updated_at: Time.zone.now)
+          statement2 = create(:statement, lead_provider:, updated_at: Time.zone.now)
 
           query = described_class.new(lead_provider:, updated_since:)
 
