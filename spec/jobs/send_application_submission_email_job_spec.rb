@@ -19,6 +19,7 @@ RSpec.describe SendApplicationSubmissionEmailJob, type: :job do
         full_name: application.user.full_name,
         provider_name: application.lead_provider.name,
         course_name: "the Leading teaching NPQ",
+        ecf_id: application.ecf_id,
       )
 
       subject.perform_now
