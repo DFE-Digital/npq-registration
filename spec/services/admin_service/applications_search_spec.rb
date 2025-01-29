@@ -12,6 +12,12 @@ RSpec.describe AdminService::ApplicationsSearch do
       let(:q) { user.email.split("@").first }
 
       it { is_expected.to include(application) }
+
+      context "and the application has no school relation" do
+        before { application.update! school: nil, works_in_school: false }
+
+        it { is_expected.to include(application) }
+      end
     end
 
     context "when name partially matches" do

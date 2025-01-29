@@ -13,7 +13,7 @@ RSpec.feature "Applications in review", type: :feature do
   let!(:application_for_lead_mentor)                { create(:application, employment_type: "local_authority_virtual_school") }
   let!(:application_for_young_offender_institution) { create(:application, employment_type: "young_offender_institution") }
   let!(:application_for_other)                      { create(:application, employment_type: "other") }
-  let!(:application_for_rtta_yes)                   { create(:application, referred_by_return_to_teaching_adviser: "yes") }
+  let!(:application_for_rtta_yes)                   { create(:application, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
   let!(:application_for_rtta_no)                    { create(:application, referred_by_return_to_teaching_adviser: "no") }
 
   let(:serialized_application) { { application: 1 } }
@@ -53,6 +53,15 @@ RSpec.feature "Applications in review", type: :feature do
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
+    expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+  end
+
+  scenario "searching with participant ID when the application has no school relation" do
+    fill_in("Enter the participant ID", with: application_for_rtta_yes.user.ecf_id)
+    click_on "Search"
+
+    expect(page).to have_text(application_for_rtta_yes.user.full_name)
+    expect(page).not_to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
   end
 
