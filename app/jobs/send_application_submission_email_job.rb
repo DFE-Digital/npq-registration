@@ -11,6 +11,7 @@ class SendApplicationSubmissionEmailJob < ApplicationJob
       provider_name: application.lead_provider.name,
       course_name: localise_sentence_embedded_course_name(application.course),
       amount: application.raw_application_data["funding_amount"],
+      ecf_id: application.ecf_id,
     ).deliver_now
   end
 end
