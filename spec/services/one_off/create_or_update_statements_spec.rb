@@ -90,7 +90,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
         OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
 
         log = FinancialChangeLog.first
-        expect(log.operation_description).to eq("OneOff 2326")
+        expect(log.operation_description).to eq("OneOff 2520")
         expect(log.data_changes).to eq(
           { "changes" => {
               "output_fee" => [true, false],
