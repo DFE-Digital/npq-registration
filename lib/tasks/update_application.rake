@@ -12,7 +12,7 @@ class UpdateApplicationRakeTask
         service = Applications::Accept.new(application:)
 
         result = service.accept
-        print_message_or_error("Application #{args.application_ecf_id} accepted", result, service.errors)
+        log_result("Application #{args.application_ecf_id} accepted", result, service.errors)
       end
 
       desc "Revert an application to pending"
@@ -22,7 +22,7 @@ class UpdateApplicationRakeTask
         service = Applications::RevertToPending.new(application:, change_status_to_pending: "yes")
 
         result = service.revert
-        print_message_or_error("Application #{args.application_ecf_id} reverted to pending", result, service.errors)
+        log_result("Application #{args.application_ecf_id} reverted to pending", result, service.errors)
       end
 
       desc "Change the lead provider of an application"
@@ -50,7 +50,7 @@ class UpdateApplicationRakeTask
                                              course_identifier: application.course.identifier,
                                              reason:)
         result = service.withdraw
-        print_message_or_error("Participant #{application.user.ecf_id} withdrawn from application #{args.application_ecf_id}", result, service.errors)
+        log_result("Participant #{application.user.ecf_id} withdrawn from application #{args.application_ecf_id}", result, service.errors)
       end
     end
   end
@@ -66,7 +66,7 @@ private
     raise "Application not found: #{ecf_id}" unless application
   end
 
-  def print_message_or_error(message, result, errors)
+  def log_result(message, result, errors)
     if result
       logger.info(message)
     else
