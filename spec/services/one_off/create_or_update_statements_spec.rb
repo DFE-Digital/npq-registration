@@ -10,7 +10,16 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
     let(:cohort) { create(:cohort, start_year: cohort_year) }
     let(:course_1) { create(:course, :senco) }
     let(:course_2) { create(:course, :headship) }
-    let(:statement_1) { create(:statement, year: 2025, month: 1, cohort: cohort, lead_provider: ambition, output_fee: true) }
+    let(:statement_1) do
+      create(:statement,
+             year: 2025,
+             month: 1,
+             cohort: cohort,
+             lead_provider: ambition,
+             output_fee: true,
+             deadline_date: Date.new(2024, 1, 25),
+             payment_date: Date.new(2024, 2, 25))
+    end
     let(:contract_template_1) { create(:contract_template, per_participant: 100) }
     let(:contract_template_2) { create(:contract_template, per_participant: 200) }
 
@@ -65,7 +74,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
       let(:csv_content) do
         <<~CSV
           name,cohort,deadline_date,payment_date,output_fee
-          25-Jan,2021,25/01/2024,25/02/2024,FALSE
+          25-Jan,2021,25/01/2025,25/02/2025,FALSE
         CSV
       end
 
@@ -73,6 +82,8 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
         expect {
           OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
         }.to change { statement_1.reload.output_fee }.from(true).to(false)
+          .and change(statement_1, :deadline_date).to(Date.new(2025, 1, 25))
+          .and change(statement_1, :payment_date).to(Date.new(2025, 2, 25))
       end
 
       it "creates log records" do
@@ -80,7 +91,14 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
         log = FinancialChangeLog.first
         expect(log.operation_description).to eq("OneOff 2326")
-        expect(log.data_changes).to eq({ "changes" => { "output_fee" => [true, false] }, "updated_statement_id" => statement_1.id })
+        expect(log.data_changes).to eq(
+          { "changes" => {
+              "output_fee" => [true, false],
+              "deadline_date" => %w[2024-01-25 2025-01-25],
+              "payment_date" => %w[2024-02-25 2025-02-25],
+            },
+            "updated_statement_id" => statement_1.id },
+        )
       end
     end
 
