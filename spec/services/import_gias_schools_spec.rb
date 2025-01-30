@@ -19,7 +19,7 @@ RSpec.describe ImportGiasSchools do
       .to_return(status: 200, body: File.open(file_fixture("gias_sample.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
     end
 
-    it "creates not existent schools" do
+    it "creates schools that don't exist" do
       expect { subject.call }.to change(School, :count).by(99)
     end
 
@@ -80,11 +80,20 @@ RSpec.describe ImportGiasSchools do
     it "applies updates correctly" do
       described_class.new.call
 
-      expect {
-        described_class.new.call
-      }.not_to change(School, :count)
-
+      expect { described_class.new.call }.not_to change(School, :count)
       expect(School.first.name).to eql("The Aldgate School 2")
+    end
+
+    context "when there is a school with nil last_changed_date" do
+      before do
+        described_class.new.call
+        School.first.update!(last_changed_date: nil)
+      end
+
+      it "applies updates correctly" do
+        expect { described_class.new.call }.not_to change(School, :count)
+        expect(School.first.name).to eql("The Aldgate School 2")
+      end
     end
 
     context "with refresh_all flag" do
@@ -98,6 +107,24 @@ RSpec.describe ImportGiasSchools do
         described_class.new(refresh_all: true).call
 
         expect(School.where(name: "foo").count).to be_zero
+      end
+    end
+
+    context "when the file has an invalid header" do
+      before do
+        stub_request(:get, "https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata#{date_string}.csv")
+          .with(
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Host" => "ea-edubase-api-prod.azurewebsites.net",
+              "User-Agent" => "Ruby",
+            },
+          ).to_return(status: 200, body: File.open(file_fixture("invalid_csv_header.csv"), "r:iso-8859-1:UTF-8").read, headers: {})
+      end
+
+      it "raises a CSV::MalformedCSVError with the header line in the message" do
+        expect { subject.call }.to raise_error(CSV::MalformedCSVError).with_message(/line: "header one", "/)
       end
     end
   end

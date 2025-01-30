@@ -11,12 +11,14 @@ class ImportGiasSchools
         s.assign_attributes(attributes_from_row(row))
       end
 
-      if refresh_all?
+      if refresh_all? || school.last_changed_date.nil?
         school.update!(attributes_from_row(row))
       elsif row["LastChangedDate"].present? && (school.last_changed_date < row["LastChangedDate"])
         school.update!(attributes_from_row(row))
       end
     end
+  rescue CSV::MalformedCSVError => e
+    raise e, e.message + ", line: #{csv_file.gets}"
   ensure
     csv_file.close
     csv_file.unlink
