@@ -3,11 +3,11 @@ require "rails_helper"
 RSpec.feature "Applications in review", type: :feature do
   include Helpers::AdminLogin
 
-  let(:cohort_21) { create(:cohort, start_year: 2021) }
-  let(:cohort_22) { create(:cohort, start_year: 2022) }
+  let(:cohort_21) { create :cohort, start_year: 2021 }
+  let(:cohort_22) { create :cohort, start_year: 2022 }
 
   let!(:normal_application)                         { create(:application) }
-  let!(:application_for_hospital_school)            { create(:application, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
+  let!(:application_for_hospital_school)            { create(:application, :accepted, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
   let!(:application_for_la_supply_teacher)          { create(:application, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
   let!(:application_for_la_virtual_school)          { create(:application, employment_type: "local_authority_virtual_school") }
   let!(:application_for_lead_mentor)                { create(:application, employment_type: "local_authority_virtual_school") }
@@ -15,6 +15,8 @@ RSpec.feature "Applications in review", type: :feature do
   let!(:application_for_other)                      { create(:application, employment_type: "other") }
   let!(:application_for_rtta_yes)                   { create(:application, referred_by_return_to_teaching_adviser: "yes") }
   let!(:application_for_rtta_no)                    { create(:application, referred_by_return_to_teaching_adviser: "no") }
+
+  let(:serialized_application) { { application: 1 } }
 
   before do
     sign_in_as create(:admin)
@@ -127,5 +129,79 @@ RSpec.feature "Applications in review", type: :feature do
     click_on "Search"
     expect(page).not_to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+  end
+
+  scenario "viewing an application" do
+    allow(API::ApplicationSerializer).to receive(:render_as_hash).and_return(serialized_application)
+    application = application_for_hospital_school.reload
+    application.user.update! uid: SecureRandom.uuid
+
+    click_on application.user.full_name
+
+    expect(page).to have_css("h1", text: application.user.full_name)
+
+    expect(page).to have_text("Applicant ID: #{application.user.ecf_id}")
+    expect(page).to have_text("Email: #{application.user.email}")
+    expect(page).to have_text("Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)}")
+    expect(page).to have_text("National Insurance: Not provided")
+    expect(page).to have_text("TRN: #{application.user.trn} Not validated")
+    expect(page).to have_text("Get an Identity ID: #{application.user.uid}")
+
+    summary_lists = all(".govuk-summary-list")
+
+    expect(page).to have_css("h2", text: "Course details")
+    within(summary_lists[0]) do |summary_list|
+      expect(summary_list).to have_summary_item("NPQ course", "#{application.course.name} (#{application.course.short_code})")
+      expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
+      expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
+    end
+
+    expect(page).to have_css("h2", text: "Funding details")
+    within(summary_lists[1]) do |summary_list|
+      expect(summary_list).to have_summary_item("Eligible for funding", "No")
+      expect(summary_list).to have_summary_item("Funded place", "No")
+      expect(summary_list).to have_summary_item("Notes", application.notes)
+    end
+
+    expect(page).to have_css("h2", text: "Work details")
+    within(summary_lists[2]) do |summary_list|
+      expect(summary_list).to have_summary_item("Works in England", "Yes")
+      expect(summary_list).to have_summary_item("Work setting", application.work_setting)
+      expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
+      expect(summary_list).to have_summary_item("Employer name", application.employer_name)
+      expect(summary_list).to have_summary_item("Role", application.employment_role)
+    end
+
+    expect(page).to have_css("h2", text: "Schedule")
+    within(summary_lists[3]) do |summary_list|
+      expect(summary_list).to have_summary_item("Cohort", application.cohort.start_year)
+      expect(summary_list).to have_summary_item("Schedule identifier", application.schedule.identifier)
+    end
+
+    expect(page).to have_css("h2", text: "Registration details")
+    within(summary_lists[4]) do |summary_list|
+      expect(summary_list).to have_summary_item("Participant ID", application.user.ecf_id)
+      expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
+      expect(summary_list).to have_summary_item("Registration submission date", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Last updated date", application.updated_at.to_fs(:govuk_short))
+    end
+
+    find("summary", text: "View registration as it appears on the Lead Provider API V3").click
+    expect(page).to have_text JSON.pretty_generate(serialized_application)
+  end
+
+  scenario "updating notes" do
+    click_on application_for_hospital_school.user.full_name
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Change"
+    end
+
+    fill_in "Notes about changes to this registration", with: "Some notes"
+    click_on "Update notes"
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Some notes")
+    end
   end
 end

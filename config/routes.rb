@@ -227,13 +227,14 @@ Rails.application.routes.draw do
 
       resources :applications, only: %i[index show] do
         collection do
-          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index]
+          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index show]
         end
         member do
           namespace :applications, path: nil do
             resource :revert_to_pending, controller: "revert_to_pending", only: %i[new create]
             resource :change_training_status, only: %i[new create]
             resource :change_funding_eligibility, only: %i[new create]
+            resource :notes, only: %i[edit update]
           end
         end
       end
