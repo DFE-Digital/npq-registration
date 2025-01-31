@@ -12,6 +12,7 @@
 # proper financial apps.
 class FinancialChangeLog < ApplicationRecord
   ONE_OFF_2326 = "OneOff 2326".freeze
+  ONE_OFF_2520 = "OneOff 2520".freeze
 
   validates :operation_description, presence: true, length: { minimum: 5 }
   validates :data_changes, presence: true

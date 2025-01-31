@@ -38,8 +38,11 @@ module OneOff
             statement = statements.first
             if statement
               statement.output_fee = output_fee(row["output_fee"])
+              statement.deadline_date = row["deadline_date"]
+              statement.payment_date = row["payment_date"]
+
               if statement.changed?
-                FinancialChangeLog.log!(description: FinancialChangeLog::ONE_OFF_2326, data: { updated_statement_id: statement.id, changes: statement.changes })
+                FinancialChangeLog.log!(description: FinancialChangeLog::ONE_OFF_2520, data: { updated_statement_id: statement.id, changes: statement.changes })
                 statement.save!
               end
             else
