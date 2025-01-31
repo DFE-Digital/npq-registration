@@ -105,7 +105,7 @@ FactoryBot.define do
     end
 
     # DO NOT USE: Only for seeds, do not use in specs - it will lead to flaky specs
-    trait :with_random_eligible_for_funding do
+    trait :with_random_eligible_for_funding_seeds_only do
       eligible_for_funding { Faker::Boolean.boolean }
     end
 
