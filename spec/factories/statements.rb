@@ -27,18 +27,6 @@ FactoryBot.define do
       output_fee { true }
     end
 
-    trait(:next_period) do
-      transient do
-        latest_statement do
-          existing = Statement.where(cohort:, lead_provider:).order(year: :desc, month: :desc)
-          existing.first || OpenStruct.new(year: cohort.start_year, month: 1)
-        end
-      end
-
-      month { latest_statement.month == 12 ? 1 : latest_statement.month + 1 }
-      year { latest_statement.month == 12 ? latest_statement.year + 1 : latest_statement.year }
-    end
-
     trait(:paid) do
       state { "paid" }
       marked_as_paid_at { 1.week.ago }
@@ -52,7 +40,7 @@ FactoryBot.define do
     end
 
     trait(:with_existing_lead_provider) do
-      lead_provider { LeadProvider.all.sample }
+      lead_provider { LeadProvider.first }
     end
   end
 end

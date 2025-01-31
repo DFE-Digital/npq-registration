@@ -10,7 +10,7 @@ RSpec.describe "Statements endpoint", type: "request" do
     let(:resource_id_key) { :ecf_id }
 
     def create_resource(**attrs)
-      create(:statement, :next_period, **attrs)
+      create(:statement, **attrs)
     end
 
     it_behaves_like "an API index endpoint with pagination"

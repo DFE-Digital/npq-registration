@@ -30,7 +30,7 @@ FactoryBot.define do
 
     trait :with_application do
       transient do
-        lead_provider { LeadProvider.all.sample }
+        lead_provider { LeadProvider.first }
       end
 
       after(:create) do |user, evaluator|

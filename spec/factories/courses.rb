@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :course do
     sequence(:name) { |n| "NPQ Course #{n}" }
-    identifier { Course::IDENTIFIERS.sample }
+    identifier { Course::IDENTIFIERS.first }
     ecf_id { SecureRandom.uuid }
     course_group
 

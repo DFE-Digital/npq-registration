@@ -125,7 +125,7 @@ LeadProvider.find_each do |lead_provider|
       :accepted,
       :with_random_user,
       :with_random_work_setting,
-      :with_random_eligible_for_funding,
+      :with_random_eligible_for_funding_seeds_only,
       :with_participant_id_change,
       lead_provider:,
       course: Course.all.sample,

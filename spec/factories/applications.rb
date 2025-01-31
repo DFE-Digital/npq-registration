@@ -5,8 +5,8 @@ FactoryBot.define do
     with_school
 
     user
-    course { create(Course::IDENTIFIERS.sample.to_sym) }
-    lead_provider { LeadProvider.all.sample }
+    course { create(Course::IDENTIFIERS.first.to_sym) }
+    lead_provider { LeadProvider.first }
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
@@ -15,8 +15,8 @@ FactoryBot.define do
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
     itt_provider
-    funding_choice { Application.funding_choices.keys.sample }
-    lead_mentor { Faker::Boolean.boolean }
+    funding_choice { Application.funding_choices.keys.first }
+    lead_mentor { false }
     ukprn { rand(10_000_000..99_999_999).to_s }
 
     trait :with_school do
@@ -34,7 +34,7 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.sample }
+      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PRIVATE_OPTIONS.first }
     end
 
     trait :with_public_childcare_provider do
@@ -44,7 +44,7 @@ FactoryBot.define do
 
       works_in_school { false }
       works_in_childcare { true }
-      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.sample }
+      kind_of_nursery { Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.first }
     end
 
     trait :with_declaration do
@@ -86,25 +86,26 @@ FactoryBot.define do
 
     trait :previously_funded do
       after(:create) do |application|
-        course = application.course.rebranded_alternative_courses.sample
+        course = application.course.rebranded_alternative_courses.first
 
         create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
       end
     end
 
     trait :with_random_work_setting do
-      work_setting { %w[a_school an_academy_trust a_16_to_19_educational_setting].sample }
+      work_setting { "a_school" }
     end
 
     trait :with_random_participant_outcome_state do
-      participant_outcome_state { %w[passed failed].sample }
+      participant_outcome_state { "passed" }
     end
 
     trait :with_random_user do
       user { build(:user, :with_random_name) }
     end
 
-    trait :with_random_eligible_for_funding do
+    # DO NOT USE: Only for seeds, do not use in specs - it will lead to flaky specs
+    trait :with_random_eligible_for_funding_seeds_only do
       eligible_for_funding { Faker::Boolean.boolean }
     end
 
@@ -140,6 +141,10 @@ FactoryBot.define do
                application:,
                lead_provider: application.lead_provider)
       end
+    end
+
+    trait :lead_mentor do
+      lead_mentor { true }
     end
   end
 end
