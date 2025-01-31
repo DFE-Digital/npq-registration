@@ -38,7 +38,7 @@ class StatementItem < ApplicationRecord
     end
 
     event :mark_voided do
-      transition %i[eligible payable] => :voided
+      transition %i[eligible ineligible payable] => :voided
     end
 
     event :mark_awaiting_clawback do

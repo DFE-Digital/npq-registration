@@ -79,7 +79,7 @@ RSpec.describe Declarations::Void, type: :model do
 
         it { expect { void }.to change { declaration.reload.state }.from(declaration_state).to("voided") }
 
-        %w[eligible payable].each do |statement_item_state|
+        %w[eligible ineligible payable].each do |statement_item_state|
           context "when the declaration has a #{statement_item_state} statement item" do
             let(:statement_item) { create(:statement_item, declaration:, state: statement_item_state) }
 

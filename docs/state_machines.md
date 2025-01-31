@@ -35,6 +35,7 @@ stateDiagram-v2
     paid --> awaiting_clawback: mark_awaiting_clawback
     awaiting_clawback --> clawed_back: mark_clawed_back
     eligible --> ineligible: mark_ineligible
+    ineligible --> voided: mark_voided
 ```
 
 ## Declaration
