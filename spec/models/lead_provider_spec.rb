@@ -14,7 +14,7 @@ RSpec.describe LeadProvider do
   describe "#next_output_fee_statement" do
     let(:cohort) { create(:cohort, :current) }
     let(:lead_provider) { next_output_fee_statement.lead_provider }
-    let(:next_output_fee_statement) { create(:statement, :next_output_fee, cohort:, month: 7) }
+    let(:next_output_fee_statement) { create(:statement, :next_output_fee, cohort:) }
 
     before do
       # Not output fee
