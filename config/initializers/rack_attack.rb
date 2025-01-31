@@ -44,7 +44,7 @@ class Rack::Attack
   end
 
   # Throttle protected routes by IP (5rpm)
-  throttle("protected routes (hitting external services)", limit: 5, period: 1.minute) do |request|
+  throttle("protected routes (hitting external services)", limit: 10, period: 2.minutes) do |request|
     request.ip if protected_path?(request)
   end
 
