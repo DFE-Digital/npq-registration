@@ -357,16 +357,16 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.1)
+    nokogiri (1.18.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.18.1-arm64-darwin)
+    nokogiri (1.18.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-darwin)
+    nokogiri (1.18.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-linux-gnu)
+    nokogiri (1.18.2-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-linux-musl)
+    nokogiri (1.18.2-x86_64-linux-musl)
       racc (~> 1.4)
     notifications-ruby-client (5.4.0)
       jwt (>= 1.5, < 3)
@@ -617,10 +617,10 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.1.0)
       tilt (~> 2.0)
-    site_prism (5.0.4)
+    site_prism (5.1)
       addressable (~> 2.8, >= 2.8.4)
-      capybara (~> 3.32)
-      site_prism-all_there (> 2, < 5)
+      capybara (~> 3.34)
+      site_prism-all_there (> 3, < 5)
     site_prism-all_there (3.0.6)
     snaky_hash (2.0.1)
       hashie
@@ -769,7 +769,7 @@ DEPENDENCIES
   sentry-ruby
   shoulda-matchers (~> 6.4)
   simplecov
-  site_prism (~> 5.0)
+  site_prism (~> 5.1)
   sprockets (~> 4.2.0)
   sprockets-rails
   state_machines-activerecord
