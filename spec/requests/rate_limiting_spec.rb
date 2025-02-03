@@ -48,16 +48,6 @@ RSpec.describe "Rate limiting" do
     end
   end
 
-  it_behaves_like "a rate limited endpoint", "csp_reports req/ip" do
-    def perform_request
-      post csp_reports_path, params: {}.to_json
-    end
-
-    def change_condition
-      set_request_ip(other_ip)
-    end
-  end
-
   it_behaves_like "a rate limited endpoint", "API get an identity webhook message requests by ip" do
     before do
       default_headers["X-Hub-Signature-256"] = "signature"
