@@ -39,7 +39,7 @@ module Declarations
 
     def void_declaration
       declaration.mark_voided!
-      declaration.statement_items.with_state(:eligible, :payable).first&.mark_voided!
+      declaration.statement_items.with_state(:eligible, :ineligible, :payable).first&.mark_voided!
     end
 
     def declaration_not_already_voided

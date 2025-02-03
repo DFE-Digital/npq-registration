@@ -128,6 +128,17 @@ RSpec.describe StatementItem, type: :model do
                 .to("voided")
         end
       end
+
+      context "when from ineligible" do
+        let(:statement_item) { create(:statement_item, :ineligible) }
+
+        it "transitions state to voided" do
+          expect { statement_item.mark_voided! }
+          .to change { statement_item.reload.state }
+                .from("ineligible")
+                .to("voided")
+        end
+      end
     end
 
     describe ".mark_awaiting_clawback" do
