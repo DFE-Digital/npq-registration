@@ -291,8 +291,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :csp_reports, only: %i[create]
-
   get "maintenance_banners/dismiss", to: "maintenance_banners#dismiss", as: :maintenance_banner_dismiss
 
   get "/404", to: "errors#not_found", via: :all

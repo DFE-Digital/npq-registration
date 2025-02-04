@@ -31,10 +31,6 @@ class Rack::Attack
     PROTECTED_ROUTES.any? { |route| request.path.starts_with?(route) }
   end
 
-  def self.csp_report_path?(request)
-    request.path == "/csp_reports"
-  end
-
   def self.get_an_identity_webhook_path?(request)
     request.path.starts_with?("/api/v1/get_an_identity/webhook_messages")
   end
@@ -46,11 +42,6 @@ class Rack::Attack
   # Throttle protected routes by IP (5rpm)
   throttle("protected routes (hitting external services)", limit: 10, period: 2.minutes) do |request|
     request.ip if protected_path?(request)
-  end
-
-  # Throttle /csp_reports requests by IP (5rpm)
-  throttle("csp_reports req/ip", limit: 5, period: 1.minute) do |request|
-    request.ip if csp_report_path?(request)
   end
 
   # Throttle /api/v1/get_an_identity/webhook_messages requests by IP (1000 requests per 5 minutes)
