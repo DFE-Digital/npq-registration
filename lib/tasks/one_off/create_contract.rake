@@ -1,7 +1,8 @@
 class CreateContractRakeTask
   COHORT_YEAR = 2023
   STATEMENT_YEAR = 2025
-  STATEMENT_MONTH = 1
+  FEBRUARY = 2
+  STATEMENT_MONTH = FEBRUARY
   LEAD_PROVIDER_NAME = "LLSE".freeze
 
   include Rake::DSL
@@ -13,7 +14,7 @@ class CreateContractRakeTask
       #
       # Example usage (perform change):
       # bundle exec rake 'one_off:create_contract[tmp/contract.csv,false]'
-      desc "One off task for ticket CPDNPQ-2363 to create missing contract"
+      desc "One off task for ticket CPDNPQ-2538 to create missing contract"
       task :create_contract, %i[file dry_run] => :environment do |_t, args|
         logger = Logger.new($stdout)
         dry_run = args[:dry_run] != "false"
