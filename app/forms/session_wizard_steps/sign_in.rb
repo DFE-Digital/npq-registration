@@ -1,4 +1,4 @@
-module Questionnaires
+module SessionWizardSteps
   class SignIn < Base
     attr_reader :email
 
