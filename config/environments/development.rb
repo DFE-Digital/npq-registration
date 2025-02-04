@@ -90,4 +90,7 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
+
+  # Disable middleware in development environment
+  config.x.enable_api_request_middleware = false
 end

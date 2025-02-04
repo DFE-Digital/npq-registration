@@ -39,6 +39,6 @@ module NpqRegistration
     # Used to stream API requests to BigQuery
     require "middleware/api_request_middleware"
     config.middleware.use Middleware::ApiRequestMiddleware
-    config.x.enable_api_request_middleware = false
+    config.x.enable_api_request_middleware = true
   end
 end

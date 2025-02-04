@@ -21,13 +21,6 @@ RSpec.describe Middleware::ApiRequestMiddleware, type: :request do
     end
   end
 
-  before do
-    allow(Rails.application.config.x)
-      .to receive(:enable_api_request_middleware).and_return(true)
-
-    allow(StreamAPIRequestsToBigQueryJob).to receive(:perform_later)
-  end
-
   context "when running in other environments other than the allowed ones" do
     before do
       allow(Rails.application.config.x)
