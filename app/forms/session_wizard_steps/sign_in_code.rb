@@ -1,4 +1,4 @@
-module Questionnaires
+module SessionWizardSteps
   class SignInCode < Base
     attr_accessor :code
 
