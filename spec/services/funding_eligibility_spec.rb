@@ -27,18 +27,35 @@ RSpec.describe FundingEligibility do
   let(:query_store) { nil }
 
   describe ".funded? && .funding_eligiblity_status_code" do
-    context "in the special URN list" do
-      let(:institution) { create(:school, :funding_eligible_establishment_type_code, urn: "100000") }
+    let(:institution) { create(:school, :funding_eligible_establishment_type_code, urn: "100000") }
 
-      Course.all.find_each do |course|
-        context "studying #{course.identifier}" do
-          let(:course) { course }
+    %w[npq-senior-leadership
+       npq-headship
+       npq-executive-leadership
+       npq-leading-teaching
+       npq-leading-behaviour-culture
+       npq-leading-teaching-development
+       npq-leading-literacy
+       npq-leading-primary-mathematics
+       npq-additional-support-offer
+       npq-early-headship-coaching-offer
+       npq-senco].each do |identifier|
+      context "studying #{identifier}" do
+        let(:course) { Course.find_by(identifier: identifier) }
 
-          it "returns true" do
-            expect(subject).to be_funded
-            expect(subject.funding_eligiblity_status_code).to eq :funded
-          end
+        it "returns true" do
+          expect(subject).to be_funded
+          expect(subject.funding_eligiblity_status_code).to eq :funded
         end
+      end
+    end
+
+    context "studying npq-early-years-leadership" do
+      let(:course) { Course.find_by(identifier: "npq-early-years-leadership") }
+
+      it "returns true" do
+        expect(subject).not_to be_funded
+        expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
       end
     end
 
