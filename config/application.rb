@@ -29,7 +29,7 @@ module NpqRegistration
 
     config.action_mailer.delivery_method = :notify
     config.action_mailer.notify_settings = {
-      api_key: ENV["GOVUK_NOTIFY_API_KEY"]
+      api_key: ENV["GOVUK_NOTIFY_API_KEY"],
     }
 
     # Used to handle HTTP_X_WITH_SERVER_DATE header for server side datetime overwrite
@@ -39,5 +39,6 @@ module NpqRegistration
     # Used to stream API requests to BigQuery
     require "middleware/api_request_middleware"
     config.middleware.use Middleware::ApiRequestMiddleware
+    config.x.enable_api_request_middleware = false
   end
 end

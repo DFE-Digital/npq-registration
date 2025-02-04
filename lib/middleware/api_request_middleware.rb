@@ -79,11 +79,15 @@ module Middleware
     end
 
     def trace_request?
-      Rails.env.in?(%w[review sandbox staging production]) && vendor_api_path?
+      trace_request_enabled? && vendor_api_path?
     end
 
     def vendor_api_path?
       @request.path =~ /^\/api\/v\d+\/.*$/
+    end
+
+    def trace_request_enabled?
+      !!Rails.application.config.x.enable_api_request_middleware
     end
   end
 end
