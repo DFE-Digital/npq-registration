@@ -1,7 +1,7 @@
 namespace :update_declaration do
   desc "Void a declaration"
   task :void, %i[declaration_ecf_id] => :environment do |_t, args|
-    logger = Logger.new($stdout)
+    logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
     declaration = Declaration.find_by(ecf_id: args.declaration_ecf_id)
     raise "Declaration not found: #{args.declaration_ecf_id}" unless declaration
 
