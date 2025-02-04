@@ -1,15 +1,13 @@
 class SessionWizardController < ApplicationController
   def show
-    @wizard = SessionWizard.new(current_step: params[:step].underscore,
-                                store:,
-                                session:)
+    @wizard = SessionWizard.new(current_step: session_step, store:, session:)
     @form = @wizard.form
 
     render @wizard.current_step
   end
 
   def update
-    @wizard = SessionWizard.new(current_step: params[:step].underscore,
+    @wizard = SessionWizard.new(current_step: session_step,
                                 store:,
                                 params: wizard_params,
                                 session:)
@@ -39,6 +37,11 @@ private
   end
 
   def wizard_params
-    params.fetch(:session_wizard, {}).permit(SessionWizard.permitted_params_for_step(params[:step].underscore))
+    params.fetch(:session_wizard, {})
+          .permit(SessionWizard.permitted_params_for_step(session_step))
+  end
+
+  def session_step
+    params[:step].underscore
   end
 end
