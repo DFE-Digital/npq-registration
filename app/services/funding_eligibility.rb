@@ -127,6 +127,8 @@ class FundingEligibility
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
+        return INELIGIBLE_ESTABLISHMENT_TYPE if institution.pp50_institution? && course.eyl?
+
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
         return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
