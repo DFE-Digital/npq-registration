@@ -12,6 +12,7 @@ SecureHeaders::Configuration.default do |config|
 
   google_analytics = %w[*.google-analytics.com *.analytics.google.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
+  flippercloud = %w[www.flippercloud.io]
   sentry = []
 
   if ENV["SENTRY_REPORT_URI"]
@@ -31,7 +32,7 @@ SecureHeaders::Configuration.default do |config|
     base_uri: %w['self'],
     upgrade_insecure_requests: true,
     child_src: %w['self'],
-    connect_src: %w['self'] + google_analytics + sentry,
+    connect_src: %w['self'] + google_analytics + flippercloud + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
     form_action: %w['self'],
     frame_ancestors: %w['self'],
