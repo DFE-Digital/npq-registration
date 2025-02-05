@@ -1,6 +1,8 @@
 class SessionWizard
   include ActiveModel::Model
 
+  STEPS = %i[sign_in sign_in_code].freeze
+
   class InvalidStep < StandardError; end
 
   attr_reader :current_step, :params, :store, :session
@@ -13,6 +15,8 @@ class SessionWizard
   end
 
   def self.permitted_params_for_step(step)
+    return [] unless STEPS.include?(step.to_sym)
+
     "Questionnaires::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
@@ -63,9 +67,6 @@ private
   end
 
   def steps
-    %i[
-      sign_in
-      sign_in_code
-    ]
+    STEPS
   end
 end
