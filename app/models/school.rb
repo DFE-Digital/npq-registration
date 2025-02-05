@@ -70,8 +70,7 @@ class School < ApplicationRecord
   end
 
   def primary_education_phase?
-    phase_name == MIDDLE_DEEMED_PRIMARY_PHASE ||
-      phase_name == PRIMARY_PHASE
+    [MIDDLE_DEEMED_PRIMARY_PHASE, PRIMARY_PHASE].include?(phase_name)
   end
 
   def address
