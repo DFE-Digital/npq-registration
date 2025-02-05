@@ -16,8 +16,8 @@ SecureHeaders::Configuration.default do |config|
   identity_domain = [ENV["TRA_OIDC_DOMAIN"]]
   sentry = []
 
-  if ENV["SENTRY_REPORT_URI"]
-    sentry_report_uri = ENV["SENTRY_REPORT_URI"]
+  if ENV["SENTRY_CSP_REPORT_URI"]
+    sentry_report_uri = ENV["SENTRY_CSP_REPORT_URI"]
     sentry = [URI(sentry_report_uri).host]
   end
 
