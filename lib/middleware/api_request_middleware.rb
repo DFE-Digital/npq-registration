@@ -62,10 +62,16 @@ module Middleware
       {
         path: @request.path,
         params: @request.params,
-        body: @request.body.read.dup.force_encoding("utf-8"),
+        body: request_body,
         headers: request_headers,
         method: @request.request_method,
       }
+    end
+
+    def request_body
+      return "" if @request.body.nil?
+
+      @request.body.dup.tap(&:rewind).read.force_encoding("utf-8")
     end
 
     def request_headers
@@ -73,11 +79,15 @@ module Middleware
     end
 
     def trace_request?
-      Rails.env.in?(%w[review sandbox staging production]) && vendor_api_path?
+      trace_request_enabled? && vendor_api_path?
     end
 
     def vendor_api_path?
       @request.path =~ /^\/api\/v\d+\/.*$/
+    end
+
+    def trace_request_enabled?
+      !!Rails.application.config.x.enable_api_request_middleware
     end
   end
 end

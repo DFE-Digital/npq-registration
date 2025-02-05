@@ -56,6 +56,7 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
   describe "#perform" do
     context "when the BigQuery table exists" do
       before do
+        allow(described_class).to receive(:perform_later).and_call_original
         allow(dataset).to receive(:table).and_return(table)
       end
 

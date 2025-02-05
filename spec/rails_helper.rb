@@ -138,6 +138,9 @@ RSpec.configure do |config|
 
   config.before do
     Flipper.enable(Feature::REGISTRATION_OPEN)
+
+    # Allows including stream middleware when testing any api requests
+    allow(StreamAPIRequestsToBigQueryJob).to receive(:perform_later)
   end
 
   config.before(:each, :exceptions_app) do
