@@ -35,7 +35,7 @@ SecureHeaders::Configuration.default do |config|
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics,
-    style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics,
+    style_src: %w['self' 'unsafe-inline' *.gov.uk fonts.googleapis.com] + google_analytics, # unsafe-inline is needed for Flipper:UI
     worker_src: %w['self'],
     report_uri: sentry_report_uri,
   }
