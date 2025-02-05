@@ -39,11 +39,11 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     # TODO: aria-expanded
     expect_page_to_have(path: "/registration/teacher-catchment", axe_check: false, submit_form: true) do
-      expect(page).to have_text("Register using your current workplace details, even if they will change soon.")
       page.choose("Yes", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/work-setting", submit_form: true) do
+      expect(page).to have_text("Register using your current workplace details, even if they will change soon.")
       page.choose("A school", visible: :all)
     end
 
