@@ -13,6 +13,7 @@ SecureHeaders::Configuration.default do |config|
   google_analytics = %w[*.google-analytics.com *.analytics.google.com *.googletagmanager.com tagmanager.google.com *.googleusercontent.com *.gstatic.com]
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
   flippercloud = %w[www.flippercloud.io]
+  identity_domain = [ENV["TRA_OIDC_DOMAIN"]]
   sentry = []
 
   if ENV["SENTRY_REPORT_URI"]
@@ -34,7 +35,7 @@ SecureHeaders::Configuration.default do |config|
     child_src: %w['self'],
     connect_src: %w['self'] + google_analytics + flippercloud + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
-    form_action: %w['self'],
+    form_action: %w['self'] + identity_domain, # needed because the POST to /users/auth/tra_openid_connect' redirects to the identity domain
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
     img_src: %w['self' data: *.gov.uk] + google_analytics + tracking_pixels,
