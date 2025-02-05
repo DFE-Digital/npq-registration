@@ -58,7 +58,7 @@ class UpdateApplicationRakeTask
 private
 
   def logger
-    @logger ||= Logger.new($stdout)
+    @logger ||= Rails.env.test? ? Rails.logger : Logger.new($stdout)
   end
 
   def find_application(ecf_id)
