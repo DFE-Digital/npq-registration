@@ -60,9 +60,12 @@ gem "net-imap", "~> 0.5.1", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.0", require: false
 
+group :development, :test, :review do
+  gem "bullet"
+end
+
 group :development, :test do
   gem "amazing_print"
-  gem "bullet"
   gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
   gem "capybara-screenshot"
