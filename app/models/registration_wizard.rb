@@ -7,6 +7,8 @@ class RegistrationWizard
 
   class InvalidStep < StandardError; end
 
+  Answer = Struct.new(:key, :value, :change_step)
+
   VALID_REGISTRATION_STEPS = %i[
     start
     closed
@@ -108,156 +110,156 @@ class RegistrationWizard
     array = []
 
     if query_store.trn_set_via_fallback_verification_question?
-      array << OpenStruct.new(key: "Full name",
-                              value: store["full_name"],
-                              change_step: :qualified_teacher_check)
+      array << Answer.new("Full name",
+                          store["full_name"],
+                          :qualified_teacher_check)
 
-      array << OpenStruct.new(key: "Teacher reference number (TRN)",
-                              value: query_store.trn,
-                              change_step: :qualified_teacher_check)
+      array << Answer.new("Teacher reference number (TRN)",
+                          query_store.trn,
+                          :qualified_teacher_check)
 
-      array << OpenStruct.new(key: "Date of birth",
-                              value: query_store.formatted_date_of_birth,
-                              change_step: :qualified_teacher_check)
+      array << Answer.new("Date of birth",
+                          query_store.formatted_date_of_birth,
+                          :qualified_teacher_check)
 
       if form_for_step(:qualified_teacher_check).national_insurance_number.present?
-        array << OpenStruct.new(key: "National Insurance number",
-                                value: store["national_insurance_number"],
-                                change_step: :qualified_teacher_check)
+        array << Answer.new("National Insurance number",
+                            store["national_insurance_number"],
+                            :qualified_teacher_check)
       end
     end
 
-    array << OpenStruct.new(key: "Course start",
-                            value: store["course_start"],
-                            change_step: :course_start_date)
+    array << Answer.new("Course start",
+                        store["course_start"],
+                        :course_start_date)
 
-    array << OpenStruct.new(key: "Workplace in England",
-                            value: query_store.teacher_catchment_humanized,
-                            change_step: :teacher_catchment)
+    array << Answer.new("Workplace in England",
+                        query_store.teacher_catchment_humanized,
+                        :teacher_catchment)
 
     if store["referred_by_return_to_teaching_adviser"]
-      array << OpenStruct.new(key: "Referred by return to teaching adviser",
-                              value: I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
-                              change_step: :referred_by_return_to_teaching_adviser)
+      array << Answer.new("Referred by return to teaching adviser",
+                          I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
+                          :referred_by_return_to_teaching_adviser)
     end
 
     if store["work_setting"]
-      array << OpenStruct.new(key: "Work setting",
-                              value: I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
-                              change_step: :work_setting)
+      array << Answer.new("Work setting",
+                          I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
+                          :work_setting)
     end
 
     if inside_catchment? && query_store.works_in_childcare?
-      array << OpenStruct.new(key: "Early years setting",
-                              value: I18n.t(store["kind_of_nursery"], scope: "helpers.label.registration_wizard.kind_of_nursery_options"),
-                              change_step: :kind_of_nursery)
+      array << Answer.new("Early years setting",
+                          I18n.t(store["kind_of_nursery"], scope: "helpers.label.registration_wizard.kind_of_nursery_options"),
+                          :kind_of_nursery)
+
       if query_store.kind_of_nursery_private?
         array << if query_store.has_ofsted_urn?
-                   OpenStruct.new(key: "Ofsted unique reference number (URN)",
-                                  value: institution_from_store.registration_details,
-                                  change_step: :have_ofsted_urn)
+                   Answer.new("Ofsted unique reference number (URN)",
+                              institution_from_store.registration_details,
+                              :have_ofsted_urn)
                  else
-                   OpenStruct.new(key: "Ofsted unique reference number (URN)",
-                                  value: store["has_ofsted_urn"] == "no" ? "Not applicable" : I18n.t(store["has_ofsted_urn"], scope: "helpers.label.registration_wizard.has_ofsted_urn_options"),
-                                  change_step: :have_ofsted_urn)
+                   Answer.new("Ofsted unique reference number (URN)",
+                              store["has_ofsted_urn"] == "no" ? "Not applicable" : I18n.t(store["has_ofsted_urn"], scope: "helpers.label.registration_wizard.has_ofsted_urn_options"),
+                              :have_ofsted_urn)
                  end
       end
     end
 
     if inside_catchment?
       if query_store.works_in_school?
-        array << OpenStruct.new(key: "Workplace",
-                                value: institution_from_store.name_with_address,
-                                change_step: :find_school)
+        array << Answer.new("Workplace",
+                            institution_from_store.name_with_address,
+                            :find_school)
       elsif query_store.works_in_childcare? && query_store.kind_of_nursery_public?
-        array << OpenStruct.new(key: "Workplace",
-                                value: institution_from_store.name_with_address,
-                                change_step: :find_childcare_provider)
+        array << Answer.new("Workplace",
+                            institution_from_store.name_with_address,
+                            :find_childcare_provider)
       end
     end
 
     if (works_in_another_setting? && inside_catchment?) || query_store.lead_mentor_for_accredited_itt_provider?
-      array << OpenStruct.new(key: "Employment type",
-                              value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
-                              change_step: :your_employment)
+      array << Answer.new("Employment type",
+                          I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
+                          :your_employment)
 
       if query_store.lead_mentor_for_accredited_itt_provider?
-        array << OpenStruct.new(key: "ITT provider",
-                                value: query_store.itt_provider,
-                                change_step: :itt_provider)
+        array << Answer.new("ITT provider",
+                            query_store.itt_provider,
+                            :itt_provider)
       end
 
       unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_hospital_school? || query_store.young_offender_institution? || query_store.employment_type_other?
-        array << OpenStruct.new(key: "Role",
-                                value: store["employment_role"],
-                                change_step: :your_role)
+        array << Answer.new("Role",
+                            store["employment_role"],
+                            :your_role)
       end
 
       unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_other?
-        array << OpenStruct.new(key: "Employer",
-                                value: store["employer_name"],
-                                change_step: :your_employer)
+        array << Answer.new("Employer",
+                            store["employer_name"],
+                            :your_employer)
       end
     end
 
-    array << OpenStruct.new(key: "Course",
-                            value: I18n.t(query_store.course.identifier, scope: "course.name"),
-                            change_step: :choose_your_npq)
+    array << Answer.new("Course",
+                        I18n.t(query_store.course.identifier, scope: "course.name"),
+                        :choose_your_npq)
 
     if course.ehco?
-      array << OpenStruct.new(key: "Headship NPQ stage",
-                              value: I18n.t(store["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options"),
-                              change_step: :npqh_status)
+      array << Answer.new("Headship NPQ stage",
+                          I18n.t(store["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options"),
+                          :npqh_status)
 
-      array << OpenStruct.new(key: "Headteacher",
-                              value: I18n.t(store["ehco_headteacher"], scope: "helpers.label.registration_wizard.ehco_headteacher_options"),
-                              change_step: :ehco_headteacher)
+      array << Answer.new("Headteacher",
+                          I18n.t(store["ehco_headteacher"], scope: "helpers.label.registration_wizard.ehco_headteacher_options"),
+                          :ehco_headteacher)
 
       if store["ehco_headteacher"] == "yes"
-        array << OpenStruct.new(key: "First 5 years of headship",
-                                value: I18n.t(store["ehco_new_headteacher"], scope: "helpers.label.registration_wizard.ehco_new_headteacher_options"),
-                                change_step: :ehco_new_headteacher)
+        array << Answer.new("First 5 years of headship",
+                            I18n.t(store["ehco_new_headteacher"], scope: "helpers.label.registration_wizard.ehco_new_headteacher_options"),
+                            :ehco_new_headteacher)
       end
     end
 
     if course.npqs?
-      array << OpenStruct.new(key: "Special educational needs co-ordinator (SENCO)",
-                              value: store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
-                              change_step: :senco_in_role)
+      array << Answer.new("Special educational needs co-ordinator (SENCO)",
+                          store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
+                          :senco_in_role)
     end
 
     if query_store.course.identifier == "npq-leading-primary-mathematics"
       if store["maths_eligibility_teaching_for_mastery"] == "yes"
-        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme",
-                                value: store["maths_eligibility_teaching_for_mastery"].capitalize,
-                                change_step: :maths_eligibility_teaching_for_mastery)
-
+        array << Answer.new("Completed one year of the primary maths Teaching for Mastery programme",
+                            store["maths_eligibility_teaching_for_mastery"].capitalize,
+                            :maths_eligibility_teaching_for_mastery)
       elsif store["maths_eligibility_teaching_for_mastery"] == "no"
-        array << OpenStruct.new(key: "Completed one year of the primary maths Teaching for Mastery programme",
-                                value: I18n.t("helpers.label.registration_wizard.maths_understanding_of_approach_options.#{store['maths_understanding_of_approach']}"),
-                                change_step: :maths_eligibility_teaching_for_mastery)
+        array << Answer.new("Completed one year of the primary maths Teaching for Mastery programme",
+                            I18n.t("helpers.label.registration_wizard.maths_understanding_of_approach_options.#{store['maths_understanding_of_approach']}"),
+                            :maths_eligibility_teaching_for_mastery)
       end
     end
 
     unless funding_eligibility_calculator.funded?
       if course.ehco? && store["ehco_funding_choice"]
-        array << OpenStruct.new(key: "Course funding",
-                                value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
-                                change_step: :funding_your_ehco)
+        array << Answer.new("Course funding",
+                            I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
+                            :funding_your_ehco)
       elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_another_setting? || works_in_other?)
-        array << OpenStruct.new(key: "Course funding",
-                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
-                                change_step: :funding_your_npq)
+        array << Answer.new("Course funding",
+                            I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                            :funding_your_npq)
       elsif !course.npqltd? && query_store.lead_mentor_for_accredited_itt_provider?
-        array << OpenStruct.new(key: "Course funding",
-                                value: I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
-                                change_step: :funding_your_npq)
+        array << Answer.new("Course funding",
+                            I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                            :funding_your_npq)
       end
     end
 
-    array << OpenStruct.new(key: "Provider",
-                            value: query_store.lead_provider&.name,
-                            change_step: :choose_your_provider)
+    array << Answer.new("Provider",
+                        query_store.lead_provider&.name,
+                        :choose_your_provider)
 
     array
   end
