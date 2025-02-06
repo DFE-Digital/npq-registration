@@ -85,20 +85,14 @@ class RegistrationWizard
   end
 
   def form
-    return @form if @form
-
-    hash = store.slice(*form_class.permitted_params.map(&:to_s))
-    hash.merge!(params)
-    hash.merge!(wizard: self)
-
-    @form ||= form_class.new(hash)
+    @form ||= begin
+      hash = store.slice(*form_class.permitted_params.map(&:to_s))
+      form_class.new hash.merge(params, wizard: self)
+    end
   end
 
   def save!
-    form.attributes.each do |k, v|
-      store[k.to_s] = v
-    end
-
+    form.attributes.each { |k, v| store[k.to_s] = v }
     form.after_save
   end
 
@@ -288,8 +282,7 @@ private
   def form_for_step(step)
     form_class = "Questionnaires::#{step.to_s.camelcase}".constantize
     hash = store.slice(*form_class.permitted_params.map(&:to_s))
-    hash.merge!(wizard: self)
-    form_class.new(hash)
+    form_class.new hash.merge(wizard: self)
   end
 
   def load_current_user_into_store
