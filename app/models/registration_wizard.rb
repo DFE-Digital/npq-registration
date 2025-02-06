@@ -62,6 +62,13 @@ class RegistrationWizard
 
   attr_reader :current_step, :params, :store, :request, :current_user
 
+  delegate :before_render,
+           :after_render,
+           :skip_step?,
+           to: :form
+
+  delegate :session, to: :request
+
   def initialize(current_step:, store:, request:, current_user:, params: {})
     set_current_step(current_step)
 
@@ -75,18 +82,6 @@ class RegistrationWizard
 
   def self.permitted_params_for_step(step)
     "Questionnaires::#{step.to_s.camelcase}".constantize.permitted_params
-  end
-
-  def before_render
-    form.before_render
-  end
-
-  def after_render
-    form.after_render
-  end
-
-  def session
-    request.session
   end
 
   def form
@@ -113,10 +108,6 @@ class RegistrationWizard
 
   def previous_step_path
     form.previous_step.to_s.dasherize
-  end
-
-  def skip_step?
-    form.skip_step?
   end
 
   def answers
@@ -290,6 +281,17 @@ class RegistrationWizard
 
 private
 
+  delegate :ineligible_institution_type?,
+           to: :funding_eligibility_calculator
+
+  delegate :new_headteacher?,
+           :inside_catchment?,
+           :works_in_other?,
+           :works_in_another_setting?,
+           :course,
+           :approved_itt_provider?,
+           to: :query_store
+
   def lead_mentor_course?
     course.npqltd?
   end
@@ -322,10 +324,6 @@ private
   def employer_data_gathered?
     works_in_another_setting? && inside_catchment?
   end
-
-  delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-
-  delegate :new_headteacher?, :inside_catchment?, :works_in_other?, :works_in_another_setting?, :course, :approved_itt_provider?, to: :query_store
 
   def load_from_store
     store.slice(*form_class.permitted_params.map(&:to_s))
