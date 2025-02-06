@@ -184,7 +184,7 @@ class RegistrationWizard
       array << Answer.new("Special educational needs co-ordinator (SENCO)", value, :senco_in_role)
     end
 
-    if course.identifier == "npq-leading-primary-mathematics"
+    if course.npqlpm?
       value = if store["maths_eligibility_teaching_for_mastery"] == "yes"
                 store["maths_eligibility_teaching_for_mastery"].capitalize
               else
