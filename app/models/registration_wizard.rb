@@ -292,10 +292,6 @@ private
     form_class.new(hash)
   end
 
-  def lead_mentor_course?
-    course.npqltd?
-  end
-
   def load_current_user_into_store
     store["current_user"] = current_user
   end
@@ -325,9 +321,5 @@ private
     @current_step = VALID_REGISTRATION_STEPS.find { |s| s == step.to_sym }
 
     raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
-  end
-
-  def submission_params
-    params.slice(:email)
   end
 end
