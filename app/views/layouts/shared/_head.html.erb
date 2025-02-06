@@ -27,8 +27,8 @@
   <%= yield :head %>
 
   <% if Rails.env.development? %>
-    <script>
+    <%= nonced_javascript_tag do %>
       console.log(<%= session.to_json.html_safe %>)
-    </script>
+    <% end %>
   <% end %>
 </head>
