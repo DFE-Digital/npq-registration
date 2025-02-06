@@ -268,13 +268,6 @@ class RegistrationWizard
     array
   end
 
-  def form_for_step(step)
-    form_class = "Questionnaires::#{step.to_s.camelcase}".constantize
-    hash = store.slice(*form_class.permitted_params.map(&:to_s))
-    hash.merge!(wizard: self)
-    form_class.new(hash)
-  end
-
   def query_store
     @query_store ||= RegistrationQueryStore.new(store:)
   end
@@ -291,6 +284,13 @@ private
            :course,
            :approved_itt_provider?,
            to: :query_store
+
+  def form_for_step(step)
+    form_class = "Questionnaires::#{step.to_s.camelcase}".constantize
+    hash = store.slice(*form_class.permitted_params.map(&:to_s))
+    hash.merge!(wizard: self)
+    form_class.new(hash)
+  end
 
   def lead_mentor_course?
     course.npqltd?
