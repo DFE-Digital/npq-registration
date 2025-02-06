@@ -109,17 +109,17 @@ class RegistrationWizard
   def answers
     array = []
 
-    if query_store.trn_set_via_fallback_verification_question?
+    if trn_set_via_fallback_verification_question?
       array << Answer.new("Full name",
                           store["full_name"],
                           :qualified_teacher_check)
 
       array << Answer.new("Teacher reference number (TRN)",
-                          query_store.trn,
+                          trn,
                           :qualified_teacher_check)
 
       array << Answer.new("Date of birth",
-                          query_store.formatted_date_of_birth,
+                          formatted_date_of_birth,
                           :qualified_teacher_check)
 
       if form_for_step(:qualified_teacher_check).national_insurance_number.present?
@@ -134,7 +134,7 @@ class RegistrationWizard
                         :course_start_date)
 
     array << Answer.new("Workplace in England",
-                        query_store.teacher_catchment_humanized,
+                        teacher_catchment_humanized,
                         :teacher_catchment)
 
     if store["referred_by_return_to_teaching_adviser"]
@@ -149,13 +149,13 @@ class RegistrationWizard
                           :work_setting)
     end
 
-    if inside_catchment? && query_store.works_in_childcare?
+    if inside_catchment? && works_in_childcare?
       array << Answer.new("Early years setting",
                           t("kind_of_nursery"),
                           :kind_of_nursery)
 
-      if query_store.kind_of_nursery_private?
-        array << if query_store.has_ofsted_urn?
+      if kind_of_nursery_private?
+        array << if has_ofsted_urn?
                    Answer.new("Ofsted unique reference number (URN)",
                               institution_from_store.registration_details,
                               :have_ofsted_urn)
@@ -168,35 +168,35 @@ class RegistrationWizard
     end
 
     if inside_catchment?
-      if query_store.works_in_school?
+      if works_in_school?
         array << Answer.new("Workplace",
                             institution_from_store.name_with_address,
                             :find_school)
-      elsif query_store.works_in_childcare? && query_store.kind_of_nursery_public?
+      elsif works_in_childcare? && kind_of_nursery_public?
         array << Answer.new("Workplace",
                             institution_from_store.name_with_address,
                             :find_childcare_provider)
       end
     end
 
-    if (works_in_another_setting? && inside_catchment?) || query_store.lead_mentor_for_accredited_itt_provider?
+    if (works_in_another_setting? && inside_catchment?) || lead_mentor_for_accredited_itt_provider?
       array << Answer.new("Employment type",
                           t("employment_type"),
                           :your_employment)
 
-      if query_store.lead_mentor_for_accredited_itt_provider?
+      if lead_mentor_for_accredited_itt_provider?
         array << Answer.new("ITT provider",
-                            query_store.itt_provider,
+                            itt_provider,
                             :itt_provider)
       end
 
-      unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_hospital_school? || query_store.young_offender_institution? || query_store.employment_type_other?
+      unless lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?
         array << Answer.new("Role",
                             store["employment_role"],
                             :your_role)
       end
 
-      unless query_store.lead_mentor_for_accredited_itt_provider? || query_store.employment_type_other?
+      unless lead_mentor_for_accredited_itt_provider? || employment_type_other?
         array << Answer.new("Employer",
                             store["employer_name"],
                             :your_employer)
@@ -204,7 +204,7 @@ class RegistrationWizard
     end
 
     array << Answer.new("Course",
-                        I18n.t(query_store.course.identifier, scope: "course.name"),
+                        I18n.t(course.identifier, scope: "course.name"),
                         :choose_your_npq)
 
     if course.ehco?
@@ -229,7 +229,7 @@ class RegistrationWizard
                           :senco_in_role)
     end
 
-    if query_store.course.identifier == "npq-leading-primary-mathematics"
+    if course.identifier == "npq-leading-primary-mathematics"
       if store["maths_eligibility_teaching_for_mastery"] == "yes"
         array << Answer.new("Completed one year of the primary maths Teaching for Mastery programme",
                             store["maths_eligibility_teaching_for_mastery"].capitalize,
@@ -246,11 +246,11 @@ class RegistrationWizard
         array << Answer.new("Course funding",
                             t("ehco_funding_choice"),
                             :funding_your_ehco)
-      elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_another_setting? || works_in_other?)
+      elsif store["funding"] && (works_in_school? || works_in_childcare? || works_in_another_setting? || works_in_other?)
         array << Answer.new("Course funding",
                             t("funding"),
                             :funding_your_npq)
-      elsif !course.npqltd? && query_store.lead_mentor_for_accredited_itt_provider?
+      elsif !course.npqltd? && lead_mentor_for_accredited_itt_provider?
         array << Answer.new("Course funding",
                             t("funding"),
                             :funding_your_npq)
@@ -258,7 +258,7 @@ class RegistrationWizard
     end
 
     array << Answer.new("Provider",
-                        query_store.lead_provider&.name,
+                        lead_provider&.name,
                         :choose_your_provider)
 
     array
@@ -273,12 +273,28 @@ private
   delegate :ineligible_institution_type?,
            to: :funding_eligibility_calculator
 
-  delegate :new_headteacher?,
-           :inside_catchment?,
-           :works_in_other?,
-           :works_in_another_setting?,
+  delegate :approved_itt_provider?,
            :course,
-           :approved_itt_provider?,
+           :employment_type_hospital_school?,
+           :employment_type_other?,
+           :formatted_date_of_birth,
+           :get_an_identity_id,
+           :has_ofsted_urn?,
+           :inside_catchment?,
+           :itt_provider,
+           :kind_of_nursery_private?,
+           :kind_of_nursery_public?,
+           :lead_mentor_for_accredited_itt_provider?,
+           :lead_provider,
+           :new_headteacher?,
+           :teacher_catchment_humanized,
+           :trn,
+           :trn_set_via_fallback_verification_question?,
+           :works_in_another_setting?,
+           :works_in_childcare?,
+           :works_in_other?,
+           :works_in_school?,
+           :young_offender_institution?,
            to: :query_store
 
   def form_for_step(step)
@@ -302,8 +318,8 @@ private
       approved_itt_provider: approved_itt_provider?,
       inside_catchment: inside_catchment?,
       new_headteacher: new_headteacher?,
-      trn: query_store.trn,
-      get_an_identity_id: query_store.get_an_identity_id,
+      trn:,
+      get_an_identity_id:,
       query_store:,
     )
   end
