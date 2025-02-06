@@ -202,13 +202,8 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
         context "with incorrect parser" do
           let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow }
 
-          it "returns errors for invalid rows" do
-            run_import
-            expect(subject.import_errors.count).to eq(7)
-          end
-
-          it "imports no rows" do
-            expect { run_import }.not_to(change(PrivateChildcareProvider, :count))
+          it "raises an error" do
+            expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
           end
         end
       end
@@ -450,13 +445,8 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
         context "with incorrect parser" do
           let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow }
 
-          it "returns errors for invalid rows" do
-            run_import
-            expect(subject.import_errors.count).to eq(2)
-          end
-
-          it "imports no rows" do
-            expect { run_import }.not_to(change(PrivateChildcareProvider, :count))
+          it "raises an error" do
+            expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
           end
         end
       end
