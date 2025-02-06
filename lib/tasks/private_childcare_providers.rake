@@ -1,16 +1,17 @@
-# Note before running, the file when downloaded from the correct link will need to be edited
-# the top three lines and the first column are note used and then you have to make sure the
-# top row is a header line as sometimes when converting it from .ods espeically on macs you
-# you may come across issues with first line causing the problem. Also the file you are
-# looking for is called "Childcare provider level data as at.."
-
-# https://www.gov.uk/government/statistics/childcare-providers-and-inspections-as-at-31-march-2022
-
+# How to use this importer:
+# 1. download the CSV files from the statistics page:
+#      e.g. https://www.gov.uk/government/statistical-data-sets/childcare-providers-and-inspections-management-information
+#      childcare providers: Management_information_-_childcare_providers_and_inspections_-_most_recent_inspections_data_-_as_at_31_December_2024.csv
+#      childminder agencies: Management_information_-_childcare_providers_and_inspections_-_registered_childminder_agencies_as_at_31_December_2024.csv
+# 2. rename the files to childcare_providers.csv and childminder_agencies.csv
+# 3. delete the non-header rows from the files - the first line should be the CSV header
+# 4. commit the files into the repo, in a lib/private_childcare_providers/YYYY-MM-DD directory
+#
 # Run examples:
-# bundle exec rake 'private_childcare_providers:import[lib/private_childcare_providers/2022-08-31/childcare_providers.csv,childcare_providers]'
-
+# rake 'private_childcare_providers:import[lib/private_childcare_providers/2024-12-31/childminder_agencies.csv,childminder_agencies]'
+# rake 'private_childcare_providers:import[lib/private_childcare_providers/2024-12-31/childcare_providers.csv,childcare_providers]'
 namespace :private_childcare_providers do
-  desc "Sync applications attributes with ecf service"
+  desc "Sync PrivateChildcareProvider attributes with imported file"
   task :import, %i[file_name parser] => :environment do |_t, args|
     file_name = args.file_name
     parser = args.parser
