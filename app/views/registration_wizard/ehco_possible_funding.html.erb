@@ -5,15 +5,7 @@
     wizard: @wizard,
     ) do
 %>
-  <h1 class="govuk-heading-xl">Funding</h1>
-
-  <p class="govuk-body">
-    You’re eligible for scholarship funding for <%= localise_sentence_embedded_course_name(Course.ehco) %> (EHCO) starting before <%= application_course_start_date %>.
-  </p>
-
-  <p class="govuk-body">
-    This means that if the provider accepts your application and confirms that you have a funded space, you will not have to pay for the EHCO.
-  </p>
+  <%= render "registration_wizard/possible_funding/eligible_for_scholarship_funding", course: @form.course %>
 
   <%= govuk_button_link_to "Continue", registration_wizard_show_path(@wizard.next_step_path) %>
 <% end %>
