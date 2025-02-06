@@ -290,7 +290,7 @@ private
   end
 
   def institution_from_store
-    institution(source: store["institution_identifier"])
+    @institution_from_store ||= institution(source: store["institution_identifier"])
   end
 
   def funding_eligibility_calculator
