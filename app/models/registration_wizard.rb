@@ -87,7 +87,7 @@ class RegistrationWizard
   def form
     return @form if @form
 
-    hash = load_from_store
+    hash = store.slice(*form_class.permitted_params.map(&:to_s))
     hash.merge!(params)
     hash.merge!(wizard: self)
 
@@ -182,7 +182,7 @@ class RegistrationWizard
       end
     end
 
-    if employer_data_gathered? || query_store.lead_mentor_for_accredited_itt_provider?
+    if (works_in_another_setting? && inside_catchment?) || query_store.lead_mentor_for_accredited_itt_provider?
       array << OpenStruct.new(key: "Employment type",
                               value: I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
                               change_step: :your_employment)
@@ -245,7 +245,7 @@ class RegistrationWizard
       end
     end
 
-    unless eligible_for_funding?
+    unless funding_eligibility_calculator.funded?
       if course.ehco? && store["ehco_funding_choice"]
         array << OpenStruct.new(key: "Course funding",
                                 value: I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
@@ -317,30 +317,14 @@ private
     )
   end
 
-  def eligible_for_funding?
-    funding_eligibility_calculator.funded?
-  end
-
-  def employer_data_gathered?
-    works_in_another_setting? && inside_catchment?
-  end
-
-  def load_from_store
-    store.slice(*form_class.permitted_params.map(&:to_s))
-  end
-
   def form_class
     @form_class ||= "Questionnaires::#{current_step.to_s.camelcase}".constantize
   end
 
   def set_current_step(step)
-    @current_step = steps.find { |s| s == step.to_sym }
+    @current_step = VALID_REGISTRATION_STEPS.find { |s| s == step.to_sym }
 
     raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
-  end
-
-  def steps
-    VALID_REGISTRATION_STEPS
   end
 
   def submission_params
