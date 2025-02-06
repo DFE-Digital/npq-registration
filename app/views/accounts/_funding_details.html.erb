@@ -4,13 +4,6 @@
       Scholarship funding
     </dt>
     <dd class="govuk-summary-list__value">
-      <% unless scholarship_eligibility_in_review?(application) %>
-        <% if application.eligible_for_funding %>
-          <%= govuk_tag(text: "Eligible", colour: "green") %>
-        <% else %>
-          <%= govuk_tag(text: "Not eligible", colour: "red") %>
-        <% end %>
-      <% end %>
       <% if application.eligible_for_funding %>
         <%= render "accounts/eligible_for_funding_details", application: @application %>
       <% elsif scholarship_eligibility_in_review?(application) %>

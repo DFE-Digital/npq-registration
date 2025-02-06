@@ -561,17 +561,17 @@ en:
 
   admin:
     features:
-      show: 
-        registration_open_html: | 
+      show:
+        registration_open_html: |
           <p class="govuk-body">When this feature is turned on, registration is open. Users can register for an NPQ as normal.</p>
           <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
-        senco_enabled_html: | 
+        senco_enabled_html: |
           <p class="govuk-body">Senco enabled</p>
           <p class="govuk-body">Hello</p>
-        closed_registration_enabled_html: | 
+        closed_registration_enabled_html: |
           <p class="govuk-body">When this feature is turned on, you can allow some users to register even when the service is closed - that is, when <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> is turned off.</p>
           <p class="govuk-body">When this feature is turned off, and Registration open is also turned off, no one can register.</p>
-        targeted_support_funding_html: | 
+        targeted_support_funding_html: |
           <p class="govuk-body">Targeted support funding</p>
           <p class="govuk-body">Hello</p>
         npq_separation_ecf_api_disabled_html: |
@@ -865,9 +865,10 @@ en:
         course_start_date_three: "Registrations are currently open for courses starting before %{date}."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
-          a_school: "This includes local authority maintained schools."
-          another_setting: "For example a virtual school, initial teacher training (ITT) provider (for ITT lead mentors), hospital school, young offender institution or other local authority setting."
-          other: "For example you are any of the following: self employed, not currently working in an educational setting or were referred to this service by the Return To Teaching Adviser (RTTA) support service."
+          a_school_html: "Includes:<ul><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"
+          an_academy_trust: "Some may provide hospital education (for example, alternative provision or academy special schools)"
+          another_setting_html: "For example: <ul><li>local authority (for staff in a direct teaching role, virtual school headteachers and staff in defined deputy headteacher roles)</li><li>initial teacher training (ITT) providers (for ITT lead mentors)</li><li>independent hospital education organisations</li><li>young offender institutions</li></ul>"
+          other_html: "Select ‘Other’ if you were referred by the Return to Teaching Advisory (RTTA) service, or if none of the above options apply to you, for example you’re:<ul><li>self-employed</li><li>not working in an educational setting</li><li>an agency supply teacher</li><li>working in any other independent setting</li></ul>"
         employment_type_options:
           local_authority_supply_teacher: "This could be as a supply teacher or peripatetic teacher."
         employment_role: "For example: Administrator, business manager"
@@ -885,12 +886,12 @@ en:
           - If you do not agree to share your information you will not be able to progress with your NPQ.
         choose_childcare_provider: "Search for your workplace in %{institution_location}"
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
-        choose_school: "Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools."
+        choose_school: "Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode."
         choose_school_search: "Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools."
         choose_private_childcare_provider: "For example a 7 digit number (1234567) or a 6 digit number sometimes prefixed with EY (EY456789)"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
-        find_childcare_provider: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
-        institution_location: "Enter the town, city or the first part of the postcode. For example Chester or CH1."
+        find_childcare_provider: "Enter the town, city or the first part of the postcode - for example Chester or CH1. If you work for a trust, enter the details for one of its schools rather than the trust’s postcode."
+        institution_location: "Enter the town, city or the first part of the postcode - for example Chester or CH1. If you work for a trust, enter the details for one of its schools rather than the trust’s postcode."
         maths_eligibility_teaching_for_mastery_hint: "You may be able to demonstrate your understanding of mastery approaches to teaching maths another way"
         course_start_date_hint: "You can also select this option if you have already started"
         maths_understanding_of_approach_hint: "For example, a reference from a professional who has supported your mastery professional development."
@@ -900,7 +901,7 @@ en:
         date_of_birth: For example, 31 3 1980
         national_insurance_number: This will help us match your details. It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
         senco_start_date: For example, 1 2024
-        work_setting: You must make sure the information you provide is correct, as your course provider will check your details.
+        work_setting: Make sure the information you provide is correct, as your course provider will check your details. Register using your current workplace details, even if they will change soon.
 
     label:
       applications_change_training_status:
@@ -956,7 +957,7 @@ en:
 
         employment_type_options:
           local_authority_virtual_school: "In a virtual school (local authority run organisations that support the education of children in care)"
-          hospital_school: "In a hospital school"
+          hospital_school: "In an independent hospital education organisation"
           young_offender_institution: "In a young offender institution"
           local_authority_supply_teacher: "As a teacher employed by a local authority to teach in more than one school"
           lead_mentor_for_accredited_itt_provider: "As a lead mentor for an accredited initial teacher training (ITT) provider"
