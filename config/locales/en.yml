@@ -729,6 +729,8 @@ en:
             banner:
               title: "Authorising for payment"
               content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
+              delayed_title: "Authorising for payment delayed"
+              delayed_content: "Requested at %{statement_marked_as_paid_at}. Authorisation takes more than 15 minutes, make sure the data within the statement (ie. declarations) is valid or contact support."
           show:
             calculation_rounding_message:
               title: Calculation rounding errors
