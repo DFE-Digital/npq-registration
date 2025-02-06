@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Listing and viewing applications", type: :feature do
   include Helpers::AdminLogin
+  include Helpers::MailHelper
 
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }
   let(:applications_in_order) { Application.order(created_at: :asc) }
@@ -303,7 +304,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css(".govuk-error-message", text: "Choose whether the Application is eligible for funding")
     choose "Yes", visible: :all
-    click_button "Continue"
+    perform_enqueued_jobs { click_button "Continue" }
+
+    expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 
     expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
     within(".govuk-summary-list:nth-of-type(3)") do |summary_list|

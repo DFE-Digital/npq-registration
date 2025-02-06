@@ -29,7 +29,9 @@ module Applications
       funding_eligiblity_status_code =
         (eligible_for_funding ? :marked_funded_by_policy : :marked_ineligible_by_policy)
 
-      application.update!(eligible_for_funding:, funding_eligiblity_status_code:)
+      application.update!(eligible_for_funding:, funding_eligiblity_status_code:).tap do
+        send_eligible_for_funding_email if application.saved_changes["eligible_for_funding"] == [false, true]
+      end
     end
 
   private
@@ -48,6 +50,16 @@ module Applications
 
     def declared_as_billable_or_changeable?
       application.declarations.billable_or_changeable.count.positive?
+    end
+
+    def send_eligible_for_funding_email
+      ApplicationFundingEligibilityMailer.eligible_for_funding_mail(
+        to: application.user.email,
+        full_name: application.user.full_name,
+        provider_name: application.lead_provider.name,
+        course_name: application.course.name,
+        ecf_id: application.ecf_id,
+      ).deliver_later
     end
   end
 end
