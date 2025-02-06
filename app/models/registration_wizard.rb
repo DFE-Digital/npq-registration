@@ -139,19 +139,19 @@ class RegistrationWizard
 
     if store["referred_by_return_to_teaching_adviser"]
       array << Answer.new("Referred by return to teaching adviser",
-                          I18n.t(store["referred_by_return_to_teaching_adviser"], scope: "helpers.label.registration_wizard.referred_by_return_to_teaching_adviser_options"),
+                          t("referred_by_return_to_teaching_adviser"),
                           :referred_by_return_to_teaching_adviser)
     end
 
     if store["work_setting"]
       array << Answer.new("Work setting",
-                          I18n.t(store["work_setting"], scope: "helpers.label.registration_wizard.work_setting_options"),
+                          t("work_setting"),
                           :work_setting)
     end
 
     if inside_catchment? && query_store.works_in_childcare?
       array << Answer.new("Early years setting",
-                          I18n.t(store["kind_of_nursery"], scope: "helpers.label.registration_wizard.kind_of_nursery_options"),
+                          t("kind_of_nursery"),
                           :kind_of_nursery)
 
       if query_store.kind_of_nursery_private?
@@ -161,7 +161,7 @@ class RegistrationWizard
                               :have_ofsted_urn)
                  else
                    Answer.new("Ofsted unique reference number (URN)",
-                              store["has_ofsted_urn"] == "no" ? "Not applicable" : I18n.t(store["has_ofsted_urn"], scope: "helpers.label.registration_wizard.has_ofsted_urn_options"),
+                              store["has_ofsted_urn"] == "no" ? "Not applicable" : t("has_ofsted_urn"),
                               :have_ofsted_urn)
                  end
       end
@@ -181,7 +181,7 @@ class RegistrationWizard
 
     if (works_in_another_setting? && inside_catchment?) || query_store.lead_mentor_for_accredited_itt_provider?
       array << Answer.new("Employment type",
-                          I18n.t(store["employment_type"], scope: "helpers.label.registration_wizard.employment_type_options"),
+                          t("employment_type"),
                           :your_employment)
 
       if query_store.lead_mentor_for_accredited_itt_provider?
@@ -209,23 +209,23 @@ class RegistrationWizard
 
     if course.ehco?
       array << Answer.new("Headship NPQ stage",
-                          I18n.t(store["npqh_status"], scope: "helpers.label.registration_wizard.npqh_status_options"),
+                          t("npqh_status"),
                           :npqh_status)
 
       array << Answer.new("Headteacher",
-                          I18n.t(store["ehco_headteacher"], scope: "helpers.label.registration_wizard.ehco_headteacher_options"),
+                          t("ehco_headteacher"),
                           :ehco_headteacher)
 
       if store["ehco_headteacher"] == "yes"
         array << Answer.new("First 5 years of headship",
-                            I18n.t(store["ehco_new_headteacher"], scope: "helpers.label.registration_wizard.ehco_new_headteacher_options"),
+                            t("ehco_new_headteacher"),
                             :ehco_new_headteacher)
       end
     end
 
     if course.npqs?
       array << Answer.new("Special educational needs co-ordinator (SENCO)",
-                          store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : I18n.t(store["senco_in_role"], scope: "helpers.label.registration_wizard.senco_in_role_options"),
+                          store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : t("senco_in_role"),
                           :senco_in_role)
     end
 
@@ -244,15 +244,15 @@ class RegistrationWizard
     unless funding_eligibility_calculator.funded?
       if course.ehco? && store["ehco_funding_choice"]
         array << Answer.new("Course funding",
-                            I18n.t(store["ehco_funding_choice"], scope: "helpers.label.registration_wizard.ehco_funding_choice_options"),
+                            t("ehco_funding_choice"),
                             :funding_your_ehco)
       elsif store["funding"] && (query_store.works_in_school? || query_store.works_in_childcare? || works_in_another_setting? || works_in_other?)
         array << Answer.new("Course funding",
-                            I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                            t("funding"),
                             :funding_your_npq)
       elsif !course.npqltd? && query_store.lead_mentor_for_accredited_itt_provider?
         array << Answer.new("Course funding",
-                            I18n.t(store["funding"], scope: "helpers.label.registration_wizard.funding_options"),
+                            t("funding"),
                             :funding_your_npq)
       end
     end
@@ -316,5 +316,9 @@ private
     @current_step = VALID_REGISTRATION_STEPS.find { |s| s == step.to_sym }
 
     raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
+  end
+
+  def t(key)
+    I18n.t(store[key], scope: "helpers.label.registration_wizard.#{key}_options")
   end
 end
