@@ -28,12 +28,14 @@ If you need to update all schools you can do this by running the (Sync School Da
 
 See [Acquiring New Private Childcare Provider data](docs/acquiring_new_private_childcare_provider_data.md) for how to acquire new data.
 
+The import should be run on staging and production.
+
 ### Locally
 - Open a rails console and run the following
 - `bundle exec rake 'private_childcare_providers:import[lib/private_childcare_providers/2024-12-31/childcare_providers.csv,childcare_providers]'`
 - `bundle exec rake 'private_childcare_providers:import[lib/private_childcare_providers/2024-12-31/childminder_agencies.csv,childminder_agencies]'`
 
-### Production
+### Staging and Production
 There is no Github Action for this, the above rake tasks need to be called.
 
 ## Importing premium pupils data
