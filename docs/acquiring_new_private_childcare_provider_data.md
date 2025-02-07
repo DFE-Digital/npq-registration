@@ -3,7 +3,7 @@
 # Acquiring new Private Childcare Provider CSV data for import
 
 1. [Overview](#overview)
-1. [Acquiring the ODS files](#acquiring-the-ods-files)
+1. [Acquiring the CSV files](#acquiring-the-csv-files)
 1. [Extracting the data](#extracting-the-data)
 1. [Importing the data](../docs/importing_data.md#importing-private-childcare-provider-data)
 
@@ -28,5 +28,5 @@ Download from the above link the CSV files named:
 - delete the non-header rows from the files - the first line should be the CSV header
 
 As the exact structure of these files can differ year to year it is worth running these files through the import process locally to ensure the data is being imported correctly before committing the files to the repository. Any changes would mean that the [import rake task](../lib/tasks/private_childcare_providers.rake) would need to be updated to reflect the new structure, these changes would be made in the CSV row wrapper classes:
-- [Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow](../app/services/importers/import_private_childcare_providers)
-- [Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow](../app/services/importers/import_private_childcare_providers)
+- [Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow](../app/services/importers/import_private_childcare_providers.rb)
+- [Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow](../app/services/importers/import_private_childcare_providers.rb)
