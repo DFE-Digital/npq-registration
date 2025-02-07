@@ -9,7 +9,7 @@ module Helpers
 
       if js
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
+          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode.")
 
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: name
@@ -21,7 +21,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
+          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode.")
 
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name

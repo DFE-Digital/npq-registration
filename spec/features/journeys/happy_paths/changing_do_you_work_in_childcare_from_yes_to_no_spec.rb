@@ -114,7 +114,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/your-employment", submit_form: true) do
       expect(page).to have_text("How are you employed?")
-      page.choose("In a hospital school", visible: :all)
+      page.choose("In an independent hospital education organisation", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/your-employer", submit_form: true) do
@@ -146,7 +146,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         {
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
-          "Employment type" => "In a hospital school",
+          "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
           "Work setting" => "Another setting",
           "Provider" => "Teach First",
