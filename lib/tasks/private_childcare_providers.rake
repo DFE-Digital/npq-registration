@@ -1,11 +1,6 @@
 # How to use this importer:
-# 1. download the CSV files from the statistics page:
-#      e.g. https://www.gov.uk/government/statistical-data-sets/childcare-providers-and-inspections-management-information
-#      childcare providers: Management_information_-_childcare_providers_and_inspections_-_most_recent_inspections_data_-_as_at_31_December_2024.csv
-#      childminder agencies: Management_information_-_childcare_providers_and_inspections_-_registered_childminder_agencies_as_at_31_December_2024.csv
-# 2. rename the files to childcare_providers.csv and childminder_agencies.csv
-# 3. delete the non-header rows from the files - the first line should be the CSV header
-# 4. commit the files into the repo, in a lib/private_childcare_providers/YYYY-MM-DD directory
+# 1. Download the files, as described in docs/acquiring_new_private_childcare_provider_data.md
+# 2. commit the files into the repo, in a lib/private_childcare_providers/YYYY-MM-DD directory
 #
 # Run examples:
 # rake 'private_childcare_providers:import[lib/private_childcare_providers/2024-12-31/childminder_agencies.csv,childminder_agencies]'
