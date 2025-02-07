@@ -152,20 +152,11 @@ class RegistrationWizard
       end
     end
 
-    if (works_in_another_setting? && inside_catchment?) || lead_mentor_for_accredited_itt_provider?
+    if employment_type_matters?
       array << Answer.new("Employment type", t("employment_type"), :your_employment)
-
-      if lead_mentor_for_accredited_itt_provider?
-        array << Answer.new("ITT provider", itt_provider, :itt_provider)
-      end
-
-      unless lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?
-        array << Answer.new("Role", store["employment_role"], :your_role)
-      end
-
-      unless lead_mentor_for_accredited_itt_provider? || employment_type_other?
-        array << Answer.new("Employer", store["employer_name"], :your_employer)
-      end
+      array << Answer.new("ITT provider", itt_provider, :itt_provider) if lead_mentor_for_accredited_itt_provider?
+      array << Answer.new("Role", store["employment_role"], :your_role) if employment_role_matters?
+      array << Answer.new("Employer", store["employer_name"], :your_employer) if employer_name_matters?
     end
 
     array << Answer.new("Course", I18n.t(course.identifier, scope: "course.name"), :choose_your_npq)
@@ -215,11 +206,11 @@ class RegistrationWizard
 
 private
 
-  delegate :ineligible_institution_type?,
-           to: :funding_eligibility_calculator
-
   delegate :approved_itt_provider?,
            :course,
+           :employment_type_matters?,
+           :employment_role_matters?,
+           :employer_name_matters?,
            :employment_type_hospital_school?,
            :employment_type_other?,
            :formatted_date_of_birth,
