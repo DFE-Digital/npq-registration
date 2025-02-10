@@ -3,10 +3,15 @@
 require "rails_helper"
 
 RSpec.describe "Rate limiting" do
+  include Helpers::JourneyHelper
+
   let(:ip) { "1.2.3.4" }
   let(:other_ip) { "9.8.7.6" }
 
-  before { set_request_ip(ip) }
+  before do
+    set_request_ip(ip)
+    stub_env_variables_for_gai
+  end
 
   [
     "/api/guidance",
