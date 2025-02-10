@@ -25,11 +25,9 @@ class LeadProvider < ApplicationRecord
   NPQH_EHCO_PROVIDERS = [
     "Ambition Institute",
     "Best Practice Network",
-    "Church of England",
     "National Institute of Teaching",
     "Teach First",
     "LLSE",
-    "Teacher Development Trust",
     "UCL Institute of Education",
   ].freeze
 
