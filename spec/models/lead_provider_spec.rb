@@ -135,10 +135,8 @@ RSpec.describe LeadProvider do
         expect(subject).to eq([
           "Ambition Institute",
           "Best Practice Network",
-          "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
