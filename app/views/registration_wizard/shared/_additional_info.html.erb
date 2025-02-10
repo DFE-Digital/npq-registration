@@ -4,10 +4,8 @@
   <ul class="govuk-list govuk-list--bullet">
     <li>use your previous name to register with the service</li>
     <li>use your previous name to register, and then change it on the Teaching Regulation Agency records at a later date</li>
-    <li><%= govuk_link_to "change your name on the Teaching Regulation Agency records", registration_wizard_show_path(step: "change-dqt") %> first and then return to register for an NPQ</li>
+    <li><%= govuk_link_to "change your name on your DfE Identity Teaching record", identity_link_uri(request.original_url) %> first and then return to register for an NPQ</li>
   </ul>
 
   <p>It will take a minimum of 5 days to update your Teaching Regulation Agency records.</p>
-
-  <p>If you are unsure whether you have updated your name, you can <%= govuk_link_to "request a reminder", registration_wizard_show_path(step: "not-sure-updated-name") %>.</p>
 <% end %>
