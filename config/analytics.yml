@@ -147,6 +147,12 @@ shared:
     - created_at
     - updated_at
     - disabled_at
+  :delivery_partners:
+    - id
+    - ecf_id
+    - name
+    - created_at
+    - updated_at
   :declarations:
     - id
     - ecf_id
