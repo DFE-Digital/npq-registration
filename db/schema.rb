@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -270,6 +270,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.datetime "updated_at"
     t.string "cron"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "delivery_partners", force: :cascade do |t|
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ecf_id"], name: "index_delivery_partners_on_ecf_id", unique: true
+    t.index ["name"], name: "index_delivery_partners_on_name", unique: true
   end
 
   create_table "ecf_sync_request_logs", force: :cascade do |t|
