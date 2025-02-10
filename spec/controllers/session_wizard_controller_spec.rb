@@ -21,7 +21,7 @@ RSpec.describe SessionWizardController do
 
   describe "#update" do
     context "when signing in successfully" do
-      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 15.minutes.from_now) }
+      let(:admin) { FactoryBot.create(:admin, otp_hash: "123456", otp_expires_at: 10.minutes.from_now) }
 
       it "sets admin_id in session" do
         session["session_store"] = { "email" => admin.email }
