@@ -76,6 +76,7 @@ en:
   declaration_type: &declaration_type
     blank: "Enter a '#/%{parameterized_attribute}'."
     mismatch_declaration_type_for_schedule: "The property '#/%{parameterized_attribute}' does not exist for this schedule."
+    inclusion: The entered '#/%{parameterized_attribute}' is not recognised.
 
   has_passed: &has_passed
     invalid: "Enter 'true' or 'false' in the '#/%{parameterized_attribute}' field to indicate whether this participant has passed or failed their course."
