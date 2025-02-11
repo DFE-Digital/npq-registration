@@ -19,6 +19,7 @@ module Declarations
     validates :declaration_date, declaration_date: true
     validates :declaration_date, presence: true
     validates :declaration_type, presence: true
+    validates :declaration_type, inclusion: { in: Declaration.declaration_types.values }
     validates :cohort, contract_for_cohort_and_course: true
 
     validate :output_fee_statement_available
