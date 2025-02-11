@@ -9,6 +9,12 @@ RSpec.describe DeliveryPartner, type: :model do
     it { is_expected.to have_attributes ecf_id: uuid_format }
   end
 
+  describe "relationships" do
+    it { is_expected.to have_many(:delivery_partnerships) }
+    it { is_expected.to have_many(:lead_providers).through(:delivery_partnerships) }
+    it { is_expected.to have_many(:cohorts).through(:delivery_partnerships) }
+  end
+
   describe "validations" do
     it { is_expected.to validate_presence_of :name }
 

@@ -87,6 +87,9 @@ class LeadProvider < ApplicationRecord
   has_many :applications
   has_many :statements
 
+  has_many :delivery_partnerships
+  has_many :delivery_partners, through: :delivery_partnerships
+
   validates :name, presence: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 

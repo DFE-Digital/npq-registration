@@ -281,6 +281,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
     t.index ["name"], name: "index_delivery_partners_on_name", unique: true
   end
 
+  create_table "delivery_partnerships", force: :cascade do |t|
+    t.bigint "delivery_partner_id", null: false
+    t.bigint "lead_provider_id", null: false
+    t.bigint "cohort_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_delivery_partnerships_on_cohort_id"
+    t.index ["delivery_partner_id", "lead_provider_id", "cohort_id"], name: "idx_on_delivery_partner_id_lead_provider_id_cohort__10d5da32cd", unique: true
+    t.index ["delivery_partner_id"], name: "index_delivery_partnerships_on_delivery_partner_id"
+    t.index ["lead_provider_id"], name: "index_delivery_partnerships_on_lead_provider_id"
+  end
+
   create_table "ecf_sync_request_logs", force: :cascade do |t|
     t.integer "syncable_id", null: false
     t.string "syncable_type", null: false
@@ -640,6 +652,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
   add_foreign_key "declarations", "cohorts"
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
   add_foreign_key "declarations", "lead_providers"
+  add_foreign_key "delivery_partnerships", "cohorts"
+  add_foreign_key "delivery_partnerships", "delivery_partners"
+  add_foreign_key "delivery_partnerships", "lead_providers"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"

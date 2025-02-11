@@ -5,8 +5,19 @@ class CreateDeliveryPartners < ActiveRecord::Migration[7.1]
       t.string :name, null: false
 
       t.timestamps
+
+      t.index :ecf_id, unique: true
+      t.index :name, unique: true
     end
-    add_index :delivery_partners, :ecf_id, unique: true
-    add_index :delivery_partners, :name, unique: true
+
+    create_table :delivery_partnerships do |t|
+      t.references :delivery_partner, null: false, foreign_key: true
+      t.references :lead_provider, null: false, foreign_key: true
+      t.references :cohort, null: false, foreign_key: true
+
+      t.timestamps
+
+      t.index %i[delivery_partner_id lead_provider_id cohort_id], unique: true
+    end
   end
 end
