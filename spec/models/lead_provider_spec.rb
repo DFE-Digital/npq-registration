@@ -4,6 +4,8 @@ RSpec.describe LeadProvider do
   describe "relationships" do
     it { is_expected.to have_many(:applications) }
     it { is_expected.to have_many(:statements) }
+    it { is_expected.to have_many(:delivery_partnerships) }
+    it { is_expected.to have_many(:delivery_partners).through(:delivery_partnerships) }
   end
 
   describe "validations" do
