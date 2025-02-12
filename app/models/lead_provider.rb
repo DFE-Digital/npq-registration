@@ -6,7 +6,7 @@ class LeadProvider < ApplicationRecord
     "LLSE" => "230e67c0-071a-4a48-9673-9d043d456281",
     "National Institute of Teaching" => "3ec607f2-7a3a-421f-9f1a-9aca8a634aeb",
     "School-Led Network" => "bc5e4e37-1d64-4149-a06b-ad10d3c55fd0",
-    "Teacher Development Trust" => "30fd937e-b93c-4f81-8fff-3c27544193f1",
+    "Teacher Development Trust" => "30fd937e-b93c-4f81-8fff-3c27544193f1", # no longer offers any NPQs
     "Teach First" => "a02ae582-f939-462f-90bc-cebf20fa8473",
     "UCL Institute of Education" => "ef687b3d-c1c0-4566-a295-16d6fa5d0fa7",
   }.freeze
@@ -17,7 +17,6 @@ class LeadProvider < ApplicationRecord
     "Church of England",
     "LLSE",
     "National Institute of Teaching",
-    "Teacher Development Trust",
     "Teach First",
     "UCL Institute of Education",
   ].freeze
@@ -34,7 +33,6 @@ class LeadProvider < ApplicationRecord
   EYL_LL_PROVIDERS = [
     "Ambition Institute",
     "National Institute of Teaching",
-    "Teacher Development Trust",
     "Teach First",
     "UCL Institute of Education",
   ].freeze
