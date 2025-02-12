@@ -134,7 +134,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
       expect(page).to have_text("Select your provider")
       expect(page).not_to have_text("Best Practice Network")
-      page.choose("Teacher Development Trust", visible: :all)
+      page.choose("National Institute of Teaching", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
@@ -148,7 +148,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Early years leadership",
           "Course funding" => "My workplace is covering the cost",
-          "Provider" => "Teacher Development Trust",
+          "Provider" => "National Institute of Teaching",
           "Work setting" => "Early years or childcare",
           "Workplace" => "open manchester school – street 1, manchester",
           "Early years setting" => public_kind_of_nursery,
@@ -198,7 +198,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "funding_eligiblity_status_code" => "not_entitled_ey_institution",
       "headteacher_status" => nil,
       "kind_of_nursery" => public_kind_of_nursery_key,
-      "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id,
+      "lead_provider_id" => LeadProvider.find_by(name: "National Institute of Teaching").id,
       "notes" => nil,
       "private_childcare_provider_id" => nil,
       "referred_by_return_to_teaching_adviser" => nil,
@@ -236,7 +236,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "kind_of_nursery" => public_kind_of_nursery_key,
-        "lead_provider_id" => LeadProvider.find_by(name: "Teacher Development Trust").id.to_s,
+        "lead_provider_id" => LeadProvider.find_by(name: "National Institute of Teaching").id.to_s,
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,
         "teacher_catchment" => "england",

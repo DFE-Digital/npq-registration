@@ -96,7 +96,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])
@@ -167,7 +166,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Church of England",
             "LLSE",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])
@@ -326,7 +324,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])
@@ -369,7 +366,6 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
             "Church of England",
             "LLSE",
             "National Institute of Teaching",
-            "Teacher Development Trust",
             "Teach First",
             "UCL Institute of Education",
           ])

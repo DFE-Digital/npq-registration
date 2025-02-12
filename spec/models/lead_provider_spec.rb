@@ -53,7 +53,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -70,7 +69,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -87,7 +85,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -104,7 +101,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -121,7 +117,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -153,7 +148,6 @@ RSpec.describe LeadProvider do
           "Church of England",
           "LLSE",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -167,7 +161,6 @@ RSpec.describe LeadProvider do
         expect(subject).to eq([
           "Ambition Institute",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
@@ -181,7 +174,6 @@ RSpec.describe LeadProvider do
         expect(subject).to eq([
           "Ambition Institute",
           "National Institute of Teaching",
-          "Teacher Development Trust",
           "Teach First",
           "UCL Institute of Education",
         ])
