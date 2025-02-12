@@ -5,7 +5,7 @@
   govuk_summary_list(card: { title:, actions: }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Application ID")
-      row.with_value(text: application.id)
+      row.with_value(text: application.ecf_id)
     end
 
     sl.with_row do |row|
