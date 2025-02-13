@@ -4,7 +4,6 @@
   "Church of England" => "coe-token",
   "School-Led Network" => "school-led-token",
   "UCL Institute of Education" => "ucl-token",
-  "Teacher Development Trust" => "tdt-token",
   "Teach First" => "teach-first-token",
   "National Institute of Teaching" => "niot-token",
   "LLSE" => "llse-token",
