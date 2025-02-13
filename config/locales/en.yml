@@ -825,6 +825,8 @@ en:
         training_status: Choose a different training status
       applications_change_funding_eligibility:
         eligible_for_funding: Is eligible for funding?
+      applications_change_lead_provider:
+        lead_provider_id: Choose a different lead provider
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"
