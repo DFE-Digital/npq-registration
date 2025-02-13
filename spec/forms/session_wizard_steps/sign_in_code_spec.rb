@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Questionnaires::SignInCode, type: :model do
+RSpec.describe SessionWizardSteps::SignInCode, type: :model do
   subject do
     described_class.new(code:)
   end
