@@ -16,10 +16,7 @@ gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
 gem "delayed_job_web"
 gem "devise", "~> 4.9"
-# gem 'dfe-analytics', github: 'DFE-Digital/dfe-analytics', tag: 'v1.14.2'
-# temporary until PR will be accepted
-gem "dfe-analytics", github: "slawosz/dfe-analytics", branch: "allow-to-exclude-models"
-
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.4"
 gem "email_validator", require: "email_validator/strict"
 gem "flipper", "~> 1.3"
 gem "flipper-active_record", "~> 1.3"
