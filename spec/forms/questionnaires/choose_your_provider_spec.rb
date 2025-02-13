@@ -388,6 +388,7 @@ RSpec.describe Questionnaires::ChooseYourProvider, type: :model do
           LeadProvider.where(name: [
             "Ambition Institute",
             "Best Practice Network",
+            "Church of England",
             "National Institute of Teaching",
             "Teach First",
             "LLSE",
