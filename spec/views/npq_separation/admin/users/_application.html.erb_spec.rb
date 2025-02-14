@@ -15,7 +15,7 @@ RSpec.describe "npq_separation/admin/users/_application.html.erb", type: :view d
       build_stubbed :application, :accepted, :with_school, :with_private_childcare_provider
     end
 
-    it { is_expected.to have_summary_item "Application ID", application.id }
+    it { is_expected.to have_summary_item "Application ID", application.ecf_id }
     it { is_expected.to have_summary_item "Lead Provider", application.lead_provider.name }
     it { is_expected.to have_summary_item "Lead Provider Approval Status", application.lead_provider_approval_status }
     it { is_expected.to have_summary_item "NPQ Course", application.course.name }
@@ -31,7 +31,7 @@ RSpec.describe "npq_separation/admin/users/_application.html.erb", type: :view d
       build_stubbed :application, cohort: nil, itt_provider: nil, school: nil
     end
 
-    it { is_expected.to have_summary_item "Application ID", application.id }
+    it { is_expected.to have_summary_item "Application ID", application.ecf_id }
     it { is_expected.to have_summary_item "Lead Provider", application.lead_provider.name }
     it { is_expected.to have_summary_item "Lead Provider Approval Status", application.lead_provider_approval_status }
     it { is_expected.to have_summary_item "NPQ Course", application.course.name }
