@@ -356,7 +356,7 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
     nokogiri (1.18.2)
@@ -744,7 +744,7 @@ DEPENDENCIES
   mail-notify (~> 1.2)
   net-imap (~> 0.5.1)
   net-pop
-  net-smtp (~> 0.5.0)
+  net-smtp (~> 0.5.1)
   oj
   omniauth
   omniauth-oauth2
