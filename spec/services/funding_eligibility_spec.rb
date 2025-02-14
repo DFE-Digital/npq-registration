@@ -43,7 +43,7 @@ RSpec.describe FundingEligibility do
       context "studying #{identifier}" do
         let(:course) { Course.find_by(identifier: identifier) }
 
-        it "returns true" do
+        it "is funded" do
           expect(subject).to be_funded
           expect(subject.funding_eligiblity_status_code).to eq :funded
         end
@@ -53,9 +53,9 @@ RSpec.describe FundingEligibility do
     context "studying npq-early-years-leadership" do
       let(:course) { Course.find_by(identifier: "npq-early-years-leadership") }
 
-      it "returns true" do
-        expect(subject).not_to be_funded
-        expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
+      it "is funded" do
+        expect(subject).to be_funded
+        expect(subject.funding_eligiblity_status_code).to eq :funded
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe FundingEligibility do
           let(:course) { create(:course, :headship) }
           let(:urn) { "123" }
 
-          it "returns true" do
+          it "is funded" do
             expect(subject).to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :funded
           end
@@ -92,7 +92,7 @@ RSpec.describe FundingEligibility do
               context "when user has selected the NPQEYL course" do
                 let(:course) { create(:course, :early_years_leadership) }
 
-                it "returns true" do
+                it "is funded" do
                   expect(subject).to be_funded
                 end
               end
@@ -101,7 +101,7 @@ RSpec.describe FundingEligibility do
             context "when user has selected the NPQEYL course" do
               let(:course) { create(:course, :early_years_leadership) }
 
-              it "returns false" do
+              it "is not funded" do
                 expect(subject).not_to be_funded
               end
             end
@@ -109,7 +109,7 @@ RSpec.describe FundingEligibility do
             context "when user has not selected the NPQEYL course" do
               let(:course) { create(:course, :headship) }
 
-              it "returns true" do
+              it "is funded" do
                 expect(subject).to be_funded
               end
             end
@@ -122,7 +122,7 @@ RSpec.describe FundingEligibility do
           let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, urn:) }
           let(:urn) { "123" }
 
-          it "returns false" do
+          it "is not funded" do
             expect(subject).not_to be_funded
             expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_type
           end
@@ -133,7 +133,7 @@ RSpec.describe FundingEligibility do
             context "when user has selected the NPQEYL course" do
               let(:course) { create(:course, :early_years_leadership) }
 
-              it "returns true" do
+              it "is funded" do
                 expect(subject).to be_funded
               end
             end
@@ -141,7 +141,7 @@ RSpec.describe FundingEligibility do
             context "when user has not selected the NPQEYL course" do
               let(:course) { create(:course, :additional_support_offer) }
 
-              it "returns false" do
+              it "is not funded" do
                 expect(subject).not_to be_funded
               end
             end
