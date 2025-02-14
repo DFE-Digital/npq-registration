@@ -347,5 +347,20 @@ RSpec.describe Declarations::Create, type: :model do
         expect(declaration.superseded_by).to eq(original_declaration)
       end
     end
+
+    context "when the declaration_type is not valid" do
+      subject(:service) { described_class.new(**params) }
+
+      let(:declaration_type) { "started-1" }
+
+      it "returns false" do
+        expect(service.create_declaration).to be false
+      end
+
+      it "has an error" do
+        service.create_declaration
+        expect(service).to have_error(:declaration_type, :inclusion, "The entered '#/declaration_type' is not recognised.")
+      end
+    end
   end
 end

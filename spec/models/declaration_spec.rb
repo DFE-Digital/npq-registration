@@ -15,6 +15,7 @@ RSpec.describe Declaration, type: :model do
 
   describe "validations" do
     it { is_expected.to validate_presence_of(:declaration_type) }
+    it { is_expected.to validate_inclusion_of(:declaration_type).in_array(described_class.declaration_types.values) }
     it { is_expected.to validate_presence_of(:declaration_date) }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
 

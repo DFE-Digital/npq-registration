@@ -80,12 +80,12 @@ class Declaration < ApplicationRecord
     end
   end
 
-  enum declaration_type: {
+  enum :declaration_type, {
     started: "started",
     "retained-1": "retained-1",
     "retained-2": "retained-2",
     completed: "completed",
-  }, _suffix: true
+  }, suffix: true, validate: true
 
   enum state_reason: {
     duplicate: "duplicate",
