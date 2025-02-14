@@ -58,7 +58,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     within(summary_lists[0]) do |summary_list|
       expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
-      expect(summary_list).to have_summary_item("User ID", application.user.id)
+      expect(summary_list).to have_summary_item("User ID", application.user.ecf_id)
       expect(summary_list).to have_summary_item("Email", application.user.email)
       expect(summary_list).to have_summary_item("TRN", application.user.trn)
       expect(summary_list).to have_summary_item("TRN validated", "No")
