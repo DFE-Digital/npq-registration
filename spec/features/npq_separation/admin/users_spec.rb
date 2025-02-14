@@ -89,7 +89,7 @@ RSpec.feature "User administration", type: :feature do
       applications.each.with_index(1) do |application, index|
         within(".govuk-summary-card", text: "Application #{index}") do |summary_card|
           expect(summary_card).to have_link("View full application", href: npq_separation_admin_application_path(application))
-          expect(summary_card).to have_summary_item("Application ID", application.id)
+          expect(summary_card).to have_summary_item("Application ID", application.ecf_id)
           expect(summary_card).to have_summary_item("Lead Provider", application.lead_provider.name)
           expect(summary_card).to have_summary_item("Lead Provider Approval Status", application.lead_provider_approval_status)
           expect(summary_card).to have_summary_item("NPQ Course", application.course.name)
