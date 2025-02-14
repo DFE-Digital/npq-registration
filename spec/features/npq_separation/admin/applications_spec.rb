@@ -247,11 +247,13 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application_details = page.find("h2", text: "Application details", exact_text: true)
                               .sibling(".govuk-summary-list:first-of-type")
 
-    within(application_details) do |summary_list|
-      expect(summary_list).to have_summary_item("Training status", "active")
-      expect(summary_list).to have_link("Change")
+    within(application_details) do
+      within(".govuk-summary-list__row:nth-of-type(8)") do |summary_list_row|
+        expect(summary_list_row).to have_summary_item("Training status", "active")
+        expect(summary_list_row).to have_link("Change")
 
-      click_link("Change")
+        click_link("Change")
+      end
     end
 
     expect(page).to have_css("h1", text: "Change training status")
@@ -266,11 +268,13 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application_details = page.find("h2", text: "Application details", exact_text: true)
                               .sibling(".govuk-summary-list:first-of-type")
 
-    within(application_details) do |summary_list|
-      expect(summary_list).to have_summary_item("Training status", "deferred")
-      expect(summary_list).to have_link("Change")
+    within(application_details) do
+      within(".govuk-summary-list__row:nth-of-type(8)") do |summary_list_row|
+        expect(summary_list_row).to have_summary_item("Training status", "deferred")
+        expect(summary_list_row).to have_link("Change")
 
-      click_link("Change")
+        click_link("Change")
+      end
     end
 
     expect(page).to have_css("h1", text: "Change training status")
@@ -283,6 +287,38 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     within(application_details) do |summary_list|
       expect(summary_list).to have_summary_item("Training status", "active")
+    end
+  end
+
+  scenario "changing lead provider" do
+    application = create(:application)
+
+    visit npq_separation_admin_application_path(application)
+
+    application_details = page.find("h2", text: "Application details", exact_text: true)
+                              .sibling(".govuk-summary-list:first-of-type")
+
+    within(application_details) do
+      within(".govuk-summary-list__row:nth-of-type(9)") do |summary_list_row|
+        expect(summary_list_row).to have_summary_item("Lead provider name", application.lead_provider.name)
+
+        click_link("Transfer")
+      end
+    end
+
+    expect(page).to have_css("h1", text: "Transfer lead provider")
+
+    click_button "Continue"
+    expect(page).to have_css(".govuk-error-message", text: "Choose a lead provider")
+
+    choose "Best Practice Network", visible: :all
+    click_button "Continue"
+
+    application_details = page.find("h2", text: "Application details", exact_text: true)
+                              .sibling(".govuk-summary-list:first-of-type")
+
+    within(application_details) do |summary_list|
+      expect(summary_list).to have_summary_item("Lead provider name", "Best Practice Network")
     end
   end
 
