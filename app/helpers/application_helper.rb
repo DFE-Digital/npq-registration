@@ -51,14 +51,7 @@ module ApplicationHelper
   end
 
   def application_course_start_date
-    date = Setting.course_start_date
-    if date > Time.zone.today
-      date.strftime("%B %Y")
-    else
-      "(please contact support for newest date)"
-    end
-  rescue StandardError
-    "(please contact support for newest date)"
+    "Spring 2025"
   end
 
   def show_otp_code_in_ui(current_env, admin)
