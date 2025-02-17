@@ -600,10 +600,10 @@ GEM
     sentry-delayed_job (5.22.3)
       delayed_job (>= 4.0)
       sentry-ruby (~> 5.22.3)
-    sentry-rails (5.22.3)
+    sentry-rails (5.22.4)
       railties (>= 5.0)
-      sentry-ruby (~> 5.22.3)
-    sentry-ruby (5.22.3)
+      sentry-ruby (~> 5.22.4)
+    sentry-ruby (5.22.4)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     shoulda-matchers (6.4.0)
