@@ -349,7 +349,7 @@ GEM
     mutex_m (0.3.0)
     net-http (0.6.0)
       uri
-    net-imap (0.5.5)
+    net-imap (0.5.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -742,7 +742,7 @@ DEPENDENCIES
   knapsack
   listen (>= 3.0.5, < 3.10)
   mail-notify (~> 1.2)
-  net-imap (~> 0.5.1)
+  net-imap (~> 0.5.6)
   net-pop
   net-smtp (~> 0.5.0)
   oj
