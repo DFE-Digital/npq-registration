@@ -46,7 +46,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
       "Omniauth login failure",
       contexts: {
         "Strategy" => { name: request.env["omniauth.error.strategy"].name },
-        "Error" => { "omniauth.error.type" => request.env["omniauth.error.type"] },
+        "Error" => { "omniauth.error.type" => Base64.encode64(request.env["omniauth.error.type"]) },
       },
     )
 
@@ -99,10 +99,10 @@ private
   rescue StandardError
     "unknown-provider-uid"
   end
-end
 
-def try_to_extract_error_type
-  request.env["omniauth.error.type"]
-rescue StandardError
-  "unknown-error-type"
+  def try_to_extract_error_type
+    request.env["omniauth.error.type"]
+  rescue StandardError
+    "unknown-error-type"
+  end
 end
