@@ -1,0 +1,39 @@
+<%= govuk_back_link href: npq_separation_admin_application_path(@application) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      Transfer lead provider
+    </h1>
+
+    <%= govuk_warning_text(text: "Before continuing with this transfer, make sure the provider has submitted their declarations for this application") %>
+
+    <div class="govuk-inset-text">
+      <p class="govuk-body">
+        <strong>Lead Provider</strong>
+        <br/>
+        <%= @application.lead_provider.name %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <%= form_for @change_lead_provider,
+                 url: npq_separation_admin_applications_change_lead_provider_path(@application) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_collection_radio_buttons :lead_provider_id,
+                                           f.object.lead_provider_options,
+                                           :id,
+                                           :name,
+                                           :description,
+                                           legend: { tag: 'h1', size: 'm' } %>
+      <div class="govuk-button-group">
+        <%= f.govuk_submit t("shared.continue") %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_path(@application) %>
+      </div>
+    <% end %>
+  </div>
+</div>
