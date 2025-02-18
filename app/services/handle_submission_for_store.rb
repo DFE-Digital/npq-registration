@@ -61,13 +61,11 @@ private
     @query_store ||= RegistrationQueryStore.new(store:)
   end
 
-  delegate :inside_catchment?, to: :query_store
-
-  def store_employer_data?
-    return false if eligible_for_funding?
-
-    (ineligible_institution_type? && inside_catchment?) || referred_by_return_to_teaching_adviser?
-  end
+  delegate :employment_type_matters?,
+           :employment_role_matters?,
+           :employer_name_matters?,
+           :inside_catchment?,
+           to: :query_store
 
   def referred_by_return_to_teaching_adviser?
     store["referred_by_return_to_teaching_adviser"] == "yes"
@@ -90,15 +88,15 @@ private
   end
 
   def employer_name
-    store["employer_name"].presence if store_employer_data?
+    store["employer_name"].presence if employer_name_matters?
   end
 
   def employment_role
-    store["employment_role"].presence if store_employer_data?
+    store["employment_role"].presence if employment_role_matters?
   end
 
   def employment_type
-    store["employment_type"].presence if store_employer_data? || lead_mentor?
+    store["employment_type"].presence if employment_type_matters?
   end
 
   def institution_from_store
