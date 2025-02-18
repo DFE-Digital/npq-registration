@@ -74,4 +74,58 @@ RSpec.describe "update_application" do
       expect(application.reload.training_status).to eq "withdrawn"
     end
   end
+
+  describe "update_application:change_cohort" do
+    subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, new_cohort.start_year) }
+
+    after { Rake::Task["update_application:change_cohort"].reenable }
+
+    let(:application) { create(:application, cohort: Cohort.first) }
+    let(:new_cohort) { Cohort.last }
+
+    it "changes the cohort of the application" do
+      run_task
+      expect(application.reload.cohort).to eq(new_cohort)
+    end
+
+    context "when the application has a schedule" do
+      let(:application) { create(:application, :accepted, cohort: Cohort.first) }
+      let!(:new_schedule) { Schedule.find_by(cohort: new_cohort, identifier: application.schedule.identifier) }
+
+      it "updates the schedule" do
+        run_task
+        expect(application.reload.schedule).to eq(new_schedule)
+      end
+
+      context "when the target schedule does not exist" do
+        let(:new_cohort) { create(:cohort, start_year: 2029) }
+
+        it "raises an error" do
+          expect { run_task }.to raise_error(RuntimeError, "Schedule not found for course group leadership, cohort 2029 and identifier npq-leadership-spring")
+        end
+      end
+    end
+
+    context "when the application does not exist" do
+      subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(SecureRandom.uuid, new_cohort.start_year) }
+
+      it_behaves_like "outputting an error"
+    end
+
+    context "when the cohort does not exist" do
+      subject(:run_task) { Rake::Task["update_application:change_cohort"].invoke(application.ecf_id, "1000") }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Cohort not found: 1000")
+      end
+    end
+
+    context "when the application has declarations" do
+      let(:application) { create(:application, :with_declaration) }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Cannot change cohort for an application with declarations")
+      end
+    end
+  end
 end
