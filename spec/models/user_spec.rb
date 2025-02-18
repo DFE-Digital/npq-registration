@@ -198,12 +198,14 @@ RSpec.describe User do
           email_verified: true,
           name: "Example User",
           trn:,
+          trn_lookup_status:,
         ),
       )
     end
 
     let(:feature_flag_id) { 1 }
     let(:trn) { "1234567" }
+    let(:trn_lookup_status) { "Found" }
     let(:user_scopes) { %i[with_verified_trn] }
 
     shared_examples "a TRN updater" do |method_name|
@@ -221,11 +223,14 @@ RSpec.describe User do
           described_class.public_send(method_name, provider_data, feature_flag_id:)
 
           expect(user.trn).to eq "1234567"
+          expect(user.trn_verified).to be true
+          expect(user.trn_lookup_status).to eq "Found"
         end
       end
 
       context "when TRA provides a nil TRN" do
         let(:trn) { nil }
+        let(:trn_lookup_status) { "Failed" }
 
         it "update the user details" do
           described_class.public_send(method_name, provider_data, feature_flag_id:)
@@ -240,6 +245,8 @@ RSpec.describe User do
           described_class.public_send(method_name, provider_data, feature_flag_id:)
 
           expect(user.trn).to eq original_attrs["trn"]
+          expect(user.trn_verified).to eq original_attrs["trn_verified"]
+          expect(user.trn_lookup_status).to eq original_attrs["trn_lookup_status"]
         end
       end
     end

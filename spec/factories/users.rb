@@ -26,6 +26,7 @@ FactoryBot.define do
 
     trait :with_verified_trn do
       trn_verified { true }
+      trn_lookup_status { "Found" }
     end
 
     trait :with_application do
