@@ -46,7 +46,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
       "Omniauth login failure",
       contexts: {
         "Strategy" => { name: request.env["omniauth.error.strategy"].name },
-        "Error" => { "omniauth.error.type" => Base64.encode64(request.env["omniauth.error.type"]) },
+        "Error" => { "omniauth.error.type" => Base64.encode64(request.env["omniauth.error.type"].to_s) },
       },
     )
 
