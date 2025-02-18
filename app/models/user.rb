@@ -80,20 +80,15 @@ class User < ApplicationRecord
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
     user_from_provider_data.feature_flag_id = feature_flag_id
 
-    provider_trn = provider_data.info.trn
-
     user_from_provider_data.assign_attributes(
       email: provider_data.info.email,
       date_of_birth: provider_data.info.date_of_birth,
-      trn_lookup_status: provider_data.info.trn_lookup_status,
-      trn_verified: provider_trn.present?,
       full_name: provider_data.info.preferred_name || provider_data.info.name,
       raw_tra_provider_data: provider_data,
       updated_from_tra_at: Time.zone.now,
     )
 
-    # The user's TRN should remain unchanged if the TRA returns an empty TRN
-    user_from_provider_data.trn = provider_trn if provider_trn.present?
+    user_from_provider_data.assign_trn_from_provider_info(provider_data.info)
 
     user_from_provider_data.tap(&:save)
   end
@@ -103,21 +98,16 @@ class User < ApplicationRecord
 
     user_from_provider_data.feature_flag_id = feature_flag_id
 
-    provider_trn = provider_data.info.trn
-
     user_from_provider_data.assign_attributes(
       provider: provider_data.provider,
       uid: provider_data.uid,
       date_of_birth: provider_data.info.date_of_birth,
-      trn_lookup_status: provider_data.info.trn_lookup_status,
-      trn_verified: provider_trn.present?,
       full_name: provider_data.info.preferred_name || provider_data.info.name,
       raw_tra_provider_data: provider_data,
       updated_from_tra_at: Time.zone.now,
     )
 
-    # The user's TRN should remain unchanged if the TRA returns an empty TRN
-    user_from_provider_data.trn = provider_trn if provider_trn.present?
+    user_from_provider_data.assign_trn_from_provider_info(provider_data.info)
 
     unless user_from_provider_data.save
       Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
@@ -203,6 +193,15 @@ class User < ApplicationRecord
     if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) && ClosedRegistrationUser.find_by(email:)
       Flipper.enable_actor(Feature::REGISTRATION_OPEN, self)
     end
+  end
+
+  def assign_trn_from_provider_info(provider_info)
+    # The user's TRN should remain unchanged if the TRA returns an empty TRN
+    return if provider_info.trn.blank?
+
+    self.trn = provider_info.trn.strip
+    self.trn_verified = true
+    self.trn_lookup_status = provider_info.trn_lookup_status
   end
 
 private
