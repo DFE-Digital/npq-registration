@@ -7,7 +7,7 @@ module Questionnaires
       end
 
       def question_text
-        "Do you want to start a course before #{application_course_start_date}?"
+        "Do you want to start a course in spring 2025?"
       end
     end
 
