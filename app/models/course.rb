@@ -47,6 +47,9 @@ class Course < ApplicationRecord
     npq-headship
   ].freeze
 
+  # Two courses do not have short codes:
+  # - npq-early-headship-coaching-offer
+  # - npq-additional-support-offer
   SHORT_CODES = {
     "npq-leading-teaching" => "NPQLT",
     "npq-leading-behaviour-culture" => "NPQLBC",
