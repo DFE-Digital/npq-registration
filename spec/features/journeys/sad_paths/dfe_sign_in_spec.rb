@@ -100,4 +100,24 @@ RSpec.feature "DfE sign in", type: :feature do
       expect(user_with_dfe_id.participant_id_changes.last).to have_attributes(from_participant_id: user_with_same_email_different_dfe_uid.ecf_id, to_participant_id: user_with_dfe_id.ecf_id)
     end
   end
+
+  context "when the DfE Identity UID matches an archived account and there is a non-archived account with the same email" do
+    let!(:archived_user) { create(:user, :archived, :with_get_an_identity_id, email: "archived-user@example.com") }
+    let!(:application_for_user) { create(:application, :accepted, user: user, course: create(:course, :leading_teaching)) }
+    let(:user) { create(:user, email: "user@example.com") }
+
+    include_context "Stub Get An Identity Omniauth Responses" do
+      let(:user_email) { "user@example.com" }
+      let(:user_uid) { archived_user.uid }
+    end
+
+    scenario "the archived account should have its UID blanked, and the non-archived account should be updated with the UID" do
+      navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+        page.click_button("Start now")
+      end
+
+      expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user.id}")
+      expect(user.reload.uid).to eq archived_user.uid
+    end
+  end
 end

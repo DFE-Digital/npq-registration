@@ -17,5 +17,9 @@ module Users
       user.provider = nil
       user.save!
     end
+
+    def set_uid_to_nil!
+      user.update!(uid: nil)
+    end
   end
 end
