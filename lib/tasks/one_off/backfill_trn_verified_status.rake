@@ -3,7 +3,7 @@ namespace :one_off do
   task :backfill_trn_verified_status, %i[dry_run] => :environment do |_task, args|
     logger = Rails.env.test? ? Rails.logger : Logger.new($stdout)
     dry_run = args[:dry_run] != "false"
-    issue_introduced = Date.parse("2024-10-03").at_beginning_of_day
+    issue_introduced = Date.parse("2024-11-28").at_beginning_of_day
 
     User.transaction do
       # Find potential affected users
@@ -28,12 +28,14 @@ namespace :one_off do
 
         users.each do |user|
           # Identify if user had problem with problem
-          next unless user.versions.any? do |version|
+          matching_version_changes = user.versions.select do |version|
             version.created_at > issue_introduced &&
               !version.object_changes.nil? &&
               version.object_changes["trn_verified"] == [true, false] &&
-              version.object_changes["trn_lookup_status"] == ["Found", nil]
+              version.object_changes.key?("updated_from_tra_at")
           end
+
+          next if matching_version_changes.none?
 
           trn_got_changed = user.versions.any? do |version|
             version.created_at > issue_introduced &&
@@ -48,7 +50,11 @@ namespace :one_off do
           end
 
           # Code to update user
-          user.update!(trn_verified: true, trn_lookup_status: "Found")
+          user.update!(
+            trn_verified: true,
+            trn_lookup_status:
+              matching_version_changes[0].object_changes["trn_lookup_status"]&.first,
+          )
           corrected_user_ids << user.id
         end
       end
