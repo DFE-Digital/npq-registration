@@ -20,11 +20,13 @@ module Declarations
     validates :declaration_date, presence: true
     validates :declaration_type, presence: true
     validates :declaration_type, inclusion: { in: Declaration.declaration_types.values }
+
+    validate :validate_schedule_exists # this needs to come before the cohort validation
+
     validates :cohort, contract_for_cohort_and_course: true
 
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?
-    validate :validate_schedule_exists
     validate :validates_billable_slot_available
     validate :declaration_date_not_in_the_future
 
