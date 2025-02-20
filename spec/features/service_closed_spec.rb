@@ -74,7 +74,7 @@ RSpec.feature "Service is closed", type: :feature do
       click_on("Start now")
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQs usually start every spring and autumn.")
+        expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       end
     end
 
@@ -98,7 +98,7 @@ RSpec.feature "Service is closed", type: :feature do
       click_on("Start now")
 
       expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-        expect(page).to have_text("NPQs usually start every spring and autumn.")
+        expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       end
 
       visit "/admin"

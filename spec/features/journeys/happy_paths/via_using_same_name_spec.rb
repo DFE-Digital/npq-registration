@@ -27,7 +27,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
     expect(page).not_to have_content("Before you start")
 
     expect_page_to_have(path: "/registration/course-start-date", submit_form: true) do
-      expect(page).to have_text("NPQs usually start every spring and autumn.")
+      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       page.choose("Yes", visible: :all)
     end
 
