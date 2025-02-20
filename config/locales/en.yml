@@ -749,8 +749,8 @@ en:
   provider_details:
     expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."
   course_start_details:
-    eligible_for_funding: "If your provider does not confirm you've started the course before %{date}, your registration will expire. You can register again later, but your funding may change."
-    not_eligible_for_funding: "If your provider does not confirm you've started the course before %{date}, your registration will expire. You can register again later."
+    eligible_for_funding: "If your provider does not confirm you’ve started the course by %{date}, your registration will expire. You can register again later, but your funding may change."
+    not_eligible_for_funding: "If your provider does not confirm you’ve started the course by %{date}, your registration will expire. You can register again later."
 
   statements:
     payment_authorisations:
@@ -863,9 +863,9 @@ en:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
         maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
-        course_start_date_one: "NPQ start dates are usually every April and October."
-        course_start_date_two: "Early headship coaching offer start dates vary by provider and are throughout the year."
-        course_start_date_three: "Registrations are currently open for courses starting before %{date}."
+        course_start_date_one: "NPQs usually start every spring and autumn."
+        course_start_date_two: "The early headship coaching offer starts at different times throughout the year depending on the provider."
+        course_start_date_three: "Registrations are currently open for courses starting in spring 2025."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           a_school_html: "Includes:<ul><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"
