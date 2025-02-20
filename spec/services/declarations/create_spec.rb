@@ -277,7 +277,7 @@ RSpec.describe Declarations::Create, type: :model do
       let(:declaration_date) { Time.zone.now }
       let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:, schedule: nil) }
 
-      it { is_expected.to have_error(:declaration_type, :mismatch_declaration_type_for_schedule, "The property '#/declaration_type' does not exist for this schedule.") }
+      it { is_expected.to have_error(:application, :application_schedule_missing, "The application is missing a schedule.") }
     end
 
     context "when the declaration type does not exist for the schedule" do
