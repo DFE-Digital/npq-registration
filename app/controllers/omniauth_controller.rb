@@ -41,6 +41,8 @@ class OmniauthController < Devise::OmniauthCallbacksController
   end
 
   def failure
+    redirect_to after_sign_in_path_for(current_user) and return if logged_in_user.present?
+
     Rails.logger.info("[GAI][omniauth_failure] uid=#{try_to_extract_user_uid} error=#{try_to_extract_error_type}")
     send_error_to_sentry(
       "Omniauth login failure",
