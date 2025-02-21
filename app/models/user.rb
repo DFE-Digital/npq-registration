@@ -77,37 +77,27 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
-    user_from_provider_data = find_or_initialize_by(provider: provider_data.provider, uid: provider_data.uid)
-    user_from_provider_data.feature_flag_id = feature_flag_id
+    user_from_provider_data = find_or_initialize_by(provider: provider_data.provider,
+                                                    uid: provider_data.uid)
 
-    user_from_provider_data.assign_attributes(
-      email: provider_data.info.email,
-      date_of_birth: provider_data.info.date_of_birth,
-      full_name: provider_data.info.preferred_name || provider_data.info.name,
-      raw_tra_provider_data: provider_data,
-      updated_from_tra_at: Time.zone.now,
-    )
+    user_from_provider_data.assign_provider_data(provider_data)
 
-    user_from_provider_data.assign_trn_from_provider_data(provider_data)
+    user_from_provider_data.assign_attributes(email: provider_data.info.email,
+                                              feature_flag_id: feature_flag_id)
 
     user_from_provider_data.tap(&:save)
   end
 
   def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
-    user_from_provider_data = find_or_initialize_by(provider: nil, uid: nil, email: provider_data.info.email)
+    user_from_provider_data = find_or_initialize_by(provider: nil,
+                                                    uid: nil,
+                                                    email: provider_data.info.email)
 
-    user_from_provider_data.feature_flag_id = feature_flag_id
+    user_from_provider_data.assign_provider_data(provider_data)
 
-    user_from_provider_data.assign_attributes(
-      provider: provider_data.provider,
-      uid: provider_data.uid,
-      date_of_birth: provider_data.info.date_of_birth,
-      full_name: provider_data.info.preferred_name || provider_data.info.name,
-      raw_tra_provider_data: provider_data,
-      updated_from_tra_at: Time.zone.now,
-    )
-
-    user_from_provider_data.assign_trn_from_provider_data(provider_data)
+    user_from_provider_data.assign_attributes(provider: provider_data.provider,
+                                              uid: provider_data.uid,
+                                              feature_flag_id: feature_flag_id)
 
     unless user_from_provider_data.save
       Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
@@ -195,15 +185,23 @@ class User < ApplicationRecord
     end
   end
 
-  def assign_trn_from_provider_data(provider_data)
+  def assign_provider_data(provider_data)
     extra_info = provider_data.extra&.raw_info
 
-    # The user's TRN should remain unchanged if the TRA returns an empty TRN
-    return if extra_info&.trn.blank?
+    self.raw_tra_provider_data = provider_data
+    self.updated_from_tra_at = Time.zone.now
+    self.full_name = extra_info&.preferred_name.presence || provider_data.info.name
 
-    self.trn = extra_info.trn.strip
-    self.trn_verified = true
-    self.trn_lookup_status = extra_info.trn_lookup_status
+    if extra_info&.birthdate.present?
+      self.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
+    end
+
+    # The user's TRN should remain unchanged if the TRA returns an empty TRN
+    if extra_info&.trn.present?
+      self.trn = extra_info.trn.strip
+      self.trn_verified = true
+      self.trn_lookup_status = extra_info.trn_lookup_status
+    end
   end
 
 private

@@ -195,13 +195,15 @@ RSpec.describe User do
         uid: "example_uid",
         info: OpenStruct.new(
           email: "user@example.com",
-          email_verified: true,
+          email_verified: "True",
           name: "Example User",
         ),
         extra: OpenStruct.new(
           raw_info: OpenStruct.new(
             trn:,
             trn_lookup_status:,
+            preferred_name:,
+            birthdate: "2000-01-01",
           ),
         ),
       )
@@ -210,9 +212,10 @@ RSpec.describe User do
     let(:feature_flag_id) { 1 }
     let(:trn) { "1234567" }
     let(:trn_lookup_status) { "Found" }
+    let(:preferred_name) { nil }
     let(:user_scopes) { %i[with_verified_trn] }
 
-    shared_examples "a TRN updater" do |method_name|
+    shared_examples "a TRA updater" do |method_name|
       context "when TRA provides a TRN" do
         let(:user_scopes) { %i[] }
 
@@ -221,6 +224,7 @@ RSpec.describe User do
 
           expect(user.email).to eq "user@example.com"
           expect(user.full_name).to eq "Example User"
+          expect(user.date_of_birth).to eq Date.parse("2000-01-01")
         end
 
         it "updates the user TRN and TRN verified status" do
@@ -253,6 +257,16 @@ RSpec.describe User do
           expect(user.trn_lookup_status).to eq original_attrs["trn_lookup_status"]
         end
       end
+
+      context "when TRA provides a preferred name" do
+        let(:preferred_name) { "Preferred Name" }
+
+        it "updates the name to the supplied preferred name" do
+          described_class.public_send(method_name, provider_data, feature_flag_id:)
+
+          expect(user.full_name).to eq "Preferred Name"
+        end
+      end
     end
 
     describe ".find_or_create_from_tra_data_on_uid" do
@@ -262,7 +276,7 @@ RSpec.describe User do
         allow(User).to receive(:find_or_initialize_by).and_return(user)
       end
 
-      it_behaves_like "a TRN updater", :find_or_create_from_tra_data_on_uid
+      it_behaves_like "a TRA updater", :find_or_create_from_tra_data_on_uid
     end
 
     describe ".find_or_create_from_tra_data_on_unclaimed_email" do
@@ -272,7 +286,7 @@ RSpec.describe User do
         allow(User).to receive(:find_or_initialize_by).and_return(user)
       end
 
-      it_behaves_like "a TRN updater", :find_or_create_from_tra_data_on_unclaimed_email do
+      it_behaves_like "a TRA updater", :find_or_create_from_tra_data_on_unclaimed_email do
         it "updates provider and UID along with TRN" do
           described_class.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
 
@@ -325,7 +339,7 @@ RSpec.describe User do
         uid:,
         info: OpenStruct.new(
           email: "clashing@example.com",
-          email_verified: true,
+          email_verified: "True",
           name: "Example User",
         ),
       )
