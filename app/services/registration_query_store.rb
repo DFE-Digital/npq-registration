@@ -165,4 +165,21 @@ class RegistrationQueryStore
   def childminder?
     store["kind_of_nursery"] == "childminder"
   end
+
+  def employment_type_matters?
+    (works_in_another_setting? && inside_catchment?) || lead_mentor_for_accredited_itt_provider?
+  end
+
+  def employment_role_matters?
+    return false unless employment_type_matters?
+
+    !(lead_mentor_for_accredited_itt_provider? || employment_type_hospital_school? || young_offender_institution? || employment_type_other?)
+  end
+
+  def employer_name_matters?
+    return true if referred_by_return_to_teaching_adviser?
+    return false unless employment_type_matters?
+
+    !(lead_mentor_for_accredited_itt_provider? || employment_type_other?)
+  end
 end
