@@ -15,7 +15,8 @@ Devise.setup do |config|
                     host: URI(ENV["TRA_OIDC_DOMAIN"]).host,
                     identifier: ENV.fetch("TRA_OIDC_CLIENT_ID"),
                     port: 443,
-                    redirect_uri: ENV.fetch("TRA_OIDC_REDIRECT_URI"),
+                    redirect_uri:
+                      "#{ENV.fetch("HOSTING_DOMAIN")}/users/auth/tra_openid_connect/callback",
                     scheme: "https",
                     secret: ENV.fetch("TRA_OIDC_CLIENT_SECRET"),
                   },
@@ -23,8 +24,8 @@ Devise.setup do |config|
                   issuer: ENV.fetch("TRA_OIDC_DOMAIN"),
                   path_prefix: "/users/auth",
                   pkce: true,
-                  # post_logout_redirect_uri: # TODO
-                  #   "#{ENV["HOSTING_DOMAIN"]}/qualifications/sign-out",
+                  post_logout_redirect_uri:
+                    "#{ENV.fetch("HOSTING_DOMAIN")}/sign-out",
                   response_type: :code,
                   scope: %w[email openid profile trn]
 end
