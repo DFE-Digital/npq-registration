@@ -197,8 +197,12 @@ RSpec.describe User do
           email: "user@example.com",
           email_verified: true,
           name: "Example User",
-          trn:,
-          trn_lookup_status:,
+        ),
+        extra: OpenStruct.new(
+          raw_info: OpenStruct.new(
+            trn:,
+            trn_lookup_status:,
+          ),
         ),
       )
     end

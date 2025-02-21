@@ -88,7 +88,7 @@ class User < ApplicationRecord
       updated_from_tra_at: Time.zone.now,
     )
 
-    user_from_provider_data.assign_trn_from_provider_info(provider_data.info)
+    user_from_provider_data.assign_trn_from_provider_data(provider_data)
 
     user_from_provider_data.tap(&:save)
   end
@@ -107,7 +107,7 @@ class User < ApplicationRecord
       updated_from_tra_at: Time.zone.now,
     )
 
-    user_from_provider_data.assign_trn_from_provider_info(provider_data.info)
+    user_from_provider_data.assign_trn_from_provider_data(provider_data)
 
     unless user_from_provider_data.save
       Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
@@ -195,13 +195,15 @@ class User < ApplicationRecord
     end
   end
 
-  def assign_trn_from_provider_info(provider_info)
-    # The user's TRN should remain unchanged if the TRA returns an empty TRN
-    return if provider_info.trn.blank?
+  def assign_trn_from_provider_data(provider_data)
+    extra_info = provider_data.extra&.raw_info
 
-    self.trn = provider_info.trn.strip
+    # The user's TRN should remain unchanged if the TRA returns an empty TRN
+    return if extra_info&.trn.blank?
+
+    self.trn = extra_info.trn.strip
     self.trn_verified = true
-    self.trn_lookup_status = provider_info.trn_lookup_status
+    self.trn_lookup_status = extra_info.trn_lookup_status
   end
 
 private
