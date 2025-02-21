@@ -52,7 +52,6 @@ en:
     cohort_mismatch: The schedule cohort must match the application cohort
     invalid_for_course: Selected schedule is not valid for the course
 
-
   funded_place: &funded_place
     inclusion: Set '#/%{parameterized_attribute}' to true or false.
     not_eligible: "The participant is not eligible for funding, so '#/funded_place' cannot be set to true."
@@ -501,6 +500,8 @@ en:
             cohort:
               <<: *statement
               missing_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
+            application:
+              application_schedule_missing: The application is missing a schedule.
         participant_outcomes/create:
           attributes:
             base:
