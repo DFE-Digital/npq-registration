@@ -3,15 +3,13 @@ require "rails_helper"
 RSpec.describe IdentityAccountHelper, type: :helper do
   include Helpers::JourneyHelper
 
-  before { stub_env_variables_for_gai }
-
   describe "#link_to_identity_account" do
     subject(:link) { helper.link_to_identity_account(redirect_uri) }
 
     let(:redirect_uri) { "https://redirect.uri?param=value" }
 
     it "is built with the TRA domain" do
-      expect(link).to match("https://tra-domain.com")
+      expect(link).to match("https://oidc-service/")
     end
 
     it "includes the client_id query parameter" do
