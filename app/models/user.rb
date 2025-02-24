@@ -198,7 +198,7 @@ class User < ApplicationRecord
 
     # The user's TRN should remain unchanged if the TRA returns an empty TRN
     if extra_info&.trn.present?
-      self.trn = extra_info.trn.strip
+      self.trn = extra_info.trn
       self.trn_verified = true
       self.trn_lookup_status = extra_info.trn_lookup_status
     end
