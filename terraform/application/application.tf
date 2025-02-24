@@ -76,7 +76,7 @@ module "worker_application" {
 
   docker_image = var.docker_image
 
-  command       = ["/bin/sh", "-c", "bundle exec rake jobs:work"]
+  command       = ["/usr/local/bin/bundle", "exec", "rake", "jobs:work"]
   probe_command = ["pgrep", "-f", "rake"]
 
   replicas   = var.worker_replicas
