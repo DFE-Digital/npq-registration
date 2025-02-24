@@ -14,7 +14,8 @@ RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do 
                   required: false,
                   schema: {
                     "$ref": filter_schema_ref,
-                  }
+                  },
+                  style: "deepObject"
       end
 
       parameter name: :page,
@@ -22,7 +23,8 @@ RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do 
                 required: false,
                 schema: {
                   "$ref": "#/components/schemas/PaginationFilter",
-                }
+                },
+                style: "deepObject"
 
       if sortable
         parameter name: :sort,

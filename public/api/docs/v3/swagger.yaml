@@ -643,7 +643,6 @@ paths:
         required: true
         schema:
           "$ref": "#/components/schemas/IDAttribute"
-        style: deepObject
       responses:
         '200':
           description: A single NPQ participant
@@ -2253,11 +2252,12 @@ components:
               example: '2021-05-31T02:22:32.000Z'
     SortingOptions:
       description: Sort records being returned.
-      example:
+      enum:
       - created_at
       - "-created_at"
       - updated_at
       - "-updated_at"
+      example: created_at
     ParticipantDeclaration:
       description: The details of a participant declaration
       type: object

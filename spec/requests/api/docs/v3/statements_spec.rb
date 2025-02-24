@@ -24,7 +24,8 @@ RSpec.describe "Statements endpoint", :exceptions_app, openapi_spec: "v3/swagger
                 required: false,
                 schema: {
                   "$ref": "#/components/schemas/PaginationFilter",
-                }
+                },
+                style: "deepObject"
 
       response "200", "A list of statements as part of which the DfE will make output payments for participants" do
         schema({ "$ref": "#/components/schemas/StatementsResponse" })
