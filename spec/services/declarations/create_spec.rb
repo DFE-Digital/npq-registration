@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Declarations::Create, type: :model do
-  let(:lead_provider) { LeadProvider.all.sample }
+  let(:lead_provider) { LeadProvider.first }
   let(:cohort) { create(:cohort, :current) }
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
@@ -271,6 +271,20 @@ RSpec.describe Declarations::Create, type: :model do
       before { contract.update!(course: create(:course, :leading_literacy)) }
 
       it { is_expected.to have_error(:cohort, :missing_contract_for_cohort_and_course, "You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.") }
+    end
+
+    context "when there is no schedule" do # bug CPDNPQ-2632
+      let(:declaration_date) { Time.zone.now }
+      let(:application) { create(:application, :eligible_for_funded_place, cohort:, course:, lead_provider:, schedule: nil) }
+
+      it { is_expected.to have_error(:application, :application_schedule_missing, "The application is missing a schedule.") }
+    end
+
+    context "when the declaration type does not exist for the schedule" do
+      let(:schedule) { create(:schedule, :npq_specialist_autumn, course_group:, cohort:) }
+      let(:declaration_type) { "retained-2" }
+
+      it { is_expected.to have_error(:declaration_type, :mismatch_declaration_type_for_schedule, "The property '#/declaration_type' does not exist for this schedule.") }
     end
   end
 
