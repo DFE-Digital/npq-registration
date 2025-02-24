@@ -14,7 +14,7 @@ StatementsResponse: STATEMENTS_RESPONSE[version]
 
 ## Documenting
 
-When adding a new controller/endpoint, you need to ensure there is a corresponding spec file in the `spec/request/api/docs` directory. Ensure to set the correct API version in the `describe` metadata:
+When adding a new controller/endpoint, you need to ensure there is a corresponding spec file in the `spec/requests/api/docs` directory. Ensure to set the correct API version in the `describe` metadata:
 
 ```
 RSpec.describe "Statements endpoint", type: :request, openapi_spec: "v3/swagger.yaml" do

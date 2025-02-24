@@ -5,7 +5,7 @@ PAGINATION_FILTER = {
     page: {
       type: :integer,
       description: "The page number to paginate to in the collection. If no value is specified it defaults to the first page.",
-      example: 3,
+      example: 1,
     },
     per_page: {
       type: :integer,
