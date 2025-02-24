@@ -52,6 +52,7 @@ gem "sprockets", "~> 4.2.0"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "stimulus-rails"
+gem "strong_migrations"
 
 gem "net-imap", "~> 0.5.6", require: false
 gem "net-pop", require: false
