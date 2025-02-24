@@ -78,7 +78,11 @@ private
   end
 
   def after_sign_in_path_for(user)
-    return new_email_update_path if session["request_email_updates"]
+    if request.env["omniauth.params"] &&
+        request.env["omniauth.params"]["request_email_updates"] == "true"
+      return new_email_update_path
+    end
+
     return account_path if user.applications.any?
 
     start_questionnaire_path(user)
