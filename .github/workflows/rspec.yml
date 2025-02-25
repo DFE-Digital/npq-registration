@@ -34,9 +34,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
-
-      - name: Install dependencies
-        run: bundle install
+          bundler-cache: true
 
       - name: Lint Ruby
         run: bundle exec rubocop --format json --out=out/rubocop-result.json
@@ -63,9 +61,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
-
-      - name: Install dependencies
-        run: bundle install
+          bundler-cache: true
 
       - name: Lint SCSS
         run: |-
@@ -110,16 +106,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
+          bundler-cache: true
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
 
       - name: Install yarn
         run: npm install yarn -g
@@ -174,11 +166,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ inputs.ruby-version }}
-
-      - name: Install gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundler-cache: true
 
       - name: Setup sonarqube
         uses: warchant/setup-sonar-scanner@v8
