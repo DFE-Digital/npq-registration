@@ -17,7 +17,7 @@ class SessionWizard
   def self.permitted_params_for_step(step)
     return [] unless STEPS.include?(step.to_sym)
 
-    "Questionnaires::#{step.to_s.camelcase}".constantize.permitted_params
+    "SessionWizardSteps::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
   def form
@@ -57,7 +57,7 @@ private
   end
 
   def form_class
-    @form_class ||= "Questionnaires::#{current_step.to_s.camelcase}".constantize
+    @form_class ||= "SessionWizardSteps::#{current_step.to_s.camelcase}".constantize
   end
 
   def set_current_step(step)

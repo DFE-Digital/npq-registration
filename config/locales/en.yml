@@ -332,15 +332,6 @@ en:
             lead_provider_id:
               blank: Choose a provider
               invalid: Choose a valid provider
-        questionnaires/sign_in:
-          attributes:
-            email:
-              blank: Email can’t be blank
-        questionnaires/sign_in_code:
-          attributes:
-            code:
-              blank: Code can’t be blank
-              incorrect: Code is not correct. Please try again
         questionnaires/choose_childcare_provider:
           attributes:
             institution_name:
@@ -427,6 +418,15 @@ en:
               blank: Enter the date you became a SENCO
               in_future: The date you became a SENCO must be in the past
               invalid: The date you became a SENCO must be a real date
+        session_wizard_steps/sign_in:
+          attributes:
+            email:
+              blank: Email can’t be blank
+        session_wizard_steps/sign_in_code:
+          attributes:
+            code:
+              blank: Code can’t be blank
+              incorrect: Code is not correct. Please try again
         participants/resume:
           attributes:
             course_identifier:
