@@ -112,12 +112,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-
-      - name: Install yarn
-        run: npm install yarn -g
-
-      - name: Install node.js dependencies
-        run: yarn install --frozen-lockfile
+          cache: yarn
 
       - name: Create screenshots directory
         run: mkdir -p tmp/capybara

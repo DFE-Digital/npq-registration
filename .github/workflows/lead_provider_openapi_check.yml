@@ -54,12 +54,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
-
-      - name: Install yarn
-        run: npm install yarn -g
-
-      - name: Install node.js dependencies
-        run: yarn install --frozen-lockfile
+          cache: yarn
 
       - name: Precompile assets
         run: RAILS_ENV=production SECRET_KEY_BASE=required-to-run-but-not-used bundle exec rails assets:precompile
