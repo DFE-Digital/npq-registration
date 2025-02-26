@@ -1,67 +1,21 @@
 module Omniauth
   module Strategies
-    class TraOpenidConnect < OmniAuth::Strategies::OAuth2
-      option :name, :identity
-
-      option :client_options,
-             {
-               authorize_url: "/connect/authorize",
-               site: ENV.fetch("TRA_OIDC_DOMAIN", nil),
-               token_url: "/connect/token",
-             }
+    class TraOpenidConnect < OmniAuth::Strategies::OpenIDConnect
+      option :name, :tra_openid_connect
       option :pkce, true
-      option :scope,
-             %i[email openid profile trn].join(" ") # This is a space separated string, comma separated will fail
+      option :discovery, true
 
-      uid { raw_info["sub"] }
+      # This is a space separated string, comma separated will fail
+      option :scope, %i[email openid profile trn].join(" ")
 
-      info do
-        {
-          date_of_birth: parsed_date_of_birth,
-          email: raw_info["email"].downcase,
-          email_verified: parsed_email_verified,
-          name: raw_info["name"],
-          preferred_name: raw_info["preferred_name"],
-          trn: raw_info["trn"],
-          trn_lookup_status: raw_info["trn_lookup_status"],
-        }
+      def authorize_uri
+        force_login_prompt? ? "#{super}&prompt=login" : super
       end
 
-      extra { { "raw_info" => raw_info } }
+    private
 
-      def authorize_params
-        if request.params["request_email_updates"] == "true"
-          request.session["request_email_updates"] = "true"
-        end
-
-        return super.merge(prompt: :login) if request.session["clear_tra_login"] == true
-
-        super
-      end
-
-      def raw_info
-        @raw_info ||= access_token.get("connect/userinfo").parsed
-      end
-
-      def parsed_date_of_birth
-        raw_date_of_birth = raw_info["birthdate"]
-        return if raw_date_of_birth.blank?
-
-        Date.parse(raw_date_of_birth, "%Y-%m-%d")
-      end
-
-      def parsed_email_verified
-        raw_info["email_verified"] == "True"
-      end
-
-      def build_access_token
-        verifier = request.params["code"]
-        redirect_uri = full_host + callback_path
-        client.auth_code.get_token(
-          verifier,
-          { redirect_uri: }.merge(token_params.to_hash(symbolize_keys: true)),
-          deep_symbolize(options.auth_token_params),
-        )
+      def force_login_prompt?
+        request.session["clear_tra_login"] == true
       end
     end
   end
