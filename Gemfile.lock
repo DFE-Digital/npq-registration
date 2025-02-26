@@ -191,7 +191,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
-    diff-lcs (1.5.1)
+    diff-lcs (1.6.0)
     docile (1.4.1)
     dotenv (3.1.7)
     dotenv-rails (3.1.7)
@@ -556,7 +556,7 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-sonarqube-formatter (1.6.3)
+    rspec-sonarqube-formatter (1.6.4)
       htmlentities (~> 4.3)
       rspec (~> 3.0)
     rspec-support (3.13.2)
