@@ -17,3 +17,5 @@ private
 end
 
 RailsSemanticLogger::ActionMailer::LogSubscriber::EventFormatter.prepend(MailerLogRedactor)
+
+ActionMailer::MailDeliveryJob.log_arguments = false
