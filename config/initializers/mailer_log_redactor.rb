@@ -1,17 +1,18 @@
 module MailerLogRedactor
   def initialize(event:, log_duration: false)
-    super(event: redact_event(event), log_duration:)
+    event.payload = redact(event.payload)
+    super(event:, log_duration:)
   end
 
 private
 
-  REDACTOR = proc { _1[:to] = "[REDACTED]" if _1.try(:[], :to).present? }
+  def redact(payload)
+    @filter ||= ActiveSupport::ParameterFilter.new(filter_parameters)
+    @filter.filter(payload)
+  end
 
-  def redact_event(event)
-    event.payload.yield_self(&REDACTOR)
-    event.payload[:args].try(:each, &REDACTOR)
-
-    event
+  def filter_parameters
+    Rails.application.config.filter_parameters
   end
 end
 
