@@ -159,6 +159,7 @@ RSpec.configure do |config|
   config.include ActiveJob::TestHelper, type: :job
   config.include Helpers::JourneyHelper, type: :feature
   config.before(:each, type: :feature) do
+    stub_env_variables_for_gai
     Capybara.current_session.driver.browser.try(:download_path=, Capybara.save_path)
   end
 

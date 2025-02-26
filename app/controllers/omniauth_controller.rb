@@ -1,5 +1,5 @@
 class OmniauthController < Devise::OmniauthCallbacksController
-  skip_before_action :verify_authenticity_token, only: %i[tra_openid_connect]
+  skip_before_action :verify_authenticity_token
 
   def tra_openid_connect
     # Let user continue using current TRA login
@@ -78,11 +78,7 @@ private
   end
 
   def after_sign_in_path_for(user)
-    if request.env["omniauth.params"] &&
-        request.env["omniauth.params"]["request_email_updates"] == "true"
-      return new_email_update_path
-    end
-
+    return new_email_update_path if session["request_email_updates"]
     return account_path if user.applications.any?
 
     start_questionnaire_path(user)

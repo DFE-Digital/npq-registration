@@ -10,6 +10,7 @@ RSpec.describe "Rate limiting" do
 
   before do
     set_request_ip(ip)
+    stub_env_variables_for_gai
   end
 
   [

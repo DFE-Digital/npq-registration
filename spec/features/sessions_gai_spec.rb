@@ -13,6 +13,6 @@ RSpec.feature "Sessions: integration with GAI", type: :feature do
     visit "/"
 
     expect(page).to have_link("Sign out", href: /\/sign-out/)
-    expect(page).to have_link("DfE Identity account", href: /\/account\?client_id=npq&redirect_uri=[^&]+&sign_out_uri=[^&]+/)
+    expect(page).to have_link("DfE Identity account", href: /\/account\?client_id=register-for-npq&redirect_uri=[^&]+&sign_out_uri=[^&]+/)
   end
 end
