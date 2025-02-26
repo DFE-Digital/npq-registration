@@ -137,6 +137,8 @@ LeadProvider.find_each do |lead_provider|
   end
 end
 
+course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
+
 # Make sure some applications will appear in the In Review list
 [
   { employment_type: "hospital_school" },
@@ -147,5 +149,5 @@ end
   { employment_type: "other" },
   { referred_by_return_to_teaching_adviser: "yes" },
 ].each do |application_attrs|
-  FactoryBot.create(:application, **application_attrs)
+  FactoryBot.create(:application, **application_attrs.merge(course:))
 end
