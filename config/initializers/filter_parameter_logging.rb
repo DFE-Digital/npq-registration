@@ -15,4 +15,5 @@ Rails.application.config.filter_parameters += %i[
   national_insurance_number
   nino
   to
+  full_name
 ]
