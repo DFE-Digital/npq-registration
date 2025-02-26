@@ -1,4 +1,4 @@
-return if ENV["HOSTING_DOMAIN"].blank? || Rails.env.local?
+return if ENV["HOSTING_DOMAIN"].blank?
 
 Dir[Rails.root.join("public/api/docs/**/swagger.yaml")].each do |swagger_file|
   swagger_doc = File.read(swagger_file)
