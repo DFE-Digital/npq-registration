@@ -149,3 +149,10 @@ end
 ].each do |application_attrs|
   FactoryBot.create(:application, **application_attrs)
 end
+
+i = 0
+Application.order("id DESC").each do |a|
+  a.update!(created_at: i.days.ago)
+  i += 1
+end
+puts "✅ Seed data created with unique timestamps!"
