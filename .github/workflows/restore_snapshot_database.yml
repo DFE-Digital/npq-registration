@@ -14,6 +14,9 @@ jobs:
   backup-and-restore-production:
     runs-on: ubuntu-20.04
     environment: production
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,4 +25,6 @@ jobs:
         uses: ./.github/actions/backup-and-restore-snapshot-database
         with:
           environment: production
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

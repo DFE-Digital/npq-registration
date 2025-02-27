@@ -33,6 +33,9 @@ jobs:
     name: Restore AKS Database
     if: ${{ inputs.environment != 'production' || (inputs.environment == 'production' && github.event.inputs.confirm-production == 'true' ) }}
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
     environment: ${{ inputs.environment }}
     concurrency: deploy_${{ inputs.environment }}
 
@@ -65,5 +68,7 @@ jobs:
           resource-group: ${{ env.RESOURCE_GROUP_NAME }}
           app-name: ${{ env.SERVICE_NAME }}-${CONFIG}-web
           cluster: ${{ env.CLUSTER }}
-          azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           backup-file: ${{ env.BACKUP_FILE }}
