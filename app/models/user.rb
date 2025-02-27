@@ -71,14 +71,15 @@ class User < ApplicationRecord
       return user
     end
 
-    Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}, trying to join account")
+    Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, UID=#{provider_data.uid}, trying to join account")
 
     find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
   end
 
   def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
     user_from_provider_data = find_or_initialize_by(provider: provider_data.provider,
-                                                    uid: provider_data.uid)
+                                                    uid: provider_data.uid,
+                                                    archived_at: nil)
 
     user_from_provider_data.assign_provider_data(provider_data)
 
@@ -98,6 +99,12 @@ class User < ApplicationRecord
     user_from_provider_data.assign_attributes(provider: provider_data.provider,
                                               uid: provider_data.uid,
                                               feature_flag_id: feature_flag_id)
+
+    user_with_clashing_uid = User.find_by(provider: provider_data.provider, uid: provider_data.uid)
+    if user_with_clashing_uid&.archived?
+      Rails.logger.info("[GAI] Archived user with clashing UID found - blanking UID, ID=#{user_with_clashing_uid.id}, UID=#{provider_data.uid}")
+      Users::Archiver.new(user: user_with_clashing_uid).set_uid_to_nil!
+    end
 
     unless user_from_provider_data.save
       Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")

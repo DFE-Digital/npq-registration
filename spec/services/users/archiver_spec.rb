@@ -34,4 +34,14 @@ RSpec.describe Users::Archiver do
       end
     end
   end
+
+  describe ".set_uid_to_nil!" do
+    let(:user) { create(:user, :archived, :with_get_an_identity_id) }
+
+    it "sets uid to nil" do
+      subject.set_uid_to_nil!
+
+      expect(user.uid).to be_nil
+    end
+  end
 end
