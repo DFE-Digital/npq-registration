@@ -141,17 +141,19 @@ module Questionnaires
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
 
-      query_store.current_user.update!(
-        trn: trn_to_store,
-        full_name:,
-        date_of_birth:,
-        national_insurance_number: ni_number_to_store,
-        trn_verified: trn_verified?,
-        trn_lookup_status:,
-        trn_auto_verified: !!trn_auto_verified?,
-        active_alert: active_alert?,
-      )
-      wizard.store["trn_set_via_fallback_verification_question"] = true
+      if query_store.current_user.actual_user?
+        query_store.current_user.update!(
+          trn: trn_to_store,
+          full_name:,
+          date_of_birth:,
+          national_insurance_number: ni_number_to_store,
+          trn_verified: trn_verified?,
+          trn_lookup_status:,
+          trn_auto_verified: !!trn_auto_verified?,
+          active_alert: active_alert?,
+        )
+        wizard.store["trn_set_via_fallback_verification_question"] = true
+      end
     end
 
     def ni_number_required?

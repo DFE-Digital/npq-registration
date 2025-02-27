@@ -561,5 +561,7 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
         end
       end
     end
+
+    it_behaves_like "coping with an expired or non-existent session"
   end
 end

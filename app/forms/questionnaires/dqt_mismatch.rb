@@ -4,6 +4,10 @@ module Questionnaires
       :qualified_teacher_check
     end
 
+    def requirements_met?
+      query_store.current_user&.actual_user?
+    end
+
     def next_step
       return :check_answers if changing_answer?
 
