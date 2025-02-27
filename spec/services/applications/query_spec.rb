@@ -221,6 +221,14 @@ RSpec.describe Applications::Query do
 
           expect(query.scope.to_sql).not_to include(condition_string)
         end
+
+        context "when the participant_id is not a valid UUID" do
+          it "does not include the particpant_id in the query" do
+            query = described_class.new(participant_ids: "not-a-uuid")
+
+            expect(query.scope.to_sql).not_to include("not-a-uuid")
+          end
+        end
       end
     end
 

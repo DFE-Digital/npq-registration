@@ -47,5 +47,12 @@ RSpec.describe "Schools::Query" do
         expect(object.extract_conditions(123, allowlist: [123, 456])).to eq(123)
       end
     end
+
+    context "when uuid is true" do
+      it "returns only valid UUIDs" do
+        expect(object.extract_conditions(["123e4567-e89b-12d3-a456-426614174000", "not-a-uuid"], uuids: true))
+          .to eql(%w[123e4567-e89b-12d3-a456-426614174000])
+      end
+    end
   end
 end

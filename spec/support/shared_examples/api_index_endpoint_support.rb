@@ -234,6 +234,13 @@ RSpec.shared_examples "an API index endpoint with filter by participant_id" do
       api_get(path, params: { filter: { participant_id: } })
     end
   end
+
+  context "when filtering with an invalid UUID" do
+    it do
+      api_get(path, params: { filter: { participant_id: "not-a-uuid" } })
+      expect(parsed_response["data"].size).to be_zero
+    end
+  end
 end
 
 RSpec.shared_examples "an API index endpoint with filter by training_status" do

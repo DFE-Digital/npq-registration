@@ -44,7 +44,7 @@ module Declarations
     def where_participant_ids_in(participant_ids)
       return if ignore?(filter: participant_ids)
 
-      scope.merge!(Declaration.where(user: { ecf_id: extract_conditions(participant_ids) }))
+      scope.merge!(Declaration.where(user: { ecf_id: extract_conditions(participant_ids, uuids: true) }))
     end
 
     def where_cohort_start_year_in(cohort_start_years)

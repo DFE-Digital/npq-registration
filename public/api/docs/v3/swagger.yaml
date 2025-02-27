@@ -20,11 +20,13 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/ListApplicationsFilter"
+        style: deepObject
       - name: page
         in: query
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       - name: sort
         in: query
         required: false
@@ -330,11 +332,13 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/ListParticipantDeclarationsFilter"
+        style: deepObject
       - name: page
         in: query
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       responses:
         '200':
           description: A list of Participant declarations
@@ -482,11 +486,13 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/ListParticipantOutcomesFilter"
+        style: deepObject
       - name: page
         in: query
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       responses:
         '200':
           description: A list of NPQ Outcomes for all participants
@@ -513,6 +519,7 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       - name: id
         in: path
         required: true
@@ -598,11 +605,13 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/ListParticipantsFilter"
+        style: deepObject
       - name: page
         in: query
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       - name: sort
         in: query
         required: false
@@ -991,6 +1000,7 @@ paths:
         required: false
         schema:
           "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
       responses:
         '200':
           description: A list of statements as part of which the DfE will make output
@@ -1055,7 +1065,7 @@ components:
           type: integer
           description: The page number to paginate to in the collection. If no value
             is specified it defaults to the first page.
-          example: 3
+          example: 1
         per_page:
           type: integer
           description: The number items to display on a page. Defaults to 100. Maximum
@@ -2242,11 +2252,12 @@ components:
               example: '2021-05-31T02:22:32.000Z'
     SortingOptions:
       description: Sort records being returned.
-      example:
+      enum:
       - created_at
       - "-created_at"
       - updated_at
       - "-updated_at"
+      example: created_at
     ParticipantDeclaration:
       description: The details of a participant declaration
       type: object
