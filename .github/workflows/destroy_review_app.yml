@@ -5,6 +5,10 @@ on:
     types: [closed]
     branches: [main]
 
+permissions:
+  id-token: write
+  packages: write
+
 jobs:
   delete-review-app:
     name: Delete Review App ${{ github.event.pull_request.number }}
