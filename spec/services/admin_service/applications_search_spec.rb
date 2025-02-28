@@ -13,6 +13,8 @@ RSpec.describe AdminService::ApplicationsSearch do
     service = AdminService::ApplicationsSearch.new(user.email.split("@").first)
     found_applications = service.call
 
+    # this is fancy way too compare
+    # found_applications == [application]
     expect(found_applications).to eq([application])
   end
 

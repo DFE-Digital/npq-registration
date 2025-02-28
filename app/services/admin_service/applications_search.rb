@@ -1,6 +1,6 @@
 class AdminService::ApplicationsSearch
 
-  def initialize(q)
+  def initialize(q:)
     @q = q
   end
 
