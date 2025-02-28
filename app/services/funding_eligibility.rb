@@ -120,6 +120,7 @@ class FundingEligibility
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
         return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
+        return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
 
         unless course.eyl?
           return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?

@@ -1,7 +1,6 @@
 class AdminService::ApplicationsSearch
-  attr_reader :q
 
-  def initialize(q:)
+  def initialize(q)
     @q = q
   end
 
@@ -21,7 +20,11 @@ class AdminService::ApplicationsSearch
 
 private
 
+  def q
+    @q
+  end
+
   def default_scope
-    Application.left_joins(:school).joins(:user).includes(:course, :lead_provider, :school, :user).order(id: :asc)
+    Application.left_joins(:school).joins(:user).includes(:course, :lead_provider, :school, :user)
   end
 end

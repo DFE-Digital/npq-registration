@@ -1048,7 +1048,7 @@ paths:
               schema:
                 "$ref": "#/components/schemas/UnauthorisedResponse"
 servers:
-- url: http://0.0.0.0:3000
+- url: http://localhost:3000
 components:
   securitySchemes:
     api_key:

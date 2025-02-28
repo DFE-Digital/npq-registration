@@ -5,6 +5,17 @@ RSpec.describe AdminService::ApplicationsSearch do
   let!(:application) { create(:application, employer_name: Faker::Company.name) }
   let!(:user) { application.user }
 
+  it "returns an application" do
+    application = create(:application, employer_name: Faker::Company.name)
+    user = application.user
+    q = user.email.split("@").first
+
+    service = AdminService::ApplicationsSearch.new(user.email.split("@").first)
+    found_applications = service.call
+
+    expect(found_applications).to eq([application])
+  end
+
   describe "#call" do
     subject { service.call }
 

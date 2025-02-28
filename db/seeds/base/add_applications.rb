@@ -134,6 +134,7 @@ LeadProvider.find_each do |lead_provider|
                 c.save!
               end,
     )
+
   end
 end
 
