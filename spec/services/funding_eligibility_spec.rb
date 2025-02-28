@@ -163,6 +163,7 @@ RSpec.describe FundingEligibility do
             headship: true,
             senior_leadership: true,
             leading_literacy: true,
+            early_years_leadership: true,
           }.each do |course, eligible|
             context "when user has selected the #{course} course" do
               let(:course) { create(:course, course) }
@@ -184,6 +185,7 @@ RSpec.describe FundingEligibility do
             leading_primary_mathmatics: true,
             headship: true,
             senior_leadership: false,
+            early_years_leadership: false,
             leading_literacy: false,
           }.each do |course, eligible|
             context "when user has selected the #{course} course" do
