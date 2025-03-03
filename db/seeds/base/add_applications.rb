@@ -150,8 +150,6 @@ end
   FactoryBot.create(:application, **application_attrs)
 end
 
-i = 0
-Application.order("id DESC").each do |a|
+Application.order("id DESC").each do |a, i|
   a.update!(created_at: i.days.ago)
-  i += 1
 end

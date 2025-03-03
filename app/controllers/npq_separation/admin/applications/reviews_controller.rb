@@ -10,7 +10,8 @@ module NpqSeparation
           applications = Application.includes(:private_childcare_provider, :school, :user)
                                     .merge(review_scope)
                                     .merge(filter_scope)
-                                    .merge(search_scope).order("applications.created_at DESC")
+                                    .merge(search_scope)
+                                    .order("applications.created_at DESC")
 
           @pagy, @applications = pagy(applications, limit: 9)
         end
