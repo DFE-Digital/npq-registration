@@ -20,6 +20,7 @@ class AdminService::ApplicationsSearch
 
 private
 
+  # comment for commit
   def q
     @q
   end
