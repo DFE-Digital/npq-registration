@@ -155,4 +155,3 @@ Application.order("id DESC").each do |a|
   a.update!(created_at: i.days.ago)
   i += 1
 end
-puts "✅ Seed data created with unique timestamps!"
