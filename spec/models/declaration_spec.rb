@@ -608,4 +608,10 @@ RSpec.describe Declaration, type: :model do
       end
     end
   end
+
+  describe "paper_trail" do
+    it "enables paper trail" do
+      expect(Declaration.new).to be_versioned
+    end
+  end
 end

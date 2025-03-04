@@ -5,6 +5,8 @@ class Declaration < ApplicationRecord
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
   VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
 
+  has_paper_trail ignore: [:updated_at]
+
   belongs_to :application
   belongs_to :cohort
   belongs_to :lead_provider
