@@ -7,14 +7,14 @@ RSpec.feature "Applications in review", type: :feature do
   let(:cohort_22) { create :cohort, start_year: 2022 }
 
   let!(:normal_application)                         { create(:application) }
-  let!(:application_for_hospital_school)            { create(:application, :accepted, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
-  let!(:application_for_la_supply_teacher)          { create(:application, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
-  let!(:application_for_la_virtual_school)          { create(:application, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_lead_mentor)                { create(:application, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_young_offender_institution) { create(:application, employment_type: "young_offender_institution") }
-  let!(:application_for_other)                      { create(:application, employment_type: "other") }
-  let!(:application_for_rtta_yes)                   { create(:application, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
-  let!(:application_for_rtta_no)                    { create(:application, referred_by_return_to_teaching_adviser: "no") }
+  let!(:application_for_hospital_school)            { create(:application, :accepted, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
+  let!(:application_for_la_supply_teacher)          { create(:application, created_at: 9.days.ago, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
+  let!(:application_for_la_virtual_school)          { create(:application, created_at: 8.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_lead_mentor)                { create(:application, created_at: 7.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_young_offender_institution) { create(:application, created_at: 6.days.ago, employment_type: "young_offender_institution") }
+  let!(:application_for_other)                      { create(:application, created_at: 5.days.ago, employment_type: "other") }
+  let!(:application_for_rtta_yes)                   { create(:application, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
+  let!(:application_for_rtta_no)                    { create(:application, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
 
   let(:serialized_application) { { application: 1 } }
 
@@ -212,5 +212,11 @@ RSpec.feature "Applications in review", type: :feature do
     within(".govuk-summary-list__row", text: "Notes") do
       expect(page).to have_text("Some notes")
     end
+  end
+
+  scenario "Applications should display in correct order" do
+    first_record = application_for_young_offender_institution.user.full_name
+    second_record = application_for_hospital_school.user.full_name
+    expect(page).to have_text(/#{first_record}.*#{second_record}/m)
   end
 end
