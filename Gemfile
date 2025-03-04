@@ -56,7 +56,7 @@ gem "strong_migrations"
 
 gem "net-imap", "~> 0.5.6", require: false
 gem "net-pop", require: false
-gem "net-smtp", "~> 0.5.0", require: false
+gem "net-smtp", "~> 0.5.1", require: false
 
 group :development, :test, :review do
   gem "bullet"
