@@ -3,13 +3,15 @@
 require "csv"
 
 class AssuranceReports::CsvSerializer
+  include StatementHelper
+
   def initialize(scope, statement)
     self.scope = scope
     self.statement = statement
   end
 
   def filename
-    "NPQ-Declarations-#{npq_lead_provider.name.gsub(/\W/, '')}-Cohort#{statement.cohort.start_year}-#{statement.name.gsub(/\W/, '')}.csv"
+    "NPQ-Declarations-#{lead_provider.name.gsub(/\W/, '')}-Cohort#{cohort.start_year}-#{statement_name(statement).gsub(/\W/, '')}.csv"
   end
 
   def serialize
@@ -51,6 +53,8 @@ private
 
   attr_accessor :scope, :statement
 
+  delegate :cohort, :lead_provider, to: :statement
+
   def to_row(record)
     [
       record.participant_id,
@@ -70,18 +74,9 @@ private
       record.declaration_type,
       record.declaration_date.iso8601,
       record.declaration_created_at.iso8601,
-      format_statement_name(statement.month, statement.year),
+      statement_name(statement),
       record.statement_id,
       record.targeted_delivery_funding,
     ]
-  end
-
-  def npq_lead_provider
-    statement.npq_lead_provider
-  end
-
-  def format_statement_name(month, year)
-    date = Date.new(year, month)
-    date.strftime("%B %Y")
   end
 end
