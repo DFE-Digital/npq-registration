@@ -11,6 +11,7 @@ module NpqSeparation
                                     .merge(review_scope)
                                     .merge(filter_scope)
                                     .merge(search_scope)
+                                    .order("applications.created_at DESC")
 
           @pagy, @applications = pagy(applications, limit: 9)
         end

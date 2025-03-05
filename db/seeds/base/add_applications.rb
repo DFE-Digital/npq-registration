@@ -151,3 +151,7 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
 ].each do |application_attrs|
   FactoryBot.create(:application, **application_attrs.merge(course:))
 end
+
+Application.order("id DESC").each_with_index do |a, i|
+  a.update!(created_at: i.days.ago)
+end
