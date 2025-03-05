@@ -418,7 +418,7 @@ GEM
       activerecord (>= 6.1)
       request_store (~> 1.4)
     parallel (1.26.3)
-    parallel_tests (4.9.1)
+    parallel_tests (5.0.1)
       parallel
     parser (3.3.7.0)
       ast (~> 2.4.1)
@@ -786,7 +786,7 @@ DEPENDENCIES
   omniauth_openid_connect
   pagy
   paper_trail (~> 16.0)
-  parallel_tests (~> 4.9)
+  parallel_tests (~> 5.0)
   pg (>= 0.18, < 2.0)
   pg_search
   pry-byebug
