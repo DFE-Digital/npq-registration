@@ -123,7 +123,7 @@ class FundingEligibility
 
         unless course.eyl?
           return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
-          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?
+          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
@@ -230,5 +230,9 @@ private
 
   def childminder?
     query_store.childminder?
+  end
+
+  def work_setting
+    query_store.work_setting
   end
 end

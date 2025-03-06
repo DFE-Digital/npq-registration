@@ -24,7 +24,8 @@ RSpec.describe FundingEligibility do
   let(:lead_mentor) { nil }
   let(:eligible_ey_urn) { "EY364275" }
   let(:new_headteacher) { true }
-  let(:query_store) { nil }
+  let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+  let(:query_store) { instance_double(RegistrationQueryStore, work_setting: work_setting) }
 
   describe ".funded? && .funding_eligiblity_status_code" do
     let(:institution) { create(:school, :funding_eligible_establishment_type_code, urn: "100000") }
@@ -312,6 +313,61 @@ RSpec.describe FundingEligibility do
       it "is ineligible" do
         expect(subject.funded?).to be false
         expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
+      end
+    end
+  end
+
+  context "when school is only on one list but provides both normal and FE" do
+    let(:urn) { "123" }
+    let(:ukprn) { "123" }
+    let(:institution) { build(:school, establishment_type_code: 28, urn:, ukprn:) } # 28 is academy
+    let(:course) { create(:course, :leading_literacy) }
+
+    context "when only school is on PP50 list" do
+      before do
+        stub_const("PP50_SCHOOLS_URN_HASH", { "123" => true })
+      end
+
+      context "when school is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+
+        it "is eligible" do
+          expect(subject).to be_funded
+          expect(subject.funding_eligiblity_status_code).to eq :funded
+        end
+      end
+
+      context "when FE is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+
+        it "is not eligible" do
+          expect(subject).not_to be_funded
+          expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_not_a_pp50
+        end
+      end
+    end
+
+    context "when only FE is on PP50 list" do
+      before do
+        stub_const("PP50_FE_UKPRN_HASH", { "123" => true })
+      end
+
+      context "when FE is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+
+        it "is eligible" do
+          expect(subject).to be_funded
+          expect(subject.funding_eligiblity_status_code).to eq :funded
+        end
+      end
+
+      context "when school is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+
+        it "is not eligible" do
+          expect(subject).not_to be_funded
+          expect(subject.funding_eligiblity_status_code).to eq :ineligible_establishment_not_a_pp50
+        end
       end
     end
   end

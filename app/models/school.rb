@@ -104,8 +104,12 @@ class School < ApplicationRecord
     ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.include?(establishment_type_code)
   end
 
-  def pp50_institution?
-    !!PP50_SCHOOLS_URN_HASH[urn.to_s] || !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+  def pp50_institution?(work_setting)
+    if work_setting == Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING
+      !!PP50_FE_UKPRN_HASH[ukprn.to_s]
+    else
+      !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+    end
   end
 
   def ey_eligible?
