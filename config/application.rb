@@ -40,5 +40,8 @@ module NpqRegistration
     require "middleware/api_request_middleware"
     config.middleware.use Middleware::ApiRequestMiddleware
     config.x.enable_api_request_middleware = true
+
+    require "middleware/restore_secure_headers_request_config"
+    config.middleware.use Middleware::RestoreSecureHeadersRequestConfig
   end
 end
