@@ -19,6 +19,7 @@ ey_ofsted_urn = ey.each_with_object({}) do |school, hash|
     hash[school[:urn].to_s] = true
   end
 end
+
 fe_ukprn = fe.each_with_object({}) { |school, hash| hash[school[:ukprn].to_s] = true }
 nurseries = la_nurseries.each_with_object({}) { |school, hash| hash[school[:urn].to_s] = true }
 childminders_urn = childminders.each_with_object({}) { |school, hash| hash[school[:ofsted_urn].to_s] = true }

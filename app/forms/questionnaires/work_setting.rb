@@ -1,9 +1,13 @@
 module Questionnaires
   class WorkSetting < Base
-    SCHOOL_SETTINGS = %w[
-      a_school
-      an_academy_trust
-      a_16_to_19_educational_setting
+    A_SCHOOL = "a_school".freeze
+    AN_ACADEMY_TRUST = "an_academy_trust".freeze
+    A_16_TO_19_EDUCATIONAL_SETTING = "a_16_to_19_educational_setting".freeze
+
+    SCHOOL_SETTINGS = [
+      A_SCHOOL,
+      AN_ACADEMY_TRUST,
+      A_16_TO_19_EDUCATIONAL_SETTING,
     ].freeze
 
     CHILDCARE_SETTINGS = %w[
