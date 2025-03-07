@@ -52,6 +52,8 @@ class FundingEligibility
               :lead_mentor_for_accredited_itt_provider,
               :query_store
 
+  delegate :childminder?, :work_setting, to: :query_store
+
   def initialize(institution:,
                  course:,
                  inside_catchment:,
@@ -226,13 +228,5 @@ private
 
   def not_eligible_england_ehco?
     inside_catchment? && course.ehco? unless funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
-  end
-
-  def childminder?
-    query_store.childminder?
-  end
-
-  def work_setting
-    query_store.work_setting
   end
 end
