@@ -1,6 +1,8 @@
 class ErrorsController < ApplicationController
   layout "application"
 
+  before_action :set_format
+
   def not_found
     respond_to do |format|
       format.html { render status: :not_found }
@@ -21,5 +23,11 @@ class ErrorsController < ApplicationController
       format.html { render status: :unprocessable_entity }
       format.json { render json: { error: "Unprocessable entity" }, status: :unprocessable_entity }
     end
+  end
+
+private
+
+  def set_format
+    request.format = :json if request.original_fullpath.start_with?("/api/")
   end
 end

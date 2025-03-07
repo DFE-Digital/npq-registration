@@ -7,16 +7,7 @@ RSpec.feature "Happy journeys", type: :feature do
   end
 
   context "when showing error pages" do
-    before do
-      method = Rails.application.method(:env_config)
-      allow(Rails.application).to receive(:env_config).with(no_args) do
-        method.call.merge(
-          "action_dispatch.show_exceptions" => :all,
-          "action_dispatch.show_detailed_exceptions" => false,
-          "consider_all_requests_local" => false,
-        )
-      end
-    end
+    include_context "when errors are rendered"
 
     scenario "script-src nonce on not_found page", :no_js do
       visit "/thispagedoesnotexist"
