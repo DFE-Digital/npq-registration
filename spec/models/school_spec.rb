@@ -134,4 +134,54 @@ RSpec.describe School do
       end
     end
   end
+
+  describe "#pp50_institution?" do
+    let(:urn) { "123" }
+    let(:ukprn) { "123" }
+    let(:institution) { build(:school, establishment_type_code: 28, urn:, ukprn:) } # 28 is academy
+
+    context "when only school is on PP50 list" do
+      before do
+        stub_const("PP50_SCHOOLS_URN_HASH", { "123" => true })
+      end
+
+      context "when school is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+
+        it "is a pp50_institution" do
+          expect(institution.pp50_institution?(work_setting)).to be true
+        end
+      end
+
+      context "when FE is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+
+        it "is not a pp50_institution" do
+          expect(institution.pp50_institution?(work_setting)).to be false
+        end
+      end
+    end
+
+    context "when only FE is on PP50 list" do
+      before do
+        stub_const("PP50_FE_UKPRN_HASH", { "123" => true })
+      end
+
+      context "when FE is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+
+        it "is a pp50_institution" do
+          expect(institution.pp50_institution?(work_setting)).to be true
+        end
+      end
+
+      context "when school is chosen as work setting" do
+        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+
+        it "is not a pp50_institution" do
+          expect(institution.pp50_institution?(work_setting)).to be false
+        end
+      end
+    end
+  end
 end

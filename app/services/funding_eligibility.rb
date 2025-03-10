@@ -52,6 +52,8 @@ class FundingEligibility
               :lead_mentor_for_accredited_itt_provider,
               :query_store
 
+  delegate :childminder?, :work_setting, to: :query_store
+
   def initialize(institution:,
                  course:,
                  inside_catchment:,
@@ -123,7 +125,7 @@ class FundingEligibility
 
         unless course.eyl?
           return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
-          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?
+          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
@@ -226,9 +228,5 @@ private
 
   def not_eligible_england_ehco?
     inside_catchment? && course.ehco? unless funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
-  end
-
-  def childminder?
-    query_store.childminder?
   end
 end

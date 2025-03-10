@@ -166,6 +166,10 @@ class RegistrationQueryStore
     store["kind_of_nursery"] == "childminder"
   end
 
+  def work_setting
+    store["work_setting"]
+  end
+
   def employment_type_matters?
     (works_in_another_setting? && inside_catchment?) || lead_mentor_for_accredited_itt_provider?
   end
