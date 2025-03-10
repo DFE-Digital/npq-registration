@@ -166,6 +166,10 @@ class Declaration < ApplicationRecord
     lead_provider.delivery_partners_for_cohort(cohort)
   end
 
+  def delivery_partners
+    [delivery_partner, secondary_delivery_partner].compact
+  end
+
 private
 
   def validate_declaration_date_within_schedule
