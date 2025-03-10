@@ -11,8 +11,8 @@ namespace :update_eyl_funding_eligible_schools_list do
 
     Rails.logger.info("Fetching previous schools from CSV file: #{previous_file}")
 
-    previous_school_urns = CSV.parse(File.read(previous_file), headers: true).map { |row| row["gias_urn"] }
-    new_school_urns = CSV.parse(File.read(file_name), headers: true).map { |row| row["URN"] }
+    previous_school_urns = CSV.read(previous_file, headers: true).map { |row| row["gias_urn"] }
+    new_school_urns = CSV.read(file_name, headers: true).map { |row| row["URN"] }
 
     Rails.logger.info("Fetched Records: #{previous_school_urns.count}")
 
