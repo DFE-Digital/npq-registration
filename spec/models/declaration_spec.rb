@@ -614,4 +614,35 @@ RSpec.describe Declaration, type: :model do
       expect(Declaration.new).to be_versioned
     end
   end
+
+  describe "#available_delivery_partners" do
+    subject { declaration.available_delivery_partners }
+
+    let :lead_provider do
+      create :lead_provider, delivery_partners: {
+        twenty_three => twenty_three_partner,
+        create(:cohort, start_year: 2024) => twenty_four_partner,
+      }
+    end
+
+    let(:declaration) { build(:declaration, lead_provider:, cohort: twenty_three) }
+    let(:twenty_three) { create(:cohort, start_year: 2023) }
+    let(:twenty_three_partner) { create(:delivery_partner) }
+    let(:twenty_four_partner) { create(:delivery_partner) }
+
+    it { is_expected.to include twenty_three_partner }
+    it { is_expected.not_to include twenty_four_partner }
+
+    context "without delivery_partner" do
+      let(:lead_provider) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "without cohort" do
+      let(:declaration) { build(:declaration, lead_provider:, cohort: nil) }
+
+      it { is_expected.to be_empty }
+    end
+  end
 end

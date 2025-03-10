@@ -145,6 +145,12 @@ class Declaration < ApplicationRecord
       )
   end
 
+  def available_delivery_partners
+    return [] unless lead_provider && cohort
+
+    lead_provider.delivery_partners_for_cohort(cohort)
+  end
+
 private
 
   def validate_declaration_date_within_schedule
