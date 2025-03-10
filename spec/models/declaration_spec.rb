@@ -11,7 +11,8 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
     it { is_expected.to have_many(:statements).through(:statement_items) }
-    xit { is_expected.to have_many(:delivery_partners) }
+    it { is_expected.to belong_to(:delivery_partner).without_validating_presence }
+    it { is_expected.to belong_to(:secondary_delivery_partner).without_validating_presence }
 
     context "with delivery partners" do
       subject do
@@ -27,6 +28,13 @@ RSpec.describe Declaration, type: :model do
 
       it { is_expected.to have_attributes delivery_partner: primary_partner }
       it { is_expected.to have_attributes secondary_delivery_partner: secondary_partner }
+      it { is_expected.to have_attributes delivery_partners: [primary_partner, secondary_partner] }
+
+      context "without secondary partner" do
+        subject { create(:declaration, application:, delivery_partner: primary_partner) }
+
+        it { is_expected.to have_attributes delivery_partners: [primary_partner] }
+      end
     end
   end
 
