@@ -95,10 +95,6 @@ class LeadProvider < ApplicationRecord
 
   scope :alphabetical, -> { order(name: :asc) }
 
-  def next_output_fee_statement(cohort)
-    statements.next_output_fee_statements.where(cohort:).first
-  end
-
   def self.for(course:)
     course_specific_list = COURSE_TO_PROVIDER_MAPPING[course.identifier]
 
@@ -108,5 +104,15 @@ class LeadProvider < ApplicationRecord
     raise "Missing provider ECF_ID for available providers list" if ecf_ids.count != course_specific_list.count
 
     where(ecf_id: ecf_ids)
+  end
+
+  def next_output_fee_statement(cohort)
+    statements.next_output_fee_statements.where(cohort:).first
+  end
+
+  def delivery_partners_for_cohort(cohort)
+    delivery_partners
+      .joins(:delivery_partnerships)
+      .where(delivery_partnerships: { cohort: })
   end
 end
