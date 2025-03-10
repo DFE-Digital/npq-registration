@@ -635,6 +635,28 @@ RSpec.describe Declaration, type: :model do
 
       it { expect(described_class.with_course_identifier(course_identifier)).to contain_exactly(declaration) }
     end
+
+    describe ".for_delivery_partners" do
+      subject { Declaration.for_delivery_partners(delivery_partner) }
+
+      let(:delivery_partner) { create :delivery_partner }
+      let(:lead_provider) { create :lead_provider, delivery_partner: }
+      let(:declaration_as_primary) { create :declaration, lead_provider:, delivery_partner: }
+
+      it { is_expected.to include declaration_as_primary }
+
+      context "when declared as secondary partner" do
+        let(:another_partner) { create :delivery_partner, lead_provider: }
+
+        let :declaration_as_secondary do
+          create :declaration, lead_provider:,
+                               delivery_partner: another_partner,
+                               secondary_delivery_partner: delivery_partner
+        end
+
+        it { is_expected.to include declaration_as_secondary }
+      end
+    end
   end
 
   describe "#duplicate_declarations" do

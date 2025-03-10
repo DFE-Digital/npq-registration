@@ -13,7 +13,7 @@ FactoryBot.define do
       partnerships = if evaluator.delivery_partners.is_a?(Hash)
                        evaluator.delivery_partners
                      elsif evaluator.delivery_partners&.any?
-                       { Cohort.current => evaluator.delivery_partners }
+                       { create(:cohort, :current) => evaluator.delivery_partners }
                      else
                        {}
                      end
