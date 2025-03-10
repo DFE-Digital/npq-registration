@@ -19,6 +19,12 @@ RSpec.describe AssuranceReports::CsvSerializer, type: :serializer do
     end
   end
 
+  describe "#filename" do
+    subject { instance.filename }
+
+    it { is_expected.to match(/NPQ-Declarations-\w+-Cohort\d{4}-\w+.csv/) }
+  end
+
   describe "#serialize" do
     let(:rows) { CSV.parse(instance.serialize, headers: true).to_a }
 

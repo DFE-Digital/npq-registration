@@ -9,6 +9,8 @@ RSpec.describe NpqSeparation::Admin::Finance::Statements::AssuranceReportsContro
     subject { response }
 
     before do
+      allow_any_instance_of(AssuranceReports::CsvSerializer).to receive(:filename).and_return("filename.csv")
+
       declaration
       sign_in_as_admin
 
@@ -29,5 +31,9 @@ RSpec.describe NpqSeparation::Admin::Finance::Statements::AssuranceReportsContro
     it { is_expected.to have_http_status :success }
     it { is_expected.to have_attributes media_type: /csv/ }
     it { is_expected.to have_attributes body: be_present }
+
+    it "has the correct Content-Disposition header" do
+      expect(response.headers["Content-Disposition"]).to eq "attachment; filename=\"filename.csv\"; filename*=UTF-8''filename.csv"
+    end
   end
 end

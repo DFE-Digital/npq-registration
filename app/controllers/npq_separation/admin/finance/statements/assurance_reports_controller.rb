@@ -8,7 +8,7 @@ class NpqSeparation::Admin::Finance::Statements::AssuranceReportsController < Np
 
     respond_to do |format|
       format.csv do
-        render body: @serializer.serialize
+        send_data @serializer.serialize, filename: @serializer.filename
       end
     end
   end
