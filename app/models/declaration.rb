@@ -114,6 +114,9 @@ class Declaration < ApplicationRecord
 
   validate :delivery_partners_are_not_the_same, if: :delivery_partner
 
+  scope :for_delivery_partners,
+        ->(dp) { where(delivery_partner: dp).or(where(secondary_delivery_partner: dp)) }
+
   def billable_statement
     statement_items.find(&:billable?)&.statement
   end
