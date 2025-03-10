@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Declaration, type: :model do
-  subject { build(:declaration) }
+  subject(:declaration) { build(:declaration) }
 
   describe "associations" do
     it { is_expected.to belong_to(:application) }
@@ -11,6 +11,23 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
     it { is_expected.to have_many(:statements).through(:statement_items) }
+    xit { is_expected.to have_many(:delivery_partners) }
+
+    context "with delivery partners" do
+      subject do
+        create(:declaration, application:,
+                             delivery_partner: primary_partner,
+                             secondary_delivery_partner: secondary_partner)
+      end
+
+      let(:application) { create(:application, :accepted) }
+      let(:lead_provider) { application.lead_provider }
+      let(:primary_partner) { create(:delivery_partner, lead_provider:) }
+      let(:secondary_partner) { create(:delivery_partner, lead_provider:) }
+
+      it { is_expected.to have_attributes delivery_partner: primary_partner }
+      it { is_expected.to have_attributes secondary_delivery_partner: secondary_partner }
+    end
   end
 
   describe "validations" do
@@ -18,6 +35,88 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to validate_inclusion_of(:declaration_type).in_array(described_class.declaration_types.values) }
     it { is_expected.to validate_presence_of(:declaration_date) }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
+
+    context "with delivery_partners" do
+      before { delivery_partner && old_cohort_partner }
+
+      let :delivery_partner do
+        create :delivery_partner, lead_provider: declaration.lead_provider
+      end
+
+      let :second_partner do
+        create :delivery_partner, lead_provider: declaration.lead_provider
+      end
+
+      let :old_cohort_partner do
+        create :delivery_partner, lead_providers: {
+          create(:cohort, start_year: 2023) => declaration.lead_provider,
+        }
+      end
+
+      it { is_expected.not_to validate_presence_of(:delivery_partner) }
+      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+
+      it "allows delivery_partner who is on the available partners list" do
+        expect(declaration).to allow_value(delivery_partner).for(:delivery_partner)
+      end
+
+      it "rejects delivery_partner who is on not on the available partners list" do
+        expect(declaration).not_to allow_value(old_cohort_partner).for(:delivery_partner)
+      end
+
+      it "allows secondary_delivery_partner who is on the available partners list" do
+        declaration.delivery_partner = delivery_partner
+
+        expect(declaration).to allow_value(second_partner).for(:secondary_delivery_partner)
+      end
+
+      it "rejects secondary_delivery_partner who is on not on the available partners list" do
+        expect(declaration)
+          .not_to allow_value(old_cohort_partner).for(:secondary_delivery_partner)
+      end
+
+      context "with feature_flag enabled" do
+        before do
+          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
+        end
+
+        it { is_expected.to validate_presence_of(:delivery_partner) }
+        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+      end
+
+      context "when delivery_partner unchanged but removed from lead providers list" do
+        before do
+          declaration.update!(delivery_partner:)
+          delivery_partner.delivery_partnerships.destroy_all
+        end
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when secondary_delivery_partner unchanged but removed from lead providers list" do
+        before do
+          declaration.update!(delivery_partner:, secondary_delivery_partner: second_partner)
+          delivery_partner.delivery_partnerships.destroy_all
+        end
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when delivery_partner is blank but secondary_delivery_partner is not" do
+        before do
+          declaration.secondary_delivery_partner = delivery_partner
+          declaration.valid?
+        end
+
+        it { expect(declaration.errors).to include :secondary_delivery_partner }
+      end
+
+      context "when delivery_partner and secondary_delivery partner are the same" do
+        before { declaration.delivery_partner = delivery_partner }
+
+        it { is_expected.not_to allow_value(delivery_partner).for(:secondary_delivery_partner) }
+      end
+    end
 
     context "when the declaration_date is in the future" do
       before { subject.declaration_date = 1.day.from_now }

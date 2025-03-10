@@ -11,6 +11,8 @@ class Declaration < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   belongs_to :superseded_by, class_name: "Declaration", optional: true
+  belongs_to :delivery_partner, optional: true # Can only be true or false, presence validated separately
+  belongs_to :secondary_delivery_partner, class_name: "DeliveryPartner", optional: true
   has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
   has_many :statements, through: :statement_items
@@ -99,6 +101,19 @@ class Declaration < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
 
+  # TODO: When removing feature flag, set the optional: on the relationship to true instead
+  validates :delivery_partner, presence: true,
+                               if: -> { Feature.declarations_require_delivery_partner? }
+  validates :delivery_partner, inclusion: { in: :available_delivery_partners },
+                               if: -> { delivery_partner && delivery_partner_changed? }
+
+  validates :secondary_delivery_partner, absence: true, unless: :delivery_partner
+  validates :secondary_delivery_partner,
+            inclusion: { in: :available_delivery_partners },
+            if: -> { secondary_delivery_partner && delivery_partner_changed? }
+
+  validate :delivery_partners_are_not_the_same, if: :delivery_partner
+
   def billable_statement
     statement_items.find(&:billable?)&.statement
   end
@@ -170,6 +185,12 @@ private
   def validate_max_statement_items_count
     if statement_items.count > 2
       errors.add(:statement_items, :more_than_two_statement_items)
+    end
+  end
+
+  def delivery_partners_are_not_the_same
+    if delivery_partner == secondary_delivery_partner
+      errors.add :secondary_delivery_partner, :duplicate_delivery_partner
     end
   end
 end

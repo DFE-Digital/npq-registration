@@ -193,6 +193,9 @@ en:
               *declaration_type
             ecf_id:
               *ecf_id
+            secondary_delivery_partner:
+              duplicate_delivery_partner:
+                The secondary delivery partner cannot match the primary delivery partner
             statement_items:
               more_than_two_statement_items: There cannot be more than two items per declaration
         lead_provider:
