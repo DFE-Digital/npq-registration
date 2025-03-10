@@ -173,6 +173,8 @@ shared:
     - state_reason
     - created_at
     - updated_at
+    - delivery_partner_id
+    - secondary_delivery_partner_id
   :course_groups:
     - id
     - name

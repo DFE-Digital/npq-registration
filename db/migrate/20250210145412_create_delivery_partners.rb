@@ -19,5 +19,11 @@ class CreateDeliveryPartners < ActiveRecord::Migration[7.1]
 
       t.index %i[delivery_partner_id lead_provider_id cohort_id], unique: true
     end
+
+    change_table :declarations do |t|
+      t.references :delivery_partner, foreign_key: true
+      t.references :secondary_delivery_partner,
+                   foreign_key: { to_table: :delivery_partners }
+    end
   end
 end

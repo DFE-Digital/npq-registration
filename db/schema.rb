@@ -249,10 +249,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
     t.enum "state_reason", enum_type: "declaration_state_reasons"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "delivery_partner_id"
+    t.bigint "secondary_delivery_partner_id"
     t.index ["application_id"], name: "index_declarations_on_application_id"
     t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_declarations_on_delivery_partner_id"
     t.index ["ecf_id"], name: "index_declarations_on_ecf_id", unique: true
     t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
+    t.index ["secondary_delivery_partner_id"], name: "index_declarations_on_secondary_delivery_partner_id"
     t.index ["superseded_by_id"], name: "index_declarations_on_superseded_by_id"
   end
 
@@ -651,6 +655,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
   add_foreign_key "declarations", "applications"
   add_foreign_key "declarations", "cohorts"
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
+  add_foreign_key "declarations", "delivery_partners"
+  add_foreign_key "declarations", "delivery_partners", column: "secondary_delivery_partner_id"
   add_foreign_key "declarations", "lead_providers"
   add_foreign_key "delivery_partnerships", "cohorts"
   add_foreign_key "delivery_partnerships", "delivery_partners"
