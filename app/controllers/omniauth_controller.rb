@@ -14,11 +14,14 @@ class OmniauthController < Devise::OmniauthCallbacksController
 
     # @user.persisted? checks that it exists and has been persisted to the database
     # @user.save checks that any changes made to an existing record have been persisted to that persisted record
-    if @user.persisted? && @user.save
+    if @user.persisted? && (user_saved = @user.save)
       session["user_id"] = @user.id
       @user.set_closed_registration_feature_flag
       sign_in_and_redirect @user
     else
+      # TODO: need a feature test for the error scenario:
+      # - uid has already been taken
+      user_id_with_clashing_email = User.find_by(email: provider_data.info.email)&.id
       send_error_to_sentry(
         "Could not persist user after omniauth callback",
         contexts: {
@@ -26,7 +29,10 @@ class OmniauthController < Devise::OmniauthCallbacksController
           "Provider" => {
             provider: provider_data.provider,
             uid: provider_data.uid,
+            user_id_with_clashing_email:,
           },
+          "Persisted?" => @user.persisted?,
+          "Saved?" => user_saved,
         },
       )
 
