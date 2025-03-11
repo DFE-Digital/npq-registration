@@ -6,12 +6,7 @@ RSpec.describe BulkOperation::BulkRejectApplicationsJob do
 
     let(:bulk_operation) { create(:reject_applications_bulk_operation, admin: create(:admin), file: uploaded_file) }
     let(:bulk_operation_id) { bulk_operation.id }
-    let(:file) do
-      Tempfile.new.tap do |file|
-        file.write application_ecf_ids.join("\n")
-        file.rewind
-      end
-    end
+    let(:file) { tempfile_with_bom application_ecf_ids.join("\n") }
     let(:uploaded_file) { Rack::Test::UploadedFile.new(file.path) }
     let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
