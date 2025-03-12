@@ -20,7 +20,7 @@
       </tr>
     <% end %>
 
-    <% logs.order(created_at: :desc).each do |log| %>
+    <% logs.order(created_at: :desc, id: :desc).each do |log| %>
       <tr class="govuk-table__row" id="log-row-<%= log.id %>">
         <td class="govuk-table__cell"><%= t(".sync_type.#{log.sync_type}") %></td>
         <td class="govuk-table__cell"><%= log.created_at.to_formatted_s(:govuk_short) %></td>

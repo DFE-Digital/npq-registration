@@ -101,10 +101,10 @@ RSpec.describe User do
 
   describe ".latest_participant_outcome" do
     let(:user) { create(:user) }
-    let(:lead_provider) { participant_outcome.lead_provider }
-    let(:course_identifier) { participant_outcome.course.identifier }
-    let(:participant_outcome) { create(:participant_outcome, user:) }
-    let(:course) { participant_outcome.course }
+    let(:lead_provider) { create(:lead_provider) }
+    let(:course_identifier) { ParticipantOutcomes::Create::PERMITTED_COURSES.first }
+    let(:participant_outcome) { create(:participant_outcome, user:, course:, lead_provider:) }
+    let(:course) { Course.find_by!(identifier: course_identifier) }
 
     subject { user.latest_participant_outcome(lead_provider, course_identifier) }
 
@@ -127,6 +127,8 @@ RSpec.describe User do
           create(:participant_outcome, user:, course:, lead_provider:).declaration.update!(state:)
         end
       end
+
+      participant_outcome
     end
 
     it { is_expected.to eq(participant_outcome) }

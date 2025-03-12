@@ -12,6 +12,6 @@ class Admin::WebhookMessagesController < AdminController
 private
 
   def scope
-    GetAnIdentity::WebhookMessage.all.order(created_at: :desc)
+    GetAnIdentity::WebhookMessage.all.order(created_at: :desc, id: :desc)
   end
 end

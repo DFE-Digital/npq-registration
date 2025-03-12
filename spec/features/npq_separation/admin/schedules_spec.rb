@@ -64,7 +64,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
 
       expect { click_on "Create schedule" }.to change(Schedule, :count).by(1)
 
-      schedule = Schedule.order(created_at: :desc).first
+      schedule = Schedule.order(created_at: :desc, id: :desc).first
       expect(page).to have_text("Schedule created")
       expect_filled_in_schedule_attributes(schedule, course_group)
     end
