@@ -138,7 +138,7 @@ module Declarations
     end
 
     def original_declaration
-      @original_declaration ||= declaration.duplicate_declarations.order(created_at: :asc).first
+      @original_declaration ||= declaration.duplicate_declarations.order(created_at: :asc, id: :asc).first
     end
 
     def validates_billable_slot_available

@@ -14,7 +14,7 @@ module ParticipantOutcomes
     end
 
     def participant_outcomes
-      scope.order(:created_at)
+      scope.order(:created_at, :id)
     end
 
   private

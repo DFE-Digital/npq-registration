@@ -21,7 +21,7 @@ RSpec.describe APIToken, type: :model do
 
       expect(
         APIToken.find_by_unhashed_token(unhashed_token, scope:),
-      ).to eql(APIToken.order(:created_at).last)
+      ).to eql(APIToken.order(:created_at, :id).last)
     end
 
     context "when a lead provider is not specified" do
