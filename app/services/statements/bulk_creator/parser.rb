@@ -13,7 +13,7 @@ module Statements
         else
           new lines.map { row_class.new(_1.to_h.slice(*row_class.attribute_names)) }
         end
-      rescue CSV::InvalidEncodingError
+      rescue CSV::MalformedCSVError
         new_with_error "must be CSV format"
       end
 
