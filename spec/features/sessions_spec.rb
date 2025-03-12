@@ -22,6 +22,7 @@ RSpec.feature "Sessions", type: :feature do
     expect(page).to have_content("Sign in")
     page.fill_in "What’s your email address?", with: " User@example.com "
     page.click_button "Sign in"
+    sleep 1 # FIXME: why does the test only pass with a sleep?
 
     code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
 

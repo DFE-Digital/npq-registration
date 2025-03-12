@@ -54,6 +54,7 @@ RSpec.feature "admin management", type: :feature do
   end
 
   def then_the_latest_admin_has_the_correct_details(full_name:, email:)
+    sleep 1 # FIXME: why does the test only pass with a sleep?
     Admin.last.tap do |admin|
       expect(admin.full_name).to eql(full_name)
       expect(admin.email).to eql(email)

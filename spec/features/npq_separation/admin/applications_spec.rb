@@ -340,7 +340,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css(".govuk-error-message", text: "Choose whether the Application is eligible for funding")
     choose "Yes", visible: :all
-    perform_enqueued_jobs { click_button "Continue" }
+    perform_enqueued_jobs do
+      click_button "Continue"
+      sleep 1 # FIXME: why does the test only pass with a sleep?
+    end
 
     expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 

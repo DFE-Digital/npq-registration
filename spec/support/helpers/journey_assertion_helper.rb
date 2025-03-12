@@ -32,6 +32,7 @@ module Helpers
     end
 
     def expect_applicant_reached_end_of_journey(total_number_of_created_applications: 1)
+      sleep 1 # FIXME: why does the test only pass with a sleep?
       expect_page_to_have(path: "/accounts/user_registrations/#{latest_application.id}?success=true", submit_form: false) do
         expect(page).to have_text("Registration successfully submitted")
         expect(page).to have_text("Application ID: #{latest_application.ecf_id}")

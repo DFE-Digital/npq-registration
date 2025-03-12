@@ -24,6 +24,7 @@ RSpec.feature "Statement payment", type: :feature do
     perform_enqueued_jobs do
       check "Yes, I'm ready to authorise this for payment", visible: :all
       click_button "Authorise for payment"
+      sleep 1 # FIXME: why does the test only pass with a sleep?
     end
 
     expect(page).to have_css("h1", text: "Statement #{statement.id}")

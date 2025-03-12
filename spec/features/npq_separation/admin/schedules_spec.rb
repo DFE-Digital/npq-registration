@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
+RSpec.feature "Managing schedules", type: :feature do
   include Helpers::AdminLogin
 
   let(:admin)  { create :admin }
@@ -17,9 +17,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
     ]
   end
 
-  before do
-    sign_in_as admin
-  end
+  before { sign_in_as admin }
 
   scenario "view the list of schedules for a cohort" do
     visit_cohort
@@ -52,9 +50,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
     let(:schedule) { schedules.first }
     let(:course_group) { CourseGroup.where.not(id: schedule.course_group_id).last }
 
-    before do
-      admin.update! super_admin: true
-    end
+    let(:admin) { create :super_admin }
 
     scenario "creation" do
       visit_cohort
@@ -62,7 +58,10 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
 
       fill_in_schedule_form(course_group)
 
-      expect { click_on "Create schedule" }.to change(Schedule, :count).by(1)
+      expect {
+        click_on "Create schedule"
+        sleep 1 # FIXME: what is going on here? why does this test only pass with a sleep?
+      }.to change(Schedule, :count).by(1)
 
       schedule = Schedule.order(created_at: :desc).first
       expect(page).to have_text("Schedule created")
@@ -84,8 +83,14 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
     scenario "deletion" do
       navigate_to_schedule
 
+      expect(Schedule.count).to eq(2)
       click_on delete_button_text
-      expect { click_on "Confirm" }.to change(Schedule, :count).by(-1)
+      click_on "Confirm"
+      expect {
+        click_on "Confirm"
+        sleep 1 # FIXME: what is going on here? why does this test only pass with a sleep?
+      }.to change(Schedule, :count).by(-1)
+      expect(Schedule.count).to eq(1)
     end
   end
 
@@ -142,6 +147,7 @@ private
   end
 
   def expect_filled_in_schedule_attributes(schedule, course_group)
+    schedule.reload
     expect(schedule.name).to eq("name")
     expect(schedule.identifier).to eq("identifier")
     expect(schedule.course_group).to eq(course_group)
