@@ -91,8 +91,8 @@ end
 group :test do
   gem "axe-core-capybara", "~> 4.7"
   gem "axe-core-rspec", "~> 4.10"
+  gem "cuprite"
   gem "rspec-default_http_header"
-  gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 6.4"
   gem "site_prism", "~> 5.1"
   gem "webmock", "~> 3.25"

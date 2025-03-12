@@ -12,7 +12,6 @@ Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| requir
 Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
 
 require "axe-rspec"
-require "axe-capybara"
 
 require "active_support/core_ext/date/conversions"
 require "active_support/core_ext/time/conversions"
@@ -23,35 +22,23 @@ require "capybara/rspec"
 require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
+require "capybara/cuprite"
 
-capybara_browser_options = {}.tap do |browser_opts|
-  version = Capybara::Selenium::Driver.load_selenium
-  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.add_argument("--headless")
-    opts.add_argument("--no-sandbox")
-    opts.add_argument("--disable-gpu")
-    opts.add_argument("--window-size=1920,1080")
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.add_argument("--disable-site-isolation-trials")
-  end
-
-  browser_opts[:browser] = :chrome
-  browser_opts[options_key] = browser_options
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(
+    app,
+    window_size: [1980, 1080],
+    process_timeout: 20,
+    timeout: 10,
+  )
 end
 
 Capybara.register_driver :headless_chrome do |app|
   Capybara::Selenium::Driver.new(app, **capybara_browser_options)
 end
 
-AxeCapybara.configure(:chrome) do |config|
-  # see below for a full list of configuration
-  # c.jslib_path = "next-version/axe.js"
-  config.page = Capybara::Selenium::Driver.new(nil, **capybara_browser_options)
-end
-
-Capybara.default_driver = :headless_chrome
-Capybara.javascript_driver = :headless_chrome
+Capybara.default_driver = :cuprite
+Capybara.javascript_driver = :cuprite
 
 require "capybara-screenshot/rspec"
 
