@@ -101,7 +101,10 @@ RSpec.describe "update_application" do
         let(:new_cohort) { create(:cohort, start_year: 2029) }
 
         it "raises an error" do
-          expect { run_task }.to raise_error(RuntimeError, "Schedule not found for course group leadership, cohort 2029 and identifier npq-leadership-spring")
+          expect { run_task }.to raise_error(
+            RuntimeError,
+            "Schedule not found for course group leadership, cohort 2029 and identifier #{application.schedule.identifier}",
+          )
         end
       end
     end
