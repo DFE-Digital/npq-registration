@@ -11,7 +11,10 @@ require "site_prism"
 Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| require f }
 Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
 
-require "axe-rspec"
+# TODO: reinstate axe-rspec
+# this needs one of the following:
+# - cuprite to support it
+# - switch back to selenium
 
 require "active_support/core_ext/date/conversions"
 require "active_support/core_ext/time/conversions"
@@ -27,7 +30,7 @@ require "capybara/cuprite"
 Capybara.register_driver(:cuprite) do |app|
   Capybara::Cuprite::Driver.new(
     app,
-    window_size: [1980, 1080],
+    window_size: [1400, 1400],
     process_timeout: 20,
     timeout: 10,
   )
