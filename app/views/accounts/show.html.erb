@@ -3,9 +3,9 @@
 <% content_for :title, "Your NPQ registrations" %>
 <% if application_count > 0%>
   <% if application_count == 1 %>
-    <h2 class="govuk-heading-xl"><%= title ||= t(".title") %></h2>
+    <h1 class="govuk-heading-xl"><%= title ||= t(".title") %></h1>
   <% else %>
-    <h2 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h2>
+    <h1 class="govuk-heading-xl"><%= title ||= t(".pural_title") %></h1>
   <% end %>
   <div class="govuk-inset-text">
     <%= link_to_identity_account(request.original_url, text: "Visit your DfE Identity account") %> to check or change your personal details.
