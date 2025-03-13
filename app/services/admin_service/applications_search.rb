@@ -22,6 +22,9 @@ class AdminService::ApplicationsSearch
 private
 
   def default_scope
-    Application.left_joins(:school).joins(:user).includes(:course, :lead_provider, :school, :user)
+    Application
+      .left_joins(:school)
+      .joins(:user)
+      .includes(:course, :lead_provider, :school, :user)
   end
 end
