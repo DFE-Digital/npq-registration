@@ -99,10 +99,23 @@ jobs:
         ci_node_index: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - uses: browser-actions/setup-chrome@v1
+      - name: Check where original chrome is installed
+        run: |
+          which google-chrome
+          which chromedriver
+
+      - name: Install Chrome
+        id: install-chrome
+        uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: 133
           install-chromedriver: true
+
+      - name: link chrome and chromedriver
+        run: |
+          sudo ln -s ${{ steps.install-chrome.outputs.chromedriver-path }} /usr/local/bin/chromedriver
+          sudo rm /usr/bin/google-chrome
+          sudo ln -s ${{ steps.install-chrome.outputs.chrome-path }} /usr/bin/google-chrome
 
       - name: Checkout code
         uses: actions/checkout@v4
