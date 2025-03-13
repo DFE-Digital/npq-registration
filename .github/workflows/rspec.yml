@@ -99,6 +99,11 @@ jobs:
         ci_node_index: [0, 1, 2, 3, 4, 5]
 
     steps:
+      - uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 133
+          install-chromedriver: true
+
       - name: Checkout code
         uses: actions/checkout@v4
 
