@@ -154,12 +154,6 @@ RSpec.configure do |config|
           .and_return GOVUKDesignSystemFormBuilder::FormBuilder
   end
 
-  config.around(:each, :in_memory_rails_cache) do |example|
-    Rails.cache = ActiveSupport::Cache::MemoryStore.new
-    example.run
-    Rails.cache.clear
-  end
-
   config.around(:each, :rack_test_driver) do |example|
     Capybara.current_driver = :rack_test
     example.run
