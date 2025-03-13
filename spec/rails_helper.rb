@@ -11,54 +11,17 @@ require "site_prism"
 Dir[Rails.root.join("spec/page_objects/**/*_section.rb")].sort.each { |f| require f }
 Dir[Rails.root.join("spec/page_objects/**/*_page.rb")].sort.each { |f| require f }
 
-require "axe-rspec"
-require "axe-capybara"
-
 require "active_support/core_ext/date/conversions"
 require "active_support/core_ext/time/conversions"
 
 require "view_component/test_helpers"
 require "view_component/system_test_helpers"
-require "capybara/rspec"
 require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
 
-selenium_webdriver_args = %w[
-  disable-build-check
-  disable-dev-shm-usage
-  disable-features=VizDisplayCompositor
-  disable-gpu
-  enable-features=NetworkService,NetworkServiceInProcess
-  headless
-  no-sandbox
-  window-size=1400,1400
-]
-
-Capybara.register_driver :chrome_headless do |app|
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    options: Selenium::WebDriver::Options.chrome(args: selenium_webdriver_args),
-  )
-end
-
-AxeCapybara.configure(:chrome) do |config|
-  config.page = Capybara::Selenium::Driver.new(
-    nil,
-    browser: :chrome,
-    options: Selenium::WebDriver::Options.chrome(args: selenium_webdriver_args),
-  )
-end
-
-Capybara.default_driver = :chrome_headless
-Capybara.javascript_driver = :chrome_headless
-
-require "capybara-screenshot/rspec"
-
-Capybara::Screenshot.register_driver(:chrome_headless) do |driver, path|
-  driver.browser.save_screenshot path
-end
+# require features_helper after support files have been loaded
+require "features_helper"
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
