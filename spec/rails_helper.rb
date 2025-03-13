@@ -24,38 +24,30 @@ require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
 
-capybara_browser_options = {}.tap do |browser_opts|
-  version = Capybara::Selenium::Driver.load_selenium
-  options_key = Capybara::Selenium::Driver::CAPS_VERSION.satisfied_by?(version) ? :capabilities : :options
-  browser_options = ::Selenium::WebDriver::Chrome::Options.new.tap do |opts|
-    opts.add_argument("--headless")
-    opts.add_argument("--no-sandbox")
-    opts.add_argument("--disable-gpu")
-    opts.add_argument("--window-size=1920,1080")
-    # Workaround https://bugs.chromium.org/p/chromedriver/issues/detail?id=2650&q=load&sort=-id&colspec=ID%20Status%20Pri%20Owner%20Summary
-    opts.add_argument("--disable-site-isolation-trials")
-  end
+Capybara.register_driver :chrome_headless do |app|
+  args = %w[
+    disable-build-check
+    disable-dev-shm-usage
+    disable-gpu
+    no-sandbox
+    window-size=1400,1400
+    enable-features=NetworkService,NetworkServiceInProcess
+    disable-features=VizDisplayCompositor
+    headless
+  ]
 
-  browser_opts[:browser] = :chrome
-  browser_opts[options_key] = browser_options
+  Capybara::Selenium::Driver.new(
+    app,
+    browser: :chrome,
+    options: Selenium::WebDriver::Options.chrome(args:),
+  )
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  Capybara::Selenium::Driver.new(app, **capybara_browser_options)
-end
-
-AxeCapybara.configure(:chrome) do |config|
-  # see below for a full list of configuration
-  # c.jslib_path = "next-version/axe.js"
-  config.page = Capybara::Selenium::Driver.new(nil, **capybara_browser_options)
-end
-
-Capybara.default_driver = :headless_chrome
-Capybara.javascript_driver = :headless_chrome
+Capybara.javascript_driver = :chrome_headless
 
 require "capybara-screenshot/rspec"
 
-Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
+Capybara::Screenshot.register_driver(:chrome_headless) do |driver, path|
   driver.browser.save_screenshot path
 end
 
