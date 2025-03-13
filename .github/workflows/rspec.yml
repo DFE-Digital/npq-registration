@@ -99,6 +99,41 @@ jobs:
         ci_node_index: [0, 1, 2, 3, 4, 5]
 
     steps:
+      - name: Uninstall Default Chromium & Chromedriver
+        run: |
+          sudo apt-get purge -y chromium-browser chromium-chromedriver
+          sudo apt-get autoremove -y
+          sudo rm -rf /usr/bin/chromium-browser
+          sudo rm -rf /usr/bin/google-chrome
+          sudo rm -rf /usr/bin/chromedriver
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 libxrandr2 \
+            libasound2t64 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 libnss3 \
+            libdrm2 libgbm1 libxss1
+
+      - name: Install Chromium 132.0.6834.159
+        run: |
+          wget https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/1381561/chrome-linux.zip
+          unzip chrome-linux.zip
+          sudo mv chrome-linux /usr/local/chromium132
+          sudo ln -s /usr/local/chromium132/chrome /usr/bin/google-chrome
+
+      - name: Install Chromedriver 132.0.6834.159
+        run: |
+          wget https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/1381561/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver_linux64/chromedriver /usr/local/bin/chromedriver
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      - name: Verify Chromium & Chromedriver Versions
+        run: |
+          google-chrome --version
+          chromedriver --version
+
       - name: Checkout code
         uses: actions/checkout@v4
 
