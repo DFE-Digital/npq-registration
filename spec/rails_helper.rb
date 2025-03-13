@@ -41,7 +41,6 @@ capybara_browser_options = {}.tap do |browser_opts|
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  Selenium::WebDriver::Chrome.path = ENV["CHROME_PATH"] if ENV["CHROME_PATH"]
   Capybara::Selenium::Driver.new(app, **capybara_browser_options)
 end
 

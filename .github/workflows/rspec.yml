@@ -99,10 +99,13 @@ jobs:
         ci_node_index: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - name: Check where original chrome is installed
+      - name: Uninstall default chrome
         run: |
-          which google-chrome
-          which chromedriver
+          sudo apt-get purge -y google-chrome-stable
+          sudo apt-get autoremove -y
+          sudo rm -rf /usr/bin/chromium-browser
+          sudo rm -rf /usr/bin/google-chrome
+          sudo rm -rf /usr/bin/chromedriver
 
       - name: Install Chrome
         id: install-chrome
@@ -110,12 +113,6 @@ jobs:
         with:
           chrome-version: 133
           install-chromedriver: true
-
-      - name: link chrome and chromedriver
-        run: |
-          sudo ln -s ${{ steps.install-chrome.outputs.chromedriver-path }} /usr/local/bin/chromedriver
-          sudo rm /usr/bin/google-chrome
-          sudo ln -s ${{ steps.install-chrome.outputs.chrome-path }} /usr/bin/google-chrome
 
       - name: Checkout code
         uses: actions/checkout@v4
