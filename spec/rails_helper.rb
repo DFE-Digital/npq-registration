@@ -24,25 +24,34 @@ require "paper_trail/frameworks/rspec"
 require "dfe/analytics/testing"
 require "dfe/analytics/rspec/matchers"
 
-Capybara.register_driver :chrome_headless do |app|
-  args = %w[
-    disable-build-check
-    disable-dev-shm-usage
-    disable-gpu
-    no-sandbox
-    window-size=1400,1400
-    enable-features=NetworkService,NetworkServiceInProcess
-    disable-features=VizDisplayCompositor
-    headless
-  ]
+selenium_webdriver_args = %w[
+  disable-build-check
+  disable-dev-shm-usage
+  disable-features=VizDisplayCompositor
+  disable-gpu
+  enable-features=NetworkService,NetworkServiceInProcess
+  headless
+  no-sandbox
+  window-size=1400,1400
+]
 
+Capybara.register_driver :chrome_headless do |app|
   Capybara::Selenium::Driver.new(
     app,
     browser: :chrome,
-    options: Selenium::WebDriver::Options.chrome(args:),
+    options: Selenium::WebDriver::Options.chrome(args: selenium_webdriver_args),
   )
 end
 
+AxeCapybara.configure(:chrome) do |config|
+  config.page = Capybara::Selenium::Driver.new(
+    nil,
+    browser: :chrome,
+    options: Selenium::WebDriver::Options.chrome(args: selenium_webdriver_args),
+  )
+end
+
+Capybara.default_driver = :chrome_headless
 Capybara.javascript_driver = :chrome_headless
 
 require "capybara-screenshot/rspec"
