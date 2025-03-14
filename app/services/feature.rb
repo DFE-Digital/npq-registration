@@ -4,12 +4,10 @@ class Feature
   REGISTRATION_OPEN = "Registration open".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
   CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
-
   SENCO_ENABLED = "Senco enabled".freeze
-
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
-
   MAINTENANCE_BANNER = "Maintenance banner".freeze
+  DECLARATIONS_REQUIRE_DELIVERY_PARTNER = "Declarations require delivery partner".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -19,6 +17,7 @@ class Feature
     SENCO_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
+    DECLARATIONS_REQUIRE_DELIVERY_PARTNER,
   ].freeze
 
   class << self
@@ -66,6 +65,10 @@ class Feature
 
     def dfe_analytics_enabled?
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
+    end
+
+    def declarations_require_delivery_partner?
+      Flipper.enabled?(DECLARATIONS_REQUIRE_DELIVERY_PARTNER)
     end
   end
 end
