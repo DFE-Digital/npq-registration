@@ -11,7 +11,7 @@ namespace :eyl_fundng_eligible_schools do
 
     Rails.logger.info("Updating schools from CSV file: #{file_name}")
 
-    table = CSV.parse(File.read(file_name), headers: true)
+    table = CSV.read(file_name, headers: true)
 
     table.each do |row|
       gias_urn = row["gias_urn"]

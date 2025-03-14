@@ -28,5 +28,7 @@ private
         break
       end
     end
+  rescue CSV::MalformedCSVError
+    errors.add(:file, :malformed)
   end
 end

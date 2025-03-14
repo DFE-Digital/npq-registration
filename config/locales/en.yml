@@ -151,6 +151,7 @@ en:
             file:
               empty: Uploaded file is empty
               invalid: Uploaded file is wrong format
+              malformed: Uploaded file is not a valid CSV
         cohort:
           attributes:
             ecf_id:
