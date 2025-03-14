@@ -16,7 +16,7 @@ module Declarations
     end
 
     def declarations
-      scope.order(created_at: :asc)
+      scope.order(created_at: :asc, id: :asc)
     end
 
     def declaration(id: nil, ecf_id: nil)

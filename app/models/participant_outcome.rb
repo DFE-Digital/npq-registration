@@ -19,7 +19,7 @@ class ParticipantOutcome < ApplicationRecord
 
   class << self
     def latest
-      order(created_at: :desc).first
+      order(created_at: :desc, id: :desc).first
     end
 
     def to_send_to_qualified_teachers_api

@@ -1,7 +1,7 @@
 module Helpers
   module JourneyHelper
     def latest_application
-      Application.order(created_at: :asc).last
+      Application.order(created_at: :asc, id: :asc).last
     end
 
     def latest_application_user
