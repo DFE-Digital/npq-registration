@@ -32,23 +32,18 @@ Capybara.register_driver(:cuprite) do |app|
     app,
     browser_options: { 'no-sandbox': nil },
     window_size: [1400, 1400],
-    process_timeout: 20,
+    process_timeout: 30,
     timeout: 10,
   )
 end
 
-Capybara.register_driver :headless_chrome do |app|
-  Capybara::Selenium::Driver.new(app, **capybara_browser_options)
+Capybara.configure do |config|
+  config.default_driver = :cuprite
+  config.javascript_driver = :cuprite
+  config.default_max_wait_time = 10 # without this, the default is 2
 end
-
-Capybara.default_driver = :cuprite
-Capybara.javascript_driver = :cuprite
 
 require "capybara-screenshot/rspec"
-
-Capybara::Screenshot.register_driver(:headless_chrome) do |driver, path|
-  driver.browser.save_screenshot path
-end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
