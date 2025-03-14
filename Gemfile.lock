@@ -165,7 +165,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    cssbundling-rails (1.4.2)
+    cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
     csv (3.3.2)
     cuprite (0.15.1)
@@ -360,7 +360,7 @@ GEM
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
-    minitest (5.25.4)
+    minitest (5.25.5)
     msgpack (1.7.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -454,7 +454,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.10)
+    rack (3.1.12)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-oauth2 (2.2.1)
