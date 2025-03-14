@@ -25,24 +25,24 @@ module CourseGroups
     end
 
     def autumn_schedule_2022?(date)
-      # Between: Jun 1 to Dec 25
+      # Between: 1st Jun 2022 and 25th Dec 2022
       (Date.new(2022, 6, 1)..Date.new(2022, 12, 25)).include?(date)
     end
 
     def autumn_schedule_2024?(date)
-      # Between: Jun 28 to Feb 10
-      (Date.new(2024, 6, 28)..Date.new(2025, 2, 10)).include?(date)
+      # Between: 28th June 2024 and 6th June 2025
+      (Date.new(2024, 6, 28)..Date.new(2025, 6, 6)).include?(date)
     end
 
     def spring_schedule?(date)
-      # Between: Jan 1 to Apr 2
-      # Or between: Dec 26 to Dec 31
+      # Between: 1st Jan and 2nd Apr
+      # Or between: 26th Dec and 31st Dec
       (Date.new(date.year, 1, 1)..Date.new(date.year, 4, 2)).include?(date) ||
         (Date.new(date.year, 12, 26)..Date.new(date.year, 12, 31)).include?(date)
     end
 
     def autumn_schedule?(date)
-      # Between: Apr 3 to Dec 25
+      # Between: 3rd Apr and 25th Dec
       (Date.new(date.year, 4, 3)..Date.new(date.year, 12, 25)).include?(date)
     end
   end
