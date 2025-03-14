@@ -12,9 +12,6 @@ require "support/helpers/journey_step_helper"
 
 WebMock.disable_net_connect!(allow_localhost: true,
                              allow: [
-                               "chromedriver.storage.googleapis.com",
-                               %r{storage\.googleapis\.com/chrome-for-testing-public/.*},
-                               "googlechromelabs.github.io",
                                "edgedl.me.gvt1.com",
                              ])
 
