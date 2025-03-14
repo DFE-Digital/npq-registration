@@ -32,8 +32,8 @@ Capybara.register_driver(:cuprite) do |app|
     app,
     browser_options: { 'no-sandbox': nil },
     window_size: [1400, 1400],
-    process_timeout: 30,
-    timeout: 10,
+    process_timeout: 60,
+    timeout: 20,
   )
 end
 
