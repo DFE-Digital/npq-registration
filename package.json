@@ -19,7 +19,7 @@
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^5.8",
     "isomorphic-fetch": "^3.0.0",
-    "mermaid": "^11.4.1",
+    "mermaid": "^11.5.0",
     "rails-ujs": "^5.2.8",
     "sass": "^1.82.0",
     "serialize-javascript": "^6.0.2",
