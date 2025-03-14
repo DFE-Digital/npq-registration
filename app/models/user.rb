@@ -107,7 +107,7 @@ class User < ApplicationRecord
     end
 
     unless user_from_provider_data.save
-      Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, ID=#{user_from_provider_data.id}, UID=#{provider_data.uid}, trying to reclaim email failed")
+      Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, UID=#{provider_data.uid}, trying to reclaim email failed")
     end
 
     user_from_provider_data
