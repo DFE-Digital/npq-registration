@@ -19,10 +19,10 @@
                               label: { text: "Email address" },
                               hint: { text: "This can be for a new or existing user" },
                               width: "three-quarters" %>
-      <%= f.govuk_email_field :full_name,
-                              label: { text: "Full name" },
-                              hint: { text: "This will set the name for the admin created using the above entered email" },
-                              width: "three-quarters" %>
+      <%= f.govuk_text_field :full_name,
+                             label: { text: "Full name" },
+                             hint: { text: "This will set the name for the admin created using the above entered email" },
+                             width: "three-quarters" %>
 
       <%= f.govuk_submit "Add admin" %>
     <% end %>

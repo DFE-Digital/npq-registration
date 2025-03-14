@@ -15,7 +15,7 @@ RSpec.feature "admin management", type: :feature do
     when_i_fill_in_the_new_admin_form_with(full_name: "Joey Joe", email: "joey-joe@shabadoo.org")
     click_button("Add admin")
 
-    then_the_latest_admin_has_the_correct_details(full_name: "JoeyJoe", email: "joey-joe@shabadoo.org") # TODO: fix this - it should be "Joey Joe" - issue with cuprite
+    then_the_latest_admin_has_the_correct_details(full_name: "Joey Joe", email: "joey-joe@shabadoo.org")
   end
 
   # this doesn't exist currently, no ability to change admins
