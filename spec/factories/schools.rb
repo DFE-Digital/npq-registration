@@ -1,8 +1,11 @@
 FactoryBot.define do
+  sequence(:urn) { |n| sprintf("%06d", n % 1_000_000) }
+  sequence(:ukprn) { |n| sprintf("%08d", n % 100_000_000) }
+
   factory :school do
     sequence(:name) { |n| Faker::Educator.primary_school + " #{n}" }
-    sequence(:urn) { rand(100_000..999_999).to_s }
-    sequence(:ukprn) { rand(10_000_000..99_999_999).to_s }
+    urn { generate(:urn) }
+    ukprn { generate(:ukprn) }
     establishment_status_code { "1" }
     last_changed_date { Date.new(2010, 1, 1) }
 
@@ -11,7 +14,7 @@ FactoryBot.define do
         urn = nil
 
         loop do
-          urn = rand(100_000..999_999).to_s
+          urn = generate(:urn)
           break unless PP50_SCHOOLS_URN_HASH[urn.to_s]
         end
 
@@ -22,7 +25,7 @@ FactoryBot.define do
         ukprn = nil
 
         loop do
-          ukprn = rand(10_000_000..99_999_999).to_s
+          ukprn = generate(:ukprn)
           break unless PP50_FE_UKPRN_HASH[ukprn.to_s]
         end
 
