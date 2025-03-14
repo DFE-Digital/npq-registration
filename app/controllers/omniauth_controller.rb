@@ -22,6 +22,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
       # TODO: need a feature test for the error scenario:
       # - uid has already been taken
       user_id_with_clashing_email = User.find_by(email: provider_data.info.email)&.id
+      multibyte = (provider_data.info.email.chars.count != provider_data.info.email.bytes.count)
       send_error_to_sentry(
         "Could not persist user after omniauth callback",
         contexts: {
@@ -33,6 +34,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
           },
           "Persisted?" => @user.persisted?,
           "Saved?" => user_saved,
+          "Multibyte email?" => multibyte,
         },
       )
 
