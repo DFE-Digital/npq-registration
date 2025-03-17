@@ -121,6 +121,13 @@ class User < ApplicationRecord
     end
   end
 
+  # def self.with_feature_flag_enabled(feature_flag_name)
+  #   @actors = Flipper::Adapters::ActiveRecord::Gate.where(feature_key: feature_flag_name, key: "actors")
+  #   user_uids = @actors.map { |actor| actor.value.split(";").last }
+  #   User.where(feature_flag_id: user_uids)
+  # end
+
+
   def get_an_identity_user
     return if get_an_identity_id.blank?
 
