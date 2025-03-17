@@ -101,7 +101,7 @@ class Declaration < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
 
-  # TODO: When removing feature flag, set the optional: on the relationship to true instead
+  # TODO: When removing feature flag, set the optional: on the relationship to false instead
   validates :delivery_partner, presence: true,
                                if: -> { Feature.declarations_require_delivery_partner? }
   validates :delivery_partner, inclusion: { in: :available_delivery_partners },
@@ -110,12 +110,14 @@ class Declaration < ApplicationRecord
   validates :secondary_delivery_partner, absence: true, unless: :delivery_partner
   validates :secondary_delivery_partner,
             inclusion: { in: :available_delivery_partners },
-            if: -> { secondary_delivery_partner && delivery_partner_changed? }
+            if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
 
   validate :delivery_partners_are_not_the_same, if: :delivery_partner
 
-  scope :for_delivery_partners,
-        ->(dp) { where(delivery_partner: dp).or(where(secondary_delivery_partner: dp)) }
+  scope :for_delivery_partners, lambda { |delivery_partner|
+    where(delivery_partner: delivery_partner)
+      .or(where(secondary_delivery_partner: delivery_partner))
+  }
 
   def billable_statement
     statement_items.find(&:billable?)&.statement

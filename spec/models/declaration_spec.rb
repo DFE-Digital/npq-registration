@@ -101,13 +101,33 @@ RSpec.describe Declaration, type: :model do
         it { is_expected.to be_valid }
       end
 
+      context "when delivery_partner is changed but not on lead providers list" do
+        before do
+          declaration.update!(delivery_partner:)
+          declaration.delivery_partner = old_cohort_partner
+        end
+
+        it { expect(declaration.tap(&:valid?).errors).to include :delivery_partner }
+      end
+
       context "when secondary_delivery_partner unchanged but removed from lead providers list" do
         before do
           declaration.update!(delivery_partner:, secondary_delivery_partner: second_partner)
-          delivery_partner.delivery_partnerships.destroy_all
+          delivery_partner.delivery_partnerships
+                          .where(delivery_partner: second_partner)
+                          .destroy_all
         end
 
         it { is_expected.to be_valid }
+      end
+
+      context "when secondary_delivery_partner changed but not on lead providers list" do
+        before do
+          declaration.update!(delivery_partner:, secondary_delivery_partner: second_partner)
+          declaration.secondary_delivery_partner = old_cohort_partner
+        end
+
+        it { expect(declaration.tap(&:valid?).errors).to include :secondary_delivery_partner }
       end
 
       context "when delivery_partner is blank but secondary_delivery_partner is not" do
@@ -745,7 +765,7 @@ RSpec.describe Declaration, type: :model do
   end
 
   describe "#available_delivery_partners" do
-    subject { declaration.available_delivery_partners }
+    subject(:available_delivery_partners) { declaration.available_delivery_partners }
 
     let :lead_provider do
       create :lead_provider, delivery_partners: {
@@ -769,9 +789,17 @@ RSpec.describe Declaration, type: :model do
     end
 
     context "without cohort" do
+      before { allow(lead_provider).to receive(:delivery_partners_for_cohort) }
+
       let(:declaration) { build(:declaration, lead_provider:, cohort: nil) }
 
       it { is_expected.to be_empty }
+
+      it "avoids querying the database" do
+        available_delivery_partners
+
+        expect(lead_provider).not_to have_received(:delivery_partners_for_cohort)
+      end
     end
   end
 end
