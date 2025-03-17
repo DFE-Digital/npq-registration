@@ -88,8 +88,33 @@ RSpec.describe Declaration, type: :model do
           allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
         end
 
+        let(:declaration) { build(:declaration, cohort:) }
+        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
+        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
+
         it { is_expected.to validate_presence_of(:delivery_partner) }
         it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+
+        context "with earlier cohort" do
+          let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
+
+        context "with later cohort" do
+          let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM + 1 }
+
+          it { is_expected.to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
+
+        context "without cohort set" do
+          let(:cohort) { nil }
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
       end
 
       context "when delivery_partner unchanged but removed from lead providers list" do
