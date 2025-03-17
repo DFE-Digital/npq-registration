@@ -7,6 +7,7 @@ class Admin::UsersController < AdminController
 
   def show
     @user = User.find(params[:id])
+    @applications = @user.applications.order(:created_at, :id)
   end
 
 private
