@@ -9,4 +9,8 @@ class DeliveryPartner < ApplicationRecord
   def declarations
     Declaration.for_delivery_partners(self)
   end
+
+  def cohorts_for_lead_provider(lead_provider)
+    cohorts.joins(:delivery_partnerships).where(delivery_partnerships: { lead_provider: lead_provider })
+  end
 end
