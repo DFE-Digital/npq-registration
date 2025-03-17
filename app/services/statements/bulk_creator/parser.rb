@@ -4,7 +4,7 @@ module Statements
       attr_accessor :error
 
       def self.read(csv_file, row_class)
-        lines = CSV.read(csv_file, headers: true, encoding: "bom|utf-8") # encoding needed for some Excel CSVs
+        lines = CSV.read(csv_file, headers: true)
 
         if lines.none?
           new_with_error "No rows found"
@@ -13,7 +13,7 @@ module Statements
         else
           new lines.map { row_class.new(_1.to_h.slice(*row_class.attribute_names)) }
         end
-      rescue CSV::InvalidEncodingError
+      rescue CSV::MalformedCSVError
         new_with_error "must be CSV format"
       end
 
