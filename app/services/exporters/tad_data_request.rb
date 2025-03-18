@@ -18,13 +18,13 @@ class Exporters::TadDataRequest
     schedule_id = @schedules.pluck(:id)
 
     accepted_applications_ids = Declaration.billable.where(declaration_type: "started").where(cohort: @cohort).pluck(:application_id)
-    Application.where(id: accepted_applications_ids, schedule_id:, course_id:)
+    Application.where(id: accepted_applications_ids, schedule_id:, course_id:).includes(:user, :school, declarations: :participant_outcomes)
   end
 
 private
 
   def generate_data
-    applications.each do |application|
+    applications.find_each(batch_size: 500) do |application|
       user = application.user
       school = application.school
       lead_provider = application.lead_provider
