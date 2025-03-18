@@ -30,7 +30,7 @@ module NpqSeparation::Admin::BulkOperations
   private
 
     def set_bulk_operations
-      @bulk_operations = BulkOperation::RejectApplications.all.includes([file_attachment: :blob]).order(:created_at)
+      @bulk_operations = BulkOperation::RejectApplications.all.includes([file_attachment: :blob]).order(:created_at, :id)
     end
 
     def set_bulk_operation

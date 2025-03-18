@@ -51,8 +51,8 @@
 <hr class="govuk-section-break govuk-section-break--l">
 
 <h1 class="govuk-heading-l">Applications</h1>
-<% if @user.applications.none? %>
+<% if @applications.none? %>
   <p class="govuk-body">This participant has no applications.</p>
 <% else %>
-  <%= render partial: 'application', collection: @user.applications %>
+  <%= render partial: 'application', collection: @applications %>
 <% end %>

@@ -27,7 +27,7 @@ class Admin::ApplicationsController < AdminController
 private
 
   def scope
-    AdminService::ApplicationsSearch.new(q: params[:q]).call
+    AdminService::ApplicationsSearch.new(q: params[:q]).call.order(id: :asc)
   end
 
   def find_application

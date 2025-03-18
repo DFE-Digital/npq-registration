@@ -81,7 +81,7 @@ RSpec.feature "User administration", type: :feature do
     scenario "shows a summary of each user application" do
       applications = %i[headship senco]
         .map { create(:application, user:, course: create(:course, _1)) }
-        .sort_by { _1.user.email }
+        .sort_by { [_1.created_at, _1.id] }
 
       visit npq_separation_admin_user_path(user)
 

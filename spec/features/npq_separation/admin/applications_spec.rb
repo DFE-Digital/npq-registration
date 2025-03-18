@@ -5,7 +5,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   include Helpers::MailHelper
 
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }
-  let(:applications_in_order) { Application.order(created_at: :asc) }
+  let(:applications_in_order) { Application.order(created_at: :asc, id: :asc) }
 
   before do
     create_list(:application, applications_per_page + 1)
@@ -110,7 +110,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing application details with declarations" do
     visit(npq_separation_admin_applications_path)
 
-    application = Application.order(created_at: :asc).first
+    application = Application.order(created_at: :asc, id: :asc).first
     started_declaration = create(:declaration, :from_ecf, application:)
     completed_declaration = create(:declaration, :completed, application:)
     payable_statement = create(:statement, :payable)
