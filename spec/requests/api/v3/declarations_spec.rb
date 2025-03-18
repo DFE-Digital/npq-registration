@@ -68,6 +68,8 @@ RSpec.describe "Declaration endpoints", type: :request do
     let(:declaration_date) { (schedule.applies_from + 1.day).rfc3339 }
     let(:course_identifier) { course.identifier }
     let(:has_passed) { true }
+    let(:delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
+    let(:secondary_delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
     let(:attributes) do
       {
         participant_id:,
@@ -75,6 +77,8 @@ RSpec.describe "Declaration endpoints", type: :request do
         declaration_date:,
         course_identifier:,
         has_passed:,
+        delivery_partner_id:,
+        secondary_delivery_partner_id:,
       }
     end
     let(:service_args) { { lead_provider: }.merge!(attributes) }

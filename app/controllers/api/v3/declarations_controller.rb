@@ -50,7 +50,13 @@ module API
         params
           .require(:data)
           .require(:attributes)
-          .permit(:participant_id, :declaration_type, :declaration_date, :course_identifier, :has_passed)
+          .permit(:participant_id,
+                  :declaration_type,
+                  :declaration_date,
+                  :course_identifier,
+                  :has_passed,
+                  :delivery_partner_id,
+                  :secondary_delivery_partner_id)
           .merge(
             lead_provider: current_lead_provider,
           )
