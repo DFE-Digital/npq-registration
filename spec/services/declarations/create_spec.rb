@@ -15,6 +15,8 @@ RSpec.describe Declarations::Create, type: :model do
   let(:declaration_date) { schedule.applies_from + 1.hour }
   let(:course_identifier) { course.identifier }
   let(:has_passed) { true }
+  let!(:delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
+  let!(:secondary_delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
   let(:params) do
     {
       lead_provider:,
@@ -23,6 +25,8 @@ RSpec.describe Declarations::Create, type: :model do
       declaration_date: declaration_date.rfc3339,
       course_identifier:,
       has_passed:,
+      delivery_partner_id:,
+      secondary_delivery_partner_id:,
     }
   end
   let(:statement) { create(:statement, cohort:, lead_provider:) }
@@ -305,6 +309,8 @@ RSpec.describe Declarations::Create, type: :model do
       expect(declaration.course_identifier).to eq(course_identifier)
       expect(declaration.lead_provider).to eq(lead_provider)
       expect(declaration.cohort).to eq(cohort)
+      expect(declaration.delivery_partner.ecf_id).to eq(delivery_partner_id)
+      expect(declaration.secondary_delivery_partner.ecf_id).to eq(secondary_delivery_partner_id)
     end
 
     context "when declaration is `submitted`" do

@@ -11,6 +11,8 @@ module Declarations
     attribute :declaration_date, :datetime
     attribute :course_identifier, :string
     attribute :has_passed
+    attribute :delivery_partner_id
+    attribute :secondary_delivery_partner_id
 
     validates :lead_provider, presence: true
     validates :participant_id, presence: true
@@ -74,12 +76,21 @@ module Declarations
     delegate :schedule, to: :application, allow_nil: true
     delegate :cohort, to: :schedule
 
-    def declaration_parameters
+    def declaration_parameters_for_find
       {
         declaration_date:,
         declaration_type:,
         lead_provider:,
       }
+    end
+
+    def declaration_parameters_for_create
+      declaration_parameters_for_find.merge(
+        application:,
+        cohort:,
+        delivery_partner: DeliveryPartner.find_by(ecf_id: delivery_partner_id),
+        secondary_delivery_partner: DeliveryPartner.find_by(ecf_id: secondary_delivery_partner_id),
+      )
     end
 
     def existing_declaration
@@ -93,11 +104,11 @@ module Declarations
             .joins(application: :course)
             .billable,
         )
-        .find_by(declaration_parameters.merge(application: { courses: { identifier: course_identifier } }))
+        .find_by(declaration_parameters_for_find.merge(application: { courses: { identifier: course_identifier } }))
     end
 
     def find_or_create_declaration!
-      @declaration = existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
+      @declaration = existing_declaration || Declaration.create!(declaration_parameters_for_create)
     end
 
     def statement_attacher
