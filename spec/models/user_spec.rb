@@ -118,6 +118,12 @@ RSpec.describe User do
 
       # this means that the method output should include the test user
       it { is_expected.to include(user) }
+
+      context "when the user gets removed" do
+        before { user.destroy }
+
+        it { is_expected.to be_empty }
+      end
     end
   end
 
