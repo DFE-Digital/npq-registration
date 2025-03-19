@@ -1,3 +1,7 @@
+<h2 class="govuk-heading-l">We’d like your feedback</h2>
+
+<p class="govuk-body">Tell us about your experience using the registration service by <a href="https://forms.office.com/pages/responsepage.aspx?id=yXfS-grGoU2187O4s0qC-XFs6Aph9JFAlL3W5RWOR_5URTJBQUEwWDBYWFRGRE5BMk8zUFhGT0tSMy4u&route=shorturl" class="govuk-link">completing a short feedback form</a>.</p>
+
 <hr class="govuk-!-margin-top-8"/>
 <% if Feature.registration_closed?(current_user) %>
   <div class="govuk-grid-row govuk-!-padding-top-7">
@@ -18,7 +22,7 @@
   </div>
 <% else %>
   <div class="govuk-!-padding-top-7">
-    <h1 class="govuk-heading-l">Register for another NPQ</h1>
+    <h2 class="govuk-heading-l">Register for another NPQ</h2>
 
     <p class="govuk-body">Use this service to submit a new registration.</p>
     <% if Feature.trn_required? && current_user.trn.blank? %>
