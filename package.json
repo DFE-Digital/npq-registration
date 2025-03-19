@@ -24,7 +24,7 @@
     "sass": "^1.86.0",
     "serialize-javascript": "^6.0.2",
     "svg-pan-zoom": "^3.6.2",
-    "swagger-ui-dist": "^5.19.0",
+    "swagger-ui-dist": "^5.20.1",
     "webpack": "^5.98.0",
     "webpack-cli": "^5.1.4"
   },
