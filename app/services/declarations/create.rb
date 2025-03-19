@@ -32,6 +32,15 @@ module Declarations
     validate :validates_billable_slot_available
     validate :declaration_date_not_in_the_future
 
+    validates :delivery_partner_id, presence: true, if: -> { Feature.declarations_require_delivery_partner? }
+    validates :delivery_partner_id, inclusion: { in: :available_delivery_partners }, if: -> { delivery_partner_id }
+
+    validates :secondary_delivery_partner_id, absence: true, unless: :delivery_partner_id
+    validates :secondary_delivery_partner_id, inclusion: { in: :available_delivery_partners },
+                                              if: -> { secondary_delivery_partner_id }
+
+    validate :delivery_partners_are_not_the_same, if: :delivery_partner_id
+
     attr_reader :raw_declaration_date, :declaration
 
     def create_declaration
@@ -204,6 +213,18 @@ module Declarations
         service.create_outcome
       else
         raise ArgumentError, I18n.t(:cannot_create_completed_declaration)
+      end
+    end
+
+    def available_delivery_partners
+      return [] unless participant_id && schedule
+
+      lead_provider.delivery_partners_for_cohort(cohort).map(&:ecf_id)
+    end
+
+    def delivery_partners_are_not_the_same
+      if delivery_partner_id == secondary_delivery_partner_id
+        errors.add :secondary_delivery_partner_id, :duplicate_delivery_partner
       end
     end
   end
