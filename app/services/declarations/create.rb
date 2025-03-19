@@ -30,7 +30,7 @@ module Declarations
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?
     validate :validates_billable_slot_available
-    validate :declaration_date_not_in_the_future
+    validate :declaration_valid
 
     attr_reader :raw_declaration_date, :declaration
 
@@ -167,10 +167,6 @@ module Declarations
       errors.add(:base, :declaration_already_exists)
     end
 
-    def declaration_date_not_in_the_future
-      errors.add(:declaration_date, :future_declaration_date) if declaration_date&.future?
-    end
-
     def validate_has_passed_field
       self.has_passed = has_passed.to_s
 
@@ -205,6 +201,13 @@ module Declarations
       else
         raise ArgumentError, I18n.t(:cannot_create_completed_declaration)
       end
+    end
+
+    def declaration_valid
+      return if errors.any?
+
+      declaration = Declaration.new(declaration_parameters_for_create)
+      errors.merge!(declaration.errors) unless declaration.valid?
     end
   end
 end

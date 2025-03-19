@@ -290,6 +290,43 @@ RSpec.describe Declarations::Create, type: :model do
 
       it { is_expected.to have_error(:declaration_type, :mismatch_declaration_type_for_schedule, "The property '#/declaration_type' does not exist for this schedule.") }
     end
+
+    context "when the declaration_type is not valid" do
+      let(:declaration_type) { "started-1" }
+
+      it { is_expected.to have_error(:declaration_type, :inclusion, "The entered '#/declaration_type' is not recognised.") }
+    end
+
+    context "when the delivery partner is not on the available partners list" do
+      let(:delivery_partner_id) { create(:delivery_partner).ecf_id }
+
+      it { is_expected.to have_error(:delivery_partner_id, :inclusion, "The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
+    end
+
+    context "when the secondary delivery partner is not on the available partners list" do
+      let(:secondary_delivery_partner_id) { create(:delivery_partner).ecf_id }
+
+      it { is_expected.to have_error(:secondary_delivery_partner_id, :inclusion, "The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
+    end
+
+    context "with the declarations_require_delivery_partner feature flag enabled" do
+      before { allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true) }
+
+      it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
+      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
+    end
+
+    context "when delivery_partner is blank but secondary_delivery_partner is not" do
+      let(:delivery_partner_id) { nil }
+
+      it { is_expected.to have_error(:secondary_delivery_partner_id, :present, "The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'") }
+    end
+
+    context "when delivery_partner and secondary_delivery partner are the same" do
+      let(:secondary_delivery_partner_id) { delivery_partner_id }
+
+      it { is_expected.to have_error(:secondary_delivery_partner_id, :duplicate_delivery_partner, "The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'") }
+    end
   end
 
   describe "#create_declaration" do
@@ -365,21 +402,6 @@ RSpec.describe Declarations::Create, type: :model do
 
         expect(declaration).to be_ineligible_state
         expect(declaration.superseded_by).to eq(original_declaration)
-      end
-    end
-
-    context "when the declaration_type is not valid" do
-      subject(:service) { described_class.new(**params) }
-
-      let(:declaration_type) { "started-1" }
-
-      it "returns false" do
-        expect(service.create_declaration).to be false
-      end
-
-      it "has an error" do
-        service.create_declaration
-        expect(service).to have_error(:declaration_type, :inclusion, "The entered '#/declaration_type' is not recognised.")
       end
     end
   end
