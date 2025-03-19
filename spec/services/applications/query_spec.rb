@@ -449,7 +449,8 @@ RSpec.describe Applications::Query do
       other_application = create(:application, lead_provider: other_lead_provider)
 
       query = described_class.new(lead_provider:)
-      expect { query.application(id: other_application.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.application(ecf_id: other_application.ecf_id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { query.application(id: other_application.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
