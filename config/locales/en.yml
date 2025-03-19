@@ -506,6 +506,13 @@ en:
               missing_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
             application:
               application_schedule_missing: The application is missing a schedule.
+            delivery_partner_id:
+              inclusion: The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
+              blank: The property '#/delivery_partner_id' must be present
+            secondary_delivery_partner_id:
+              inclusion: The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
+              present: The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'
+              duplicate_delivery_partner: The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'
         participant_outcomes/create:
           attributes:
             base:

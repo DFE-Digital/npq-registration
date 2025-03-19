@@ -11,6 +11,8 @@ module Declarations
     attribute :declaration_date, :datetime
     attribute :course_identifier, :string
     attribute :has_passed
+    attribute :delivery_partner_id
+    attribute :secondary_delivery_partner_id
 
     validates :lead_provider, presence: true
     validates :participant_id, presence: true
@@ -29,6 +31,15 @@ module Declarations
     validate :validate_has_passed_field, if: :validate_has_passed?
     validate :validates_billable_slot_available
     validate :declaration_date_not_in_the_future
+
+    validates :delivery_partner_id, presence: true, if: -> { Feature.declarations_require_delivery_partner? }
+    validates :delivery_partner_id, inclusion: { in: :available_delivery_partners }, if: -> { delivery_partner_id }
+
+    validates :secondary_delivery_partner_id, absence: true, unless: :delivery_partner_id
+    validates :secondary_delivery_partner_id, inclusion: { in: :available_delivery_partners },
+                                              if: -> { secondary_delivery_partner_id }
+
+    validate :delivery_partners_are_not_the_same, if: :delivery_partner_id
 
     attr_reader :raw_declaration_date, :declaration
 
@@ -74,12 +85,21 @@ module Declarations
     delegate :schedule, to: :application, allow_nil: true
     delegate :cohort, to: :schedule
 
-    def declaration_parameters
+    def declaration_parameters_for_find
       {
         declaration_date:,
         declaration_type:,
         lead_provider:,
       }
+    end
+
+    def declaration_parameters_for_create
+      declaration_parameters_for_find.merge(
+        application:,
+        cohort:,
+        delivery_partner: DeliveryPartner.find_by(ecf_id: delivery_partner_id),
+        secondary_delivery_partner: DeliveryPartner.find_by(ecf_id: secondary_delivery_partner_id),
+      )
     end
 
     def existing_declaration
@@ -93,11 +113,11 @@ module Declarations
             .joins(application: :course)
             .billable,
         )
-        .find_by(declaration_parameters.merge(application: { courses: { identifier: course_identifier } }))
+        .find_by(declaration_parameters_for_find.merge(application: { courses: { identifier: course_identifier } }))
     end
 
     def find_or_create_declaration!
-      @declaration = existing_declaration || Declaration.create!(declaration_parameters.merge(application:, cohort:))
+      @declaration = existing_declaration || Declaration.create!(declaration_parameters_for_create)
     end
 
     def statement_attacher
@@ -193,6 +213,18 @@ module Declarations
         service.create_outcome
       else
         raise ArgumentError, I18n.t(:cannot_create_completed_declaration)
+      end
+    end
+
+    def available_delivery_partners
+      return [] unless participant_id && schedule
+
+      lead_provider.delivery_partners_for_cohort(cohort).map(&:ecf_id)
+    end
+
+    def delivery_partners_are_not_the_same
+      if delivery_partner_id == secondary_delivery_partner_id
+        errors.add :secondary_delivery_partner_id, :duplicate_delivery_partner
       end
     end
   end
