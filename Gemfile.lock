@@ -392,7 +392,7 @@ GEM
       racc (~> 1.4)
     notifications-ruby-client (5.4.0)
       jwt (>= 1.5, < 3)
-    oj (3.16.9)
+    oj (3.16.10)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (2.1.3)
