@@ -11,7 +11,7 @@ module Statements
         elsif (missing_headers = row_class.attribute_names - lines.first.headers).any?
           new_with_error "Missing headers: #{missing_headers.join(", ")}"
         else
-          new lines.map { row_class.new(_1.to_h.slice(*row_class.attribute_names)) }
+          new(lines.map { row_class.new(_1.to_h.slice(*row_class.attribute_names)) })
         end
       rescue CSV::MalformedCSVError
         new_with_error "must be CSV format"
