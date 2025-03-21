@@ -4,6 +4,7 @@ class Declaration < ApplicationRecord
   UPLIFT_PAID_STATES = %w[paid awaiting_clawback clawed_back].freeze
   COURSE_IDENTIFIERS_INELIGIBLE_FOR_UPLIFT = %w[npq-additional-support-offer npq-early-headship-coaching-offer].freeze
   VOIDABLE_STATES = %w[submitted eligible payable ineligible].freeze
+  DELIVER_PARTNER_REQUIRED_FROM = 2024
 
   has_paper_trail ignore: [:updated_at]
 
@@ -11,6 +12,8 @@ class Declaration < ApplicationRecord
   belongs_to :cohort
   belongs_to :lead_provider
   belongs_to :superseded_by, class_name: "Declaration", optional: true
+  belongs_to :delivery_partner, optional: true
+  belongs_to :secondary_delivery_partner, class_name: "DeliveryPartner", optional: true
   has_many :participant_outcomes, dependent: :destroy
   has_many :statement_items
   has_many :statements, through: :statement_items
@@ -29,6 +32,7 @@ class Declaration < ApplicationRecord
   scope :completed, -> { where(declaration_type: "completed") }
   scope :with_course_identifier, ->(course_identifier) { joins(application: :course).where(course: { identifier: course_identifier }) }
   scope :latest_first, -> { order(created_at: :desc, id: :desc) }
+
   scope :eligible_for_outcomes, lambda { |lead_provider, course_identifier|
     completed
     .with_lead_provider(lead_provider)
@@ -99,6 +103,22 @@ class Declaration < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
 
+  validates :delivery_partner, presence: true, if: :delivery_partner_required
+  validates :delivery_partner, inclusion: { in: :available_delivery_partners },
+                               if: -> { delivery_partner && delivery_partner_changed? }
+
+  validates :secondary_delivery_partner, absence: true, unless: :delivery_partner
+  validates :secondary_delivery_partner,
+            inclusion: { in: :available_delivery_partners },
+            if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
+
+  validate :delivery_partners_are_not_the_same, if: :delivery_partner
+
+  scope :for_delivery_partners, lambda { |delivery_partner|
+    where(delivery_partner: delivery_partner)
+      .or(where(secondary_delivery_partner: delivery_partner))
+  }
+
   def billable_statement
     statement_items.find(&:billable?)&.statement
   end
@@ -145,6 +165,16 @@ class Declaration < ApplicationRecord
       )
   end
 
+  def available_delivery_partners
+    return [] unless lead_provider && cohort
+
+    lead_provider.delivery_partners_for_cohort(cohort)
+  end
+
+  def delivery_partners
+    [delivery_partner, secondary_delivery_partner].compact
+  end
+
 private
 
   def validate_declaration_date_within_schedule
@@ -165,5 +195,18 @@ private
     if statement_items.count > 2
       errors.add(:statement_items, :more_than_two_statement_items)
     end
+  end
+
+  def delivery_partners_are_not_the_same
+    if delivery_partner == secondary_delivery_partner
+      errors.add :secondary_delivery_partner, :duplicate_delivery_partner
+    end
+  end
+
+  def delivery_partner_required
+    return false unless Feature.declarations_require_delivery_partner?
+    return false unless cohort
+
+    cohort.start_year >= DELIVER_PARTNER_REQUIRED_FROM
   end
 end

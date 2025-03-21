@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -249,10 +249,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.enum "state_reason", enum_type: "declaration_state_reasons"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "delivery_partner_id"
+    t.bigint "secondary_delivery_partner_id"
     t.index ["application_id"], name: "index_declarations_on_application_id"
     t.index ["cohort_id"], name: "index_declarations_on_cohort_id"
+    t.index ["delivery_partner_id"], name: "index_declarations_on_delivery_partner_id"
     t.index ["ecf_id"], name: "index_declarations_on_ecf_id", unique: true
     t.index ["lead_provider_id"], name: "index_declarations_on_lead_provider_id"
+    t.index ["secondary_delivery_partner_id"], name: "index_declarations_on_secondary_delivery_partner_id"
     t.index ["superseded_by_id"], name: "index_declarations_on_superseded_by_id"
   end
 
@@ -270,6 +274,27 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
     t.datetime "updated_at"
     t.string "cron"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "delivery_partners", force: :cascade do |t|
+    t.uuid "ecf_id", default: -> { "gen_random_uuid()" }, null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ecf_id"], name: "index_delivery_partners_on_ecf_id", unique: true
+    t.index ["name"], name: "index_delivery_partners_on_name", unique: true
+  end
+
+  create_table "delivery_partnerships", force: :cascade do |t|
+    t.bigint "delivery_partner_id", null: false
+    t.bigint "lead_provider_id", null: false
+    t.bigint "cohort_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cohort_id"], name: "index_delivery_partnerships_on_cohort_id"
+    t.index ["delivery_partner_id", "lead_provider_id", "cohort_id"], name: "idx_on_delivery_partner_id_lead_provider_id_cohort__10d5da32cd", unique: true
+    t.index ["delivery_partner_id"], name: "index_delivery_partnerships_on_delivery_partner_id"
+    t.index ["lead_provider_id"], name: "index_delivery_partnerships_on_lead_provider_id"
   end
 
   create_table "ecf_sync_request_logs", force: :cascade do |t|
@@ -630,7 +655,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_06_140920) do
   add_foreign_key "declarations", "applications"
   add_foreign_key "declarations", "cohorts"
   add_foreign_key "declarations", "declarations", column: "superseded_by_id"
+  add_foreign_key "declarations", "delivery_partners"
+  add_foreign_key "declarations", "delivery_partners", column: "secondary_delivery_partner_id"
   add_foreign_key "declarations", "lead_providers"
+  add_foreign_key "delivery_partnerships", "cohorts"
+  add_foreign_key "delivery_partnerships", "delivery_partners"
+  add_foreign_key "delivery_partnerships", "lead_providers"
   add_foreign_key "participant_id_changes", "users"
   add_foreign_key "participant_outcome_api_requests", "participant_outcomes"
   add_foreign_key "participant_outcomes", "declarations"
