@@ -14,6 +14,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Schools" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
       "Bulk operations" => "/npq-separation/admin/bulk-operations",
+      "Delivery partners" => "/npq-separation/admin/delivery-partners",
       "Settings" => "#",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
