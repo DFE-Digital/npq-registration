@@ -1,12 +1,9 @@
 RSpec.shared_context("with activerecord flipper") do
-  around do |example|
-    Flipper.configure do |config|
-      config.adapter { Flipper::Adapters::ActiveRecord.new }
-      config.default { Flipper.new(config.adapter) }
-    end
+  before do
+    config = Flipper::Configuration.new
+    config.adapter { Flipper::Adapters::ActiveRecord.new }
+    config.default { Flipper.new(config.adapter) }
 
-    example.run
-
-    Flipper::TestHelp.flipper_configure
+    allow(Flipper).to receive(:instance) { config.default }
   end
 end
