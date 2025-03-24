@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Declaration, type: :model do
-  subject { build(:declaration) }
+  subject(:declaration) { build(:declaration) }
 
   describe "associations" do
     it { is_expected.to belong_to(:application) }
@@ -11,6 +11,31 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to have_many(:participant_outcomes).dependent(:destroy) }
     it { is_expected.to have_many(:statement_items) }
     it { is_expected.to have_many(:statements).through(:statement_items) }
+    it { is_expected.to belong_to(:delivery_partner).without_validating_presence }
+    it { is_expected.to belong_to(:secondary_delivery_partner).without_validating_presence }
+
+    context "with delivery partners" do
+      subject do
+        create(:declaration, application:,
+                             delivery_partner: primary_partner,
+                             secondary_delivery_partner: secondary_partner)
+      end
+
+      let(:application) { create(:application, :accepted) }
+      let(:lead_provider) { application.lead_provider }
+      let(:primary_partner) { create(:delivery_partner, lead_provider:) }
+      let(:secondary_partner) { create(:delivery_partner, lead_provider:) }
+
+      it { is_expected.to have_attributes delivery_partner: primary_partner }
+      it { is_expected.to have_attributes secondary_delivery_partner: secondary_partner }
+      it { is_expected.to have_attributes delivery_partners: [primary_partner, secondary_partner] }
+
+      context "without secondary partner" do
+        subject { create(:declaration, application:, delivery_partner: primary_partner) }
+
+        it { is_expected.to have_attributes delivery_partners: [primary_partner] }
+      end
+    end
   end
 
   describe "validations" do
@@ -18,6 +43,133 @@ RSpec.describe Declaration, type: :model do
     it { is_expected.to validate_inclusion_of(:declaration_type).in_array(described_class.declaration_types.values) }
     it { is_expected.to validate_presence_of(:declaration_date) }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique") }
+
+    context "with delivery_partners" do
+      before { delivery_partner && old_cohort_partner }
+
+      let :delivery_partner do
+        create :delivery_partner, lead_provider: declaration.lead_provider
+      end
+
+      let :second_partner do
+        create :delivery_partner, lead_provider: declaration.lead_provider
+      end
+
+      let :old_cohort_partner do
+        create :delivery_partner, lead_providers: {
+          create(:cohort, start_year: 2023) => declaration.lead_provider,
+        }
+      end
+
+      it { is_expected.not_to validate_presence_of(:delivery_partner) }
+      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+
+      it "allows delivery_partner who is on the available partners list" do
+        expect(declaration).to allow_value(delivery_partner).for(:delivery_partner)
+      end
+
+      it "rejects delivery_partner who is on not on the available partners list" do
+        expect(declaration).not_to allow_value(old_cohort_partner).for(:delivery_partner)
+      end
+
+      it "allows secondary_delivery_partner who is on the available partners list" do
+        declaration.delivery_partner = delivery_partner
+
+        expect(declaration).to allow_value(second_partner).for(:secondary_delivery_partner)
+      end
+
+      it "rejects secondary_delivery_partner who is on not on the available partners list" do
+        expect(declaration)
+          .not_to allow_value(old_cohort_partner).for(:secondary_delivery_partner)
+      end
+
+      context "with feature_flag enabled" do
+        before do
+          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
+        end
+
+        let(:declaration) { build(:declaration, cohort:) }
+        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
+        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
+
+        it { is_expected.to validate_presence_of(:delivery_partner) }
+        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+
+        context "with earlier cohort" do
+          let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
+
+        context "with later cohort" do
+          let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM + 1 }
+
+          it { is_expected.to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
+
+        context "without cohort set" do
+          let(:cohort) { nil }
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        end
+      end
+
+      context "when delivery_partner unchanged but removed from lead providers list" do
+        before do
+          declaration.update!(delivery_partner:)
+          delivery_partner.delivery_partnerships.destroy_all
+        end
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when delivery_partner is changed but not on lead providers list" do
+        before do
+          declaration.update!(delivery_partner:)
+          declaration.delivery_partner = old_cohort_partner
+        end
+
+        it { expect(declaration.tap(&:valid?).errors).to include :delivery_partner }
+      end
+
+      context "when secondary_delivery_partner unchanged but removed from lead providers list" do
+        before do
+          declaration.update!(delivery_partner:, secondary_delivery_partner: second_partner)
+          delivery_partner.delivery_partnerships
+                          .where(delivery_partner: second_partner)
+                          .destroy_all
+        end
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when secondary_delivery_partner changed but not on lead providers list" do
+        before do
+          declaration.update!(delivery_partner:, secondary_delivery_partner: second_partner)
+          declaration.secondary_delivery_partner = old_cohort_partner
+        end
+
+        it { expect(declaration.tap(&:valid?).errors).to include :secondary_delivery_partner }
+      end
+
+      context "when delivery_partner is blank but secondary_delivery_partner is not" do
+        before do
+          declaration.secondary_delivery_partner = delivery_partner
+          declaration.valid?
+        end
+
+        it { expect(declaration.errors).to include :secondary_delivery_partner }
+      end
+
+      context "when delivery_partner and secondary_delivery partner are the same" do
+        before { declaration.delivery_partner = delivery_partner }
+
+        it { is_expected.not_to allow_value(delivery_partner).for(:secondary_delivery_partner) }
+      end
+    end
 
     context "when the declaration_date is in the future" do
       before { subject.declaration_date = 1.day.from_now }
@@ -528,6 +680,28 @@ RSpec.describe Declaration, type: :model do
 
       it { expect(described_class.with_course_identifier(course_identifier)).to contain_exactly(declaration) }
     end
+
+    describe ".for_delivery_partners" do
+      subject { Declaration.for_delivery_partners(delivery_partner) }
+
+      let(:delivery_partner) { create :delivery_partner }
+      let(:lead_provider) { create :lead_provider, delivery_partner: }
+      let(:declaration_as_primary) { create :declaration, lead_provider:, delivery_partner: }
+
+      it { is_expected.to include declaration_as_primary }
+
+      context "when declared as secondary partner" do
+        let(:another_partner) { create :delivery_partner, lead_provider: }
+
+        let :declaration_as_secondary do
+          create :declaration, lead_provider:,
+                               delivery_partner: another_partner,
+                               secondary_delivery_partner: delivery_partner
+        end
+
+        it { is_expected.to include declaration_as_secondary }
+      end
+    end
   end
 
   describe "#duplicate_declarations" do
@@ -612,6 +786,45 @@ RSpec.describe Declaration, type: :model do
   describe "paper_trail" do
     it "enables paper trail" do
       expect(Declaration.new).to be_versioned
+    end
+  end
+
+  describe "#available_delivery_partners" do
+    subject(:available_delivery_partners) { declaration.available_delivery_partners }
+
+    let :lead_provider do
+      create :lead_provider, delivery_partners: {
+        twenty_three => twenty_three_partner,
+        create(:cohort, start_year: 2024) => twenty_four_partner,
+      }
+    end
+
+    let(:declaration) { build(:declaration, lead_provider:, cohort: twenty_three) }
+    let(:twenty_three) { create(:cohort, start_year: 2023) }
+    let(:twenty_three_partner) { create(:delivery_partner) }
+    let(:twenty_four_partner) { create(:delivery_partner) }
+
+    it { is_expected.to include twenty_three_partner }
+    it { is_expected.not_to include twenty_four_partner }
+
+    context "without delivery_partner" do
+      let(:lead_provider) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "without cohort" do
+      before { allow(lead_provider).to receive(:delivery_partners_for_cohort) }
+
+      let(:declaration) { build(:declaration, lead_provider:, cohort: nil) }
+
+      it { is_expected.to be_empty }
+
+      it "avoids querying the database" do
+        available_delivery_partners
+
+        expect(lead_provider).not_to have_received(:delivery_partners_for_cohort)
+      end
     end
   end
 end

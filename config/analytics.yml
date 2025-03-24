@@ -147,6 +147,19 @@ shared:
     - created_at
     - updated_at
     - disabled_at
+  :delivery_partners:
+    - id
+    - ecf_id
+    - name
+    - created_at
+    - updated_at
+  :delivery_partnerships:
+    - id
+    - delivery_partner_id
+    - lead_provider_id
+    - cohort_id
+    - created_at
+    - updated_at
   :declarations:
     - id
     - ecf_id
@@ -160,6 +173,8 @@ shared:
     - state_reason
     - created_at
     - updated_at
+    - delivery_partner_id
+    - secondary_delivery_partner_id
   :course_groups:
     - id
     - name
