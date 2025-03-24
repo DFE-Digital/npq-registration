@@ -1,0 +1,14 @@
+<%= govuk_back_link href: npq_separation_admin_delivery_partners_path %>
+
+<h1 class="govuk-heading-l govuk-!-margin-top-6">Update delivery partner name</h1>
+
+<%=
+  govuk_summary_list do |summary_list|
+    summary_list.with_row do |row|
+      row.with_key { 'Delivery partner' }
+      row.with_value { @delivery_partner.name }
+    end
+  end
+%>
+
+<%= render 'form' %>
