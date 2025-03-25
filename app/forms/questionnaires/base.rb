@@ -101,7 +101,7 @@ module Questionnaires
       # Some questions add additional requirements, such as the confirmation page which requires
       # a lead provider and a course to have been selected.
       wizard.store.present? &&
-        query_store.current_user.present? &&
+        query_store.current_user&.actual_user? &&
         wizard.store.keys != %w[current_user]
     end
 
