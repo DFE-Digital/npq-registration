@@ -9,31 +9,48 @@ The lists are stored in the [config/data/January2025](.././config/data/January20
 
 ## Eligibility Lists
 
+Currently there is 5 different lists. All lists are being processed and saved to a constant. Each constant is very simple hash where key is the institution identification number and value is always true. The hash is used for fast and simple lookup.
+The constants are being used in the methods that are later used in `FundingEligiblity` calculator.
+
+Example method using this list looks like that:
+
+```ruby
+def ey_eligible?
+  !!EY_OFSTED_URN_HASH[urn.to_s] || !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+end
+
+```
+
 ### Schools PP50 List
 **File:** `NPQ_Schools_PP50_2025_cohort.csv`
-- Matches schools using the `urn` field.
-- Schools are recorded in the `School` model.
+- Matches schools using the `urn` field from the document.
+- Schools are instances of the `School` model.
+- Uses `PP50_SCHOOLS_URN_HASH` for lookup in the code.
 
 ### Further Education PP55 List
 **File:** `NPQ_FE_PP50_2025_cohort.csv`
-- Matches schools using the `ukprn` field.
-- Schools are recorded in the `School` model.
+- Matches schools using the `ukprn` field from the document.
+- Schools are instances of the `School` model.
+- Uses `PP50_FE_UKPRN_HASH` for lookup in the code.
 
 ### Childminders
 **File:** `NPQ_EY_Childminders_2025_cohort.csv`
-- Matches institutions using the `ofsted_urn` field.
-- Institutions are recorded in the `PrivateChildcareProvider` model.
+- Matches institutions using the `ofsted_urn` field from the document.
+- Institutions are instances of the `PrivateChildcareProvider` model.
+- Uses `CHILDMINDERS_OFSTED_URN_HASH` for lookup in the code.
 
 ### Early Years Settings
 **File:** `NPQ_Disadvantaged_EY_2025_cohort.csv`
-- Matches institutions using both `urn` and `ofsted_urn` fields.
-- Institutions are recorded in both the `School` and `PrivateChildcareProvider` models.
+- Matches institutions using both `urn` and `ofsted_urn` fields from the document.
 - The `ofsted_urn` field is used only when `urn` is empty.
+- Institutions are instances of the `School` and `PrivateChildcareProvider` models.
+- Uses `EY_OFSTED_URN_HASH` for lookup in the code.
 
 ### Local Authority Nurseries
 **File:** `NPQ_LA_Nursery_Schools_2025_cohort.csv`
-- Matches nurseries using the `urn` field.
-- Nurseries are recorded in the `School` model.
+- Matches nurseries using the `urn` field from the document.
+- Nurseries are instances of the `School` model.
+- Uses `LA_DISADVANTAGED_NURSERIES` for lookup in the code.
 
 ## Updating the Lists
 
