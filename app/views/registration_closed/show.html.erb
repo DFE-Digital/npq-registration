@@ -6,7 +6,7 @@
     <p class="govuk-body">Registration for NPQs and the early headship coaching offer is now closed.</p>
     <p class="govuk-body">You can request email updates to tell you when registration reopens.</p>
 
-    <% if current_user.persisted? %>
+    <% if current_user&.persisted? %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Request email updates",
