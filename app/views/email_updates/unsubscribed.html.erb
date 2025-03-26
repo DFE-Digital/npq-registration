@@ -10,7 +10,7 @@
       You will not receive any further emails about the opening of the 'Register for a national professional qualification (NPQ)' service.
     </p>
 
-    <% if current_user.persisted? %>
+    <% if current_user&.persisted? %>
       <p class="govuk-body">
         Did you unsubscribe by accident? <%= link_to "Re-subscribe", new_email_update_path, class: "govuk-link" %>
       </p>

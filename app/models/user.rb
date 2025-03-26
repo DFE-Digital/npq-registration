@@ -140,14 +140,6 @@ class User < ApplicationRecord
     self.provider = :tra_openid_connect
   end
 
-  def actual_user?
-    true
-  end
-
-  def null_user?
-    false
-  end
-
   def synced_to_ecf?
     ecf_id.present?
   end
