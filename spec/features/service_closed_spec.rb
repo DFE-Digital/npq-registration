@@ -15,8 +15,8 @@ RSpec.feature "Service is closed", type: :feature do
     expect(page).to be_accessible
 
     page.click_button("Request email updates")
-    # Due to mocking GAI, we need to manually follow the path
-    visit new_email_update_path
+
+    expect(page).to have_current_path(new_email_update_path)
     expect(page).to have_content("Request email updates about registration opening")
     expect(page).to be_accessible
   end
