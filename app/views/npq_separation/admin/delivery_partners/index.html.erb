@@ -6,6 +6,7 @@
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
+        row.with_cell(text: "ID")
         row.with_cell(text: "Delivery partner")
         row.with_cell(text: "Actions")
       end
@@ -14,6 +15,7 @@
     table.with_body do |body|
       @delivery_partners.each do |delivery_partner|
         body.with_row do |row|
+          row.with_cell(text: delivery_partner.ecf_id)
           row.with_cell(text: delivery_partner.name)
           row.with_cell(text: govuk_link_to("Update", edit_npq_separation_admin_delivery_partner_path(delivery_partner)))
         end

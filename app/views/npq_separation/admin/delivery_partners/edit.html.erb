@@ -5,6 +5,10 @@
 <%=
   govuk_summary_list do |summary_list|
     summary_list.with_row do |row|
+      row.with_key { 'ID' }
+      row.with_value { @delivery_partner.ecf_id }
+    end
+    summary_list.with_row do |row|
       row.with_key { 'Delivery partner' }
       row.with_value { @delivery_partner.name }
     end

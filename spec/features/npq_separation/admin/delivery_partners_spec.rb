@@ -24,6 +24,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
 
       # Test delivery partner pagination
       delivery_partners[0..9].each do |delivery_partner|
+        expect(page).to have_content(delivery_partner.ecf_id)
         expect(page).to have_content(delivery_partner.name)
         expect(page).to have_link("Update", href: edit_npq_separation_admin_delivery_partner_path(delivery_partner))
       end
