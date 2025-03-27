@@ -168,25 +168,18 @@ RSpec.describe User do
     end
   end
 
-  # TODO: test the following methods
+  describe ".find_or_create_from_provider_data" do
+    let(:provider_data) { { foo: :bar } }
+    let(:feature_flag_id) { "123" }
+    let(:service) { instance_double(Users::FindOrCreateFromProviderData) }
 
-  describe ".find_by_get_an_identity_id"
+    before { allow(Users::FindOrCreateFromProviderData).to receive(:new).with(provider_data: provider_data, feature_flag_id: feature_flag_id) { service } }
 
-  describe ".find_or_create_from_provider_data"
-
-  describe ".with_feature_flag_enabled"
-
-  describe "#get_an_identity_user"
-
-  describe "#get_an_identity_provider?"
-
-  describe "#get_an_identity_id"
-
-  describe "#synced_to_ecf?"
-
-  describe "#flipper_id"
-
-  describe "#retrieve_or_persist_feature_flag_id"
+    it "calls Users::FindOrCreateFromProviderData service" do
+      expect(service).to receive(:call)
+      described_class.find_or_create_from_provider_data(provider_data, feature_flag_id: feature_flag_id)
+    end
+  end
 
   describe "#update_email_updates_status" do
     let(:user) { create(:user) }
