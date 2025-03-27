@@ -6,7 +6,8 @@ RSpec.feature "DfE sign in", type: :feature do
   let(:user) { User.find_by(email: "user@example.com") }
 
   context "when there is an existing user with the provided DfE Identity UID" do
-    let!(:existing_user_with_dfe_id) { create(:user, :with_get_an_identity_id, email: "old@example.com", full_name: "old name") }
+    let(:existing_user_with_dfe_id) { create(:user, :with_get_an_identity_id, email: "old@example.com", full_name: "old name") }
+    let!(:application_for_user_with_dfe_id) { create(:application, :accepted, user: existing_user_with_dfe_id, course: create(:course, :leading_teaching)) }
 
     context "and the email in DfE Identity has changed" do
       include_context "Stub Get An Identity Omniauth Responses" do
@@ -19,8 +20,24 @@ RSpec.feature "DfE sign in", type: :feature do
           page.click_button("Start now")
         end
 
-        expect_page_to_have(path: "/registration/course-start-date", submit_form: true)
+        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_with_dfe_id.id}")
         expect(existing_user_with_dfe_id.reload.email).to eq "user@example.com"
+      end
+    end
+
+    context "and the email in DfE Identity has not changed" do
+      include_context "Stub Get An Identity Omniauth Responses" do
+        let(:user_email) { "old@example.com" }
+        let(:user_uid) { existing_user_with_dfe_id.uid }
+      end
+
+      scenario "the user should log in successfully" do
+        navigate_to_page(path: "/", submit_form: false, axe_check: false) do
+          page.click_button("Start now")
+        end
+
+        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_with_dfe_id.id}")
+        expect(existing_user_with_dfe_id.reload.email).to eq "old@example.com"
       end
     end
 
@@ -38,7 +55,7 @@ RSpec.feature "DfE sign in", type: :feature do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_without_dfe_id.id}")
+        expect(page).to have_current_path("/account")
 
         expect(user_without_dfe_id.reload.email).to eq "archived-user@example.com"
         expect(user_without_dfe_id.uid).to be_nil
@@ -48,7 +65,7 @@ RSpec.feature "DfE sign in", type: :feature do
 
         expect(existing_user_with_dfe_id.reload.email).to eq "user@example.com"
         expect(existing_user_with_dfe_id.full_name).to eq "John Doe"
-        expect(existing_user_with_dfe_id.applications.first).to eq application_for_user_without_dfe_id
+        expect(existing_user_with_dfe_id.applications.to_a).to contain_exactly(application_for_user_with_dfe_id, application_for_user_without_dfe_id)
         expect(existing_user_with_dfe_id.participant_id_changes.last).to have_attributes(from_participant_id: user_without_dfe_id.ecf_id, to_participant_id: existing_user_with_dfe_id.ecf_id)
       end
     end
@@ -70,7 +87,7 @@ RSpec.feature "DfE sign in", type: :feature do
           page.click_button("Start now")
         end
 
-        expect(page).to have_current_path("/accounts/user_registrations/#{application_for_user_with_same_email_different_dfe_uid.id}")
+        expect(page).to have_current_path("/account")
 
         expect(user_with_same_email_different_dfe_uid.reload.email).to eq "archived-user@example.com"
         expect(user_with_same_email_different_dfe_uid.uid).to be_nil
@@ -79,7 +96,7 @@ RSpec.feature "DfE sign in", type: :feature do
         expect(user_with_same_email_different_dfe_uid.applications.count).to be_zero
 
         expect(existing_user_with_dfe_id.reload.full_name).to eq "John Doe"
-        expect(existing_user_with_dfe_id.applications.first).to eq application_for_user_with_same_email_different_dfe_uid
+        expect(existing_user_with_dfe_id.applications.to_a).to contain_exactly(application_for_user_with_dfe_id, application_for_user_with_same_email_different_dfe_uid)
         expect(existing_user_with_dfe_id.participant_id_changes.last).to have_attributes(from_participant_id: user_with_same_email_different_dfe_uid.ecf_id, to_participant_id: existing_user_with_dfe_id.ecf_id)
       end
     end
