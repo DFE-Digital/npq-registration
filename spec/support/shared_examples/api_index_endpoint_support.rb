@@ -77,11 +77,13 @@ RSpec.shared_examples "an API index endpoint on a parent resource" do |parent, c
   end
 end
 
-RSpec.shared_examples "an API index endpoint with sorting" do
-  it "calls the correct query" do
-    expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, sort: "-created_at")).and_call_original
-
-    api_get(path, params: { sort: "-created_at" })
+RSpec.shared_examples "an API index endpoint with sorting" do |additional_sorts = []|
+  sorts = %w[created_at updated_at]
+  sorts.union(additional_sorts).map { |sort| ["-", "+"].map { |direction| "#{direction}#{sort}" } }.flatten.each do |sort|
+    it "calls the correct query" do
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, sort: sort)).and_call_original
+      api_get(path, params: { sort: sort })
+    end
   end
 end
 
