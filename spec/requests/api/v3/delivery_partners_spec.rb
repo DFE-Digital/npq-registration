@@ -28,7 +28,7 @@ RSpec.describe "Delivery Partner endpoints", type: :request do
 
     it_behaves_like "an API index endpoint"
     it_behaves_like "an API index endpoint with pagination"
-    it_behaves_like "an API index endpoint with sorting"
+    it_behaves_like "an API index endpoint with sorting", %w[name]
 
     context "when filtering by cohort" do
       let(:cohort_2023) { create(:cohort, start_year: 2023) }
