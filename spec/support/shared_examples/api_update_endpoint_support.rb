@@ -19,6 +19,7 @@ RSpec.shared_examples "an API update endpoint" do
 
         expect(response.status).to eq 200
         expect(response.content_type).to eql("application/json")
+        expect(response.headers).to include("cache-control" => "no-store")
         expect(parsed_response["data"]["id"]).to eq(resource_id)
       end
 

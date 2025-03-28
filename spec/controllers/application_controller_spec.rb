@@ -11,6 +11,12 @@ RSpec.describe ApplicationController do
     allow(Sentry).to receive(:set_user)
   end
 
+  it "sets caching headers" do
+    get :index
+
+    expect(response.headers).to include "Cache-Control" => "no-store"
+  end
+
   context "when user is not known" do
     it "does not set sentry user" do
       get :index
