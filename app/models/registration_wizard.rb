@@ -71,6 +71,24 @@ class RegistrationWizard
 
   delegate :session, to: :request
 
+  class << self
+    def validate_step!(step)
+      return step.to_sym if VALID_REGISTRATION_STEPS.include?(step.to_sym)
+
+      raise InvalidStep, "Could not find step: #{step}"
+    end
+
+    def fetch_step(step)
+      validate_step!(step)
+
+      "Questionnaires::#{step.to_s.camelcase}".constantize
+    end
+
+    def permitted_params_for_step(step)
+      fetch_step(step).permitted_params
+    end
+  end
+
   def initialize(current_step:, store:, request:, current_user:, params: {})
     set_current_step(current_step)
 
@@ -80,10 +98,6 @@ class RegistrationWizard
     @request = request
 
     load_current_user_into_store
-  end
-
-  def self.permitted_params_for_step(step)
-    "Questionnaires::#{step.to_s.camelcase}".constantize.permitted_params
   end
 
   def form
@@ -234,7 +248,7 @@ private
            to: :query_store
 
   def form_for_step(step)
-    form_class = "Questionnaires::#{step.to_s.camelcase}".constantize
+    form_class = self.class.fetch_step(step)
     hash = store.slice(*form_class.permitted_params.map(&:to_s))
     form_class.new hash.merge(wizard: self)
   end
@@ -261,13 +275,11 @@ private
   end
 
   def form_class
-    @form_class ||= "Questionnaires::#{current_step.to_s.camelcase}".constantize
+    @form_class ||= self.class.fetch_step(current_step)
   end
 
   def set_current_step(step)
-    @current_step = VALID_REGISTRATION_STEPS.find { |s| s == step.to_sym }
-
-    raise InvalidStep, "Could not find step: #{step}" if @current_step.nil?
+    @current_step = self.class.validate_step!(step)
   end
 
   def t(key)
