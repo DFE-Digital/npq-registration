@@ -2421,6 +2421,24 @@ components:
               nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
@@ -2446,24 +2464,6 @@ components:
               - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
-    ParticipantDeclarationResponse:
-      description: A single participant declaration.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          "$ref": "#/components/schemas/ParticipantDeclaration"
-    ParticipantDeclarationsResponse:
-      description: A list of participant declarations.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationStartedRequest:
       description: An NPQ started participant declaration
       type: object
@@ -2510,6 +2510,20 @@ components:
           - npq-early-headship-coaching-offer
           - npq-senco
           example: npq-senior-leadership
+        delivery_partner_id:
+          description: The delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+        secondary_delivery_partner_id:
+          description: The secondary delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: f0de7abf-399b-4e68-83de-2c33b503810c
       required:
       - participant_id
       - declaration_type
@@ -2567,6 +2581,20 @@ components:
           - npq-early-headship-coaching-offer
           - npq-senco
           example: npq-senior-leadership
+        delivery_partner_id:
+          description: The delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+        secondary_delivery_partner_id:
+          description: The secondary delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: f0de7abf-399b-4e68-83de-2c33b503810c
       required:
       - participant_id
       - declaration_type
@@ -2635,6 +2663,20 @@ components:
           required: true
           nullable: false
           example: true
+        delivery_partner_id:
+          description: The delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+        secondary_delivery_partner_id:
+          description: The secondary delivery partner ID
+          type: string
+          format: uuid
+          required: false
+          nullable: false
+          example: f0de7abf-399b-4e68-83de-2c33b503810c
       example:
         participant_id: db3a7848-7308-4879-942a-c4a70ced400a
         declaration_type: completed

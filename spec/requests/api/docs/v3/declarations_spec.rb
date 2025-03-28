@@ -44,13 +44,15 @@ RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.ya
 
   describe "create declarations" do
     let(:lead_provider) { create(:lead_provider) }
-    let(:type) { "participant-declaration" } # check
+    let(:type) { "participant-declaration" }
     let(:cohort) { create(:cohort, :current) }
     let(:course_group) { CourseGroup.find_by(name: "leadership") }
     let(:course) { create(:course, :senior_leadership, course_group:) }
     let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
     let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
     let(:declaration_date) { schedule.applies_from + 1.day }
+    let(:delivery_partner) { create(:delivery_partner) }
+    let(:secondary_delivery_partner) { create(:delivery_partner) }
     let(:invalid_attributes) { { participant_id: "invalid" } }
     let(:attributes) do
       {
@@ -58,6 +60,8 @@ RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.ya
         declaration_type: "started",
         declaration_date: application.schedule.applies_from.rfc3339,
         course_identifier: course.identifier,
+        delivery_partner_id: delivery_partner.id,
+        secondary_delivery_partner_id: secondary_delivery_partner.id,
       }
     end
 
