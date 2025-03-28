@@ -68,5 +68,9 @@ FactoryBot.define do
     trait :voided do
       state { :voided }
     end
+
+    trait :with_delivery_partner do
+      delivery_partner { create(:delivery_partner, lead_provider:) }
+    end
   end
 end
