@@ -68,6 +68,11 @@ module NpqSeparation
             prefix: "/npq-separation/admin/bulk_operations",
           ) => [],
           Node.new(
+            name: "Delivery partners",
+            href: npq_separation_admin_delivery_partners_path,
+            prefix: "/npq-separation/admin/delivery-partners",
+          ) => [],
+          Node.new(
             name: "Settings",
             href: "#",
             prefix: "/npq-separation/admin/settings",

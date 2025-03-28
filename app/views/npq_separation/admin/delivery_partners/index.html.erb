@@ -1,0 +1,27 @@
+<h1 class="govuk-heading-l">Delivery partners</h1>
+
+<%= govuk_button_link_to "Add a delivery partner", new_npq_separation_admin_delivery_partner_path %>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "ID")
+        row.with_cell(text: "Delivery partner")
+        row.with_cell(text: "Actions")
+      end
+    end
+
+    table.with_body do |body|
+      @delivery_partners.each do |delivery_partner|
+        body.with_row do |row|
+          row.with_cell(text: delivery_partner.ecf_id)
+          row.with_cell(text: delivery_partner.name)
+          row.with_cell(text: govuk_link_to("Update", edit_npq_separation_admin_delivery_partner_path(delivery_partner)))
+        end
+      end
+    end
+  end
+%>
+
+<%= govuk_pagination(pagy: @pagy) %>
