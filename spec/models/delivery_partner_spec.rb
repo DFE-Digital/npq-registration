@@ -47,4 +47,20 @@ RSpec.describe DeliveryPartner, type: :model do
       it { is_expected.to include declaration_as_secondary }
     end
   end
+
+  describe "#cohorts_for_lead_provider" do
+    subject { delivery_partner.cohorts_for_lead_provider(lead_provider) }
+
+    let(:delivery_partner) { create :delivery_partner, lead_providers: { cohort => lead_provider, other_cohort => other_lead_provider } }
+    let(:lead_provider) { create :lead_provider }
+    let(:other_lead_provider) { create :lead_provider }
+    let(:cohort) { create :cohort }
+    let(:other_cohort) { create :cohort }
+
+    before do
+      create :delivery_partner, lead_providers: { cohort => lead_provider, other_cohort => other_lead_provider }
+    end
+
+    it { is_expected.to eq [cohort] }
+  end
 end

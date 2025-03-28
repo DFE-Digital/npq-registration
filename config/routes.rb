@@ -208,6 +208,8 @@ Rails.application.routes.draw do
       end
 
       resources :statements, only: %i[index show], param: :ecf_id
+
+      resources :delivery_partners, path: "delivery-partners", only: %i[index show], param: :ecf_id
     end
 
     namespace :teacher_record_service, path: "teacher-record-service", defaults: { format: :json } do

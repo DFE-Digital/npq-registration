@@ -9,4 +9,8 @@ class DeliveryPartner < ApplicationRecord
   def declarations
     Declaration.for_delivery_partners(self)
   end
+
+  def cohorts_for_lead_provider(lead_provider)
+    delivery_partnerships.select { |delivery_partnership| delivery_partnership.lead_provider_id == lead_provider.id }.map(&:cohort)
+  end
 end
