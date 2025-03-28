@@ -102,6 +102,21 @@ RSpec.configure do |config|
         }.compact,
       },
     }
+  }.tap do |hash|
+    v1_v2_participant_declaration_requests = {
+      ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
+      ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
+      ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+      ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+    }
+    hash["v1/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    hash["v2/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    hash["v3/swagger.yaml"][:components][:schemas].merge!(
+      ParticipantDeclarationRequest: V3_PARTICIPANT_DECLARATION_REQUEST,
+      ParticipantDeclarationStartedRequest: V3_PARTICIPANT_DECLARATION_STARTED_REQUEST,
+      ParticipantDeclarationRetainedRequest: V3_PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+      ParticipantDeclarationCompletedRequest: V3_PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+    )
   end
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
