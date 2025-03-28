@@ -53,6 +53,7 @@ RSpec.configure do |config|
           ListParticipantDeclarationsFilter: LIST_PARTICIPANT_DECLARATIONS_FILTER[version],
           ListParticipantOutcomesFilter: LIST_PARTICIPANT_OUTCOMES_FILTER,
           ListStatementsFilter: LIST_STATEMENTS_FILTER[version],
+
           UnauthorisedResponse: UNAUTHORISED_RESPONSE,
           NotFoundResponse: NOT_FOUND_RESPONSE,
           BadRequestResponse: BAD_REQUEST_RESPONSE,
@@ -92,6 +93,12 @@ RSpec.configure do |config|
           ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
           ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
           ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+
+          ListDeliveryPartnersFilter: LIST_DELIVERY_PARTNERS_FILTER[version],
+          DeliveryPartner: DELIVERY_PARTNER[version],
+          DeliveryPartnerResponse: DELIVERY_PARTNER_RESPONSE[version],
+          DeliveryPartnersResponse: DELIVERY_PARTNERS_RESPONSE[version],
+          DeliveryPartnersSortingOptions: DELIVERY_PARTNERS_SORTING_OPTIONS[version],
         }.compact,
       },
     }

@@ -42,6 +42,8 @@ swagger_schemas/models
 swagger_schemas/responses
 ```
 
+Once updates are made to the schemas, you will need to run the `rswag:specs:swaggerize` rake task to update the `swagger.yaml`.
+
 ## Swagger UI
 
 We currently have a simple controller that renders out a custom layout to pull in a JS pack containing `swagger-ui-dist`. This will boot Swagger UI using the version of the yaml file in the path, so `/api/docs/v3` will render `/api/docs/v3/swagger.yaml`.

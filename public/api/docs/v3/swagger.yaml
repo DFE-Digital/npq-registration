@@ -473,6 +473,44 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v3/delivery-partners":
+    get:
+      summary: Retrieve multiple Delivery Partners
+      tags:
+      - Delivery Partners
+      security:
+      - api_key: []
+      parameters:
+      - name: filter
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/ListDeliveryPartnersFilter"
+        style: deepObject
+      - name: page
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/PaginationFilter"
+        style: deepObject
+      - name: sort
+        in: query
+        required: false
+        schema:
+          "$ref": "#/components/schemas/DeliveryPartnersSortingOptions"
+      responses:
+        '200':
+          description: A list of Delivery Partners
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DeliveryPartnersResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
   "/api/v3/participants/npq/outcomes":
     get:
       summary: Retrieve multiple NPQ Outcomes for all participants
@@ -2603,3 +2641,82 @@ components:
         declaration_date: '2021-05-31T02:21:32Z'
         course_identifier: npq-senior-leadership
         has_passed: true
+    ListDeliveryPartnersFilter:
+      description: Filter delivery partners to return more specific results
+      type: object
+      properties:
+        cohort:
+          description: Return only delivery partners from the specified cohort.
+          type: string
+          example: '2022'
+    DeliveryPartner:
+      description: A single delivery partner
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+          example: delivery-partner
+          enum:
+          - delivery-partner
+        attributes:
+          properties:
+            name:
+              description: The name of the delivery partner
+              type: string
+              nullable: false
+              example: Awesome Delivery Partner Ltd
+            cohort:
+              description: The starting years of the cohorts the delivery partner
+                is valid for
+              type: array
+              items:
+                type: string
+                example: '2025'
+            created_at:
+              description: The date the delivery partner was created
+              type: string
+              nullable: false
+              format: date-time
+              example: '2025-03-25T02:21:32.000Z'
+            updated_at:
+              description: The date the delivery partner was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2025-03-25T02:22:32.000Z'
+    DeliveryPartnerResponse:
+      description: A single delivery partner
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/DeliveryPartner"
+    DeliveryPartnersResponse:
+      description: A list of delivery partners
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/DeliveryPartner"
+    DeliveryPartnersSortingOptions:
+      description: Sort records being returned.
+      enum:
+      - name
+      - "-name"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"
+      default: name
+      example: created_at

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do |url, tag, resource_description, filter_schema_ref, response_schema_ref, sortable|
+RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do |url, tag, resource_description, filter_schema_ref, response_schema_ref, default_sortable, sorting_schema_ref = nil|
   path url do
     get "Retrieve multiple #{resource_description}" do
       tags tag
@@ -26,12 +26,21 @@ RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do 
                 },
                 style: "deepObject"
 
-      if sortable
+      if default_sortable
         parameter name: :sort,
                   in: :query,
                   required: false,
                   schema: {
                     "$ref": "#/components/schemas/SortingOptions",
+                  }
+      end
+
+      if sorting_schema_ref
+        parameter name: :sort,
+                  in: :query,
+                  required: false,
+                  schema: {
+                    "$ref": sorting_schema_ref,
                   }
       end
 
