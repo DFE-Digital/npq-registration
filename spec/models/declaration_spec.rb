@@ -61,26 +61,26 @@ RSpec.describe Declaration, type: :model do
         }
       end
 
-      it { is_expected.not_to validate_presence_of(:delivery_partner) }
-      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+      it { is_expected.not_to validate_presence_of(:delivery_partner_id) }
+      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
 
       it "allows delivery_partner who is on the available partners list" do
-        expect(declaration).to allow_value(delivery_partner).for(:delivery_partner)
+        expect(declaration).to allow_value(delivery_partner.id).for(:delivery_partner_id)
       end
 
       it "rejects delivery_partner who is on not on the available partners list" do
-        expect(declaration).not_to allow_value(old_cohort_partner).for(:delivery_partner)
+        expect(declaration).not_to allow_value(old_cohort_partner.id).for(:delivery_partner_id)
       end
 
       it "allows secondary_delivery_partner who is on the available partners list" do
         declaration.delivery_partner = delivery_partner
 
-        expect(declaration).to allow_value(second_partner).for(:secondary_delivery_partner)
+        expect(declaration).to allow_value(second_partner.id).for(:secondary_delivery_partner_id)
       end
 
       it "rejects secondary_delivery_partner who is on not on the available partners list" do
         expect(declaration)
-          .not_to allow_value(old_cohort_partner).for(:secondary_delivery_partner)
+          .not_to allow_value(old_cohort_partner.id).for(:secondary_delivery_partner_id)
       end
 
       context "with feature_flag enabled" do
@@ -92,28 +92,28 @@ RSpec.describe Declaration, type: :model do
         let(:cohort) { create(:cohort, start_year: cohort_start_year) }
         let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
 
-        it { is_expected.to validate_presence_of(:delivery_partner) }
-        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+        it { is_expected.to validate_presence_of(:delivery_partner_id) }
+        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
 
         context "with earlier cohort" do
           let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
 
-          it { is_expected.not_to validate_presence_of(:delivery_partner) }
-          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:delivery_partner_id) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
         end
 
         context "with later cohort" do
           let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM + 1 }
 
-          it { is_expected.to validate_presence_of(:delivery_partner) }
-          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+          it { is_expected.to validate_presence_of(:delivery_partner_id) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
         end
 
         context "without cohort set" do
           let(:cohort) { nil }
 
-          it { is_expected.not_to validate_presence_of(:delivery_partner) }
-          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:delivery_partner_id) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
         end
       end
 
@@ -132,7 +132,7 @@ RSpec.describe Declaration, type: :model do
           declaration.delivery_partner = old_cohort_partner
         end
 
-        it { expect(declaration.tap(&:valid?).errors).to include :delivery_partner }
+        it { expect(declaration.tap(&:valid?).errors).to include :delivery_partner_id }
       end
 
       context "when secondary_delivery_partner unchanged but removed from lead providers list" do
@@ -152,7 +152,7 @@ RSpec.describe Declaration, type: :model do
           declaration.secondary_delivery_partner = old_cohort_partner
         end
 
-        it { expect(declaration.tap(&:valid?).errors).to include :secondary_delivery_partner }
+        it { expect(declaration.tap(&:valid?).errors).to include :secondary_delivery_partner_id }
       end
 
       context "when delivery_partner is blank but secondary_delivery_partner is not" do
@@ -161,13 +161,13 @@ RSpec.describe Declaration, type: :model do
           declaration.valid?
         end
 
-        it { expect(declaration.errors).to include :secondary_delivery_partner }
+        it { expect(declaration.errors).to include :secondary_delivery_partner_id }
       end
 
       context "when delivery_partner and secondary_delivery partner are the same" do
         before { declaration.delivery_partner = delivery_partner }
 
-        it { is_expected.not_to allow_value(delivery_partner).for(:secondary_delivery_partner) }
+        it { is_expected.not_to allow_value(delivery_partner.id).for(:secondary_delivery_partner_id) }
       end
     end
 
@@ -789,8 +789,8 @@ RSpec.describe Declaration, type: :model do
     end
   end
 
-  describe "#available_delivery_partners" do
-    subject(:available_delivery_partners) { declaration.available_delivery_partners }
+  describe "#available_delivery_partner_ids" do
+    subject(:available_delivery_partner_ids) { declaration.available_delivery_partner_ids }
 
     let :lead_provider do
       create :lead_provider, delivery_partners: {
@@ -804,8 +804,8 @@ RSpec.describe Declaration, type: :model do
     let(:twenty_three_partner) { create(:delivery_partner) }
     let(:twenty_four_partner) { create(:delivery_partner) }
 
-    it { is_expected.to include twenty_three_partner }
-    it { is_expected.not_to include twenty_four_partner }
+    it { is_expected.to include twenty_three_partner.id }
+    it { is_expected.not_to include twenty_four_partner.id }
 
     context "without delivery_partner" do
       let(:lead_provider) { nil }
@@ -821,7 +821,7 @@ RSpec.describe Declaration, type: :model do
       it { is_expected.to be_empty }
 
       it "avoids querying the database" do
-        available_delivery_partners
+        available_delivery_partner_ids
 
         expect(lead_provider).not_to have_received(:delivery_partners_for_cohort)
       end

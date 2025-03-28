@@ -103,13 +103,13 @@ class Declaration < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validate :validate_max_statement_items_count
 
-  validates :delivery_partner, presence: true, if: :delivery_partner_required
-  validates :delivery_partner, inclusion: { in: :available_delivery_partners },
-                               if: -> { delivery_partner && delivery_partner_changed? }
+  validates :delivery_partner_id, presence: true, if: :delivery_partner_required
+  validates :delivery_partner_id, inclusion: { in: :available_delivery_partner_ids },
+                                  if: -> { delivery_partner && delivery_partner_changed? }
 
-  validates :secondary_delivery_partner, absence: true, unless: :delivery_partner
-  validates :secondary_delivery_partner,
-            inclusion: { in: :available_delivery_partners },
+  validates :secondary_delivery_partner_id, absence: true, unless: :delivery_partner
+  validates :secondary_delivery_partner_id,
+            inclusion: { in: :available_delivery_partner_ids },
             if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
 
   validate :delivery_partners_are_not_the_same, if: :delivery_partner
@@ -165,10 +165,10 @@ class Declaration < ApplicationRecord
       )
   end
 
-  def available_delivery_partners
+  def available_delivery_partner_ids
     return [] unless lead_provider && cohort
 
-    lead_provider.delivery_partners_for_cohort(cohort)
+    lead_provider.delivery_partners_for_cohort(cohort).map(&:id)
   end
 
   def delivery_partners
@@ -199,7 +199,7 @@ private
 
   def delivery_partners_are_not_the_same
     if delivery_partner == secondary_delivery_partner
-      errors.add :secondary_delivery_partner, :duplicate_delivery_partner
+      errors.add :secondary_delivery_partner_id, :duplicate_delivery_partner
     end
   end
 
