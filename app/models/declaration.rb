@@ -206,6 +206,7 @@ private
   def delivery_partner_required
     return false unless Feature.declarations_require_delivery_partner?
     return false unless cohort
+    return false if persisted? && !delivery_partner_id_changed?
 
     cohort.start_year >= DELIVER_PARTNER_REQUIRED_FROM
   end
