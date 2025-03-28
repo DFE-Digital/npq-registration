@@ -103,8 +103,6 @@ class FundingEligibility
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
 
           if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
-            return FUNDED_ELIGIBILITY_RESULT if course.npqlpm? || course.npqh? || course.npqs? || course.ehco?
-
             return NO_INSTITUTION
           elsif query_store.works_in_other?
             return INELIGIBLE_INSTITUTION_TYPE

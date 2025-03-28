@@ -305,14 +305,50 @@ RSpec.describe FundingEligibility do
       end
     end
 
-    context "when user is referred by return to teaching adviser" do
+    context "when there is no institution" do
       let(:institution) { nil }
       let(:inside_catchment) { true }
-      let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: true) }
 
-      it "is ineligible" do
-        expect(subject.funded?).to be false
-        expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
+      context "when user is referred by return to teaching adviser" do
+        let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: true) }
+
+        it "is ineligible" do
+          expect(subject.funded?).to be false
+          expect(subject.funding_eligiblity_status_code).to eq :referred_by_return_to_teaching_adviser
+        end
+      end
+
+      describe "no_institution code" do
+        let(:young_offender) { false }
+        let(:hospital) { false }
+
+        let(:query_store) do
+          instance_double(RegistrationQueryStore,
+                          young_offender_institution?: young_offender,
+                          local_authority_supply_teacher?: false,
+                          employment_type_local_authority_virtual_school?: false,
+                          employment_type_hospital_school?: hospital,
+                          referred_by_return_to_teaching_adviser?: false)
+        end
+        let(:course) { create(:course, :headship) }
+
+        context "when user is working in young offender institution" do
+          let(:young_offender) { true }
+
+          it "is ineligible" do
+            expect(subject.funded?).to be false
+            expect(subject.funding_eligiblity_status_code).to eq :no_institution
+          end
+        end
+
+        context "when user is working in hospital school" do
+          let(:hospital) { true }
+
+          it "is ineligible" do
+            expect(subject.funded?).to be false
+            expect(subject.funding_eligiblity_status_code).to eq :no_institution
+          end
+        end
       end
     end
   end
