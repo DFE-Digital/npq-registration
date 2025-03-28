@@ -167,7 +167,7 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
-    csv (3.3.2)
+    csv (3.3.3)
     cuprite (0.15.1)
       capybara (~> 3.0)
       ferrum (~> 0.15.0)
@@ -299,7 +299,7 @@ GEM
     html-attributes-utils (1.0.2)
       activesupport (>= 6.1.4.4)
     htmlentities (4.3.4)
-    httparty (0.22.0)
+    httparty (0.23.0)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -779,7 +779,7 @@ DEPENDENCIES
   govuk-components (~> 5.8)
   govuk_design_system_formbuilder (~> 5.8)
   govuk_markdown
-  httparty (~> 0.22)
+  httparty (~> 0.23)
   i18n-debug
   iconv
   jsbundling-rails (~> 1.3)
