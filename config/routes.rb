@@ -238,6 +238,7 @@ Rails.application.routes.draw do
             resource :change_funding_eligibility, only: %i[new create]
             resource :change_lead_provider, controller: "change_lead_provider", only: %i[show create]
             resource :notes, only: %i[edit update]
+            resource :change_cohort, controller: "change_cohort", only: %i[show create]
           end
         end
       end
