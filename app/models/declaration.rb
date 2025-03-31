@@ -19,6 +19,7 @@ class Declaration < ApplicationRecord
   has_many :statements, through: :statement_items
 
   delegate :course, :user, to: :application
+  delegate :inside_catchment?, to: :application, prefix: true, allow_nil: true
   delegate :identifier, to: :course, prefix: true
   delegate :name, to: :lead_provider, prefix: true
 
@@ -104,10 +105,17 @@ class Declaration < ApplicationRecord
   validate :validate_max_statement_items_count
 
   validates :delivery_partner_id, presence: true, if: :delivery_partner_required
+  validates :delivery_partner_id, absence: { message: :overseas },
+                                  unless: :application_inside_catchment?
   validates :delivery_partner_id, inclusion: { in: :available_delivery_partner_ids },
                                   if: -> { delivery_partner && delivery_partner_changed? }
 
   validates :secondary_delivery_partner_id, absence: true, unless: :delivery_partner
+
+  validates :secondary_delivery_partner_id,
+            absence: { message: :overseas },
+            if: -> { delivery_partner_id && !application_inside_catchment? }
+
   validates :secondary_delivery_partner_id,
             inclusion: { in: :available_delivery_partner_ids },
             if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
@@ -206,6 +214,7 @@ private
   def delivery_partner_required
     return false unless Feature.declarations_require_delivery_partner?
     return false unless cohort
+    return false unless application_inside_catchment?
     return false if persisted? && !delivery_partner_id_changed?
 
     cohort.start_year >= DELIVER_PARTNER_REQUIRED_FROM
