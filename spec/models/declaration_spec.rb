@@ -94,6 +94,8 @@ RSpec.describe Declaration, type: :model do
 
         it { is_expected.to validate_presence_of(:delivery_partner_id) }
         it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
+        it { is_expected.not_to validate_absence_of(:delivery_partner_id) }
+        it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
 
         context "with earlier cohort" do
           let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
@@ -124,6 +126,31 @@ RSpec.describe Declaration, type: :model do
           end
 
           it { is_expected.to be_eligible_state }
+        end
+
+        context "with application from another country" do
+          let(:declaration) { build(:declaration, cohort:, application:) }
+
+          let :application do
+            create(:application, teacher_catchment: nil,
+                                 teacher_catchment_country: "Italy",
+                                 teacher_catchment_iso_country_code: "ITA")
+          end
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+          it { is_expected.to validate_absence_of(:delivery_partner_id) }
+          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
+        end
+
+        context "with application from a non-english home nation" do
+          let(:declaration) { build(:declaration, cohort:, application:) }
+          let(:application) { build(:application, teacher_catchment: "wales") }
+
+          it { is_expected.not_to validate_presence_of(:delivery_partner) }
+          it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
+          it { is_expected.to validate_absence_of(:delivery_partner_id) }
+          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
         end
       end
 
