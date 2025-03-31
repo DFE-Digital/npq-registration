@@ -247,6 +247,8 @@ Rails.application.routes.draw do
         resources :statements, only: %i[new create show]
       end
 
+      resources :delivery_partners, path: "delivery-partners", except: %i[show destroy]
+
       resources :schools, only: %i[index show]
       resources :courses, only: %i[index show]
       resources :users, only: %i[index show] do
