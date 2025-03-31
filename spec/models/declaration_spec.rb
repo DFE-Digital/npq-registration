@@ -129,7 +129,9 @@ RSpec.describe Declaration, type: :model do
         end
 
         context "with application from another country" do
-          let(:declaration) { build(:declaration, cohort:, application:) }
+          subject do
+            build(:declaration, cohort:, application:, delivery_partner: DeliveryPartner.first)
+          end
 
           let :application do
             create(:application, teacher_catchment: nil,
@@ -139,18 +141,21 @@ RSpec.describe Declaration, type: :model do
 
           it { is_expected.not_to validate_presence_of(:delivery_partner) }
           it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
-          it { is_expected.to validate_absence_of(:delivery_partner_id) }
-          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
+          it { is_expected.to validate_absence_of(:delivery_partner_id).with_message(/outside of England/) }
+          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id).with_message(/outside of England/) }
         end
 
         context "with application from a non-english home nation" do
-          let(:declaration) { build(:declaration, cohort:, application:) }
+          subject do
+            build(:declaration, cohort:, application:, delivery_partner: DeliveryPartner.first)
+          end
+
           let(:application) { build(:application, teacher_catchment: "wales") }
 
           it { is_expected.not_to validate_presence_of(:delivery_partner) }
           it { is_expected.not_to validate_presence_of(:secondary_delivery_partner) }
-          it { is_expected.to validate_absence_of(:delivery_partner_id) }
-          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
+          it { is_expected.to validate_absence_of(:delivery_partner_id).with_message(/outside of England/) }
+          it { is_expected.to validate_absence_of(:secondary_delivery_partner_id).with_message(/outside of England/) }
         end
       end
 
