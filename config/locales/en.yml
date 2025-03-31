@@ -196,9 +196,11 @@ en:
             delivery_partner_id:
               inclusion: The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
               blank: The property '#/delivery_partner_id' must be present
+              overseas: The property '#/delivery_partner_id' cannot be specified for Applications from outside of England'
             secondary_delivery_partner_id:
               inclusion: The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
               present: The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'
+              overseas: The property '#/secondary_delivery_partner_id' cannot be specified for Applications from outside of England'
               duplicate_delivery_partner: The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'
             statement_items:
               more_than_two_statement_items: There cannot be more than two items per declaration

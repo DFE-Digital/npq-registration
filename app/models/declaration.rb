@@ -105,13 +105,17 @@ class Declaration < ApplicationRecord
   validate :validate_max_statement_items_count
 
   validates :delivery_partner_id, presence: true, if: :delivery_partner_required
-  validates :delivery_partner_id, absence: true, unless: :application_inside_catchment?
+  validates :delivery_partner_id, absence: { message: :overseas },
+                                  unless: :application_inside_catchment?
   validates :delivery_partner_id, inclusion: { in: :available_delivery_partner_ids },
                                   if: -> { delivery_partner && delivery_partner_changed? }
 
+  validates :secondary_delivery_partner_id, absence: true, unless: :delivery_partner
+
   validates :secondary_delivery_partner_id,
-            absence: true,
-            unless: -> { delivery_partner_id && application_inside_catchment? }
+            absence: { message: :overseas },
+            if: -> { delivery_partner_id && !application_inside_catchment? }
+
   validates :secondary_delivery_partner_id,
             inclusion: { in: :available_delivery_partner_ids },
             if: -> { secondary_delivery_partner && secondary_delivery_partner_changed? }
