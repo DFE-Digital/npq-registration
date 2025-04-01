@@ -3,9 +3,11 @@ require "rails_helper"
 RSpec.describe NpqSeparation::AdminController, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
+  subject(:admin_response) { get(npq_separation_admin_path) && response }
+
   context "when admin is not logged in" do
     it "redirects to the sign in page" do
-      expect(get(npq_separation_admin_path)).to redirect_to(sign_in_path)
+      expect(admin_response).to redirect_to(sign_in_path)
     end
   end
 
@@ -20,8 +22,12 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
 
     it "shows the admin landing page" do
       travel_to Time.zone.now.end_of_day - 5.minutes do
-        expect(get(npq_separation_admin_path)).to eq(200)
+        expect(admin_response).to have_http_status :success
       end
+    end
+
+    it "includes no-store cache headers" do
+      expect(admin_response.headers).to include "Cache-Control" => "no-store"
     end
   end
 
@@ -36,7 +42,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
 
     it "redirects to the sign in page" do
       travel_to Time.zone.now.beginning_of_day + 1.minute do
-        expect(get(npq_separation_admin_path)).to redirect_to(sign_in_path)
+        expect(admin_response).to redirect_to(sign_in_path)
       end
     end
   end

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  before_action :set_cache_headers
   before_action :set_sentry_user
   before_action :initialize_store
 
@@ -58,5 +59,9 @@ private
 
   def initialize_store
     session["registration_store"] ||= {}
+  end
+
+  def set_cache_headers
+    no_store
   end
 end
