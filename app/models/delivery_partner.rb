@@ -3,6 +3,8 @@ class DeliveryPartner < ApplicationRecord
   has_many :lead_providers, through: :delivery_partnerships
   has_many :cohorts, through: :delivery_partnerships
 
+  accepts_nested_attributes_for :delivery_partnerships, allow_destroy: true
+
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 

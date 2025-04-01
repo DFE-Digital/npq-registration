@@ -1,0 +1,47 @@
+<%= govuk_back_link(href: npq_separation_admin_delivery_partners_path) %>
+
+<h1 class="govuk-heading-l">Add a lead provider</h1>
+<p class="govuk-caption-m">Select all that apply</p>
+
+<%= form_with model: [:npq_separation, :admin, @delivery_partner], method: :patch, id: 'delivery-partnerships-form' do |form| %>
+  <%= form.govuk_error_summary %>
+
+  <% @lead_providers.each do |lead_provider| %>
+    <div>
+      <%= form.govuk_check_boxes_fieldset :lead_providers, legend: nil do %>
+        <%= form.govuk_check_box :lead_provider_id, lead_provider.id, label: { text: lead_provider.name }, checked: @delivery_partner.delivery_partnerships.where(lead_provider:).any? do %>
+          <p class="govuk-caption-m">Select all that apply</p>
+          <% @cohorts.each do |cohort| %>
+            <%= form.fields_for :delivery_partnerships, @delivery_partner.delivery_partnerships.find_or_initialize_by(lead_provider:, cohort:) do |delivery_partnership_form| %>
+              <%= delivery_partnership_form.hidden_field :lead_provider_id, value: lead_provider.id %>
+              <%= delivery_partnership_form.hidden_field :cohort_id, value: cohort.id %>
+              <%= delivery_partnership_form.govuk_check_box :_destroy, 0, 1, multiple: false, label: { text: "Cohort #{format_cohort(cohort)}" }, checked: delivery_partnership_form.object.persisted? %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="govuk-button-group">
+    <%= form.govuk_submit "Save" %>
+    <%= govuk_link_to "Cancel", npq_separation_admin_delivery_partners_path %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  // uncheck all cohorts when a lead provider is deselected
+  document
+    .getElementById("delivery-partnerships-form")
+    .addEventListener("change", function(event) {
+      const target = event.target
+
+      if (target.name !== "delivery_partner[lead_provider_id][]") {
+        return
+      }
+
+      if (!target.checked) {
+        target.closest(".govuk-checkboxes").querySelectorAll("input[type='checkbox']").forEach(c => c.checked = false)
+      }
+    })
+</script>
