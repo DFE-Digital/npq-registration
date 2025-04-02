@@ -63,7 +63,7 @@ module Questionnaires
 
     def requirements_met?
       # The user has to have logged in via GAI to reach this question
-      wizard.store.present? && query_store.current_user.present?
+      wizard.store.present? && query_store.current_user&.actual_user?
     end
 
     def next_step
