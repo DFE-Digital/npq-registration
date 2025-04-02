@@ -60,7 +60,57 @@ class User < ApplicationRecord
   end
 
   def self.find_or_create_from_provider_data(provider_data, feature_flag_id:)
-    Users::FindOrCreateFromProviderData.new(provider_data: provider_data, feature_flag_id: feature_flag_id).call
+    user = find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
+
+    if user.persisted?
+      unless user.valid?
+        Rails.logger.info("[GAI] User persisted BUT not valid, #{user.errors.full_messages.join(';')}, ID=#{user.id}, UID=#{provider_data.uid}")
+        Users::ArchiveByEmail.new(user:).call if user.changes[:email] && User.where(email: user.changes[:email].last).any?
+      end
+
+      return user
+    end
+
+    Rails.logger.info("[GAI] User not persisted, #{user.errors.full_messages.join(';')}, UID=#{provider_data.uid}, trying to join account")
+
+    find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
+  end
+
+  def self.find_or_create_from_tra_data_on_uid(provider_data, feature_flag_id:)
+    user_from_provider_data = find_or_initialize_by(provider: provider_data.provider,
+                                                    uid: provider_data.uid,
+                                                    archived_at: nil)
+
+    user_from_provider_data.assign_provider_data(provider_data)
+
+    user_from_provider_data.assign_attributes(email: provider_data.info.email,
+                                              feature_flag_id: feature_flag_id)
+
+    user_from_provider_data.tap(&:save)
+  end
+
+  def self.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
+    user_from_provider_data = find_or_initialize_by(provider: nil,
+                                                    uid: nil,
+                                                    email: provider_data.info.email)
+
+    user_from_provider_data.assign_provider_data(provider_data)
+
+    user_from_provider_data.assign_attributes(provider: provider_data.provider,
+                                              uid: provider_data.uid,
+                                              feature_flag_id: feature_flag_id)
+
+    user_with_clashing_uid = User.find_by(provider: provider_data.provider, uid: provider_data.uid)
+    if user_with_clashing_uid&.archived?
+      Rails.logger.info("[GAI] Archived user with clashing UID found - blanking UID, ID=#{user_with_clashing_uid.id}, UID=#{provider_data.uid}")
+      Users::Archiver.new(user: user_with_clashing_uid).set_uid_to_nil!
+    end
+
+    unless user_from_provider_data.save
+      Rails.logger.info("[GAI] User not persisted, #{user_from_provider_data.errors.full_messages.join(';')}, UID=#{provider_data.uid}, trying to reclaim email failed")
+    end
+
+    user_from_provider_data
   end
 
   def self.with_feature_flag_enabled(feature_flag_name)
@@ -83,6 +133,11 @@ class User < ApplicationRecord
     uid if get_an_identity_provider?
   end
 
+  def get_an_identity_id=(new_get_an_identity_id)
+    self.uid = new_get_an_identity_id
+    self.provider = :tra_openid_connect
+  end
+
   def actual_user?
     true
   end
@@ -95,6 +150,10 @@ class User < ApplicationRecord
     ecf_id.present?
   end
 
+  def applications_synced_to_ecf?
+    applications.map(&:synced_to_ecf?).all?
+  end
+
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end
@@ -105,7 +164,6 @@ class User < ApplicationRecord
     self.feature_flag_id
   end
 
-  # TODO: delete
   def super_admin?
     raise StandardError, "deprecated"
   end
@@ -129,6 +187,25 @@ class User < ApplicationRecord
   def set_closed_registration_feature_flag
     if Flipper.enabled?(Feature::CLOSED_REGISTRATION_ENABLED) && ClosedRegistrationUser.find_by(email:)
       Flipper.enable_actor(Feature::REGISTRATION_OPEN, self)
+    end
+  end
+
+  def assign_provider_data(provider_data)
+    extra_info = provider_data.extra&.raw_info
+
+    self.raw_tra_provider_data = provider_data
+    self.updated_from_tra_at = Time.zone.now
+    self.full_name = extra_info&.preferred_name.presence || provider_data.info.name
+
+    if extra_info&.birthdate.present?
+      self.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
+    end
+
+    # The user's TRN should remain unchanged if the TRA returns an empty TRN
+    if extra_info&.trn.present?
+      self.trn = extra_info.trn
+      self.trn_verified = true
+      self.trn_lookup_status = extra_info.trn_lookup_status
     end
   end
 
