@@ -2,7 +2,8 @@ class Cohort < ApplicationRecord
   has_many :declarations, dependent: :restrict_with_exception
   has_many :schedules, dependent: :destroy
   has_many :statements, dependent: :restrict_with_exception
-  has_many :delivery_partnerships
+  has_many :delivery_partnerships, dependent: :destroy
+  has_many :delivery_partners, through: :delivery_partnerships
 
   validates :start_year,
             presence: true,
