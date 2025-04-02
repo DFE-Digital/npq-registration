@@ -12,7 +12,7 @@
     "@babel/preset-react": "^7.25.9",
     "@hotwired/stimulus": "^3.2.2",
     "accessible-autocomplete": "^3.0.1",
-    "babel-loader": "^9.2.1",
+    "babel-loader": "^10.0.0",
     "babel-plugin-macros": "^3.1.0",
     "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
