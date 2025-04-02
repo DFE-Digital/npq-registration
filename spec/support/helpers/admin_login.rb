@@ -16,7 +16,7 @@ module Helpers
       page.click_button "Sign in"
       expect(page).to have_current_path("/session/sign-in-code")
 
-      code = ActionMailer::Base.deliveries.last[:personalisation].unparsed_value[:code]
+      code = ActionMailer::Base.deliveries.last.personalisation[:code]
 
       page.fill_in "Enter your code", with: code
       page.click_button "Sign in"

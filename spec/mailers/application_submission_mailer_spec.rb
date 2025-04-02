@@ -26,19 +26,16 @@ RSpec.describe ApplicationSubmissionMailer, type: :mailer do
     end
 
     it "sends the correct personalisation" do
-      expect(mail["personalisation"].unparsed_value).to eq({
+      expect(mail).to have_personalisation(
         full_name:,
         provider_name:,
         course_name:,
         amount:,
         ecf_id:,
-      })
+      )
     end
 
-    it "uses the correct template" do
-      expect(mail["template-id"].unparsed_value)
-        .to eq(ApplicationSubmissionMailer::TEMPLATE_ID)
-    end
+    it { is_expected.to use_template(ApplicationSubmissionMailer::TEMPLATE_ID) }
 
     it_behaves_like "a mailer with redacted logs"
   end
