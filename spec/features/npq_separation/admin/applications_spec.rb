@@ -328,9 +328,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     visit npq_separation_admin_application_path(application)
 
     expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
-      expect(summary_list).to have_summary_item("Eligible for funding", "No")
-      expect(summary_list).to have_link("Change")
+    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
+      expect(summary_list_row).to have_summary_item("Eligible for funding", "No")
+      expect(summary_list_row).to have_link("Change")
 
       click_link("Change")
     end
@@ -345,9 +345,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 
     expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
-      expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
-      expect(summary_list).to have_link("Change")
+    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
+      expect(summary_list_row).to have_summary_item("Eligible for funding", "Yes")
+      expect(summary_list_row).to have_link("Change")
 
       click_link("Change")
     end
@@ -357,8 +357,32 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     click_button "Continue"
 
     expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(".govuk-summary-list:nth-of-type(3)") do |summary_list|
-      expect(summary_list).to have_summary_item("Eligible for funding", "No")
+    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
+      expect(summary_list_row).to have_summary_item("Eligible for funding", "No")
+    end
+  end
+
+  scenario "changing schedule cohort" do
+    application = create(:application, cohort: Cohort.first)
+    create(:schedule, :npq_leadership_autumn, cohort: application.cohort)
+    create(:schedule, :npq_leadership_spring, cohort: create(:cohort, start_year: 2025))
+
+    visit npq_separation_admin_application_path(application)
+
+    within(:xpath, "//dt[text()='Schedule Cohort']/..") do
+      click_link("Change")
+    end
+
+    expect(page).to have_css("h1", text: "Choose a cohort")
+
+    click_button "Continue"
+    expect(page).to have_css(".govuk-error-message", text: "Choose a cohort")
+
+    choose "2025", visible: :all
+    click_button "Continue"
+
+    within(:xpath, "//h2[text()='Funding eligibility']/following-sibling::dl") do |summary_list|
+      expect(summary_list).to have_summary_item("Schedule Cohort", "2025")
     end
   end
 end
