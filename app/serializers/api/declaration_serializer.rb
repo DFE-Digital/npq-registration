@@ -5,7 +5,6 @@ module API
 
     class AttributesSerializer < Blueprinter::Base
       exclude :id
-
       field(:participant_id) { |declaration| declaration.user.ecf_id }
       field(:declaration_type)
       field(:course_identifier)
@@ -27,6 +26,10 @@ module API
       end
 
       view :v3 do
+        field(:delivery_partner_id)
+        field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
+        field(:secondary_delivery_partner_id)
+        field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
         field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
         field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
         field(:uplift_paid?, name: :uplift_paid)

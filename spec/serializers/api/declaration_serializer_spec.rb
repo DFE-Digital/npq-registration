@@ -1,7 +1,16 @@
 require "rails_helper"
 
 RSpec.describe API::DeclarationSerializer, type: :serializer do
-  let(:declaration) { create(:declaration) }
+  let(:declaration) do
+    create(:declaration, application:,
+           delivery_partner: primary_partner,
+           secondary_delivery_partner: secondary_partner)
+  end
+
+  let(:application) { create(:application, :accepted) }
+  let(:lead_provider) { application.lead_provider }
+  let(:primary_partner) { create(:delivery_partner, lead_provider:) }
+  let(:secondary_partner) { create(:delivery_partner, lead_provider:) }
 
   describe "core attributes" do
     subject(:response) { JSON.parse(described_class.render(declaration)) }
@@ -23,6 +32,22 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
     %i[v1 v2 v3].each do |view|
       context "when serializing the `#{view}` view" do
         subject(:attributes) { JSON.parse(described_class.render(declaration, view:))["attributes"] }
+
+        it "serializes the `delivery_partner_id`" do
+          expect(attributes["delivery_partner_id"]).to eq(primary_partner.id)
+        end
+
+        it "serializes the `delivery_partner_name`" do
+          expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
+        end
+
+        it "serializes the `secondary_delivery_partner_id`" do
+          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.id)
+        end
+
+        it "serializes the `secondary_delivery_partner_name`" do
+          expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
+        end
 
         it "serializes the `participant_id`" do
           expect(attributes["participant_id"]).to eq(declaration.application.user.ecf_id)
