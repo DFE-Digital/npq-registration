@@ -29,7 +29,7 @@
   </div>
 <% end %>
 
-<script type="text/javascript">
+<%= nonced_javascript_tag do %>
   // uncheck all cohorts when a lead provider is deselected
   document
     .getElementById("delivery-partnerships-form")
@@ -44,4 +44,4 @@
         target.closest(".govuk-checkboxes").querySelectorAll("input[type='checkbox']").forEach(c => c.checked = false)
       }
     })
-</script>
+<% end %>
