@@ -268,6 +268,12 @@ Rails.application.routes.draw do
 
       namespace :finance do
         resources :statements, only: %i[index show] do
+          resources :adjustments, controller: "statements/adjustments", only: %i[new create index] do
+            collection do
+              post :add_another
+            end
+          end
+
           collection do
             resources :unpaid, controller: "statements/unpaid", only: "index"
             resources :paid, controller: "statements/paid", only: "index"
