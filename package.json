@@ -21,7 +21,7 @@
     "isomorphic-fetch": "^3.0.0",
     "mermaid": "^11.6.0",
     "rails-ujs": "^5.2.8",
-    "sass": "^1.86.1",
+    "sass": "^1.86.2",
     "serialize-javascript": "^6.0.2",
     "svg-pan-zoom": "^3.6.2",
     "swagger-ui-dist": "^5.20.2",
