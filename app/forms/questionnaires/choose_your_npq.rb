@@ -138,11 +138,7 @@ module Questionnaires
     end
 
     def courses
-      if Flipper.enabled?(Feature::SENCO_ENABLED)
-        Course.where(display: true).order(:position)
-      else
-        Course.where(display: true).where.not(identifier: "npq-senco").order(:position)
-      end
+      Course.where(display: true).order(:position)
     end
 
     def previous_course
