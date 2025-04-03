@@ -19,10 +19,12 @@ class OmniauthController < Devise::OmniauthCallbacksController
       @user.set_closed_registration_feature_flag
       sign_in_and_redirect @user
     else
+      # we should never get here - as errors should have been previously handled
       # TODO: need a feature test for the error scenario:
-      # - uid has already been taken
+      # - email has already been taken - but somehow user_id_with_clashing_email is nil
       user_id_with_clashing_email = User.find_by(email: provider_data.info.email)&.id
       multibyte_email = (provider_data.info.email.chars.count != provider_data.info.email.bytes.count)
+
       send_error_to_sentry(
         "Could not persist user after omniauth callback",
         contexts: {

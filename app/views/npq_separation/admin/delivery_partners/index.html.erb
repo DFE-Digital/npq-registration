@@ -6,7 +6,6 @@
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
-        row.with_cell(text: "ID")
         row.with_cell(text: "Delivery partner")
         row.with_cell(text: "Actions")
       end
@@ -15,9 +14,13 @@
     table.with_body do |body|
       @delivery_partners.each do |delivery_partner|
         body.with_row do |row|
-          row.with_cell(text: delivery_partner.ecf_id)
           row.with_cell(text: delivery_partner.name)
-          row.with_cell(text: govuk_link_to("Update", edit_npq_separation_admin_delivery_partner_path(delivery_partner)))
+          row.with_cell do
+            tag.div class: "govuk-button-group govuk-!-margin-bottom-0" do
+              govuk_link_to("Assign lead providers", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") +
+              govuk_link_to("Update name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0")
+            end
+          end
         end
       end
     end

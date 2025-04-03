@@ -1,5 +1,6 @@
 module API
   class BaseController < ActionController::API
+    before_action :set_cache_headers
     before_action :remove_charset
 
     include API::TokenAuthenticatable
@@ -34,6 +35,10 @@ module API
 
     def api_token_scope
       APIToken.scopes[:lead_provider]
+    end
+
+    def set_cache_headers
+      no_store
     end
   end
 end

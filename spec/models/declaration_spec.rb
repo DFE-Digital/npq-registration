@@ -115,6 +115,34 @@ RSpec.describe Declaration, type: :model do
           it { is_expected.not_to validate_presence_of(:delivery_partner_id) }
           it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
         end
+
+        context "when changing declaration state" do
+          subject do
+            create(:declaration, :with_delivery_partner, cohort:)
+              .tap(&:mark_eligible!)
+              .reload
+          end
+
+          it { is_expected.to be_eligible_state }
+        end
+      end
+
+      context "with existing declarations after enabling feature flag" do
+        subject(:declaration) { create(:declaration, cohort:) }
+
+        before do
+          declaration
+
+          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
+
+          declaration.mark_eligible!
+          declaration.reload
+        end
+
+        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
+        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
+
+        it { is_expected.to be_eligible_state }
       end
 
       context "when delivery_partner unchanged but removed from lead providers list" do

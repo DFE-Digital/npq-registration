@@ -15,6 +15,7 @@ RSpec.shared_examples "an API index endpoint" do
 
         expect(response.status).to eq 200
         expect(response.content_type).to eql("application/json")
+        expect(response.headers).to include("cache-control" => "no-store")
         expect(response_ids).to contain_exactly(resource1[resource_id_key], resource2[resource_id_key])
       end
 
@@ -72,6 +73,7 @@ RSpec.shared_examples "an API index endpoint on a parent resource" do |parent, c
 
       expect(response.status).to eq 200
       expect(response.content_type).to eql("application/json")
+      expect(response.headers).to include("cache-control" => "no-store")
       expect(response_ids).to contain_exactly(resource[resource_id_key])
     end
   end

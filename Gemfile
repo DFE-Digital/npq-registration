@@ -28,7 +28,7 @@ gem "govuk_markdown"
 gem "httparty", "~> 0.23"
 gem "iconv"
 gem "jsbundling-rails", "~> 1.3"
-gem "mail-notify", "~> 1.2"
+gem "mail-notify"
 gem "oj"
 gem "omniauth"
 gem "omniauth_openid_connect"
@@ -64,14 +64,12 @@ end
 
 group :development, :test do
   gem "amazing_print"
-  gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "capybara"
   gem "capybara-screenshot"
+  gem "debug"
   gem "dotenv-rails"
   gem "knapsack"
   gem "parallel_tests", "~> 5.1"
-  gem "pry-byebug"
-  gem "pry-rails"
   gem "rspec-rails", "~> 7.1"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"

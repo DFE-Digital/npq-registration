@@ -23,17 +23,17 @@ RSpec.describe ApplicationFundingEligibilityMailer, type: :mailer do
     end
 
     it "sends the correct personalisation" do
-      expect(mail["personalisation"].unparsed_value).to eq({
+      expect(mail).to have_personalisation(
         full_name:,
         provider_name:,
         course_name:,
         ecf_id:,
-      })
+      )
     end
 
     it "uses the correct template" do
-      expect(mail["template-id"].unparsed_value)
-        .to eq(ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
+      expect(mail).to use_template \
+        ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE
     end
 
     it_behaves_like "a mailer with redacted logs"

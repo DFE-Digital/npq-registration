@@ -1,3 +1,5 @@
+require "method_source"
+
 class RegistrationWizardVisualiser
   class << self
     def call
@@ -91,9 +93,21 @@ private
 
   # Image Generation
 
+  def output_dir
+    tmp_dir = Rails.env.test? ? "visualisations_test" : "visualisations"
+
+    Rails.root.join("tmp", tmp_dir)
+  end
+
+  def make_output_dir
+    FileUtils.mkdir_p(output_dir)
+  end
+
   def generate_and_save_graph(digraph_output)
-    output_digraph_filename = "tmp/visualisations/registration_wizard_visualisation.dot"
-    output_graph_filename = "tmp/visualisations/registration_wizard_visualisation.png"
+    make_output_dir
+
+    output_digraph_filename = output_dir.join("registration_wizard_visualisation.dot")
+    output_graph_filename = output_dir.join("registration_wizard_visualisation.png")
 
     save_file(output_digraph_filename, digraph_output)
 

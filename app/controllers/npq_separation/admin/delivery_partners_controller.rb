@@ -37,6 +37,14 @@ class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminCon
 private
 
   def delivery_partners_params
-    params.require(:delivery_partner).permit(:name)
+    params.require(:delivery_partner).permit(
+      :name,
+      delivery_partnerships_attributes: %i[
+        id
+        lead_provider_id
+        cohort_id
+        _destroy
+      ],
+    )
   end
 end

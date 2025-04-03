@@ -51,7 +51,7 @@ RSpec.describe User do
     }
   end
 
-  describe "methods" do
+  describe "actual_user? and null_user? methods" do
     it { expect(User.new).to be_actual_user }
     it { expect(User.new).not_to be_null_user }
   end
@@ -127,7 +127,7 @@ RSpec.describe User do
     end
   end
 
-  describe ".latest_participant_outcome" do
+  describe "#latest_participant_outcome" do
     let(:user) { create(:user) }
     let(:lead_provider) { create(:lead_provider) }
     let(:course_identifier) { ParticipantOutcomes::Create::PERMITTED_COURSES.first }
@@ -165,6 +165,19 @@ RSpec.describe User do
       before { ParticipantOutcome.destroy_all }
 
       it { is_expected.to be_nil }
+    end
+  end
+
+  describe ".find_or_create_from_provider_data" do
+    let(:provider_data) { { foo: :bar } }
+    let(:feature_flag_id) { "123" }
+    let(:service) { instance_double(Users::FindOrCreateFromProviderData) }
+
+    before { allow(Users::FindOrCreateFromProviderData).to receive(:new).with(provider_data: provider_data, feature_flag_id: feature_flag_id) { service } }
+
+    it "calls Users::FindOrCreateFromProviderData service" do
+      expect(service).to receive(:call)
+      described_class.find_or_create_from_provider_data(provider_data, feature_flag_id: feature_flag_id)
     end
   end
 
@@ -218,128 +231,6 @@ RSpec.describe User do
     end
   end
 
-  context "when updating the user with the TRA data" do
-    let(:provider_data) do
-      OpenStruct.new(
-        provider: "example_provider",
-        uid: "example_uid",
-        info: OpenStruct.new(
-          email: "user@example.com",
-          email_verified: "True",
-          name: "Example User",
-        ),
-        extra: OpenStruct.new(
-          raw_info: OpenStruct.new(
-            trn:,
-            trn_lookup_status:,
-            preferred_name:,
-            birthdate: "2000-01-01",
-          ),
-        ),
-      )
-    end
-
-    let(:feature_flag_id) { 1 }
-    let(:trn) { "1234567" }
-    let(:trn_lookup_status) { "Found" }
-    let(:preferred_name) { nil }
-    let(:user_scopes) { %i[with_verified_trn] }
-
-    shared_examples "a TRA updater" do |method_name|
-      context "when TRA provides a TRN" do
-        let(:user_scopes) { %i[] }
-
-        it "updates the user details" do
-          described_class.public_send(method_name, provider_data, feature_flag_id:)
-
-          expect(user.email).to eq "user@example.com"
-          expect(user.full_name).to eq "Example User"
-          expect(user.date_of_birth).to eq Date.parse("2000-01-01")
-        end
-
-        it "updates the user TRN and TRN verified status" do
-          described_class.public_send(method_name, provider_data, feature_flag_id:)
-
-          expect(user.trn).to eq "1234567"
-          expect(user.trn_verified).to be true
-          expect(user.trn_lookup_status).to eq "Found"
-        end
-      end
-
-      context "when TRA provides a nil TRN" do
-        let(:trn) { nil }
-        let(:trn_lookup_status) { "Failed" }
-
-        it "update the user details" do
-          described_class.public_send(method_name, provider_data, feature_flag_id:)
-
-          expect(user.email).to eq "user@example.com"
-          expect(user.full_name).to eq "Example User"
-        end
-
-        it "keeps the users TRN and TRN verified status unchanged" do
-          original_attrs = user.attributes.dup
-
-          described_class.public_send(method_name, provider_data, feature_flag_id:)
-
-          expect(user.trn).to eq original_attrs["trn"]
-          expect(user.trn_verified).to eq original_attrs["trn_verified"]
-          expect(user.trn_lookup_status).to eq original_attrs["trn_lookup_status"]
-        end
-      end
-
-      context "when TRA provides a preferred name" do
-        let(:preferred_name) { "Preferred Name" }
-
-        it "updates the name to the supplied preferred name" do
-          described_class.public_send(method_name, provider_data, feature_flag_id:)
-
-          expect(user.full_name).to eq "Preferred Name"
-        end
-      end
-    end
-
-    describe ".find_or_create_from_tra_data_on_uid" do
-      let(:user) { create(:user, *user_scopes, provider: "example_provider", trn: "1020304") }
-
-      before do
-        allow(User).to receive(:find_or_initialize_by).and_return(user)
-      end
-
-      it_behaves_like "a TRA updater", :find_or_create_from_tra_data_on_uid
-    end
-
-    describe ".find_or_create_from_tra_data_on_unclaimed_email" do
-      let(:user) { create(:user, *user_scopes, provider: nil, uid: nil, email: "user@example.com", trn: "1020304") }
-
-      before do
-        allow(User).to receive(:find_or_initialize_by).and_return(user)
-      end
-
-      it_behaves_like "a TRA updater", :find_or_create_from_tra_data_on_unclaimed_email do
-        it "updates provider and UID along with TRN" do
-          described_class.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
-
-          expect(user.provider).to eq "example_provider"
-          expect(user.uid).to eq "example_uid"
-        end
-      end
-
-      context "when user cannot be saved" do
-        before do
-          allow(user).to receive(:save).and_return(false)
-          allow(Rails.logger).to receive(:info)
-        end
-
-        it "logs the error" do
-          described_class.find_or_create_from_tra_data_on_unclaimed_email(provider_data, feature_flag_id:)
-
-          expect(Rails.logger).to have_received(:info).with(/\[GAI\] User not persisted, .+ trying to reclaim email failed/)
-        end
-      end
-    end
-  end
-
   describe "#archived?" do
     context "when user is archived" do
       subject(:user) { build(:user, :archived) }
@@ -354,43 +245,6 @@ RSpec.describe User do
 
       it "returns false" do
         expect(user.archived?).to be(false)
-      end
-    end
-  end
-
-  describe ".find_or_create_from_provider_data" do
-    subject { described_class.find_or_create_from_provider_data(provider_data, feature_flag_id:) }
-
-    let(:provider) { "example_provider" }
-    let(:uid) { "example_uid" }
-    let(:provider_data) do
-      OpenStruct.new(
-        provider:,
-        uid:,
-        info: OpenStruct.new(
-          email: "clashing@example.com",
-          email_verified: "True",
-          name: "Example User",
-        ),
-      )
-    end
-    let(:feature_flag_id) { 1 }
-
-    context "when the email has changed in the provider but clashes with an existing user" do
-      let!(:user) { create(:user, email: "old@example.com", provider:, uid:) }
-      let!(:clashing_user) { create(:user, :with_get_an_identity_id, email: "clashing@example.com") }
-
-      it "archives the clashing user" do
-        subject
-        expect(clashing_user.reload).to be_archived
-      end
-
-      it "returns the user" do
-        expect(subject).to eq user
-      end
-
-      it "the returned user has unsaved changes" do
-        expect(subject.changed?).to be true
       end
     end
   end
