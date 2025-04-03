@@ -137,9 +137,10 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
 
       context "when declaration api feature flag is on" do
+        include_context "with activerecord flipper"
 
         before do
-
+          Flipper.enable(Feature::INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
         end
 
         it "serializes the `delivery_partner_id`" do
@@ -161,19 +162,19 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
 
       context "when declaration api feature flag is off" do
         it "serializes the `delivery_partner_id`" do
-          expect(attributes["delivery_partner_id"]).to eq(nil)
+          expect(attributes).not_to have_key("delivery_partner_id")
         end
 
         it "serializes the `delivery_partner_name`" do
-          expect(attributes["delivery_partner_name"]).to eq(nil)
+          expect(attributes).not_to have_key("delivery_partner_name")
         end
 
         it "serializes the `secondary_delivery_partner_id`" do
-          expect(attributes["secondary_delivery_partner_id"]).to eq(nil)
+          expect(attributes).not_to have_key("secondary_delivery_partner_id")
         end
 
         it "serializes the `secondary_delivery_partner_name`" do
-          expect(attributes["secondary_delivery_partner_name"]).to eq(nil)
+          expect(attributes).not_to have_key("secondary_delivery_partner_name")
         end
       end
 
