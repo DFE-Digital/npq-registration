@@ -136,20 +136,45 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
     context "when serializing the `v3` view" do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
 
-      it "serializes the `delivery_partner_id`" do
-        expect(attributes["delivery_partner_id"]).to eq(primary_partner.id)
+      context "when declaration api feature flag is on" do
+
+        before do
+
+        end
+
+        it "serializes the `delivery_partner_id`" do
+          expect(attributes["delivery_partner_id"]).to eq(primary_partner.id)
+        end
+
+        it "serializes the `delivery_partner_name`" do
+          expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
+        end
+
+        it "serializes the `secondary_delivery_partner_id`" do
+          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.id)
+        end
+
+        it "serializes the `secondary_delivery_partner_name`" do
+          expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
+        end
       end
 
-      it "serializes the `delivery_partner_name`" do
-        expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
-      end
+      context "when declaration api feature flag is off" do
+        it "serializes the `delivery_partner_id`" do
+          expect(attributes["delivery_partner_id"]).to eq(nil)
+        end
 
-      it "serializes the `secondary_delivery_partner_id`" do
-        expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.id)
-      end
+        it "serializes the `delivery_partner_name`" do
+          expect(attributes["delivery_partner_name"]).to eq(nil)
+        end
 
-      it "serializes the `secondary_delivery_partner_name`" do
-        expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
+        it "serializes the `secondary_delivery_partner_id`" do
+          expect(attributes["secondary_delivery_partner_id"]).to eq(nil)
+        end
+
+        it "serializes the `secondary_delivery_partner_name`" do
+          expect(attributes["secondary_delivery_partner_name"]).to eq(nil)
+        end
       end
 
       it "serializes the `created_at`" do
