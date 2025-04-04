@@ -7,6 +7,7 @@ module API
       def index
         conditions = { updated_since:, participant_ids:, cohort_start_years: }
         declarations = declarations_query(conditions:).declarations
+                         .includes(:delivery_partner, :secondary_delivery_partner)
 
         render json: to_json(paginate(declarations))
       end
