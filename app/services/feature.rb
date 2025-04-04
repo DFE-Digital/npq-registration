@@ -25,7 +25,8 @@ class Feature
       FEATURE_FLAG_KEYS.each do |feature_flag_key|
         Flipper.add(feature_flag_key)
       end
-      Flipper.disable(:targeted_support_funding)
+
+      redundant.each(&:remove)
     end
 
     # This is always true but is checked so that it is explicit
@@ -73,6 +74,12 @@ class Feature
 
     def include_delivery_partners_in_declarations_api?
       Flipper.enabled?(INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
+    end
+
+  private
+
+    def redundant
+      Flipper.features.reject { _1.name.in? FEATURE_FLAG_KEYS }
     end
   end
 end
