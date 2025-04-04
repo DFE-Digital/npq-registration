@@ -23,30 +23,6 @@
                 </tr>
                 <% end %>
             </tbody>
-
         </table>
-        <%# only display this section if there is flag in DB that is not in the Feature::FEATURE_FLAG_KEYS %>
-
-        <% if @features_not_in_use.present? %>
-        <h1 class="govuk-heading-m">Not in use</h1>
-
-        <table class="govuk-table">
-
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Feature name</th>
-                    <th scope="col" class="govuk-table__header"></th>
-                </tr>
-            </thead>
-
-            <tbody class="govuk-table__body">
-                <% @features_not_in_use.each do |feature| %>
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><%= feature.key %></td>
-                <% end %>
-            </tbody>
-
-        </table>
-        <% end %>
     </div>
 </div>
