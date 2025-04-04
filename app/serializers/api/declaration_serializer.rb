@@ -26,7 +26,7 @@ module API
       end
 
       view :delivery_partner_fields do
-        feature_flag_checker = -> (*) { Feature.include_delivery_partners_in_declarations_api? }
+        feature_flag_checker = ->(*) { Feature.include_delivery_partners_in_declarations_api? }
 
         field(:delivery_partner_id, if: feature_flag_checker)
         field(:delivery_partner_name, if: feature_flag_checker) { |declaration| declaration.delivery_partner&.name }
