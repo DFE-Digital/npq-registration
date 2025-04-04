@@ -145,7 +145,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
         end
 
         it "serializes the `delivery_partner_id`" do
-          expect(attributes["delivery_partner_id"]).to eq(primary_partner.id)
+          expect(attributes["delivery_partner_id"]).to eq(primary_partner.ecf_id)
         end
 
         it "serializes the `delivery_partner_name`" do
@@ -153,7 +153,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
         end
 
         it "serializes the `secondary_delivery_partner_id`" do
-          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.id)
+          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.ecf_id)
         end
 
         it "serializes the `secondary_delivery_partner_name`" do
