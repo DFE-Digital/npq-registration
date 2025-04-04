@@ -4,7 +4,6 @@ class Feature
   REGISTRATION_OPEN = "Registration open".freeze
   REGISTRATION_DISABLED = "Registration disabled".freeze
   CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
-  SENCO_ENABLED = "Senco enabled".freeze
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
   DECLARATIONS_REQUIRE_DELIVERY_PARTNER = "Declarations require delivery partner".freeze
@@ -14,7 +13,6 @@ class Feature
   FEATURE_FLAG_KEYS = [
     REGISTRATION_OPEN,
     CLOSED_REGISTRATION_ENABLED,
-    SENCO_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
     DECLARATIONS_REQUIRE_DELIVERY_PARTNER,
@@ -25,7 +23,8 @@ class Feature
       FEATURE_FLAG_KEYS.each do |feature_flag_key|
         Flipper.add(feature_flag_key)
       end
-      Flipper.disable(:targeted_support_funding)
+
+      redundant.each(&:remove)
     end
 
     # This is always true but is checked so that it is explicit
@@ -69,6 +68,12 @@ class Feature
 
     def declarations_require_delivery_partner?
       Flipper.enabled?(DECLARATIONS_REQUIRE_DELIVERY_PARTNER)
+    end
+
+  private
+
+    def redundant
+      Flipper.features.reject { _1.name.in? FEATURE_FLAG_KEYS }
     end
   end
 end
