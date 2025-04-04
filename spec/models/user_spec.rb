@@ -99,34 +99,6 @@ RSpec.describe User do
     end
   end
 
-  describe ".with_feature_flag_enabled" do
-    include_context("with activerecord flipper")
-    # we're calling the 'with_feature_flag_enabled' method ("subject") from the User ("described_class") class.
-    subject { described_class.with_feature_flag_enabled("test_flag") }
-
-    # uses factory bot to create a test user
-    let(:user) { create(:user) }
-
-    # context describes the scenario
-    context "with user who is not feature flagged" do
-      # this means that the method output should not include the test user
-      it { is_expected.not_to include(user) }
-    end
-
-    context "with user who is feature flagged" do
-      before { Flipper.enable("test_flag", user) }
-
-      # this means that the method output should include the test user
-      it { is_expected.to include(user) }
-
-      context "when the user gets removed" do
-        before { user.destroy }
-
-        it { is_expected.to be_empty }
-      end
-    end
-  end
-
   describe "#latest_participant_outcome" do
     let(:user) { create(:user) }
     let(:lead_provider) { create(:lead_provider) }

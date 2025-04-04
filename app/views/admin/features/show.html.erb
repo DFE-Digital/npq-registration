@@ -26,35 +26,12 @@
 
     <div class="govuk-!-margin-top-8">
       <%= form_with url: admin_feature_path(@feature), method: :patch, local: true do |f| %>
-      <%= f.govuk_text_field :feature_flag_name, 
+      <%= f.govuk_text_field :feature_flag_name,
           label: { text: 'Confirm the feature flag name to change the state', tag: 'h2', size: 'm', class: 'govuk-!-margin-bottom-2' },
           hint: { text: 'Write the feature name exactly as it appears, including any capitalisation.' } %>
       <%= f.govuk_submit 'Change state' %>
       <% end %>
     </div>
 
-    <h2 class="govuk-heading-m govuk-!-margin-top-7">Users</h2>
-
-    <p class="govuk-body-m">
-      There <%= @users.count == 1 ? 'is' : 'are' %> currently <%= @users.count %>
-      <%= @users.count == 1 ? 'user' : 'users' %> for this feature.
-    </p>
-
-    <% if @users.any? %>
-    <table class="govuk-table govuk-!-margin-top-3">
-      <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
-          <th scope="col" class="govuk-table__header">Users</th>
-        </tr>
-      </thead>
-      <tbody class="govuk-table__body">
-        <% @users.each do |user| %>
-        <tr class="govuk-table__row">
-          <td class="govuk-table__cell"><%= user.full_name %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-    <% end %>
   </div>
 </div>
