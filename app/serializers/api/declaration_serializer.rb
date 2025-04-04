@@ -5,7 +5,6 @@ module API
 
     class AttributesSerializer < Blueprinter::Base
       exclude :id
-
       field(:participant_id) { |declaration| declaration.user.ecf_id }
       field(:declaration_type)
       field(:course_identifier)
@@ -26,7 +25,18 @@ module API
       view :v2 do
       end
 
+      view :delivery_partner_fields do
+        feature_flag_checker = ->(*) { Feature.include_delivery_partners_in_declarations_api? }
+
+        field(:delivery_partner_id, if: feature_flag_checker) { |declaration| declaration.delivery_partner&.ecf_id }
+        field(:delivery_partner_name, if: feature_flag_checker) { |declaration| declaration.delivery_partner&.name }
+        field(:secondary_delivery_partner_id, if: feature_flag_checker) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
+        field(:secondary_delivery_partner_name, if: feature_flag_checker) { |declaration| declaration.secondary_delivery_partner&.name }
+      end
+
       view :v3 do
+        include_view :delivery_partner_fields
+
         field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
         field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
         field(:uplift_paid?, name: :uplift_paid)
