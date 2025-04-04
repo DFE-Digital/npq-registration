@@ -1,6 +1,20 @@
 require "rails_helper"
 
 RSpec.describe Feature do
+  describe ".initialize_feature_flags" do
+    before do
+      Flipper.features.each(&:remove)
+      Flipper.add("test")
+      Flipper.add(Feature::FEATURE_FLAG_KEYS.first)
+
+      Feature.initialize_feature_flags
+    end
+
+    it "removes features whose name is not in FEATURE_FLAG_KEYS" do
+      expect(Flipper.features.map(&:name)).to match_array(Feature::FEATURE_FLAG_KEYS)
+    end
+  end
+
   describe "#registration_closed?" do
     context 'with Flipper flag "Registration open" turned on' do
       before do
