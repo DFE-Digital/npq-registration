@@ -3,9 +3,3 @@
 <p class="govuk-body">You’re eligible for scholarship funding for <%= localise_sentence_embedded_course_name(course) %>, but this does not guarantee funding for your course.</p>
 
 <p class="govuk-body">Your provider must confirm they can offer you a funded place, after you apply to them.</p>
-
-<% if Flipper.enabled?(:targeted_support_funding) %>
-    <p class="govuk-body">Your workplace is also eligible for targeted support funding.</p>
-
-    <p class="govuk-body">They’ll receive £<%= funding_amount %> to support you to do this NPQ.</p>
-<% end %>
