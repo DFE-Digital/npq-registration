@@ -1,8 +1,9 @@
 require "rails_helper"
 
 RSpec.describe API::DeclarationSerializer, type: :serializer do
-  let(:declaration) do
-    create(:declaration, application:,
+    let(:declaration) do
+    create(:declaration,
+           application:,
            delivery_partner: primary_partner,
            secondary_delivery_partner: secondary_partner)
   end
