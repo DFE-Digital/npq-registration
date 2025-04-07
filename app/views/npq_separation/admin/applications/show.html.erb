@@ -196,6 +196,7 @@
       row.with_key(text: "Schedule Cohort")
       if @application.cohort.present?
         row.with_value(text: @application.cohort.start_year)
+        row.with_action(text: "Change", href: npq_separation_admin_applications_change_cohort_path(@application))
       else
         row.with_value(text: "-" )
       end
