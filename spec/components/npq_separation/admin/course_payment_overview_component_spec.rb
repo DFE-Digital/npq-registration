@@ -31,16 +31,16 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
   end
 
   describe "total" do
-    it { is_expected.to have_css ".govuk-body", text: /#{t(".course_total")}\s+£#{calculator.course_total}/ }
+    it { is_expected.to have_text(/#{t(".course_total")}\s+£#{calculator.course_total}/) }
   end
 
   describe "itemisation" do
     it { is_expected.to have_css "thead th", text: t(".payment_type") }
-    it { is_expected.to have_css "thead th", text: t(".participants") }
+    it { is_expected.to have_css "thead th", text: t(".users") }
     it { is_expected.to have_css "thead th", text: t(".payment_per_participant") }
     it { is_expected.to have_css "thead th", text: t(".total") }
 
-    it { is_expected.to have_css "tr:nth-child(1) th", text: t(".output_payment") }
+    it { is_expected.to have_css "tr:nth-child(1) td", text: t(".output_payment") }
     it { is_expected.to have_css "tr:nth-child(1) td", text: calculator.billable_declarations_count }
     it { is_expected.to have_css "tr:nth-child(1) td", text: "£#{calculator.output_payment_per_participant}" }
     it { is_expected.to have_css "tr:nth-child(1) td", text: "£#{calculator.output_payment_subtotal}" }
@@ -54,7 +54,7 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
         create_list(:declaration, 2, :awaiting_clawback, course:, statement:, paid_statement:)
       end
 
-      it { is_expected.to have_css "tr:nth-child(2) th", text: "Clawbacks - Started" }
+      it { is_expected.to have_css "tr:nth-child(2) td:nth-child(1)", text: "Clawbacks - Started" }
       it { is_expected.to have_css "tr:nth-child(2) td:nth-child(2)", text: "2" }
       it { is_expected.to have_css "tr:nth-child(2) td:nth-child(3)", text: "-£160" }
       it { is_expected.to have_css "tr:nth-child(2) td:nth-child(4)", text: "-£320" }
@@ -69,14 +69,14 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
     end
 
     context "when course has targeted delivery funding" do
-      let(:refund_selector) { "tr:nth-child(4) th" }
+      let(:refund_selector) { "tr:nth-child(4) td" }
       let(:refund_text) { "Clawbacks" }
 
       before do
         allow_any_instance_of(::Statements::CourseCalculator).to receive(:course_has_targeted_delivery_funding?).and_return(true)
       end
 
-      it { is_expected.to have_css("tr:nth-child(2) th:nth-child(1)", text: t(".targeted_delivery_funding")) }
+      it { is_expected.to have_css("tr:nth-child(2) td:nth-child(1)", text: t(".targeted_delivery_funding")) }
       it { is_expected.to have_css("tr:nth-child(2) td:nth-child(2)", text: calculator.targeted_delivery_funding_declarations_count) }
       it { is_expected.to have_css("tr:nth-child(2) td:nth-child(3)", text: "£#{calculator.targeted_delivery_funding_per_participant}") }
       it { is_expected.to have_css("tr:nth-child(2) td:nth-child(4)", text: "£#{calculator.targeted_delivery_funding_subtotal}") }
@@ -107,7 +107,7 @@ RSpec.describe NpqSeparation::Admin::CoursePaymentOverviewComponent, type: :comp
     context "when monthly service fees are not zero" do
       before { contract.contract_template.update! monthly_service_fee: 10 }
 
-      it { is_expected.to have_css "tr:nth-child(3) th", text: t(".service_fee") }
+      it { is_expected.to have_css "tr:nth-child(3) td", text: t(".service_fee") }
       it { is_expected.to have_css "tr:nth-child(3) td", text: "£#{calculator.monthly_service_fees}" }
     end
   end

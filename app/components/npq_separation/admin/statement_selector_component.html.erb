@@ -1,3 +1,4 @@
+<div class="govuk-grid-row">
 <%= form_with url: npq_separation_admin_finance_statements_path, method: :get, class: 'app-statement-selector' do |f| %>
   <%= f.govuk_collection_select :lead_provider_id,
     lead_providers,
@@ -28,3 +29,4 @@
 
   <%= f.govuk_submit "View", secondary: true %>
 <% end %>
+</div>
