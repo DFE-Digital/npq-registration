@@ -8,7 +8,7 @@ class Feature
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
   DECLARATIONS_REQUIRE_DELIVERY_PARTNER = "Declarations require delivery partner".freeze
-  INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API = "Include Delivery Partners in Declarations API".freeze
+  INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API = "Include delivery partners in declarations API".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -19,6 +19,7 @@ class Feature
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
     DECLARATIONS_REQUIRE_DELIVERY_PARTNER,
+    INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API,
   ].freeze
 
   class << self

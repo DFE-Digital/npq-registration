@@ -588,8 +588,10 @@ en:
           <p class="govuk-body">NPQ separation ECF API disabled</p>
           <p class="govuk-body">Hello</p>
         declarations_require_delivery_partner_html: |
-          <p class="govuk-body">When this feature is turned on, submitting a declaration for the 2024 cohort onwards will require the delivery partner to be included</p>
-          <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner</p>
+          <p class="govuk-body">When this feature is turned on, submitting a declaration for the 2024 cohort onwards will require the delivery partner to be included.</p>
+          <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner.</p>
+        include_delivery_partners_in_declarations_api_html: |
+          <p class="govuk-body">When this feature is turned on, lead providers can use the API to see which delivery partners are associated with declarations.</p>
     application_submissions:
       ecf_sync_request_log:
         sync_type:
