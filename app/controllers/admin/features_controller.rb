@@ -6,9 +6,7 @@ class Admin::FeaturesController < SuperAdminController
 
   def show
     @feature = params[:id]
-    if Feature::FEATURE_FLAG_KEYS.include?(@feature)
-      @users = User.with_feature_flag_enabled(@feature)
-    else
+    unless Feature::FEATURE_FLAG_KEYS.include?(@feature)
       redirect_back fallback_location: admin_features_path
     end
   end
