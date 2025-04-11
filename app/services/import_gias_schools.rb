@@ -2,6 +2,7 @@ require "csv"
 
 class ImportGiasSchools
   class FileNotAvailableError < StandardError; end
+
   def initialize(refresh_all: false)
     @refresh_all = refresh_all
   end

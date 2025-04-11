@@ -138,7 +138,7 @@ RSpec.describe ImportGiasSchools do
               "Host" => "ea-edubase-api-prod.azurewebsites.net",
               "User-Agent" => "Ruby",
             },
-            ).to_return(status: 404, body: "Error from GIAS", headers: {})
+          ).to_return(status: 404, body: "Error from GIAS", headers: {})
       end
 
       it "raises a custom error" do
