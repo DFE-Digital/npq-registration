@@ -204,10 +204,10 @@ RSpec.describe LeadProvider do
     subject { lead_provider.delivery_partners_for_cohort(twenty_three) }
 
     let :lead_provider do
-      create :lead_provider, delivery_partners: {
+      create_list(:lead_provider, 2, delivery_partners: {
         twenty_three => twenty_three_partner,
         create(:cohort, start_year: 2024) => twenty_four_partner,
-      }
+      }).first
     end
 
     let(:twenty_three) { create(:cohort, start_year: 2023) }
@@ -215,6 +215,7 @@ RSpec.describe LeadProvider do
     let(:twenty_four_partner) { create(:delivery_partner) }
     let(:unrelated_partner) { create(:delivery_partner) }
 
+    it { is_expected.to have_attributes length: 1 }
     it { is_expected.to include twenty_three_partner }
     it { is_expected.not_to include twenty_four_partner }
     it { is_expected.not_to include unrelated_partner }
