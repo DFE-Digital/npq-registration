@@ -127,5 +127,23 @@ RSpec.describe ImportGiasSchools do
         expect { subject.call }.to raise_error(CSV::MalformedCSVError).with_message(/line: "header one", "/)
       end
     end
+
+    context "when the get request is not successful" do
+      before do
+        stub_request(:get, "https://ea-edubase-api-prod.azurewebsites.net/edubase/downloads/public/edubasealldata#{date_string}.csv")
+          .with(
+            headers: {
+              "Accept" => "*/*",
+              "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+              "Host" => "ea-edubase-api-prod.azurewebsites.net",
+              "User-Agent" => "Ruby",
+            },
+            ).to_return(status: 404, body: "Error from GIAS", headers: {})
+      end
+
+      it "raises a custom error" do
+        expect { subject.call }.to raise_error(ImportGiasSchools::FileNotAvailableError).with_message(/Error from GIAS/)
+      end
+    end
   end
 end
