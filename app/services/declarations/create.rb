@@ -30,6 +30,8 @@ module Declarations
     validate :output_fee_statement_available
     validate :validate_has_passed_field, if: :validate_has_passed?
     validate :validates_billable_slot_available
+    validate :delivery_partner_exists, if: :delivery_partner_id
+    validate :secondary_delivery_partner_exists, if: :secondary_delivery_partner_id
     validate :declaration_valid
 
     attr_reader :raw_declaration_date, :declaration
@@ -208,6 +210,18 @@ module Declarations
 
       declaration = Declaration.new(declaration_parameters_for_create)
       errors.merge!(declaration.errors) unless declaration.valid?
+    end
+
+    def delivery_partner_exists
+      return if DeliveryPartner.exists?(ecf_id: delivery_partner_id)
+
+      errors.add(:delivery_partner_id, :not_found)
+    end
+
+    def secondary_delivery_partner_exists
+      return if DeliveryPartner.exists?(ecf_id: secondary_delivery_partner_id)
+
+      errors.add(:secondary_delivery_partner_id, :not_found)
     end
   end
 end
