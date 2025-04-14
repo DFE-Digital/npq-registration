@@ -6,7 +6,7 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 [#new-feature #sandbox-release]
 
-We’ve made updates in the sandbox environment to improve how delivery partners interact with the service.
+We’ve made updates in the sandbox environment to improve how lead providers interact with the service.
 
 We’ve added delivery partner api endpoints so that you can fetch assigned delivery partners. You can filter by cohort to help quickly find specific results.
 
