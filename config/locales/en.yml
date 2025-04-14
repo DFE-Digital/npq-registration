@@ -488,6 +488,17 @@ en:
             declaration:
               <<: *statement
               <<: *declaration
+        declarations/change_delivery_partner:
+          attributes:
+            delivery_partner_id:
+              blank: The property '#/delivery_partner_id' must be present
+            secondary_delivery_partner_id:
+              present: The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'
+            delivery_partner:
+              presence: The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
+            secondary_delivery_partner:
+              presence: The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
+
         declarations/void:
           attributes:
             declaration:

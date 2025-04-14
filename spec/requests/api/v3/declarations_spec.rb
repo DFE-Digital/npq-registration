@@ -51,6 +51,37 @@ RSpec.describe "Declaration endpoints", type: :request do
     it_behaves_like "an API update endpoint"
   end
 
+  describe "PUT /api/v3/participant-declarations/:ecf_id/change-delivery-partner" do
+    let(:cohort) { create(:cohort, :current) }
+
+    let(:delivery_partner) { create(:delivery_partner, lead_providers: { cohort => current_ }) }
+    let(:secondary_delivery_partner) { create(:delivery_partner, lead_providers: { cohort => current_lead_provider }) }
+    let(:new_delivery_partner) { create(:delivery_partner, lead_providers: { cohort => current_lead_provider }) }
+    let(:new_secondary_delivery_partner) { create(:delivery_partner, lead_providers: { cohort => current_lead_provider }) }
+    let(:delivery_partner_id) { new_delivery_partner.ecf_id }
+    let(:secondary_delivery_partner_id) { new_secondary_delivery_partner.ecf_id }
+
+    let(:resource) { create(:declaration, lead_provider: current_lead_provider) }
+    let(:resource_id) { resource.ecf_id }
+    let(:service) { Declarations::ChangeDeliveryPartner }
+    let(:action) { :change_delivery_partner }
+
+    let(:service_args) { { declaration: resource, delivery_partner_id:, secondary_delivery_partner_id: } }
+
+    let(:attributes) do
+      {
+        delivery_partner_id:,
+        secondary_delivery_partner_id:,
+      }
+    end
+
+    def path(id = nil)
+      change_delivery_partner_api_v3_declaration_path(ecf_id: id)
+    end
+
+    it_behaves_like "an API update endpoint"
+  end
+
   describe "POST /api/v3/participant-declarations" do
     let(:path) { api_v3_declarations_path }
 

@@ -204,6 +204,7 @@ Rails.application.routes.draw do
       resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
         member do
           put :void, path: "void"
+          put :change_delivery_partner, path: "change-delivery-partner"
         end
       end
 
