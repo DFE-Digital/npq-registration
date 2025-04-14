@@ -111,8 +111,6 @@ class LeadProvider < ApplicationRecord
   end
 
   def delivery_partners_for_cohort(cohort)
-    delivery_partners
-      .joins(:delivery_partnerships)
-      .where(delivery_partnerships: { cohort: })
+    delivery_partners.where(delivery_partnerships: { cohort: })
   end
 end
