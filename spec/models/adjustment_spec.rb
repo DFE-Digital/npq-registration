@@ -17,13 +17,7 @@ RSpec.describe Adjustment, type: :model do
     context "when amount is zero" do
       subject { build(:adjustment, amount: 0) }
 
-      it { is_expected.to validate_numericality_of(:amount).is_greater_than(0) }
-    end
-
-    context "when amount is negative" do
-      subject { build(:adjustment, amount: -100) }
-
-      it { is_expected.to validate_numericality_of(:amount).is_greater_than(0) }
+      it { is_expected.to validate_numericality_of(:amount).is_other_than(0) }
     end
 
     context "when there are non-numeric characters in the amount" do
@@ -33,6 +27,12 @@ RSpec.describe Adjustment, type: :model do
         expect(subject.valid?).to be false
         expect(subject.errors[:amount]).to include("You can only enter numeric values in the adjustment amount field")
       end
+    end
+
+    context "when the amount is negative" do
+      subject { build(:adjustment, amount: -100) }
+
+      it { is_expected.to be_valid }
     end
   end
 end

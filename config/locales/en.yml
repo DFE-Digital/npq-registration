@@ -140,8 +140,9 @@ en:
               blank: You must enter a description for the adjustment
             amount:
               blank: You must enter an adjustment amount
-              greater_than: The adjustment amount must be greater than zero
+              other_than: The adjustment amount cannot be zero
               not_a_number: You can only enter numeric values in the adjustment amount field
+              format: You can only enter numeric values in the adjustment amount field
         application:
           attributes:
             schedule:
