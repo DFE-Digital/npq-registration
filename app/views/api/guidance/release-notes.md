@@ -3,8 +3,7 @@
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
 ## 14 April 2025
-
-[#new-feature #sandbox-release]
+*SANDBOX]*
 
 We’ve made updates in the sandbox environment to improve how lead providers interact with the service.
 
