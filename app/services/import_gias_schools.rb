@@ -1,6 +1,8 @@
 require "csv"
 
 class ImportGiasSchools
+  class FileNotAvailableError < StandardError; end
+
   def initialize(refresh_all: false)
     @refresh_all = refresh_all
   end
@@ -95,8 +97,11 @@ private
 
     Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
       request = Net::HTTP::Get.new uri
-
       http.request request do |response|
+        if response.code != "200"
+          raise ImportGiasSchools::FileNotAvailableError, "Response body: #{response.body}"
+        end
+
         File.open tempfile.path, "w" do |io|
           response.read_body do |chunk|
             converted_chunk = Iconv.conv("utf-8", "ISO8859-1", chunk)
