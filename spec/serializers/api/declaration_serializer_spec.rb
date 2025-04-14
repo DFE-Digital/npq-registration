@@ -138,8 +138,6 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
 
       context "when declaration api feature flag is on" do
-        include_context "with activerecord flipper"
-
         before do
           Flipper.enable(Feature::INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
         end
