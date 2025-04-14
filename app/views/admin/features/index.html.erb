@@ -10,7 +10,6 @@
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">Feature name</th>
                     <th scope="col" class="govuk-table__header">Current state</th>
-                    <th scope="col" class="govuk-table__header">Users</th>
                     <th scope="col" class="govuk-table__header"></th>
                 </tr>
             </thead>
@@ -20,7 +19,6 @@
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell"><%= feature %></td>
                     <td class="govuk-table__cell"><strong class="govuk-tag <%= Flipper.enabled?(feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(feature) ? 'On' : 'Off' %></strong></td>
-                    <td class="govuk-table__cell"><%= Flipper::Adapters::ActiveRecord::Gate.where(feature_key: feature, key: "actors").count %></td>
                     <td class="govuk-table__cell"><%= govuk_link_to("View", admin_feature_path(feature)) %><span class="govuk-visually-hidden"><%= ' '  + feature %></span></td>
                 </tr>
                 <% end %>

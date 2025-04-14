@@ -196,9 +196,11 @@ en:
             delivery_partner_id:
               inclusion: The entered '#/delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
               blank: The property '#/delivery_partner_id' must be present
+              overseas: The property '#/delivery_partner_id' cannot be specified for Applications from outside of England'
             secondary_delivery_partner_id:
               inclusion: The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort
               present: The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'
+              overseas: The property '#/secondary_delivery_partner_id' cannot be specified for Applications from outside of England'
               duplicate_delivery_partner: The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'
             statement_items:
               more_than_two_statement_items: There cannot be more than two items per declaration
@@ -273,6 +275,12 @@ en:
               inclusion: Current lead provider approval status is not Accepted
             base:
               pending_unremoveable_declarations: There are already declarations for this participant on this course, please ask the provider to void any declarations they have made before attempting to revert the application.
+        applications/change_cohort:
+          attributes:
+            cohort_id:
+              must_be_different: must be different
+              schedule_not_found: There is no schedule for the current course in the specified cohort
+              declarations_present: Cannot change cohort for an application with declarations
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:
@@ -510,6 +518,10 @@ en:
               missing_contract_for_cohort_and_course: You cannot submit a declaration for this participant as you do not have a contract for the cohort and course. Contact the DfE for assistance.
             application:
               application_schedule_missing: The application is missing a schedule.
+            delivery_partner_id:
+              not_found: The property '#/delivery_partner_id' does not exist
+            secondary_delivery_partner_id:
+              not_found: The property '#/secondary_delivery_partner_id' does not exist
         participant_outcomes/create:
           attributes:
             base:
@@ -579,8 +591,10 @@ en:
           <p class="govuk-body">Senco enabled</p>
           <p class="govuk-body">Hello</p>
         closed_registration_enabled_html: |
-          <p class="govuk-body">When this feature is turned on, you can allow some users to register even when the service is closed - that is, when <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> is turned off.</p>
-          <p class="govuk-body">When this feature is turned off, and Registration open is also turned off, no one can register.</p>
+          <p class="govuk-body">When this feature is turned on, specified users can register for an NPQ even when the service is closed to the general public.</p>
+          <p class="govuk-body">Use the <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> feature flag if you need to close the service to the general public.
+          <p class="govuk-body">To view or manage who can register while the service is closed, visit <a href="/admin/closed_registration_users" class="govuk-link">Closed registration users</a>.</p>
+          <p class="govuk-body">When both the Registration open and Closed registration enabled feature flags are turned off, no one will be able to register.</p>
         targeted_support_funding_html: |
           <p class="govuk-body">Targeted support funding</p>
           <p class="govuk-body">Hello</p>
@@ -841,6 +855,8 @@ en:
         eligible_for_funding: Is eligible for funding?
       applications_change_lead_provider:
         lead_provider_id: Choose a different lead provider
+      applications_change_cohort:
+        cohort_id: Choose a cohort
       registration_wizard:
         can_share_choices: "Sharing your NPQ information"
         ehco_headteacher: "Are you a headteacher?"

@@ -1,0 +1,32 @@
+<%= govuk_back_link href: npq_separation_admin_application_path(@application) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">
+      Change Schedule Cohort
+    </h1>
+
+    <div class="govuk-inset-text">
+      <p class="govuk-body">
+        <strong>Schedule Cohort</strong>
+        <br/>
+        <%= @application.cohort.start_year %>
+      </p>
+    </div>
+
+    <%= form_for @change_cohort,
+                 url: npq_separation_admin_applications_change_cohort_path(@application) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_collection_radio_buttons :cohort_id,
+                                           f.object.cohort_options,
+                                           :id,
+                                           :start_year,
+                                           legend: { tag: 'h1', size: 'm' } %>
+      <div class="govuk-button-group">
+        <%= f.govuk_submit t("shared.continue") %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_path(@application) %>
+      </div>
+    <% end %>
+  </div>
+</div>
