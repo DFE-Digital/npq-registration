@@ -1,7 +1,17 @@
 require "rails_helper"
 
 RSpec.describe API::DeclarationSerializer, type: :serializer do
-  let(:declaration) { create(:declaration) }
+  let(:declaration) do
+    create(:declaration,
+           application:,
+           delivery_partner: primary_partner,
+           secondary_delivery_partner: secondary_partner)
+  end
+
+  let(:application) { create(:application, :accepted) }
+  let(:lead_provider) { application.lead_provider }
+  let(:primary_partner) { create(:delivery_partner, lead_provider:) }
+  let(:secondary_partner) { create(:delivery_partner, lead_provider:) }
 
   describe "core attributes" do
     subject(:response) { JSON.parse(described_class.render(declaration)) }
@@ -126,6 +136,46 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
 
     context "when serializing the `v3` view" do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
+
+      context "when declaration api feature flag is on" do
+        before do
+          Flipper.enable(Feature::INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
+        end
+
+        it "serializes the `delivery_partner_id`" do
+          expect(attributes["delivery_partner_id"]).to eq(primary_partner.ecf_id)
+        end
+
+        it "serializes the `delivery_partner_name`" do
+          expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
+        end
+
+        it "serializes the `secondary_delivery_partner_id`" do
+          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.ecf_id)
+        end
+
+        it "serializes the `secondary_delivery_partner_name`" do
+          expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
+        end
+      end
+
+      context "when declaration api feature flag is off" do
+        it "serializes the `delivery_partner_id`" do
+          expect(attributes).not_to have_key("delivery_partner_id")
+        end
+
+        it "serializes the `delivery_partner_name`" do
+          expect(attributes).not_to have_key("delivery_partner_name")
+        end
+
+        it "serializes the `secondary_delivery_partner_id`" do
+          expect(attributes).not_to have_key("secondary_delivery_partner_id")
+        end
+
+        it "serializes the `secondary_delivery_partner_name`" do
+          expect(attributes).not_to have_key("secondary_delivery_partner_name")
+        end
+      end
 
       it "serializes the `created_at`" do
         expect(attributes["created_at"]).to eq(declaration.created_at.rfc3339)
