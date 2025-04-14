@@ -70,7 +70,20 @@ FactoryBot.define do
     end
 
     trait :with_delivery_partner do
-      delivery_partner { create(:delivery_partner, lead_provider:) }
+      if cohort
+        delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
+      else
+        delivery_partner { create(:delivery_partner, lead_provider:) }
+      end
+    end
+
+    trait :with_secondary_delivery_partner do
+      with_delivery_partner
+      if cohort
+        secondary_delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
+      else
+        secondary_delivery_partner { create(:delivery_partner, lead_provider:) }
+      end
     end
   end
 end

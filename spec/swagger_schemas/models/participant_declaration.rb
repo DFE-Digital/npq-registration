@@ -141,6 +141,32 @@ PARTICIPANT_DECLARATION = {
     format: :"date-time",
     example: "2021-05-31T02:22:32.000Z",
   }
+  h[:v3][:properties][:attributes][:properties][:delivery_partner_id] = {
+    description: "The delivery partner ID",
+    type: :string,
+    format: :uuid,
+    nullable: false,
+    example: "524df095-f9bf-4f9d-ba4c-772545a99e60",
+  }
+  h[:v3][:properties][:attributes][:properties][:delivery_partner_name] = {
+    description: "The name of the delivery partner",
+    type: :string,
+    nullable: false,
+    example: "Awesome Delivery Partner Ltd",
+  }
+  h[:v3][:properties][:attributes][:properties][:secondary_delivery_partner_id] = {
+    description: "The secondary delivery partner ID",
+    type: :string,
+    format: :uuid,
+    nullable: false,
+    example: "f0de7abf-399b-4e68-83de-2c33b503810c",
+  }
+  h[:v3][:properties][:attributes][:properties][:secondary_delivery_partner_name] = {
+    description: "The name of the secondary delivery partner",
+    type: :string,
+    nullable: false,
+    example: "Another Delivery Partner Ltd",
+  }
   # Re-add updated_at to fix ordering
   updated_at = h[:v3][:properties][:attributes][:properties].delete(:updated_at)
   h[:v3][:properties][:attributes][:properties][:updated_at] = updated_at

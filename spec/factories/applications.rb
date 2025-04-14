@@ -51,7 +51,7 @@ FactoryBot.define do
       accepted
 
       after(:create) do |application|
-        create(:declaration, application:)
+        create(:declaration, :with_secondary_delivery_partner, application:)
       end
     end
 

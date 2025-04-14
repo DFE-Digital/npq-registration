@@ -2482,24 +2482,6 @@ components:
               nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
-    ParticipantDeclarationResponse:
-      description: A single participant declaration.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          "$ref": "#/components/schemas/ParticipantDeclaration"
-    ParticipantDeclarationsResponse:
-      description: A list of participant declarations.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
@@ -2525,6 +2507,24 @@ components:
               - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationStartedRequest:
       description: An NPQ started participant declaration
       type: object

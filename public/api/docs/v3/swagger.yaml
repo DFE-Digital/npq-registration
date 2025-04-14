@@ -458,6 +458,11 @@ paths:
                         lead_provider_name: Example Institute
                         ineligible_for_funding_reason: duplicate_declaration
                         created_at: '2021-05-31T02:22:32.000Z'
+                        delivery_partner_id: 524df095-f9bf-4f9d-ba4c-772545a99e60
+                        delivery_partner_name: Awesome Delivery Partner Ltd
+                        secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
+                        secondary_delivery_partner_name: Another Delivery Partner
+                          Ltd
                         updated_at: '2021-05-31T02:22:32.000Z'
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
@@ -2415,30 +2420,34 @@ components:
               nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
+            delivery_partner_id:
+              description: The delivery partner ID
+              type: string
+              format: uuid
+              nullable: false
+              example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+            delivery_partner_name:
+              description: The name of the delivery partner
+              type: string
+              nullable: false
+              example: Awesome Delivery Partner Ltd
+            secondary_delivery_partner_id:
+              description: The secondary delivery partner ID
+              type: string
+              format: uuid
+              nullable: false
+              example: f0de7abf-399b-4e68-83de-2c33b503810c
+            secondary_delivery_partner_name:
+              description: The name of the secondary delivery partner
+              type: string
+              nullable: false
+              example: Another Delivery Partner Ltd
             updated_at:
               description: The date the application was last updated
               type: string
               nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
-    ParticipantDeclarationResponse:
-      description: A single participant declaration.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          "$ref": "#/components/schemas/ParticipantDeclaration"
-    ParticipantDeclarationsResponse:
-      description: A list of participant declarations.
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
@@ -2464,6 +2473,24 @@ components:
               - "$ref": "#/components/schemas/ParticipantDeclarationStartedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationRetainedRequest"
               - "$ref": "#/components/schemas/ParticipantDeclarationCompletedRequest"
+    ParticipantDeclarationResponse:
+      description: A single participant declaration.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/ParticipantDeclaration"
+    ParticipantDeclarationsResponse:
+      description: A list of participant declarations.
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ParticipantDeclaration"
     ParticipantDeclarationStartedRequest:
       description: An NPQ started participant declaration
       type: object
