@@ -34,8 +34,12 @@ module Statements
       clawback_payments + total_targeted_delivery_funding_refundable
     end
 
+    def total_adjustments
+      statement.adjustments.sum(&:amount)
+    end
+
     def total_payment
-      total_service_fees + total_output_payment - total_clawbacks + statement.reconcile_amount + total_targeted_delivery_funding
+      total_service_fees + total_output_payment - total_clawbacks + total_adjustments + statement.reconcile_amount + total_targeted_delivery_funding
     end
 
     def total_starts
