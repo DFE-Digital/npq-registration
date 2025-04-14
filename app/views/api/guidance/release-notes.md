@@ -2,6 +2,22 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 14 April 2025
+
+[#new-feature #sandbox-release]
+
+We’ve made updates in the sandbox environment to improve how delivery partners interact with the service.
+
+We’ve added delivery partner api endpoints so that you can fetch assigned delivery partners. You can filter by cohort to help quickly find specific results.
+
+The `Declarations GET` endpoint has been extended to include `delivery_partner_id` and `secondary_delivery_partner_id` attributes.
+
+We have also extended the `Declarations POST` endpoint to enable submissions that include `delivery_partner_id` and `secondary_delivery_partner_id`(where applicable).
+
+Starting from 28 April 2025, the `delivery_partner_id` will be required for cohort 2024 declarations and later in the sandbox environment, excluding overseas applicants.
+
+
+
 ## 27 November 2024
 
 We've launched the live standalone National Professional Qualifications (NPQs) API following a 3-month test phase.
