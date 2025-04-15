@@ -292,7 +292,7 @@ GEM
       activemodel (>= 6.1)
       activesupport (>= 6.1)
       html-attributes-utils (~> 1)
-    govuk_markdown (2.0.2)
+    govuk_markdown (2.0.3)
       activesupport
       redcarpet
     hashdiff (1.1.2)
@@ -515,7 +515,7 @@ GEM
       ffi (~> 1.0)
     rdoc (6.13.1)
       psych (>= 4.0.0)
-    redcarpet (3.6.0)
+    redcarpet (3.6.1)
     redis (5.4.0)
       redis-client (>= 0.22.0)
     redis-client (0.23.2)
