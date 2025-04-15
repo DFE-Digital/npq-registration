@@ -624,7 +624,6 @@ en:
       webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
-      new_feature_flags: "New Feature Flags"
       settings: "Settings"
       bulk_operations: "Bulk operations"
 

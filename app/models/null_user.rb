@@ -7,11 +7,6 @@ class NullUser < User
     false
   end
 
-  # Whether this user has admin access to the feature flagging interface
-  def flipper_access?
-    false
-  end
-
   def flipper_id
     "User;#{feature_flag_id}"
   end
