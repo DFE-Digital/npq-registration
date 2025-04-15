@@ -5,17 +5,15 @@ module CourseGroups
 
     attribute :course_group
     attribute :cohort
-    attribute :schedule_date, :date
+    attribute :schedule_date, :date # TODO: remove this attribute - it is always set to Date.current
 
     delegate :schedules, to: :course_group
 
     def schedule
-      if autumn_schedule_2024?(schedule_date)
-        if cohort.start_year == 2025
-          schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
-        elsif cohort.start_year == 2024
-          schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
-        end
+      if autumn_schedule_2024?(schedule_date) && cohort.start_year == 2025
+        schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
+      elsif autumn_schedule_2024?(schedule_date) && cohort.start_year == 2024
+        schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
       elsif spring_schedule?(schedule_date)
         schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
       elsif autumn_schedule?(schedule_date)

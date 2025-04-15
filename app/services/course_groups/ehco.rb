@@ -5,7 +5,7 @@ module CourseGroups
 
     attribute :course_group
     attribute :cohort
-    attribute :schedule_date, :date
+    attribute :schedule_date, :date # TODO: remove this attribute - it is always set to Date.current
 
     delegate :schedules, to: :course_group
 
