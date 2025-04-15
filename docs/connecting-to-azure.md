@@ -104,7 +104,7 @@ To make a PIM request:
 4. The request must now be approved by another team member
 
 You can view all pending requests
-[here](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ApproveRequestMenuBlade/~/aadmigratedroles).
+[here](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ApproveRequestMenuBlade/~/aadgroup).
 
 
 ### Environments
