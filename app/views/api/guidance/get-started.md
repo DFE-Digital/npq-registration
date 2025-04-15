@@ -84,14 +84,11 @@ This limit on requests for each authentication key is calculated on a rolling ba
 
 ### Polling the API regularly 
 
-To make sure no declarations, participants, transfers or unfunded mentors are missed: 
+To make sure no declarations, participants, transfers or unfunded mentors are missed:
 
 * poll the relevant <code>GET endpoints</code> multiple times a day 
-
 * use the <code>updated_since</code> filter to get recent changes 
-
 * use the default pagination of 100 records per page 
-
 * keep polling until you get an empty response 
 
 Contact the DfE using our Slack channel if you need further details. 
@@ -107,7 +104,6 @@ The DfE can coordinate ‘windows’ (set time periods) for providers to do this
 Always poll 2 windows back from your last successful poll. This guarantees that all participant data is captured. For example: 
 
 * at 3:15pm enter the following request - <code>/api/v3/participants/ecf?filter[updated_since]=2025-01-28T13:15:00Z</code>
-
 * at 4:15pm enter the following request - <code>/api/v3/participants/ecf?filter[updated_since]=2025-01-28T14:15:00Z</code>
 
 Try polling randomly rather than on the hour to prevent system overload. 
@@ -119,21 +115,17 @@ To prevent errors when updating the funded place status, follow these best pract
 **1. Set the correct status before submission**
 
 * Ensure the funded place field is correct before submitting a declaration. 
-
 * Avoid changing the funded place status after submission. 
 
 **2. Correct mistakes**
 
 * If the status was incorrect, void the original declaration and resubmit with the correct funded place status. 
-
 * Do not use the PUT change-funded-place request to update this field after submission. 
 
 **3. API best practices**
 
 * Always check and validate data before making a POST declaration request. 
-
 * Use the <code>GET declaration endpoint</code> to verify existing records before making updates. 
-
 * Minimise unnecessary updates to keep records consistent and reduce errors. 
 
 Following these steps will help maintain data accuracy and prevent processing issues. 
