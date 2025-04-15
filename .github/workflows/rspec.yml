@@ -37,15 +37,7 @@ jobs:
           bundler-cache: true
 
       - name: Lint Ruby
-        run: bundle exec rubocop --format json --out=out/rubocop-result.json
-
-      - name: Keep Rubocop output
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.rubocop-artifact-name }}
-          path: ${{ github.workspace }}/out/rubocop-result.json
-          include-hidden-files: true
+        run: bundle exec rubocop
 
   scss_linting:
     name: "Lint SCSS"
