@@ -76,7 +76,7 @@ These limits help prevent the service from getting overloaded.
 
 **Request more data at once**: Use a larger page size (e.g. 300) to reduce the number of requests. This allows fetching up to 300,000 declarations in 5 minutes, which should be enough. 
 
-If the limit is exceeded, providers will see <code>429</code> HTTP status codes. 
+If the limit is exceeded, providers will see `429` HTTP status codes. 
 
 This limit on requests for each authentication key is calculated on a rolling basis. 
 
