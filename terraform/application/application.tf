@@ -83,4 +83,6 @@ module "worker_application" {
   max_memory = var.worker_memory_max
 
   enable_logit = var.enable_logit
+
+  depends_on = [module.postgres]
 }
