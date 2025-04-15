@@ -31,15 +31,6 @@ ApplicationRecord.descendants.each(&:reset_column_information)
   "add_schedules.rb",
   "add_lead_providers.rb",
   "add_itt_providers.rb",
-  "add_users.rb",
-  "add_applications.rb",
-  "add_settings.rb",
-  "add_statements.rb",
-  "add_contracts.rb",
-  "add_declarations.rb",
-  "add_api_tokens.rb",
-  "process_statements.rb",
-  "add_delivery_partners.rb",
 ].each do |seed_file|
   Rails.logger.info("seeding #{seed_file}")
   ApplicationRecord.transaction do
