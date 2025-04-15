@@ -84,5 +84,5 @@ module "worker_application" {
 
   enable_logit = var.enable_logit
 
-  depends_on = [module.postgres]
+  // depends_on = [module.postgres]
 }
