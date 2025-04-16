@@ -161,5 +161,13 @@ RSpec.describe "update_application" do
         expect { run_task }.to raise_error(RuntimeError, "Schedule not found: this-schedule-does-not-exist")
       end
     end
+
+    context "when the application has declarations" do
+      let(:application) { create(:application, :with_declaration) }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Cannot change schedule for an application with declarations")
+      end
+    end
   end
 end

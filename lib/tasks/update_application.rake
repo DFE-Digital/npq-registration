@@ -87,6 +87,8 @@ class UpdateApplicationRakeTask
       task :update_schedule, %i[application_ecf_id new_schedule_identifier] => :environment do |_t, args|
         find_application(args.application_ecf_id)
 
+        raise "Cannot change schedule for an application with declarations" if application.declarations.any?
+
         current_schedule = application.schedule
 
         new_schedule = Schedule.find_by(identifier: args.new_schedule_identifier, cohort: application.cohort)
