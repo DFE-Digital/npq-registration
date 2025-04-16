@@ -86,8 +86,7 @@ This limit on requests for each authentication key is calculated on a rolling ba
 
 To make sure no declarations, participants, transfers or unfunded mentors are missed:
 
-* poll the relevant <code>GET endpoints</code> multiple times a day 
-* use the <code>updated_since</code> filter to get recent changes 
+* poll the relevant `GET endpoints` multiple times a day, ensuring you include an `updated_since` filter
 * use the default pagination of 100 records per page 
 * keep polling and incrementing the page number until you receive an empty response
 
