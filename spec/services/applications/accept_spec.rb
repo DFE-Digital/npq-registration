@@ -61,6 +61,18 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           expect { service.accept }.to raise_error(ActiveRecord::RecordInvalid)
         end
       end
+
+      context "when a schedule cannot be found" do
+        before { allow(CourseGroups::Leadership).to receive(:new).and_return(instance_double(CourseGroups::Leadership, schedule: nil)) }
+
+        it { is_expected.to have_error(:schedule, :blank, "Schedule cannot be determined") }
+
+        it "notifies sentry" do
+          allow(Sentry).to receive(:capture_message)
+          subject.valid?
+          expect(Sentry).to have_received(:capture_message)
+        end
+      end
     end
 
     context "when user applies for EHCO but has accepted ASO" do
