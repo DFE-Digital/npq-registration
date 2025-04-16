@@ -8,9 +8,12 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
   end
 
   def create
-    @create_adjustment_form = Admin::Adjustments::CreateAdjustmentForm.new(adjustment_params.merge(session:, statement: @statement))
+    @create_adjustment_form = Admin::Adjustments::CreateAdjustmentForm.new(
+      adjustment_params.merge(created_adjustment_ids: session[:created_adjustment_ids], statement: @statement),
+    )
 
-    if @create_adjustment_form.save
+    if @create_adjustment_form.save_form
+      session[:created_adjustment_ids] = @create_adjustment_form.created_adjustment_ids
       redirect_to npq_separation_admin_finance_statement_adjustments_path(@statement)
     else
       @adjustment = @create_adjustment_form
@@ -20,14 +23,19 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
 
   def index
     @add_another_form = Admin::Adjustments::AddAnotherAdjustmentForm.new(add_another_params.merge(statement: @statement))
-    @create_adjustment_form = Admin::Adjustments::CreateAdjustmentForm.new(session:, statement: @statement)
+    @create_adjustment_form = Admin::Adjustments::CreateAdjustmentForm.new(created_adjustment_ids: session[:created_adjustment_ids], statement: @statement)
     @adjustments = @create_adjustment_form.adjustments
   end
 
   def add_another
     index
     if @add_another_form.valid?
-      redirect_to @add_another_form.redirect_to
+      if @add_another_form.adding_another_adjustment?
+        redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement)
+      else
+        session[:created_adjustment_ids] = nil
+        redirect_to npq_separation_admin_finance_statement_path(@statement)
+      end
     else
       render :index, status: :unprocessable_entity
     end

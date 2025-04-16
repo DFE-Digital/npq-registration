@@ -5,7 +5,7 @@ module Admin::Adjustments
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    attribute :session
+    attribute :created_adjustment_ids
     attribute :statement
     attribute :description
     attribute :amount, :integer
@@ -16,14 +16,14 @@ module Admin::Adjustments
 
     def initialize(*)
       super
-      session[:created_adjustment_ids] ||= []
+      self.created_adjustment_ids ||= []
     end
 
-    def save
+    def save_form
       success = adjustment.save
 
       if success
-        session[:created_adjustment_ids] << adjustment.id
+        created_adjustment_ids << adjustment.id
       else
         errors.merge!(adjustment.errors)
       end
@@ -32,7 +32,7 @@ module Admin::Adjustments
     end
 
     def adjustments
-      statement.adjustments.where(id: session[:created_adjustment_ids])
+      statement.adjustments.where(id: created_adjustment_ids)
     end
 
   private
