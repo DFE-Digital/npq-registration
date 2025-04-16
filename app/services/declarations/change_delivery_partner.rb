@@ -17,7 +17,7 @@ module Declarations
       declaration.delivery_partner = delivery_partner
       declaration.secondary_delivery_partner = secondary_delivery_partner
 
-      return false unless declaration.valid? && valid?
+      return false unless valid?
 
       declaration.save!
       declaration.reload

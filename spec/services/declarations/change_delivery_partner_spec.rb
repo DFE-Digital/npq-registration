@@ -35,11 +35,11 @@ RSpec.describe Declarations::ChangeDeliveryPartner, type: :model do
       before { change_delivery_partner }
 
       it "changes delivery partner" do
-        expect(declaration.reload.delivery_partner).to eq(new_delivery_partner)
+        expect(declaration.delivery_partner).to eq(new_delivery_partner)
       end
 
       it "changes secondary delivery partner" do
-        expect(declaration.reload.secondary_delivery_partner).to eq(new_secondary_delivery_partner)
+        expect(declaration.secondary_delivery_partner).to eq(new_secondary_delivery_partner)
       end
 
       context "when secondary delivery partner needs to be removed" do
@@ -48,7 +48,7 @@ RSpec.describe Declarations::ChangeDeliveryPartner, type: :model do
         before { change_delivery_partner }
 
         it "is performed correctly" do
-          expect(declaration.reload.secondary_delivery_partner).to be_nil
+          expect(declaration.secondary_delivery_partner).to be_nil
         end
       end
     end

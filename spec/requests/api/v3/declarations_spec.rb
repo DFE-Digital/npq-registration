@@ -80,6 +80,24 @@ RSpec.describe "Declaration endpoints", type: :request do
     end
 
     it_behaves_like "an API update endpoint"
+
+    context "when a parameter is missing" do
+      let(:attributes) do
+        {
+          secondary_delivery_partner_id:,
+        }
+      end
+
+      let(:params) { { data: {} } }
+
+      before do
+        api_put(path(resource_id), params:)
+      end
+
+      it "has proper response status" do
+        expect(response.status).to eq(400)
+      end
+    end
   end
 
   describe "POST /api/v3/participant-declarations" do
