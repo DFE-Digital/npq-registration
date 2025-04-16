@@ -37,13 +37,18 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: "TRN validated")
-      row.with_value(text: boolean_red_green_tag(@user.trn_verified) + (" (automatically)" if @user.trn_auto_verified))
-    end
 
-    sl.with_row do |row|
-      row.with_key(text: "TRN auto validated")
-      row.with_value(text: boolean_red_green_tag(@user.trn_auto_verified))
+      row.with_key(text: "TRN status")
+
+      if @user.trn_auto_verified
+        value = govuk_tag(text: "TRN verified", colour: "green") + " - automatically"
+      elsif @user.trn_verified
+        value = govuk_tag(text: "TRN verified", colour: "green") + " - manually"
+      else
+        value = govuk_tag(text: "TRN not verified", colour: "red")
+      end
+
+      row.with_value(text: value)
     end
 
     sl.with_row do |row|
