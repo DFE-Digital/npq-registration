@@ -89,7 +89,7 @@ To make sure no declarations, participants, transfers or unfunded mentors are mi
 * poll the relevant <code>GET endpoints</code> multiple times a day 
 * use the <code>updated_since</code> filter to get recent changes 
 * use the default pagination of 100 records per page 
-* keep polling until you get an empty response 
+* keep polling and incrementing the page number until you receive an empty response
 
 Contact the DfE using our Slack channel if you need further details. 
 
