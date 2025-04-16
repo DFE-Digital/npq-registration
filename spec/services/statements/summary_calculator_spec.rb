@@ -3,14 +3,15 @@
 require "rails_helper"
 
 RSpec.describe Statements::SummaryCalculator do
-  let(:cohort)           { create(:cohort, :current) }
-  let(:lead_provider)    { create :lead_provider }
-  let(:statement)        { create(:statement, lead_provider:) }
-  let(:application)      { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:) }
-  let(:declaration_type) { application.schedule.allowed_declaration_types.first }
+  let(:cohort) { create(:cohort, :current) }
+  let(:lead_provider) { create :lead_provider }
+  let(:statement) { create(:statement, lead_provider:, reconcile_amount: 0) }
+  let(:application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:) }
+  let(:declaration_type) { "started" }
 
-  let!(:course)          { create(:course, :leading_teaching) }
-  let!(:contract)        { create(:contract, course:, statement:) }
+  let!(:course) { create(:course, :leading_teaching) }
+  let!(:contract) { create(:contract, course:, statement:) }
+  let(:contract_template_monthly_service_fee) { nil }
 
   subject { described_class.new(statement:) }
 
@@ -21,8 +22,10 @@ RSpec.describe Statements::SummaryCalculator do
 
   describe "#total_payment" do
     let(:default_total) { BigDecimal("0.1212631578947368421052631578947368421064e4") }
+    let(:expected_total_output_payment) { 160 }
+    let(:expected_total_targeted_delivery_funding) { 100 }
 
-    before { contract.contract_template.update! monthly_service_fee: nil }
+    before { contract.contract_template.update! monthly_service_fee: contract_template_monthly_service_fee }
 
     context "when there is a positive reconcile_amount" do
       before { statement.update!(reconcile_amount: 1234) }
@@ -37,6 +40,76 @@ RSpec.describe Statements::SummaryCalculator do
 
       it "descreases the total" do
         expect(subject.total_payment).to eq(default_total - 1234)
+      end
+    end
+
+    context "when there are course output payments" do
+      before { create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:) }
+
+      it "adds the output payments to the total" do
+        expect(subject.total_payment).to eq(default_total + expected_total_output_payment)
+      end
+    end
+
+    context "when there are targeted delivery funding" do
+      let(:application) do
+        create(
+          :application,
+          :accepted,
+          :eligible_for_funding,
+          course:,
+          lead_provider:,
+          targeted_delivery_funding_eligibility: true,
+        )
+      end
+
+      before do
+        travel_to statement.deadline_date do
+          create(:declaration, :eligible, declaration_type:, application:, lead_provider:, statement:)
+        end
+      end
+
+      it "adds the targeted delivery funding to the total" do
+        expect(subject.total_payment).to eq(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding)
+      end
+    end
+
+    context "when there are clawbacks" do
+      let(:application) do
+        create(
+          :application,
+          :accepted,
+          :eligible_for_funding,
+          course:,
+          lead_provider:,
+          targeted_delivery_funding_eligibility: true,
+        )
+      end
+
+      let!(:to_be_awaiting_clawed_back) do
+        travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
+          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement:)
+        end
+      end
+      let(:expected_total_clawbacks) { 260 }
+
+      before do
+        travel_to statement.deadline_date do
+          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
+        end
+      end
+
+      it "deducts the clawbacks from the total" do
+        expect(subject.total_payment).to eq(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding - expected_total_clawbacks)
+      end
+    end
+
+    context "when there are adjustments" do
+      let!(:adjustment_1) { create(:adjustment, statement:, amount: 100) }
+      let!(:adjustment_2) { create(:adjustment, statement:, amount: -50) }
+
+      it "adds adjustments to the total" do
+        expect(subject.total_payment).to eq(default_total + adjustment_1.amount + adjustment_2.amount)
       end
     end
   end
@@ -292,8 +365,6 @@ RSpec.describe Statements::SummaryCalculator do
   end
 
   describe "#total_clawbacks" do
-    let(:declaration_type) { "started" }
-
     let(:application) do
       create(
         :application,
@@ -322,6 +393,18 @@ RSpec.describe Statements::SummaryCalculator do
       expect(subject.clawback_payments.to_f).to eq(160.0)
       expect(subject.total_targeted_delivery_funding_refundable.to_f).to eq(100.0)
       expect(subject.total_clawbacks.to_f).to eq(160.0 + 100.0)
+    end
+  end
+
+  describe "#total_adjustments" do
+    before do
+      create(:adjustment, statement:, amount: 100)
+      create(:adjustment, statement:, amount: 200)
+      create(:adjustment, amount: 400)
+    end
+
+    it "returns total adjustments" do
+      expect(subject.total_adjustments.to_f).to eq(300)
     end
   end
 

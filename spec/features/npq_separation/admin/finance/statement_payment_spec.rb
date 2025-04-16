@@ -15,7 +15,7 @@ RSpec.feature "Statement payment", type: :feature do
   end
 
   scenario "marking a statement as paid" do
-    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
     click_link "Authorise for payment"
 
     expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
@@ -26,12 +26,12 @@ RSpec.feature "Statement payment", type: :feature do
       click_button "Authorise for payment"
     end
 
-    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
     expect(page).to have_css(".govuk-tag", text: /Authorised for payment at 1?\d:\d\d[ap]m on \d?\d [A-Z][a-z]{2} 20\d\d/)
   end
 
   scenario "marking a statement as paid before job has run" do
-    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
     click_link "Authorise for payment"
 
     expect(page).to have_css("h1", text: "Check #{Date::MONTHNAMES[statement.month]} #{statement.year} statement details")
@@ -40,7 +40,7 @@ RSpec.feature "Statement payment", type: :feature do
     check "Yes, I'm ready to authorise this for payment", visible: :all
     click_button "Authorise for payment"
 
-    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
     expect(page).to have_css(".govuk-notification-banner__title", text: "Authorising for payment")
     expect(page).to have_css(".govuk-notification-banner__content", text: /Requested at \d\d?:\d\d[ap]m/)
   end
