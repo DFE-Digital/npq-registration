@@ -54,7 +54,7 @@ module Dqt
 
       if matches >= 3
         CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
-      elsif matches < 3 && (trn_matches && trn != "1")
+      elsif matches < 3 && trn_matches && trn != "1"
         if matches == 2 && !name_matches && check_first_name_only
           CheckResult.new(dqt_record, trn_matches, name_matches, dob_matches, nino_matches, matches)
         else
