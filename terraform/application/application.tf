@@ -83,4 +83,17 @@ module "worker_application" {
   max_memory = var.worker_memory_max
 
   enable_logit = var.enable_logit
+
+  depends_on = [time_sleep.wait_15_seconds]
+}
+
+// Delayed::Job can take several seconds to shutdown but terraform thinks it has
+// gone away as soon as the signal is sent. This means Delayed::Job errors out
+// when it is still running but the postgres container is removed.
+//
+// Adding a 15 second delay before removing postgres for review apps solves this
+resource "time_sleep" "wait_15_seconds" {
+  count = var.deploy_azure_backing_services ? 0 : 1
+  depends_on = [module.postgres]
+  destroy_duration = "15s"
 }
