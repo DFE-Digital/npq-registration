@@ -131,4 +131,43 @@ RSpec.describe "update_application" do
       end
     end
   end
+
+  describe "update_application:update_schedule" do
+    subject(:run_task) { Rake::Task["update_application:update_schedule"].invoke(application.ecf_id, schedule_identifier) }
+
+    after { Rake::Task["update_application:update_schedule"].reenable }
+
+    let(:application) { create(:application, :accepted, schedule: nil) }
+    let(:schedule_identifier) { new_schedule.identifier }
+
+    let(:new_schedule) { Schedule.where(cohort: application.cohort, course_group: application.course.course_group).last }
+
+    it "updates the schedule of the application" do
+      run_task
+
+      expect(application.reload.schedule).to eq(new_schedule)
+    end
+
+    context "when the application does not exist" do
+      subject(:run_task) { Rake::Task["update_application:update_schedule"].invoke(SecureRandom.uuid, schedule_identifier) }
+
+      it_behaves_like "outputting an error"
+    end
+
+    context "when a schedule cannot be found for the specified schedule identifier" do
+      subject(:run_task) { Rake::Task["update_application:update_schedule"].invoke(application.ecf_id, "this-schedule-does-not-exist") }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Schedule not found: this-schedule-does-not-exist")
+      end
+    end
+
+    context "when the application has declarations" do
+      let(:application) { create(:application, :with_declaration) }
+
+      it "raises an error" do
+        expect { run_task }.to raise_error(RuntimeError, "Cannot change schedule for an application with declarations")
+      end
+    end
+  end
 end
