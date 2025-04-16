@@ -9,6 +9,8 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
   subject(:rendered) { render_inline described_class.new(statement:) }
 
   let(:statement) { create(:statement) }
+  let(:summary_list) { page.find(".govuk-summary-list") }
+
   let(:calculator) do
     OpenStruct.new(
       show_targeted_delivery_funding?: false,
@@ -24,7 +26,6 @@ RSpec.describe NpqSeparation::Admin::StatementSummaryComponent, type: :component
       total_voided: 4,
     )
   end
-  let(:summary_list) { page.find(".govuk-summary-list") }
 
   before do
     allow(::Statements::SummaryCalculator).to receive(:new).and_return(calculator)
