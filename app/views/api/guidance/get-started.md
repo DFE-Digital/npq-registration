@@ -1,6 +1,6 @@
-# Get started
+# Get started now
 
-## Connect to the API
+## Connect to the API 
 
 Providers integrate their local CRM systems by connecting to this API's test environments.
 
