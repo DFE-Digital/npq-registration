@@ -274,3 +274,10 @@ shared:
     - email_updates_unsubscribe_key
     - archived_at
     - significantly_updated_at
+  :adjustments:
+    - id
+    - statement_id
+    - description
+    - amount
+    - created_at
+    - updated_at

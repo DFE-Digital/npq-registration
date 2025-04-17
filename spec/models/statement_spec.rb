@@ -10,6 +10,7 @@ RSpec.describe Statement, type: :model do
     it { is_expected.to have_many(:declarations) }
     it { is_expected.to have_many(:contracts) }
     it { is_expected.to have_many(:declarations).through(:statement_items) }
+    it { is_expected.to have_many(:adjustments) }
   end
 
   describe "validations" do

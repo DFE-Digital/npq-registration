@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_01_125057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -58,6 +58,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "adjustments", force: :cascade do |t|
+    t.bigint "statement_id", null: false
+    t.string "description", null: false
+    t.integer "amount", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["statement_id"], name: "index_adjustments_on_statement_id"
   end
 
   create_table "admins", force: :cascade do |t|
@@ -637,6 +646,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_10_145412) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "adjustments", "statements"
   add_foreign_key "api_tokens", "lead_providers"
   add_foreign_key "application_states", "applications"
   add_foreign_key "application_states", "lead_providers"
