@@ -61,5 +61,5 @@ module "postgres-snapshot" {
   azure_enable_high_availability = false
   azure_enable_backup_storage    = false
   azure_enable_monitoring        = false
-  azure_extensions               = ["btree_gin", "citext", "plpgsql", "pg_trgm"]
+  azure_extensions               = ["btree_gin", "citext", "pg_trgm"]
 }
