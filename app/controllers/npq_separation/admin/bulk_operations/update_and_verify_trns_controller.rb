@@ -2,10 +2,6 @@ module NpqSeparation::Admin::BulkOperations
   class UpdateAndVerifyTrnsController < NpqSeparation::Admin::BulkOperations::BaseController
   private
 
-    def sort_order
-      { created_at: :desc, id: :desc }
-    end
-
     def bulk_operation_class
       BulkOperation::UpdateAndVerifyTrns
     end
