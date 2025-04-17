@@ -544,6 +544,8 @@ en:
               <<: *schedule_identifier
             funded_place:
               <<: *funded_place
+            schedule:
+              blank: Schedule cannot be determined
         applications/reject:
           attributes:
             application:

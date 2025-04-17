@@ -16,6 +16,7 @@ module Applications
     validate :other_accepted_applications_with_same_course?
     validate :eligible_for_funded_place
     validate :validate_permitted_schedule_for_course
+    validate :validate_schedule_exists
 
     def accept
       return false unless valid?
@@ -124,6 +125,15 @@ module Applications
 
     def schedule
       @schedule ||= schedule_identifier.present? ? new_schedule : fallback_schedule
+    end
+
+    def validate_schedule_exists
+      return unless application
+
+      unless schedule
+        errors.add(:schedule, :blank)
+        Sentry.capture_message("Schedule could not be determined for application #{application.ecf_id}")
+      end
     end
 
     def validate_permitted_schedule_for_course
