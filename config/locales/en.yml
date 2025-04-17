@@ -505,6 +505,10 @@ en:
               <<: *cohort
             lead_provider:
               <<: *lead_provider
+        participants/change_trn:
+          attributes:
+            user:
+              blank: User not found
         declarations/statement_attacher:
           attributes:
             declaration:

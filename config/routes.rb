@@ -295,6 +295,9 @@ Rails.application.routes.draw do
         resources :reject_applications, controller: "reject_applications", only: %i[index create show] do
           post "run", on: :member
         end
+        resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
+          post "run", on: :member
+        end
       end
     end
   end

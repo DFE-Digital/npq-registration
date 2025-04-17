@@ -11,6 +11,7 @@ module Participants
 
     before_validation :strip_trn_whitespace
 
+    validates :user, presence: true
     validates :trn, valid_trn: true
 
     def change_trn

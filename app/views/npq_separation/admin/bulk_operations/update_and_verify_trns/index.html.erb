@@ -1,0 +1,67 @@
+<h1 class="govuk-heading-l">Update and verify TRNs</h1>
+
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_update_and_verify_trns_path, method: :post, multipart: true do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <p class="govuk-body">
+    If the service shows multiple incorrect teacher reference numbers (TRNs),
+    you can fix this by uploading a CSV file with the correct TRNs.
+    The service will then verify the TRNs you provide.
+  </p>
+
+  <p class="govuk-body">
+    Create a CSV file with the headings:
+  </p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>'User ID' in column A, followed by the relevant user IDs</li>
+    <li>'Updated TRN' in column B, followed by the replacement TRNs</li>
+  </ul>
+
+  <div class="govuk-form-group">
+    <%= f.govuk_file_field :file,
+      label: { text: "Upload file", tag: "h2", size: "m" },
+      hint: { text: "Maximum file size is 256MB. File must be in CSV format." }
+    %>
+  </div>
+
+  <%= f.govuk_submit "Upload file" %>
+<% end %>
+
+<h2 class="govuk-heading-m">Uploaded files</h2>
+
+<%=
+  if @bulk_operations.empty?
+    tag.p("No files have been uploaded", class: "govuk-body")
+  else
+    govuk_table do |table|
+      table.with_head do |header|
+        header.with_row do |row|
+          row.with_cell(text: "Bulk operation")
+          row.with_cell(text: "Number of rows")
+          row.with_cell(text: "Date created")
+          row.with_cell(text: "Date started")
+          row.with_cell
+        end
+      end
+
+      table.with_body do |body|
+        @bulk_operations.each do |bulk_operation|
+          body.with_row do |row|
+            row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_update_and_verify_trn_path(bulk_operation)))
+            row.with_cell(text: bulk_operation.row_count)
+            row.with_cell(text: bulk_operation.created_at.to_formatted_s(:govuk_short))
+            row.with_cell(text: bulk_operation.started_at&.to_formatted_s(:govuk_short))
+            row.with_cell do
+              unless bulk_operation.started?
+                form_with url: run_npq_separation_admin_bulk_operations_update_and_verify_trn_path(bulk_operation) do |f|
+                  f.govuk_submit "Update and verify TRNs"
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+%>
