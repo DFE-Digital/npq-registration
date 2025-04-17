@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe BulkOperation::BulkChangeApplicationsToPending do
+RSpec.describe BulkOperation::BulkRevertApplicationsToPending do
   let(:application_ecf_ids) { [application.ecf_id] }
-  let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin)) }
-  let(:instance) { described_class.new(application_ecf_ids:, bulk_operation:) }
+  let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin), application_ecf_ids:) }
+  let(:instance) { described_class.new(bulk_operation:) }
 
   describe "#run!" do
     let(:dry_run) { false }
@@ -70,6 +70,13 @@ RSpec.describe BulkOperation::BulkChangeApplicationsToPending do
 
     context "when the application doesn't exist" do
       let(:application_ecf_id) { SecureRandom.uuid }
+      let(:application_ecf_ids) { [application_ecf_id] }
+
+      it { expect(run[application_ecf_id]).to eq("Not found") }
+    end
+
+    context "when the application ecf_id is not a valid UUID" do
+      let(:application_ecf_id) { "invalid-uuid" }
       let(:application_ecf_ids) { [application_ecf_id] }
 
       it { expect(run[application_ecf_id]).to eq("Not found") }
