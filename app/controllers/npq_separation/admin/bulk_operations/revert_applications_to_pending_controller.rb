@@ -1,7 +1,6 @@
 module NpqSeparation::Admin::BulkOperations
-  class RevertApplicationsToPendingController < NpqSeparation::AdminController
+  class RevertApplicationsToPendingController < NpqSeparation::Admin::BulkOperations::BaseController
     before_action :set_bulk_operations, :set_bulk_operation, only: %i[index create]
-    before_action :find_bulk_operation, only: %i[run show]
 
     def create
       if (file = params.dig(:bulk_operation_revert_applications_to_pending, :file))
@@ -17,14 +16,10 @@ module NpqSeparation::Admin::BulkOperations
       render :index, status: :unprocessable_entity
     end
 
-    def run
+    def perform_bulk_action
       @bulk_operation.update!(started_at: Time.zone.now, ran_by_admin_id: current_admin.id)
       BulkOperation::BulkChangeApplicationsToPendingJob.perform_later(bulk_operation_id: @bulk_operation.id)
       redirect_to :npq_separation_admin_bulk_operations_revert_applications_to_pending_index
-    end
-
-    def show
-      # empty method, because rubocop will complain in the before_action otherwise
     end
 
   private

@@ -27,7 +27,7 @@ RSpec.feature "reject applications", :rack_test_driver, type: :feature do
 
   scenario "file validation" do
     visit npq_separation_admin_bulk_operations_reject_applications_path
-    attach_file "file", empty_applications_file.path
+    attach_file "file", empty_file.path
     click_button "Upload"
     expect(page).to have_content "is empty"
 

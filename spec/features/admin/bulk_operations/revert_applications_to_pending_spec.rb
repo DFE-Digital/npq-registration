@@ -28,7 +28,7 @@ RSpec.feature "revert applications to pending", :rack_test_driver, type: :featur
 
   scenario "file validation" do
     visit npq_separation_admin_bulk_operations_revert_applications_to_pending_index_path
-    attach_file "file", empty_applications_file.path
+    attach_file "file", empty_file.path
     click_button "Upload"
     expect(page).to have_content "is empty"
 

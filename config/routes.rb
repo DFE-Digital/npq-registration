@@ -281,7 +281,7 @@ Rails.application.routes.draw do
       resources :admins, only: %i[index]
 
       resources :bulk_operations, only: %i[index], path: "bulk-operations" do
-        post "revert_applications_to_pending", on: :member
+        # post "revert_applications_to_pending", on: :member
       end
 
       namespace :bulk_operations, path: "bulk-operations" do
@@ -289,6 +289,9 @@ Rails.application.routes.draw do
           post "run", on: :member
         end
         resources :reject_applications, controller: "reject_applications", only: %i[index create show] do
+          post "run", on: :member
+        end
+        resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
           post "run", on: :member
         end
       end
