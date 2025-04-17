@@ -57,7 +57,7 @@ RSpec.feature "User administration", type: :feature do
         expect(summary_list).to have_summary_item("Email", user.email)
         expect(summary_list).to have_summary_item("Name", user.full_name)
         expect(summary_list).to have_summary_item("TRN", user.trn)
-        expect(summary_list).to have_summary_item("TRN validated", "No")
+        expect(summary_list).to have_summary_item("TRN status", "TRN not verified")
         expect(summary_list).to have_summary_item("Get an Identity ID", user.get_an_identity_id)
       end
     end
