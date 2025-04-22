@@ -350,6 +350,8 @@ en:
               invalid: Choose a valid provider
         questionnaires/choose_childcare_provider:
           attributes:
+            institution_identifier:
+              invalid: No matching childcare provider found
             institution_name:
               no_results: No nurseries in %{location} with the name %{name} were found, please try again
         questionnaires/choose_private_childcare_provider:
@@ -361,6 +363,8 @@ en:
               no_results: No private childcare providers with the URN %{urn} were found, please try again
         questionnaires/choose_school:
           attributes:
+            institution_identifier:
+              invalid: No matching school found
             institution_name:
               no_results: No schools in %{location} with the name %{name} were found, please try again
         questionnaires/find_school:
