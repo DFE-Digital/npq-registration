@@ -69,4 +69,11 @@ module ApplicationHelper
 
     govuk_tag(text: lead_provider_approval_status.humanize, colour:)
   end
+
+  def sentry_javascript_tag
+    dsn = Sentry.configuration.dsn.public_key
+    return if dsn.blank?
+
+    javascript_include_tag "https://js.sentry-cdn.com/#{dsn}.min.js", crossorigin: "anonymous"
+  end
 end
