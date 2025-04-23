@@ -36,6 +36,16 @@ module API
         end
       end
 
+      def change_delivery_partner
+        service = Declarations::ChangeDeliveryPartner.new(declaration:, delivery_partner_id:, secondary_delivery_partner_id:)
+
+        if service.change_delivery_partner
+          render json: to_json(service.declaration)
+        else
+          render json: API::Errors::Response.from(service), status: :unprocessable_entity
+        end
+      end
+
     private
 
       def declarations_query(conditions: {})
@@ -65,6 +75,19 @@ module API
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       end
 
+      def change_delivery_partner_params
+        params
+          .require(:data)
+          .require(:attributes)
+          .permit(:delivery_partner_id,
+                  :secondary_delivery_partner_id)
+          .merge(
+            lead_provider: current_lead_provider,
+          )
+      rescue ActionController::ParameterMissing
+        raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
+      end
+
       def participant_ids
         params.dig(:filter, :participant_id)
       end
@@ -75,6 +98,14 @@ module API
 
       def to_json(obj)
         DeclarationSerializer.render(obj, view: :v3, root: "data")
+      end
+
+      def delivery_partner_id
+        change_delivery_partner_params["delivery_partner_id"]
+      end
+
+      def secondary_delivery_partner_id
+        change_delivery_partner_params["secondary_delivery_partner_id"]
       end
     end
   end
