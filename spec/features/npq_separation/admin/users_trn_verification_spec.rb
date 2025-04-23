@@ -26,12 +26,12 @@ RSpec.feature "viewing a user's TRN status", type: :feature do
   end
 
   feature "when TRN verified is false and TRN auto verified is true" do
-    scenario "shows TRN verified automatically" do
+    scenario "shows TRN not verified" do
       user = create(:user, trn_verified: false, trn_auto_verified: true)
       sign_in_as(create(:admin))
       visit npq_separation_admin_user_path(user)
       within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("TRN status", "TRN verified - automatically")
+        expect(summary_list).to have_summary_item("TRN status", "TRN not verified")
       end
     end
   end
