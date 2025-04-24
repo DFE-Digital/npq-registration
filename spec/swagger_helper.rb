@@ -111,6 +111,7 @@ RSpec.configure do |config|
       ParticipantDeclarationStartedRequest: V3_PARTICIPANT_DECLARATION_STARTED_REQUEST,
       ParticipantDeclarationRetainedRequest: V3_PARTICIPANT_DECLARATION_RETAINED_REQUEST,
       ParticipantDeclarationCompletedRequest: V3_PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+      ParticipantDeclarationChangeDeliveryPartnerRequest: V3_PARTICIPANT_DECLARATION_CHANGE_DELIVERY_PARTNER_REQUEST,
     )
   end
 
