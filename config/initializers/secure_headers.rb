@@ -14,11 +14,11 @@ SecureHeaders::Configuration.default do |config|
   tracking_pixels = %w[www.facebook.com px.ads.linkedin.com]
   flippercloud = %w[www.flippercloud.io]
   identity_domain = [ENV["TRA_OIDC_DOMAIN"]]
-  sentry = []
+  sentry = %w[*.sentry-cdn.com *.ingest.us.sentry.io]
 
   if ENV["SENTRY_CSP_REPORT_URI"]
     sentry_report_uri = ENV["SENTRY_CSP_REPORT_URI"]
-    sentry = [URI(sentry_report_uri).host]
+    sentry += [URI(sentry_report_uri).host]
   end
 
   flipper_ui_hashes = %w[
@@ -41,7 +41,7 @@ SecureHeaders::Configuration.default do |config|
     img_src: %w['self' data: *.gov.uk] + google_analytics + tracking_pixels,
     manifest_src: %w['self'],
     media_src: %w['self'],
-    script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics,
+    script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics + sentry,
     style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics + %w['unsafe-hashes'] + flipper_ui_hashes,
     worker_src: %w['self'],
     report_uri: [sentry_report_uri],
