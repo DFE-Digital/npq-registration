@@ -450,7 +450,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.1.12)
+    rack (3.1.13)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-oauth2 (2.2.1)
@@ -660,8 +660,9 @@ GEM
       capybara (~> 3.34)
       site_prism-all_there (> 3, < 5)
     site_prism-all_there (3.0.6)
-    sprockets (4.2.1)
+    sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
+      logger
       rack (>= 2.2.4, < 4)
     sprockets-rails (3.5.2)
       actionpack (>= 6.1)
@@ -815,7 +816,7 @@ DEPENDENCIES
   shoulda-matchers (~> 6.4)
   simplecov
   site_prism (~> 5.1)
-  sprockets (~> 4.2.0)
+  sprockets (~> 4.2.2)
   sprockets-rails
   state_machines-activerecord
   stimulus-rails
