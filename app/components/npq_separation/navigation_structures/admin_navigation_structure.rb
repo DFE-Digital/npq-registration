@@ -73,6 +73,11 @@ module NpqSeparation
             prefix: "/npq-separation/admin/delivery-partners",
           ) => [],
           Node.new(
+            name: "Feature flags",
+            href: npq_separation_admin_features_path,
+            prefix: "/npq-separation/admin/features",
+            ) => [],
+          Node.new(
             name: "Settings",
             href: "#",
             prefix: "/npq-separation/admin/settings",
