@@ -3,6 +3,7 @@ module API
     class DeclarationsController < BaseController
       include Pagination
       include FilterByDate
+      include FilterByParticipantIds
 
       def index
         conditions = { updated_since:, participant_ids: }
@@ -64,10 +65,6 @@ module API
           )
       rescue ActionController::ParameterMissing
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
-      end
-
-      def participant_ids
-        params.dig(:filter, :participant_id)
       end
 
       def to_json(obj)
