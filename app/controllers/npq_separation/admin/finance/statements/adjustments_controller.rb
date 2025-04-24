@@ -29,15 +29,14 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
 
   def add_another
     index
-    if @add_another_form.valid?
-      if @add_another_form.adding_another_adjustment?
-        redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement)
-      else
-        session[:created_adjustment_ids] = nil
-        redirect_to npq_separation_admin_finance_statement_path(@statement)
-      end
-    else
+
+    if @add_another_form.invalid?
       render :index, status: :unprocessable_entity
+    elsif @add_another_form.adding_another_adjustment?
+      redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement)
+    else
+      session[:created_adjustment_ids] = nil
+      redirect_to npq_separation_admin_finance_statement_path(@statement)
     end
   end
 
