@@ -36,4 +36,3 @@ RSpec.feature "super admin", :rack_test_driver, type: :feature do
     expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(false)
   end
 end
-
