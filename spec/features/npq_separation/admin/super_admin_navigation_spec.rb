@@ -35,8 +35,6 @@ RSpec.feature "super admin", :rack_test_driver, type: :feature do
     expect(page).to have_content("You have turned the Registration open feature flag off.")
     expect(Flipper.enabled?(Feature::REGISTRATION_OPEN)).to be(false)
   end
-
 end
-
 
 
