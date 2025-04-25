@@ -76,7 +76,7 @@ module NpqSeparation
             name: "Feature flags",
             href: npq_separation_admin_features_path,
             prefix: "/npq-separation/admin/features",
-            ) => [],
+          ) => [],
           Node.new(
             name: "Settings",
             href: "#",
