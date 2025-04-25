@@ -11,10 +11,10 @@ RSpec.feature "Service is closed", type: :feature do
     close_registration!
 
     visit "/"
-    expect(page).to have_content("Registration for NPQs and the early headship coaching offer is now closed")
+    expect(page).to have_content("Registration is temporarily closed")
     expect(page).to be_accessible
 
-    page.click_button("Request email updates")
+    page.click_button("Sign up for email updates")
 
     expect(page).to have_current_path(new_email_update_path)
     expect(page).to have_content("Request email updates about registration opening")
@@ -50,7 +50,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     scenario "Allow user to register" do
       visit "/"
-      expect(page).to have_content("Registration for NPQs and the early headship coaching offer is now closed")
+      expect(page).to have_content("Registration is temporarily closed")
 
       sign_in_as(super_admin)
 
@@ -148,7 +148,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     scenario "When user is not whitelisted" do
       visit "/"
-      expect(page).to have_content("Registration for NPQs and the early headship coaching offer is now closed")
+      expect(page).to have_content("Registration is temporarily closed")
 
       visit "/closed_registration_exception"
 
@@ -163,7 +163,7 @@ RSpec.feature "Service is closed", type: :feature do
 
     scenario "Register to email and unsubscribe" do
       visit "/"
-      click_button "Sign in to your account"
+      click_button "Sign in to your DfE Identity account"
 
       visit new_email_update_path
 
