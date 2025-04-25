@@ -3,39 +3,82 @@
     <h1 class="govuk-heading-xl">
       Register for a national professional qualification (NPQ)
     </h1>
-    <p class="govuk-body">Registration for NPQs and the early headship coaching offer is now closed.</p>
-    <p class="govuk-body">You can request email updates to tell you when registration reopens.</p>
+
+    <h2 class="govuk-heading-l">
+      Registration is temporarily closed
+    </h2>
+
+    <p class="govuk-body">
+      You can register for an NPQ or the early headship coaching offer when
+      registration reopens for courses starting in autumn 2025.
+    </p>
+
+    <p class="govuk-body">
+      Sign up for email updates to find out when registration reopens. You can
+      also express interest in the special education needs coordinator (SENCO)
+      NPQ course.
+    </p>
 
     <% if current_user.persisted? %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
-          text: "Request email updates",
+          text: "Sign up for email updates",
           href: new_email_update_path,
         )
       %>
     <% else %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
-          text: "Request email updates",
+          text: "Sign up for email updates",
           href: user_tra_openid_connect_omniauth_authorize_path(request_email_updates: "true"),
           as_button: true
         )
       %>
     <% end %>
     
-    <p class="govuk-body">You’ll be asked to create a DfE Identity account or sign in to your account.</p>
+    <h3 class="govuk-heading-m">
+      How to register
+    </h3>
 
-    <p class="govuk-body">If you’re starting an NPQ course before April 2025, contact your course provider for support.</p>
+    <p class="govuk-body">
+      You'll need to:
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>create a DfE Identity account or sign in to your existing account</li>
+      <li>provide a teacher reference number (TRN), even if you’re not a teacher</li>
+    </ul>
+
+
+    <p class="govuk-body">
+      If you’ve lost your TRN, use the
+        <%= govuk_link_to "Find a lost TRN",
+                          "https://find-a-lost-trn.education.gov.uk/start" %>
+        service. If you’ve never had one, use the
+        <%= govuk_link_to "Get a TRN",
+                          "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn?AccessToken=8TDf7xiqoMKATHhx" %>
+        service.
+    </p>
+
+    <p class="govuk-body">
+      If you're starting a national professional qualification (NPQ) course
+      before July 2025, contact your course provider for support.
+    </p>
 
     <h3 class="govuk-heading-m">Check your existing registrations</h3>
-    <p class="govuk-body">You can still sign in to your DfE Identity account to check your: </p>
+
+    <p class="govuk-body">
+      You can still sign in to your DfE Identity account to check your:
+    </p>
+
     <ul class="govuk-list govuk-list--bullet">
-      <li>registration details, if you already registered </li>
-      <li>course outcome, if you have completed your course </li>
+      <li>registration details, if you already registered</li>
+      <li>course outcome, if you have completed your course</li>
     </ul>
+
     <%=
       render GovukComponent::ContinueButtonComponent.new(
-        text: "Sign in to your account",
+        text: "Sign in to your DfE Identity account",
         href: user_tra_openid_connect_omniauth_authorize_path,
         classes: "govuk-button--secondary",
         as_button: true,

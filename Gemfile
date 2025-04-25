@@ -48,13 +48,13 @@ gem "secure_headers"
 gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
-gem "sprockets", "~> 4.2.0"
+gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "strong_migrations"
 
-gem "net-imap", "~> 0.5.6", require: false
+gem "net-imap", "~> 0.5.7", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.1", require: false
 
