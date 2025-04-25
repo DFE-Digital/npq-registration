@@ -37,4 +37,3 @@ RSpec.feature "super admin", :rack_test_driver, type: :feature do
   end
 end
 
-
