@@ -10,7 +10,7 @@
 
 <% if flash[:error].present? %>
   <%=
-    govuk_notification_banner(title_text: "Error") do |banner|
+    govuk_notification_banner(title_text: (flash[:error_title] || "Error")) do |banner|
       banner.with_heading(text: flash[:error])
     end
   %>
