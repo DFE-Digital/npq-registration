@@ -10,6 +10,7 @@ on:
         type: choice
         options:
           - staging
+          - sandbox
           - production
       backup-file:
         description: |
