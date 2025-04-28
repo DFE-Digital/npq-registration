@@ -91,7 +91,7 @@ group :test do
   gem "axe-core-rspec", "~> 4.10"
   gem "cuprite"
   gem "rspec-default_http_header"
-  gem "shoulda-matchers", "~> 6.4"
+  gem "shoulda-matchers", "~> 6.5"
   gem "site_prism", "~> 5.1"
   gem "webmock", "~> 3.25"
 end
