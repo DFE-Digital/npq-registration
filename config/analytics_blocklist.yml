@@ -189,3 +189,10 @@ shared:
     - completion_date
     - created_at
     - updated_at
+  :adjustments:
+    - id
+    - statement_id
+    - description
+    - amount
+    - created_at
+    - updated_at
