@@ -18,37 +18,18 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe "#show_tracking_pixels?" do
-    before do
-      allow(Rails.application.config.x)
-        .to receive(:tracking_pixels_enabled).and_return(pixels_enabled)
-    end
-
     let(:cookie_name) { "consented-to-cookies" }
 
-    context "when enabled in configuration" do
-      let(:pixels_enabled) { true }
-
-      context "when cookies haven't been consented to" do
-        specify "tracking pixels are disabled" do
-          expect(show_tracking_pixels?).to be(false)
-        end
-      end
-
-      context "when cookies have been consented to" do
-        specify "tracking pixels are enabled" do
-          cookies[cookie_name] = "accept"
-          expect(show_tracking_pixels?).to be(true)
-          cookies.delete(cookie_name)
-        end
+    context "when cookies haven't been consented to" do
+      specify "tracking pixels are disabled" do
+        expect(show_tracking_pixels?).to be(false)
       end
     end
 
-    context "when disabled by configuration" do
-      let(:pixels_enabled) { false }
-
+    context "when cookies have been consented to" do
       specify "tracking pixels are enabled" do
         cookies[cookie_name] = "accept"
-        expect(show_tracking_pixels?).to be(false)
+        expect(show_tracking_pixels?).to be(true)
         cookies.delete(cookie_name)
       end
     end

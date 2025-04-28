@@ -35,7 +35,7 @@ module ApplicationHelper
   end
 
   def show_tracking_pixels?
-    Rails.configuration.x.tracking_pixels_enabled && cookies["consented-to-cookies"] == "accept"
+    cookies["consented-to-cookies"] == "accept"
   end
 
   def accepted?(application)

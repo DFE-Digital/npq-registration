@@ -20,7 +20,7 @@
 
   <%= render partial: "shared/analytics/google" %>
 
-  <% if show_tracking_pixels? %>
+  <% if show_tracking_pixels? && Rails.env.production? %>
     <%= render partial: "shared/analytics/tracking_pixels" %>
   <% end %>
 

@@ -43,7 +43,5 @@ module NpqRegistration
 
     require "middleware/restore_secure_headers_request_config"
     config.middleware.use Middleware::RestoreSecureHeadersRequestConfig
-
-    config.x.tracking_pixels_enabled = ENV["TRACKING_PIXELS"].to_s == "true"
   end
 end
