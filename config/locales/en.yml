@@ -754,7 +754,7 @@ en:
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
-        participants: Participants
+        users: Users
         payment_per_participant: Payment per participant
         payment_type: Payment type
         service_fee: Service fee
@@ -791,10 +791,6 @@ en:
             banner:
               title: "Authorising for payment"
               content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
-          show:
-            calculation_rounding_message:
-              title: Calculation rounding errors
-              content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
