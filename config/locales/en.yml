@@ -135,6 +135,15 @@ en:
   activerecord:
     errors:
       models:
+        adjustment:
+          attributes:
+            description:
+              blank: You must enter a description for the adjustment
+            amount:
+              blank: You must enter an adjustment amount
+              other_than: The adjustment amount cannot be zero
+              not_a_number: You can only enter numeric values in the adjustment amount field
+              format: You can only enter numeric values in the adjustment amount field
         application:
           attributes:
             schedule:
@@ -254,6 +263,14 @@ en:
         checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
+        admin/adjustments/create_adjustment_form:
+          attributes:
+            statement:
+              not_open: The statement has to be open for adjustments to be made
+        admin/adjustments/add_another_adjustment_form:
+          attributes:
+            add_another:
+              inclusion: Select if you need to add another adjustment
         applications/change_training_status:
           attributes:
             training_status:
@@ -758,6 +775,10 @@ en:
         total_voids: Total voids
         totals: Totals
         view: View
+      adjustments_table_component:
+        description: Description
+        amount: Amount
+        total: Total
       finance:
         statements:
           payment_authorisations:
