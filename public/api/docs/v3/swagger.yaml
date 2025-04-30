@@ -214,7 +214,7 @@ paths:
                         teacher_catchment_iso_country_code: GBR
                         itt_provider: University of Southampton
                         lead_mentor: true
-                        funded_place:
+                        funded_place: 
                         created_at: '2021-05-31T02:21:32.000Z'
                         updated_at: '2021-05-31T02:22:32.000Z'
                         schedule_identifier: npq-aso-march
@@ -451,13 +451,17 @@ paths:
                         course_identifier: npq-senior-leadership
                         declaration_date: '2021-05-31T02:22:32Z'
                         state: voided
-                        has_passed:
+                        has_passed: 
                         statement_id: cd3a12347-7308-4879-942a-c4a70ced400a
-                        clawback_statement_id:
+                        clawback_statement_id: 
                         uplift_paid: true
                         lead_provider_name: Example Institute
                         ineligible_for_funding_reason: duplicate_declaration
                         created_at: '2021-05-31T02:22:32.000Z'
+                        delivery_partner_id: 524df095-f9bf-4f9d-ba4c-772545a99e60
+                        delivery_partner_name: Foo education
+                        secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
+                        secondary_delivery_partner_name: Bar education
                         updated_at: '2021-05-31T02:22:32.000Z'
               schema:
                 "$ref": "#/components/schemas/ParticipantDeclarationResponse"
@@ -473,6 +477,56 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/NotFoundResponse"
+  "/api/v3/participant-declarations/{id}/change-delivery-partner":
+    put:
+      summary: Change declaration delivery partner
+      tags:
+      - Participant declarations
+      security:
+      - api_key: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          "$ref": "#/components/schemas/IDAttribute"
+      responses:
+        '200':
+          description: The declaration delivery partner is going to be changed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ParticipantDeclarationResponse"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnauthorisedResponse"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/BadRequestResponse"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/UnprocessableEntityResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ParticipantDeclarationChangeDeliveryPartnerRequest"
+        required: true
   "/api/v3/delivery-partners":
     get:
       summary: Retrieve multiple Delivery Partners
@@ -739,8 +793,8 @@ paths:
                           targeted_delivery_funding_eligibility: true
                           funded_place: true
                           email: isabelle.macdonald2@some-school.example.com
-                          withdrawal:
-                          deferral:
+                          withdrawal: 
+                          deferral: 
                           created_at: '2021-05-31T02:21:32.000Z'
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
@@ -817,7 +871,7 @@ paths:
                           targeted_delivery_funding_eligibility: true
                           funded_place: true
                           email: isabelle.macdonald2@some-school.example.com
-                          withdrawal:
+                          withdrawal: 
                           deferral:
                             reason: bereavement
                             date: '2021-05-31T02:22:32.000Z'
@@ -900,7 +954,7 @@ paths:
                           withdrawal:
                             reason: insufficient-capacity-to-undertake-programme
                             date: '2021-05-31T02:22:32.000Z'
-                          deferral:
+                          deferral: 
                           created_at: '2021-05-31T02:21:32.000Z'
                         participant_id_changes:
                         - from_participant_id: 23dd8d66-e11f-4139-9001-86b4f9abcb02
@@ -1462,7 +1516,7 @@ components:
                 being funded by DfE
               nullable: true
               type: boolean
-              example:
+              example: 
             created_at:
               description: The date the application was created
               type: string
@@ -1733,7 +1787,7 @@ components:
                     required:
                     - reason
                     - date
-                    example:
+                    example: 
                     properties:
                       reason:
                         description: The reason a participant was withdrawn
@@ -1771,7 +1825,7 @@ components:
                     required:
                     - reason
                     - date
-                    example:
+                    example: 
                     properties:
                       reason:
                         description: The reason a participant was deferred
@@ -2376,7 +2430,7 @@ components:
             has_passed:
               description: Whether the participant has failed or passed
               type: string
-              example:
+              example: 
               nullable: true
             statement_id:
               description: Unique ID of the statement the declaration will be paid
@@ -2415,6 +2469,32 @@ components:
               nullable: false
               format: date-time
               example: '2021-05-31T02:22:32.000Z'
+            delivery_partner_id:
+              description: The delivery partner ID
+              type: string
+              format: uuid
+              required: true
+              nullable: true
+              example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+            delivery_partner_name:
+              description: The delivery partner name
+              type: string
+              required: true
+              nullable: true
+              example: Foo education
+            secondary_delivery_partner_id:
+              description: The secondary delivery partner ID
+              type: string
+              format: uuid
+              required: true
+              nullable: true
+              example: f0de7abf-399b-4e68-83de-2c33b503810c
+            secondary_delivery_partner_name:
+              description: The secondary delivery partner name
+              type: string
+              required: true
+              nullable: true
+              example: Bar education
             updated_at:
               description: The date the application was last updated
               type: string
@@ -2439,6 +2519,85 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/ParticipantDeclaration"
+    ListDeliveryPartnersFilter:
+      description: Filter delivery partners to return more specific results
+      type: object
+      properties:
+        cohort:
+          description: Return only delivery partners from the specified cohort.
+          type: string
+          example: '2022'
+    DeliveryPartner:
+      description: A single delivery partner
+      type: object
+      required:
+      - id
+      - type
+      - attributes
+      properties:
+        id:
+          "$ref": "#/components/schemas/IDAttribute"
+        type:
+          description: The data type
+          type: string
+          example: delivery-partner
+          enum:
+          - delivery-partner
+        attributes:
+          properties:
+            name:
+              description: The name of the delivery partner
+              type: string
+              nullable: false
+              example: Awesome Delivery Partner Ltd
+            cohort:
+              description: The starting years of the cohorts the delivery partner
+                is valid for
+              type: array
+              items:
+                type: string
+                example: '2025'
+            created_at:
+              description: The date the delivery partner was created
+              type: string
+              nullable: false
+              format: date-time
+              example: '2025-03-25T02:21:32.000Z'
+            updated_at:
+              description: The date the delivery partner was last updated
+              type: string
+              nullable: false
+              format: date-time
+              example: '2025-03-25T02:22:32.000Z'
+    DeliveryPartnerResponse:
+      description: A single delivery partner
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          "$ref": "#/components/schemas/DeliveryPartner"
+    DeliveryPartnersResponse:
+      description: A list of delivery partners
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/DeliveryPartner"
+    DeliveryPartnersSortingOptions:
+      description: Sort records being returned.
+      enum:
+      - name
+      - "-name"
+      - created_at
+      - "-created_at"
+      - updated_at
+      - "-updated_at"
+      default: name
+      example: created_at
     ParticipantDeclarationRequest:
       description: A participant declaration data request
       type: object
@@ -2683,82 +2842,63 @@ components:
         declaration_date: '2021-05-31T02:21:32Z'
         course_identifier: npq-senior-leadership
         has_passed: true
-    ListDeliveryPartnersFilter:
-      description: Filter delivery partners to return more specific results
-      type: object
-      properties:
-        cohort:
-          description: Return only delivery partners from the specified cohort.
-          type: string
-          example: '2022'
-    DeliveryPartner:
-      description: A single delivery partner
+    ParticipantDeclarationChangeDeliveryPartnerRequest:
+      description: A participant declaration change delivery partner request
       type: object
       required:
-      - id
-      - type
-      - attributes
+      - data
       properties:
-        id:
-          "$ref": "#/components/schemas/IDAttribute"
-        type:
-          description: The data type
-          type: string
-          example: delivery-partner
-          enum:
-          - delivery-partner
-        attributes:
+        data:
+          description: A participant declaration change delivery partner request
+          type: object
+          required:
+          - type
+          - attributes
           properties:
-            name:
-              description: The name of the delivery partner
+            type:
               type: string
-              nullable: false
-              example: Awesome Delivery Partner Ltd
-            cohort:
-              description: The starting years of the cohorts the delivery partner
-                is valid for
-              type: array
-              items:
-                type: string
-                example: '2025'
-            created_at:
-              description: The date the delivery partner was created
-              type: string
-              nullable: false
-              format: date-time
-              example: '2025-03-25T02:21:32.000Z'
-            updated_at:
-              description: The date the delivery partner was last updated
-              type: string
-              nullable: false
-              format: date-time
-              example: '2025-03-25T02:22:32.000Z'
-    DeliveryPartnerResponse:
-      description: A single delivery partner
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          "$ref": "#/components/schemas/DeliveryPartner"
-    DeliveryPartnersResponse:
-      description: A list of delivery partners
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            "$ref": "#/components/schemas/DeliveryPartner"
-    DeliveryPartnersSortingOptions:
-      description: Sort records being returned.
-      enum:
-      - name
-      - "-name"
-      - created_at
-      - "-created_at"
-      - updated_at
-      - "-updated_at"
-      default: name
-      example: created_at
+              required: true
+              enum:
+              - participant-declaration
+              example: participant-declaration
+            attributes:
+              required: true
+              anyOf:
+              - description: An NPQ completed participant declaration
+                type: object
+                required:
+                - delivery_partner_id
+                additionalProperties: false
+                properties:
+                  participant_id:
+                    description: The unique id of the participant
+                    type: string
+                    format: uuid
+                    required: true
+                    nullable: false
+                    example: db3a7848-7308-4879-942a-c4a70ced400a
+                  declaration_type:
+                    description: The event declaration type
+                    type: string
+                    required: true
+                    nullable: false
+                    enum:
+                    - completed
+                    example: completed
+                  delivery_partner_id:
+                    description: The delivery partner ID
+                    type: string
+                    format: uuid
+                    required: true
+                    nullable: false
+                    example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+                  secondary_delivery_partner_id:
+                    description: The secondary delivery partner ID
+                    type: string
+                    format: uuid
+                    required: false
+                    nullable: false
+                    example: f0de7abf-399b-4e68-83de-2c33b503810c
+                example:
+                  delivery_partner_id: db3a7848-7308-4879-942a-c4a70ced400a
+                  secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
