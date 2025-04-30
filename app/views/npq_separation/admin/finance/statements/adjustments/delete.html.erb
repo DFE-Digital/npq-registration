@@ -1,0 +1,14 @@
+<%= form_for @adjustment,
+  url: npq_separation_admin_finance_statement_adjustment_path(
+    @statement, @adjustment.id, show_all_adjustments: @show_all_adjustments
+  ), method: :delete do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <h1 class="govuk-heading-l">Are you sure you want to remove this adjustment?</h1>
+
+  <%= render NpqSeparation::Admin::AdjustmentsTableComponent.new(adjustments: [@adjustment]) %>
+
+  <%= f.govuk_submit "Remove", warning: true do %>
+    <%= govuk_link_to "Cancel", npq_separation_admin_finance_statement_adjustments_path(@statement, show_all_adjustments: @show_all_adjustments) %>
+  <% end %>
+<% end %>

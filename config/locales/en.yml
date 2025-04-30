@@ -263,10 +263,14 @@ en:
         checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
-        admin/adjustments/create_adjustment_form:
+        admin/adjustments/create_adjustment_form: &create_adjustment_form
           attributes:
             statement:
               not_open: The statement has to be open for adjustments to be made
+        admin/adjustments/update_adjustment_form:
+          <<: *create_adjustment_form
+        admin/adjustments/destroy_adjustment_form:
+          <<: *create_adjustment_form
         admin/adjustments/add_another_adjustment_form:
           attributes:
             add_another:
@@ -777,6 +781,9 @@ en:
       adjustments_table_component:
         description: Description
         amount: Amount
+        actions: Actions
+        edit: Edit
+        remove: Remove
         total: Total
       finance:
         statements:

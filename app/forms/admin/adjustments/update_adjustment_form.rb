@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Admin::Adjustments
-  class CreateAdjustmentForm
+  class UpdateAdjustmentForm
     include ActiveModel::Model
     include ActiveModel::Attributes
 
-    attribute :created_adjustment_ids
     attribute :statement
     attribute :description
     attribute :amount, :integer
@@ -14,34 +13,22 @@ module Admin::Adjustments
     validate :adjustment_valid
     validate :statement_open
 
+    delegate :id, to: :adjustment
+
     def initialize(*)
       super
-      self.created_adjustment_ids ||= []
     end
 
     def save_adjustment
+      adjustment.description = description
+      adjustment.amount = amount
+
       return false unless valid?
 
-      success = adjustment.save
-
-      if success
-        created_adjustment_ids << adjustment.id
-      else
-        errors.merge!(adjustment.errors)
-      end
-
-      success
-    end
-
-    def adjustments
-      statement.adjustments.where(id: created_adjustment_ids)
+      adjustment.save # rubocop:disable Rails/SaveBang - result used by caller
     end
 
   private
-
-    def adjustment
-      @adjustment ||= statement.adjustments.new(description:, amount:)
-    end
 
     def adjustment_valid
       errors.merge!(adjustment.errors) unless adjustment.valid?
