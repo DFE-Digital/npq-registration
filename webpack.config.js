@@ -9,6 +9,7 @@ module.exports = {
   },
   entry: {
     application: "./app/javascript/application.js",
+    mermaid: "./app/javascript/mermaid.js",
     "swagger-ui": "./app/javascript/swagger-ui.js",
   },
   module: {
