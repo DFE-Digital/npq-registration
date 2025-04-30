@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_01_125057) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_30_155332) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -559,12 +559,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_01_125057) do
     t.datetime "updated_at", null: false
     t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
     t.index ["updated_at"], name: "index_sessions_on_updated_at"
-  end
-
-  create_table "settings", force: :cascade do |t|
-    t.date "course_start_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "statement_items", force: :cascade do |t|
