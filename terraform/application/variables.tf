@@ -53,7 +53,7 @@ variable "deploy_snapshot_database" {
 }
 variable "deploy_redis_cache" {
   type    = bool
-  default = false
+  default = true
 }
 variable "enable_postgres_ssl" {
   default     = true
