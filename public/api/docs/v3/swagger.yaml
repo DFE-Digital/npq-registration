@@ -459,8 +459,8 @@ paths:
                         ineligible_for_funding_reason: duplicate_declaration
                         created_at: '2021-05-31T02:22:32.000Z'
                         delivery_partner_id: 524df095-f9bf-4f9d-ba4c-772545a99e60
-                        secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
                         delivery_partner_name: Foo education
+                        secondary_delivery_partner_id: f0de7abf-399b-4e68-83de-2c33b503810c
                         secondary_delivery_partner_name: Bar education
                         updated_at: '2021-05-31T02:22:32.000Z'
               schema:
@@ -2476,6 +2476,12 @@ components:
               required: true
               nullable: true
               example: 524df095-f9bf-4f9d-ba4c-772545a99e60
+            delivery_partner_name:
+              description: The delivery partner name
+              type: string
+              required: true
+              nullable: true
+              example: Foo education
             secondary_delivery_partner_id:
               description: The secondary delivery partner ID
               type: string
@@ -2483,12 +2489,6 @@ components:
               required: true
               nullable: true
               example: f0de7abf-399b-4e68-83de-2c33b503810c
-            delivery_partner_name:
-              description: The delivery partner name
-              type: string
-              required: true
-              nullable: true
-              example: Foo education
             secondary_delivery_partner_name:
               description: The secondary delivery partner name
               type: string

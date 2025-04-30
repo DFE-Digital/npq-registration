@@ -149,6 +149,13 @@ PARTICIPANT_DECLARATION = {
     nullable: true,
     example: "524df095-f9bf-4f9d-ba4c-772545a99e60",
   }
+  h[:v3][:properties][:attributes][:properties][:delivery_partner_name] = {
+    description: "The delivery partner name",
+    type: :string,
+    required: true,
+    nullable: true,
+    example: "Foo education",
+  }
   h[:v3][:properties][:attributes][:properties][:secondary_delivery_partner_id] = {
     description: "The secondary delivery partner ID",
     type: :string,
@@ -156,13 +163,6 @@ PARTICIPANT_DECLARATION = {
     required: true,
     nullable: true,
     example: "f0de7abf-399b-4e68-83de-2c33b503810c",
-  }
-  h[:v3][:properties][:attributes][:properties][:delivery_partner_name] = {
-    description: "The delivery partner name",
-    type: :string,
-    required: true,
-    nullable: true,
-    example: "Foo education",
   }
   h[:v3][:properties][:attributes][:properties][:secondary_delivery_partner_name] = {
     description: "The secondary delivery partner name",
