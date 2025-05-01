@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" class="govuk-template admin--wide">
+<% content_for :head do %>
+  <%= nonced_javascript_include_tag 'mermaid', defer: true %>
+<% end %>
 <%= render partial: "layouts/shared/head" %>
 
 <body class="govuk-template__body js-enabled <%= yield :body_class %>">
