@@ -448,6 +448,59 @@ Participants starting their NPQ training on or before December 2021 as part of t
   </tbody>
 </table>
 
+Participants starting their NPQ training on or before February 2021 as part of this cohort, will be on the following schedules.
+<p class="govuk-body">Schedule identifiers:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>`npq-aso-march`</li>
+  <li>`npq-aso-june`</li>
+  <li>`npq-leadership-spring`</li>
+  <li>`npq-specialist-spring`</li>
+</ul>
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Milestone</th>
+      <th scope="col" class="govuk-table__header">Milestone date</th>
+      <th scope="col" class="govuk-table__header">Declaration type</th>
+      <th scope="col" class="govuk-table__header">Payment date</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant start (leadership &amp; specialist)</th>
+      <td class="govuk-table__cell">25 Feb 2022</td>
+      <td class="govuk-table__cell">started</td>
+      <td class="govuk-table__cell">25 Mar 2022</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Retention point 1 (leadership &amp; specialist)</th>
+      <td class="govuk-table__cell">25 Oct 2022</td>
+      <td class="govuk-table__cell">retained-1</td>
+      <td class="govuk-table__cell">25 Oct 2022</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Retention point 2 (leadership only)</th>
+      <td class="govuk-table__cell">25 Apr 2023</td>
+      <td class="govuk-table__cell">retained-2</td>
+      <td class="govuk-table__cell">25 May 2023</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant completion (specialist)</th>
+      <td class="govuk-table__cell">25 May 2023</td>
+      <td class="govuk-table__cell">completed</td>
+      <td class="govuk-table__cell">25 Jun 2023</td>
+    </tr>
+    <tr class="govuk-table__row">
+      <th scope="row" class="govuk-table__header">Participant completion (leadership)</th>
+      <td class="govuk-table__cell">25 Dec 2023</td>
+      <td class="govuk-table__cell">completed</td>
+      <td class="govuk-table__cell">25 Jan 2024</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## Validating declarations against milestones 
 
 Declarations submitted for participants are subject to milestone validation. 
