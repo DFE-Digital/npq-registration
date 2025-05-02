@@ -34,6 +34,7 @@ RSpec.describe NotifyEmailValidator do
       firstname-lastname@domain.com
       info@german-financial-services.reallylongarbitrarytldthatiswaytoohugejustincase
       email@double--hyphen.com
+      uñicode@domain.com
     ]
     valid_email_addresses.each do |email|
       expect(user_model.new(email:)).to be_valid
