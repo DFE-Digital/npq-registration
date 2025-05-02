@@ -4,6 +4,7 @@ const webpack = require("webpack")
 
 module.exports = {
   mode,
+  devtool: 'source-map',
   optimization: {
     moduleIds: 'deterministic',
   },
