@@ -4,20 +4,16 @@ RSpec.describe BulkOperation::RevertApplicationsToPendingJob do
   describe "#perform" do
     subject { described_class.new.perform(bulk_operation_id:) }
 
-    let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin), file: uploaded_file) }
-    let(:bulk_operation_id) { bulk_operation.id }
-    let(:file) { tempfile_with_bom application_ecf_ids.join("\n") }
-    let(:uploaded_file) { Rack::Test::UploadedFile.new(file.path) }
-    let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
+    let(:bulk_operation) { instance_double(BulkOperation::RevertApplicationsToPending, run!: {}) }
+    let(:bulk_operation_id) { 1 }
 
-    it "calls BulkOperation::BulkRevertApplicationsToPending" do
-      expect(BulkOperation::BulkRevertApplicationsToPending).to receive(:new).with(bulk_operation:).and_call_original
-      subject
+    before do
+      allow(BulkOperation::RevertApplicationsToPending).to receive(:find).with(bulk_operation_id).and_return(bulk_operation)
     end
 
-    it "sets finished_at" do
+    it "runs the bulk operation" do
+      expect(bulk_operation).to receive(:run!)
       subject
-      expect(bulk_operation.reload.finished_at).to be_present
     end
   end
 end
