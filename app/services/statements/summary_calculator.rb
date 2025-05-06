@@ -55,12 +55,7 @@ module Statements
     end
 
     def total_voided
-      statement.declarations
-               .joins(:application)
-               .select(:user_id)
-               .distinct(:user_id)
-               .where(state: "voided")
-               .count
+      statement.declarations.where(state: "voided").count
     end
 
   private
