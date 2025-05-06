@@ -3,6 +3,7 @@ module API
     class ApplicationsController < BaseController
       include Pagination
       include FilterByDate
+      include FilterByParticipantIds
 
       def index
         conditions = { cohort_start_years:, participant_ids:, updated_since:, sort: }
@@ -58,10 +59,6 @@ module API
 
       def cohort_start_years
         application_params.dig(:filter, :cohort)
-      end
-
-      def participant_ids
-        application_params.dig(:filter, :participant_id)
       end
 
       def application_params
