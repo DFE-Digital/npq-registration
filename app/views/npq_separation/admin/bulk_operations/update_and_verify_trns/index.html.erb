@@ -55,7 +55,9 @@
             row.with_cell do
               unless bulk_operation.started?
                 form_with url: run_npq_separation_admin_bulk_operations_update_and_verify_trn_path(bulk_operation) do |f|
-                  f.govuk_submit "Update and verify TRNs"
+                  tag.div(class: "govuk-button-group bulk-operation-action-button-group") do
+                    f.govuk_submit "Update and verify TRNs", class: "bulk-operation-action-button"
+                  end
                 end
               end
             end
