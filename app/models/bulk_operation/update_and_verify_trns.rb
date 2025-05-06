@@ -45,7 +45,7 @@ private
   def outcome(success, errors)
     return "TRN updated and verified" if success
 
-    errors.full_messages.to_sentence
+    errors.messages.values.flatten.to_sentence
   end
 
   def user_ecf_id(csv_row)
