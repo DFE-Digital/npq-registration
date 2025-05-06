@@ -3,10 +3,15 @@
 class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSeparation::AdminController
   before_action :set_statement
   before_action :find_adjustment, only: %i[edit update delete destroy]
-  before_action :set_show_all_adjustments
+  before_action :set_show_all_adjustments, except: %i[create add_another]
 
   def new
     @adjustment = @statement.adjustments.new
+    @cancel_url = if @show_all_adjustments
+                    npq_separation_admin_finance_statement_adjustments_path(@statement, show_all_adjustments: @show_all_adjustments)
+                  else
+                    npq_separation_admin_finance_statement_path(@statement)
+                  end
   end
 
   def create
@@ -16,7 +21,8 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
 
     if @create_adjustment_form.save_adjustment
       session[:created_adjustment_ids] = @create_adjustment_form.created_adjustment_ids
-      redirect_to npq_separation_admin_finance_statement_adjustments_path(@statement)
+      show_all_adjustments = params[:adjustment][:show_all_adjustments] == "true"
+      redirect_to npq_separation_admin_finance_statement_adjustments_path(@statement, show_all_adjustments:)
     else
       @adjustment = @create_adjustment_form
       render :new
@@ -55,7 +61,8 @@ class NpqSeparation::Admin::Finance::Statements::AdjustmentsController < NpqSepa
     if @add_another_form.invalid?
       render :index, status: :unprocessable_entity
     elsif @add_another_form.adding_another_adjustment?
-      redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement)
+      show_all_adjustments = params[:add_another_form][:show_all_adjustments] == "true"
+      redirect_to new_npq_separation_admin_finance_statement_adjustment_path(@statement, show_all_adjustments:)
     else
       session[:created_adjustment_ids] = nil
       redirect_to npq_separation_admin_finance_statement_path(@statement)

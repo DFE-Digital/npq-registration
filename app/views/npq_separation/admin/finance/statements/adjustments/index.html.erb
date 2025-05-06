@@ -15,6 +15,7 @@
         <%= f.govuk_radio_button :add_another, "yes", label: { text: "Yes" }, link_errors: true %>
         <%= f.govuk_radio_button :add_another, "no", label: { text: "No" } %>
       <% end %>
+      <%= f.hidden_field :show_all_adjustments, value: @show_all_adjustments %>
 
       <%= f.govuk_submit %>
     <% end %>
