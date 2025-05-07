@@ -5,6 +5,7 @@ en:
   bad_request: "Bad request"
   not_found: "Not found"
   invalid_date_filter: "The filter '#/%{parameterized_attribute}' must be a valid ISO 8601 date"
+  invalid_participant_id_filter: "The filter '#/participant_id' must be a comma-delimited list of valid UUIDs"
   invalid_training_status: "The filter '#/training_status' must be %{valid_training_status}"
   invalid_page_parameters: "The '#/page[page]' and '#/page[per_page]' parameter values must be a valid positive number"
   invalid_data_structure: correct json data structure required. See API docs for reference
@@ -134,6 +135,15 @@ en:
   activerecord:
     errors:
       models:
+        adjustment:
+          attributes:
+            description:
+              blank: You must enter a description for the adjustment
+            amount:
+              blank: You must enter an adjustment amount
+              other_than: The adjustment amount cannot be zero
+              not_a_number: You can only enter numeric values in the adjustment amount field
+              format: You can only enter numeric values in the adjustment amount field
         application:
           attributes:
             schedule:
@@ -253,6 +263,14 @@ en:
         checks_done: Yes, I'm ready to authorise this for payment
     errors:
       models:
+        admin/adjustments/create_adjustment_form:
+          attributes:
+            statement:
+              not_open: The statement has to be open for adjustments to be made
+        admin/adjustments/add_another_adjustment_form:
+          attributes:
+            add_another:
+              inclusion: Select if you need to add another adjustment
         applications/change_training_status:
           attributes:
             training_status:
@@ -615,7 +633,6 @@ en:
       webhook_messages: "Webhook Messages"
       admins: "Admin Users"
       feature_flags: "Feature Flags"
-      settings: "Settings"
       bulk_operations: "Bulk operations"
 
     super_admins:
@@ -736,7 +753,7 @@ en:
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
-        participants: Participants
+        users: Users
         payment_per_participant: Payment per participant
         payment_type: Payment type
         service_fee: Service fee
@@ -757,6 +774,10 @@ en:
         total_voids: Total voids
         totals: Totals
         view: View
+      adjustments_table_component:
+        description: Description
+        amount: Amount
+        total: Total
       finance:
         statements:
           payment_authorisations:
@@ -769,10 +790,6 @@ en:
             banner:
               title: "Authorising for payment"
               content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
-          show:
-            calculation_rounding_message:
-              title: Calculation rounding errors
-              content: Due to the way payments per participant are made, there may be rounding errors in some of the individual sub-calculations. The total output fees displayed are correct. Contact your contract manager if you have any queries.
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."

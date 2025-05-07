@@ -220,7 +220,7 @@ RSpec.shared_examples "an API index endpoint with filter by created_since" do
 end
 
 RSpec.shared_examples "an API index endpoint with filter by participant_id" do
-  context "when fitlering by participant_id" do
+  context "when filtering by participant_id" do
     it "returns resources with the given `participant_id`" do
       resource1 = create_resource(lead_provider: current_lead_provider, user: create(:user))
       resource2 = create_resource(lead_provider: current_lead_provider, user: create(:user))
@@ -242,7 +242,28 @@ RSpec.shared_examples "an API index endpoint with filter by participant_id" do
   context "when filtering with an invalid UUID" do
     it do
       api_get(path, params: { filter: { participant_id: "not-a-uuid" } })
-      expect(parsed_response["data"].size).to be_zero
+
+      expect(response.status).to eq 400
+      expect(parsed_response["errors"]).to eq([
+        {
+          "detail" => I18n.t(:invalid_participant_id_filter),
+          "title" => "Bad request",
+        },
+      ])
+    end
+  end
+
+  context "when filtering with incorrectly formed params" do
+    it do
+      api_get(path, params: { filter: { participant_id: { SecureRandom.uuid => nil } } })
+
+      expect(response.status).to eq 400
+      expect(parsed_response["errors"]).to eq([
+        {
+          "detail" => I18n.t(:invalid_participant_id_filter),
+          "title" => "Bad request",
+        },
+      ])
     end
   end
 end

@@ -1,0 +1,30 @@
+<% if adjustments.empty? %>
+  <p class="govuk-body">There are no adjustments.</p>
+<% else %>
+  <%=
+    govuk_table(classes: 'govuk-!-font-size-16') do |table|
+      table.with_head do |head|
+        head.with_row do |row|
+          row.with_cell(text: t(".description"))
+          row.with_cell(text: t(".amount"), numeric: true)
+        end
+      end
+
+      table.with_body do |body|
+        adjustments.each do |adjustment|
+          body.with_row do |row|
+            row.with_cell(text: adjustment.description)
+            row.with_cell(text: number_to_currency(adjustment.amount), numeric: true)
+          end
+        end
+
+        if show_total
+          body.with_row do |row|
+            row.with_cell(text: t(".total"), header: true)
+            row.with_cell(text: number_to_currency(adjustments.sum(&:amount)), numeric: true)
+          end
+        end
+      end
+    end
+  %>
+<% end %>

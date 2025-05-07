@@ -28,17 +28,19 @@ RSpec.feature "Statement", type: :feature do
   scenario "see details" do
     visit(npq_separation_admin_finance_statement_path(statement))
 
-    expect(page).to have_css("h1", text: "Statement #{statement.id}")
+    expect(page).to have_css("h1", text: "#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
 
-    within(".govuk-summary-list") do |summary_list|
-      start_year = statement.cohort.start_year
-      expect(summary_list).to have_summary_item("Statement ID", statement.ecf_id)
-      expect(summary_list).to have_summary_item("Lead provider", statement.lead_provider.name)
-      expect(summary_list).to have_summary_item("Cohort", "#{start_year}/#{start_year.next - 2000}")
-      expect(summary_list).to have_summary_item("Status", statement.state.humanize)
+    find("span", text: "Statement ID").click
+    within("#statement-id") do
+      expect(page).to have_content(statement.ecf_id)
     end
 
-    component = NpqSeparation::Admin::StatementDetailsComponent.new(statement:)
+    start_year = statement.cohort.start_year
+    expect(page).to have_content("Cohort: #{start_year}/#{start_year.next - 2000}")
+    expect(page).to have_content("Output payment date: #{statement.payment_date.to_fs(:govuk)}")
+    expect(page).to have_content("Status: #{statement.state.humanize}")
+
+    component = NpqSeparation::Admin::StatementSummaryComponent.new(statement:)
     expect(page).to have_component(component)
 
     expect(page).to have_css("a", text: "Save as PDF")
@@ -60,7 +62,7 @@ RSpec.feature "Statement", type: :feature do
 
     visit npq_separation_admin_finance_statement_path(statement)
 
-    within ".govuk-warning-text" do
+    within "#special-contracts-warning" do
       expect(page).to have_content("#{contract.course.name} has standalone payments")
       expect(page).to have_link("View payments for this course", href: "#standalone_payments")
     end
@@ -69,7 +71,7 @@ RSpec.feature "Statement", type: :feature do
       expect(page).to have_content("Standalone payments")
     end
 
-    within "h4#standalone_payments + .app-statement-block" do
+    within "h4#standalone_payments + .govuk-summary-card" do
       component = NpqSeparation::Admin::CoursePaymentOverviewComponent.new(contract:)
       expect(page).to have_component(component)
     end
@@ -81,7 +83,7 @@ RSpec.feature "Statement", type: :feature do
     visit npq_separation_admin_finance_statement_path(statement)
     find("span", text: "Contract Information").click
 
-    within first(".govuk-details__text", visible: false) do
+    within all(".govuk-details__text", visible: false).last do
       contracts.each do |contract|
         expect(page).to have_content(contract.course.name)
         expect(page).to have_content(contract.recruitment_target)

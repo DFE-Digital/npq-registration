@@ -125,11 +125,6 @@ shared:
     - contract_template_id
     - created_at
     - updated_at
-  :settings:
-    - id
-    - course_start_date
-    - created_at
-    - updated_at
   :statements:
     - reconcile_amount
   :courses:
@@ -187,5 +182,12 @@ shared:
     - trn
     - course_short_code
     - completion_date
+    - created_at
+    - updated_at
+  :adjustments:
+    - id
+    - statement_id
+    - description
+    - amount
     - created_at
     - updated_at

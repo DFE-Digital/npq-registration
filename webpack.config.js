@@ -4,11 +4,13 @@ const webpack = require("webpack")
 
 module.exports = {
   mode,
+  devtool: 'source-map',
   optimization: {
     moduleIds: 'deterministic',
   },
   entry: {
     application: "./app/javascript/application.js",
+    mermaid: "./app/javascript/mermaid.js",
     "swagger-ui": "./app/javascript/swagger-ui.js",
   },
   module: {

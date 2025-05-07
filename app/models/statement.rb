@@ -7,6 +7,7 @@ class Statement < ApplicationRecord
   has_many :statement_items
   has_many :contracts
   has_many :declarations, through: :statement_items
+  has_many :adjustments
 
   validates :output_fee,
             inclusion: {
