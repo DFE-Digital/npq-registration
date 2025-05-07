@@ -26,6 +26,20 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
         expect(subject[i].href).to eql(href)
       end
     end
+
+    it "excludes feature flags" do
+      expect(subject.map(&:name)).not_to include("Feature flags")
+    end
+
+    context "when user is a super admin" do
+      let(:admin) { build_stubbed(:super_admin) }
+
+      it "includes feature flags" do
+        expect(subject[-1]).to have_attributes(name: "Feature flags")
+        expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/features")
+      end
+    end
+
   end
 
   describe "#sub_structure" do
