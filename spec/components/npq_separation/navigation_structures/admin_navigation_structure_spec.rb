@@ -1,8 +1,12 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, type: :component do
+  subject(:instance) { described_class.new(admin) }
+
+  let(:admin) { build_stubbed(:admin) }
+
   describe "#primary_structure" do
-    subject { NpqSeparation::NavigationStructures::AdminNavigationStructure.new.primary_structure }
+    subject { instance.primary_structure }
 
     {
       "Dashboard" => "/npq-separation/admin",
@@ -26,7 +30,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
 
   describe "#sub_structure" do
     describe "Cohorts" do
-      subject { NpqSeparation::NavigationStructures::AdminNavigationStructure.new.sub_structure("Cohorts") }
+      subject { instance.sub_structure("Cohorts") }
 
       before do
         (2026..2028).map { create :cohort, start_year: _1 }
@@ -46,7 +50,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
     end
 
     describe "Finance" do
-      subject { NpqSeparation::NavigationStructures::AdminNavigationStructure.new.sub_structure("Finance") }
+      subject { instance.sub_structure("Finance") }
 
       it "the first entry is Statements" do
         expect(subject.first.name).to eql("Statements")
