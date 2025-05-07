@@ -96,6 +96,16 @@ RSpec.feature "update and verify TRNs", :rack_test_driver, type: :feature do
       expect(User.all.pluck(:trn_verified)).to eq [true, true]
     end
 
+    scenario "when the bulk operation has started but not finished" do
+      visit npq_separation_admin_bulk_operations_update_and_verify_trns_path
+      attach_file "file", trns_file.path
+      click_button "Upload file"
+      click_button "Update and verify TRNs"
+      click_link filename
+
+      expect(page).to have_content "The bulk operation is in progress."
+    end
+
     scenario "file validation" do
       visit npq_separation_admin_bulk_operations_update_and_verify_trns_path
       attach_file "file", empty_file.path

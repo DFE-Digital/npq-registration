@@ -47,7 +47,7 @@
     %>
 
     <%=
-      if @bulk_operation.started?
+      if @bulk_operation.finished?
         govuk_table do |table|
           table.with_caption(size: 'm', text: 'Result')
           table.with_head do |header|
@@ -67,6 +67,8 @@
             end
           end
         end
+      elsif @bulk_operation.started?
+        tag.p("The bulk operation is in progress.", class: "govuk-body")
       end
     %>
   </div>

@@ -105,6 +105,24 @@ RSpec.describe BulkOperation, type: :model do
     end
   end
 
+  describe "#finished?" do
+    context "when finished_at present" do
+      let(:bulk_operation) { build(:reject_applications_bulk_operation, finished_at: Time.zone.yesterday) }
+
+      it "returns true" do
+        expect(bulk_operation.finished?).to be true
+      end
+    end
+
+    context "when finished_at not present" do
+      let(:bulk_operation) { create(:reject_applications_bulk_operation, finished_at: nil) }
+
+      it "returns false" do
+        expect(bulk_operation.finished?).to be false
+      end
+    end
+  end
+
   describe "#ids_to_update" do
     subject(:ids_to_update) { bulk_operation.ids_to_update }
 
