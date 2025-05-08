@@ -1,4 +1,5 @@
-class NpqSeparation::Admin::FeaturesController < SuperAdminController
+class NpqSeparation::Admin::FeaturesController < NpqSeparation::AdminController
+  before_action :require_super_admin
   def index
     @features = Feature::FEATURE_FLAG_KEYS
   end
