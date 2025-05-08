@@ -25,8 +25,8 @@ module NpqSeparation
           Node.new(
             name: "Feature flags",
             href: npq_separation_admin_features_path,
-            prefix: "/npq-separation/admin/features"
-          ) => []
+            prefix: "/npq-separation/admin/features",
+          ) => [],
         }
       end
 
@@ -100,9 +100,7 @@ module NpqSeparation
             prefix: "/npq-separation/admin/settings",
           ) => [],
         }
-
       end
-
 
       def application_nodes
         [
