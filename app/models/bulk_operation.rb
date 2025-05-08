@@ -36,7 +36,7 @@ private
   end
 
   def attached_file
-    attachment_changes["file"].attachable
+    attachment_changes["file"]&.attachable
   end
 
   def headers?
