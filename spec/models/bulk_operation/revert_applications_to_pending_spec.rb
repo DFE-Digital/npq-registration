@@ -1,14 +1,11 @@
 require "rails_helper"
 
-RSpec.describe BulkOperation::BulkRevertApplicationsToPending do
+RSpec.describe BulkOperation::RevertApplicationsToPending do
   let(:application_ecf_ids) { [application.ecf_id] }
   let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin), application_ecf_ids:) }
-  let(:instance) { described_class.new(bulk_operation:) }
 
   describe "#run!" do
-    let(:dry_run) { false }
-
-    subject(:run) { instance.run!(dry_run:) }
+    subject(:run) { bulk_operation.run! }
 
     RSpec.shared_examples "changes to pending" do |initial_state|
       it { expect { run }.to(change { application.reload.lead_provider_approval_status }.from(initial_state).to("pending")) }
@@ -16,6 +13,11 @@ RSpec.describe BulkOperation::BulkRevertApplicationsToPending do
       it "saves the result" do
         run
         expect(JSON.parse(bulk_operation.result)[application.ecf_id]).to eq("Changed to pending")
+      end
+
+      it "sets finished_at" do
+        subject
+        expect(bulk_operation.reload.finished_at).to be_present
       end
     end
 
@@ -89,15 +91,6 @@ RSpec.describe BulkOperation::BulkRevertApplicationsToPending do
 
         it_behaves_like "does not change to pending", /There are already declarations for this participant/
       end
-    end
-
-    context "when dry_run is true" do
-      let(:dry_run) { true }
-
-      let(:application) { create(:application, :accepted) }
-
-      it { expect { run }.not_to(change { application.reload.lead_provider_approval_status }) }
-      it { expect(run[application.ecf_id]).to eq("Changed to pending") }
     end
   end
 end

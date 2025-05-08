@@ -1,5 +1,5 @@
 module NpqSeparation::Admin::BulkOperations
-  class RevertApplicationsToPendingController < NpqSeparation::Admin::BulkOperations::BaseController
+  class RevertApplicationsToPendingController < BaseController
   private
 
     def bulk_operation_class

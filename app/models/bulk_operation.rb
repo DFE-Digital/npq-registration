@@ -15,6 +15,10 @@ class BulkOperation < ApplicationRecord
     started_at.present?
   end
 
+  def finished?
+    finished_at.present?
+  end
+
   def ids_to_update
     file.open { CSV.read(_1, headers: false).flatten }
   end
@@ -32,7 +36,7 @@ private
   end
 
   def attached_file
-    attachment_changes["file"].attachable
+    attachment_changes["file"]&.attachable
   end
 
   def headers?

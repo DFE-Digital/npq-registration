@@ -1,0 +1,75 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+
+    <h1 class="govuk-heading-l">Update and verify TRNs</h1>
+
+    <%=
+      govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "Filename")
+          row.with_value(text: @bulk_operation.file.filename)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Rows")
+          row.with_value(text: @bulk_operation.row_count)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Created At")
+          row.with_value(text: @bulk_operation.created_at.to_formatted_s(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Started At")
+          row.with_value(text: @bulk_operation.started_at&.to_formatted_s(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Finished At")
+          row.with_value(text: @bulk_operation.finished_at&.to_formatted_s(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Created by")
+          row.with_value(text: "#{@bulk_operation.admin.full_name} (#{@bulk_operation.admin.email})")
+        end
+
+        if @bulk_operation.ran_by_admin
+          sl.with_row do |row|
+            row.with_key(text: "Ran by")
+            row.with_value(text: "#{@bulk_operation.ran_by_admin.full_name} (#{@bulk_operation.ran_by_admin.email})")
+          end
+        end
+      end
+    %>
+
+    <%=
+      if @bulk_operation.finished?
+        govuk_table do |table|
+          table.with_caption(size: 'm', text: 'Result')
+          table.with_head do |header|
+            header.with_row do |row|
+              row.with_cell(text: "User ID")
+              row.with_cell(text: "Outcome")
+            end
+          end
+          table.with_body do |body|
+            if @bulk_operation.result
+              JSON.parse(@bulk_operation.result.gsub('=>', ':')).each do |ecf_id, result|
+                body.with_row do |row|
+                  row.with_cell(text: ecf_id)
+                  row.with_cell(text: result)
+                end
+              end
+            end
+          end
+        end
+      elsif @bulk_operation.started?
+        tag.p("The bulk operation is in progress.", class: "govuk-body")
+      end
+    %>
+  </div>
+</div>
