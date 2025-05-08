@@ -5,13 +5,13 @@
 
   <%=
     f.govuk_text_area :notes,
-                      label: { text: 'Notes about changes to this registration', size: "m" },
-                      hint: { text: "Please add the date and your initials when adding a note, and add above any existing notes. Notes are for internal use only." },
+                      label: { text: 'Add a note about the changes to this registration', size: "m" },
+                      hint: { text: "Begin your note with the date and your initials. (Notes are for internal use only.)" },
                       max_chars: 1_000
   %>
 
   <div class="govuk-button-group">
-    <%= f.govuk_submit "Update notes" %>
+    <%= f.govuk_submit "Add note" %>
     <%= govuk_link_to "Cancel", npq_separation_admin_application_review_path(@application) %>
   </div>
 <% end %>
