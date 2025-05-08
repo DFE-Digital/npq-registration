@@ -19,7 +19,7 @@ RSpec.configure do |config|
   # By default, the operations defined in spec files are added to the first
   # document below. You can override this behavior by adding a openapi_spec tag to the
   # the root example_group in your specs, e.g. describe '...', openapi_spec: 'v2/swagger.json'
-  config.openapi_specs = API::Version.all.each_with_object({}) do |version, hash|
+  config.openapi_specs = API::Version.all.each_with_object({}) { |version, hash|
     hash["#{version}/swagger.yaml"] = {
       openapi: "3.0.1",
       info: {
@@ -87,13 +87,8 @@ RSpec.configure do |config|
           SortingOptions: SORTING_OPTIONS[version],
 
           ParticipantDeclaration: PARTICIPANT_DECLARATION[version],
-          ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
           ParticipantDeclarationResponse: PARTICIPANT_DECLARATION_RESPONSE[version],
           ParticipantDeclarationsResponse: PARTICIPANT_DECLARATIONS_RESPONSE[version],
-          ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
-          ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
-          ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
-
           ListDeliveryPartnersFilter: LIST_DELIVERY_PARTNERS_FILTER[version],
           DeliveryPartner: DELIVERY_PARTNER[version],
           DeliveryPartnerResponse: DELIVERY_PARTNER_RESPONSE[version],
@@ -102,6 +97,22 @@ RSpec.configure do |config|
         }.compact,
       },
     }
+  }.tap do |hash|
+    v1_v2_participant_declaration_requests = {
+      ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
+      ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
+      ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+      ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+    }
+    hash["v1/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    hash["v2/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    hash["v3/swagger.yaml"][:components][:schemas].merge!(
+      ParticipantDeclarationRequest: V3_PARTICIPANT_DECLARATION_REQUEST,
+      ParticipantDeclarationStartedRequest: V3_PARTICIPANT_DECLARATION_STARTED_REQUEST,
+      ParticipantDeclarationRetainedRequest: V3_PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+      ParticipantDeclarationCompletedRequest: V3_PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+      ParticipantDeclarationChangeDeliveryPartnerRequest: V3_PARTICIPANT_DECLARATION_CHANGE_DELIVERY_PARTNER_REQUEST,
+    )
   end
 
   # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
