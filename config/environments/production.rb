@@ -118,5 +118,7 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: true, expire_after: 2.weeks
+  # increase the actor limit from the default of 100
+  # this limits the number of users that can use the late registration route
   config.flipper.actor_limit = 1000
 end
