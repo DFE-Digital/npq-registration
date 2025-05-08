@@ -1,12 +1,7 @@
 module Helpers
   module BulkOperations
     def applications_file
-      @applications_file ||= Tempfile.new.tap do |file|
-        Application.find_each do |application|
-          file.write "#{application.ecf_id}\n"
-        end
-        file.rewind
-      end
+      @applications_file ||= tempfile_with_bom(Application.all.pluck(:ecf_id).join("\n"))
     end
 
     def empty_file
@@ -14,10 +9,7 @@ module Helpers
     end
 
     def wrong_format_file
-      @wrong_format_file ||= Tempfile.new.tap do |file|
-        file.write "one,two\nthree,four\n"
-        file.rewind
-      end
+      @wrong_format_file ||= tempfile_with_bom("one,two\nthree,four\n")
     end
   end
 end

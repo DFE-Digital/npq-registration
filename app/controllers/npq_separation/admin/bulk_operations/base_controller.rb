@@ -40,12 +40,12 @@ module NpqSeparation::Admin::BulkOperations
       @bulk_operation = bulk_operation_class.find(params[:id])
     end
 
-    def sort_order
-      %i[created_at id]
+    def bulk_operations
+      bulk_operation_class.all.includes([file_attachment: :blob]).order(created_at: :desc, id: :desc)
     end
 
     def set_bulk_operations
-      @bulk_operations = bulk_operation_class.all.includes([file_attachment: :blob]).order(sort_order)
+      @pagy, @bulk_operations = pagy(bulk_operations)
     end
 
     def initialize_bulk_operation
