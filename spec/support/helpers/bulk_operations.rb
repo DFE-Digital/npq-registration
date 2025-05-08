@@ -9,8 +9,8 @@ module Helpers
       end
     end
 
-    def empty_applications_file
-      @empty_applications_file ||= Tempfile.new
+    def empty_file
+      @empty_file ||= Tempfile.new
     end
 
     def wrong_format_file

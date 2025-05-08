@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe BulkOperation::BulkRejectApplicationsJob do
+RSpec.describe BulkOperation::RejectApplicationsJob do
   describe "#perform" do
     subject { described_class.new.perform(bulk_operation_id:) }
 
@@ -11,7 +11,7 @@ RSpec.describe BulkOperation::BulkRejectApplicationsJob do
     let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
     it "calls BulkOperation::BulkRejectApplications" do
-      expect(BulkOperation::BulkRejectApplications).to receive(:new).with(application_ecf_ids:, bulk_operation:).and_call_original
+      expect(BulkOperation::BulkRejectApplications).to receive(:new).with(bulk_operation:).and_call_original
       subject
     end
 

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe BulkOperation::BulkChangeApplicationsToPendingJob do
+RSpec.describe BulkOperation::RevertApplicationsToPendingJob do
   describe "#perform" do
     subject { described_class.new.perform(bulk_operation_id:) }
 
@@ -10,8 +10,8 @@ RSpec.describe BulkOperation::BulkChangeApplicationsToPendingJob do
     let(:uploaded_file) { Rack::Test::UploadedFile.new(file.path) }
     let(:application_ecf_ids) { [SecureRandom.uuid, SecureRandom.uuid] }
 
-    it "calls BulkOperation::BulkChangeApplicationsToPending" do
-      expect(BulkOperation::BulkChangeApplicationsToPending).to receive(:new).with(application_ecf_ids:, bulk_operation:).and_call_original
+    it "calls BulkOperation::BulkRevertApplicationsToPending" do
+      expect(BulkOperation::BulkRevertApplicationsToPending).to receive(:new).with(bulk_operation:).and_call_original
       subject
     end
 
