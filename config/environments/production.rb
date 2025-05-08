@@ -118,4 +118,5 @@ Rails.application.configure do
   # config.active_record.database_resolver_context = ActiveRecord::Middleware::DatabaseSelector::Resolver::Session
 
   config.session_store :active_record_store, key: "_npq_registration_session", secure: true, expire_after: 2.weeks
+  config.flipper.actor_limit = 1000
 end
