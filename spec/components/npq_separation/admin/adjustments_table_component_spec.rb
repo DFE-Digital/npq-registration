@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component do
-  include Rails.application.routes.url_helpers
-
   subject { render_inline described_class.new(adjustments: adjustments, show_total: show_total, show_actions: show_actions) }
 
   let(:statement) { create(:statement) }
@@ -12,6 +10,7 @@ RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component
   let(:adjustments) { [adjustment_1, adjustment_2, adjustment_3] }
   let(:show_total) { nil }
   let(:show_actions) { nil }
+  let(:urls) { Rails.application.routes.url_helpers }
 
   describe "table of adjustments" do
     it { is_expected.to have_css "thead th", text: t(".description") }
@@ -27,13 +26,13 @@ RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component
     context "when show_actions is true" do
       let(:show_actions) { true }
 
-      it { is_expected.to have_link t(".edit"), href: edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_1, show_all_adjustments: false) }
-      it { is_expected.to have_link t(".edit"), href: edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_2, show_all_adjustments: false) }
-      it { is_expected.to have_link t(".edit"), href: edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_3, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".edit"), href: urls.edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_1, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".edit"), href: urls.edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_2, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".edit"), href: urls.edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_3, show_all_adjustments: false) }
 
-      it { is_expected.to have_link t(".remove"), href: delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_1, show_all_adjustments: false) }
-      it { is_expected.to have_link t(".remove"), href: delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_2, show_all_adjustments: false) }
-      it { is_expected.to have_link t(".remove"), href: delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_3, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".remove"), href: urls.delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_1, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".remove"), href: urls.delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_2, show_all_adjustments: false) }
+      it { is_expected.to have_link t(".remove"), href: urls.delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment_3, show_all_adjustments: false) }
     end
   end
 

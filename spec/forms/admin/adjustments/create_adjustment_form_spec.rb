@@ -23,9 +23,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
         expect(form.created_adjustment_ids).to include(Adjustment.last.id)
       end
 
-      it "returns true" do
-        expect(save_adjustment).to be true
-      end
+      it { is_expected.to be true }
 
       it "the form should be valid" do
         expect(form).to be_valid
@@ -40,9 +38,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
         expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_adjustment).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid
@@ -65,9 +61,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
         expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_adjustment).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid
@@ -89,9 +83,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
         expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_adjustment).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid

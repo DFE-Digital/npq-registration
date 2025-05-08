@@ -30,9 +30,7 @@ RSpec.describe Admin::Adjustments::DestroyAdjustmentForm, type: :model do
     subject(:destroy_adjustment) { form.destroy_adjustment }
 
     context "when the statement is open" do
-      it "returns true" do
-        expect(destroy_adjustment).to be true
-      end
+      it { is_expected.to be true }
 
       it "the form should be valid" do
         destroy_adjustment
@@ -47,9 +45,7 @@ RSpec.describe Admin::Adjustments::DestroyAdjustmentForm, type: :model do
     context "when the statement is payable" do
       let(:statement) { create(:statement, :payable) }
 
-      it "returns false" do
-        expect(destroy_adjustment).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         destroy_adjustment
@@ -73,9 +69,7 @@ RSpec.describe Admin::Adjustments::DestroyAdjustmentForm, type: :model do
     context "when the statement is paid" do
       let(:statement) { create(:statement, :paid) }
 
-      it "returns false" do
-        expect(destroy_adjustment).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         destroy_adjustment
