@@ -1,6 +1,91 @@
 require "rails_helper"
 
 RSpec.describe "Delivery Partners rake tasks" do
+  before { allow(Rails.logger).to receive(:info).and_call_original }
+
+  describe "delivery_partners:partners:import" do
+    subject :run_task do
+      Rake::Task["delivery_partners:partners:import"].invoke(csv_path, dry_run)
+    end
+
+    after { Rake::Task["delivery_partners:partners:import"].reenable }
+
+    let(:partners) { attributes_for_list :delivery_partner, 3 }
+    let(:dry_run) { "false" }
+    let(:csv_path) { csv_file.path }
+
+    let :csv_file do
+      Tempfile.new.tap do |tmp|
+        CSV.open(tmp.path, "w") do |csv|
+          csv << ["ECF Id", "Name"]
+
+          partners.each do |partner|
+            csv << [partner[:ecf_id], partner[:name]]
+          end
+        end
+      end
+    end
+
+    context "with valid delivery partner details" do
+      subject { run_task && DeliveryPartner.find_by!(ecf_id: partners[0][:ecf_id]) }
+
+      it { expect { run_task }.to change(DeliveryPartner, :count).from(0).to(3) }
+      it { is_expected.to have_attributes name: partners[0][:name] }
+    end
+
+    context "without specifying import file" do
+      let(:csv_path) { nil }
+
+      it { expect { run_task }.to raise_exception "Import file not specified" }
+    end
+
+    context "with empty file" do
+      let(:csv_file) { Tempfile.new }
+
+      it { expect { run_task }.to raise_exception "Import file is empty" }
+    end
+
+    context "with Delivery Partners already present" do
+      before { create :delivery_partner }
+
+      it "rejects the import" do
+        expect { run_task }
+          .to raise_exception("Delivery Partners already exist")
+              .and(not_change(DeliveryPartner, :count))
+      end
+    end
+
+    context "with invalid file" do
+      let :partners do
+        attributes_for_list(:delivery_partner, 3).tap do |partners|
+          partners[2][:ecf_id] = partners[0][:ecf_id]
+        end
+      end
+
+      it "rejects the import" do
+        expect { run_task }
+          .to raise_exception(ActiveRecord::RecordInvalid)
+              .and(not_change(DeliveryPartner, :count))
+      end
+    end
+
+    context "with dry_run" do
+      let(:dry_run) { nil }
+
+      it "runs the import" do
+        run_task
+
+        expect(Rails.logger)
+          .to have_received(:info)
+                .with("DRY RUN: Imported 3 Delivery Partners, now rolling back")
+      end
+
+      it "rolls back" do
+        expect { run_task }.not_to change(DeliveryPartner, :count)
+      end
+    end
+  end
+
   describe "delivery_partners:partners:export" do
     subject :csv_data do
       Rake::Task["delivery_partners:partners:export"].invoke(csv_file)
