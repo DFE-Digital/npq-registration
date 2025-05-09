@@ -13,11 +13,12 @@ module NpqSeparation
       # Returns a hash where the keys are primary nodes and the values are
       # sub nodes nested with the 'nodes: key'
       def structure
-          admin_nodes.merge(super_admin_nodes)
+        admin_nodes.merge(super_admin_nodes)
       end
 
       def super_admin_nodes
         return {} unless @current_admin.super_admin?
+
         {
           Node.new(
             name: "Feature flags",

@@ -17,8 +17,14 @@
       <% @features.each do |feature| %>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell"><%= feature %></td>
-          <td class="govuk-table__cell"><strong class="govuk-tag <%= Flipper.enabled?(feature) ? 'govuk-tag--green' : 'govuk-tag--red' %>"><%= Flipper.enabled?(feature) ? 'On' : 'Off' %></strong></td>
-          <td class="govuk-table__cell"><%= govuk_link_to("View", npq_separation_admin_feature_path(feature)) %><span class="govuk-visually-hidden"><%= ' '  + feature %></span></td>
+          <td class="govuk-table__cell">
+            <% if Flipper.enabled?(feature) %>
+              <strong class="govuk-tag govuk-tag--green">On</strong>
+            <% else %>
+              <strong class="govuk-tag govuk-tag--red">Off</strong>
+            <% end %>
+          </td>
+          <td class="govuk-table__cell"><%= govuk_link_to("View", npq_separation_admin_feature_path(feature)) %><span class="govuk-visually-hidden"> <%= feature %></span></td>
         </tr>
       <% end %>
       </tbody>
