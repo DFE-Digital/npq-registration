@@ -39,6 +39,35 @@ namespace :delivery_partners do
   end
 
   namespace :partnerships do
+    desc "Import delivery partnerships from csv"
+    task :import, %i[import_file dry_run] => :environment do |_t, args|
+      raise "Import file not specified" if args[:import_file].blank?
+      raise "Import file not present" unless File.exist?(args[:import_file])
+      raise "Import file is empty" if File.size(args[:import_file]).zero?
+
+      DeliveryPartnership.transaction do
+        raise "Delivery Partnerships already exist" unless DeliveryPartnership.count.zero?
+
+        lead_providers = LeadProvider.all.index_by(&:ecf_id)
+        cohorts = Cohort.all.index_by(&:start_year).transform_keys(&:to_s)
+        delivery_partners = DeliveryPartner.all.index_by(&:ecf_id)
+
+        CSV.foreach(args[:import_file], headers: true) do |row|
+          DeliveryPartnership.create!(
+            lead_provider: lead_providers[row["Lead Provider ECF Id"]],
+            cohort: cohorts[row["Cohort Start Year"]],
+            delivery_partner: delivery_partners[row["Delivery Partner ECF Id"]],
+          )
+        end
+
+        unless args[:dry_run] == "false"
+          Rails.logger.info \
+            "DRY RUN: Imported #{DeliveryPartnership.count} Delivery Partnerships, now rolling back"
+          raise ActiveRecord::Rollback
+        end
+      end
+    end
+
     desc "Export all delivery partnerships to a csv"
     task :export, %i[export_file] => :environment do |_t, args|
       raise "Export file not specified" if args[:export_file].blank?
