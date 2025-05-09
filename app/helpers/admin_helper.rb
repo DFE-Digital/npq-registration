@@ -16,6 +16,6 @@ module AdminHelper
   end
 
   def admin_navigation_structure
-    @admin_navigation_structure ||= NpqSeparation::NavigationStructures::AdminNavigationStructure.new
+    @admin_navigation_structure ||= NpqSeparation::NavigationStructures::AdminNavigationStructure.new(current_admin)
   end
 end

@@ -69,7 +69,6 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
-    resources :features, only: %i[index show update]
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
     resources :webhook_messages, only: %i[index show] do
@@ -219,6 +218,7 @@ Rails.application.routes.draw do
     get "admin", to: "admin/dashboards/summary#show"
 
     namespace :admin do
+      resources :features, only: %i[index show update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
       end
