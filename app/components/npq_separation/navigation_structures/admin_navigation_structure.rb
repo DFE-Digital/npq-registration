@@ -13,14 +13,11 @@ module NpqSeparation
       # Returns a hash where the keys are primary nodes and the values are
       # sub nodes nested with the 'nodes: key'
       def structure
-        if @current_admin.super_admin?
-          admin_user_nodes.merge(super_admin_nodes)
-        else
-          admin_user_nodes
-        end
+          admin_nodes.merge(super_admin_nodes)
       end
 
       def super_admin_nodes
+        return {} unless @current_admin.super_admin?
         {
           Node.new(
             name: "Feature flags",
@@ -30,7 +27,7 @@ module NpqSeparation
         }
       end
 
-      def admin_user_nodes
+      def admin_nodes
         {
           Node.new(
             name: "Dashboard",
