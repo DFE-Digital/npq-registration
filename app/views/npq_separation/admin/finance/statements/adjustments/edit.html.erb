@@ -1,0 +1,7 @@
+<%= govuk_back_link href: npq_separation_admin_finance_statement_path(@statement) %>
+
+<%= render partial: "npq_separation/admin/finance/statements/adjustments/adjustment_form",
+  locals: {
+    url: npq_separation_admin_finance_statement_adjustment_path( @statement, @adjustment.id, show_all_adjustments: @show_all_adjustments),
+    cancel_url: @cancel_url,
+    method: :put} %>
