@@ -55,7 +55,7 @@ gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "strong_migrations"
 
-gem "net-imap", "~> 0.5.7", require: false
+gem "net-imap", "~> 0.5.8", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.1", require: false
 
