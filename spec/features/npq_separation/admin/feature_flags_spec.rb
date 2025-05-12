@@ -16,6 +16,7 @@ RSpec.feature "Administering feature flags", :rack_test_driver, type: :feature d
     within("tr", text: "Registration open") do
       page.click_link("View")
     end
+    expect(page).to have_link("Closed registration enabled", href: "/npq-separation/admin/features/Closed%20registration%20enabled")
 
     expect(page).to have_current_path("/npq-separation/admin/features/Registration open")
     expect(page).to have_content("Registration open")
