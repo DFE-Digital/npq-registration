@@ -65,7 +65,7 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables set-azure-account
-	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE: "ghcr.io/dfe-digital/npq-registration:no-tag"))
+	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE="ghcr.io/dfe-digital/npq-registration:no-tag"))
 	$(if $(PR_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	rm -rf terraform/application/vendor/modules/aks
