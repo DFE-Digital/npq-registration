@@ -34,7 +34,6 @@ class User < ApplicationRecord
 
   scope :admins, -> { where(admin: true) }
   scope :unsynced, -> { where(ecf_id: nil) }
-  scope :synced_to_ecf, -> { where.not(ecf_id: nil) }
 
   scope :with_get_an_identity_id, lambda {
     where.not(uid: nil)
@@ -85,10 +84,6 @@ class User < ApplicationRecord
     false
   end
 
-  def synced_to_ecf?
-    ecf_id.present?
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end
@@ -97,11 +92,6 @@ class User < ApplicationRecord
     self.feature_flag_id ||= SecureRandom.uuid
     save!(validate: false) if feature_flag_id_changed?
     self.feature_flag_id
-  end
-
-  # TODO: delete
-  def super_admin?
-    raise StandardError, "deprecated"
   end
 
   def update_email_updates_status(form)
