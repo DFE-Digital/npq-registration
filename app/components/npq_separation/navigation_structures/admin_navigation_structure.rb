@@ -4,11 +4,31 @@ module NpqSeparation
       include Rails.application.routes.url_helpers
       include AdminHelper
 
+      def initialize(current_admin)
+        @current_admin = current_admin
+      end
+
     private
 
       # Returns a hash where the keys are primary nodes and the values are
       # sub nodes nested with the 'nodes: key'
       def structure
+        admin_nodes.merge(super_admin_nodes)
+      end
+
+      def super_admin_nodes
+        return {} unless @current_admin.super_admin?
+
+        {
+          Node.new(
+            name: "Feature flags",
+            href: npq_separation_admin_features_path,
+            prefix: "/npq-separation/admin/features",
+          ) => [],
+        }
+      end
+
+      def admin_nodes
         {
           Node.new(
             name: "Dashboard",
