@@ -4,7 +4,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <%= render "admin/layout", title: "Settings" %>
-    <%= form_for [:admin, @user] do |f| %>
+    <%= form_for [:npq_separation, :admin, @user] do |f| %>
       <%= f.govuk_error_summary %>
       <%= f.govuk_text_field :email,  legend: { text: 'Provide course start date' } %>
       <%= f.govuk_submit "Save" %>
