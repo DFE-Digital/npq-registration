@@ -1,4 +1,19 @@
-<h1 class="govuk-heading-l">All applications</h1>
+<h1 class="govuk-heading-l">Applications</h1>
+
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :q,
+        value: params[:q],
+        label: { text: "Find an application", size: "m" },
+        hint: { text: "Search by name, application ID or declaration ID", size: "s" },
+      )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
 <%=
   govuk_table do |table|
     table.with_head do |header|

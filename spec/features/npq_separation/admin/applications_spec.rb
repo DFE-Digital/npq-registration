@@ -15,7 +15,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing the list of applications" do
     visit(npq_separation_admin_applications_path)
 
-    expect(page).to have_css("h1", text: "All applications")
+    expect(page).to have_css("h1", text: "Applications")
 
     applications_in_order.limit(applications_per_page).each do |application|
       expect(page).to have_link(application.ecf_id, href: npq_separation_admin_application_path(application.id))
@@ -33,6 +33,16 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
     expect(page).to have_css(".govuk-pagination__item--current", text: "2")
+  end
+
+  scenario "searching for an application" do
+    visit(npq_separation_admin_applications_path)
+
+    fill_in "Find an application", with: applications_in_order.first.ecf_id
+    click_on "Search"
+
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_link(applications_in_order.first.ecf_id, href: npq_separation_admin_application_path(applications_in_order.first.id))
   end
 
   scenario "viewing application details" do

@@ -1,6 +1,10 @@
 class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminController
   def index
-    @pagy, @applications = pagy(applications_query.applications)
+    applications = Application.includes(:private_childcare_provider, :school, :user)
+                              .merge(search_scope)
+                              .order("applications.created_at ASC")
+
+    @pagy, @applications = pagy(applications)
   end
 
   def show
@@ -14,5 +18,9 @@ private
 
   def applications_query
     @applications_query ||= Applications::Query.new
+  end
+
+  def search_scope
+    @search_scope ||= Applications::Search.search(params[:q])
   end
 end
