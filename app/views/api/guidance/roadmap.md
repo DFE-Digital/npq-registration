@@ -17,9 +17,9 @@ Our objectives are centered around how we can make it easier for applicants to r
 <div class="govuk-grid-row">
 
 <div class="govuk-grid-column-one-third">
-<h2 id="now" class="govuk-heading-m">Now 🏃</h2>
-<p class="govuk-body-m">We are:</p>
-<strong> Improving the user journey </strong>
+<h2 id="now" class="govuk-heading-m">Now</h2>
+<p>We are:</p>
+<p><strong> Improving the user journey </strong></p>
 <ul class="govuk-list govuk-list--bullet">
 <li>Changing up the applicant journey to better accommodate overseas and self-funded applicants.</li>
 <li>BAU improvements to the service.</li>
