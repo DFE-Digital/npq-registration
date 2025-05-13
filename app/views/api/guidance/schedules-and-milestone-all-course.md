@@ -52,21 +52,20 @@ Providers must [submit declarations](https://register-national-professional-qu
 
 A default NPQ schedule can last from 12 to 22 months.  
 
-<p class="govuk-body">For the 2025 cohort, a reduced number of schedules exist:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>NPQ Specialist Spring</li>
-  <li>NPQ Leadership Spring</li>
-  <li>NPQ EHCO March</li>
-  <li>NPQ EHCO June</li>
-</ul>
+For the 2025 cohort, a reduced number of schedules exist:
 
-<p class="govuk-body">For the 2024 cohort, a reduced number of schedules exist:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>NPQ Specialist Autumn</li>
-  <li>NPQ Leadership Autumn</li>
-  <li>NPQ EHCO March</li>
-  <li>NPQ EHCO June</li>
-</ul>
+* NPQ Specialist Spring
+* NPQ Leadership Spring
+* NPQ EHCO March
+* NPQ EHCO June
+
+For the 2024 cohort, a reduced number of schedules exist:
+
+* NPQ Specialist Autumn
+* NPQ Leadership Autumn
+* NPQ EHCO March
+* NPQ EHCO June
+
 For each of the milestones a provider is supporting a participant, DfE will pay the corresponding output payment according to valid declarations submitted. 
 
 Declarations submitted for participants will be validated (accepted or rejected) against the milestone dates.  
@@ -76,14 +75,15 @@ Note, all participants will be registered by default to an autumn or spring sche
 Contact DfE contract managers via email for additional support or information. 
 
 ### 2025 cohort
+
 Participants starting their NPQ training on or before May 2025 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-june`</li>
-  <li>`npq-ehco-march`</li>
-  <li>`npq-leadership-spring`</li>
-  <li>`npq-specialist-spring`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-june`
+* `npq-ehco-march`
+* `npq-leadership-spring`
+* `npq-specialist-spring`
   
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -131,13 +131,13 @@ Participants starting their NPQ training on or before May 2025 as part of this c
 ### 2024 cohort
 
 Participants starting their NPQ training on or before Nov 2024 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-november`</li>
-  <li>`npq-ehco-december`</li>
-  <li>`npq-leadership-autumn`</li>
-  <li>`npq-specialist-autumn`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-november`
+* `npq-ehco-december`
+* `npq-leadership-autumn`
+* `npq-specialist-autumn`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -185,13 +185,13 @@ Participants starting their NPQ training on or before Nov 2024 as part of this c
 
 ### 2023 cohort 
 Participants starting their NPQ training on or before Nov 2023 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-november`</li>
-  <li>`npq-ehco-december`</li>
-  <li>`npq-leadership-autumn`</li>
-  <li>`npq-specialist-autumn`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-november`
+* `npq-ehco-december`
+* `npq-leadership-autumn`
+* `npq-specialist-autumn`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -237,13 +237,13 @@ Participants starting their NPQ training on or before Nov 2023 as part of this c
 </table>
 
 Participants starting their NPQ training on or before June 2024 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-march`</li>
-  <li>`npq-ehco-june`</li>
-  <li>`npq-leadership-spring`</li>
-  <li>`npq-specialist-spring`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-march`
+* `npq-ehco-june`
+* `npq-leadership-spring`
+* `npq-specialist-spring`
   
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -291,13 +291,13 @@ Participants starting their NPQ training on or before June 2024 as part of this 
 ### 2022 cohort
 
 Participants starting their NPQ training on or before November 2022 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-november`</li>
-  <li>`npq-ehco-december`</li>
-  <li>`npq-leadership-autumn`</li>
-  <li>`npq-specialist-autumn`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-november`
+* `npq-ehco-december`
+* `npq-leadership-autumn`
+* `npq-specialist-autumn`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -344,13 +344,13 @@ Participants starting their NPQ training on or before November 2022 as part of t
 
 
 Participants starting their NPQ training on or before June 2023 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-ehco-march`</li>
-  <li>`npq-ehco-june`</li>
-  <li>`npq-leadership-spring`</li>
-  <li>`npq-specialist-spring`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-ehco-march`
+* `npq-ehco-june`
+* `npq-leadership-spring`
+* `npq-specialist-spring`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -397,13 +397,13 @@ Participants starting their NPQ training on or before June 2023 as part of this 
 
 ### 2021 cohort
 Participants starting their NPQ training on or before December 2021 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-aso-november`</li>
-  <li>`npq-aso-december`</li>
-  <li>`npq-leadership-autumn`</li>
-  <li>`npq-specialist-autumn`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-aso-november`
+* `npq-aso-december`
+* `npq-leadership-autumn`
+* `npq-specialist-autumn`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -449,13 +449,13 @@ Participants starting their NPQ training on or before December 2021 as part of t
 </table>
 
 Participants starting their NPQ training on or before February 2021 as part of this cohort, will be on the following schedules.
-<p class="govuk-body">Schedule identifiers:</p>
-<ul class="govuk-list govuk-list--bullet">
-  <li>`npq-aso-march`</li>
-  <li>`npq-aso-june`</li>
-  <li>`npq-leadership-spring`</li>
-  <li>`npq-specialist-spring`</li>
-</ul>
+
+Schedule identifiers:
+
+* `npq-aso-march`
+* `npq-aso-june`
+* `npq-leadership-spring`
+* `npq-specialist-spring`
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -499,7 +499,6 @@ Participants starting their NPQ training on or before February 2021 as part of t
     </tr>
   </tbody>
 </table>
-
 
 ## Validating declarations against milestones 
 
