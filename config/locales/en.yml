@@ -741,10 +741,10 @@ en:
         show:
           registration_open_html: |
             <p class="govuk-body">When this feature is turned on, registration is open. Users can register for an NPQ as normal.</p>
-            <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
+            <p class="govuk-body">When this feature is turned off, registration is closed. Users cannot register for an NPQ, unless the <a href="/npq-separation/admin/features/Closed%20registration%20enabled" class="govuk-link">Closed registration enabled</a> feature is turned on to allow certain users to register late.</p>
           closed_registration_enabled_html: |
             <p class="govuk-body">When this feature is turned on, specified users can register for an NPQ even when the service is closed to the general public.</p>
-            <p class="govuk-body">Use the <a href="/admin/features/Registration%20open" class="govuk-link">Registration open</a> feature flag if you need to close the service to the general public.
+            <p class="govuk-body">Use the <a href="/npq-separation/admin/features/Registration%20open" class="govuk-link">Registration open</a> feature flag if you need to close the service to the general public.
             <p class="govuk-body">To view or manage who can register while the service is closed, visit <a href="/admin/closed_registration_users" class="govuk-link">Closed registration users</a>.</p>
             <p class="govuk-body">When both the Registration open and Closed registration enabled feature flags are turned off, no one will be able to register.</p>
           targeted_support_funding_html: |
