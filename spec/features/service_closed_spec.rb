@@ -101,9 +101,7 @@ RSpec.feature "Service is closed", type: :feature do
         expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       end
 
-      visit "/admin"
-
-      click_link("Closed registration user")
+      visit "/npq-separation/admin/closed_registration_users"
 
       click_link("Remove access")
       click_link("Remove access")
