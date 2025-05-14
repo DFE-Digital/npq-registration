@@ -1,6 +1,6 @@
 <%# google tag manager snippet based on: https://developers.google.com/tag-platform/security/guides/csp %>
 <% if cookies["consented-to-cookies"] == "accept" && Rails.configuration.x.google_analytics_id %>
-  <%= nonced_javascript_include_tag "https://www.googletagmanager.com/gtag/js?id=#{ Rails.configuration.x.google_analytics_id }", defer: true %>
+  <%= nonced_javascript_include_tag "https://www.googletagmanager.com/gtag/js?id=#{ Rails.configuration.x.google_analytics_id }", async: true %>
 
   <%= nonced_javascript_tag do %>
     window.dataLayer = window.dataLayer || [];
