@@ -22,6 +22,8 @@ We have the `config.entity_table_checks_enabled` config option set to `true`, an
 The following environment variables are required:
 
 * `BIGQUERY_DFE_ANALYTICS_API_JSON_KEY` contains the credentials JSON file
+* `BIGQUERY_PROJECT_ID` contains the GCP BigQuery project ID
+* `BIGQUERY_TABLE_NAME` contains the name of the table to write to - set to `events`
 
 
 ## Review apps
@@ -30,6 +32,8 @@ To test the analytics export on a review app, you can use the following steps:
 1. Set the `BIGQUERY_DFE_ANALYTICS_API_JSON_KEY` environment variable, or set the credentials on the review app using `rails credentials:edit`
 1. Enable the DfE Analytics feature flag in the admin console
 1. DfE Analytics events should be viewable on the GCP BigQuery console, in the `npq_events_review` dataset
+
+To get access to the GCP BigQuery console, you need to have a GCP account (requested via the IT Help Centre), then access to the BigQuery project can be requested on `#twd_data_insights`.
 
 
 ## Creating datasets and tables
