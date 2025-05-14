@@ -1,3 +1,3 @@
-<% if cookies["consented-to-cookies"] == "accept" %>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%= Analytics::GOOGLE_TAG_MANAGER_ID %>" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<% if cookies["consented-to-cookies"] == "accept" && Rails.configuration.x.google_analytics_id %>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<%= Rails.configuration.x.google_analytics_id %>" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <% end %>
