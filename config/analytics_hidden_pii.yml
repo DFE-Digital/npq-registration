@@ -1,0 +1,16 @@
+---
+shared:
+  :applications:
+    - on_submission_trn
+  :contracts:
+    - statement_id
+    - course_id
+    - contract_template_id
+    - created_at
+    - updated_at
+  :private_childcare_providers:
+    - registered_person_name
+  :registration_interests:
+    - email
+  :users:
+    - trn
