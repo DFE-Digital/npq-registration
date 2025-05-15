@@ -13,9 +13,12 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <%=
-          f.govuk_select(
+          f.govuk_collection_select(
             :training_status,
-            options_for_select(Application.training_statuses.keys.map { [_1.humanize, _1] }.prepend(["All", nil]), params[:training_status]),
+            Application.training_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:training_status], include_blank: "All" },
             label: { text: "Application status", size: "s" },
           )
         %>
@@ -23,9 +26,12 @@
 
       <div class="govuk-grid-column-one-half">
         <%=
-          f.govuk_select(
+          f.govuk_collection_select(
             :lead_provider_approval_status,
-            options_for_select(Application.lead_provider_approval_statuses.keys.map { [_1.humanize, _1] }.prepend(["All", nil]), params[:lead_provider_approval_status]),
+            Application.lead_provider_approval_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:lead_provider_approval_status], include_blank: "All" },
             label: { text: "Provider approval status", size: "s" },
           )
         %>
@@ -38,15 +44,18 @@
         Cohort.all,
         :id,
         :start_year,
-        options: { selected: params[:cohort_id], include_blank: true },
+        options: { selected: params[:cohort_id], include_blank: "All" },
         label: { text: "Year of application", size: "s" }
       )
     %>
 
     <%=
-      f.govuk_select(
+      f.govuk_collection_select(
         :work_setting,
-        options_for_select(Application.distinct(:work_setting).pluck(:work_setting).compact.sort.map { [_1.humanize, _1] }.prepend(["All", nil]), params[:work_setting]),
+        Application.distinct(:work_setting).pluck(:work_setting).compact.sort,
+        :to_s,
+        :humanize,
+        options: { selected: params[:work_setting], include_blank: "All" },
         label: { text: "Work setting", size: "s" }
       )
     %>
