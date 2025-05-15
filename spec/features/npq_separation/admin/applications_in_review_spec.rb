@@ -149,7 +149,7 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_css("h1", text: application.user.full_name)
 
-    expect(page).to have_text("Applicant ID: #{application.user.ecf_id}")
+    expect(page).to have_text("User ID: #{application.user.ecf_id}")
     expect(page).to have_text("Email: #{application.user.email}")
     expect(page).to have_text("Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)}")
     expect(page).to have_text("National Insurance: Not provided")
@@ -189,7 +189,7 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_css("h2", text: "Registration details")
     within(summary_lists[4]) do |summary_list|
-      expect(summary_list).to have_summary_item("Participant ID", application.user.ecf_id)
+      expect(summary_list).to have_summary_item("User ID", application.user.ecf_id)
       expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
       expect(summary_list).to have_summary_item("Registration submission date", application.created_at.to_fs(:govuk_short))
       expect(summary_list).to have_summary_item("Last updated date", application.updated_at.to_fs(:govuk_short))
