@@ -36,7 +36,6 @@ module.exports = function (api) {
       ]
     ].filter(Boolean),
     plugins: [
-      require('babel-plugin-macros'),
       isTestEnv && require('babel-plugin-dynamic-import-node'),
       require('@babel/plugin-transform-destructuring').default,
       require('@babel/plugin-transform-class-properties').default,
