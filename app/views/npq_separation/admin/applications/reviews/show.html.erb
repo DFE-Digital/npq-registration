@@ -1,7 +1,7 @@
 <h1 class="govuk-heading-l"><%= @application.user.full_name %></h1>
 
 <p class="govuk-body govuk-!-margin-bottom-2">
-  <strong>Applicant ID:</strong>
+  <strong>User ID:</strong>
   <%= @application.user.ecf_id %>
 </p>
 
@@ -106,7 +106,7 @@
 <%=
   govuk_summary_list(card: { title: "Registration details" }) do |sl|
     sl.with_row do |row|
-      row.with_key(text: "Participant ID")
+      row.with_key(text: "User ID")
       row.with_value(text: @application.user.ecf_id)
     end
     sl.with_row do |row|
