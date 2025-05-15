@@ -9,7 +9,7 @@ class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminControl
   end
 
   def show
-    @application = applications_query.application(id: params[:id])
+    @application = Application.find(params[:id])
     @declarations = @application.declarations
                                 .includes(:lead_provider, :cohort, :participant_outcomes, :statements)
                                 .order(created_at: :asc, id: :asc)
@@ -24,10 +24,6 @@ private
       cohort_id
       work_setting
     ]
-  end
-
-  def applications_query
-    @applications_query ||= Applications::Query.new
   end
 
   def filter_scope
