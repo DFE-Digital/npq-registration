@@ -1,18 +1,49 @@
-<h1 class="govuk-heading-l">All schools</h1>
+<h1 class="govuk-heading-l">Workplaces</h1>
+<p class="govuk-body">Search for a workplace to find its:</p>
+<ul class="govuk-list govuk-list--bullet">
+  <li>ID</li>
+  <li>Unique Reference Number (URN)</li>
+  <li>UK Provider Reference Number (UKPRN)</li>
+  <li>local authority</li>
+  <li>address</li>
+</ul>
+
+<div style="background-color: #f3f2f1; padding: 20px 15px; margin-bottom: 30px;">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+          :q,
+          value: params[:q],
+          hint: { text: "Search by entering the workplace name or its Unique Reference Number (URN)" },
+          label: { text: "Find a workplace", tag: "h1", size: "m" },
+          )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
 <%=
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
-        row.with_cell(text: "School")
-        row.with_cell(text: "URN")
+        row.with_cell(text: "Workplace name")
+        row.with_cell(text: "ID")
+        row.with_cell(text: "URN (unique reference number)")
+        row.with_cell(text: "UKPRN (UK provider reference number)")
+        row.with_cell(text: "Local authority")
+        row.with_cell(text: "Address")
       end
     end
 
     table.with_body do |body|
       @schools.each do |school|
         body.with_row do |row|
-          row.with_cell(text: govuk_link_to(school.name, npq_separation_admin_school_path(school)))
+          row.with_cell(text: school.name)
+          row.with_cell(text: school.id)
           row.with_cell(text: school.urn)
+          row.with_cell(text: school.ukprn)
+          row.with_cell(text: school.la_name)
+          row.with_cell(text: "#{school.town}, #{school.county}, #{school.postcode}")
         end
       end
     end
