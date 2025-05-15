@@ -20,9 +20,6 @@ window.onload = function init() {
   window.GOVUKFrontend.initAll();
 };
 
-
-require('es6-promise').polyfill()
-
 if (document.querySelector('#school-picker')) {
   institutionPicker.enhanceSelectElement({
     selectElement: document.querySelector('#school-picker'),

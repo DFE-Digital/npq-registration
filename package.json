@@ -12,7 +12,6 @@
     "accessible-autocomplete": "^3.0.1",
     "babel-loader": "^10.0.0",
     "babel-plugin-macros": "^3.1.0",
-    "es6-promise": "^4.2.8",
     "file-loader": "^6.2.0",
     "govuk-country-and-territory-autocomplete": "^2.0.0",
     "govuk-frontend": "^5.8",
