@@ -22,7 +22,6 @@ window.onload = function init() {
 
 
 require('es6-promise').polyfill()
-require('isomorphic-fetch')
 
 if (document.querySelector('#school-picker')) {
   institutionPicker.enhanceSelectElement({
