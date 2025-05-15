@@ -1,7 +1,6 @@
 // Entry point for the build script in your package.json
 require.context('govuk-frontend/dist/govuk/assets');
 
-import './controllers';
 import Rails from 'rails-ujs';
 import accessibleAutocomplete from 'accessible-autocomplete';
 
