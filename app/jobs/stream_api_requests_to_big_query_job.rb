@@ -6,8 +6,6 @@ class StreamAPIRequestsToBigQueryJob < ApplicationJob
   queue_as :low_priority
 
   def perform(request_data, response_data, status_code, created_at)
-    return if table.nil?
-
     request_data = request_data.with_indifferent_access
     response_data = response_data.with_indifferent_access
     request_headers = request_data.fetch(:headers, {})
@@ -17,30 +15,22 @@ class StreamAPIRequestsToBigQueryJob < ApplicationJob
     response_headers = response_data[:headers]
     response_body = response_data[:body]
 
-    rows = [
-      {
-        request_path: request_data[:path],
-        status_code:,
-        request_headers: request_headers.to_json,
-        request_method: request_data[:method],
-        request_body: request_body(request_data).to_json,
-        response_body: response_hash(response_body, status_code).to_json,
-        response_headers: response_headers.to_json,
-        lead_provider: lead_provider&.name,
-        created_at:,
-      }.stringify_keys,
-    ]
+    data = {
+      request_path: request_data[:path],
+      status_code:,
+      request_headers: request_headers,
+      request_method: request_data[:method],
+      request_body: request_body(request_data),
+      response_body: response_hash(response_body, status_code),
+      response_headers:,
+      lead_provider: lead_provider&.name,
+      created_at:,
+    }
 
-    table.insert(rows, ignore_unknown: true)
+    send_analytics_event(lead_provider:, data:)
   end
 
 private
-
-  def table
-    bigquery = Google::Cloud::Bigquery.new
-    dataset = bigquery.dataset "npq_api_requests", skip_lookup: true
-    dataset.table "npq_api_requests_#{Rails.env.downcase}"
-  end
 
   AuthorizationStruct = Struct.new(:authorization)
 
@@ -68,5 +58,17 @@ private
     end
   rescue JSON::ParserError
     { error: "request data did not contain valid JSON" }
+  end
+
+  def send_analytics_event(lead_provider:, data:)
+    return if lead_provider.blank?
+
+    event = DfE::Analytics::Event.new
+      .with_type(:persist_api_request)
+      .with_user(lead_provider)
+      .with_namespace("npq")
+      .with_data(data:)
+
+    DfE::Analytics::SendEvents.do(Array.wrap(event))
   end
 end

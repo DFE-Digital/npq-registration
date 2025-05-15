@@ -5,9 +5,6 @@ require "rails_helper"
 RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
   subject(:job) { described_class.perform_now(request_data, response_data, status_code, created_at) }
 
-  let(:bigquery) { instance_double(Google::Cloud::Bigquery::Project) }
-  let(:dataset)  { instance_double(Google::Cloud::Bigquery::Dataset) }
-  let(:table)    { instance_double(Google::Cloud::Bigquery::Table, insert: nil) }
   let(:status_code) { 200 }
   let(:created_at) { Time.zone.now.to_s }
   let(:lead_provider) { LeadProvider.find_by(name: "Ambition Institute") }
@@ -46,225 +43,224 @@ RSpec.describe StreamAPIRequestsToBigQueryJob, type: :job do
     }
   end
 
+  let(:analytics_event) { instance_double(DfE::Analytics::Event) }
+
   before do
     APIToken.create_with_known_token!("ambition-token", lead_provider:)
 
-    allow(Google::Cloud::Bigquery).to receive(:new).and_return(bigquery)
-    allow(bigquery).to receive(:dataset).and_return(dataset)
+    allow(DfE::Analytics::Event).to receive(:new) { analytics_event }
+    allow(analytics_event).to receive(:with_type).with(:persist_api_request) { analytics_event }
+    allow(analytics_event).to receive(:with_namespace).with("npq") { analytics_event }
+    allow(analytics_event).to receive(:with_user).with(lead_provider) { analytics_event }
   end
 
   describe "#perform" do
-    context "when the BigQuery table exists" do
-      before do
-        allow(described_class).to receive(:perform_later).and_call_original
-        allow(dataset).to receive(:table).and_return(table)
-      end
+    before do
+      allow(described_class).to receive(:perform_later).and_call_original
+    end
 
-      it "enqueues a job with the correct arguments" do
-        expect {
-          described_class.perform_later(request_data, response_data, status_code, created_at)
-        }.to have_enqueued_job.with(request_data, response_data, status_code, created_at)
-      end
+    it "enqueues a job with the correct arguments" do
+      expect {
+        described_class.perform_later(request_data, response_data, status_code, created_at)
+      }.to have_enqueued_job.with(request_data, response_data, status_code, created_at)
+    end
 
-      context "when API Request response is success" do
-        it "sends correct data to BigQuery with no `response_body`" do
-          job
-
-          expect(table).to have_received(:insert).with([{
+    context "when API Request response is success" do
+      it "sends a DfE::Analytics custom event" do
+        expect(analytics_event).to receive(:with_data).with(
+          data: {
             request_path: request_data["path"],
             status_code:,
-            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION"),
             request_method: request_data["method"],
-            request_body: { "foo" => "bar" }.to_json,
-            response_body: "{}",
-            response_headers: response_data["headers"].to_json,
+            request_body: { "foo" => "bar" },
+            response_body: {},
+            response_headers: response_data["headers"],
             lead_provider: lead_provider.name,
             created_at:,
-          }.stringify_keys], ignore_unknown: true)
-        end
+          },
+        )
 
-        context "when there is no `response_body`" do
-          let(:response_data) do
-            {
-              "headers" => { "Content-Type" => "application/json" },
-              "body" => nil,
-            }
-          end
-
-          it "sends correct data to BigQuery with no `response_body`" do
-            job
-
-            expect(table).to have_received(:insert).with([{
-              request_path: request_data["path"],
-              status_code:,
-              request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
-              request_method: request_data["method"],
-              request_body: { "foo" => "bar" }.to_json,
-              response_body: "{}",
-              response_headers: response_data["headers"].to_json,
-              lead_provider: lead_provider.name,
-              created_at:,
-            }.stringify_keys], ignore_unknown: true)
-          end
-        end
+        job
       end
 
-      context "when API Request response is not success" do
-        let(:status_code) { 422 }
+      context "when there is no `response_body`" do
         let(:response_data) do
           {
             "headers" => { "Content-Type" => "application/json" },
-            "body" => {
-              "errors" => [{
-                "title" => "application",
-                "detail" => "This NPQ application has already been accepted",
-              }],
-            }.to_json,
+            "body" => nil,
           }
         end
 
-        it "sends correct data to BigQuery with `response_body`" do
-          job
+        it "sends a DfE::Analytics custom event" do
+          expect(analytics_event).to receive(:with_data).with(
+            data: {
+              request_path: request_data["path"],
+              status_code:,
+              request_headers: request_data["headers"].except("HTTP_AUTHORIZATION"),
+              request_method: request_data["method"],
+              request_body: { "foo" => "bar" },
+              response_body: {},
+              response_headers: response_data["headers"],
+              lead_provider: lead_provider.name,
+              created_at:,
+            },
+          )
 
-          expect(table).to have_received(:insert).with([{
+          job
+        end
+      end
+    end
+
+    context "when API Request response is not success" do
+      let(:status_code) { 422 }
+      let(:response_data) do
+        {
+          "headers" => { "Content-Type" => "application/json" },
+          "body" => {
+            "errors" => [{
+              "title" => "application",
+              "detail" => "This NPQ application has already been accepted",
+            }],
+          }.to_json,
+        }
+      end
+
+      it "sends a DfE::Analytics custom event" do
+        expect(analytics_event).to receive(:with_data).with(
+          data: {
             request_path: request_data["path"],
             status_code:,
-            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION"),
             request_method: request_data["method"],
-            request_body: { "foo" => "bar" }.to_json,
+            request_body: { "foo" => "bar" },
             response_body: {
               "errors" => [{
                 "title" => "application",
                 "detail" => "This NPQ application has already been accepted",
               }],
-            }.to_json,
-            response_headers: response_data["headers"].to_json,
+            },
+            response_headers: response_data["headers"],
             lead_provider: lead_provider.name,
             created_at:,
-          }.stringify_keys], ignore_unknown: true)
-        end
-      end
+          },
+        )
 
-      context "when no `auth_token`` has been used in the request" do
-        let(:request_data) do
-          {
-            "path" => "/api/v3/participants/npq",
-            "params" => {},
-            "body" => { "foo" => "bar" }.to_json,
-            "headers" => {
-              "HTTP_VERSION" => "HTTP/1.1",
-              "HTTP_HOST" => "localhost:3000",
-              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
-              "HTTP_ACCEPT" => "*/*",
-              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
-              "HTTP_CONNECTION" => "keep-alive",
-              "QUERY_STRING" => "",
-            },
-            "method" => "GET",
-          }
-        end
-
-        it "sends correct data to BigQuery" do
-          job
-
-          expect(table).to have_received(:insert).with([{
-            request_path: request_data["path"],
-            status_code:,
-            request_headers: request_data["headers"].to_json,
-            request_method: request_data["method"],
-            request_body: { "foo" => "bar" }.to_json,
-            response_body: "{}",
-            response_headers: response_data["headers"].to_json,
-            lead_provider: nil,
-            created_at:,
-          }.stringify_keys], ignore_unknown: true)
-        end
-      end
-
-      context "when there is no `request_body`" do
-        let(:request_data) do
-          {
-            "path" => "/api/v3/participants/npq",
-            "params" => { "data" => { "attributes" => { "course_identifier" => "test-course" } } },
-            "body" => nil,
-            "headers" => {
-              "HTTP_VERSION" => "HTTP/1.1",
-              "HTTP_HOST" => "localhost:3000",
-              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
-              "HTTP_ACCEPT" => "*/*",
-              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
-              "HTTP_AUTHORIZATION" => "Bearer ambition-token",
-              "HTTP_CONNECTION" => "keep-alive",
-              "QUERY_STRING" => "",
-            },
-            "method" => "GET",
-          }
-        end
-
-        it "sends correct data to BigQuery" do
-          job
-
-          expect(table).to have_received(:insert).with([{
-            request_path: request_data["path"],
-            status_code:,
-            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
-            request_method: request_data["method"],
-            request_body: { "data" => { "attributes" => { "course_identifier" => "test-course" } } }.to_json,
-            response_body: "{}",
-            response_headers: response_data["headers"].to_json,
-            lead_provider: lead_provider.name,
-            created_at:,
-          }.stringify_keys], ignore_unknown: true)
-        end
-      end
-
-      context "when `request_body` is invalid" do
-        let(:request_data) do
-          {
-            "path" => "/api/v3/participants/npq",
-            "params" => {},
-            "body" => "invalid-body",
-            "headers" => {
-              "HTTP_VERSION" => "HTTP/1.1",
-              "HTTP_HOST" => "localhost:3000",
-              "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
-              "HTTP_ACCEPT" => "*/*",
-              "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
-              "HTTP_AUTHORIZATION" => "Bearer ambition-token",
-              "HTTP_CONNECTION" => "keep-alive",
-              "QUERY_STRING" => "",
-            },
-            "method" => "GET",
-          }
-        end
-
-        it "sends correct data to BigQuery with a error message in `request_body`" do
-          job
-
-          expect(table).to have_received(:insert).with([{
-            request_path: request_data["path"],
-            status_code:,
-            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION").to_json,
-            request_method: request_data["method"],
-            request_body: { "error" => "request data did not contain valid JSON" }.to_json,
-            response_body: "{}",
-            response_headers: response_data["headers"].to_json,
-            lead_provider: lead_provider.name,
-            created_at:,
-          }.stringify_keys], ignore_unknown: true)
-        end
+        job
       end
     end
 
-    context "when the BigQuery table does not exist" do
-      before do
-        allow(dataset).to receive(:table).and_return(nil)
+    context "when no `auth_token`` has been used in the request" do
+      let(:request_data) do
+        {
+          "path" => "/api/v3/participants/npq",
+          "params" => {},
+          "body" => { "foo" => "bar" }.to_json,
+          "headers" => {
+            "HTTP_VERSION" => "HTTP/1.1",
+            "HTTP_HOST" => "localhost:3000",
+            "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+            "HTTP_CONNECTION" => "keep-alive",
+            "QUERY_STRING" => "",
+          },
+          "method" => "GET",
+        }
       end
 
-      it "doesn't attempt to stream" do
-        job
+      it "does not send a DfE::Analytics custom event" do
+        expect(analytics_event).not_to receive(:with_data).with(
+          data: {
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"],
+            request_method: request_data["method"],
+            request_body: { "foo" => "bar" },
+            response_body: {},
+            response_headers: response_data["headers"],
+            lead_provider: nil,
+            created_at:,
+          },
+        )
 
-        expect(table).not_to have_received(:insert)
+        job
+      end
+    end
+
+    context "when there is no `request_body`" do
+      let(:request_data) do
+        {
+          "path" => "/api/v3/participants/npq",
+          "params" => { "data" => { "attributes" => { "course_identifier" => "test-course" } } },
+          "body" => nil,
+          "headers" => {
+            "HTTP_VERSION" => "HTTP/1.1",
+            "HTTP_HOST" => "localhost:3000",
+            "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+            "HTTP_AUTHORIZATION" => "Bearer ambition-token",
+            "HTTP_CONNECTION" => "keep-alive",
+            "QUERY_STRING" => "",
+          },
+          "method" => "GET",
+        }
+      end
+
+      it "sends a DfE::Analytics custom event" do
+        expect(analytics_event).to receive(:with_data).with(
+          data: {
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION"),
+            request_method: request_data["method"],
+            request_body: { "data" => { "attributes" => { "course_identifier" => "test-course" } } },
+            response_body: {},
+            response_headers: response_data["headers"],
+            lead_provider: lead_provider.name,
+            created_at:,
+          },
+        )
+        job
+      end
+    end
+
+    context "when `request_body` is invalid" do
+      let(:request_data) do
+        {
+          "path" => "/api/v3/participants/npq",
+          "params" => {},
+          "body" => "invalid-body",
+          "headers" => {
+            "HTTP_VERSION" => "HTTP/1.1",
+            "HTTP_HOST" => "localhost:3000",
+            "HTTP_USER_AGENT" => "PostmanRuntime/7.39.0",
+            "HTTP_ACCEPT" => "*/*",
+            "HTTP_ACCEPT_ENCODING" => "gzip, deflate, br",
+            "HTTP_AUTHORIZATION" => "Bearer ambition-token",
+            "HTTP_CONNECTION" => "keep-alive",
+            "QUERY_STRING" => "",
+          },
+          "method" => "GET",
+        }
+      end
+
+      it "sends a DfE::Analytics custom event with an error message in the `request_body`" do
+        expect(analytics_event).to receive(:with_data).with(
+          data: {
+            request_path: request_data["path"],
+            status_code:,
+            request_headers: request_data["headers"].except("HTTP_AUTHORIZATION"),
+            request_method: request_data["method"],
+            request_body: { error: "request data did not contain valid JSON" },
+            response_body: {},
+            response_headers: response_data["headers"],
+            lead_provider: lead_provider.name,
+            created_at:,
+          },
+        )
+        job
       end
     end
   end
