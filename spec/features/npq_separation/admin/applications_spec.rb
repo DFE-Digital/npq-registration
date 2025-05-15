@@ -20,7 +20,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     applications_in_order.limit(applications_per_page).each do |application|
       expect(page).to have_link(application.ecf_id, href: npq_separation_admin_application_path(application.id))
       expect(page).to have_link(application.user.full_name, href: npq_separation_admin_user_path(application.user))
-      expect(page).to have_text(application.school.name)
+      expect(page).to have_text(application.employer_name_to_display)
     end
 
     expect(page).to have_css(".govuk-pagination__item--current", text: 1)
