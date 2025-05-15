@@ -33,8 +33,7 @@ module.exports = function (api) {
           modules: false,
           exclude: ['transform-typeof-symbol']
         }
-      ],
-      require('@babel/preset-react'),
+      ]
     ].filter(Boolean),
     plugins: [
       require('babel-plugin-macros'),
