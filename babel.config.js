@@ -41,12 +41,6 @@ module.exports = function (api) {
       require('@babel/plugin-transform-destructuring').default,
       require('@babel/plugin-transform-class-properties').default,
       [
-        require('@babel/plugin-proposal-object-rest-spread').default,
-        {
-          useBuiltIns: true
-        }
-      ],
-      [
         require('@babel/plugin-transform-runtime').default,
         {
           helpers: false,
