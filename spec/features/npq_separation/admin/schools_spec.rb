@@ -35,25 +35,25 @@ RSpec.feature "Listing and viewing schools", type: :feature do
     scenario "viewing school details" do
       school = School.order(name: :asc).first
 
-      within first('tbody tr.govuk-table__row') do |row|
-        expect(find('td:nth-child(1)').text).to eq(school.name)
-        expect(find('td:nth-child(2)').text).to eq(school.id.to_s)
-        expect(find('td:nth-child(3)').text).to eq(school.urn)
-        expect(find('td:nth-child(4)').text).to eq(school.ukprn)
-        expect(find('td:nth-child(5)').text).to eq(school.la_name)
-        expect(find('td:nth-child(6)').text).to match(school.postcode)
+      within first("tbody tr.govuk-table__row") do |_row|
+        expect(find("td:nth-child(1)").text).to eq(school.name)
+        expect(find("td:nth-child(2)").text).to eq(school.id.to_s)
+        expect(find("td:nth-child(3)").text).to eq(school.urn)
+        expect(find("td:nth-child(4)").text).to eq(school.ukprn)
+        expect(find("td:nth-child(5)").text).to eq(school.la_name)
+        expect(find("td:nth-child(6)").text).to match(school.postcode)
       end
     end
   end
 
   context "when searching for workplace" do
     let(:school_name) { "School 1" }
-    let(:school_urn)  {  "123" }
+    let(:school_urn)  { "123" }
 
-    let(:school) { create(:school, :with_address,  name: school_name, urn: school_urn) }
+    let(:school) { create(:school, :with_address, name: school_name, urn: school_urn) }
 
     before do
-      create(:school,  name: "School 2", urn: "124")
+      create(:school, name: "School 2", urn: "124")
       visit(npq_separation_admin_schools_path)
     end
 
@@ -61,10 +61,10 @@ RSpec.feature "Listing and viewing schools", type: :feature do
       fill_in("Find a workplace", with: school.name)
       click_button("Search")
 
-      expect(page).to have_css('tbody tr.govuk-table__row', count: 1)
+      expect(page).to have_css("tbody tr.govuk-table__row", count: 1)
 
-      within first('tbody tr.govuk-table__row') do |row|
-        expect(find('td:nth-child(1)').text).to eq(school.name)
+      within first("tbody tr.govuk-table__row") do |_row|
+        expect(find("td:nth-child(1)").text).to eq(school.name)
       end
     end
 
@@ -72,10 +72,10 @@ RSpec.feature "Listing and viewing schools", type: :feature do
       fill_in("Find a workplace", with: school.urn)
       click_button("Search")
 
-      expect(page).to have_css('tbody tr.govuk-table__row', count: 1)
+      expect(page).to have_css("tbody tr.govuk-table__row", count: 1)
 
-      within first('tbody tr.govuk-table__row') do |row|
-        expect(find('td:nth-child(1)').text).to eq(school.name)
+      within first("tbody tr.govuk-table__row") do |_row|
+        expect(find("td:nth-child(1)").text).to eq(school.name)
       end
     end
   end
