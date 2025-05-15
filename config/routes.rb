@@ -75,13 +75,6 @@ Rails.application.routes.draw do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
 
-    resources :closed_registration_users do
-      member do
-        get "destroy"
-        delete "destroy"
-      end
-    end
-
     resources :reopening_email_subscriptions do
       member do
         get "unsubscribe"
@@ -221,6 +214,13 @@ Rails.application.routes.draw do
       resources :features, only: %i[index show update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
+      end
+
+      resources :closed_registration_users do
+        member do
+          get "destroy"
+          delete "destroy"
+        end
       end
 
       resources :applications, only: %i[index show] do

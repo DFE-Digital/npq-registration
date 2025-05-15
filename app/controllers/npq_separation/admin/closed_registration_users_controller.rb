@@ -1,4 +1,4 @@
-class Admin::ClosedRegistrationUsersController < AdminController
+class NpqSeparation::Admin::ClosedRegistrationUsersController < NpqSeparation::AdminController
   def index
     @users = ClosedRegistrationUser.all
     @user = ClosedRegistrationUser.new
@@ -12,7 +12,7 @@ class Admin::ClosedRegistrationUsersController < AdminController
     @user = ClosedRegistrationUser.new(params[:closed_registration_user].permit(:email))
     if @user.save
       flash[:success] = "New closed registration user added"
-      redirect_to admin_closed_registration_users_path
+      redirect_to npq_separation_admin_closed_registration_users_path
     else
       flash[:error] = "Can not create a closed registration user"
       render :index
@@ -26,7 +26,7 @@ class Admin::ClosedRegistrationUsersController < AdminController
       Flipper.disable_actor(Feature::REGISTRATION_OPEN, user) if user
       if @user.delete
         flash[:success] = "Closed registration user was deleted"
-        redirect_to admin_closed_registration_users_path
+        redirect_to npq_separation_admin_closed_registration_users_path
       else
         flash[:error] = "Can not delete a closed registration user"
         render :index

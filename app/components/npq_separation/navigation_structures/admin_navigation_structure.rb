@@ -97,6 +97,11 @@ module NpqSeparation
             href: "#",
             prefix: "/npq-separation/admin/settings",
           ) => [],
+          Node.new(
+            name: "Closed registration users",
+            href: npq_separation_admin_closed_registration_users_path,
+            prefix: "/npq-separation/admin/closed_registration_users",
+          ) => [],
         }
       end
 
