@@ -25,9 +25,7 @@
     "webpack": "^5.99.8",
     "webpack-cli": "^5.1.4"
   },
-  "devDependencies": {
-    "@webpack-cli/serve": "^3.0.0"
-  },
+  "devDependencies": {},
   "license": "MIT",
   "scripts": {
     "build": "webpack --config webpack.config.js",
