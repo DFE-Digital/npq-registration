@@ -31,6 +31,6 @@ private
   end
 
   def search_scope
-    @search_scope ||= Applications::Search.search(params[:q])
+    Applications::Search.search(params[:q])
   end
 end
