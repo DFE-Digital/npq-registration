@@ -30,7 +30,7 @@ module NpqSeparation
             name: "Admins",
             href: npq_separation_admin_admins_path,
             prefix: "/npq-separation/admin/admins",
-            ) => [],
+          ) => [],
         }
       end
 

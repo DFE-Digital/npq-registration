@@ -41,7 +41,7 @@ class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
     end
   end
 
-  private
+private
 
   def admin_params
     params.require(:admin).permit(:full_name, :email)
