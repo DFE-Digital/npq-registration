@@ -16,7 +16,7 @@ gem "delayed_job", "~> 4.1"
 gem "delayed_job_active_record"
 gem "delayed_job_web"
 gem "devise", "~> 4.9"
-gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.4"
+gem "dfe-analytics", github: "DFE-Digital/dfe-analytics", tag: "v1.15.6"
 gem "email_validator", require: "email_validator/strict"
 gem "flipper", "~> 1.3"
 gem "flipper-active_record", "~> 1.3"
@@ -48,13 +48,14 @@ gem "secure_headers"
 gem "sentry-delayed_job"
 gem "sentry-rails"
 gem "sentry-ruby"
+gem "simpleidn", "~> 0.2.3"
 gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
 gem "stimulus-rails"
 gem "strong_migrations"
 
-gem "net-imap", "~> 0.5.7", require: false
+gem "net-imap", "~> 0.5.8", require: false
 gem "net-pop", require: false
 gem "net-smtp", "~> 0.5.1", require: false
 
@@ -69,7 +70,7 @@ group :development, :test do
   gem "debug"
   gem "dotenv-rails"
   gem "knapsack"
-  gem "parallel_tests", "~> 5.1"
+  gem "parallel_tests", "~> 5.2"
   gem "rspec-rails", "~> 7.1"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"

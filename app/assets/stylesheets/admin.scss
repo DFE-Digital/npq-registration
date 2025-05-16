@@ -169,3 +169,11 @@
 .api-view {
   overflow: auto; // show scrollbar when the content is too wide
 }
+
+.bulk-operation-action-button {
+  margin-bottom: 0 !important;
+}
+
+.bulk-operation-action-button-group {
+  margin-bottom: 0;
+}

@@ -267,7 +267,7 @@ RSpec.describe Statements::SummaryCalculator do
       end
 
       it "counts them" do
-        expect(subject.total_voided).to eq(2)
+        expect(subject.total_voided).to eq(3)
       end
     end
   end

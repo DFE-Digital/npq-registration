@@ -1,0 +1,22 @@
+<%= form_for @adjustment, url: url, method: method, as: :adjustment do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_text_field(
+      :description,
+      label: { text: "Make adjustment", tag: "h1", size: "l" },
+      hint: { text: "Describe what the adjustment is for, such as 'IT consultant fee' for example. We'll share this information with the lead provider." }
+  ) %>
+
+  <%= f.govuk_text_field :amount,
+    width: 5,
+    label: { hint: "Do not include decimal points, commas or pound signs, for example enter 19000 for £19,000." },
+    prefix_text: "£",
+    suffix_text: ".00" %>
+
+  <%= f.hidden_field :show_all_adjustments, value: @show_all_adjustments %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit t("shared.continue") %>
+    <%= govuk_link_to t("shared.cancel"), cancel_url %>
+  </div>
+<% end %>

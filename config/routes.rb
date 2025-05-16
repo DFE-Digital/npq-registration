@@ -69,18 +69,10 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
-    resources :features, only: %i[index show update]
     resources :admins, only: %i[index new create destroy]
     resources :super_admins, only: %i[update]
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
-    end
-
-    resources :closed_registration_users do
-      member do
-        get "destroy"
-        delete "destroy"
-      end
     end
 
     resources :reopening_email_subscriptions do
@@ -219,8 +211,16 @@ Rails.application.routes.draw do
     get "admin", to: "admin/dashboards/summary#show"
 
     namespace :admin do
+      resources :features, only: %i[index show update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
+      end
+
+      resources :closed_registration_users do
+        member do
+          get "destroy"
+          delete "destroy"
+        end
       end
 
       resources :applications, only: %i[index show] do
@@ -264,9 +264,13 @@ Rails.application.routes.draw do
 
       namespace :finance do
         resources :statements, only: %i[index show] do
-          resources :adjustments, controller: "statements/adjustments", only: %i[new create index] do
+          resources :adjustments, controller: "statements/adjustments" do
             collection do
               post :add_another
+            end
+
+            member do
+              get :delete
             end
           end
 
@@ -286,15 +290,18 @@ Rails.application.routes.draw do
       resources :lead_providers, only: %i[index show], path: "lead-providers"
       resources :admins, only: %i[index]
 
-      resources :bulk_operations, only: %i[index], path: "bulk-operations" do
-        post "revert_applications_to_pending", on: :member
-      end
+      resources :bulk_operations, only: %i[index], path: "bulk-operations"
 
       namespace :bulk_operations, path: "bulk-operations" do
         resources :revert_applications_to_pending, controller: "revert_applications_to_pending", only: %i[index create show] do
           post "run", on: :member
         end
+
         resources :reject_applications, controller: "reject_applications", only: %i[index create show] do
+          post "run", on: :member
+        end
+
+        resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
           post "run", on: :member
         end
       end

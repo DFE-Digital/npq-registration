@@ -206,8 +206,8 @@ RSpec.feature "Applications in review", type: :feature do
       click_on "Change"
     end
 
-    fill_in "Notes about changes to this registration", with: "Some notes"
-    click_on "Update notes"
+    fill_in "Add a note about the changes to this registration", with: "Some notes"
+    click_on "Add note"
 
     within(".govuk-summary-list__row", text: "Notes") do
       expect(page).to have_text("Some notes")

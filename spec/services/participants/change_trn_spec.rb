@@ -29,6 +29,10 @@ RSpec.describe Participants::ChangeTrn, type: :model do
     it "does not allow more than 7 characters" do
       expect(subject).not_to allow_value("99123456").for(:trn).with_message("TRN is the wrong length (should be 7 characters)")
     end
+
+    it "does not allow a nil user" do
+      expect(subject).not_to allow_value(nil).for(:user).with_message("User not found")
+    end
   end
 
   describe "#change_trn" do
@@ -46,12 +50,20 @@ RSpec.describe Participants::ChangeTrn, type: :model do
       end
     end
 
-    context "when the validations fail" do
+    context "when the the TRN is blank" do
       let(:trn) { "" }
 
       it "does not update the TRN" do
         expect { subject }.not_to change(user, :trn)
       end
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+
+    context "when the user is nil" do
+      let(:user) { nil }
 
       it "returns false" do
         expect(subject).to be false

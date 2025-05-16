@@ -1,6 +1,5 @@
-<% service_url = Feature.registration_closed?(current_user) ? "/registration/closed" : "/" %>
 <%=
-  govuk_header(service_name: "Register for a national professional qualification", service_url: service_url) do |header|
+  govuk_header(service_name: "Register for a national professional qualification", service_url: root_path) do |header|
     if current_admin
       header.with_navigation_item(text: "Legacy Admin", href: admin_path)
       header.with_navigation_item(text: "Separation Admin", href: npq_separation_admin_path)

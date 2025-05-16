@@ -19,7 +19,9 @@ module Admin::Adjustments
       self.created_adjustment_ids ||= []
     end
 
-    def save_form
+    def save_adjustment
+      return false unless valid?
+
       success = adjustment.save
 
       if success
