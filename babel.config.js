@@ -33,20 +33,12 @@ module.exports = function (api) {
           modules: false,
           exclude: ['transform-typeof-symbol']
         }
-      ],
-      require('@babel/preset-react'),
+      ]
     ].filter(Boolean),
     plugins: [
-      require('babel-plugin-macros'),
       isTestEnv && require('babel-plugin-dynamic-import-node'),
       require('@babel/plugin-transform-destructuring').default,
       require('@babel/plugin-transform-class-properties').default,
-      [
-        require('@babel/plugin-proposal-object-rest-spread').default,
-        {
-          useBuiltIns: true
-        }
-      ],
       [
         require('@babel/plugin-transform-runtime').default,
         {

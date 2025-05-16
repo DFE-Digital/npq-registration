@@ -52,7 +52,6 @@ gem "simpleidn", "~> 0.2.3"
 gem "sprockets", "~> 4.2.2"
 gem "sprockets-rails", require: "sprockets/railtie"
 gem "state_machines-activerecord"
-gem "stimulus-rails"
 gem "strong_migrations"
 
 gem "net-imap", "~> 0.5.8", require: false
