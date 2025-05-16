@@ -18,6 +18,10 @@
   <%= nonced_stylesheet_link_tag 'application', media: 'all' %>
   <%= nonced_javascript_include_tag 'application', defer: true %>
 
+  <%= nonced_style_tag do %>
+    .hidden-element { display: none; visibility: hidden }
+  <% end %>
+
   <%= render partial: "shared/analytics/google" %>
 
   <% if show_tracking_pixels? %>
