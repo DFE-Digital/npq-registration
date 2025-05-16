@@ -25,6 +25,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - uses: google-github-actions/auth@v2
+        with:
+          project_id: ecf-bq
+          workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.4

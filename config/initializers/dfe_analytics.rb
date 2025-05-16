@@ -22,13 +22,13 @@ DfE::Analytics.configure do |config|
   #
   # config.bigquery_dataset = ENV['BIGQUERY_DATASET']
 
-  config.bigquery_dataset = ENV["BIGQUERY_DFE_ANALYTICS_DATASET"] || "npq_events_#{Rails.env}"
+  # config.bigquery_dataset = ENV["BIGQUERY_DFE_ANALYTICS_DATASET"] || "npq_events_#{Rails.env}"
 
   # Service account JSON key for the BigQuery API. See
   # https://cloud.google.com/bigquery/docs/authentication/service-account-file
   #
   # config.bigquery_api_json_key = ENV['BIGQUERY_API_JSON_KEY']
-  config.bigquery_api_json_key = ENV["BIGQUERY_DFE_ANALYTICS_API_JSON_KEY"] || Rails.application.credentials.BIGQUERY_DFE_ANALYTICS_API_JSON_KEY
+  # config.bigquery_api_json_key = ENV["BIGQUERY_DFE_ANALYTICS_API_JSON_KEY"] || Rails.application.credentials.BIGQUERY_DFE_ANALYTICS_API_JSON_KEY
 
   # Passed directly to the retries: option on the BigQuery client
   # config.bigquery_retries = 3
@@ -55,4 +55,6 @@ DfE::Analytics.configure do |config|
 
   config.entity_table_checks_enabled = true
   config.excluded_paths = ["/healthcheck"]
+
+  config.azure_federated_auth = ENV.include? "GOOGLE_CLOUD_CREDENTIALS"
 end
