@@ -12,7 +12,7 @@ module AdminManagementHelper
   end
 
   def remove_as_admin_cell_contents(user)
-    govuk_button_link_to(t(".buttons.delete"), admin_admin_path(user), method: :delete, warning: true)
+    govuk_button_link_to(t(".buttons.delete"), npq_separation_admin_admin_path(user), method: :delete, warning: true)
   end
 
   def elevate_to_super_admin_cell_contents(user)
