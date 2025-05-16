@@ -43,7 +43,6 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
         expect(subject[-1]).to have_attributes(name: "Admins")
         expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/admins")
       end
-
     end
   end
 
