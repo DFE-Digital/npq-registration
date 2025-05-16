@@ -26,6 +26,12 @@ SecureHeaders::Configuration.default do |config|
     'sha256-zuOhDbTpAZjaeemuptCNLaf/7IaV06c8De4EMGOhtzM='
   ]
 
+  non_html_inline_style_hash = %w[
+    'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='
+  ]
+
+  all_hashes = flipper_ui_hashes + non_html_inline_style_hash
+
   config.csp = SecureHeaders::OPT_OUT
 
   config.csp_report_only = {
@@ -43,7 +49,7 @@ SecureHeaders::Configuration.default do |config|
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics + sentry,
-    style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics + %w['unsafe-hashes'] + flipper_ui_hashes,
+    style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics + %w['unsafe-hashes'] + all_hashes,
     worker_src: %w['self'],
     report_uri: [sentry_report_uri],
   }
