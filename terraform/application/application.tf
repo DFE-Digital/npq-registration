@@ -23,6 +23,9 @@ module "application_configuration" {
     RAILS_ENV        = var.environment
     DOMAIN           = local.domain
     HOSTING_DOMAIN   = "https://${local.access_external_domain}"
+    BIGQUERY_DATASET    = var.dataset_name
+    BIGQUERY_PROJECT_ID = "ecf-bq"
+    BIGQUERY_TABLE_NAME = "events"
 
     AZURE_STORAGE_ACCOUNT_NAME = azurerm_storage_account.uploads.name
     AZURE_STORAGE_CONTAINER    = azurerm_storage_container.uploads.name
@@ -30,6 +33,7 @@ module "application_configuration" {
   secret_variables = {
     DATABASE_URL = module.postgres.url
     REDIS_CACHE_URL = var.deploy_redis_cache ? module.redis-cache[0].url : ""
+    GOOGLE_CLOUD_CREDENTIALS = var.enable_dfe_analytics_federated_auth ? module.dfe_analytics[0].google_cloud_credentials : null
 
     AZURE_STORAGE_ACCESS_KEY   = azurerm_storage_account.uploads.primary_access_key
   }
@@ -58,6 +62,7 @@ module "web_application" {
 
   enable_logit = var.enable_logit
   send_traffic_to_maintenance_page = var.send_traffic_to_maintenance_page
+  enable_gcp_wif                   = true
 }
 
 module "worker_application" {
