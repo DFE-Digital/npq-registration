@@ -41,7 +41,7 @@ RSpec.feature "admin management", type: :feature do
   end
 
   def given_i_am_on_the_admin_index
-    visit("/admin/admins")
+    visit("/npq-separation/admin/admins")
   end
   alias_method :and_i_am_on_the_admin_index, :given_i_am_on_the_admin_index
 
@@ -50,7 +50,7 @@ RSpec.feature "admin management", type: :feature do
   end
 
   def and_i_should_be_on_the_add_new_admin_page
-    expect(page).to have_current_path("/admin/admins/new")
+    expect(page).to have_current_path("/npq-separation/admin/admins/new")
   end
 
   def then_the_latest_admin_has_the_correct_details(full_name:, email:)
@@ -84,7 +84,7 @@ RSpec.feature "admin management", type: :feature do
   end
 
   def then_the_admin_record_should_have_been_deleted_for(full_name:)
-    expect(page).to have_current_path("/admin/admins")
+    expect(page).to have_current_path("/npq-separation/admin/admins")
     expect(page).to have_content("#{full_name} deleted")
   end
 end

@@ -69,8 +69,6 @@ Rails.application.routes.draw do
     resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
-    resources :admins, only: %i[index new create destroy]
-    resources :super_admins, only: %i[update]
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
@@ -212,6 +210,8 @@ Rails.application.routes.draw do
 
     namespace :admin do
       resources :features, only: %i[index show update]
+      resources :admins, only: %i[index new create destroy]
+      resources :super_admins, only: %i[update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
       end

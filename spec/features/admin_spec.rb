@@ -46,32 +46,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     expect(page).not_to have_link("Admin Users", href: "/admin/admins")
   end
 
-  scenario "when logged in as a super admin, it allows access to the admin homepage with super admin permissions" do
-    visit "/admin"
-
-    sign_in_as_super_admin
-
-    page.click_link("Legacy Admin")
-    expect(page).to have_link("Admin Users", href: "/admin/admins")
-  end
-
-  scenario "when logged in as a super admin, it allows management of admins", skip: "disabled" do
-    sign_in_as_super_admin
-
-    page.click_link("Legacy Admin")
-    page.click_link("Admin Users")
-
-    expect {
-      page.click_link("Add new admin")
-      expect(page).to have_current_path("/admin/admins/new")
-      page.fill_in "Email", with: "foobar@example.com"
-      page.click_button "Add admin"
-    }.to change { User.admins.count }.by(1)
-
-    expect(page).to have_current_path("/admin/admins")
-    expect(page).to have_content("foobar@example.com")
-  end
-
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
     create_list :application, 4
 
