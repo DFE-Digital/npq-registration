@@ -1,10 +1,9 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <%= render "admin/layout", title: "Admins" do %>
-      <%= govuk_button_link_to("Add new admin", new_npq_separation_admin_admin_path) %>
-    <% end %>
 
-    <%= govuk_details(summary_text: t('.super_admins.summary_text'), text: t('.super_admins.text_html')) %>
+    <h1 class="govuk-heading-l">Admins</h1>
+
+    <%= govuk_button_link_to("Add new admin", new_npq_separation_admin_admin_path) %>
 
     <%=
       govuk_table do |table|
