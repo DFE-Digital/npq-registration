@@ -81,7 +81,7 @@ RSpec.describe ApplicationHelper, type: :helper do
     include_examples "boolean tag"
 
     it "returns an empty string when bool is nil" do
-      expect(boolean_red_green_nil_tag(nil)).to eq("")
+      expect(boolean_red_green_nil_tag(nil)).to eq("–")
     end
   end
 end
