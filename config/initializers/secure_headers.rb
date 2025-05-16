@@ -29,9 +29,10 @@ SecureHeaders::Configuration.default do |config|
   config.csp = SecureHeaders::OPT_OUT
 
   config.csp_report_only = {
+    upgrade_insecure_requests: true,
+    disable_nonce_backwards_compatibility: true,
     default_src: %w['none'],
     base_uri: %w['self'],
-    upgrade_insecure_requests: true,
     child_src: %w['self'],
     connect_src: %w['self'] + google_analytics + flippercloud + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
