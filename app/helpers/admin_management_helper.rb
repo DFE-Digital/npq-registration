@@ -18,6 +18,6 @@ module AdminManagementHelper
   def elevate_to_super_admin_cell_contents(user)
     return "" if user.super_admin?
 
-    govuk_link_to(t(".buttons.elevate"), admin_super_admin_path(user), method: :patch)
+    govuk_link_to(t(".buttons.elevate"), npq_separation_admin_super_admin_path(user), method: :patch)
   end
 end
