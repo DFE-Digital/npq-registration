@@ -84,4 +84,12 @@ RSpec.describe ApplicationHelper, type: :helper do
       expect(boolean_red_green_nil_tag(nil)).to eq("")
     end
   end
+
+  describe "#join_with_commas" do
+    it "returns arguments correctly formated" do
+      expect(join_with_commas("a", "b", "c")).to eq("a, b, c")
+      expect(join_with_commas("a", "", "c")).to eq("a, c")
+      expect(join_with_commas("a", nil, "c")).to eq("a, c")
+    end
+  end
 end

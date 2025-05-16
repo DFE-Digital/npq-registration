@@ -1,15 +1,15 @@
 class NpqSeparation::Admin::SchoolsController < NpqSeparation::AdminController
   def index
-    @pagy, @schools = pagy(schools_query.schools)
+    @pagy, @schools = pagy(scope)
   end
 
   def show
-    @school = schools_query.school(id: params[:id])
+    @school = School.find(params[:id])
   end
 
 private
 
-  def schools_query
-    @schools_query ||= Schools::Query.new
+  def scope
+    AdminService::SchoolsSearch.new(q: params[:q]).call
   end
 end

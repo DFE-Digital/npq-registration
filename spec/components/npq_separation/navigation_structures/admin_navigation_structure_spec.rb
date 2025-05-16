@@ -15,7 +15,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Courses" => "/npq-separation/admin/courses",
       "Participants" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
-      "Schools" => "/npq-separation/admin/schools",
+      "Workplaces" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
       "Bulk operations" => "/npq-separation/admin/bulk-operations",
       "Delivery partners" => "/npq-separation/admin/delivery-partners",
