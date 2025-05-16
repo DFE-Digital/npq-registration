@@ -1,7 +1,3 @@
-# class NpqSeparation::Admin::AdminsController < ApplicationController
-#   def index = head(:method_not_allowed)
-# end
-
 class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
   before_action :require_super_admin
 
