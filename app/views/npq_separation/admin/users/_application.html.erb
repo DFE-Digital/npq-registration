@@ -1,40 +1,42 @@
 <%- title = "#{application.course.name} registration" -%>
 <%- actions = [govuk_link_to("View full registration", npq_separation_admin_application_path(application))] -%>
 
-<%=
-  govuk_summary_list(card: { title:, actions: }) do |sl| # TODO: make the title a larger font
-    sl.with_row do |row|
-      row.with_key(text: "NPQ Course")
-      row.with_value(text: application.course.name)
-    end
+<div class="admin-application-card">
+  <%=
+    govuk_summary_list(card: { title:, actions: }) do |sl|
+      sl.with_row do |row|
+        row.with_key(text: "NPQ Course")
+        row.with_value(text: application.course.name)
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Provider")
-      row.with_value(text: application.lead_provider.name)
-    end
+      sl.with_row do |row|
+        row.with_key(text: "Provider")
+        row.with_value(text: application.lead_provider.name)
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Eligible for funding")
-      row.with_value(text: boolean_tag(application.eligible_for_funding))
-    end
+      sl.with_row do |row|
+        row.with_key(text: "Eligible for funding")
+        row.with_value(text: boolean_tag(application.eligible_for_funding))
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Provider Approval Status")
-      row.with_value(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
-    end
+      sl.with_row do |row|
+        row.with_key(text: "Provider Approval Status")
+        row.with_value(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Funded Place")
-      row.with_value(text: boolean_red_green_nil_tag(application.funded_place))
-    end
+      sl.with_row do |row|
+        row.with_key(text: "Funded Place")
+        row.with_value(text: boolean_red_green_nil_tag(application.funded_place))
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Latest declaration")
-    end
+      sl.with_row do |row|
+        row.with_key(text: "Latest declaration")
+      end
 
-    sl.with_row do |row|
-      row.with_key(text: "Registration submission date")
-      row.with_value(text: application.created_at.to_fs(:govuk_short))
+      sl.with_row do |row|
+        row.with_key(text: "Registration submission date")
+        row.with_value(text: application.created_at.to_fs(:govuk_short))
+      end
     end
-  end
-%>
+  %>
+</div>
