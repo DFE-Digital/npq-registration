@@ -26,10 +26,10 @@ docker-compose-build:
 
 .PHONY: review
 review: test-cluster ## Specify review AKS environment
-	# PULL_REQUEST_NUMBER is set by the GitHub action
-	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
+	# PR_NUMBER is set by the GitHub action
+	$(if $(PULL_REQUEST_NUMBER), , $(eval PULL_REQUEST_NUMBER="PR_NUMBER"))
 	$(eval include global_config/review.sh)
-	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_PR_NUMBER=-$(PULL_REQUEST_NUMBER))
 
 .PHONY: staging
 staging: test-cluster
@@ -65,8 +65,8 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables set-azure-account
-	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
-	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
+	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE="ghcr.io/dfe-digital/npq-registration:no-tag"))
+	$(if $(PR_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
@@ -89,7 +89,7 @@ terraform-plan: terraform-init
 terraform-apply: terraform-init
 	terraform -chdir=terraform/application apply -var-file "config/${CONFIG}.tfvars.json" ${AUTO_APPROVE}
 
-## DOCKER_IMAGE=fake-image make review terraform-unlock PULL_REQUEST_NUMBER=4169 LOCK_ID=123456
+## DOCKER_IMAGE=fake-image make review terraform-unlock PR_NUMBER=4169 LOCK_ID=123456
 ## DOCKER_IMAGE=fake-image make staging terraform-unlock LOCK_ID=123456
 .PHONY: terraform-unlock
 terraform-unlock: terraform-init
@@ -173,23 +173,23 @@ install-konduit: ## Install the konduit script, for accessing backend services
 		|| true
 
 aks-console: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c --sandbox"
 
 aks-rw-console: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails c"
 
 aks-runner: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh -c "cd /app && bundle exec rails runner \"$(code)\""
 
 aks-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-worker -- /bin/sh
 
 aks-web-ssh: get-cluster-credentials
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 	kubectl -n ${NAMESPACE} exec -ti --tty deployment/npq-registration-${APP_ID}-web -- /bin/sh
 
 action-group-resources: set-azure-account # make env_aks action-group-resources ACTION_GROUP_EMAIL=notificationemail@domain.com . Must be run before setting enable_monitoring=true for each subscription
@@ -226,8 +226,8 @@ konduit-snapshot: get-cluster-credentials
 	$(KONDUIT_CONNECT) ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-pg-snapshot -n ${NAMESPACE} -k ${AZURE_RESOURCE_PREFIX}-${SERVICE_SHORT}-${CONFIG_SHORT}-app-kv npq-registration-${CONFIG_LONG}-web -- psql > "$$tmp_file"
 	exit 0
 
-define SET_APP_ID_FROM_PULL_REQUEST_NUMBER
-	$(if $(PULL_REQUEST_NUMBER), $(eval export APP_ID=review-$(PULL_REQUEST_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
+define SET_APP_ID_FROM_PR_NUMBER
+	$(if $(PR_NUMBER), $(eval export APP_ID=review-$(PR_NUMBER)) , $(eval export APP_ID=$(CONFIG_LONG)))
 endef
 
 # downloads the given file from the app/tmp directory of all
@@ -235,7 +235,7 @@ endef
 ## ie: FILENAME=restart.txt make staging aks-download-tmp-file
 ## ie: FILENAME=restart.txt make ci production aks-download-tmp-file
 aks-download-tmp-file: get-cluster-credentials
-	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(SET_APP_ID_FROM_PR_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-download-tmp-file))
 	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} sh -c 'mkdir -p {}/ && kubectl cp ${NAMESPACE}/{}:/app/tmp/${FILENAME} {}/${FILENAME}'
 
@@ -243,7 +243,7 @@ aks-download-tmp-file: get-cluster-credentials
 # pods in the cluster.
 ## ie: FILENAME=local_file.txt make staging aks-upload-tmp-file
 aks-upload-tmp-file: get-cluster-credentials
-	$(SET_APP_ID_FROM_PULL_REQUEST_NUMBER)
+	$(SET_APP_ID_FROM_PR_NUMBER)
 	$(if $(FILENAME), , $(error Usage: FILENAME=restart.txt make staging aks-upload-tmp-file))
 	kubectl get pods -n ${NAMESPACE} -l app=npq-registration-${APP_ID}-worker -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' | xargs -I {} kubectl cp ${FILENAME} ${NAMESPACE}/{}:/app/tmp/${FILENAME}
 
