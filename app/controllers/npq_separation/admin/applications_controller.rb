@@ -1,10 +1,15 @@
 class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminController
   def index
-    @pagy, @applications = pagy(applications_query.applications)
+    applications = Application.includes(:private_childcare_provider, :school, :user)
+                              .merge(filter_scope)
+                              .merge(search_scope)
+                              .order("applications.created_at ASC")
+
+    @pagy, @applications = pagy(applications)
   end
 
   def show
-    @application = applications_query.application(id: params[:id])
+    @application = Application.find(params[:id])
     @declarations = @application.declarations
                                 .includes(:lead_provider, :cohort, :participant_outcomes, :statements)
                                 .order(created_at: :asc, id: :asc)
@@ -12,7 +17,20 @@ class NpqSeparation::Admin::ApplicationsController < NpqSeparation::AdminControl
 
 private
 
-  def applications_query
-    @applications_query ||= Applications::Query.new
+  def filter_params
+    params.permit %i[
+      training_status
+      lead_provider_approval_status
+      cohort_id
+      work_setting
+    ]
+  end
+
+  def filter_scope
+    Application.where(filter_params.compact_blank)
+  end
+
+  def search_scope
+    Applications::Search.search(params[:q])
   end
 end
