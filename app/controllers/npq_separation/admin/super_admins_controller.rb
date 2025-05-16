@@ -1,4 +1,5 @@
-class NpqSeparation::Admin::SuperAdminsController < SuperAdminController
+class NpqSeparation::Admin::SuperAdminsController < NpqSeparation::AdminController
+  before_action :require_super_admin
 def update
     @admin = Admin.find(params[:id])
 
