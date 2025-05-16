@@ -94,10 +94,30 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         service.accept
       end
 
-      it "does not accept the EHCO application" do
-        expect {
-          described_class.new(application: other_application).accept
-        }.not_to(change { other_application.reload.lead_provider_approval_status })
+      context "and the applications are in the same cohort" do
+        it "does not accept the EHCO application" do
+          expect {
+            described_class.new(application: other_application).accept
+          }.not_to(change { other_application.reload.lead_provider_approval_status })
+        end
+      end
+
+      context "and the applications are in different cohorts" do
+        let(:other_application) do
+          create(
+            :application,
+            user:,
+            course: npq_ehco,
+            lead_provider:,
+            cohort: cohort_next,
+          )
+        end
+
+        it "accepts the EHCO application" do
+          expect {
+            described_class.new(application: other_application).accept
+          }.to(change { other_application.reload.lead_provider_approval_status }.to("accepted"))
+        end
       end
     end
 
@@ -148,15 +168,31 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           application.update!(lead_provider_approval_status: "accepted")
         end
 
-        it "does not allow 2 applications with same course to be accepted" do
-          expect {
+        context "when both applications are in the same cohort" do
+          it "does not allow 2 applications with same course and cohort to be accepted" do
+            expect {
+              service.accept
+            }.not_to(change { other_application.reload.lead_provider_approval_status })
+          end
+
+          it "attaches errors to the object" do
             service.accept
-          }.not_to(change { other_application.reload.lead_provider_approval_status })
+            expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
+          end
         end
 
-        it "attaches errors to the object" do
-          service.accept
-          expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
+        context "when the applications are in different cohorts" do
+          let(:other_application) do
+            create(:application,
+                   user:,
+                   course:,
+                   lead_provider: other_lead_provider,
+                   cohort: cohort_next)
+          end
+
+          it "allows both applications to be accepted" do
+            expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
+          end
         end
       end
 
@@ -181,15 +217,31 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           application.update!(lead_provider_approval_status: "accepted")
         end
 
-        it "does not allow 2 applications with same course to be accepted" do
-          expect {
+        context "when both applications are in the same cohort" do
+          it "does not allow 2 applications with same course and cohort to be accepted" do
+            expect {
+              service.accept
+            }.not_to(change { other_application.reload.lead_provider_approval_status })
+          end
+
+          it "attaches errors to the object" do
             service.accept
-          }.not_to(change { other_application.reload.lead_provider_approval_status })
+            expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
+          end
         end
 
-        it "attaches errors to the object" do
-          service.accept
-          expect(service).to have_error(:application, :has_another_accepted_application, "The participant has already had an application accepted for this course.")
+        context "when the applications are in different cohorts" do
+          let(:other_application) do
+            create(:application,
+                   user: another_user,
+                   course:,
+                   lead_provider: other_lead_provider,
+                   cohort: cohort_next)
+          end
+
+          it "allows both applications to be accepted" do
+            expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
+          end
         end
       end
     end

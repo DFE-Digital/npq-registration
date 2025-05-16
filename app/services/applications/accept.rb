@@ -13,7 +13,7 @@ module Applications
     validates :funded_place, inclusion: { in: [true, false], if: :validate_funded_place? }
     validate :not_already_accepted
     validate :cannot_change_from_rejected
-    validate :other_accepted_applications_with_same_course?
+    validate :other_accepted_applications_with_same_course_and_cohort?
     validate :eligible_for_funded_place
     validate :validate_permitted_schedule_for_course
     validate :validate_schedule_exists
@@ -49,8 +49,8 @@ module Applications
       errors.add(:application, :cannot_change_from_rejected) if application.rejected_lead_provider_approval_status?
     end
 
-    def other_accepted_applications_with_same_course?
-      errors.add(:application, :has_another_accepted_application) if other_accepted_applications_with_same_course.present?
+    def other_accepted_applications_with_same_course_and_cohort?
+      errors.add(:application, :has_another_accepted_application) if other_accepted_applications_with_same_course_and_cohort.present?
     end
 
     def accept_application!
@@ -74,12 +74,15 @@ module Applications
       other_applications_in_same_cohort.update!(lead_provider_approval_status: "rejected")
     end
 
-    def other_accepted_applications_with_same_course
+    def other_accepted_applications_with_same_course_and_cohort
       return if application.blank?
 
-      @other_accepted_applications_with_same_course ||= Application
-                                                          .where(lead_provider_approval_status: "accepted", course: course.rebranded_alternative_courses, user: [user, same_trn_users].flatten.compact.uniq)
-                                                          .where.not(id: application.id)
+      @other_accepted_applications_with_same_course_and_cohort ||= Application
+        .where(lead_provider_approval_status: "accepted",
+               course: course.rebranded_alternative_courses,
+               user: [user, same_trn_users].flatten.compact.uniq,
+               cohort:)
+        .where.not(id: application.id)
     end
 
     def other_applications_in_same_cohort
