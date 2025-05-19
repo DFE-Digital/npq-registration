@@ -21,16 +21,18 @@ SecureHeaders::Configuration.default do |config|
     sentry += [URI(sentry_report_uri).host]
   end
 
+  # These are for the inline CSS in the flipper admin UI
   flipper_ui_hashes = %w[
     'sha256-NNzAJMHPK9KuPslppuoTz2azqZcpUO0IJZosehbmhHA='
     'sha256-zuOhDbTpAZjaeemuptCNLaf/7IaV06c8De4EMGOhtzM='
   ]
 
-  non_html_inline_style_hash = %w[
+  # This is for the inline style browsers apply to robots.txt file
+  robots_txt_inline_style_hash = %w[
     'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='
   ]
 
-  all_hashes = flipper_ui_hashes + non_html_inline_style_hash
+  all_hashes = flipper_ui_hashes + robots_txt_inline_style_hash
 
   config.csp = SecureHeaders::OPT_OUT
 
