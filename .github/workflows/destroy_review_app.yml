@@ -42,6 +42,7 @@ jobs:
           echo "AZURE_RESOURCE_PREFIX=${AZURE_RESOURCE_PREFIX}" >> $GITHUB_ENV
           echo "CONFIG_SHORT=${CONFIG_SHORT}" >> $GITHUB_ENV
           echo "SERVICE_SHORT=${SERVICE_SHORT}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${ENVIRONMENT}" >> $GITHUB_ENV
 
       - name: Delete Review App
         id: delete-review-app
