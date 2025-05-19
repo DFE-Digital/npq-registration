@@ -8,13 +8,13 @@
   <li>address</li>
 </ul>
 
-<div style="background-color: #f3f2f1; padding: 20px 15px; margin-bottom: 30px;">
+<div class="admin-search-box">
   <%= form_with method: :get do |f| %>
     <%= f.govuk_text_field(
           :q,
           value: params[:q],
           hint: { text: "Search by entering the workplace name or its Unique Reference Number (URN)" },
-          label: { text: "Find a workplace", tag: "h1", size: "m" },
+          label: { text: "Find a workplace", tag: "h2", size: "m" },
           )
     %>
 
