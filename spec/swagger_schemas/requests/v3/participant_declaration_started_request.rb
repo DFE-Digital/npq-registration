@@ -65,5 +65,6 @@ V3_PARTICIPANT_DECLARATION_STARTED_REQUEST = {
     declaration_type: "started",
     declaration_date: "2021-05-31T02:21:32Z",
     course_identifier: Course::IDENTIFIERS.first,
+    delivery_partner_id: "524df095-f9bf-4f9d-ba4c-772545a99e60",
   },
 }.freeze
