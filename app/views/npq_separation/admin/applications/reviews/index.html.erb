@@ -1,46 +1,95 @@
 <h1 class="govuk-heading-l">Registrations in review</h1>
 
 <div class="admin-search-box">
-  <h2 class="govuk-heading-m">Search for registrations in review</h2>
+  <h2 class="govuk-heading-m">Find a registration</h2>
 
   <%= form_with method: :get do |f| %>
-    <%= f.govuk_text_field(
-        :q,
-        value: params[:q],
-        label: { text: "Enter the participant ID, name, email address, employer name, or application ID", size: "s" },
-      )
-    %>
+    <div class="govuk-grid-row">
+      <%= f.govuk_text_field(
+          :q,
+          value: params[:q],
+          label: { text: "Enter the User ID, name, email address, employer name, or application ID", size: "s" },
+          form_group: { class: "govuk-grid-column-full" },
+        )
+      %>
+    </div>
 
-    <%=
-      f.govuk_select(
-        :employment_type,
-        options_for_select(employment_types.map { [_1.humanize, _1] }.prepend(nil), params[:employment_type]),
-        label: { text: "Employment type", size: "s" }
-      )
-    %>
+    <div class="govuk-grid-row">
+      <%#= # will be implemented in CPDNPQ-2567
+        f.govuk_select(
+          :review_status,
+          options_for_select([
+          ], params[:review_status]),
+          label: { text: "Review status", size: "s" },
+          form_group: { class: "govuk-grid-column-one-half" },
+        )
+      %>
 
-    <%=
-      f.govuk_select(
-        :referred_by_return_to_teaching_adviser,
-        options_for_select([
-          ['', nil],
-          ['Yes', 'yes'],
-          ['No', 'no'],
-        ], params[:referred_by_return_to_teaching_adviser]),
-        label: { text: "Referred by return to teaching adviser", size: "s" },
-      )
-    %>
+      <%=
+        f.govuk_select(
+          :employment_type,
+          options_for_select(employment_types.map { [_1.humanize, _1] }.prepend(nil), params[:employment_type]),
+          label: { text: "Employment type", size: "s" },
+          form_group: { class: "govuk-grid-column-one-half" },
+        )
+      %>
+    </div>
 
-    <%=
-      f.govuk_collection_select(
-        :cohort_id,
-        Cohort.all,
-        :id,
-        -> { format_cohort _1 },
-        options: { selected: params[:cohort_id], include_blank: true },
-        label: { text: "Cohort", size: "s" }
-      )
-    %>
+    <div class="govuk-grid-row">
+      <%=
+        f.govuk_select(
+          :eligible_for_funding,
+          options_for_select([
+            ['', nil],
+            ['Yes', true],
+            ['No', false],
+          ], params[:eligible_for_funding]),
+          label: { text: "Eligible for funding", size: "s" },
+          form_group: { class: "govuk-grid-column-one-half" },
+        )
+      %>
+
+      <%=
+        f.govuk_select(
+          :referred_by_return_to_teaching_adviser,
+          options_for_select([
+            ['', nil],
+            ['Yes', 'yes'],
+            ['No', 'no'],
+          ], params[:referred_by_return_to_teaching_adviser]),
+          label: { text: "Referred by return to teaching adviser", size: "s" },
+          form_group: { class: "govuk-grid-column-one-half" },
+        )
+      %>
+    </div>
+
+    <div class="govuk-grid-row">
+      <%=
+        f.govuk_check_boxes_fieldset(nil,
+                                     legend: nil,
+                                     form_group: { class: "govuk-grid-column-one-half" },
+                                    ) do
+          f.govuk_check_box(
+            :has_funding_decision, "", true,
+            multiple: false,
+            label: { text: "Show registrations without a funding decision" },
+            checked: params[:has_funding_decision].blank?,
+          )
+        end
+      %>
+
+      <%=
+        f.govuk_collection_select(
+          :cohort_id,
+          Cohort.all.order(start_year: :desc),
+          :id,
+          -> { format_cohort_full _1 },
+          options: { selected: params[:cohort_id], include_blank: true },
+          label: { text: "Year of registration", size: "s" },
+          form_group: { class: "govuk-grid-column-one-half" },
+        )
+      %>
+    </div>
 
     <%= f.govuk_submit "Search" %>
   <% end %>

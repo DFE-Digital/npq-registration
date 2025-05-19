@@ -6,15 +6,17 @@ RSpec.feature "Applications in review", type: :feature do
   let(:cohort_21) { create :cohort, start_year: 2021 }
   let(:cohort_22) { create :cohort, start_year: 2022 }
 
-  let!(:normal_application)                         { create(:application) }
-  let!(:application_for_hospital_school)            { create(:application, :accepted, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
-  let!(:application_for_la_supply_teacher)          { create(:application, created_at: 9.days.ago, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
-  let!(:application_for_la_virtual_school)          { create(:application, created_at: 8.days.ago, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_lead_mentor)                { create(:application, created_at: 7.days.ago, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_young_offender_institution) { create(:application, created_at: 6.days.ago, employment_type: "young_offender_institution") }
-  let!(:application_for_other)                      { create(:application, created_at: 5.days.ago, employment_type: "other") }
-  let!(:application_for_rtta_yes)                   { create(:application, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
-  let!(:application_for_rtta_no)                    { create(:application, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
+  let!(:normal_application)                         { create(:application, :with_random_user) }
+  let!(:application_for_hospital_school)            { create(:application, :with_random_user, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
+  let!(:application_for_la_supply_teacher)          { create(:application, :with_random_user, created_at: 9.days.ago, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
+  let!(:application_for_la_virtual_school)          { create(:application, :with_random_user, created_at: 8.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_lead_mentor)                { create(:application, :with_random_user, created_at: 7.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_young_offender_institution) { create(:application, :with_random_user, created_at: 6.days.ago, employment_type: "young_offender_institution") }
+  let!(:application_for_other)                      { create(:application, :with_random_user, created_at: 5.days.ago, employment_type: "other") }
+  let!(:application_for_rtta_yes)                   { create(:application, :with_random_user, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
+  let!(:application_for_rtta_no)                    { create(:application, :with_random_user, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
+  let!(:aplication_eligible_for_funding)            { create(:application, :with_random_user, :eligible_for_funding, created_at: 11.days.ago, employment_type: "other") }
+  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :accepted, created_at: 12.days.ago, employment_type: "hospital_school") }
 
   let(:serialized_application) { { application: 1 } }
 
@@ -26,6 +28,8 @@ RSpec.feature "Applications in review", type: :feature do
 
   scenario "listing" do
     rows = [
+      application_with_funding_decision,
+      aplication_eligible_for_funding,
       application_for_hospital_school,
       application_for_la_supply_teacher,
       application_for_la_virtual_school,
@@ -48,16 +52,20 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).not_to have_text application_for_rtta_no.user.full_name
   end
 
-  scenario "searching with participant ID" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.user.ecf_id)
+  scenario "default filters" do
+    expect(page).to have_checked_field("Show registrations without a funding decision", visible: :all)
+  end
+
+  scenario "searching with User ID" do
+    fill_in("Enter the User ID", with: application_for_hospital_school.user.ecf_id)
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
   end
 
-  scenario "searching with participant ID when the application has no school relation" do
-    fill_in("Enter the participant ID", with: application_for_rtta_yes.user.ecf_id)
+  scenario "searching with User ID when the application has no school relation" do
+    fill_in("Enter the User ID", with: application_for_rtta_yes.user.ecf_id)
     click_on "Search"
 
     expect(page).to have_text(application_for_rtta_yes.user.full_name)
@@ -65,16 +73,16 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
   end
 
-  scenario "searching with participant name" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.user.full_name)
+  scenario "searching with user name" do
+    fill_in("Enter the User ID", with: application_for_hospital_school.user.full_name)
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
   end
 
-  scenario "searching with participant email" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.user.email)
+  scenario "searching with user email" do
+    fill_in("Enter the User ID", with: application_for_hospital_school.user.email)
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
@@ -82,7 +90,7 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "searching with employer name" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.employer_name)
+    fill_in("Enter the User ID", with: application_for_hospital_school.employer_name)
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
@@ -90,7 +98,7 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "searching with application ID" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.ecf_id)
+    fill_in("Enter the User ID", with: application_for_hospital_school.ecf_id)
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
@@ -103,6 +111,20 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+  end
+
+  scenario "filtering by eligible for funding" do
+    select "No", from: "Eligible for funding"
+    click_on "Search"
+
+    expect(page).to have_text(application_for_la_supply_teacher.user.full_name)
+    expect(page).not_to have_text(aplication_eligible_for_funding.user.full_name)
+
+    select "Yes", from: "Eligible for funding"
+    click_on "Search"
+
+    expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+    expect(page).to have_text(aplication_eligible_for_funding.user.full_name)
   end
 
   scenario "filtering by referred by return to teaching adviser" do
@@ -118,8 +140,17 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).not_to have_text(application_for_rtta_no.user.full_name)
   end
 
+  scenario "filtering by registrations without a funding decision" do
+    uncheck "Show registrations without a funding decision", visible: :all
+    click_on "Search"
+
+    expect(page).to have_unchecked_field("Show registrations without a funding decision", visible: :all)
+    expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+    expect(page).to have_text(application_with_funding_decision.user.full_name)
+  end
+
   scenario "filtering by cohort" do
-    select "2021/22", from: "Cohort"
+    select "2021 to 2022", from: "Year of registration"
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
@@ -127,14 +158,14 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "combining search and filters" do
-    fill_in("Enter the participant ID", with: application_for_hospital_school.user.full_name)
-    select "2021/22", from: "Cohort"
+    fill_in("Enter the User ID", with: application_for_hospital_school.user.full_name)
+    select "2021 to 2022", from: "Year of registration"
     click_on "Search"
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
 
-    select "2022/23", from: "Cohort"
+    select "2022 to 2023", from: "Year of registration"
     click_on "Search"
     expect(page).not_to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
@@ -142,7 +173,7 @@ RSpec.feature "Applications in review", type: :feature do
 
   scenario "viewing an application" do
     allow(API::ApplicationSerializer).to receive(:render_as_hash).and_return(serialized_application)
-    application = application_for_hospital_school.reload
+    application = application_with_funding_decision.reload
     application.user.update! uid: SecureRandom.uuid
 
     click_on application.user.full_name
