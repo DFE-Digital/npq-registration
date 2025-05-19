@@ -1,11 +1,76 @@
-<h1 class="govuk-heading-l">All applications</h1>
+<h1 class="govuk-heading-l">Applications</h1>
+
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :q,
+        value: params[:q],
+        label: { text: "Find an application", size: "m" },
+        hint: { text: "Search by name, application ID or declaration ID", size: "s" },
+      )
+    %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :training_status,
+            Application.training_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:training_status], include_blank: "All" },
+            label: { text: "Application status", size: "s" },
+          )
+        %>
+      </div>
+
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :lead_provider_approval_status,
+            Application.lead_provider_approval_statuses.keys,
+            :to_s,
+            :humanize,
+            options: { selected: params[:lead_provider_approval_status], include_blank: "All" },
+            label: { text: "Provider approval status", size: "s" },
+          )
+        %>
+      </div>
+    </div>
+
+    <%=
+      f.govuk_collection_select(
+        :cohort_id,
+        Cohort.all.order(start_year: :desc),
+        :id,
+        :start_year,
+        options: { selected: params[:cohort_id], include_blank: "All" },
+        label: { text: "Year of application", size: "s" }
+      )
+    %>
+
+    <%=
+      f.govuk_collection_select(
+        :work_setting,
+        Application.distinct(:work_setting).pluck(:work_setting).compact.sort,
+        :to_s,
+        :humanize,
+        options: { selected: params[:work_setting], include_blank: "All" },
+        label: { text: "Work setting", size: "s" }
+      )
+    %>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
 <%=
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
         row.with_cell(text: "Application ID")
-        row.with_cell(text: "Applicant")
-        row.with_cell(text: "School")
+        row.with_cell(text: "Name")
+        row.with_cell(text: "Workplace")
       end
     end
 
@@ -14,16 +79,15 @@
         body.with_row do |row|
           row.with_cell(text: govuk_link_to(application.ecf_id, npq_separation_admin_application_path(application.id)))
           row.with_cell(text: govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user)))
-
-          if application.school
-            row.with_cell(text: govuk_link_to(application.school.name, npq_separation_admin_school_path(application.school)))
-          else
-            row.with_cell(text: '')
-          end
+          row.with_cell(text: application.employer_name_to_display)
         end
       end
     end
   end
 %>
+
+<% if @applications.none? %>
+  <p class="govuk-body">No applications match the search and filters.</p>
+<% end %>
 
 <%= govuk_pagination(pagy: @pagy) %>
