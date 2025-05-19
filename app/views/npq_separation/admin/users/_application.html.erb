@@ -30,10 +30,6 @@
       end
 
       sl.with_row do |row|
-        row.with_key(text: "Latest declaration")
-      end
-
-      sl.with_row do |row|
         row.with_key(text: "Registration submission date")
         row.with_value(text: application.created_at.to_fs(:govuk_short))
       end
