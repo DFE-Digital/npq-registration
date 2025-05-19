@@ -10,8 +10,8 @@ RSpec.feature "update and verify TRNs", :rack_test_driver, type: :feature do
   let(:trns_file) do
     tempfile <<~CSV
       User ID,Updated TRN
-      #{User.first.ecf_id},1234567
-      #{User.last.ecf_id},2345678
+      #{User.order(:id).first.ecf_id},1234567
+      #{User.order(:id).last.ecf_id},2345678
     CSV
   end
 
@@ -23,16 +23,16 @@ RSpec.feature "update and verify TRNs", :rack_test_driver, type: :feature do
 
   let(:no_headers_trns_file) do
     tempfile <<~CSV
-      #{User.first.ecf_id},1234567
-      #{User.last.ecf_id},2345678
+      #{User.order(:id).first.ecf_id},1234567
+      #{User.order(:id).last.ecf_id},2345678
     CSV
   end
 
   let(:wrong_format_trns_file) do
     tempfile <<~CSV
       User ID
-      #{User.first.ecf_id}
-      #{User.last.ecf_id}
+      #{User.order(:id).first.ecf_id}
+      #{User.order(:id).last.ecf_id}
     CSV
   end
 
@@ -89,11 +89,11 @@ RSpec.feature "update and verify TRNs", :rack_test_driver, type: :feature do
         expect(summary_list).to have_summary_item("Ran by", "#{admin.full_name} (#{admin.email})")
       end
 
-      expect(page).to have_content "#{User.first.ecf_id}TRN updated and verified"
-      expect(page).to have_content "#{User.last.ecf_id}TRN updated and verified"
+      expect(page).to have_content "#{User.order(:id).first.ecf_id}TRN updated and verified"
+      expect(page).to have_content "#{User.order(:id).last.ecf_id}TRN updated and verified"
       expect(page).not_to have_button("Update and verify TRNs")
-      expect(User.all.pluck(:trn)).to eq %w[1234567 2345678]
-      expect(User.all.pluck(:trn_verified)).to eq [true, true]
+      expect(User.all.pluck(:trn)).to match_array %w[1234567 2345678]
+      expect(User.all).to all be_trn_verified
     end
 
     scenario "when the bulk operation has started but not finished" do
