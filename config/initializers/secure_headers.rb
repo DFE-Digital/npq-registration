@@ -21,17 +21,26 @@ SecureHeaders::Configuration.default do |config|
     sentry += [URI(sentry_report_uri).host]
   end
 
+  # These are for the inline CSS in the flipper admin UI
   flipper_ui_hashes = %w[
     'sha256-NNzAJMHPK9KuPslppuoTz2azqZcpUO0IJZosehbmhHA='
     'sha256-zuOhDbTpAZjaeemuptCNLaf/7IaV06c8De4EMGOhtzM='
   ]
 
+  # This is for the inline style browsers apply to robots.txt file
+  robots_txt_inline_style_hash = %w[
+    'sha256-4Su6mBWzEIFnH4pAGMOuaeBrstwJN4Z3pq/s1Kn4/KQ='
+  ]
+
+  all_hashes = flipper_ui_hashes + robots_txt_inline_style_hash
+
   config.csp = SecureHeaders::OPT_OUT
 
   config.csp_report_only = {
+    upgrade_insecure_requests: true,
+    disable_nonce_backwards_compatibility: true,
     default_src: %w['none'],
     base_uri: %w['self'],
-    upgrade_insecure_requests: true,
     child_src: %w['self'],
     connect_src: %w['self'] + google_analytics + flippercloud + sentry,
     font_src: %w['self' *.gov.uk fonts.gstatic.com],
@@ -42,7 +51,7 @@ SecureHeaders::Configuration.default do |config|
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics + sentry,
-    style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics + %w['unsafe-hashes'] + flipper_ui_hashes,
+    style_src: %w['self' *.gov.uk fonts.googleapis.com] + google_analytics + %w['unsafe-hashes'] + all_hashes,
     worker_src: %w['self'],
     report_uri: [sentry_report_uri],
   }
