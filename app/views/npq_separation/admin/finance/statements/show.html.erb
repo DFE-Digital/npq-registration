@@ -54,7 +54,12 @@
     <%= render NpqSeparation::Admin::AdjustmentsTableComponent.new(adjustments: @statement.adjustments, show_total: true) %>
 
     <% if @statement.open? %>
-      <%= govuk_button_link_to "Make adjustment", new_npq_separation_admin_finance_statement_adjustment_path(@statement) %>
+      <div class="govuk-button-group">
+        <%= govuk_button_link_to "Make adjustment", new_npq_separation_admin_finance_statement_adjustment_path(@statement) %>
+        <% if @statement.adjustments.any? %>
+          <%= govuk_link_to "Change or remove", npq_separation_admin_finance_statement_adjustments_path(@statement, show_all_adjustments: true) %>
+        <% end %>
+      </div>
     <% end %>
 
     <h1 class="govuk-heading-l govuk-!-margin-bottom-5">Course finance details</h1>

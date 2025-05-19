@@ -22,7 +22,7 @@ DfE::Analytics.configure do |config|
   #
   # config.bigquery_dataset = ENV['BIGQUERY_DATASET']
 
-  config.bigquery_dataset = ENV["BIGQUERY_DFE_ANALYTICS_DATASET"] || Rails.application.credentials.BIGQUERY_DFE_ANALYTICS_DATASET
+  config.bigquery_dataset = ENV["BIGQUERY_DFE_ANALYTICS_DATASET"] || "npq_events_#{Rails.env}"
 
   # Service account JSON key for the BigQuery API. See
   # https://cloud.google.com/bigquery/docs/authentication/service-account-file

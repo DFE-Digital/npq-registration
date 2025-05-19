@@ -3,32 +3,27 @@
 require "rails_helper"
 
 RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
-  subject(:form) { described_class.new(created_adjustment_ids:, statement:, description:, amount:) }
+  let(:form) { described_class.new(created_adjustment_ids:, statement:, description:, amount:) }
 
   let(:created_adjustment_ids) { nil }
   let(:statement) { create(:statement) }
-  let(:description) { nil }
-  let(:amount) { nil }
+  let(:description) { "Adjustment description" }
+  let(:amount) { 100 }
 
-  describe "#save_form" do
-    subject(:save_form) { form.save_form }
+  describe "#save_adjustment" do
+    subject(:save_adjustment) { form.save_adjustment }
 
     context "when the adjustment is valid" do
-      let(:description) { "Adjustment description" }
-      let(:amount) { 100 }
-
       it "saves the adjustment" do
-        expect { save_form }.to change(statement.adjustments, :count).by(1)
+        expect { save_adjustment }.to change(statement.adjustments, :count).by(1)
       end
 
       it "adds the adjustment ID to the created_adjustment_ids" do
-        save_form
+        save_adjustment
         expect(form.created_adjustment_ids).to include(Adjustment.last.id)
       end
 
-      it "returns true" do
-        expect(save_form).to be true
-      end
+      it { is_expected.to be true }
 
       it "the form should be valid" do
         expect(form).to be_valid
@@ -36,13 +31,14 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
     end
 
     context "when the adjustment is invalid" do
+      let(:description) { nil }
+      let(:amount) { nil }
+
       it "does not save the adjustment" do
-        expect { save_form }.not_to change(statement.adjustments, :count)
+        expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_form).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid
@@ -62,12 +58,10 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
       let(:statement) { create(:statement, :payable) }
 
       it "does not save the adjustment" do
-        expect { save_form }.not_to change(statement.adjustments, :count)
+        expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_form).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid
@@ -86,12 +80,10 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
       let(:statement) { create(:statement, :paid) }
 
       it "does not save the adjustment" do
-        expect { save_form }.not_to change(statement.adjustments, :count)
+        expect { save_adjustment }.not_to change(statement.adjustments, :count)
       end
 
-      it "returns false" do
-        expect(save_form).to be false
-      end
+      it { is_expected.to be false }
 
       it "the form should not be valid" do
         expect(form).not_to be_valid

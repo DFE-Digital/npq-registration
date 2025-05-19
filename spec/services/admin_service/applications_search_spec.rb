@@ -21,7 +21,7 @@ RSpec.describe AdminService::ApplicationsSearch do
     end
 
     context "when name partially matches" do
-      let(:q) { user.full_name.split(" ").first }
+      let(:q) { user.full_name.split(" ").first.upcase }
 
       it { is_expected.to include(application) }
     end

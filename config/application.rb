@@ -45,5 +45,6 @@ module NpqRegistration
     config.middleware.use Middleware::RestoreSecureHeadersRequestConfig
 
     config.x.tracking_pixels_enabled = ENV["TRACKING_PIXELS"].to_s == "true"
+    config.x.google_analytics_id = ENV["GOOGLE_ANALYTICS_ID"].presence
   end
 end

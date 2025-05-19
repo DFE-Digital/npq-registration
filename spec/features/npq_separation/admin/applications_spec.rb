@@ -15,12 +15,12 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   scenario "viewing the list of applications" do
     visit(npq_separation_admin_applications_path)
 
-    expect(page).to have_css("h1", text: "All applications")
+    expect(page).to have_css("h1", text: "Applications")
 
     applications_in_order.limit(applications_per_page).each do |application|
       expect(page).to have_link(application.ecf_id, href: npq_separation_admin_application_path(application.id))
       expect(page).to have_link(application.user.full_name, href: npq_separation_admin_user_path(application.user))
-      expect(page).to have_link(application.school.name, href: npq_separation_admin_school_path(application.school))
+      expect(page).to have_text(application.employer_name_to_display)
     end
 
     expect(page).to have_css(".govuk-pagination__item--current", text: 1)
@@ -33,6 +33,96 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
     expect(page).to have_css(".govuk-pagination__item--current", text: "2")
+  end
+
+  scenario "searching applications" do
+    visit(npq_separation_admin_applications_path)
+
+    fill_in "Find an application", with: applications_in_order[0].ecf_id
+    click_on "Search"
+
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(applications_in_order[0].ecf_id)
+  end
+
+  scenario "filtering applications by application status" do
+    application = applications_in_order.last
+    application.update! training_status: :deferred
+
+    visit(npq_separation_admin_applications_path)
+    select "Deferred", from: "Application status"
+    click_on "Search"
+
+    expect(page).to have_select("Application status", selected: "Deferred")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(application.ecf_id)
+  end
+
+  scenario "filtering applications by provider approval status" do
+    application = applications_in_order.last
+    application.update! lead_provider_approval_status: :accepted
+
+    visit(npq_separation_admin_applications_path)
+    select "Accepted", from: "Provider approval status"
+    click_on "Search"
+
+    expect(page).to have_select("Provider approval status", selected: "Accepted")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(application.ecf_id)
+  end
+
+  scenario "filtering applications by year of application" do
+    cohort = create(:cohort, start_year: 2022)
+    application = applications_in_order.last
+    application.update!(cohort:)
+
+    visit(npq_separation_admin_applications_path)
+    select "2022", from: "Year of application"
+    click_on "Search"
+
+    expect(page).to have_select("Year of application", selected: "2022")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(application.ecf_id)
+  end
+
+  scenario "filtering applications by work setting" do
+    application = applications_in_order.last
+    application.update!(work_setting: "a_school")
+
+    visit(npq_separation_admin_applications_path)
+    select "A school", from: "Work setting"
+    click_on "Search"
+
+    expect(page).to have_select("Work setting", selected: "A school")
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(application.ecf_id)
+  end
+
+  scenario "simultaneously filtering and searching applications" do
+    application = applications_in_order.last
+
+    search_with_results = application.user.full_name
+    approval_status_with_results = "Pending"
+    search_without_results = "no-match"
+    approval_status_without_results = "Accepted"
+
+    visit(npq_separation_admin_applications_path)
+
+    fill_in "Find an application", with: search_with_results
+    select approval_status_without_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_text("No applications match the search and filters")
+
+    fill_in "Find an application", with: search_without_results
+    select approval_status_with_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_text("No applications match the search and filters")
+
+    fill_in "Find an application", with: search_with_results
+    select approval_status_with_results, from: "Provider approval status"
+    click_on "Search"
+    expect(page).to have_css("table.govuk-table tbody tr", count: 1)
+    expect(page).to have_text(application.ecf_id)
   end
 
   scenario "viewing application details" do
@@ -179,16 +269,6 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     user = applications_in_order.first.user
 
     expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
-  end
-
-  scenario "viewing school details" do
-    visit(npq_separation_admin_applications_path)
-
-    school = applications_in_order.first.school
-
-    click_link(school.name)
-
-    expect(page).to have_css("h1", text: school.name)
   end
 
   scenario "resending outcome to qualified teachers api" do

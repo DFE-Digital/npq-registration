@@ -245,4 +245,116 @@ RSpec.describe User do
       end
     end
   end
+
+  describe ".find_by_get_an_identity_id" do
+    let(:uid) { SecureRandom.uuid }
+    let!(:user) { create(:user, :with_get_an_identity_id, uid:) }
+
+    it "returns the user with matching uid from the with_get_an_identity_id scope" do
+      expect(User.find_by_get_an_identity_id(uid)).to eq(user)
+    end
+
+    it "returns nil if no user matches the uid" do
+      expect(User.find_by_get_an_identity_id("nonexistent-uid")).to be_nil
+    end
+  end
+
+  describe "#get_an_identity_user" do
+    let(:user) { create(:user, :with_get_an_identity_id, uid:) }
+    let(:uid) { SecureRandom.uuid }
+    let(:external_user) { instance_double(External::GetAnIdentity::User) }
+
+    context "when get_an_identity_id is present" do
+      it "returns the external user from GetAnIdentity" do
+        allow(External::GetAnIdentity::User).to receive(:find).with(uid).and_return(external_user)
+        expect(user.get_an_identity_user).to eq(external_user)
+      end
+    end
+
+    context "when get_an_identity_id is blank" do
+      let(:uid) { nil }
+
+      it "returns nil without calling the external service" do
+        expect(External::GetAnIdentity::User).not_to receive(:find)
+        expect(user.get_an_identity_user).to be_nil
+      end
+    end
+  end
+
+  describe "#get_an_identity_provider?" do
+    context "when the user is using GAI" do
+      let(:user) { create(:user, :with_get_an_identity_id) }
+
+      it "returns true" do
+        expect(user).to be_get_an_identity_provider
+      end
+    end
+
+    context "when the user provider is empty" do
+      let(:user) { create(:user) }
+
+      it "returns false" do
+        expect(user).not_to be_get_an_identity_provider
+      end
+    end
+  end
+
+  describe "#get_an_identity_id" do
+    context "when the user is using GAI" do
+      let(:uid) { SecureRandom.uuid }
+      let(:user) { create(:user, :with_get_an_identity_id, uid:) }
+
+      it "returns true" do
+        expect(user.get_an_identity_id).to eq(uid)
+      end
+    end
+
+    context "when the user provider is empty" do
+      let(:user) { create(:user) }
+
+      it "returns false" do
+        expect(user.get_an_identity_id).to be_nil
+      end
+    end
+  end
+
+  describe "#flipper_id" do
+    let(:feature_flag_id) { SecureRandom.uuid }
+    let(:user) { build(:user) }
+
+    before do
+      allow(user).to receive(:retrieve_or_persist_feature_flag_id).and_return(feature_flag_id)
+    end
+
+    it "returns the feature_flag_id prefixed with 'User;'" do
+      expect(user.flipper_id).to eq("User;#{feature_flag_id}")
+    end
+  end
+
+  describe "#retrieve_or_persist_feature_flag_id" do
+    let(:feature_flag_id) { SecureRandom.uuid }
+
+    context "when feature_flag_id is nil" do
+      let(:user) { create(:user) }
+
+      before do
+        allow(SecureRandom).to receive(:uuid).and_return(feature_flag_id)
+      end
+
+      it "generates a new feature_flag_id and saves it" do
+        expect(user.feature_flag_id).to be_nil
+
+        expect(user.retrieve_or_persist_feature_flag_id).to eq(feature_flag_id)
+      end
+    end
+
+    context "when feature_flag_id is already present" do
+      let(:feature_flag_id) { SecureRandom.uuid }
+      let(:user) { create(:user, feature_flag_id:) }
+
+      it "returns the correct flag id" do
+        expect(user.retrieve_or_persist_feature_flag_id).to eq(feature_flag_id)
+      end
+    end
+  end
 end
