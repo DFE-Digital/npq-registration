@@ -2,6 +2,19 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+
+## 19 May 2025
+
+The delivery partner API changes released in the sandbox environment on 14 April 2025 are now live in production.
+
+You can find technical details in the previous release note.
+
+From 19 May 2025, the `delivery_partner_id` will be required for all cohort 2024 declarations and later in the production environment.
+
+This requirement does not apply to overseas applicants.
+
+
+
 ## 14 April 2025
 
 **SANDBOX**
