@@ -66,7 +66,7 @@ set-azure-account:
 
 terraform-init: composed-variables set-azure-account
 	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
-	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
+	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
@@ -74,7 +74,7 @@ terraform-init: composed-variables set-azure-account
 	terraform -chdir=terraform/application init -upgrade -reconfigure \
 		-backend-config=resource_group_name=${RESOURCE_GROUP_NAME} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
-		-backend-config=key=${PR_NUMBER}.tfstate
+		-backend-config=key=${KEY_PREFIX}.tfstate
 
     $(eval export TF_VAR_pr_number=$(PR_NUMBER))
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
