@@ -27,7 +27,7 @@ docker-compose-build:
 .PHONY: review
 review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
-	$(if $(PULL_REQUEST_NUMBER), , $(eval PULL_REQUEST_NUMBER=${(PR_NUMBER)}))
+	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review.sh)
 	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
 
@@ -65,7 +65,8 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables set-azure-account
-	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE="ghcr.io/dfe-digital/npq-registration:no-tag"))
+	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
+	$(if $(PULL_REQUEST_NUMBER), $(eval PR_NUMBER=$(PR_NUMBER)))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
@@ -73,7 +74,7 @@ terraform-init: composed-variables set-azure-account
 	terraform -chdir=terraform/application init -upgrade -reconfigure \
 		-backend-config=resource_group_name=${RESOURCE_GROUP_NAME} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
-		-backend-config=key=${PR_NUMBER}.tfstate
+		-backend-config=key=${KEY_PREFIX}.tfstate
 
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
