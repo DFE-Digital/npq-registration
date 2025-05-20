@@ -126,6 +126,17 @@ variable "postgres_enable_high_availability" {
 }
 
 variable "enable_logit" { default = false }
+
+variable "enable_dfe_analytics_federated_auth" {
+  description = "Create the resources in Google cloud for federated authentication and enable in application"
+  type = bool
+  default = false
+}
+
+variable "dataset_name" {
+  description = "dfe analytics dataset name in Google Bigquery"
+}
+
 locals {
   environment_variables = yamldecode(file("${path.module}/config/${var.config}.yml"))
 

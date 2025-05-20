@@ -41,11 +41,22 @@ runs:
         terraform_version: 1.5.4
         terraform_wrapper: false
 
+    - uses: Azure/login@v2
+      with:
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
+
     - uses: DFE-Digital/github-actions/set-kubelogin-environment@master
       with:
         azure-client-id: ${{ inputs.azure-client-id }}
         azure-tenant-id: ${{ inputs.azure-tenant-id }}
         azure-subscription-id: ${{ inputs.azure-subscription-id }}
+
+    - uses: google-github-actions/auth@v2
+      with:
+        project_id: ecf-bq
+        workload_identity_provider: projects/808138694727/locations/global/workloadIdentityPools/npq-registration/providers/npq-registration
 
     - name: Apply Terraform
       id: apply-terraform
@@ -57,12 +68,6 @@ runs:
         TF_VAR_statuscake_api_token: ${{ inputs.statuscake-api-token }}
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
-
-    - uses: Azure/login@v2
-      with:
-          client-id: ${{ inputs.azure-client-id }}
-          tenant-id: ${{ inputs.azure-tenant-id }}
-          subscription-id: ${{ inputs.azure-subscription-id }}
 
     - name: Seed database
       if: inputs.pull-request-number != '' && inputs.environment != 'production'
