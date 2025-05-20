@@ -72,7 +72,7 @@ SecureHeaders::Configuration.default do |config|
     form_action: %w['self'] + identity_domain, # needed because the POST to /users/auth/tra_openid_connect' redirects to the identity domain
     frame_ancestors: %w['self'],
     frame_src: %w['self'] + google_analytics,
-    img_src: %w['self' data: *.gov.uk] + google_analytics + tracking_pixels,
+    img_src: %w['self' *.gov.uk] + google_analytics + tracking_pixels + %w[data:],
     manifest_src: %w['self'],
     media_src: %w['self'],
     script_src: %w['self' *.gov.uk https://cdn.jsdelivr.net/npm/chart.js] + google_analytics + sentry,
