@@ -4,6 +4,11 @@
 
   <body class="govuk-template__body ">
     <%= render partial: "shared/analytics/google_noscript" %>
+
+    <% if show_tracking_pixels? %>
+      <%= render partial: "shared/analytics/tracking_pixels" %>
+    <% end %>
+
     <%= render partial: "layouts/shared/govuk_javascript" %>
 
     <%= render partial: "shared/cookies/banner" %>
