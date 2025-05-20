@@ -1,10 +1,11 @@
 module NpqSeparation
   class SubNavigationComponent < ViewComponent::Base
-    attr_accessor :current_path, :current_section, :structure
+    attr_accessor :current_path, :current_section, :structure, :heading
 
-    def initialize(current_path, structure:)
+    def initialize(current_path, structure:, heading: {})
       @current_path = current_path
       @structure = structure
+      @heading = heading
     end
 
     def render?
@@ -25,6 +26,13 @@ module NpqSeparation
         "x-govuk-sub-navigation__section-item",
         "x-govuk-sub-navigation__section-item--current" => current?(section.prefix),
       )
+    end
+
+    def render_heading
+      heading_text  = heading[:text].presence || "Navigation"
+      heading_class = class_names("govuk-visually-hidden" => !heading[:visible])
+
+      tag.h2(heading_text, class: heading_class, id: "sub-navigation-heading")
     end
 
   private
