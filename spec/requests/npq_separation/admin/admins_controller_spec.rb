@@ -17,13 +17,13 @@ RSpec.describe NpqSeparation::Admin::AdminsController, type: :request do
     context "when signed in as an admin" do
       before { sign_in_as_admin }
 
-      it "returns a 302 unauthorised response" do
+      it "returns a 302 redirect response" do
         expect(subject).to(have_http_status(:redirect))
       end
     end
 
     context "when not signed in" do
-      it "returns a 302 unauthorised response" do
+      it "returns a 302 redirect response" do
         expect(subject).to(have_http_status(:redirect))
       end
     end
