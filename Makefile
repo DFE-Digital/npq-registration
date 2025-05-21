@@ -27,7 +27,7 @@ docker-compose-build:
 .PHONY: review
 review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
-	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
+	$(if $(PR_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 	$(eval include global_config/review.sh)
 	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
 
@@ -75,7 +75,6 @@ terraform-init: composed-variables set-azure-account
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
 		-backend-config=key=${PR_NUMBER}.tfstate
 
-    $(eval export TF_VAR_pr_number=$(PR_NUMBER))
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
 	$(eval export TF_VAR_config=${CONFIG})
