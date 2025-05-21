@@ -49,5 +49,5 @@ jobs:
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           resource-group-name: "${{ env.AZURE_RESOURCE_PREFIX }}-${{ env.SERVICE_SHORT }}-${{ env.CONFIG_SHORT }}-rg"
           storage-account-name: "${{ env.AZURE_RESOURCE_PREFIX }}${{ env.SERVICE_SHORT }}${{ env.CONFIG_SHORT }}tfsa"
-          tf-state-file: "${{ env.PR_NUMBER }}.tfstate"
+          tf-state-file: "${{ github.event.pull_request.number || github.event.inputs.pr_number }}.tfstate"
 
