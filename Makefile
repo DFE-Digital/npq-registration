@@ -66,7 +66,7 @@ set-azure-account:
 
 terraform-init: composed-variables set-azure-account
 	$(if $(DOCKER_IMAGE), , $(eval export DOCKER_IMAGE="main"))
-	$(if $(PULL_REQUEST_NUMBER), , $(eval export PULL_REQUEST_NUMBER=$(PR_NUMBER)) )
+	$(if $(PULL_REQUEST_NUMBER), , $(eval export PULL_REQUEST_NUMBER=${PR_NUMBER}) )
 	$(eval export TF_VAR_pull_request_number=${PULL_REQUEST_NUMBER})
 
 	rm -rf terraform/application/vendor/modules/aks
