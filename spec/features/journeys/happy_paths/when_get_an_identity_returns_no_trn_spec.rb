@@ -221,6 +221,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => manually_entered_trn,
+      "review_status" => nil,
       "raw_application_data" => {
         "active_alert" => false,
         "can_share_choices" => "1",
