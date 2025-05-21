@@ -76,4 +76,8 @@ module ApplicationHelper
 
     javascript_include_tag "https://js.sentry-cdn.com/#{dsn}.min.js", crossorigin: "anonymous"
   end
+
+  def join_with_commas(*args)
+    args.select(&:present?).join(", ")
+  end
 end
