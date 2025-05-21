@@ -7,16 +7,16 @@ RSpec.feature "Applications in review", type: :feature do
   let(:cohort_22) { create :cohort, start_year: 2022 }
 
   let!(:normal_application)                         { create(:application, :with_random_user) }
-  let!(:application_for_hospital_school)            { create(:application, :with_random_user, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
-  let!(:application_for_la_supply_teacher)          { create(:application, :with_random_user, created_at: 9.days.ago, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
-  let!(:application_for_la_virtual_school)          { create(:application, :with_random_user, created_at: 8.days.ago, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_lead_mentor)                { create(:application, :with_random_user, created_at: 7.days.ago, employment_type: "local_authority_virtual_school") }
-  let!(:application_for_young_offender_institution) { create(:application, :with_random_user, created_at: 6.days.ago, employment_type: "young_offender_institution") }
-  let!(:application_for_other)                      { create(:application, :with_random_user, created_at: 5.days.ago, employment_type: "other") }
-  let!(:application_for_rtta_yes)                   { create(:application, :with_random_user, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
+  let!(:application_for_hospital_school)            { create(:application, :with_random_user, :manual_review, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }
+  let!(:application_for_la_supply_teacher)          { create(:application, :with_random_user, :manual_review, created_at: 9.days.ago, employment_type: "local_authority_supply_teacher", cohort: cohort_22, referred_by_return_to_teaching_adviser: "no") }
+  let!(:application_for_la_virtual_school)          { create(:application, :with_random_user, :manual_review, created_at: 8.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_lead_mentor)                { create(:application, :with_random_user, :manual_review, created_at: 7.days.ago, employment_type: "local_authority_virtual_school") }
+  let!(:application_for_young_offender_institution) { create(:application, :with_random_user, :manual_review, created_at: 6.days.ago, employment_type: "young_offender_institution") }
+  let!(:application_for_other)                      { create(:application, :with_random_user, :manual_review, created_at: 5.days.ago, employment_type: "other") }
+  let!(:application_for_rtta_yes)                   { create(:application, :with_random_user, :manual_review, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
   let!(:application_for_rtta_no)                    { create(:application, :with_random_user, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
-  let!(:aplication_eligible_for_funding)            { create(:application, :with_random_user, :eligible_for_funding, created_at: 11.days.ago, employment_type: "other") }
-  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :accepted, created_at: 12.days.ago, employment_type: "hospital_school") }
+  let!(:application_eligible_for_funding)           { create(:application, :with_random_user, :manual_review, :eligible_for_funding, created_at: 11.days.ago, employment_type: "other") }
+  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :manual_review, :accepted, created_at: 12.days.ago, employment_type: "hospital_school") }
 
   let(:serialized_application) { { application: 1 } }
 
@@ -29,7 +29,7 @@ RSpec.feature "Applications in review", type: :feature do
   scenario "listing" do
     rows = [
       application_with_funding_decision,
-      aplication_eligible_for_funding,
+      application_eligible_for_funding,
       application_for_hospital_school,
       application_for_la_supply_teacher,
       application_for_la_virtual_school,
@@ -119,13 +119,13 @@ RSpec.feature "Applications in review", type: :feature do
     click_on "Search"
 
     expect(page).to have_text(application_for_la_supply_teacher.user.full_name)
-    expect(page).not_to have_text(aplication_eligible_for_funding.user.full_name)
+    expect(page).not_to have_text(application_eligible_for_funding.user.full_name)
 
     select "Yes", from: "Eligible for funding"
     click_on "Search"
 
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
-    expect(page).to have_text(aplication_eligible_for_funding.user.full_name)
+    expect(page).to have_text(application_eligible_for_funding.user.full_name)
   end
 
   scenario "filtering by referred by return to teaching adviser" do

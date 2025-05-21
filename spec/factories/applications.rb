@@ -147,5 +147,9 @@ FactoryBot.define do
     trait :lead_mentor do
       lead_mentor { true }
     end
+
+    trait :manual_review do
+      review_status { :needs_review }
+    end
   end
 end

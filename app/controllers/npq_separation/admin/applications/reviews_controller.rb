@@ -44,8 +44,7 @@ module NpqSeparation
         end
 
         def review_scope
-          Application.where(employment_type: employment_types)
-                     .or(Application.where(referred_by_return_to_teaching_adviser: "yes"))
+          Application.for_manual_review
         end
 
         def filter_scope
