@@ -66,14 +66,15 @@ set-azure-account:
 
 terraform-init: composed-variables set-azure-account
 	$(if $(DOCKER_IMAGE), , $(eval export DOCKER_IMAGE="main"))
-
+	$(if $(PULL_REQUEST_NUMBER), , $(eval export PULL_REQUEST_NUMBER=$(PR_NUMBER)) )
+	
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
 
 	terraform -chdir=terraform/application init -upgrade -reconfigure \
 		-backend-config=resource_group_name=${RESOURCE_GROUP_NAME} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
-		-backend-config=key=${PR_NUMBER}.tfstate
+		-backend-config=key="${PULL_REQUEST_NUMBER}.tfstate"
 
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
