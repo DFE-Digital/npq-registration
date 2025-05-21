@@ -29,7 +29,7 @@ review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(eval PULL_REQUEST_NUMBER=$(PR_NUMBER)))
 	$(eval include global_config/review.sh)
-	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_pull_request_number=-$(PR_NUMBER))
 
 .PHONY: staging
 staging: test-cluster
@@ -66,7 +66,7 @@ set-azure-account:
 
 terraform-init: composed-variables set-azure-account
 	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE=""))
-	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)))
+	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=${PR_NUMBER}))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
@@ -74,7 +74,7 @@ terraform-init: composed-variables set-azure-account
 	terraform -chdir=terraform/application init -upgrade -reconfigure \
 		-backend-config=resource_group_name=${RESOURCE_GROUP_NAME} \
 		-backend-config=storage_account_name=${STORAGE_ACCOUNT_NAME} \
-		-backend-config=key=${KEY_PREFIX}.tfstate
+		-backend-config=key=$(PULL_REQUEST_NUMBER).tfstate
 
 	$(eval export TF_VAR_azure_resource_prefix=${AZURE_RESOURCE_PREFIX})
 	$(eval export TF_VAR_config_short=${CONFIG_SHORT})
