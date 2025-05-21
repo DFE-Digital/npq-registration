@@ -35,7 +35,7 @@ jobs:
           else
             PR_NUMBER=${{ github.event.pull_request.number }}
           fi
-          echo "PR_NUMBER=${{ PR_NUMBER }}" >> $GITHUB_ENV
+          echo "PR_NUMBER=${{ env.PR_NUMBER }}" >> $GITHUB_ENV
 
       - name: Set environment variables
         shell: bash
