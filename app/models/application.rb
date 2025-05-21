@@ -79,6 +79,13 @@ class Application < ApplicationRecord
     withdrawn: "withdrawn",
   }, _suffix: true
 
+  enum :review_status, {
+    needs_review: "needs_review",
+    awaiting_information: "awaiting_information",
+    reregister: "reregister",
+    decision_made: "decision_made",
+  }, suffix: true
+
   validates :funded_place, inclusion: { in: [true, false] }, if: :validate_funded_place?
   validate :eligible_for_funded_place
   validate :validate_permitted_schedule_for_course

@@ -6,9 +6,9 @@ FactoryBot.define do
       course { create(Course::IDENTIFIERS.first.to_sym) }
       school { create(:school, :funding_eligible_establishment_type_code) }
       lead_provider { LeadProvider.first }
-      current_user { create(:user) }
     end
 
+    current_user { create(:user) }
     course_identifier { course.identifier }
     institution_identifier { "School-#{school.urn}" }
     lead_provider_id { lead_provider.id }
