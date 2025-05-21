@@ -1,7 +1,16 @@
 class HandleSubmissionForStore
   include Helpers::Institution
 
-  attr_reader :store
+  EMPLOYMENT_TYPES_REQUIRING_MANUAL_REVIEW = %w[
+    hospital_school
+    lead_mentor_for_accredited_itt_provider
+    local_authority_supply_teacher
+    local_authority_virtual_school
+    young_offender_institution
+    other
+  ].freeze
+
+  attr_reader :store, :application
 
   def initialize(store:)
     @store = store
@@ -9,7 +18,7 @@ class HandleSubmissionForStore
 
   def call
     ActiveRecord::Base.transaction do
-      application = user.applications.create!(
+      @application = user.applications.create!(
         course_id: course.id,
         lead_provider_id: store["lead_provider_id"],
         private_childcare_provider: private_childcare_provider_urn.present? && PrivateChildcareProvider.find_by(provider_urn: private_childcare_provider_urn),
@@ -43,6 +52,7 @@ class HandleSubmissionForStore
         teacher_catchment_iso_country_code:,
         cohort: Cohort.current,
         lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
+        review_status: requires_manual_review? ? :needs_review : nil,
       )
       enqueue_send_application_submission_email_job(application)
     end
@@ -240,5 +250,10 @@ private
       Sentry.capture_message("Could not find the ISO3166 alpha3 code for #{teacher_catchment_country}.", level: :warning)
       nil
     end
+  end
+
+  def requires_manual_review?
+    referred_by_return_to_teaching_adviser? ||
+      EMPLOYMENT_TYPES_REQUIRING_MANUAL_REVIEW.include?(employment_type)
   end
 end
