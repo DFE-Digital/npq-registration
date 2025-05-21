@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_19_144551) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_21_091744) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_19_144551) do
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
   create_enum "lead_provider_approval_statuses", ["pending", "accepted", "rejected"]
   create_enum "outcome_states", ["passed", "failed", "voided"]
+  create_enum "review_statuses", ["needs_review", "awaiting_information", "reregister", "decision_made"]
   create_enum "statement_item_states", ["eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "statement_states", ["open", "payable", "paid"]
 
@@ -155,6 +156,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_19_144551) do
     t.string "senco_in_role"
     t.date "senco_start_date"
     t.string "on_submission_trn"
+    t.enum "review_status", enum_type: "review_statuses"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
