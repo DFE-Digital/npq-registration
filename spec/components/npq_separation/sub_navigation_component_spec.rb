@@ -41,9 +41,10 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   let(:current_path) { "/some-path" }
   let(:current_section) { "First" }
   let(:structure) { TestSubNavigationStructure.new }
+  let(:heading) { {} }
 
   subject do
-    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section))
+    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section), heading:)
   end
 
   it "renders a visually hidden level 2 heading" do
@@ -118,6 +119,32 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
         expect(rendered_content).to have_css(selector, text: "Second part 2")
         expect(rendered_content).to have_css(selector, count: 1)
+      end
+    end
+  end
+
+  describe "heading" do
+    before { render_inline(subject) }
+
+    context "when heading options are not provided" do
+      it "renders a visually hidden default heading" do
+        expect(rendered_content).to have_css("h2.govuk-visually-hidden", text: "Navigation")
+      end
+    end
+
+    context "when heading text is provided" do
+      let(:heading) { { text: "My heading" } }
+
+      it "renders the heading" do
+        expect(rendered_content).to have_css("h2.govuk-visually-hidden", text: "My heading")
+      end
+    end
+
+    context "when heading visbility is enabled" do
+      let(:heading) { { visible: true } }
+
+      it "renders the heading" do
+        expect(rendered_content).to have_css("h2:not(.govuk-visually-hidden)", text: "Navigation")
       end
     end
   end
