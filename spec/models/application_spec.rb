@@ -186,6 +186,25 @@ RSpec.describe Application do
         expect(described_class.with_targeted_delivery_funding_eligibility).to contain_exactly(application_with_targeted_delivery_funding_eligibility)
       end
     end
+
+    describe ".for_manual_review" do
+      subject { described_class.for_manual_review.to_a }
+
+      before { application }
+
+      let(:application) { create(:application, review_status:) }
+      let(:review_status) { nil }
+
+      it { is_expected.not_to include(application) }
+
+      Application.review_statuses.each_value do |enum_value|
+        context "with review_status of #{enum_value}" do
+          let(:review_status) { enum_value }
+
+          it { is_expected.to include(application) }
+        end
+      end
+    end
   end
 
   describe "#inside_catchment?" do
