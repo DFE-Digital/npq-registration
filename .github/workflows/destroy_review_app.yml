@@ -27,16 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: set PR_NUMBER
-        id: config
-        run: |
-          if [ ${{ github.event_name }} == 'workflow_dispatch' ]; then
-            PR_NUMBER=${{ github.event.inputs.pr_number }}
-          else
-            PR_NUMBER=${{ github.event.pull_request.number }}
-          fi
-          echo "PR_NUMBER=${{ env.PR_NUMBER }}" >> $GITHUB_ENV
-
       - name: Set environment variables
         shell: bash
         run: |
@@ -54,6 +44,7 @@ jobs:
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           container-name: terraform-state
+          pr-number: ${{ github.event.pull_request.number || github.event.inputs.pr_number }}
           gcp-wip: ${{ vars.GCP_WIP }}
           gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           pr-number: ${{ env.PR_NUMBER }}
