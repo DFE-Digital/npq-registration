@@ -5,7 +5,7 @@
   <%=
     govuk_summary_list(card: { title:, actions: }) do |sl|
       sl.with_row do |row|
-        row.with_key(text: "NPQ Course")
+        row.with_key(text: "NPQ course")
         row.with_value(text: application.course.name)
       end
 
@@ -20,12 +20,12 @@
       end
 
       sl.with_row do |row|
-        row.with_key(text: "Provider Approval Status")
+        row.with_key(text: "Provider approval status")
         row.with_value(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
       end
 
       sl.with_row do |row|
-        row.with_key(text: "Funded Place")
+        row.with_key(text: "Funded place")
         row.with_value(text: boolean_red_green_nil_tag(application.funded_place))
       end
 
