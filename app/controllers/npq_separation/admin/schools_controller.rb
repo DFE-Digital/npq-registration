@@ -3,13 +3,9 @@ class NpqSeparation::Admin::SchoolsController < NpqSeparation::AdminController
     @pagy, @schools = pagy(scope)
   end
 
-  def show
-    @school = School.find(params[:id])
-  end
-
 private
 
   def scope
-    AdminService::SchoolsSearch.new(q: params[:q]).call
+    AdminService::WorkplaceSearch.new(q: params[:q])
   end
 end

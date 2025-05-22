@@ -40,4 +40,8 @@ class LocalAuthority < ApplicationRecord
   def in_england?
     true
   end
+
+  def la_name
+    name
+  end
 end
