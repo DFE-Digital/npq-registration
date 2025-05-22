@@ -67,7 +67,7 @@ set-azure-account:
 	[ "${SKIP_AZURE_LOGIN}" != "true" ] && az account set -s ${AZURE_SUBSCRIPTION} || true
 
 terraform-init: composed-variables set-azure-account
-	$(if $(DOCKER_IMAGE), , $(eval DOCKER_IMAGE="main"))
+	$(if $(DOCKER_IMAGE), , $(error Missing environment variable "DOCKER_IMAGE"))
 	# ITS AN ENVT  DELETE
 	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
