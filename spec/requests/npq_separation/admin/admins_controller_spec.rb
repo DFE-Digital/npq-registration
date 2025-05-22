@@ -27,6 +27,5 @@ RSpec.describe NpqSeparation::Admin::AdminsController, type: :request do
         expect(subject).to redirect_to(sign_in_path)
       end
     end
-
   end
 end
