@@ -238,12 +238,27 @@ RSpec.feature "Applications in review", type: :feature do
       click_on "Change"
     end
 
+    # check cancel
+    click_on "Cancel"
+    expect(page).to have_current_path(npq_separation_admin_application_review_path(application_for_hospital_school))
+
+    # change for real
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Change"
+    end
+
     fill_in "Add a note about the changes to this registration", with: "Some notes"
     click_on "Add note"
 
+    expect(page).to have_current_path(npq_separation_admin_application_review_path(application_for_hospital_school))
     within(".govuk-summary-list__row", text: "Notes") do
       expect(page).to have_text("Some notes")
     end
+
+    # check going straight to the note edit page
+    visit(edit_npq_separation_admin_applications_notes_path(application_for_hospital_school))
+    click_on "Cancel"
+    expect(page).to have_current_path(npq_separation_admin_application_path(application_for_hospital_school))
   end
 
   scenario "Applications should display in correct order" do
