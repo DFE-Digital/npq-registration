@@ -38,10 +38,6 @@
   <% end %>
 
   <% if super_admin? %>
-    <% component.with_nav_item(path: admin_admins_path) do %>
-      <%= t(".admins") %>
-    <% end %>
-
 
     <% component.with_nav_item(path: admin_reopening_email_subscriptions_path) do %>
       <%= "Reopening email subscriptions" %>
