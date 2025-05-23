@@ -180,6 +180,6 @@
 
 .admin-application-card {
   h2.govuk-summary-card__title {
-    font-size: 1.5rem;
+    @include govuk-font-size(24); // default font size is 19 here
   }
 }
