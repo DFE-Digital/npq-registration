@@ -6,12 +6,14 @@ module NpqSeparation
       class NotesController < NpqSeparation::AdminController
         before_action :set_application
 
-        def edit; end
+        def edit
+          @return_path = request.referer || npq_separation_admin_application_path(@application)
+        end
 
         def update
           if @application.update(notes_params)
             flash[:success] = "Notes updated."
-            redirect_to npq_separation_admin_application_review_path(@application)
+            redirect_to return_path_param
           else
             render :edit
           end
@@ -21,6 +23,10 @@ module NpqSeparation
 
         def notes_params
           params.require(:application).permit(:notes)
+        end
+
+        def return_path_param
+          params.permit(:return_path)[:return_path]
         end
 
         def set_application
