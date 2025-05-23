@@ -91,6 +91,7 @@ module Participants
     end
 
     def validate_permitted_schedule_for_course
+      return if errors.any?
       return unless new_schedule
 
       unless new_schedule.course_group.courses.exists?(identifier: course_identifier)
@@ -99,11 +100,12 @@ module Participants
     end
 
     def validate_not_changing_cohort_with_declarations
+      return if errors.any?
       return unless application
       return unless new_schedule
 
       if applicable_declarations.any? && new_schedule.cohort.start_year != application.schedule.cohort.start_year
-        errors.add(:cohort, :cannot_change)
+        errors.add(:cohort, :cannot_change_with_declarations)
       end
     end
 
@@ -112,7 +114,7 @@ module Participants
       return unless new_schedule
 
       if new_schedule == application.schedule
-        errors.add(:schedule_identifier, :already_on_the_profile)
+        errors.add(:schedule_identifier, :schedule_has_not_changed)
       end
     end
 
@@ -121,7 +123,7 @@ module Participants
       return unless application.cohort != cohort
 
       if application.cohort&.funding_cap? && !cohort.funding_cap?
-        errors.add(:cohort, :cannot_change)
+        errors.add(:cohort, :cannot_change_to_cohort_without_funding_cap)
       end
     end
   end

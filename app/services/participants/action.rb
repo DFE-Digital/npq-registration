@@ -12,8 +12,8 @@ module Participants
     validates :lead_provider, presence: true
     validates :participant_id, presence: true
     validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false
-    validate :application_exists
     validate :participant_exists
+    validate :application_exists
 
     def participant
       @participant ||= Query.new(lead_provider:).participant(ecf_id: participant_id)
@@ -41,7 +41,9 @@ module Participants
     end
 
     def application_exists
-      errors.add(:participant_id, :invalid_participant) if application.blank?
+      return if errors.any?
+
+      errors.add(:participant_id, :application_not_found) if application.blank?
     end
 
     def participant_exists

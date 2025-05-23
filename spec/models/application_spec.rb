@@ -95,7 +95,7 @@ RSpec.describe Application do
         it "returns validation error" do
           subject.schedule = new_schedule
 
-          expect(subject).to have_error(:schedule, :invalid_for_course, "Selected schedule is not valid for the course")
+          expect(subject).to have_error(:schedule, :invalid_for_course, "The selected schedule is not valid for the course")
         end
       end
     end

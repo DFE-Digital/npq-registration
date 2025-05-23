@@ -11,6 +11,8 @@ RSpec.shared_examples "a participant action" do
   it { expect(instance).to be_valid }
 
   describe "validations" do
+    subject { instance }
+
     it { is_expected.to validate_presence_of(:lead_provider).with_message("Your update cannot be made as the '#/lead_provider' is not recognised. Check lead provider details and try again.") }
     it { is_expected.to validate_presence_of(:participant_id).with_message("The property '#/participant_id' must be present") }
     it { is_expected.to validate_inclusion_of(:course_identifier).in_array(Course::IDENTIFIERS).with_message("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
@@ -18,7 +20,8 @@ RSpec.shared_examples "a participant action" do
     context "when a matching application does not exist (different course identifier)" do
       let(:course_identifier) { Course::IDENTIFIERS.excluding(application.course.identifier).sample }
 
-      it { is_expected.to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
+      it { is_expected.to have_error_count(1) }
+      it { is_expected.to have_error(:participant_id, :application_not_found, "Your update cannot be made as an accepted application cannot be found for the given '#/participant_id' and '#/course_identifier'.") }
     end
 
     context "when a matching application does not exist (different lead provider)" do
@@ -30,7 +33,23 @@ RSpec.shared_examples "a participant action" do
     context "when there is a matching application, but it is not accepted" do
       let(:application) { create(:application) }
 
+      # This error is misleading, it should be :application_not_found really,
+      # but to implement this is complex, because the current Participants::Query only returns users with accepted applications
       it { is_expected.to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
+    end
+
+    context "when the participant does not exist" do
+      let(:participant_id) { "non-existent-participant-id" }
+
+      it { is_expected.to have_error_count(1) }
+      it { is_expected.to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
+    end
+
+    context "when a non-existent course identifier is provided" do
+      let(:course_identifier) { "non-existent-course-identifier" }
+
+      it { is_expected.to have_error_count(1) }
+      it { is_expected.to have_error(:course_identifier, :inclusion, "The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
     end
   end
 

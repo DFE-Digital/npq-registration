@@ -48,6 +48,8 @@ module Participants
     end
 
     def has_started_declarations
+      return if errors.any?
+
       errors.add(:participant_id, :no_started_declarations) unless application&.declarations&.any?(&:started_declaration_type?)
     end
   end
