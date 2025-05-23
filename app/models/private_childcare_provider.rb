@@ -66,6 +66,14 @@ class PrivateChildcareProvider < ApplicationRecord
     true # Needs filling in
   end
 
+  def la_name
+    local_authority
+  end
+
+  def county
+    ofsted_region
+  end
+
   def identifier
     "PrivateChildcareProvider-#{urn}"
   end
