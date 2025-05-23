@@ -70,8 +70,10 @@ terraform-init: composed-variables set-azure-account
 #IF DOCKER IMAGE IS UNDEFINED AND ITS A REVIEW ENVT DELETION
 	$(if $(or ${DOCKER_IMAGE}, , ${PR_NUMBER}),, $(error Missing environment variable "DOCKER_IMAGE"))
 
-	# ITS AN ENVT  DELETE
-	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
+#REVIEW ENVT BUILD
+	$(if $(PULL_REQUEST_NUMBER), $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
+#REVIEW ENVT DESTROY
+	$(if $(PR_NUMBER), $(eval KEY_PREFIX=$(PR_NUMBER)), $(eval KEY_PREFIX=$(ENVIRONMENT)))
 
 	rm -rf terraform/application/vendor/modules/aks
 	git -c advice.detachedHead=false clone --depth=1 --single-branch --branch ${TERRAFORM_MODULES_TAG} https://github.com/DFE-Digital/terraform-modules.git terraform/application/vendor/modules/aks
