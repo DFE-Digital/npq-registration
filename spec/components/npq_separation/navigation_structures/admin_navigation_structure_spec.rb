@@ -15,7 +15,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Courses" => "/npq-separation/admin/courses",
       "Participants" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
-      "Schools" => "/npq-separation/admin/schools",
+      "Workplaces" => "/npq-separation/admin/schools",
       "Lead providers" => "/npq-separation/admin/lead-providers",
       "Bulk operations" => "/npq-separation/admin/bulk-operations",
       "Delivery partners" => "/npq-separation/admin/delivery-partners",
@@ -35,8 +35,13 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       let(:admin) { build_stubbed(:super_admin) }
 
       it "includes feature flags" do
-        expect(subject[-1]).to have_attributes(name: "Feature flags")
-        expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/features")
+        expect(subject[-2]).to have_attributes(name: "Feature flags")
+        expect(subject[-2]).to have_attributes(href: "/npq-separation/admin/features")
+      end
+
+      it "includes admins" do
+        expect(subject[-1]).to have_attributes(name: "Admins")
+        expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/admins")
       end
     end
   end

@@ -19,6 +19,6 @@ class AdminService::SchoolsSearch
 private
 
   def default_scope
-    School
+    School.order(name: :asc)
   end
 end

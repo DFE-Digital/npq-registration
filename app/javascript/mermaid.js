@@ -3,6 +3,7 @@ import svgPanZoom from 'svg-pan-zoom';
 
 mermaid.initialize({
   startOnLoad: false,
+  deterministicIds: true,
   theme: "base",
   fontSize: "19px",
   themeVariables: {

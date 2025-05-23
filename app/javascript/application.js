@@ -1,7 +1,6 @@
 // Entry point for the build script in your package.json
 require.context('govuk-frontend/dist/govuk/assets');
 
-import './controllers';
 import Rails from 'rails-ujs';
 import accessibleAutocomplete from 'accessible-autocomplete';
 
@@ -20,10 +19,6 @@ window.GOVUKFrontend = GOVUKFrontend;
 window.onload = function init() {
   window.GOVUKFrontend.initAll();
 };
-
-
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
 
 if (document.querySelector('#school-picker')) {
   institutionPicker.enhanceSelectElement({

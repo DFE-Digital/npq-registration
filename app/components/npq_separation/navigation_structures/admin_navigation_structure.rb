@@ -25,6 +25,12 @@ module NpqSeparation
             href: npq_separation_admin_features_path,
             prefix: "/npq-separation/admin/features",
           ) => [],
+
+          Node.new(
+            name: "Admins",
+            href: npq_separation_admin_admins_path,
+            prefix: "/npq-separation/admin/admins",
+          ) => [],
         }
       end
 
@@ -73,7 +79,7 @@ module NpqSeparation
             Node.new(name: "Contracts", href: "#", prefix: "/npq-separation/admin/finance/contracts"),
           ],
           Node.new(
-            name: "Schools",
+            name: "Workplaces",
             href: npq_separation_admin_schools_path,
             prefix: "/npq-separation/admin/schools",
           ) => [],
