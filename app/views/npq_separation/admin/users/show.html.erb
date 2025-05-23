@@ -1,64 +1,35 @@
 <%= govuk_back_link(href: url_for(:back)) %>
 
-<h1 class="govuk-heading-l">Participant</h1>
+<h1 class="govuk-heading-l govuk-!-margin-bottom-1"><%= @user.full_name %></h1>
 
-<%=
-  govuk_summary_list do |sl|
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>User ID:</strong>
+  <%= @user.ecf_id %>
+</p>
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Date of birth:</strong>
+  <%= @user.date_of_birth.try(:to_fs, :govuk_short) %>
+  |
+  <strong>National Insurance:</strong>
+  <%= @user.national_insurance_number %>
+</p>
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>TRN:</strong>
+  <%= @user.trn %>
+  <%= trn_verified_badge(@user) %>
+  <%= govuk_link_to "Change", npq_separation_admin_users_change_trn_path(@user) %>
+</p>
+<p class="govuk-body govuk-!-margin-bottom-6">
+  <strong>Get an Identity ID:</strong>
+  <%= @user.uid %>
+</p>
 
-    sl.with_row do |row|
-      row.with_key(text: "Participant ID")
-      row.with_value(text: @user.ecf_id)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Name")
-      row.with_value(text: @user.full_name)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Email")
-      row.with_value(text: @user.email)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "National Insurance Number")
-      row.with_value(text: @user.national_insurance_number)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Date of Birth")
-      row.with_value(text: @user.date_of_birth.try(:to_fs, :govuk_short))
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "TRN")
-      row.with_value(text: @user.trn)
-      row.with_action(text: "Change", href: npq_separation_admin_users_change_trn_path(@user))
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "TRN status")
-      value = if @user.trn_verified == false
-                govuk_tag(text: "TRN not verified", colour: "red")
-              else
-                verified_method = @user.trn_auto_verified ? "automatically" : "manually"
-                govuk_tag(text: "TRN verified", colour: "green") + " - #{verified_method}"
-              end
-      row.with_value(text: value)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Get an Identity ID")
-      row.with_value(text: @user.uid)
-    end
-  end
-%>
-
-<hr class="govuk-section-break govuk-section-break--l">
-
-<h1 class="govuk-heading-l">Applications</h1>
 <% if @applications.none? %>
-  <p class="govuk-body">This participant has no applications.</p>
+  <p class="govuk-body">This user has no applications.</p>
 <% else %>
   <%= render partial: 'application', collection: @applications %>
 <% end %>

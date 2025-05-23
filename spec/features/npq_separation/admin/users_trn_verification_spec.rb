@@ -4,13 +4,11 @@ RSpec.feature "viewing a user's TRN status", type: :feature do
   include Helpers::AdminLogin
 
   feature "when TRN verified is true and TRN auto verified is true" do
-    scenario "shows TRN verified automatically" do
+    scenario "shows TRN: verified automatically" do
       user = create(:user, trn_verified: true, trn_auto_verified: true)
       sign_in_as(create(:admin))
       visit npq_separation_admin_user_path(user)
-      within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("TRN status", "TRN verified - automatically")
-      end
+      expect(page).to have_content("TRN: #{user.trn} Verified - automatically")
     end
   end
 
@@ -19,9 +17,7 @@ RSpec.feature "viewing a user's TRN status", type: :feature do
       user = create(:user, trn_verified: true, trn_auto_verified: false)
       sign_in_as(create(:admin))
       visit npq_separation_admin_user_path(user)
-      within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("TRN status", "TRN verified - manually")
-      end
+      expect(page).to have_content("TRN: #{user.trn} Verified - manually")
     end
   end
 
@@ -30,9 +26,7 @@ RSpec.feature "viewing a user's TRN status", type: :feature do
       user = create(:user, trn_verified: false, trn_auto_verified: true)
       sign_in_as(create(:admin))
       visit npq_separation_admin_user_path(user)
-      within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("TRN status", "TRN not verified")
-      end
+      expect(page).to have_content("TRN: #{user.trn} Not verified")
     end
   end
 
@@ -41,9 +35,7 @@ RSpec.feature "viewing a user's TRN status", type: :feature do
       user = create(:user, trn_verified: false, trn_auto_verified: false)
       sign_in_as(create(:admin))
       visit npq_separation_admin_user_path(user)
-      within(first(".govuk-summary-list")) do |summary_list|
-        expect(summary_list).to have_summary_item("TRN status", "TRN not verified")
-      end
+      expect(page).to have_content("TRN: #{user.trn} Not verified")
     end
   end
 end

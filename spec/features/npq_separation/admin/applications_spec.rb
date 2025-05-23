@@ -151,7 +151,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("User ID", application.user.ecf_id)
       expect(summary_list).to have_summary_item("Email", application.user.email)
       expect(summary_list).to have_summary_item("TRN", application.user.trn)
-      expect(summary_list).to have_summary_item("TRN validated", "No")
+      expect(summary_list).to have_summary_item("TRN verified", "No")
       expect(summary_list).to have_summary_item("Course name", application.course.name)
       expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
       expect(summary_list).to have_summary_item("Training status", application.training_status)
