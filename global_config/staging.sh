@@ -7,3 +7,4 @@ KV_PURGE_PROTECTION=false
 CONFIG_LONG=staging
 NAMESPACE=cpd-development
 TERRAFORM_MODULES_TAG=testing
+KEY_PREFIX=staging

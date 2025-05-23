@@ -7,3 +7,4 @@ ENABLE_KV_DIAGNOSTICS=true
 CONFIG_LONG=production
 NAMESPACE=cpd-production
 TERRAFORM_MODULES_TAG=stable
+KEY_PREFIX=production
