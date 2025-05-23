@@ -29,7 +29,7 @@
     end
 
     sl.with_row do |row|
-      row.with_key(text: 'TRN validated')
+      row.with_key(text: 'TRN verified')
       row.with_value { boolean_red_green_tag(@application.user.trn_verified) }
     end
 

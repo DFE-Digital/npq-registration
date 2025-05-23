@@ -20,14 +20,7 @@
 <p class="govuk-body govuk-!-margin-bottom-2">
   <strong>TRN:</strong>
   <%= @user.trn %>
-  <%=
-    if @user.trn_verified == false
-      govuk_tag(text: "Not verified", colour: "red")
-    else
-      verified_method = @user.trn_auto_verified ? "automatically" : "manually"
-      govuk_tag(text: "Verified", colour: "green") + " - #{verified_method}"
-    end
-  %>
+  <%= trn_verified_badge(@user) %>
   <%= govuk_link_to "Change", npq_separation_admin_users_change_trn_path(@user) %>
 </p>
 <p class="govuk-body govuk-!-margin-bottom-6">

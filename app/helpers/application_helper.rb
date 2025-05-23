@@ -80,4 +80,15 @@ module ApplicationHelper
   def join_with_commas(*args)
     args.select(&:present?).join(", ")
   end
+
+  def trn_verified_badge(user)
+    return unless user
+
+    if user.trn_verified == false
+      govuk_tag(text: "Not verified", colour: "red")
+    else
+      verified_method = user.trn_auto_verified ? "automatically" : "manually"
+      govuk_tag(text: "Verified", colour: "green") + " - #{verified_method}"
+    end
+  end
 end
