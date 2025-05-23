@@ -1,8 +1,6 @@
 class NpqSeparation::Admin::AdminsController < NpqSeparation::AdminController
   before_action :require_super_admin
 
-  include Pagy::Backend
-
   def index
     @pagy, @admins = pagy(Admin.all)
   end
