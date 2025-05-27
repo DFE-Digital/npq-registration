@@ -61,7 +61,7 @@
     end
     sl.with_row do |row|
       row.with_key(text: "Schedule cohort")
-      row.with_value(text: @application.cohort.start_year)
+      row.with_value(text: @application.cohort.try(:start_year))
       row.with_action(text: "Change", href: npq_separation_admin_applications_change_cohort_path(@application))
     end
     sl.with_row do |row|
