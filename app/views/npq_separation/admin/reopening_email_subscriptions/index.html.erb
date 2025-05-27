@@ -23,7 +23,7 @@
             <%= user.senco_email_updates_status? ? "Yes" : "No" %>
           </td>
           <td class="govuk-table__cell">
-            <%= govuk_link_to "Unsubscribe", unsubscribe_admin_reopening_email_subscription_path(user.id) %>
+            <%= govuk_link_to "Unsubscribe", unsubscribe_npq_separation_admin_reopening_email_subscription_path(user.id) %>
           </td>
         </tr>
       <% end %>
