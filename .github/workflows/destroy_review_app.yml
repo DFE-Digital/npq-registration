@@ -60,8 +60,6 @@ jobs:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           container-name: terraform-state
           pr-number: ${{ github.event.pull_request.number || github.event.inputs.pr_number }}
-          gcp-wip: ${{ vars.GCP_WIP }}
-          gcp-project-id: ${{ vars.GCP_PROJECT_ID }}
           resource-group-name: "${{ env.AZURE_RESOURCE_PREFIX }}-${{ env.SERVICE_SHORT }}-${{ env.CONFIG_SHORT }}-rg"
           storage-account-name: "${{ env.AZURE_RESOURCE_PREFIX }}${{ env.SERVICE_SHORT }}${{ env.CONFIG_SHORT }}tfsa"
           tf-state-file: "${{ github.event.pull_request.number || github.event.inputs.pr_number }}.tfstate"
