@@ -48,7 +48,6 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
         expect(subject[-1]).to have_attributes(name: "Reopening email subscriptions")
         expect(subject[-1]).to have_attributes(href: "/npq-separation/admin/reopening_email_subscriptions")
       end
-
     end
   end
 
