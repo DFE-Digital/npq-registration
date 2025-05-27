@@ -1,4 +1,5 @@
-class Admin::ReopeningEmailSubscriptionsController < SuperAdminController
+class NpqSeparation::Admin::ReopeningEmailSubscriptionsController < NpqSeparation::AdminController
+  before_action :require_super_admin
   include Pagy::Backend
 
   def index
@@ -21,7 +22,7 @@ class Admin::ReopeningEmailSubscriptionsController < SuperAdminController
       flash[:success] = "Email '#{@user.email}' unsubscribed"
       @user.unsubscribe_from_email_updates
 
-      redirect_to admin_reopening_email_subscriptions_path
+      redirect_to npq_separation_admin_reopening_email_subscriptions_path
     end
   end
 end

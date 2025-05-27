@@ -72,17 +72,6 @@ Rails.application.routes.draw do
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
     end
-
-    resources :reopening_email_subscriptions do
-      member do
-        get "unsubscribe"
-        post "unsubscribe"
-      end
-      collection do
-        get "all_users"
-        get "senco"
-      end
-    end
   end
 
   get "/admin", to: "admin#show"
@@ -214,6 +203,17 @@ Rails.application.routes.draw do
       resources :super_admins, only: %i[update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
+      end
+
+      resources :reopening_email_subscriptions do
+        member do
+          get "unsubscribe"
+          post "unsubscribe"
+        end
+        collection do
+          get "all_users"
+          get "senco"
+        end
       end
 
       resources :closed_registration_users do
