@@ -140,56 +140,49 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     click_link(application.ecf_id)
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
+    expect(page).to have_css("p", text: "Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)} | National Insurance: Not provided")
+    expect(page).to have_css("p", text: "Email: #{application.user.email}")
+    expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not validated")
 
     summary_lists = all(".govuk-summary-list")
 
-    expect(page).to have_css("h2", text: "Application details")
+    expect(page).to have_css("h2", text: "Application overview")
 
     within(summary_lists[0]) do |summary_list|
       expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
-      expect(summary_list).to have_summary_item("User ID", application.user.ecf_id)
-      expect(summary_list).to have_summary_item("Email", application.user.email)
-      expect(summary_list).to have_summary_item("TRN", application.user.trn)
-      expect(summary_list).to have_summary_item("TRN validated", "No")
-      expect(summary_list).to have_summary_item("Course name", application.course.name)
+      expect(summary_list).to have_summary_item("Course", application.course.name)
       expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
+      expect(summary_list).to have_summary_item("Course provider", application.lead_provider.name)
+      expect(summary_list).to have_summary_item("Course provider approval status", application.lead_provider_approval_status.humanize)
       expect(summary_list).to have_summary_item("Training status", application.training_status)
-      expect(summary_list).to have_summary_item("Lead provider name", application.lead_provider.name)
-      expect(summary_list).to have_summary_item("Lead provider approval status", application.lead_provider_approval_status.humanize)
-      expect(summary_list).to have_summary_item("Created at", application.created_at.to_fs(:govuk_short))
-      expect(summary_list).to have_summary_item("Updated at", application.updated_at.to_fs(:govuk_short))
-    end
-
-    expect(page).to have_css("h2", text: "Employment details")
-
-    within(summary_lists[1]) do |summary_list|
-      expect(summary_list).to have_summary_item("School URN", application.school_urn)
-      expect(summary_list).to have_summary_item("School UKPRN", application.school.ukprn)
-      expect(summary_list).to have_summary_item("Private Childcare Provider URN", "-")
-      expect(summary_list).to have_summary_item("Headteacher status", application.headteacher_status)
-      expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
-      expect(summary_list).to have_summary_item("Employer name", application.employer_name)
-      expect(summary_list).to have_summary_item("Employment role", application.employment_role.humanize)
-      expect(summary_list).to have_summary_item("ITT Lead mentor", application.lead_mentor? ? "Yes" : "No")
-      expect(summary_list).to have_summary_item("ITT provider", application.itt_provider.operating_name)
-      expect(summary_list).to have_summary_item("Country", application.teacher_catchment_country)
+      expect(summary_list).to have_summary_item("Created", application.created_at.to_fs(:govuk_short))
+      expect(summary_list).to have_summary_item("Updated", application.updated_at.to_fs(:govuk_short))
     end
 
     expect(page).to have_css("h2", text: "Funding eligibility")
 
-    within(summary_lists[2]) do |summary_list|
+    within(summary_lists[1]) do |summary_list|
       expect(summary_list).to have_summary_item("Eligible for funding", "Yes")
       expect(summary_list).to have_summary_item("Funded place", "")
-      expect(summary_list).to have_summary_item("Funding eligibility status code", application.funding_eligiblity_status_code.humanize)
-      expect(summary_list).to have_summary_item("Primary establishment", "No")
-      expect(summary_list).to have_summary_item("Number of pupils", application.number_of_pupils)
-      expect(summary_list).to have_summary_item("Targeted support funding primary plus eligibility", "No")
-      expect(summary_list).to have_summary_item("Targeted delivery funding eligibility", "No")
+      expect(summary_list).to have_summary_item("Status code", application.funding_eligiblity_status_code.humanize)
+      expect(summary_list).to have_summary_item("Schedule cohort", application.cohort.start_year)
       expect(summary_list).to have_summary_item("Funding choice", application.funding_choice&.capitalize)
-      expect(summary_list).to have_summary_item("Schedule Cohort", application.cohort.start_year)
-      expect(summary_list).to have_summary_item("Schedule identifier", "-")
       expect(summary_list).to have_summary_item("Notes", "No notes")
+    end
+
+    expect(page).to have_css("h2", text: "Workplace")
+
+    within(summary_lists[2]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.employer_name)
+      expect(summary_list).to have_summary_item("UK Provider Reference Number (UKPRN)", application.ukprn)
+      expect(summary_list).to have_summary_item("Unique reference number (URN)", application.school_urn)
+      expect(summary_list).to have_summary_item("Headteacher status", application.headteacher_status.humanize)
+      expect(summary_list).to have_summary_item("Employment type", application.employment_type.humanize)
+      expect(summary_list).to have_summary_item("ITT Lead mentor", application.lead_mentor? ? "Yes" : "No")
+      expect(summary_list).to have_summary_item("ITT provider", application.itt_provider.operating_name)
+      expect(summary_list).to have_summary_item("Country", application.teacher_catchment_country)
     end
 
     expect(page).to have_css("h2", text: "Declarations")
@@ -211,36 +204,34 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_css("h2", text: "Declarations")
 
-    summary_cards = all(".govuk-summary-card")
+    summary_cards = all("[data-declarations] .govuk-summary-card")
     expect(summary_cards).to have_attributes(length: 3)
 
     within(summary_cards[0]) do |summary_card|
-      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started")
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Started (Submitted)")
 
       within(find(".govuk-summary-list")) do |summary_list|
         expect(summary_list).to have_summary_item("Declaration ID", started_declaration.ecf_id)
-        expect(summary_list).to have_summary_item("Declaration type", started_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", started_declaration.cohort.start_year)
         expect(summary_list).to have_summary_item("Lead provider", started_declaration.lead_provider.name)
-        expect(summary_list).to have_summary_item("State", started_declaration.state.humanize)
         expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Statements", "")
       end
     end
 
     within(summary_cards[1]) do |summary_card|
-      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Completed")
+      expect(summary_card).to have_css(".govuk-summary-card__title", text: "Completed (Submitted)")
 
       within(find(".govuk-summary-list")) do |summary_list|
         expect(summary_list).to have_summary_item("Declaration ID", "-")
-        expect(summary_list).to have_summary_item("Declaration type", completed_declaration.declaration_type.humanize)
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)
         expect(summary_list).to have_summary_item("Lead provider", completed_declaration.lead_provider.name)
-        expect(summary_list).to have_summary_item("State", completed_declaration.state.humanize)
         expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
+        expect(summary_list).to have_summary_item("Statements", "")
       end
     end
 
@@ -276,7 +267,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(outcome.application_id)
 
-    expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
+    expect(page).to have_css("h1", text: outcome.user.full_name)
 
     within(".govuk-table tbody tr:first-of-type td:last-of-type") do |action_cell|
       expect(action_cell).to have_button("Resend")
@@ -284,7 +275,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       click_button("Resend")
     end
 
-    expect(page).to have_css("h1", text: "Application for #{outcome.user.full_name}")
+    expect(page).to have_css("h1", text: outcome.user.full_name)
     expect(page).to have_css(".govuk-notification-banner--success", text: /rescheduled/i)
   end
 
@@ -293,13 +284,11 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    expect(page).to have_css("h1", text: application.user.full_name)
 
-    within(".govuk-summary-list:first-of-type") do |summary_list|
-      expect(summary_list).to have_summary_item("Lead provider approval status", "Accepted")
-      expect(summary_list).to have_link("Change to pending")
-
-      click_link("Change to pending")
+    within(".govuk-summary-list__row", text: "Course provider approval status") do |summary_list_row|
+      expect(summary_list_row).to have_text "Accepted"
+      click_link("Change")
     end
 
     expect(page).to have_css("h1", text: "Are you sure you want to change the status to Pending?")
@@ -309,10 +298,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "Yes", visible: :all
     click_button "Change status to Pending"
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(".govuk-summary-list:first-of-type") do |summary_list|
-      expect(summary_list).to have_summary_item("Lead provider approval status", "Pending")
-      expect(summary_list).not_to have_link("Change to pending")
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Course provider approval status") do |summary_list_row|
+      expect(summary_list_row).to have_text "Pending"
+      expect(summary_list_row).not_to have_link("Change")
     end
   end
 
@@ -322,18 +311,11 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
+    expect(page).to have_css("h1", text: application.user.full_name)
 
-    application_details = page.find("h2", text: "Application details", exact_text: true)
-                              .sibling(".govuk-summary-list:first-of-type")
-
-    within(application_details) do
-      within(".govuk-summary-list__row:nth-of-type(8)") do |summary_list_row|
-        expect(summary_list_row).to have_summary_item("Training status", "active")
-        expect(summary_list_row).to have_link("Change")
-
-        click_link("Change")
-      end
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Active"
+      click_on "Change"
     end
 
     expect(page).to have_css("h1", text: "Change training status")
@@ -344,29 +326,19 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     select Applications::ChangeTrainingStatus::REASON_OPTIONS["deferred"].first
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    application_details = page.find("h2", text: "Application details", exact_text: true)
-                              .sibling(".govuk-summary-list:first-of-type")
-
-    within(application_details) do
-      within(".govuk-summary-list__row:nth-of-type(8)") do |summary_list_row|
-        expect(summary_list_row).to have_summary_item("Training status", "deferred")
-        expect(summary_list_row).to have_link("Change")
-
-        click_link("Change")
-      end
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Deferred"
+      click_on "Change"
     end
 
     expect(page).to have_css("h1", text: "Change training status")
     choose "Active", visible: :all
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    application_details = page.find("h2", text: "Application details", exact_text: true)
-                              .sibling(".govuk-summary-list:first-of-type")
-
-    within(application_details) do |summary_list|
-      expect(summary_list).to have_summary_item("Training status", "active")
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Training status") do |summary_list|
+      expect(summary_list).to have_text "Active"
     end
   end
 
@@ -374,16 +346,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application = create(:application)
 
     visit npq_separation_admin_application_path(application)
+    expect(page).to have_css("h1", text: application.user.full_name)
 
-    application_details = page.find("h2", text: "Application details", exact_text: true)
-                              .sibling(".govuk-summary-list:first-of-type")
-
-    within(application_details) do
-      within(".govuk-summary-list__row:nth-of-type(9)") do |summary_list_row|
-        expect(summary_list_row).to have_summary_item("Lead provider name", application.lead_provider.name)
-
-        click_link("Transfer")
-      end
+    within(".govuk-summary-list__row", text: application.lead_provider.name) do
+      click_link("Transfer")
     end
 
     expect(page).to have_css("h1", text: "Transfer lead provider")
@@ -394,12 +360,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "Best Practice Network", visible: :all
     click_button "Continue"
 
-    application_details = page.find("h2", text: "Application details", exact_text: true)
-                              .sibling(".govuk-summary-list:first-of-type")
-
-    within(application_details) do |summary_list|
-      expect(summary_list).to have_summary_item("Lead provider name", "Best Practice Network")
-    end
+    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_summary_item("Course provider", "Best Practice Network")
   end
 
   scenario "changing eligibility for funding" do
@@ -407,11 +369,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
-      expect(summary_list_row).to have_summary_item("Eligible for funding", "No")
-      expect(summary_list_row).to have_link("Change")
-
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "No"
       click_link("Change")
     end
 
@@ -424,11 +384,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
-      expect(summary_list_row).to have_summary_item("Eligible for funding", "Yes")
-      expect(summary_list_row).to have_link("Change")
-
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "Yes"
       click_link("Change")
     end
 
@@ -436,9 +394,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "No", visible: :all
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: "Application for #{application.user.full_name}")
-    within(:xpath, "//dt[text()='Eligible for funding']/..") do |summary_list_row|
-      expect(summary_list_row).to have_summary_item("Eligible for funding", "No")
+    expect(page).to have_css("h1", text: application.user.full_name)
+    within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
+      expect(summary_list_row).to have_text "No"
     end
   end
 
@@ -449,7 +407,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    within(:xpath, "//dt[text()='Schedule Cohort']/..") do
+    within(".govuk-summary-list__row", text: "Schedule cohort") do
       click_link("Change")
     end
 
@@ -461,8 +419,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "2025", visible: :all
     click_button "Continue"
 
-    within(:xpath, "//h2[text()='Funding eligibility']/following-sibling::dl") do |summary_list|
-      expect(summary_list).to have_summary_item("Schedule Cohort", "2025")
+    within(".govuk-summary-list__row", text: "Schedule cohort") do |row|
+      expect(row).to have_text("2025")
     end
   end
 end
