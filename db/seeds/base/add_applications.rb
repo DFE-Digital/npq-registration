@@ -149,7 +149,7 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
   { employment_type: "other" },
   { referred_by_return_to_teaching_adviser: "yes" },
 ].each do |application_attrs|
-  FactoryBot.create(:application, **application_attrs.merge(course:))
+  FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))
 end
 
 Application.order("id DESC").each_with_index do |a, i|
