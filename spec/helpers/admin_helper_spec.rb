@@ -1,9 +1,6 @@
 require "rails_helper"
 
 RSpec.describe AdminHelper, type: :helper do
-  include GovukVisuallyHiddenHelper
-  include GovukLinkHelper
-
   describe "#format_cohort" do
     subject { format_cohort(cohort) }
 
@@ -41,6 +38,46 @@ RSpec.describe AdminHelper, type: :helper do
       let(:school) { build(:school, :with_address, address_2: nil, address_3: " ") }
 
       it { expect(CGI.unescapeHTML(subject)).to eq("#{school.address_1}<br>#{school.town}<br>#{school.county}<br>#{school.postcode}") }
+    end
+  end
+
+  describe "review_status_tag" do
+    subject { review_status_tag(review_status) }
+
+    context "with nil" do
+      let(:review_status) { nil }
+
+      it { is_expected.to be_nil }
+    end
+
+    context "with needs review" do
+      let(:review_status) { "needs_review" }
+
+      it { is_expected.to have_css ".govuk-tag--blue", text: "Needs review" }
+    end
+
+    context "with awaiting information" do
+      let(:review_status) { "awaiting_information" }
+
+      it { is_expected.to have_css ".govuk-tag--yellow", text: "Awaiting information" }
+    end
+
+    context "with re-register" do
+      let(:review_status) { "reregister" }
+
+      it { is_expected.to have_css ".govuk-tag--grey", text: "Re-register" }
+    end
+
+    context "with decision_made" do
+      let(:review_status) { "decision_made" }
+
+      it { is_expected.to have_css ".govuk-tag--grey", text: "Decision made" }
+    end
+
+    context "with something unexpected" do
+      let(:review_status) { "something_unexpected" }
+
+      it { is_expected.to eq "Something unexpected" }
     end
   end
 end
