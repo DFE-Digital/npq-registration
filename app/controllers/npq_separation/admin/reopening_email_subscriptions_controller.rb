@@ -1,6 +1,5 @@
 class NpqSeparation::Admin::ReopeningEmailSubscriptionsController < NpqSeparation::AdminController
   before_action :require_super_admin
-  include Pagy::Backend
 
   def index
     subscriptions = params[:senco_only] ? [:senco] : %i[senco other_npq]
