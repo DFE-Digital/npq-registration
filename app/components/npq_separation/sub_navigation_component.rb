@@ -40,7 +40,11 @@ module NpqSeparation
         "govuk-visually-hidden" => !heading[:visible],
       )
 
-      tag.h2(heading_text, class: heading_class, id: "sub-navigation-heading")
+      tag.h2(heading_text, class: heading_class, id: aria_key)
+    end
+
+    def aria_key
+      @aria_key ||= "sub-navigation-heading-#{SecureRandom.base58(4)}"
     end
 
   private
