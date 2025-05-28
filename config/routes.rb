@@ -66,7 +66,6 @@ Rails.application.routes.draw do
       end
     end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
-    resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
     resources :webhook_messages, only: %i[index show] do
