@@ -107,6 +107,10 @@ module NpqSeparation
 
       def application_nodes
         [
+          Heading.new(
+            text: "Applications",
+            visible: true,
+          ),
           Node.new(
             name: "All applications",
             href: npq_separation_admin_applications_path,
