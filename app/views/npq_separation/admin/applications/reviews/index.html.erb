@@ -101,6 +101,7 @@
       header.with_row do |row|
         row.with_cell(text: "Application ID")
         row.with_cell(text: "Name")
+        row.with_cell(text: "Review Status")
         row.with_cell(text: "Eligible for funding")
         row.with_cell(text: "Provider approval status")
         row.with_cell(text: "Notes", classes: 'govuk-!-width-one-third')
@@ -117,6 +118,7 @@
             concat tag.p(application.employment_type.try(:humanize), class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
             concat tag.p(application.employer_name_to_display, class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
           end
+          row.with_cell { review_status_tag(application.review_status) }
           row.with_cell(text: boolean_red_green_tag(application.eligible_for_funding))
           row.with_cell(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
           row.with_cell(text: application.notes)

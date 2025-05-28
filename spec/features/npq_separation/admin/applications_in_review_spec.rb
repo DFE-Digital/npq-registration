@@ -41,6 +41,7 @@ RSpec.feature "Applications in review", type: :feature do
       [
         application.ecf_id,
         [application.user.full_name, application.employment_type.try(:humanize), application.employer_name].compact.join,
+        application.review_status ? "Needs review" : nil,
         application.eligible_for_funding ? "Yes" : "No",
         application.lead_provider_approval_status.humanize,
         application.notes.to_s,

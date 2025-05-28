@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
-  include GovukComponentsHelper
-
   shared_examples "boolean tag" do
     it "is a red tag with 'No' when bool is false" do
       expect(boolean_red_green_tag(false)).to have_css("strong.govuk-tag.govuk-tag--red", text: "No")
