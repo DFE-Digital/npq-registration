@@ -119,7 +119,7 @@ module NpqSeparation
           Node.new(
             name: "In review",
             href: npq_separation_admin_application_reviews_path,
-            prefix: "/npq-separation/admin/applications/reviews",
+            prefix: /\/npq-separation\/admin\/applications\/reviews$/,
           ),
         ]
       end
