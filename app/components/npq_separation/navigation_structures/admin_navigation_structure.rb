@@ -57,7 +57,7 @@ module NpqSeparation
             prefix: "/npq-separation/admin/courses",
           ) => [],
           Node.new(
-            name: "Participants",
+            name: "Users",
             href: npq_separation_admin_users_path,
             prefix: "/npq-separation/admin/users",
           ) => [],

@@ -184,7 +184,7 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).to have_text("Email: #{application.user.email}")
     expect(page).to have_text("Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)}")
     expect(page).to have_text("National Insurance: Not provided")
-    expect(page).to have_text("TRN: #{application.user.trn} Not validated")
+    expect(page).to have_text("TRN: #{application.user.trn} Not verified")
     expect(page).to have_text("Get an Identity ID: #{application.user.uid}")
 
     summary_lists = all(".govuk-summary-list")
