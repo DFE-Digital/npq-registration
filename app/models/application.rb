@@ -81,10 +81,10 @@ class Application < ApplicationRecord
   }, _suffix: true
 
   enum :review_status, {
-    needs_review: "needs_review",
-    awaiting_information: "awaiting_information",
-    reregister: "reregister",
-    decision_made: "decision_made",
+    "Needs review" => "needs_review",
+    "Awaiting information" => "awaiting_information",
+    "Re-register" => "reregister",
+    "Decision made" => "decision_made",
   }, suffix: true
 
   validates :funded_place, inclusion: { in: [true, false] }, if: :validate_funded_place?

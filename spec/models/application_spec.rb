@@ -151,10 +151,10 @@ RSpec.describe Application do
 
     it "defines an enum for review_status" do
       expect(subject).to define_enum_for(:review_status).with_values(
-        needs_review: "needs_review",
-        awaiting_information: "awaiting_information",
-        reregister: "reregister",
-        decision_made: "decision_made",
+        "Needs review" => "needs_review",
+        "Awaiting information" => "awaiting_information",
+        "Re-register" => "reregister",
+        "Decision made" => "decision_made",
       ).backed_by_column_of_type(:enum).with_suffix
     end
   end

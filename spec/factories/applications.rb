@@ -149,7 +149,7 @@ FactoryBot.define do
     end
 
     trait :manual_review do
-      review_status { :needs_review }
+      review_status { "Needs review" }
     end
   end
 end

@@ -52,7 +52,7 @@ class HandleSubmissionForStore
         teacher_catchment_iso_country_code:,
         cohort: Cohort.current,
         lead_provider_approval_status: Application.lead_provider_approval_statuses[:pending],
-        review_status: requires_manual_review? ? :needs_review : nil,
+        review_status: requires_manual_review? ? "needs_review" : nil,
       )
       enqueue_send_application_submission_email_job(application)
     end

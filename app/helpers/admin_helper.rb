@@ -24,19 +24,15 @@ module AdminHelper
   end
 
   def review_status_tag(review_status)
-    return nil if review_status.blank?
-
     case review_status
-    when "needs_review"
+    when "Needs review"
       govuk_tag(text: "Needs review", colour: "blue")
-    when "awaiting_information"
+    when "Awaiting information"
       govuk_tag(text: "Awaiting information", colour: "yellow")
-    when "reregister"
-      govuk_tag(text: "Re-register", colour: "grey")
-    when "decision_made"
-      govuk_tag(text: "Decision made", colour: "grey")
+    when "Re-register", "Decision made"
+      govuk_tag(text: review_status, colour: "grey")
     else
-      review_status.to_s.humanize
+      review_status.presence
     end
   end
 end
