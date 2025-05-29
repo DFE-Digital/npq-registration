@@ -51,31 +51,31 @@ RSpec.describe AdminHelper, type: :helper do
     end
 
     context "with needs review" do
-      let(:review_status) { "needs_review" }
+      let(:review_status) { "Needs review" }
 
       it { is_expected.to have_css ".govuk-tag--blue", text: "Needs review" }
     end
 
     context "with awaiting information" do
-      let(:review_status) { "awaiting_information" }
+      let(:review_status) { "Awaiting information" }
 
       it { is_expected.to have_css ".govuk-tag--yellow", text: "Awaiting information" }
     end
 
     context "with re-register" do
-      let(:review_status) { "reregister" }
+      let(:review_status) { "Re-register" }
 
       it { is_expected.to have_css ".govuk-tag--grey", text: "Re-register" }
     end
 
-    context "with decision_made" do
-      let(:review_status) { "decision_made" }
+    context "with decision made" do
+      let(:review_status) { "Decision made" }
 
       it { is_expected.to have_css ".govuk-tag--grey", text: "Decision made" }
     end
 
     context "with something unexpected" do
-      let(:review_status) { "something_unexpected" }
+      let(:review_status) { "Something unexpected" }
 
       it { is_expected.to eq "Something unexpected" }
     end

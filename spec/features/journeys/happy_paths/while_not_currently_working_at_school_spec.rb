@@ -153,7 +153,7 @@ RSpec.feature "Happy journeys",
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
-      "review_status" => "needs_review",
+      "review_status" => "Needs review",
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
