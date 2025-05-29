@@ -29,7 +29,7 @@ review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(or ${PULL_REQUEST_NUMBER}, , ${PR_NUMBER}), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 
-	$(if ${PULL_REQUEST_NUMBER}, $(eval KEY_PREFIX=-$(PULL_REQUEST_NUMBER))  )
+	$(if ${PULL_REQUEST_NUMBER}, $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER))  )
 	$(if ${PR_NUMBER}, $(eval KEY_PREFIX=-$(PR_NUMBER))  )
 
 	$(eval include global_config/review.sh)
