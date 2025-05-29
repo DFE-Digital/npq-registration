@@ -214,6 +214,7 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_css("h2", text: "Funding details")
     within(summary_lists[1]) do |summary_list|
+      expect(summary_list).to have_summary_item("Review status", "Decision made")
       expect(summary_list).to have_summary_item("Eligible for funding", "No")
       expect(summary_list).to have_summary_item("Funded place", "No")
       expect(summary_list).to have_summary_item("Notes", "No notes")
