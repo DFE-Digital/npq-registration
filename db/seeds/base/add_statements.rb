@@ -1,7 +1,7 @@
 LeadProvider.find_each do |lead_provider|
   Cohort.find_each do |cohort|
     date    = cohort.registration_start_date.to_date
-    periods = ((date.end_of_month + 1.day)...(date + 2.years)).map { [_1.year, _1.month] }.uniq
+    periods = ((date.beginning_of_month - 2.months)...(date + 2.years)).map { [_1.year, _1.month] }.uniq
 
     periods.each.with_index(1) do |(year, month), i|
       final_statement  = i == periods.count
