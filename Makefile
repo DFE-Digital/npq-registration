@@ -34,6 +34,8 @@ review: test-cluster ## Specify review AKS environment
 
 	$(eval include global_config/review.sh)
 	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
+	#POSSIBLE MOD
+	$(if ${PULL_REQUEST_NUMBER}, , $(eval TF_VAR_pull_request_number=-$(PR_NUMBER))  )
 
 .PHONY: staging
 staging: test-cluster
