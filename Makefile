@@ -30,7 +30,7 @@ review: test-cluster ## Specify review AKS environment
 	$(if $(or ${PULL_REQUEST_NUMBER}, , ${PR_NUMBER}), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
 
 	$(if ${PULL_REQUEST_NUMBER}, $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER))  )
-	$(if ${PR_NUMBER}, $(eval KEY_PREFIX=-$(PR_NUMBER))  )
+	$(if ${PR_NUMBER}, $(eval KEY_PREFIX=$(PR_NUMBER))  )
 
 	$(eval include global_config/review.sh)
 	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
