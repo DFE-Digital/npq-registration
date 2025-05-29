@@ -16,7 +16,7 @@ RSpec.feature "Applications in review", type: :feature do
   let!(:application_for_rtta_yes)                   { create(:application, :with_random_user, :manual_review, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
   let!(:application_for_rtta_no)                    { create(:application, :with_random_user, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
   let!(:application_eligible_for_funding)           { create(:application, :with_random_user, :manual_review, :eligible_for_funding, created_at: 11.days.ago, employment_type: "other") }
-  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :manual_review, :accepted, created_at: 12.days.ago, employment_type: "hospital_school") }
+  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :accepted, created_at: 12.days.ago, employment_type: "hospital_school", review_status: "decision_made") }
 
   let(:serialized_application) { { application: 1 } }
 
@@ -41,7 +41,7 @@ RSpec.feature "Applications in review", type: :feature do
       [
         application.ecf_id,
         [application.user.full_name, application.employment_type.try(:humanize), application.employer_name].compact.join,
-        application.review_status ? "Needs review" : nil,
+        application.review_status,
         application.eligible_for_funding ? "Yes" : "No",
         application.lead_provider_approval_status.humanize,
         application.notes.to_s,
@@ -157,6 +157,20 @@ RSpec.feature "Applications in review", type: :feature do
 
     expect(page).to have_text(application_for_hospital_school.user.full_name)
     expect(page).not_to have_text(application_for_la_supply_teacher.user.full_name)
+  end
+
+  scenario "filtering by review status" do
+    select "Needs review", from: "Review status"
+    click_on "Search"
+
+    expect(page).to have_text application_for_hospital_school.user.full_name
+    expect(page).not_to have_text application_with_funding_decision.user.full_name
+
+    select "Decision made", from: "Review status"
+    click_on "Search"
+
+    expect(page).to have_text application_with_funding_decision.user.full_name
+    expect(page).not_to have_text application_for_hospital_school.user.full_name
   end
 
   scenario "combining search and filters" do

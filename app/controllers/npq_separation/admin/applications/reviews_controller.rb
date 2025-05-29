@@ -44,7 +44,11 @@ module NpqSeparation
         end
 
         def review_scope
-          Application.for_manual_review
+          if Application.review_statuses.keys.include?(params[:review_status])
+            Application.where(review_status: params[:review_status])
+          else
+            Application.for_manual_review
+          end
         end
 
         def filter_scope
