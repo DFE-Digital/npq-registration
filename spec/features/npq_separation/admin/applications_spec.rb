@@ -424,13 +424,13 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     end
   end
 
-  scenario "updating notes" do
+  scenario "adding and editing notes" do
     application = applications_in_order.first
 
     visit(npq_separation_admin_application_path(application))
 
     within(".govuk-summary-list__row", text: "Notes") do
-      click_on "Change"
+      click_on "Add note"
     end
 
     # check cancel
@@ -439,7 +439,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     # change for real
     within(".govuk-summary-list__row", text: "Notes") do
-      click_on "Change"
+      click_on "Add note"
     end
 
     fill_in "Add a note about the changes to this registration", with: "Some notes"
@@ -448,6 +448,17 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_current_path(npq_separation_admin_application_path(application))
     within(".govuk-summary-list__row", text: "Notes") do
       expect(page).to have_text("Some notes")
+    end
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Edit note"
+    end
+    fill_in "Edit the note about the changes to this registration", with: "Different notes"
+    click_on "Edit note"
+
+    expect(page).to have_current_path(npq_separation_admin_application_path(application))
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Different notes")
     end
 
     # check going straight to the note edit page
