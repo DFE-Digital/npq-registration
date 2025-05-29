@@ -15,13 +15,16 @@
     </div>
 
     <div class="govuk-grid-row">
-      <%#= # will be implemented in CPDNPQ-2567
+      <%=
         f.govuk_select(
           :review_status,
-          options_for_select([
-          ], params[:review_status]),
+          options_for_select(
+            Application.review_statuses.keys.unshift(""),
+            params[:review_status],
+          ),
           label: { text: "Review status", size: "s" },
           form_group: { class: "govuk-grid-column-one-half" },
+          include_blank: true,
         )
       %>
 
