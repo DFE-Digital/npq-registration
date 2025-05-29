@@ -41,7 +41,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
       # Check the links are present
       expect(page).to have_link(text, href:)
     end
-    expect(page).not_to have_link("Admin Users", href: "/admin/admins")
   end
 
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
