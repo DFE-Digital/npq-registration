@@ -21,6 +21,12 @@ module NpqSeparation
 
         {
           Node.new(
+            name: "Reopening email subscriptions",
+            href: npq_separation_admin_reopening_email_subscriptions_path,
+            prefix: "/npq-separation/admin/reopening-email-subscriptions",
+          ) => [],
+
+          Node.new(
             name: "Feature flags",
             href: npq_separation_admin_features_path,
             prefix: "/npq-separation/admin/features",

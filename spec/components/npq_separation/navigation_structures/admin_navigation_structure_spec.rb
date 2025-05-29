@@ -34,6 +34,11 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
     context "when user is a super admin" do
       let(:admin) { build_stubbed(:super_admin) }
 
+      it "includes reopening email subscriptions" do
+        expect(subject[-3]).to have_attributes(name: "Reopening email subscriptions")
+        expect(subject[-3]).to have_attributes(href: "/npq-separation/admin/reopening_email_subscriptions")
+      end
+
       it "includes feature flags" do
         expect(subject[-2]).to have_attributes(name: "Feature flags")
         expect(subject[-2]).to have_attributes(href: "/npq-separation/admin/features")
