@@ -7,7 +7,9 @@
 <%= form_with model: @service, scope: :statements_bulk_creator, url: npq_separation_admin_cohort_statements_path(params[:cohort_id]) do |f| %>
   <div class="govuk-form-group">
     <%= f.label :statements_csv_file, "Statements CSV", class: "govuk-label govuk-label--m" %>
-    <%= f.file_field :statements_csv_file, class: "govuk-file-upload" %>
+    <div class="govuk-drop-zone" data-module="govuk-file-upload">
+      <%= f.file_field :statements_csv_file, class: "govuk-file-upload" %>
+    </div>
     <%= govuk_details(summary_text: "Example statements CSV", classes: 'govuk-!-margin-top-3') do %>
       <p class="govuk-body">One row per statement to be created for each contracted lead provider, e.g.:</p>
 <pre class="govuk-!-padding-5 govuk-!-font-size-16 statement-example">
@@ -23,7 +25,9 @@
 
   <div class="govuk-form-group">
     <%= f.label :contracts_csv_file, "Contracts CSV", class: "govuk-label govuk-label--m" %>
-    <%= f.file_field :contracts_csv_file, class: "govuk-file-upload" %>
+    <div class="govuk-drop-zone" data-module="govuk-file-upload">
+      <%= f.file_field :contracts_csv_file, class: "govuk-file-upload" %>
+    </div>
     <%= govuk_details(summary_text: "Example contracts CSV", classes: 'govuk-!-margin-top-3') do %>
       <p class="govuk-body">One row per course to be added to each lead provider's statements, e.g.:</p>
 <pre class="govuk-!-padding-5 govuk-!-font-size-16 statement-example">
