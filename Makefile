@@ -28,8 +28,10 @@ docker-compose-build:
 review: test-cluster ## Specify review AKS environment
 	# PULL_REQUEST_NUMBER is set by the GitHub action
 	$(if $(PULL_REQUEST_NUMBER), , $(error Missing environment variable "PULL_REQUEST_NUMBER"))
+	$(if ${PULL_REQUEST_NUMBER}, $(eval KEY_PREFIX=$(PULL_REQUEST_NUMBER))  )
 	$(eval include global_config/review.sh)
 	$(eval export TF_VAR_pull_request_number=-$(PULL_REQUEST_NUMBER))
+	$(eval export TF_VAR_docker_image: "ghcr.io/dfe-digital/npq-registration:no-tag")
 
 .PHONY: staging
 staging: test-cluster
