@@ -162,6 +162,7 @@ class Declaration < ApplicationRecord
       .class
       .billable_or_changeable
       .joins(application: %i[user course])
+      .includes([:application]) # added because Bullet::Notification::UnoptimizedQueryError seen on review apps. Not covered by a spec.
       .where(user: { trn: application.user.trn })
       .where.not(user: { trn: nil })
       .where.not(user: { id: application.user_id })
