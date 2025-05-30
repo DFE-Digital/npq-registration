@@ -144,7 +144,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
     expect(page).to have_css("p", text: "Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)} | National Insurance: Not provided")
     expect(page).to have_css("p", text: "Email: #{application.user.email}")
-    expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not validated")
+    expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not verified")
 
     summary_lists = all(".govuk-summary-list")
 
