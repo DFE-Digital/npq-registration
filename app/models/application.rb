@@ -43,42 +43,42 @@ class Application < ApplicationRecord
 
   after_commit :touch_user_if_changed
 
-  enum kind_of_nursery: {
+  enum :kind_of_nursery, {
     local_authority_maintained_nursery: "local_authority_maintained_nursery",
     preschool_class_as_part_of_school: "preschool_class_as_part_of_school",
     private_nursery: "private_nursery",
     another_early_years_setting: "another_early_years_setting",
     childminder: "childminder",
-  }, _suffix: true
+  }, suffix: true
 
-  enum headteacher_status: {
+  enum :headteacher_status, {
     no: "no",
     yes_when_course_starts: "yes_when_course_starts",
     yes_in_first_two_years: "yes_in_first_two_years",
     yes_over_two_years: "yes_over_two_years",
     yes_in_first_five_years: "yes_in_first_five_years",
     yes_over_five_years: "yes_over_five_years",
-  }, _suffix: true
+  }, suffix: true
 
-  enum funding_choice: {
+  enum :funding_choice, {
     school: "school",
     trust: "trust",
     self: "self",
     another: "another",
     employer: "employer",
-  }, _suffix: true
+  }, suffix: true
 
-  enum lead_provider_approval_status: {
+  enum :lead_provider_approval_status, {
     pending: "pending",
     accepted: "accepted",
     rejected: "rejected",
-  }, _suffix: true
+  }, suffix: true
 
-  enum training_status: {
+  enum :training_status, {
     active: "active",
     deferred: "deferred",
     withdrawn: "withdrawn",
-  }, _suffix: true
+  }, suffix: true
 
   enum :review_status, {
     "Needs review" => "needs_review",
