@@ -41,6 +41,11 @@ module Declarations
 
       ApplicationRecord.transaction do
         find_or_create_declaration!
+
+        # CPDNPQ-2808: this reload is here to stop bullet complaining about an unoptimized query
+        # the issue could not be replicated locally or in a review app
+        declaration.reload
+
         set_eligibility!
 
         statement_attacher.attach unless declaration.submitted_state?
