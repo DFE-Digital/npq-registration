@@ -7,13 +7,14 @@ module NpqSeparation
         before_action :set_application
 
         def edit
-          @return_path = request.referer || npq_separation_admin_application_path(@application)
+          @in_review_application = true if request.referer =~ /review/
+          @return_path = return_path(@in_review_application)
         end
 
         def update
           if @application.update(notes_params)
             flash[:success] = "Notes updated."
-            redirect_to return_path_param
+            redirect_to return_path(in_review_application_param.present?)
           else
             render :edit
           end
@@ -25,8 +26,16 @@ module NpqSeparation
           params.require(:application).permit(:notes)
         end
 
-        def return_path_param
-          params.permit(:return_path)[:return_path]
+        def in_review_application_param
+          params.permit(:in_review_application)[:in_review_application]
+        end
+
+        def return_path(in_review_application)
+          if in_review_application
+            npq_separation_admin_application_review_path(@application)
+          else
+            npq_separation_admin_application_path(@application)
+          end
         end
 
         def set_application

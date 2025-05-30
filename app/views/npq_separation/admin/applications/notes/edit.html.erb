@@ -11,7 +11,7 @@
                       max_chars: 1_000
   %>
 
-  <%= hidden_field_tag :return_path, @return_path %>
+  <%= hidden_field_tag :in_review_application, @in_review_application %>
 
   <div class="govuk-button-group">
     <%= f.govuk_submit(@application.notes.present? ? "Edit note" : "Add note") %>
