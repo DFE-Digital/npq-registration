@@ -99,7 +99,8 @@
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
-        row.with_cell(text: "Participant")
+        row.with_cell(text: "Application ID")
+        row.with_cell(text: "Name")
         row.with_cell(text: "Eligible for funding")
         row.with_cell(text: "Provider approval status")
         row.with_cell(text: "Notes", classes: 'govuk-!-width-one-third')
@@ -110,8 +111,9 @@
     table.with_body do |body|
       @applications.each do |application|
         body.with_row do |row|
+          row.with_cell(text: govuk_link_to(application.ecf_id, npq_separation_admin_application_review_path(application.id)))
           row.with_cell do
-            concat govuk_link_to(application.user.full_name, npq_separation_admin_application_review_path(application))
+            concat govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user))
             concat tag.p(application.employment_type.try(:humanize), class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
             concat tag.p(application.employer_name_to_display, class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
           end
