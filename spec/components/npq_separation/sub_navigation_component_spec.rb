@@ -121,4 +121,46 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
       end
     end
   end
+
+  describe "heading" do
+    let(:heading) { nil }
+    let(:structure) do
+      [
+        heading,
+        NpqSeparation::NavigationStructure::Node.new(name: "Node", href: "#", prefix: "/a"),
+      ].compact
+    end
+
+    subject do
+      NpqSeparation::SubNavigationComponent.new(current_path, structure:)
+    end
+
+    before { render_inline(subject) }
+
+    context "when heading options are not provided" do
+      it "renders a visually hidden default heading" do
+        expect(rendered_content).to have_css("h2.govuk-visually-hidden", text: "Navigation")
+      end
+    end
+
+    context "when heading text is provided" do
+      let(:heading) do
+        NpqSeparation::NavigationStructure::Heading.new(text: "My heading")
+      end
+
+      it "renders the heading text" do
+        expect(rendered_content).to have_css("h2.govuk-visually-hidden", text: "My heading")
+      end
+    end
+
+    context "when heading visbility is enabled" do
+      let(:heading) do
+        NpqSeparation::NavigationStructure::Heading.new(visible: true)
+      end
+
+      it "renders the heading" do
+        expect(rendered_content).to have_css("h2:not(.govuk-visually-hidden)", text: "Navigation")
+      end
+    end
+  end
 end

@@ -15,6 +15,7 @@ module NpqSeparation
     #             the primary nav to the sub nav
     # * nodes   - a list of nodes that sit under this one in the structure
     Node = Struct.new(:name, :href, :prefix, :current, :nodes, keyword_init: true)
+    Heading = Struct.new(:text, :visible, keyword_init: true)
 
     def primary_structure
       structure.keys
