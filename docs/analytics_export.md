@@ -57,4 +57,22 @@ If we need to create a new dataset for a new environment, the following process 
 
 ### Helper scripts
 
-The [list_records.rb](analytics_export_scripts/list_records.rb) is an example script to list BigQuery records.
+The below is an example script to list BigQuery records.
+
+```ruby
+require "google/cloud/bigquery"
+
+def list_records(project_id, dataset_id, table_id)
+  bigquery = Google::Cloud::Bigquery.new(project: project_id, credentials: JSON.parse(DfE::Analytics.config.bigquery_api_json_key))
+  bigquery.dataset(dataset_id)
+
+  query = "SELECT * FROM `#{dataset_id}.#{table_id}` LIMIT 10"
+  rows = bigquery.query(query)
+
+  rows.each do |row|
+    puts row
+  end
+end
+
+list_records "ecf-bq", "npq_events_review", "events"
+```

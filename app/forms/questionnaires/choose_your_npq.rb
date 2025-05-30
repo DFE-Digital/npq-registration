@@ -9,6 +9,23 @@ module Questionnaires
     validates QUESTION_NAME, presence: true
     validate :validate_course_exists
 
+    delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
+
+    delegate :new_headteacher?,
+             :inside_catchment?,
+             :approved_itt_provider?,
+             :works_in_another_setting?,
+             :works_in_school?,
+             :young_offender_institution?,
+             :referred_by_return_to_teaching_adviser?,
+             :employment_type_local_authority_virtual_school?,
+             :has_ofsted_urn?,
+             :employment_type_hospital_school?,
+             :employment_type_other?,
+             :works_in_childcare?,
+             :kind_of_nursery_public?,
+             to: :query_store
+
     def self.permitted_params
       [QUESTION_NAME]
     end
@@ -176,11 +193,6 @@ module Questionnaires
     def eligible_for_funding?
       funding_eligibility_calculator.funded?
     end
-
-    delegate :ineligible_institution_type?, to: :funding_eligibility_calculator
-    delegate :new_headteacher?, :inside_catchment?, :approved_itt_provider?, :works_in_another_setting?, :works_in_school?, :young_offender_institution?,
-             :inside_catchment?, :referred_by_return_to_teaching_adviser?, :employment_type_local_authority_virtual_school?, :has_ofsted_urn?,
-             :employment_type_hospital_school?, :employment_type_other?, :works_in_childcare?, :kind_of_nursery_public?, to: :query_store
 
     def validate_course_exists
       if course.blank?
