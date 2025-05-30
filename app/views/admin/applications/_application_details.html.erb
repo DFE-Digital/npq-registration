@@ -33,7 +33,6 @@
     sl.with_row do |row|
       row.with_key(text: 'Email')
       row.with_value(text: application.user.email)
-      row.with_action(text: "View User", href: admin_user_path(application.user))
     end
 
     sl.with_row do |row|
