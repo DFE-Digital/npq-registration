@@ -19,7 +19,7 @@
     "svg-pan-zoom": "^3.6.2",
     "swagger-ui-dist": "^5.22.0",
     "webpack": "^5.99.9",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^6.0.1"
   },
   "devDependencies": {},
   "license": "MIT",
