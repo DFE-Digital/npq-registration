@@ -212,6 +212,8 @@
       row.with_value do
         @application.notes.present? ? simple_format(@application.notes) : "No notes"
       end
+      link_text = @application.notes.present? ? "Edit note" : "Add note"
+      row.with_action(text: link_text, href: edit_npq_separation_admin_applications_notes_path(@application))
     end
   end
 %>
