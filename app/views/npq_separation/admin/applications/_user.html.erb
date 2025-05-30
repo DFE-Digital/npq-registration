@@ -21,7 +21,7 @@
 <p class="govuk-body govuk-!-margin-bottom-2">
   <strong>TRN:</strong>
   <%= user.trn %>
-  <%= boolean_red_green_tag(user.trn_verified?, user.trn_verified? ? "Validated" : "Not validated") %>
+  <%= trn_verified_badge(@application.user) %>
 </p>
 
 <p class="govuk-body govuk-!-margin-bottom-6">
