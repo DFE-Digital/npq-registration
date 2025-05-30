@@ -7,10 +7,12 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
 
   before do
     sign_in_as(super_admin)
+    create(:cohort, registration_start_date: 1.year.ago, start_year: 2024)
     create :user, email_updates_status: :senco, email: "example@example.org", full_name: "John Doe"
   end
 
   scenario "unsubscribe user" do
+    visit("/npq-separation/admin")
     click_link "Reopening email subscriptions"
     expect(page).to have_text("example@example.org")
     click_link "Unsubscribe"
@@ -18,7 +20,8 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
     expect(page).to have_text("Email 'example@example.org' unsubscribed")
   end
 
-  scenario "when logged in as a regular admin, it allows access to the admin homepage" do
+  scenario "super admin exports users with SENCO interest as CSV" do
+    visit("/npq-separation/admin")
     click_link "Reopening email subscriptions"
     click_link "Export all with SENCO interest"
     expect(page.body).to eq("Name,Email\n  John Doe,example@example.org\n")
