@@ -1,286 +1,172 @@
-<%= govuk_back_link(href: url_for(:back)) %>
-
-<h1 class="govuk-heading-l">Application for <%= @application.user.full_name %></h1>
-
-<h2 class="govuk-heading-m">Application details</h2>
+<%= render "npq_separation/admin/applications/user", user: @application.user %>
 
 <%=
-  govuk_summary_list do |sl|
-
+  govuk_summary_list(card: { title: "Application overview" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Application ID")
       row.with_value(text: @application.ecf_id)
     end
-
     sl.with_row do |row|
-      row.with_key(text: "User ID")
-      row.with_value(text: @application.user.ecf_id)
-      row.with_action(text: "View Participant", href: npq_separation_admin_user_path(@application.user))
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Email")
-      row.with_value(text: @application.user.email)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'TRN')
-      row.with_value(text: @application.user.trn || '-')
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'TRN verified')
-      row.with_value { boolean_red_green_tag(@application.user.trn_verified) }
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Course name")
+      row.with_key(text: "Course")
       row.with_value(text: @application.course.name)
     end
-
     sl.with_row do |row|
       row.with_key(text: "Course identifier")
       row.with_value(text: @application.course.identifier)
     end
-
     sl.with_row do |row|
-      row.with_key { "Training status" }
-      row.with_value { @application.training_status || '-' }
-      row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_training_status_path(@application))
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Lead provider name")
+      row.with_key(text: "Course provider")
       row.with_value(text: @application.lead_provider.name)
       row.with_action(text: "Transfer", href: npq_separation_admin_applications_change_lead_provider_path(@application))
     end
-
     sl.with_row do |row|
-      row.with_key(text: "Lead provider approval status")
-      row.with_value(text: @application.lead_provider_approval_status&.humanize)
-
-      if @application.pending_lead_provider_approval_status?
-        row.with_action(text: :none)
-      else
+      row.with_key(text: "Course provider approval status")
+      row.with_value(text: @application.lead_provider_approval_status.try(:humanize))
+      unless @application.pending_lead_provider_approval_status?
         row.with_action(
-          text: "Change to pending",
-          visually_hidden_text: "",
+          text: "Change",
           href: new_npq_separation_admin_applications_revert_to_pending_path(@application))
       end
     end
-
     sl.with_row do |row|
-      row.with_key(text: "Created at")
+      row.with_key(text: "Training status")
+      row.with_value(text: @application.training_status.try(:humanize))
+      row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_training_status_path(@application))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Created")
       row.with_value(text: @application.created_at.to_fs(:govuk_short))
     end
-
     sl.with_row do |row|
-      row.with_key(text: "Updated at")
+      row.with_key(text: "Updated")
       row.with_value(text: @application.updated_at.to_fs(:govuk_short))
     end
   end
 %>
 
-<hr class="govuk-section-break govuk-section-break--l">
-
-<h2 class="govuk-heading-m">Employment details</h2>
-
 <%=
-  govuk_summary_list do |sl|
-    sl.with_row do |row|
-      row.with_key(text: 'School URN')
-      row.with_value(text: @application.school_urn || '-')
-      if @application.school.present?
-        row.with_action(text: "View School", href: npq_separation_admin_school_path(@application.school))
-      end
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'School UKPRN')
-      row.with_value(text: @application.school&.ukprn || "-")
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Private Childcare Provider URN')
-      row.with_value(text: @application.private_childcare_provider.try(:urn) || "-")
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Headteacher status')
-      row.with_value(text: @application.headteacher_status || "-")
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Employment type")
-      row.with_value(text: @application.employment_type&.humanize)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Employer name")
-      row.with_value(text: @application.employer_name)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Employment role")
-      row.with_value(text: @application.employment_role&.humanize)
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'ITT Lead mentor')
-      row.with_value { boolean_red_green_tag(@application.lead_mentor?) }
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'ITT provider')
-      row.with_value(text: @application.itt_provider.try(:operating_name) || "-")
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Country')
-      row.with_value(text: @application.teacher_catchment_country || "-")
-    end
-  end
-%>
-
-<hr class="govuk-section-break govuk-section-break--l">
-
-<h2 class="govuk-heading-m">Funding eligibility</h2>
-
-<%=
-  govuk_summary_list do |sl|
+  govuk_summary_list(card: { title: "Funding eligibility" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Eligible for funding")
-      row.with_value(text: boolean_red_green_tag(@application.eligible_for_funding?))
+      row.with_value(text: @application.eligible_for_funding ? "Yes" : "No")
       row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_funding_eligibility_path(@application))
     end
-
     sl.with_row do |row|
-      row.with_key(text: 'Funded place')
-      row.with_value(text: boolean_red_green_nil_tag(@application.funded_place))
+      row.with_key(text: "Funded place")
+      row.with_value(text: @application.funded_place ? "Yes" : "No")
     end
-
     sl.with_row do |row|
-      row.with_key(text: "Funding eligibility status code")
-      row.with_value(text: @application.funding_eligiblity_status_code&.humanize)
+      row.with_key(text: "Status code")
+      row.with_value(text: @application.funding_eligiblity_status_code.presence || "-")
     end
-
     sl.with_row do |row|
-      row.with_key(text: 'Primary establishment')
-      row.with_value{ boolean_red_green_tag(@application.primary_establishment) }
-      row.with_action
+      row.with_key(text: "Schedule cohort")
+      row.with_value(text: @application.cohort.try(:start_year))
+      row.with_action(text: "Change", href: npq_separation_admin_applications_change_cohort_path(@application))
     end
-
     sl.with_row do |row|
-      row.with_key(text: 'Number of pupils')
-      row.with_value(text: @application.number_of_pupils.to_i)
-      row.with_action
+      row.with_key(text: "Funding choice")
+      row.with_value(text: @application.funding_choice.try(:humanize))
     end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Targeted support funding primary plus eligibility')
-      row.with_value{ boolean_red_green_tag(@application.tsf_primary_plus_eligibility) }
-      row.with_action
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Targeted delivery funding eligibility")
-      row.with_value { boolean_red_green_tag(@application.targeted_delivery_funding_eligibility) }
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Funding choice')
-      row.with_value(text: @application.funding_choice&.capitalize || "-")
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: "Schedule Cohort")
-      if @application.cohort.present?
-        row.with_value(text: @application.cohort.start_year)
-        row.with_action(text: "Change", href: npq_separation_admin_applications_change_cohort_path(@application))
-      else
-        row.with_value(text: "-" )
-      end
-    end
-
-    sl.with_row do |row|
-      row.with_key(text: 'Schedule identifier')
-      row.with_value(text: @application.schedule.try(:identifier) || '-')
-    end
-
     sl.with_row do |row|
       row.with_key(text: "Notes")
-      row.with_value do
-        @application.notes.present? ? simple_format(@application.notes) : "No notes"
-      end
+      row.with_value(text: @application.notes.presence || "No notes")
     end
   end
 %>
 
-<hr class="govuk-section-break govuk-section-break--l">
-
-<h2 class="govuk-heading-m">Declarations</h2>
-
-<% @declarations.each do |declaration| %>
-  <%= govuk_summary_card(title: declaration.declaration_type.humanize) do |summary_card|
-    concat(govuk_summary_list do |sl|
-
-      sl.with_row do |row|
-        row.with_key(text: "Declaration ID" )
-        row.with_value { declaration.ecf_id || "-" }
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Declaration type")
-        row.with_value(text: declaration.declaration_type.humanize)
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Declaration date")
-        row.with_value(text: declaration.declaration_date.to_fs(:govuk_short))
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Declaration cohort")
-        row.with_value(text: declaration.cohort.start_year)
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Lead provider")
-        row.with_value(text: declaration.lead_provider.name)
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "State")
-        row.with_value(text: declaration.state.humanize)
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Created at")
-        row.with_value(text: declaration.created_at.to_fs(:govuk_short))
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Updated at")
-        row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
-      end
-
-      sl.with_row do |row|
-        row.with_key(text: "Statements")
-        row.with_value do
-          safe_join(declaration.statements.map do |statement|
-            tag.div govuk_link_to(statement_name(statement), npq_separation_admin_finance_statement_path(statement))
-          end)
-        end
-      end
-    end)
-
-    if declaration.participant_outcomes.any?
-      concat tag.hr(class: "govuk-section-break govuk-section-break--m")
-      concat render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes))
+<%=
+  govuk_summary_list(card: { title: "Workplace" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @application.employer_name_to_display)
     end
-  end %>
-<% end %>
+    sl.with_row do |row|
+      row.with_key(text: "UK Provider Reference Number (UKPRN)")
+      row.with_value(text: @application.ukprn)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Unique reference number (URN)")
+      row.with_value(text: @application.employer_urn)
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Headteacher status")
+      row.with_value(text: @application.headteacher_status.try(:humanize))
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Employment type")
+      row.with_value(text: @application.employment_type.try(:humanize).presence || "-")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "ITT Lead mentor")
+      row.with_value(text: @application.lead_mentor ? "Yes" : "No")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "ITT provider")
+      row.with_value(text: @application.itt_provider.try(:operating_name).presence || "N/A")
+    end
+    sl.with_row do |row|
+      row.with_key(text: "Country")
+      row.with_value(text: @application.teacher_catchment_country.presence || "-")
+    end
+  end
+%>
+
+<div data-declarations>
+  <h2 class="govuk-heading-l">Declarations</h2>
+
+  <% @declarations.each do |declaration| %>
+    <%- title = "#{declaration.declaration_type.humanize} (#{declaration.state.humanize})"%>
+    <%= govuk_summary_card(title:) do |summary_card|
+      concat(govuk_summary_list do |sl|
+        sl.with_row do |row|
+          row.with_key(text: "Declaration ID" )
+          row.with_value { declaration.ecf_id || "-" }
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Declaration date")
+          row.with_value(text: declaration.declaration_date.to_fs(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Declaration cohort")
+          row.with_value(text: declaration.cohort.start_year)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Lead provider")
+          row.with_value(text: declaration.lead_provider.name)
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Created at")
+          row.with_value(text: declaration.created_at.to_fs(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Updated at")
+          row.with_value(text: declaration.updated_at.to_fs(:govuk_short))
+        end
+
+        sl.with_row do |row|
+          row.with_key(text: "Statements")
+          row.with_value do
+            safe_join(declaration.statements.map do |statement|
+              tag.div govuk_link_to(statement_name(statement), npq_separation_admin_finance_statement_path(statement))
+            end)
+          end
+        end
+      end)
+
+      if declaration.participant_outcomes.any?
+        concat tag.hr(class: "govuk-section-break govuk-section-break--m")
+        concat render(NpqSeparation::Admin::OutcomesTableComponent.new(declaration.participant_outcomes))
+      end
+    end %>
+  <% end %>
+</div>
 
 <% if @declarations.none? %>
-  <p class="govuk-body">No declarations</p>
+  <p class="govuk-body">No declarations.</p>
 <% end %>

@@ -10,7 +10,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
 
   describe "a row for a full application" do
     let :application do
-      build_stubbed :application, :accepted, :with_school, :with_private_childcare_provider
+      build_stubbed :application, :accepted, :with_school
     end
 
     let :declarations do
@@ -18,13 +18,13 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
                                        lead_provider: application.lead_provider
     end
 
-    it { is_expected.to have_css "h1", text: "Application for #{application.user.full_name}" }
+    it { is_expected.to have_css "h1", text: application.user.full_name }
+    it { is_expected.to have_text "TRN: #{application.user.trn}", normalize_ws: true }
     it { is_expected.to have_summary_item "Application ID", application.ecf_id }
-    it { is_expected.to have_summary_item "TRN", application.user.trn }
-    it { is_expected.to have_summary_item "Lead provider name", application.lead_provider.name }
-    it { is_expected.to have_summary_item "Course name", application.course.name }
-    it { is_expected.to have_summary_item "School URN", application.school.urn }
-    it { is_expected.to have_summary_item "School UKPRN", application.school.ukprn }
+    it { is_expected.to have_summary_item "Course provider", application.lead_provider.name }
+    it { is_expected.to have_summary_item "Course", application.course.name }
+    it { is_expected.to have_summary_item "Unique reference number (URN)", application.school.urn }
+    it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", application.school.ukprn }
   end
 
   describe "a row for a minimal application" do
@@ -34,12 +34,12 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
 
     let(:declarations) { [] }
 
-    it { is_expected.to have_css "h1", text: "Application for #{application.user.full_name}" }
+    it { is_expected.to have_css "h1", text: application.user.full_name }
+    it { is_expected.to have_text "TRN: #{application.user.trn}", normalize_ws: true }
     it { is_expected.to have_summary_item "Application ID", application.ecf_id }
-    it { is_expected.to have_summary_item "TRN", application.user.trn }
-    it { is_expected.to have_summary_item "Lead provider name", application.lead_provider.name }
-    it { is_expected.to have_summary_item "Course name", application.course.name }
-    it { is_expected.to have_summary_item "School URN", "" }
-    it { is_expected.to have_summary_item "School UKPRN", "" }
+    it { is_expected.to have_summary_item "Course provider", application.lead_provider.name }
+    it { is_expected.to have_summary_item "Course", application.course.name }
+    it { is_expected.to have_summary_item "Unique reference number (URN)", "" }
+    it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", "" }
   end
 end
