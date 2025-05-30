@@ -23,7 +23,8 @@
   <div class="govuk-form-group">
     <%= f.govuk_file_field :file,
       label: { text: "Upload file", tag: "h2", size: "m" },
-      hint: { text: "Maximum file size is 256MB. File must be in CSV format." }
+      hint: { text: "Maximum file size is 256MB. File must be in CSV format." },
+      javascript: true
     %>
   </div>
 
