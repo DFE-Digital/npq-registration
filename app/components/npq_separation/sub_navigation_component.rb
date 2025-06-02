@@ -2,15 +2,10 @@ module NpqSeparation
   class SubNavigationComponent < ViewComponent::Base
     attr_accessor :current_path, :current_section, :structure, :heading
 
-    def initialize(current_path, structure:)
+    def initialize(current_path, structure:, heading: {})
       @current_path = current_path
       @structure = structure
-
-      @heading = if structure.first.is_a? NavigationStructure::Heading
-                   @structure.shift.to_h
-                 else
-                   {}
-                 end
+      @heading = heading
     end
 
     def render?

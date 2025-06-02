@@ -41,9 +41,10 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   let(:current_path) { "/some-path" }
   let(:current_section) { "First" }
   let(:structure) { TestSubNavigationStructure.new }
+  let(:heading) { {} }
 
   subject do
-    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section))
+    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section), heading:)
   end
 
   it "renders a visually hidden level 2 heading" do
@@ -123,18 +124,6 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   end
 
   describe "heading" do
-    let(:heading) { nil }
-    let(:structure) do
-      [
-        heading,
-        NpqSeparation::NavigationStructure::Node.new(name: "Node", href: "#", prefix: "/a"),
-      ].compact
-    end
-
-    subject do
-      NpqSeparation::SubNavigationComponent.new(current_path, structure:)
-    end
-
     before { render_inline(subject) }
 
     context "when heading options are not provided" do
@@ -145,7 +134,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
     context "when heading text is provided" do
       let(:heading) do
-        NpqSeparation::NavigationStructure::Heading.new(text: "My heading")
+        { text: "My heading" }
       end
 
       it "renders the heading text" do
@@ -155,7 +144,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
     context "when heading visbility is enabled" do
       let(:heading) do
-        NpqSeparation::NavigationStructure::Heading.new(visible: true)
+        { visible: true }
       end
 
       it "renders the heading" do
