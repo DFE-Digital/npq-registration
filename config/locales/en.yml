@@ -637,14 +637,9 @@ en:
       title: "Admin"
       dashboard: "Dashboard"
       applications: "Applications"
-      unsynced_applications: "Unsynced applications"
-      users: "Users"
       unsynced_users: "Unsynced users"
       schools: "Schools"
       webhook_messages: "Webhook Messages"
-      admins: "Admin Users"
-      feature_flags: "Feature Flags"
-      bulk_operations: "Bulk operations"
 
     applications:
       show:
