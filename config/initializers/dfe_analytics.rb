@@ -55,4 +55,6 @@ DfE::Analytics.configure do |config|
 
   config.entity_table_checks_enabled = true
   config.excluded_paths = ["/healthcheck"]
+
+  config.azure_federated_auth = ENV.include? "GOOGLE_CLOUD_CREDENTIALS"
 end

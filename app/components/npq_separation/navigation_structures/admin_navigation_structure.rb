@@ -21,9 +21,21 @@ module NpqSeparation
 
         {
           Node.new(
+            name: "Reopening email subscriptions",
+            href: npq_separation_admin_reopening_email_subscriptions_path,
+            prefix: "/npq-separation/admin/reopening-email-subscriptions",
+          ) => [],
+
+          Node.new(
             name: "Feature flags",
             href: npq_separation_admin_features_path,
             prefix: "/npq-separation/admin/features",
+          ) => [],
+
+          Node.new(
+            name: "Admins",
+            href: npq_separation_admin_admins_path,
+            prefix: "/npq-separation/admin/admins",
           ) => [],
         }
       end
@@ -51,7 +63,7 @@ module NpqSeparation
             prefix: "/npq-separation/admin/courses",
           ) => [],
           Node.new(
-            name: "Participants",
+            name: "Users",
             href: npq_separation_admin_users_path,
             prefix: "/npq-separation/admin/users",
           ) => [],
@@ -73,7 +85,7 @@ module NpqSeparation
             Node.new(name: "Contracts", href: "#", prefix: "/npq-separation/admin/finance/contracts"),
           ],
           Node.new(
-            name: "Schools",
+            name: "Workplaces",
             href: npq_separation_admin_schools_path,
             prefix: "/npq-separation/admin/schools",
           ) => [],

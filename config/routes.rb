@@ -66,24 +66,10 @@ Rails.application.routes.draw do
       end
     end
     resources :unsynced_applications, only: %i[index], path: "unsynced-applications"
-    resources :users, only: %i[index show]
     resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
-    resources :admins, only: %i[index new create destroy]
-    resources :super_admins, only: %i[update]
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
-    end
-
-    resources :reopening_email_subscriptions do
-      member do
-        get "unsubscribe"
-        post "unsubscribe"
-      end
-      collection do
-        get "all_users"
-        get "senco"
-      end
     end
   end
 
@@ -212,8 +198,21 @@ Rails.application.routes.draw do
 
     namespace :admin do
       resources :features, only: %i[index show update]
+      resources :admins, only: %i[index new create destroy]
+      resources :super_admins, only: %i[update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
+      end
+
+      resources :reopening_email_subscriptions do
+        member do
+          get "unsubscribe"
+          post "unsubscribe"
+        end
+        collection do
+          get "all_users"
+          get "senco"
+        end
       end
 
       resources :closed_registration_users do

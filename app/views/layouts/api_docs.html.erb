@@ -1,6 +1,6 @@
 <% content_for :head do %>
-  <%= javascript_include_tag "swagger-ui", defer: true %>
-  <%= stylesheet_link_tag "swagger-ui", media: "all" %>
+  <%= nonced_javascript_include_tag "swagger-ui", defer: true %>
+  <%= nonced_stylesheet_link_tag "swagger-ui", media: "all" %>
 <% end %>
 
 <!DOCTYPE html>
@@ -9,6 +9,11 @@
 
   <body class="govuk-template__body js-enabled <%= yield :body_class %>">
     <%= render partial: "layouts/shared/govuk_javascript" %>
+
+    <% if show_tracking_pixels? %>
+      <%= render partial: "shared/analytics/tracking_pixels" %>
+    <% end %>
+
     <%= render partial: "shared/analytics/google_noscript" %>
 
     <%= nonced_javascript_tag do %>

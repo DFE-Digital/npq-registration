@@ -17,10 +17,6 @@
     <%= t(".applications") %>
   <% end %>
 
-  <% component.with_nav_item(path: admin_users_path) do %>
-    <%= t(".users") %>
-  <% end %>
-
   <% component.with_nav_item(path: admin_unsynced_applications_path) do %>
     <%= t(".unsynced_applications") %>
   <% end %>
@@ -37,14 +33,4 @@
     <%= t(".webhook_messages") %>
   <% end %>
 
-  <% if super_admin? %>
-    <% component.with_nav_item(path: admin_admins_path) do %>
-      <%= t(".admins") %>
-    <% end %>
-
-
-    <% component.with_nav_item(path: admin_reopening_email_subscriptions_path) do %>
-      <%= "Reopening email subscriptions" %>
-    <% end %>
-  <% end %>
 <% end %>

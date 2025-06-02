@@ -1,11 +1,22 @@
 RSpec::Matchers.define :have_component do |expected_component|
   match do |page|
-    expected_html = ApplicationController.renderer.render(expected_component, layout: false)
+    actual_html(page).include? expected_html(expected_component)
+  end
 
-    if page.is_a? ActiveSupport::SafeBuffer
-      page.include?(expected_html)
-    else
-      page.html.include?(expected_html)
-    end
+  failure_message do |page|
+    [
+      "expected to find",
+      expected_html(expected_component),
+      "within page content",
+      actual_html(page),
+    ].join("\n\n")
+  end
+
+  def expected_html(component)
+    ApplicationController.renderer.render(component, layout: false)
+  end
+
+  def actual_html(page)
+    page.is_a?(ActiveSupport::SafeBuffer) ? page : page.html
   end
 end
