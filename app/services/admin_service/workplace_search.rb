@@ -58,55 +58,64 @@ private
   end
 
   def scopes
-    [
+    @scopes ||= [
       schools_scope,
       private_childcare_provider_scope,
       local_authority_scope,
     ]
   end
 
-  # Return properly paginated scopes
   def find_scopes
-    # Extra offset is to compensate for the previous scopes count.
-    # When using pagination, we are getting absolute offset. When paginating further scopes, we need to
-    # substract offset.
-    # Eg:
-    # If we already have 24 schools and then 5 PrivateChildcareProviders and we are on the
-    # 2rd page, where we will display remaining 4 PCP pagy will set offset to 25.
-    # But in this case, we want to display records from offset 1 of the PCP, as one PCP was displayed on the
-    # previous page. Using extra_offset will let us do it. In the above case, during accessing the
-    # second page, the extra_offset will be set to 24 which will allow us to display records correctly.
-    extra_offset = 0
-    current_scope_index = 0
+    calculate_scopes_indexes
 
-    while current_scope_index < scopes.length
-      scope = scopes[current_scope_index]
+    scopes.each_with_object([]) do |scope, records|
+      next unless @scope_indexes[scope.class]
 
-      # case where current scope can be displayed alone
-      if scope.count + extra_offset >= @offset + @limit
-        return scope.offset(@offset - extra_offset).limit(@limit)
-      # case where we need to display more than one different scope in one page
-      elsif scope.count + extra_offset > @offset && scope.count + extra_offset < @offset + @limit
-        remaining_records_count = (scope.count + extra_offset) % @limit
-
-        records = scope.offset(@offset - extra_offset).limit(remaining_records_count).to_a
-        next_scope_index = current_scope_index
-        # we need to fill current page with further scopes
-        # we iterate until all scopes are looked after or current page records are full
-        while (next_scope = scopes[next_scope_index + 1]) && records.count < @limit
-          extra_records_count = @limit - records.count
-          records += next_scope.offset(0).limit(extra_records_count)
-          next_scope_index += 1
-        end
-
-        return records
+      # creating initial records array for the records on current page
+      if (scope_range = @scope_indexes[scope.class]).include?(@offset)
+        current_offset = @offset - scope_range.begin
+        records.push(*scope.offset(current_offset).limit(@limit))
+        next
       end
 
-      # If we reached this point it means that current scope is shorter than offset.
-      extra_offset += scope.count
-      current_scope_index += 1
+      # if the records array is not full yet it means that previous
+      # scope was too small. Now we are trying to fill it up using next scopes
+      # Please note that we start with offset 0 as we are just adding missing records from the next scope
+      if records.present? && records.length < @limit
+        records_remaining = @limit - records.length
+        records.push(*scope.offset(0).limit(records_remaining))
+      end
     end
+  end
 
-    [] # Fallback when no records could be found
+  # The essence of pagination is get a sublist (subarray) of the long array of records.
+  # The problem here is, we are paginating through different database scopes
+  # This method calculates start and end index of each scope. This will be used later to get
+  # proper records.
+  # Empty scopes get nil instead of range
+  #
+  # Eg.
+  # If we have 2 schools records, 3 private childcare provider records and 1 local authority to paginate,
+  # the result will look like that:
+  # {
+  #   School::ActiveRecord_Relation=>0...2,
+  #   PrivateChildcareProvider::ActiveRecord_Relation=>2...5,
+  #   LocalAuthority::ActiveRecord_Relation=>5...6}
+  # }
+  def calculate_scopes_indexes
+    @scope_indexes = {}
+    start_index = 0
+
+    scopes.each do |scope|
+      if scope.empty?
+        @scope_indexes[scope.class] = nil
+        next
+      end
+      end_index = scope.length + start_index
+      @scope_indexes[scope.class] = (start_index...end_index)
+
+      start_index = end_index
+    end
+    @scope_indexes
   end
 end
