@@ -21,6 +21,7 @@ FactoryBot.define do
 
     trait :with_school do
       school
+      ukprn { school.ukprn }
       private_childcare_provider_id { nil }
       DEPRECATED_private_childcare_provider_urn { nil }
 
