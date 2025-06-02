@@ -19,7 +19,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
       admin_path,
       admin_applications_path,
       admin_unsynced_applications_path,
-      admin_users_path,
       admin_unsynced_users_path,
       admin_schools_path,
     ].each do |href|
@@ -36,14 +35,12 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
       "Dashboard" => admin_path,
       "Applications" => admin_applications_path,
       "Unsynced applications" => admin_unsynced_applications_path,
-      "Users" => admin_users_path,
       "Unsynced users" => admin_unsynced_users_path,
       "Schools" => admin_schools_path,
     }.each do |text, href|
       # Check the links are present
       expect(page).to have_link(text, href:)
     end
-    expect(page).not_to have_link("Admin Users", href: "/admin/admins")
   end
 
   scenario "when logged in as a regular admin, it allows access to the dashboard" do
@@ -129,76 +126,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     end
 
     expect(page).to have_link("Back", href: admin_applications_url(q: selected_application.user.email))
-  end
-
-  scenario "when logged in as a regular admin, it allows access to the users interface" do
-    users = create_list(:user, 4, ecf_id: nil)
-
-    sign_in_as_admin
-
-    expect(page).to have_link("Users", href: admin_users_path)
-    page.click_link("Users")
-    expect(page).to have_current_path(admin_users_path)
-
-    display_users = User.all.order(email: :asc)
-
-    # Test application pagination
-    display_users[0..2].each do |user|
-      expect(page).to have_content(user.email)
-    end
-
-    page.find("[rel=next]").click
-
-    display_users[3..].each do |user|
-      expect(page).to have_content(user.email)
-    end
-
-    # Test application search and show page
-    selected_user = users.sample
-
-    successful_sync_log = selected_user.ecf_sync_request_logs.create!(
-      status: :success,
-      sync_type: :user_creation,
-      created_at: 15.days.ago,
-    )
-
-    failed_sync_log = selected_user.ecf_sync_request_logs.create!(
-      status: :failed,
-      sync_type: :user_creation,
-      error_messages: %w[foobar],
-      created_at: 16.days.ago,
-    )
-
-    page.fill_in "Search records", with: selected_user.email
-    page.click_button "Search"
-
-    expect(page.find_all("table tbody tr").size).to be(1)
-
-    click_link selected_user.email
-    expect(page).to have_current_path("/admin/users/#{selected_user.id}")
-
-    expect(page).to have_link("ECF Sync Log", href: "#ecf-sync-log")
-
-    click_link "ECF Sync Log"
-    within "#log-row-#{successful_sync_log.id}" do
-      expect(page.text).to eq [
-        "User Creation",
-        successful_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Success",
-        "-",
-      ].join(" ")
-    end
-
-    within "#log-row-#{failed_sync_log.id}" do
-      expect(page.text).to eq [
-        "User Creation",
-        failed_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Failed",
-        failed_sync_log.error_messages.join(", "),
-      ].join(" ")
-    end
-
-    expect(page).to have_link("Back", href: admin_users_url(q: selected_user.email))
   end
 
   scenario "when logged in as a regular admin, it allows access to the schools interface" do
