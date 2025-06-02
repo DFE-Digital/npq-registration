@@ -2,7 +2,10 @@ require "rails_helper"
 
 RSpec.describe BulkOperation::RevertApplicationsToPending do
   let(:application_ecf_ids) { [application.ecf_id] }
-  let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin), application_ecf_ids:) }
+  let(:bulk_operation) { create(:revert_applications_to_pending_bulk_operation, admin: create(:admin)) }
+  let(:file) { tempfile(application_ecf_ids.join("\n")) }
+
+  before { bulk_operation.file.attach(file.open) }
 
   describe "#run!" do
     subject(:run) { bulk_operation.run! }

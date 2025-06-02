@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.describe BulkOperation, type: :model do
   let(:admin) { create(:admin) }
   let(:application_ecf_id) { "e857f4bc-9e19-4bf8-9874-02a60905dbdb" }
-  let(:application_ecf_ids) { [application_ecf_id] }
 
   let(:valid_file) do
     tempfile <<~CSV
@@ -57,7 +56,7 @@ RSpec.describe BulkOperation, type: :model do
   end
 
   describe "callbacks" do
-    subject(:bulk_operation) { build(:reject_applications_bulk_operation, application_ecf_ids: [], admin:) }
+    subject(:bulk_operation) { build(:reject_applications_bulk_operation, admin:) }
 
     describe "before_save" do
       context "when file is attached" do
@@ -126,7 +125,9 @@ RSpec.describe BulkOperation, type: :model do
   describe "#ids_to_update" do
     subject(:ids_to_update) { bulk_operation.ids_to_update }
 
-    let(:bulk_operation) { create(:reject_applications_bulk_operation, application_ecf_ids:) }
+    let(:bulk_operation) { create(:reject_applications_bulk_operation) }
+
+    before { bulk_operation.file.attach(valid_file.open) }
 
     it "returns an array of application ECF IDs" do
       expect(ids_to_update.to_a).to eq [application_ecf_id]
