@@ -425,9 +425,11 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   end
 
   scenario "adding and editing notes" do
+    visit(npq_separation_admin_applications_path)
+
     application = applications_in_order.first
 
-    visit(npq_separation_admin_application_path(application))
+    click_link(application.ecf_id)
 
     within(".govuk-summary-list__row", text: "Notes") do
       click_on "Add note"
