@@ -66,22 +66,19 @@ private
   end
 
   def find_scopes
-    calculate_scopes_indexes
+    calculate_scope_indexes
 
     scopes.each_with_object([]) do |scope, records|
+      # Guard statement checking if the given scope has any records given current search criteria.
       next unless @scope_indexes[scope.class]
 
-      # creating initial records array for the records on current page
       if (scope_range = @scope_indexes[scope.class]).include?(@offset)
         current_offset = @offset - scope_range.begin
         records.push(*scope.offset(current_offset).limit(@limit))
-        next
-      end
-
-      # if the records array is not full yet it means that previous
-      # scope was too small. Now we are trying to fill it up using next scopes
-      # Please note that we start with offset 0 as we are just adding missing records from the next scope
-      if records.present? && records.length < @limit
+      elsif records.any? && records.length < @limit
+        # If the records array is not full yet it means that previous scope subset was smaller than the page size.
+        # Now we are trying to fill it up using next scopes
+        # Please note that we start with offset 0 as we are just adding missing records from the next scope
         records_remaining = @limit - records.length
         records.push(*scope.offset(0).limit(records_remaining))
       end
@@ -102,12 +99,13 @@ private
   #   PrivateChildcareProvider::ActiveRecord_Relation=>2...5,
   #   LocalAuthority::ActiveRecord_Relation=>5...6}
   # }
-  def calculate_scopes_indexes
+  def calculate_scope_indexes
     @scope_indexes = {}
     start_index = 0
 
     scopes.each do |scope|
       if scope.empty?
+        # There is not possibility to have an empty range, so we need to use nil
         @scope_indexes[scope.class] = nil
         next
       end
