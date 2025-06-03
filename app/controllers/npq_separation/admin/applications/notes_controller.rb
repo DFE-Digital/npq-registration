@@ -7,7 +7,8 @@ module NpqSeparation
         before_action :set_application
 
         def edit
-          @in_review_application = true if request.referer =~ /review/
+          referrer_path = URI(request.referer).path if request.referer
+          @in_review_application = true if referrer_path =~ /review/
           @return_path = return_path(@in_review_application)
         end
 
