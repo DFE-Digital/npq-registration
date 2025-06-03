@@ -348,7 +348,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         let(:params) { { application:, funded_place: nil } }
 
         context "when funding_cap is true" do
-          it "returns funding_place is required error" do
+          it "returns funded_place is required error" do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
@@ -368,7 +368,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         context "when funded_place is `true`" do
           let(:params) { { application:, funded_place: "true" } }
 
-          it "returns funding_place is required error" do
+          it "returns funded_place is required error" do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
@@ -377,7 +377,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         context "when funded_place is `false`" do
           let(:params) { { application:, funded_place: "false" } }
 
-          it "returns funding_place is required error" do
+          it "returns funded_place is required error" do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
@@ -386,7 +386,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         context "when funded_place is `null`" do
           let(:params) { { application:, funded_place: "null" } }
 
-          it "returns funding_place is required error" do
+          it "returns funded_place is required error" do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
@@ -395,7 +395,7 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         context "when funded_place is an empty string" do
           let(:params) { { application:, funded_place: "" } }
 
-          it "returns funding_place is required error" do
+          it "returns funded_place is required error" do
             service.accept
             expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
           end
