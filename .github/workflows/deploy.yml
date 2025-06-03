@@ -5,11 +5,34 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy environment"
+        required: true
+        type: choice
+        default: review
+        options:
+          - review
+          - staging
+          - sandbox
+          - production
+      docker-image-tag:
+        description: "Docker image tag to deploy"
+        required: true
+        type: string
+      pull-request-number:
+        description: "Pull request number (required for review environment)"
+        required: false
+        type: string
   push:
     branches:
       - main
   pull_request:
   merge_group:
+env:
+  TERRAFORM_BASE: terraform/application
+  HEALTHCHECK_CMD: "healthcheck"
 
 permissions:
   id-token: write
@@ -48,6 +71,32 @@ jobs:
           docker-repository: ghcr.io/dfe-digital/npq-registration
           github-token: ${{ secrets.GITHUB_TOKEN }}
           snyk-token: ${{ secrets.SNYK_TOKEN }}
+
+  manual_deploy:
+    name: Manual deploy
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ steps.deploy_manual.outputs.environment_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pull-requests: write
+
+    steps:
+      - name: Deploy app to ${{ inputs.environment }}
+        id: deploy_manual
+        uses: DFE-Digital/github-actions/deploy-to-aks@master
+        with:
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          environment: ${{ inputs.environment }}
+          pr-number: ${{ inputs.pull-request-number }}
+          sha: ${{ inputs.docker-image-tag }}
+          terraform-base: ${{ env.TERRAFORM_BASE }}
+          healthcheck: ${{ env.HEALTHCHECK_CMD }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
 
   deploy_review:
     name: Deploy review
