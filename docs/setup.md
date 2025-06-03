@@ -10,7 +10,7 @@
 ## Local development
 
 1. Install the prerequisites:
-- Ruby 3.3.4
+- Ruby 3.3.8
 - PostgreSQL
 - NodeJS 20.15.1
 - Yarn 1.22.x
