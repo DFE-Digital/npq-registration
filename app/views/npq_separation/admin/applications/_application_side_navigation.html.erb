@@ -1,0 +1,20 @@
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+
+  <%=
+    render NpqSeparation::SubNavigationComponent.new(
+      request.path,
+      heading: {
+        text: @application.user.full_name,
+        visible: true
+      },
+      structure: [
+        NpqSeparation::NavigationStructure::Node.new(
+          name: "#{@application.course.name}, #{@application.created_at.to_date.to_fs(:govuk)}",
+          href: npq_separation_admin_application_path(@application),
+          prefix: /\/npq-separation\/admin\/applications(?:|\/reviews)\/\d+$/,
+        ),
+      ],
+    )
+  %>
+<% end %>
