@@ -201,7 +201,7 @@ RSpec.feature "Applications in review", type: :feature do
     within(summary_lists[1]) do |summary_list|
       expect(summary_list).to have_summary_item("Eligible for funding", "No")
       expect(summary_list).to have_summary_item("Funded place", "No")
-      expect(summary_list).to have_summary_item("Notes", application.notes)
+      expect(summary_list).to have_summary_item("Notes", "No notes")
     end
 
     expect(page).to have_css("h2", text: "Work details")
@@ -231,19 +231,46 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).to have_text JSON.pretty_generate(serialized_application)
   end
 
-  scenario "updating notes" do
+  scenario "adding and editing notes" do
     click_on application_for_hospital_school.ecf_id
 
     within(".govuk-summary-list__row", text: "Notes") do
-      click_on "Change"
+      click_on "Add note"
+    end
+
+    # check cancel
+    click_on "Cancel"
+    expect(page).to have_current_path(npq_separation_admin_application_review_path(application_for_hospital_school))
+
+    # change for real
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Add note"
     end
 
     fill_in "Add a note about the changes to this registration", with: "Some notes"
     click_on "Add note"
 
+    expect(page).to have_current_path(npq_separation_admin_application_review_path(application_for_hospital_school))
     within(".govuk-summary-list__row", text: "Notes") do
       expect(page).to have_text("Some notes")
     end
+
+    within(".govuk-summary-list__row", text: "Notes") do
+      click_on "Edit note"
+    end
+
+    fill_in "Edit the note about the changes to this registration", with: "Different notes"
+    click_on "Edit note"
+
+    expect(page).to have_current_path(npq_separation_admin_application_review_path(application_for_hospital_school))
+    within(".govuk-summary-list__row", text: "Notes") do
+      expect(page).to have_text("Different notes")
+    end
+
+    # check going straight to the note edit page
+    visit(edit_npq_separation_admin_applications_notes_path(application_for_hospital_school))
+    click_on "Cancel"
+    expect(page).to have_current_path(npq_separation_admin_application_path(application_for_hospital_school))
   end
 
   scenario "Applications should display in correct order" do
