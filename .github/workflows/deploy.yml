@@ -13,7 +13,6 @@ on:
         type: choice
         default: review
         options:
-          - review
           - staging
           - sandbox
           - production
@@ -21,10 +20,7 @@ on:
         description: "Docker image tag to deploy"
         required: true
         type: string
-      pull-request-number:
-        description: "Pull request number (required for review environment)"
-        required: false
-        type: string
+
   push:
     branches:
       - main
@@ -73,30 +69,30 @@ jobs:
           snyk-token: ${{ secrets.SNYK_TOKEN }}
 
   manual_deploy:
-    name: Manual deploy
+    name: Manual deploy to ${{ inputs.environment }}
     if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: [docker]
     environment:
       name: ${{ inputs.environment }}
-      url: ${{ steps.deploy_manual.outputs.environment_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       pull-requests: write
 
     steps:
-      - name: Deploy app to ${{ inputs.environment }}
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        name: Deploy app to ${{ inputs.environment }}
         id: deploy_manual
-        uses: DFE-Digital/github-actions/deploy-to-aks@master
         with:
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           environment: ${{ inputs.environment }}
-          pr-number: ${{ inputs.pull-request-number }}
-          sha: ${{ inputs.docker-image-tag }}
-          terraform-base: ${{ env.TERRAFORM_BASE }}
-          healthcheck: ${{ env.HEALTHCHECK_CMD }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+          docker-image: ghcr.io/dfe-digital/npq-registration:${{ inputs.docker-image-tag }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          current-commit-sha: ${{ inputs.docker-image-tag }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
   deploy_review:
     name: Deploy review
@@ -118,7 +114,7 @@ jobs:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ github.event.pull_request.number }}
-          current-commit-sha: ${{ github.event.pull_request.head.sha }}
+          current-commit-sha: ${{ github.sha }}
 
       - name: Post sticky pull request comment
         if: github.event_name == 'pull_request'

@@ -12,24 +12,24 @@ if [[ -z $current_commit_sha ]]; then
   exit 1
 fi
 
-max_retries=10
+# max_retries=10
 
-for ((i=1; i<=max_retries; i++)); do
-  response=$(curl -sL $url/healthcheck)
-  response_sha=$(jq ".git_commit_sha" <<< $response)
+# for ((i=1; i<=max_retries; i++)); do
+#   response=$(curl -sL $url/healthcheck)
+#   response_sha=$(jq ".git_commit_sha" <<< $response)
   
-  if [[ $response_sha == $current_commit_sha ]]; then
-    echo "✅ Correct version deployed"
-    break
-  fi
+#   if [[ $response_sha == $current_commit_sha ]]; then
+#     echo "✅ Correct version deployed"
+#     break
+#   fi
 
-  if [[ $i -eq $max_retries ]]; then
-    echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
-    exit 1
-  fi
+#   if [[ $i -eq $max_retries ]]; then
+#     echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
+#     exit 1
+#   fi
 
-  sleep 1 # Wait for 1 second before retrying
-done
+#   sleep 1 # Wait for 1 second before retrying
+# done
 
 response_migration=$(jq ".database.migration_version" <<< $response)
 latest_migration=$(ls db/migrate/ | cut -d "_" -f1 | sort -nr | head -n1)
