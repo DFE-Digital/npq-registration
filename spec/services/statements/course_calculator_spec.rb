@@ -196,7 +196,7 @@ RSpec.describe Statements::CourseCalculator do
     context "when monthly_service_fee on contract set to nil" do
       let(:monthly_service_fee) { nil }
 
-      it { is_expected.to eql(BigDecimal("0.1212631578947368421052631578947368421064e4")) }
+      it { is_expected.to match_bigdecimal(BigDecimal("0.1212631578947368421052631578947368421064e4")) }
     end
 
     context "when monthly_service_fee present on contract" do
@@ -222,13 +222,13 @@ RSpec.describe Statements::CourseCalculator do
     context "when monthly_service_fee on contract set to nil" do
       let(:monthly_service_fee) { nil }
 
-      it { is_expected.to eql(BigDecimal("0.16842105263157894736842105263157894737e2")) }
+      it { is_expected.to match_bigdecimal(BigDecimal("0.16842105263157894736842105263157894737e2")) }
     end
 
     context "when monthly_service_fee present on contract" do
       let(:monthly_service_fee) { 5432.10 }
 
-      it { is_expected.to eql(BigDecimal("0.12402054794520547945205479452054794521e2")) }
+      it { is_expected.to match_bigdecimal(BigDecimal("0.12402054794520547945205479452054794521e2")) }
     end
   end
 

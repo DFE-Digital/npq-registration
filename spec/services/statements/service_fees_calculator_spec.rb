@@ -14,5 +14,11 @@ RSpec.describe Statements::ServiceFeesCalculator do
     }
   end
 
-  it { is_expected.to eq(expected_result) }
+  it "calculates the correct monthly service fee" do
+    expect(subject[:monthly]).to match_bigdecimal(expected_result[:monthly])
+  end
+
+  it "calculates the correct per participant service fee" do
+    expect(subject[:per_participant]).to match_bigdecimal(expected_result[:per_participant])
+  end
 end
