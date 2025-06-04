@@ -151,7 +151,6 @@ RSpec.describe Application do
   end
 
   describe "scopes" do
-
     describe ".accepted" do
       it "returns accepted applications" do
         accepted_application = create(:application, :accepted)
