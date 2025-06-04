@@ -29,7 +29,6 @@ class Application < ApplicationRecord
   has_many :application_states
   has_many :declarations
 
-  scope :unsynced, -> { where(ecf_id: nil) }
   scope :expired_applications, -> { where(lead_provider_approval_status: "rejected").where("created_at < ?", cut_off_date_for_expired_applications) }
   scope :active_applications, -> { where.not(id: expired_applications) }
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
