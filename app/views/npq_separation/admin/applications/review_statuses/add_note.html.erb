@@ -1,0 +1,14 @@
+<%= govuk_back_link(href: url_for(:back)) %>
+
+<h1 class="govuk-heading-xl"><%= @application.user.full_name %></h1>
+
+<%= form_with model: @application, url: npq_separation_admin_application_review_review_status_path(@application) do |f| %>
+  <%= f.hidden_field :review_status, value: application_params[:review_status] %>
+
+  <%= render NpqSeparation::Admin::ApplicationNotesInputComponent.new(form: f) %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit "Add note" %>
+    <%= govuk_link_to t("shared.cancel"), npq_separation_admin_application_review_path(@application) %>
+  </div>
+<% end %>

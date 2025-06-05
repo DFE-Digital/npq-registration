@@ -1,0 +1,20 @@
+<%= govuk_back_link(href: npq_separation_admin_application_review_path(@application)) %>
+
+<h1 class="govuk-heading-xl"><%= @application.user.full_name %></h1>
+
+<%= form_with model: @application, url: npq_separation_admin_application_review_review_status_path(@application), method: :patch do |f| %>
+  <%=
+    f.govuk_collection_radio_buttons(
+      :review_status,
+      Application.review_statuses.keys,
+      :to_s,
+      :to_s,
+      legend: { text: "What is the review status for this registration?" }
+    )
+  %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit "Update review status" %>
+    <%= govuk_link_to "Cancel", npq_separation_admin_application_review_path(@application), class: "govuk-link--no-visited-state" %>
+  </div>
+<% end %>
