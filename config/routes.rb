@@ -65,7 +65,6 @@ Rails.application.routes.draw do
         patch "update_participant_outcome"
       end
     end
-    resources :unsynced_users, only: %i[index], path: "unsynced-users"
     resources :schools, only: %i[index show]
     resources :webhook_messages, only: %i[index show] do
       resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"

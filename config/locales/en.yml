@@ -637,7 +637,6 @@ en:
       title: "Admin"
       dashboard: "Dashboard"
       applications: "Applications"
-      unsynced_users: "Unsynced users"
       schools: "Schools"
       webhook_messages: "Webhook Messages"
 

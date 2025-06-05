@@ -33,7 +33,6 @@ class User < ApplicationRecord
   after_commit :touch_significantly_updated_at
 
   scope :admins, -> { where(admin: true) }
-  scope :unsynced, -> { where(ecf_id: nil) }
 
   scope :with_get_an_identity_id, lambda {
     where.not(uid: nil)
