@@ -18,7 +18,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     [
       admin_path,
       admin_applications_path,
-      admin_unsynced_applications_path,
       admin_unsynced_users_path,
       admin_schools_path,
     ].each do |href|
@@ -34,7 +33,6 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     {
       "Dashboard" => admin_path,
       "Applications" => admin_applications_path,
-      "Unsynced applications" => admin_unsynced_applications_path,
       "Unsynced users" => admin_unsynced_users_path,
       "Schools" => admin_schools_path,
     }.each do |text, href|
