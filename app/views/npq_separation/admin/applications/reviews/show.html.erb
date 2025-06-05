@@ -24,6 +24,7 @@
     sl.with_row do |row|
       row.with_key(text: "Review status")
       row.with_value(text: review_status_tag(@application.review_status))
+      row.with_action(text: "Change", visually_hidden_text: "review status", href: edit_npq_separation_admin_application_review_review_status_path(@application))
     end
     sl.with_row do |row|
       row.with_key(text: "Eligible for funding")

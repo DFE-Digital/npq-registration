@@ -3,13 +3,7 @@
 <%= form_with model: @application, url: npq_separation_admin_applications_notes_path(@application) do |f| %>
   <%= f.govuk_error_summary %>
 
-  <%=
-    text_area_label = @application.notes.present? ? "Edit the note about the changes to this registration" : "Add a note about the changes to this registration"
-    f.govuk_text_area :notes,
-                      label: { text: text_area_label, size: "m" },
-                      hint: { text: "Begin your note with the date and your initials. (Notes are for internal use only.)" },
-                      max_chars: 1_000
-  %>
+  <%= render NpqSeparation::Admin::ApplicationNotesInputComponent.new(form: f) %>
 
   <%= hidden_field_tag :in_review_application, @in_review_application %>
 
