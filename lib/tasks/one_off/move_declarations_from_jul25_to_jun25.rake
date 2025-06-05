@@ -1,11 +1,12 @@
 namespace :one_off do
-  desc "Move declarations from July 2025 to June 2025 for 2023 Cohort"
+  desc "Move declarations from July 2025 to June 2025 for 2022 Cohort"
   task :move_declarations_from_jul25_to_jun25, %i[dry_run override_date_checks] => :environment do |_task, args|
     Rails.logger = Logger.new($stdout) unless Rails.env.test?
+    Rails.logger.level = Logger::INFO
     dry_run = args[:dry_run] != "false"
     override_date_checks = args[:override_date_checks] == "true"
 
-    cohort = Cohort.find_by!(start_year: 2023)
+    cohort = Cohort.find_by!(start_year: 2022)
 
     migrator = OneOff::MigrateDeclarationsBetweenStatements
       .new(

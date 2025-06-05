@@ -155,18 +155,24 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           migrate
 
           expect(from_statement.reload).to have_attributes(from_statement_updates)
-          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} updated with #{from_statement_updates}")
+          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} updated from: {\"output_fee\"=>true} to {\"output_fee\"=>false}")
         end
       end
 
       context "when to_statement_updates are provided" do
-        let(:to_statement_updates) { { deadline_date: 5.days.from_now.to_date, payment_date: 2.days.from_now.to_date } }
+        let!(:old_deadline_date) { to_statement.deadline_date }
+        let!(:old_payment_date) { to_statement.payment_date }
+        let(:new_deadline_date) { 5.days.from_now.to_date }
+        let(:new_payment_date) { 2.days.from_now.to_date }
+        let(:to_statement_updates) { { deadline_date: new_deadline_date, payment_date: new_payment_date } }
 
         it "updates the to statements" do
           migrate
 
           expect(to_statement.reload).to have_attributes(to_statement_updates)
-          expect(logged_output).to include("Statement #{to_statement.year}-#{to_statement.month} for #{to_statement.lead_provider.name} updated with #{to_statement_updates}")
+          expect(logged_output).to include("Statement #{to_statement.year}-#{to_statement.month} for #{to_statement.lead_provider.name} " \
+                                           "updated from: {\"deadline_date\"=>#{old_deadline_date.inspect}, \"payment_date\"=>#{old_payment_date.inspect}} " \
+                                           "to {\"deadline_date\"=>#{new_deadline_date.inspect}, \"payment_date\"=>#{new_payment_date.inspect}}")
         end
       end
 

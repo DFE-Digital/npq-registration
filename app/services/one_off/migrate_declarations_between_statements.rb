@@ -82,7 +82,11 @@ module OneOff
 
       from_statements_by_provider.each_value do |statement|
         statement.update!(from_statement_updates)
-        record_info("Statement #{statement.year}-#{statement.month} for #{statement.lead_provider.name} updated with #{from_statement_updates}")
+        next unless statement.previous_changes.any?
+
+        record_info("Statement #{statement.year}-#{statement.month} for #{statement.lead_provider.name} updated " \
+                    "from: #{statement.previous_changes.except(:updated_at).transform_values(&:first)} " \
+                    "to #{statement.previous_changes.except(:updated_at).transform_values(&:last)}")
       end
     end
 
@@ -91,7 +95,11 @@ module OneOff
 
       to_statements_by_provider.each_value do |statement|
         statement.update!(to_statement_updates)
-        record_info("Statement #{statement.year}-#{statement.month} for #{statement.lead_provider.name} updated with #{to_statement_updates}")
+        next unless statement.previous_changes.any?
+
+        record_info("Statement #{statement.year}-#{statement.month} for #{statement.lead_provider.name} updated " \
+                    "from: #{statement.previous_changes.except(:updated_at).transform_values(&:first)} " \
+                    "to #{statement.previous_changes.except(:updated_at).transform_values(&:last)}")
       end
     end
 
