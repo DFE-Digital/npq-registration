@@ -31,6 +31,7 @@ RSpec.describe Declarations::Create, type: :model do
   end
   let(:statement) { create(:statement, cohort:, lead_provider:) }
   let!(:contract) { create(:contract, statement:, course:) }
+  let(:declaration) { Declaration.last }
 
   subject(:service) { described_class.new(**params) }
 
@@ -143,6 +144,7 @@ RSpec.describe Declarations::Create, type: :model do
 
     context "when submitting completed" do
       let(:declaration_type) { "completed" }
+      let(:outcome) { declaration.participant_outcomes.first }
 
       context "when has_passed is nil" do
         let(:has_passed) { nil }
@@ -164,8 +166,6 @@ RSpec.describe Declarations::Create, type: :model do
             service.create_declaration
           }.to change(ParticipantOutcome, :count).by(1)
 
-          declaration = Declaration.last
-          outcome = declaration.participant_outcomes.first
           expect(outcome.completion_date).to eql(declaration.declaration_date.to_date)
           expect(outcome).to be_passed_state
         end
@@ -179,8 +179,6 @@ RSpec.describe Declarations::Create, type: :model do
             service.create_declaration
           }.to change(ParticipantOutcome, :count).by(1)
 
-          declaration = Declaration.last
-          outcome = declaration.participant_outcomes.first
           expect(outcome.completion_date).to eql(declaration.declaration_date.to_date)
           expect(outcome).to be_passed_state
         end
@@ -194,8 +192,6 @@ RSpec.describe Declarations::Create, type: :model do
             service.create_declaration
           }.to change(ParticipantOutcome, :count).by(1)
 
-          declaration = Declaration.last
-          outcome = declaration.participant_outcomes.first
           expect(outcome.completion_date).to eql(declaration.declaration_date.to_date)
           expect(outcome).to be_failed_state
         end
@@ -209,8 +205,6 @@ RSpec.describe Declarations::Create, type: :model do
             service.create_declaration
           }.to change(ParticipantOutcome, :count).by(1)
 
-          declaration = Declaration.last
-          outcome = declaration.participant_outcomes.first
           expect(outcome.completion_date).to eql(declaration.declaration_date.to_date)
           expect(outcome).to be_failed_state
         end
@@ -371,8 +365,7 @@ RSpec.describe Declarations::Create, type: :model do
     it "stores the correct data" do
       subject
 
-      declaration = Declaration.last
-
+      expect(declaration.application).to eq(application)
       expect(declaration.declaration_type).to eq(declaration_type)
       expect(declaration.user.ecf_id).to eq(participant.ecf_id)
       expect(declaration.course_identifier).to eq(course_identifier)
@@ -400,7 +393,6 @@ RSpec.describe Declarations::Create, type: :model do
       it "sets the declaration to submitted" do
         subject
 
-        declaration = Declaration.last
         expect(declaration).to be_submitted_state
       end
     end
@@ -413,8 +405,6 @@ RSpec.describe Declarations::Create, type: :model do
       it "creates declaration to next cohort statement" do
         travel_to declaration_date + 1.day do
           expect { subject }.to change(Declaration, :count).by(1)
-
-          declaration = Declaration.last
 
           expect(declaration).to be_eligible_state
           expect(declaration.statements).to include(statement)
@@ -430,10 +420,25 @@ RSpec.describe Declarations::Create, type: :model do
       it "creates an `ineligible` declaration superseded by the original declaration" do
         subject
 
-        declaration = Declaration.last
-
         expect(declaration).to be_ineligible_state
         expect(declaration.superseded_by).to eq(original_declaration)
+      end
+    end
+
+    context "when there is more than one matching application" do
+      let(:newer_application) { create(:application, :accepted, cohort:, course:, lead_provider:, user: application.user) }
+
+      before do
+        travel_to(1.day.ago) do
+          application
+        end
+        newer_application
+      end
+
+      it "creates a declaration for the latest application" do
+        expect { subject }.to change(Declaration, :count).by(1)
+
+        expect(declaration.application).to eq(newer_application)
       end
     end
   end

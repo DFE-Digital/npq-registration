@@ -60,6 +60,7 @@ module Declarations
         &.applications
         &.accepted
         &.includes(:course)
+        &.order(created_at: :desc)
         &.find_by(lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
     end
 
