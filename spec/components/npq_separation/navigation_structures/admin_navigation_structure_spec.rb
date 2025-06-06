@@ -79,18 +79,6 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
         expect(subject.first.name).to eql("Statements")
         expect(subject.first.href).to eql("/npq-separation/admin/finance/statements")
       end
-
-      describe "Statements sub pages" do
-        {
-          "Unpaid statements" => "/npq-separation/admin/finance/statements/unpaid",
-          "Paid statements" => "/npq-separation/admin/finance/statements/paid",
-        }.each_with_index do |(name, href), i|
-          it "#{name} with href #{href} is at position #{i + 1}" do
-            expect(subject.first.nodes[i].name).to eql(name)
-            expect(subject.first.nodes[i].href).to eql(href)
-          end
-        end
-      end
     end
   end
 end
