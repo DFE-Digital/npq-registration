@@ -1,6 +1,6 @@
 <%= govuk_back_link(href: npq_separation_admin_delivery_partners_path) %>
 
-<h1 class="govuk-heading-l">Add a lead provider</h1>
+<h1 class="govuk-heading-l">Add a course provider</h1>
 <p class="govuk-caption-m">Select all that apply</p>
 
 <%= form_with model: [:npq_separation, :admin, @delivery_partner], method: :patch, id: 'delivery-partnerships-form' do |form| %>
@@ -30,7 +30,7 @@
 <% end %>
 
 <%= nonced_javascript_tag do %>
-  // uncheck all cohorts when a lead provider is deselected
+  // uncheck all cohorts when a course provider is deselected
   document
     .getElementById("delivery-partnerships-form")
     .addEventListener("change", function(event) {

@@ -214,7 +214,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Declaration ID", started_declaration.ecf_id)
         expect(summary_list).to have_summary_item("Declaration date", started_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", started_declaration.cohort.start_year)
-        expect(summary_list).to have_summary_item("Lead provider", started_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("Course provider", started_declaration.lead_provider.name)
         expect(summary_list).to have_summary_item("Created at", started_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", started_declaration.updated_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Statements", "")
@@ -228,7 +228,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
         expect(summary_list).to have_summary_item("Declaration ID", "-")
         expect(summary_list).to have_summary_item("Declaration date", completed_declaration.declaration_date.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Declaration cohort", completed_declaration.cohort.start_year)
-        expect(summary_list).to have_summary_item("Lead provider", completed_declaration.lead_provider.name)
+        expect(summary_list).to have_summary_item("Course provider", completed_declaration.lead_provider.name)
         expect(summary_list).to have_summary_item("Created at", completed_declaration.created_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Updated at", completed_declaration.updated_at.to_fs(:govuk_short))
         expect(summary_list).to have_summary_item("Statements", "")
@@ -352,10 +352,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       click_link("Transfer")
     end
 
-    expect(page).to have_css("h1", text: "Transfer lead provider")
+    expect(page).to have_css("h1", text: "Transfer course provider")
 
     click_button "Continue"
-    expect(page).to have_css(".govuk-error-message", text: "Choose a lead provider")
+    expect(page).to have_css(".govuk-error-message", text: "Choose a course provider")
 
     choose "Best Practice Network", visible: :all
     click_button "Continue"

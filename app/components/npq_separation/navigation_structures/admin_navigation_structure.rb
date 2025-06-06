@@ -23,7 +23,7 @@ module NpqSeparation
           Node.new(
             name: "Reopening email subscriptions",
             href: npq_separation_admin_reopening_email_subscriptions_path,
-            prefix: "/npq-separation/admin/reopening_email_subscriptions",
+            prefix: "/npq-separation/admin/reopening-email-subscriptions",
           ) => [],
 
           Node.new(
@@ -90,10 +90,10 @@ module NpqSeparation
             prefix: "/npq-separation/admin/schools",
           ) => [],
           Node.new(
-            name: "Lead providers",
+            name: "Course providers",
             href: npq_separation_admin_lead_providers_path,
             prefix: "/npq-separation/admin/lead-providers",
-          ) => [],
+          ) => course_provider_nodes,
           Node.new(
             name: "Bulk operations",
             href: npq_separation_admin_bulk_operations_path,
@@ -112,7 +112,7 @@ module NpqSeparation
           Node.new(
             name: "Closed registration users",
             href: npq_separation_admin_closed_registration_users_path,
-            prefix: "/npq-separation/admin/closed_registration_users",
+            prefix: "/npq-separation/admin/closed-registration-users",
           ) => [],
         }
       end
@@ -144,6 +144,16 @@ module NpqSeparation
             name: "Cohort #{format_cohort(cohort)}",
             href: npq_separation_admin_cohort_path(cohort),
             prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
+          )
+        end
+      end
+
+      def course_provider_nodes
+        LeadProvider.order(:name).map do |lead_provider|
+          Node.new(
+            name: lead_provider.name,
+            href: npq_separation_admin_lead_provider_path(lead_provider),
+            prefix: "/npq-separation/admin/lead-providers/#{lead_provider.id}",
           )
         end
       end

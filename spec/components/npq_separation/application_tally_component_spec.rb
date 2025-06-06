@@ -13,10 +13,22 @@ RSpec.describe NpqSeparation::ApplicationTallyComponent, type: :component do
     create(:application, cohort:, course: course_2)
   end
 
+  it "returns the correct dimension haeder" do
+    expect(subject.dimension_header).to eq("Course")
+  end
+
   it "returns the correct rows" do
     expect(subject.rows).to eq([
       [course_2.name, 1],
       [course_1.name, 2],
     ])
+  end
+
+  context "when the dimension has a different label" do
+    subject { described_class.new(Application.where(cohort:), :lead_provider, dimension_header: "Course provider") }
+
+    it "returns the correct dimension header" do
+      expect(subject.dimension_header).to eq("Course provider")
+    end
   end
 end

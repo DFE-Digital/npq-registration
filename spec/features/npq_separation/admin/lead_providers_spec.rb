@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Listing and viewing lead providers", type: :feature do
+RSpec.feature "Listing and viewing course providers", type: :feature do
   include Helpers::AdminLogin
 
   before do
@@ -8,17 +8,17 @@ RSpec.feature "Listing and viewing lead providers", type: :feature do
     sign_in_as(create(:admin))
   end
 
-  scenario "viewing the list of lead providers" do
+  scenario "viewing the list of course providers" do
     visit(npq_separation_admin_lead_providers_path)
 
-    expect(page).to have_css("h1", text: "Lead providers")
+    expect(page).to have_css("h1", text: "Course providers")
 
     LeadProvider.all.find_each do |lead_provider|
       expect(page).to have_link(lead_provider.name, href: npq_separation_admin_lead_provider_path(lead_provider))
     end
   end
 
-  scenario "viewing lead provider details" do
+  scenario "viewing course provider details" do
     visit(npq_separation_admin_lead_providers_path)
 
     lead_provider = LeadProvider.first

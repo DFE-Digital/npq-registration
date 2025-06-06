@@ -70,7 +70,7 @@ RSpec.describe BulkOperation::RevertApplicationsToPending do
     context "when the application is already pending" do
       let(:application) { create(:application, :pending) }
 
-      it_behaves_like "does not change to pending", /lead provider approval status is not Accepted/
+      it_behaves_like "does not change to pending", /course provider approval status is not Accepted/
     end
 
     context "when the application doesn't exist" do

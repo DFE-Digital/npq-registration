@@ -13,6 +13,6 @@ RSpec.feature "Viewing summary dashboard", type: :feature do
 
     expect(page).to have_css("h1", text: "Summary")
     expect(page).to have_css("th", text: "Course")
-    expect(page).to have_css("th", text: "Lead Provider")
+    expect(page).to have_css("th", text: "Course provider")
   end
 end

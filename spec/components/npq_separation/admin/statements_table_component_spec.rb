@@ -7,9 +7,9 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
 
   let(:statements) { FactoryBot.create_list(:statement, 3) }
   let(:show_lead_provider) { true }
-  let(:expected_columns) { ["Lead provider", "Cohort", "Status"] }
+  let(:expected_columns) { ["Course provider", "Cohort", "Status"] }
 
-  it "renders a table with Lead provider, Cohort and Status columns" do
+  it "renders a table with Course provider, Cohort and Status columns" do
     expected_columns.each do |heading|
       expect(rendered_content).to have_css("th", text: heading)
     end
@@ -33,11 +33,11 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
     let(:show_lead_provider) { false }
 
     it "renders no lead provider column" do
-      expect(rendered_content).not_to have_css("th", text: "Lead provider")
+      expect(rendered_content).not_to have_css("th", text: "Course provider")
     end
 
     it "does render the other columns" do
-      expected_columns.excluding("Lead provider").each do |heading|
+      expected_columns.excluding("Course provider").each do |heading|
         expect(rendered_content).to have_css("th", text: heading)
       end
     end
