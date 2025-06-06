@@ -60,7 +60,7 @@ module Declarations
         &.applications
         &.accepted
         &.includes(:course)
-        &.order(created_at: :desc)
+        &.order(created_at: :desc, id: :desc)
         &.find_by(lead_provider:, course: Course.find_by(identifier: course_identifier)&.rebranded_alternative_courses)
     end
 
@@ -159,13 +159,7 @@ module Declarations
       return if errors.any?
       return unless participant
 
-      return unless Declaration
-                      .billable_or_changeable
-                      .joins(application: %i[user course])
-                      .where(
-                        application: { user: participant, courses: { identifier: course_identifier } },
-                        declaration_type:,
-                      ).exists?
+      return unless application.declarations.billable_or_changeable.where(declaration_type:).exists?
 
       errors.add(:base, :declaration_already_exists)
     end

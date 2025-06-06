@@ -441,5 +441,26 @@ RSpec.describe Declarations::Create, type: :model do
         expect(declaration.application).to eq(newer_application)
       end
     end
+
+    context "when there is already an older application with declarations" do
+      let(:newer_application) { create(:application, :accepted, cohort:, course:, lead_provider:, user: application.user) }
+
+      before do
+        travel_to(1.month.ago) do
+          application
+          create(:declaration, application:, declaration_type:, declaration_date: 1.month.ago)
+          create(:declaration, application:, declaration_type: "retained-1", declaration_date: 1.month.ago)
+          create(:declaration, application:, declaration_type: "retained-2", declaration_date: 1.month.ago)
+          create(:declaration, application:, declaration_type: "completed", declaration_date: 1.month.ago)
+        end
+        newer_application
+      end
+
+      it "creates a declaration for the latest application" do
+        expect { subject }.to change(Declaration, :count).by(1)
+
+        expect(declaration.application).to eq(newer_application)
+      end
+    end
   end
 end
