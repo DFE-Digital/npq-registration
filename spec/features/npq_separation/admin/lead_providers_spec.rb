@@ -44,6 +44,6 @@ RSpec.feature "Listing and viewing lead providers", type: :feature do
 
     click_link("View all statements")
 
-    expect(page).to have_css("h1", text: "Statements")
+    expect(page).to have_css("h1", text: "Finance")
   end
 end
