@@ -31,7 +31,7 @@ RSpec.describe Statements::SummaryCalculator do
       before { statement.update!(reconcile_amount: 1234) }
 
       it "increases total" do
-        expect(subject.total_payment).to eq(default_total + 1234)
+        expect(subject.total_payment).to match_bigdecimal(default_total + 1234)
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe Statements::SummaryCalculator do
       before { statement.update!(reconcile_amount: -1234) }
 
       it "descreases the total" do
-        expect(subject.total_payment).to eq(default_total - 1234)
+        expect(subject.total_payment).to match_bigdecimal(default_total - 1234)
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Statements::SummaryCalculator do
       before { create(:declaration, :eligible, course:, lead_provider:, cohort:, statement:) }
 
       it "adds the output payments to the total" do
-        expect(subject.total_payment).to eq(default_total + expected_total_output_payment)
+        expect(subject.total_payment).to match_bigdecimal(default_total + expected_total_output_payment)
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Statements::SummaryCalculator do
       end
 
       it "adds the targeted delivery funding to the total" do
-        expect(subject.total_payment).to eq(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding)
+        expect(subject.total_payment).to match_bigdecimal(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding)
       end
     end
 
@@ -100,7 +100,7 @@ RSpec.describe Statements::SummaryCalculator do
       end
 
       it "deducts the clawbacks from the total" do
-        expect(subject.total_payment).to eq(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding - expected_total_clawbacks)
+        expect(subject.total_payment).to match_bigdecimal(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding - expected_total_clawbacks)
       end
     end
 
@@ -109,7 +109,7 @@ RSpec.describe Statements::SummaryCalculator do
       let!(:adjustment_2) { create(:adjustment, statement:, amount: -50) }
 
       it "adds adjustments to the total" do
-        expect(subject.total_payment).to eq(default_total + adjustment_1.amount + adjustment_2.amount)
+        expect(subject.total_payment).to match_bigdecimal(default_total + adjustment_1.amount + adjustment_2.amount)
       end
     end
   end
