@@ -69,7 +69,7 @@ group :development, :test do
   gem "debug"
   gem "dotenv-rails"
   gem "knapsack"
-  gem "parallel_tests", "~> 5.2"
+  gem "parallel_tests", "~> 5.3"
   gem "rspec-rails", "~> 7.1"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
