@@ -142,6 +142,17 @@ RSpec.describe Declarations::Create, type: :model do
       end
     end
 
+    context "when a declaration exists for a different course" do
+      let(:a_different_course) { create(:course, :headship, course_group:) }
+      let(:another_application) { create(:application, :accepted, cohort:, course: a_different_course, lead_provider:, user: participant) }
+
+      before { create(:declaration, application: another_application, declaration_type:, declaration_date:) }
+
+      it "allows the declaration to be created" do
+        expect { service.create_declaration }.to change(Declaration, :count).by(1)
+      end
+    end
+
     context "when submitting completed" do
       let(:declaration_type) { "completed" }
       let(:outcome) { declaration.participant_outcomes.first }
