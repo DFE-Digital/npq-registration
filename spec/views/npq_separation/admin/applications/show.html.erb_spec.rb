@@ -20,11 +20,16 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
 
     it { is_expected.to have_css "h1", text: application.user.full_name }
     it { is_expected.to have_text "TRN: #{application.user.trn}", normalize_ws: true }
-    it { is_expected.to have_summary_item "Application ID", application.ecf_id }
-    it { is_expected.to have_summary_item "Course provider", application.lead_provider.name }
-    it { is_expected.to have_summary_item "Course", application.course.name }
     it { is_expected.to have_summary_item "Unique reference number (URN)", application.school.urn }
     it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", application.school.ukprn }
+
+    context "with application overview summary card" do
+      subject { Capybara.string(render).find(".govuk-summary-card", text: "Application overview") }
+
+      it { is_expected.to have_summary_item "Application ID", application.ecf_id }
+      it { is_expected.to have_summary_item "Course provider", application.lead_provider.name }
+      it { is_expected.to have_summary_item "Course", application.course.name }
+    end
   end
 
   describe "a row for a minimal application" do
