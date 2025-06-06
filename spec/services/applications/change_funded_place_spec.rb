@@ -30,12 +30,11 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
       params.merge!(funded_place: true)
       application.update!(funded_place: false)
 
-      allow(service.application).to receive(:reload)
+      expect(service.application).to receive(:reload)
       service.change
-      expect(service.application).to have_received(:reload)
     end
 
-    context "when application funded_place is false" do
+    context "when the application funded place is false and the funded_place param is true" do
       before do
         params.merge!(funded_place: true)
         application.update!(funded_place: false)
@@ -46,7 +45,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
       end
     end
 
-    context "when application funded_place is true" do
+    context "when the application funded place is true and the funded_place param is false" do
       before do
         params.merge!(funded_place: false)
         application.update!(funded_place: true)
@@ -60,7 +59,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
     describe "validations" do
       it { is_expected.to validate_presence_of(:application).with_message("The entered '#/application' is missing from your request. Check details and try again.") }
 
-      context "when funded_place is present" do
+      context "when funded_place is present in the params" do
         before { params.merge!(funded_place: true) }
 
         it "is invalid if the application has not been accepted" do
@@ -79,7 +78,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
           expect(service).to have_error(:application, :cannot_change_funded_status_non_eligible, "This participant is not eligible for funding. Contact us if you think this is wrong.")
         end
 
-        it "is invalid if the cohort does not accept capping and we set a funded place to true" do
+        it "is invalid if the cohort does not accept capping and we have a true funded_place param" do
           cohort.update!(funding_cap: false)
 
           service.change
@@ -87,7 +86,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
           expect(service).to have_error(:application, :cohort_does_not_accept_capping, "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
         end
 
-        it "is invalid if the cohort does not accept capping and we set a funded place to false" do
+        it "is invalid if the cohort does not accept capping and we have a false funded_place param" do
           params.merge!(funded_place: false)
           cohort.update!(funding_cap: false)
 
@@ -99,7 +98,7 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
         context "when the application is not accepted" do
           let(:application) { create(:application, eligible_for_funding: true) }
 
-          it "does not check for applicable declarations" do
+          it "does not allow the funded place to be changed" do
             params.merge!(funded_place: false)
 
             service.change
@@ -109,14 +108,60 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
         end
 
         context "with declarations" do
-          context "when funded_place is true" do
-            before do
-              params.merge!(funded_place: true)
+          shared_examples "not allowing funded place to change" do
+            context "when changing from false to true" do
+              before do
+                application.update!(funded_place: false)
+                params.merge!(funded_place: true)
+              end
+
+              it "is invalid" do
+                service.change
+
+                expect(service).to have_error(:application, :cannot_change_funded_place, "You cannot change the funded place because declarations have been submitted. You will need to void the existing declarations and resubmit them after changing the funded place.")
+              end
             end
 
-            Declaration.states.each_key do |state|
-              it "is valid if the application has #{state} declarations" do
-                create(:declaration, application:, state:)
+            context "when changing from true to false" do
+              before do
+                application.update!(funded_place: true)
+                params.merge!(funded_place: false)
+              end
+
+              it "is invalid" do
+                service.change
+
+                expect(service).to have_error(
+                  :application,
+                  :cannot_change_funded_place,
+                  "You cannot change the funded place because declarations have been submitted." \
+                  " You will need to void the existing declarations and resubmit them after changing the funded place.",
+                )
+              end
+            end
+          end
+
+          shared_examples "allowing funded place to change" do
+            context "when changing from false to true" do
+              before do
+                application.update!(funded_place: false)
+                params.merge!(funded_place: true)
+              end
+
+              it "is valid" do
+                service.change
+
+                expect(service.errors.messages_for(:application)).to be_empty
+              end
+            end
+
+            context "when changing from true to false" do
+              before do
+                application.update!(funded_place: true)
+                params.merge!(funded_place: false)
+              end
+
+              it "is valid" do
                 service.change
 
                 expect(service.errors.messages_for(:application)).to be_empty
@@ -124,67 +169,56 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
             end
           end
 
-          context "when funded_place is false" do
-            before do
-              params.merge!(funded_place: false)
-            end
-
-            applicable = %w[submitted eligible payable paid]
-            applicable.each do |applicable_state|
-              it "is invalid if the application has #{applicable_state} declarations" do
-                create(:declaration, application:, state: applicable_state)
-
-                service.change
-
-                expect(service).to have_error(:application, :cannot_change_funded_place, "You must void or claw back your declarations for this participant before being able to set '#/funded_place' to false")
+          context "when there are billable or changeable declarations" do
+            (Declaration::BILLABLE_STATES | Declaration::CHANGEABLE_STATES).each do |state|
+              it_behaves_like "not allowing funded place to change" do
+                before { create(:declaration, application:, state:) }
               end
             end
+          end
 
-            (Declaration.states.keys - applicable).each do |non_applicable_state|
-              it "is valid if the application has #{non_applicable_state} declarations" do
-                create(:declaration, application:, state: non_applicable_state)
-
-                service.change
-
-                expect(service.errors.messages_for(:application)).to be_empty
+          context "when there are no billable or changeable declarations" do
+            (Declaration.states.values - (Declaration::BILLABLE_STATES | Declaration::CHANGEABLE_STATES)).each do |state|
+              it_behaves_like "allowing funded place to change" do
+                before { create(:declaration, application:, state:) }
               end
             end
           end
         end
 
-        context "when funded_place is a string" do
-          context "when funded_place is `true`" do
+        context "when the funded_place param is a string" do
+          context "when the funded_place param is `true`" do
             before { params.merge!(funded_place: "true") }
 
-            it "returns funding_place is required error" do
+            it "returns funded_place is required error" do
               service.change
 
               expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
             end
           end
 
-          context "when funded_place is `false`" do
+          context "when the funded_place param is `false`" do
             before { params.merge!(funded_place: "false") }
 
-            it "returns funding_place is required error" do
+            it "returns funded_place is required error" do
               service.change
               expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
             end
           end
 
-          context "when funded_place is `null`" do
+          context "when the funded_place param is `null`" do
             before { params.merge!(funded_place: "null") }
 
-            it "returns funding_place is required error" do
+            it "returns funded_place is required error" do
               service.change
               expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
             end
           end
 
-          context "when funded_place is an empty string" do
+          context "when the funded_place param is an empty string" do
             before { params.merge!(funded_place: "") }
 
-            it "returns funding_place is required error" do
+            it "returns funded_place is required error" do
               service.change
               expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
             end
@@ -192,10 +226,10 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
         end
       end
 
-      context "when funded_place is not present" do
+      context "when the funded_place param is not present in the params" do
         before { params.merge!(funded_place: nil) }
 
-        it "is invalid if funded_place is `nil`" do
+        it "returns funded_place is required error" do
           service.change
           expect(service).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
         end
