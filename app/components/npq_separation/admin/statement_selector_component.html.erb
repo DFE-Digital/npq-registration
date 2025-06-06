@@ -4,7 +4,13 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        &nbsp;
+        <%= f.govuk_collection_select :payment_status,
+          ['Paid', 'Unpaid'],
+          :downcase,
+          :to_s,
+          options: { selected: payment_status, include_blank: 'All' },
+          label: { text: "Status", size: "s" }
+        %>
       </div>
 
       <div class="govuk-grid-column-one-half">
