@@ -13,10 +13,14 @@ RSpec::Matchers.define :have_component do |expected_component|
   end
 
   def expected_html(component)
-    ApplicationController.renderer.render(component, layout: false)
+    CGI.unescapeHTML render_component(component)
   end
 
   def actual_html(page)
     page.is_a?(ActiveSupport::SafeBuffer) ? page : page.html
+  end
+
+  def render_component(component)
+    ApplicationController.renderer.render(component, layout: false)
   end
 end
