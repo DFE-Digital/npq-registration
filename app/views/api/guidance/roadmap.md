@@ -20,7 +20,7 @@ Our objectives are centered around how we can make it easier for applicants to r
   <p class="govuk-body-m"><strong>Improving the user journey</strong></p>
   <ul class="govuk-list govuk-list--bullet">
     <li>Understanding how we can adapt the service to better accommodate overseas and self-funded applicants in the future.</li>
-    <li>Maintaining and making general day-to-day improvements to the service.</li>
+    <li>Maintaining and making general day-to-day improvements to the registration service.</li>
   </ul>
   <p class="govuk-body-m"><strong>Giving providers the ability to indicate the Delivery Partner with API Declarations</strong></p>
   <ul class="govuk-list govuk-list--bullet">
@@ -39,15 +39,15 @@ Our objectives are centered around how we can make it easier for applicants to r
         <li>Ability to see why an application was rejected, including if another provider has accepted or the DfE has rejected the application.</li>
         <li>Ability to have visibility of declarations if an applicant was transferred.</li>
       </ul>
-    <p class="govuk-body-m"><strong>Making other technical changes to optimise the service</strong></p>
+    <p class="govuk-body-m"><strong>Make other technical changes to optimise the service</strong></p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>Restricting access to the API based on the provider's IP range (to be commissioned).</li>
-        <li>Dropping the maximum page size to 1000 for API requests.</li>
+        <li>Restrict access to the API based on the provider's IP range (to be commissioned).</li>
+        <li>Drop the maximum page size to 1000 for API requests.</li>
       </ul>
     <p class="govuk-body-m"><strong>Process applications more efficiently</strong></p>
       <ul class="govuk-list govuk-list--bullet">
         <li>Ability to reject a previously accepted application with no declarations.</li>
-        <li>Ability to change the application cohort for funded places, to allow applicants to register.</li>
+        <li>Explore the ability to change the application cohort for funded places, to allow applicants to register.</li>
       </ul>
   </div>
 
