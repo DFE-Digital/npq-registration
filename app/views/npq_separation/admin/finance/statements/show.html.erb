@@ -1,5 +1,25 @@
 <%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>
 
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+
+  <%= render NpqSeparation::SubNavigationComponent.new(
+    request.path,
+    heading: {
+      text: "Finance statement",
+      visible: true
+    },
+    structure: [
+      NpqSeparation::NavigationStructure::Node.new(
+        name: "#{@statement.lead_provider.name}, #{statement_name(@statement)}",
+        href: npq_separation_admin_finance_statement_path(@statement),
+        prefix: ""
+      )
+    ]
+  ) %>
+<% end %>
+
+
 <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">

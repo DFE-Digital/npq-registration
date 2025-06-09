@@ -81,8 +81,7 @@ module NpqSeparation
                 Node.new(name: "Paid statements", href: npq_separation_admin_finance_paid_index_path, prefix: "/npq-separation/admin/finance/statements/paid"),
               ],
             ),
-            Node.new(name: "Declarations", href: "#", prefix: "/npq-separation/admin/finance/declarations"),
-            Node.new(name: "Contracts", href: "#", prefix: "/npq-separation/admin/finance/contracts"),
+            Node.new(name: "Cohorts", href: "/npq-separation/admin/cohorts", prefix: "/npq-separation/admin/cohorts"),
           ],
           Node.new(
             name: "Workplaces",
