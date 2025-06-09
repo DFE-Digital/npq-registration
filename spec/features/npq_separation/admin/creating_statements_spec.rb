@@ -29,8 +29,8 @@ RSpec.feature "Creating statements", type: :feature do
     scenario "is possible" do
       click_on "Create statements"
 
-      attach_file "Statements CSV", statements_csv.path
-      attach_file "Contracts CSV", contracts_csv.path
+      attach_file "statements_bulk_creator[statements_csv_file]", statements_csv.path, make_visible: true
+      attach_file "statements_bulk_creator[contracts_csv_file]", contracts_csv.path, make_visible: true
 
       expect {
         click_on "Continue to preview"
