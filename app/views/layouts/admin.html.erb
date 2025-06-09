@@ -25,7 +25,7 @@
         <%= render partial: "layouts/shared/messages" %>
 
         <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-quarter">
+          <div class="govuk-grid-column-one-quarter" id="side-navigation">
             <%=
               render NpqSeparation::SubNavigationComponent.new(
                 request.path,

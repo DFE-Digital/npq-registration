@@ -33,6 +33,13 @@ class TestSubNavigationStructure < NpqSeparation::NavigationStructure
           ],
         ),
       ],
+      Node.new(
+        name: "Third",
+        href: "/c",
+        prefix: "/c",
+      ) => [
+        Node.new(name: "Third - with no prefix", href: "#"),
+      ],
     }
   end
 end
@@ -120,6 +127,18 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
         expect(rendered_content).to have_css(selector, text: "Second part 2")
         expect(rendered_content).to have_css(selector, count: 1)
       end
+    end
+  end
+
+  describe "when navigation node prefix is nil" do
+    let(:current_path) { "/c" }
+    let(:current_section) { "Third" }
+
+    it "does not highlight the section as current" do
+      render_inline(subject)
+
+      expect(rendered_content).to have_css("li.x-govuk-sub-navigation__section-item")
+      expect(rendered_content).not_to have_css("li.x-govuk-sub-navigation__section-item--current")
     end
   end
 

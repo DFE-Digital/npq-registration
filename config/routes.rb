@@ -286,7 +286,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :lead_providers, only: %i[index show], path: "lead-providers"
+      resources :lead_providers, only: %i[index show], path: "lead-providers" do
+        resources :cohort, controller: "lead_provider_cohort", only: %i[show]
+      end
       resources :admins, only: %i[index]
 
       resources :bulk_operations, only: %i[index], path: "bulk-operations"
