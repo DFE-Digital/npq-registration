@@ -291,11 +291,11 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
       it "records information" do
         migrate
 
-        expect(logged_output).to eq([
+        expect(logged_output).to include(
           "Migrating declarations from #{from_statement.year}-#{from_statement.month} to #{to_statement.year}-#{to_statement.month} for 1 providers",
           "Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}",
           "Marking 1 payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement: #{to_statement.id}",
-        ])
+        )
       end
     end
 

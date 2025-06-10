@@ -154,6 +154,8 @@ module OneOff
     def migrate_statement_items!(from_statement, to_statement)
       statement_items = filter_statement_items(from_statement.statement_items)
 
+      record_info("Migrating #{statement_items.size} declarations, with IDs:\n#{statement_items.map { |si| si.declaration.ecf_id }.join("\n")}")
+
       record_info("Migrating #{statement_items.size} declarations for #{from_statement.lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}")
       statement_items.update!(statement_id: to_statement.id)
 
