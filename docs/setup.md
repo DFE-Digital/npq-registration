@@ -12,7 +12,7 @@
 1. Install the prerequisites:
 - Ruby 3.3.8
 - PostgreSQL
-- NodeJS 20.15.1
+- NodeJS 22.15.1
 - Yarn 1.22.x
 - Graphviz
 1. Run `bundle install` to install the gem dependencies
