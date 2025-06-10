@@ -254,6 +254,7 @@ shared:
     - senco_in_role
     - senco_start_date
     - on_submission_trn
+    - review_status
   :users:
     - id
     - created_at

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe HandleSubmissionForStore do
-  subject { described_class.new(store:) }
+  subject(:service) { described_class.new(store:) }
 
   let(:user_record_trn) { "0012345" }
   let(:user) { create(:user, trn: user_record_trn, full_name: "John Doe", ecf_id: nil) }
@@ -146,6 +146,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => "yes",
           "senco_start_date" => "2024-12-12",
           "on_submission_trn" => "1234321",
+          "review_status" => nil,
         })
       end
     end
@@ -265,6 +266,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
+          "review_status" => nil,
         })
       end
     end
@@ -433,6 +435,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
+          "review_status" => nil,
         })
       end
     end
@@ -507,6 +510,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
+          "review_status" => nil,
         })
       end
     end
@@ -591,7 +595,61 @@ RSpec.describe HandleSubmissionForStore do
           "senco_in_role" => nil,
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
+          "review_status" => nil,
         })
+      end
+    end
+
+    describe "#review_status" do
+      subject { application.review_status }
+
+      let(:store) { build :registration_wizard_store }
+      let(:application) { service.tap(&:call).application }
+
+      it { is_expected.to be_nil }
+
+      context "when referred_by_return_to_teaching_adviser is set" do
+        let :store do
+          build :registration_wizard_store, referred_by_return_to_teaching_adviser: "yes"
+        end
+
+        it { is_expected.to eq "Needs review" }
+      end
+
+      %w[
+        hospital_school
+        lead_mentor_for_accredited_itt_provider
+        local_authority_supply_teacher
+        local_authority_virtual_school
+        young_offender_institution
+        other
+      ].each do |employment_type|
+        context "when employment_type is set to #{employment_type}" do
+          let :store do
+            build :registration_wizard_store, employment_type:,
+                                              work_setting: "another_setting"
+          end
+
+          it { is_expected.to eq "Needs review" }
+        end
+      end
+
+      context "when employment_type is set to a non in-review type" do
+        let :store do
+          build :registration_wizard_store, employment_type: "something else",
+                                            work_setting: "another_setting"
+        end
+
+        it { is_expected.to be_nil }
+      end
+
+      context "when employment_type is not relevant" do
+        let :store do
+          build :registration_wizard_store, employment_type: "hospital_school",
+                                            work_setting: "early_years_or_childcare"
+        end
+
+        it { is_expected.to be_nil }
       end
     end
   end

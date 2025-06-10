@@ -183,6 +183,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
+      "review_status" => nil,
       "raw_application_data" => {
         "email_template" => "eligible_scholarship_funding_not_tsf",
         "funding_eligiblity_status_code" => "funded",
