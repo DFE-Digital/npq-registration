@@ -34,7 +34,7 @@ module NpqSeparation
           ) => [],
           Node.new(
             name: "Roadmap",
-            href: api_guidance_page_path(page: "/", anchor: "roadmap"),
+            href: api_guidance_page_path(page: "roadmap"),
             prefix: "/api/guidance/roadmap",
           ) => [],
         }
