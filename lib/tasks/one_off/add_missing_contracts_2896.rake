@@ -5,13 +5,15 @@ module OneOff
     [2025, 3],
     [2025, 4],
     [2025, 5],
-    [2025, 6], # July 2025 is already created
+    [2025, 6],
+    # July 2025 is already created
     [2025, 8],
     [2025, 9],
     [2025, 10],
     [2025, 11],
     [2025, 12],
-    [2026, 2], # January 2026 is already created
+    # January 2026 is already created
+    [2026, 2],
     [2026, 3],
     [2026, 4],
     [2026, 5],
