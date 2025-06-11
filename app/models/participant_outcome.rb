@@ -11,11 +11,11 @@ class ParticipantOutcome < ApplicationRecord
   delegate :trn, to: :user
   delegate :short_code, to: :course, prefix: true
 
-  enum :state, {
+  enum state: {
     passed: "passed",
     failed: "failed",
     voided: "voided",
-  }, suffix: true
+  }, _suffix: true
 
   class << self
     def latest

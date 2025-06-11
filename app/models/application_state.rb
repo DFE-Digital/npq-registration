@@ -6,11 +6,11 @@ class ApplicationState < ApplicationRecord
 
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
-  enum :state, {
+  enum state: {
     active: "active",
     deferred: "deferred",
     withdrawn: "withdrawn",
-  }, suffix: true
+  }, _suffix: true
 
   scope :most_recent, -> { order("created_at desc").limit(1) }
   scope :for_lead_provider, ->(lead_provider) { where(lead_provider:) }
