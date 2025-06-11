@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+all_courses = Course.all.to_a
+all_cohorts = Cohort.all.to_a
+
 LeadProvider.find_each do |lead_provider|
   quantity = { "review" => 4, "development" => 1 }.fetch(Rails.env, 0)
 
@@ -12,22 +15,35 @@ LeadProvider.find_each do |lead_provider|
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
-      course: Course.all.sample,
+      course: all_courses.sample,
       lead_provider_approval_status: "pending",
-      cohort: Cohort.all.sample,
+      cohort: all_cohorts.sample,
     )
 
-    # users with 4 applications each
-    FactoryBot.create_list(
+    # users with 3 applications each
+    user = FactoryBot.create(:user, :with_random_name)
+
+    FactoryBot.create(
       :application,
-      4,
-      %i[accepted rejected].sample,
+      :accepted,
       :with_random_participant_outcome_state,
       :with_random_work_setting,
-      user: FactoryBot.create(:user, :with_random_name),
+      user:,
       lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
+      course: all_courses.sample,
+      cohort: all_cohorts.sample,
+    )
+
+    FactoryBot.create_list(
+      :application,
+      2,
+      :rejected,
+      :with_random_participant_outcome_state,
+      :with_random_work_setting,
+      user:,
+      lead_provider:,
+      course: all_courses.sample,
+      cohort: all_cohorts.sample,
     )
 
     # users with one accepted application each
@@ -38,9 +54,9 @@ LeadProvider.find_each do |lead_provider|
       :with_random_user,
       :with_random_work_setting,
       lead_provider:,
-      course: Course.all.sample,
+      course: all_courses.sample,
       participant_outcome_state: "passed",
-      cohort: Cohort.all.sample,
+      cohort: all_cohorts.sample,
     )
 
     # users with one rejected application each
@@ -51,9 +67,9 @@ LeadProvider.find_each do |lead_provider|
       :with_random_user,
       :with_random_work_setting,
       lead_provider:,
-      course: Course.all.sample,
+      course: all_courses.sample,
       participant_outcome_state: "failed",
-      cohort: Cohort.all.sample,
+      cohort: all_cohorts.sample,
     )
 
     # users with one deferred application each
@@ -66,8 +82,8 @@ LeadProvider.find_each do |lead_provider|
       :with_random_work_setting,
       :with_random_participant_outcome_state,
       lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
+      course: all_courses.sample,
+      cohort: all_cohorts.sample,
     )
 
     # users with one withdrawn application each
@@ -80,8 +96,8 @@ LeadProvider.find_each do |lead_provider|
       :with_random_work_setting,
       :with_random_participant_outcome_state,
       lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.all.sample,
+      course: all_courses.sample,
+      cohort: all_cohorts.sample,
     )
 
     # users with one eligible for funded place application each (cohort funding_cap true)
@@ -93,9 +109,9 @@ LeadProvider.find_each do |lead_provider|
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
-      course: Course.all.sample,
+      course: all_courses.sample,
       funded_place: Faker::Boolean.boolean(true_ratio: 0.6),
-      cohort: Cohort.where(funding_cap: true).sample || Cohort.all.sample.tap do |c|
+      cohort: Cohort.where(funding_cap: true).sample || all_cohorts.sample.tap do |c|
                 c.funding_cap = true
                 c.save!
               end,
@@ -110,9 +126,9 @@ LeadProvider.find_each do |lead_provider|
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
-      course: Course.all.sample,
+      course: all_courses.sample,
       funded_place: false,
-      cohort: Cohort.where(funding_cap: true).sample || Cohort.all.sample.tap do |c|
+      cohort: Cohort.where(funding_cap: true).sample || all_cohorts.sample.tap do |c|
                 c.funding_cap = true
                 c.save!
               end,
@@ -128,8 +144,8 @@ LeadProvider.find_each do |lead_provider|
       :with_random_eligible_for_funding_seeds_only,
       :with_participant_id_change,
       lead_provider:,
-      course: Course.all.sample,
-      cohort: Cohort.where(funding_cap: false).sample || Cohort.all.sample.tap do |c|
+      course: all_courses.sample,
+      cohort: Cohort.where(funding_cap: false).sample || all_cohorts.sample.tap do |c|
                 c.funding_cap = false
                 c.save!
               end,
@@ -152,6 +168,6 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
   FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))
 end
 
-Application.order("id DESC").each_with_index do |a, i|
+Application.order(id: :desc).each.with_index do |a, i|
   a.update!(created_at: i.days.ago)
 end
