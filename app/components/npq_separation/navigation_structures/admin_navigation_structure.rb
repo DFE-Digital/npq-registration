@@ -23,7 +23,7 @@ module NpqSeparation
           Node.new(
             name: "Reopening email subscriptions",
             href: npq_separation_admin_reopening_email_subscriptions_path,
-            prefix: "/npq-separation/admin/reopening-email-subscriptions",
+            prefix: "/npq-separation/admin/reopening_email_subscriptions",
           ) => [],
 
           Node.new(
@@ -92,12 +92,12 @@ module NpqSeparation
           Node.new(
             name: "Lead providers",
             href: npq_separation_admin_lead_providers_path,
-            prefix: "/npq-separation/admin/lead_providers",
+            prefix: "/npq-separation/admin/lead-providers",
           ) => [],
           Node.new(
             name: "Bulk operations",
             href: npq_separation_admin_bulk_operations_path,
-            prefix: "/npq-separation/admin/bulk_operations",
+            prefix: "/npq-separation/admin/bulk-operations",
           ) => [],
           Node.new(
             name: "Delivery partners",
