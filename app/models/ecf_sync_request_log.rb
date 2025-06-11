@@ -5,16 +5,16 @@ class EcfSyncRequestLog < ApplicationRecord
   validates :status, presence: true
   validates :sync_type, presence: true
 
-  enum :status, {
+  enum status: {
     success: "success",
     failed: "failed",
-  }, suffix: true
+  }, _suffix: true
 
-  enum :sync_type, {
+  enum sync_type: {
     user_lookup: "user_lookup",
     user_update: "user_update",
     user_creation: "user_creation",
     get_an_identity_id_sync: "get_an_identity_id_sync",
     application_creation: "application_creation",
-  }, suffix: true
+  }, _suffix: true
 end
