@@ -15,7 +15,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
   context "when logged in as admin" do
     before { sign_in_as_admin }
 
-    scenario "when logged in as admin, it displays the list of delivery partners" do
+    scenario "it displays the list of delivery partners" do
       delivery_partners = create_list(:delivery_partner, 11).sort_by(&:name)
 
       visit npq_separation_admin_delivery_partners_path
@@ -35,7 +35,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
       end
     end
 
-    scenario "when logged in as admin, it allows creating a new delivery partner" do
+    scenario "it allows creating a new delivery partner" do
       visit npq_separation_admin_delivery_partners_path
       click_link "Add a delivery partner"
 
@@ -62,7 +62,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
       expect(page).to have_content("can't be blank")
     end
 
-    scenario "when logged in as admin, it allows updating an existing delivery partner" do
+    scenario "it allows updating an existing delivery partner" do
       create(:delivery_partner, name: "Original Partner Name")
 
       visit npq_separation_admin_delivery_partners_path
@@ -107,6 +107,21 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
 
       click_link "Cancel"
       expect(page).to have_current_path(npq_separation_admin_delivery_partners_path)
+    end
+
+    scenario "searching for a delivery partner" do
+      create_list(:delivery_partner, 10)
+      create(:delivery_partner, name: "A different delivery partner")
+
+      visit npq_separation_admin_delivery_partners_path
+      fill_in("Find a delivery partner", with: "different")
+      click_button("Search")
+
+      expect(page).to have_css("tbody tr.govuk-table__row", count: 1)
+
+      within first("tbody tr.govuk-table__row") do |row|
+        expect(row.find("td:nth-child(1)").text).to eq("A different delivery partner")
+      end
     end
   end
 end
