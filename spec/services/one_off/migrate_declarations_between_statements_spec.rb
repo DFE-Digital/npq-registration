@@ -6,7 +6,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
   let(:to_statement_updates) { {} }
   let(:lead_provider) { create(:lead_provider) }
   let(:from_statement) { create(:statement, month: 4, year: 2023, lead_provider:, cohort:, output_fee: true) }
-  let(:to_statement) { create(:statement, :next_output_fee, month: 5, year: 2023, lead_provider:, cohort:) }
+  let(:to_statement) { create(:statement, :next_output_fee, month: 5, year: 2023, lead_provider:, cohort:, payment_date: 1.day.from_now) }
   let(:from_month) { from_statement.month }
   let(:from_year) { from_statement.year }
   let(:to_month) { to_statement.month }
