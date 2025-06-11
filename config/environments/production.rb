@@ -95,6 +95,7 @@ Rails.application.configure do
   config.active_storage.service = :microsoft
   config.active_job.queue_adapter = :delayed_job
   config.flipper.actor_limit = 1000
+  config.active_record.logger = nil # Don't log SQL
 
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     $stdout.sync = true
