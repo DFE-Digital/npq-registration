@@ -1,7 +1,7 @@
 class APIToken < ApplicationRecord
   belongs_to :lead_provider, optional: true
 
-  enum scope: {
+  enum :scope, {
     lead_provider: "lead_provider",
     teacher_record_service: "teacher_record_service",
   }
