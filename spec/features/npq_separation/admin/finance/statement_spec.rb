@@ -25,6 +25,12 @@ RSpec.feature "Statement", type: :feature do
     sign_in_as(create(:admin))
   end
 
+  scenario "shows side navigation with current statement highlighted" do
+    visit(npq_separation_admin_finance_statement_path(statement))
+
+    expect(page).to have_content("Finance statement")
+  end
+
   scenario "see details" do
     visit(npq_separation_admin_finance_statement_path(statement))
 
