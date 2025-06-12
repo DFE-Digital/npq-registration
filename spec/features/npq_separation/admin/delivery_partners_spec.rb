@@ -25,7 +25,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
       # Test delivery partner pagination
       delivery_partners[0..9].each do |delivery_partner|
         expect(page).to have_content(delivery_partner.name)
-        expect(page).to have_link("Update", href: edit_npq_separation_admin_delivery_partner_path(delivery_partner))
+        expect(page).to have_link("Change", href: edit_npq_separation_admin_delivery_partner_path(delivery_partner))
       end
 
       page.find("[rel=next]").click
@@ -66,7 +66,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
       create(:delivery_partner, name: "Original Partner Name")
 
       visit npq_separation_admin_delivery_partners_path
-      click_link "Update"
+      click_link "Change"
 
       expect(page).to have_content("Update delivery partner name")
       expect(page).to have_content("Original Partner Name")
@@ -84,7 +84,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
       create(:delivery_partner, name: "Original Partner Name")
 
       visit npq_separation_admin_delivery_partners_path
-      click_link "Update"
+      click_link "Change"
 
       fill_in "Enter delivery partner name", with: ""
       click_button "Save"
