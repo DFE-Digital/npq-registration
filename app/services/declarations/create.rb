@@ -129,6 +129,14 @@ module Declarations
     end
 
     def set_eligibility!
+      # CPDNPQ-2808: this reload is here to stop bullet complaining about an unoptimized query - may be a bullet bug
+      # it can't be replicated in the test environment, but it can in development:
+      #  1. submit an application
+      #  2. change application to be last year's cohort in the admin console
+      #  3. accept the application
+      #  4. create a started declaration via the API
+      declaration.reload
+
       if declaration.duplicate_declarations.any?
         declaration.update!(superseded_by: original_declaration)
         declaration.mark_ineligible!
