@@ -36,7 +36,7 @@ RSpec.feature "Statement", type: :feature do
     end
 
     start_year = statement.cohort.start_year
-    expect(page).to have_content("Cohort: #{start_year}/#{start_year.next - 2000}")
+    expect(page).to have_content("Cohort: #{start_year} to #{start_year.next}")
     expect(page).to have_content("Output payment date: #{statement.payment_date.to_fs(:govuk)}")
     expect(page).to have_content("Status: #{statement.state.humanize}")
 

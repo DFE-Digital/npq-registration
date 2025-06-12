@@ -141,7 +141,7 @@ module NpqSeparation
           ),
         ] + Cohort.order(start_year: :desc).map do |cohort|
           Node.new(
-            name: "Cohort #{format_cohort(cohort)}",
+            name: "Cohort #{format_cohort_full(cohort)}",
             href: npq_separation_admin_cohort_path(cohort),
             prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
           )

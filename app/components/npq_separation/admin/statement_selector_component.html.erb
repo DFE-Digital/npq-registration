@@ -11,7 +11,7 @@
   <%= f.govuk_collection_select :cohort_id,
     cohorts,
     :id,
-    :start_year,
+    -> { format_cohort_full _1 },
     label: { text: "View a different cohort" },
     options: { selected: cohort_id, include_blank: "All" },
     form_group: { class: "govuk-form-group govuk-!-width-one-quarter" }

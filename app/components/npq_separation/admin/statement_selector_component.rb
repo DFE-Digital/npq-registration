@@ -5,6 +5,7 @@ module NpqSeparation
     class StatementSelectorComponent < BaseComponent
       StatementOption = Struct.new(:name, :value)
 
+      include AdminHelper
       include StatementHelper
 
       attr_reader :lead_provider_id, :cohort_id, :selection

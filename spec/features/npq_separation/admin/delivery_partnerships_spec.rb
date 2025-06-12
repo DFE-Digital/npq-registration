@@ -137,6 +137,6 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 private
 
   def cohort_label(cohort)
-    "Cohort #{cohort.start_year}/#{cohort.start_year - 1999}"
+    "Cohort #{cohort.start_year} to #{cohort.start_year + 1}"
   end
 end
