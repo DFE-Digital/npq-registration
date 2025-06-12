@@ -28,7 +28,6 @@ DfE::Analytics.configure do |config|
   # https://cloud.google.com/bigquery/docs/authentication/service-account-file
   #
   # config.bigquery_api_json_key = ENV['BIGQUERY_API_JSON_KEY']
-  config.bigquery_api_json_key = ENV["BIGQUERY_DFE_ANALYTICS_API_JSON_KEY"] || Rails.application.credentials.BIGQUERY_DFE_ANALYTICS_API_JSON_KEY
 
   # Passed directly to the retries: option on the BigQuery client
   # config.bigquery_retries = 3
