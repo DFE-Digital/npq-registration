@@ -65,9 +65,9 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
 
       it "has an entry for each cohort" do
         expect(subject.drop(1).map(&:name)).to eq([
-          "Cohort 2028/29",
-          "Cohort 2027/28",
-          "Cohort 2026/27",
+          "Cohort 2028 to 2029",
+          "Cohort 2027 to 2028",
+          "Cohort 2026 to 2027",
         ])
       end
     end

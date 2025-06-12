@@ -77,10 +77,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application.update!(cohort:)
 
     visit(npq_separation_admin_applications_path)
-    select "2022", from: "Year of application"
+    select "2022 to 2023", from: "Year of application"
     click_on "Search"
 
-    expect(page).to have_select("Year of application", selected: "2022")
+    expect(page).to have_select("Year of application", selected: "2022 to 2023")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
     expect(page).to have_text(application.ecf_id)
   end
