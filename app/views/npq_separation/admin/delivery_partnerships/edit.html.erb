@@ -15,7 +15,7 @@
             <%= form.fields_for :delivery_partnerships, @delivery_partner.delivery_partnerships.find_or_initialize_by(lead_provider:, cohort:) do |delivery_partnership_form| %>
               <%= delivery_partnership_form.hidden_field :lead_provider_id, value: lead_provider.id %>
               <%= delivery_partnership_form.hidden_field :cohort_id, value: cohort.id %>
-              <%= delivery_partnership_form.govuk_check_box :_destroy, 0, 1, multiple: false, label: { text: "Cohort #{format_cohort(cohort)}" }, checked: delivery_partnership_form.object.persisted? %>
+              <%= delivery_partnership_form.govuk_check_box :_destroy, 0, 1, multiple: false, label: { text: "Cohort #{format_cohort_full(cohort)}" }, checked: delivery_partnership_form.object.persisted? %>
             <% end %>
           <% end %>
         <% end %>

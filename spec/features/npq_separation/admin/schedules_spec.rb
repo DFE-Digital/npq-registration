@@ -38,7 +38,7 @@ RSpec.feature "Managing schedules", :ecf_api_disabled, type: :feature do
     click_on schedule.name
 
     within(".govuk-summary-list") do |sl|
-      expect(sl).to have_summary_item("Cohort", "2026/27")
+      expect(sl).to have_summary_item("Cohort", "2026 to 2027")
       expect(sl).to have_summary_item("Name", schedule.name)
       expect(sl).to have_summary_item("Identifier", schedule.identifier)
       expect(sl).to have_summary_item("Course group", schedule.course_group.name)
