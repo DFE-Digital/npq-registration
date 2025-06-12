@@ -93,7 +93,7 @@ module NpqSeparation
             name: "Course providers",
             href: npq_separation_admin_lead_providers_path,
             prefix: "/npq-separation/admin/lead-providers",
-          ) => course_provider_nodes,
+          ) => [],
           Node.new(
             name: "Bulk operations",
             href: npq_separation_admin_bulk_operations_path,
@@ -144,16 +144,6 @@ module NpqSeparation
             name: "Cohort #{format_cohort(cohort)}",
             href: npq_separation_admin_cohort_path(cohort),
             prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
-          )
-        end
-      end
-
-      def course_provider_nodes
-        LeadProvider.order(:name).map do |lead_provider|
-          Node.new(
-            name: lead_provider.name,
-            href: npq_separation_admin_lead_provider_path(lead_provider),
-            prefix: "/npq-separation/admin/lead-providers/#{lead_provider.id}",
           )
         end
       end

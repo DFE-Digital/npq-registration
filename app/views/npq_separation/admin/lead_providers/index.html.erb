@@ -1,3 +1,19 @@
+<% content_for :side_navigation do %>
+  <%=
+    render NpqSeparation::SubNavigationComponent.new(
+      request.path,
+      structure:
+        LeadProvider.order(:name).map do |lead_provider|
+          NpqSeparation::NavigationStructure::Node.new(
+            name: lead_provider.name,
+            href: npq_separation_admin_lead_provider_path(lead_provider),
+            prefix: "/npq-separation/admin/lead-providers/#{lead_provider.id}",
+          )
+        end
+    )
+  %>
+<% end %>
+
 <h1 class="govuk-heading-l">Course providers</h1>
 
 <p class="govuk-body">
