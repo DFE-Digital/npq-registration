@@ -22,16 +22,16 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
     expect(Cohort.count).to eq(3)
 
     expect(page).to have_table(rows: [
-      ["2028/29", "3 April 2028", "No"],
-      ["2027/28", "3 April 2027", "No"],
-      ["2026/27", "3 April 2026", "No"],
+      ["2028 to 2029", "3 April 2028", "No"],
+      ["2027 to 2028", "3 April 2027", "No"],
+      ["2026 to 2027", "3 April 2026", "No"],
     ])
   end
 
   scenario "viewing details" do
     navigate_to_cohort
 
-    expect(page).to have_css("h1", text: "Cohort 2026/27")
+    expect(page).to have_css("h1", text: "Cohort 2026 to 2027")
 
     within(".govuk-summary-list") do |summary_list|
       expect(summary_list).to have_summary_item("Start year", "2026")
@@ -121,6 +121,6 @@ private
 
   def navigate_to_cohort
     visit_index
-    click_on "2026/27"
+    click_on "2026 to 2027"
   end
 end
