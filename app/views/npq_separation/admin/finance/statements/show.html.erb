@@ -13,7 +13,7 @@
       NpqSeparation::NavigationStructure::Node.new(
         name: "#{@statement.lead_provider.name}, #{statement_name(@statement)}",
         href: npq_separation_admin_finance_statement_path(@statement),
-        prefix: ""
+        prefix: npq_separation_admin_finance_statement_path(@statement)
       )
     ]
   ) %>
