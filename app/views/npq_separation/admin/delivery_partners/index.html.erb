@@ -1,4 +1,8 @@
 <h1 class="govuk-heading-l">Delivery partners</h1>
+<p class="govuk-body">
+  Here’s a list of all delivery partners that help course providers deliver NPQs.
+  You can add a new delivery partner and assign them to course providers.
+</p>
 
 <div class="admin-search-box">
   <%= form_with method: :get do |f| %>
@@ -29,10 +33,8 @@
         body.with_row do |row|
           row.with_cell(text: delivery_partner.name)
           row.with_cell do
-            tag.div class: "govuk-button-group govuk-!-margin-bottom-0" do
-              govuk_link_to("Assign course providers", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") +
-              govuk_link_to("Update name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0")
-            end
+              safe_join [tag.div { govuk_link_to("Change name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0") },
+                tag.div { govuk_link_to("Assign course provider", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") }]
           end
         end
       end
