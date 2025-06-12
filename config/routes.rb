@@ -66,9 +66,6 @@ Rails.application.routes.draw do
       end
     end
     resources :schools, only: %i[index show]
-    resources :webhook_messages, only: %i[index show] do
-      resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
-    end
   end
 
   get "/admin", to: "admin#show"
