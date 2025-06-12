@@ -297,7 +297,7 @@ en:
             change_status_to_pending:
               inclusion: Confirm you wish to change the status to Pending
             lead_provider_approval_status:
-              inclusion: Current lead provider approval status is not Accepted
+              inclusion: Current course provider approval status is not Accepted
             base:
               pending_unremoveable_declarations: There are already declarations for this participant on this course, please ask the provider to void any declarations they have made before attempting to revert the application.
         applications/change_cohort:
@@ -754,7 +754,7 @@ en:
             <p class="govuk-body">When this feature is turned on, submitting a declaration for the 2024 cohort onwards will require the delivery partner to be included.</p>
             <p class="govuk-body">When this feature is turned off, submitting a declaration does not require a delivery partner, but will still accept a declaration with a delivery partner.</p>
           include_delivery_partners_in_declarations_api_html: |
-            <p class="govuk-body">When this feature is turned on, lead providers can use the API to see which delivery partners are associated with declarations.</p>
+            <p class="govuk-body">When this feature is turned on, course providers can use the API to see which delivery partners are associated with declarations.</p>
       course_payment_overview_component:
         course_total: Course total
         output_payment: Output payment
@@ -890,7 +890,7 @@ en:
       applications_change_funding_eligibility:
         eligible_for_funding: Is eligible for funding?
       applications_change_lead_provider:
-        lead_provider_id: Choose a different lead provider
+        lead_provider_id: Choose a different course provider
       applications_change_cohort:
         cohort_id: Choose a cohort
       registration_wizard:
