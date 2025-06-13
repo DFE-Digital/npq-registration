@@ -48,6 +48,15 @@ RSpec.feature "User administration", type: :feature do
   end
 
   feature "viewing a user" do
+    scenario "shows side navigation with current user" do
+      visit(npq_separation_admin_user_path(user))
+
+      within "#side-navigation" do |side_navigation|
+        expect(side_navigation).to have_content("Overview")
+        expect(side_navigation).to have_content(user.full_name)
+      end
+    end
+
     scenario "shows user details" do
       visit npq_separation_admin_user_path(user)
 

@@ -66,7 +66,7 @@ module NpqSeparation
             name: "Users",
             href: npq_separation_admin_users_path,
             prefix: "/npq-separation/admin/users",
-          ) => [],
+          ) => application_nodes,
           Node.new(
             name: "Finance",
             href: npq_separation_admin_finance_statements_path,
