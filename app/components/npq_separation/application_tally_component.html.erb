@@ -2,7 +2,7 @@
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
-        row.with_cell(text: dimension.to_s.titleize)
+        row.with_cell(text: dimension_header)
         row.with_cell(text: 'Applications', numeric: true)
       end
     end

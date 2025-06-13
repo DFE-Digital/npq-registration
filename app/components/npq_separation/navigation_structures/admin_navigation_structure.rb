@@ -87,14 +87,14 @@ module NpqSeparation
             prefix: "/npq-separation/admin/schools",
           ) => [],
           Node.new(
-            name: "Lead providers",
+            name: "Course providers",
             href: npq_separation_admin_lead_providers_path,
-            prefix: "/npq-separation/admin/lead_providers",
+            prefix: "/npq-separation/admin/lead-providers",
           ) => [],
           Node.new(
             name: "Bulk operations",
             href: npq_separation_admin_bulk_operations_path,
-            prefix: "/npq-separation/admin/bulk_operations",
+            prefix: "/npq-separation/admin/bulk-operations",
           ) => [],
           Node.new(
             name: "Delivery partners",
@@ -109,7 +109,7 @@ module NpqSeparation
           Node.new(
             name: "Closed registration users",
             href: npq_separation_admin_closed_registration_users_path,
-            prefix: "/npq-separation/admin/closed_registration_users",
+            prefix: "/npq-separation/admin/closed-registration-users",
           ) => [],
         }
       end

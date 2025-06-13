@@ -1,4 +1,4 @@
 <h1 class="govuk-heading-l">Summary</h1>
 
 <%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :course) %>
-<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :lead_provider) %>
+<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :lead_provider, dimension_header: "Course provider") %>

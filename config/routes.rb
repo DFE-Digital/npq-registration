@@ -222,7 +222,9 @@ Rails.application.routes.draw do
 
       resources :applications, only: %i[index show] do
         collection do
-          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index show]
+          resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index show] do
+            resource :review_status, controller: "applications/review_statuses", only: %i[edit update]
+          end
         end
         member do
           namespace :applications, path: nil do
@@ -279,7 +281,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :lead_providers, only: %i[index show], path: "lead-providers"
+      resources :lead_providers, only: %i[index show], path: "lead-providers" do
+        resources :cohort, controller: "lead_provider_cohort", only: %i[show]
+      end
       resources :admins, only: %i[index]
 
       resources :bulk_operations, only: %i[index], path: "bulk-operations"

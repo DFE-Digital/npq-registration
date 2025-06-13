@@ -6,7 +6,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
   let(:to_statement_updates) { {} }
   let(:lead_provider) { create(:lead_provider) }
   let(:from_statement) { create(:statement, month: 4, year: 2023, lead_provider:, cohort:, output_fee: true) }
-  let(:to_statement) { create(:statement, :next_output_fee, month: 5, year: 2023, lead_provider:, cohort:) }
+  let(:to_statement) { create(:statement, :next_output_fee, month: 5, year: 2023, lead_provider:, cohort:, payment_date: 1.day.from_now) }
   let(:from_month) { from_statement.month }
   let(:from_year) { from_statement.year }
   let(:to_month) { to_statement.month }
@@ -291,11 +291,11 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
       it "records information" do
         migrate
 
-        expect(logged_output).to eq([
+        expect(logged_output).to include(
           "Migrating declarations from #{from_statement.year}-#{from_statement.month} to #{to_statement.year}-#{to_statement.month} for 1 providers",
           "Migrating 1 declarations for #{lead_provider.name} - from statement #{from_statement.id} to statement #{to_statement.id}",
           "Marking 1 payable declarations back as eligible for #{to_statement.year}-#{to_statement.month} statement: #{to_statement.id}",
-        ])
+        )
       end
     end
 

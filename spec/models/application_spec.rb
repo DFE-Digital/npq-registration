@@ -148,6 +148,15 @@ RSpec.describe Application do
         withdrawn: "withdrawn",
       ).backed_by_column_of_type(:enum).with_suffix
     }
+
+    it "defines an enum for review_status" do
+      expect(subject).to define_enum_for(:review_status).with_values(
+        "Needs review" => "needs_review",
+        "Awaiting information" => "awaiting_information",
+        "Re-register" => "reregister",
+        "Decision made" => "decision_made",
+      ).backed_by_column_of_type(:enum).with_suffix
+    end
   end
 
   describe "scopes" do
@@ -175,6 +184,25 @@ RSpec.describe Application do
         create(:application, targeted_delivery_funding_eligibility: false)
 
         expect(described_class.with_targeted_delivery_funding_eligibility).to contain_exactly(application_with_targeted_delivery_funding_eligibility)
+      end
+    end
+
+    describe ".for_manual_review" do
+      subject { described_class.for_manual_review.to_a }
+
+      before { application }
+
+      let(:application) { create(:application, review_status:) }
+      let(:review_status) { nil }
+
+      it { is_expected.not_to include(application) }
+
+      Application.review_statuses.each_value do |enum_value|
+        context "with review_status of #{enum_value}" do
+          let(:review_status) { enum_value }
+
+          it { is_expected.to include(application) }
+        end
       end
     end
   end

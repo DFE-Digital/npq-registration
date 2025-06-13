@@ -32,6 +32,11 @@ module NpqSeparation
             href: api_guidance_page_path(page: "/", anchor: "process-diagrams"),
             prefix: "/api/guidance/process-diagrams",
           ) => [],
+          Node.new(
+            name: "Roadmap",
+            href: api_guidance_page_path(page: "roadmap"),
+            prefix: "/api/guidance/roadmap",
+          ) => [],
         }
       end
     end

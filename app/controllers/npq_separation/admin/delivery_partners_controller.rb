@@ -1,6 +1,5 @@
 class NpqSeparation::Admin::DeliveryPartnersController < NpqSeparation::AdminController
   def index
-    scope = DeliveryPartner.all.order(name: :asc)
     @pagy, @delivery_partners = pagy(scope, limit: 10)
   end
 
@@ -46,5 +45,9 @@ private
         _destroy
       ],
     )
+  end
+
+  def scope
+    AdminService::DeliveryPartnersSearch.new(q: params[:q]).call
   end
 end

@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe ApplicationHelper, type: :helper do
-  include GovukComponentsHelper
-
   shared_examples "boolean tag" do
     it "is a red tag with 'No' when bool is false" do
       expect(boolean_red_green_tag(false)).to have_css("strong.govuk-tag.govuk-tag--red", text: "No")
@@ -126,6 +124,40 @@ RSpec.describe ApplicationHelper, type: :helper do
       it "return a red tag with 'Not verified'" do
         expect(subject).to have_css("strong.govuk-tag.govuk-tag--red", text: "Not verified")
       end
+    end
+  end
+
+  describe "#lead_provider_approval_status_badge" do
+    subject { lead_provider_approval_status_badge(status) }
+
+    context "with pending" do
+      let(:status) { "pending" }
+
+      it { is_expected.to have_css ".govuk-tag--blue", text: "Pending" }
+    end
+
+    context "with accepted" do
+      let(:status) { "accepted" }
+
+      it { is_expected.to have_css ".govuk-tag--green", text: "Accepted" }
+    end
+
+    context "with rejected" do
+      let(:status) { "rejected" }
+
+      it { is_expected.to have_css ".govuk-tag--red", text: "Rejected" }
+    end
+
+    context "with something else" do
+      let(:status) { "something_else" }
+
+      it { is_expected.to have_css ".govuk-tag--grey", text: "Something else" }
+    end
+
+    context "without a lead_provider_approval_status" do
+      let(:status) { nil }
+
+      it { is_expected.to be_nil }
     end
   end
 end

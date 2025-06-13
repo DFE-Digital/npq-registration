@@ -1,5 +1,18 @@
 <h1 class="govuk-heading-l">Delivery partners</h1>
 
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+    <%= f.govuk_text_field(
+        :q,
+        value: params[:q],
+        label: { text: "Find a delivery partner", size: "m" },
+        hint: { text: "Enter part or all of the delivery partner’s name.", size: "s" },
+      )
+    %>
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
 <%= govuk_button_link_to "Add a delivery partner", new_npq_separation_admin_delivery_partner_path %>
 
 <%=
@@ -17,7 +30,7 @@
           row.with_cell(text: delivery_partner.name)
           row.with_cell do
             tag.div class: "govuk-button-group govuk-!-margin-bottom-0" do
-              govuk_link_to("Assign lead providers", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") +
+              govuk_link_to("Assign course providers", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") +
               govuk_link_to("Update name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0")
             end
           end

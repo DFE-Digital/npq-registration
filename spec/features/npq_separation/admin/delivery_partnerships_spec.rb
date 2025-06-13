@@ -20,33 +20,33 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 
     scenario "viewing the edit page for a delivery partner's partnerships" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "Assign lead providers", match: :first
+      click_link "Assign course providers", match: :first
 
       expect(page).to have_current_path(edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner))
 
       within "main" do
-        expect(page).to have_content("Add a lead provider")
+        expect(page).to have_content("Add a course provider")
 
-        # All lead providers are displayed
+        # All course providers are displayed
         lead_providers.each do |lead_provider|
           expect(page).to have_content(lead_provider.name)
         end
 
-        # Cohorts are hidden until a lead provider is selected
+        # Cohorts are hidden until a course provider is selected
         expect(page).not_to have_content("Cohort")
       end
     end
 
-    scenario "assigning lead providers and cohorts to a delivery partner" do
+    scenario "assigning course providers and cohorts to a delivery partner" do
       lead_provider = lead_providers.first
       cohort = cohorts.first
 
       visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
 
-      # Check the lead provider checkbox
+      # Check the course provider checkbox
       check lead_provider.name, visible: :all
 
-      # Check the cohort checkbox for this lead provider
+      # Check the cohort checkbox for this course provider
       within("#delivery-partner-lead-provider-id-#{lead_provider.id}-conditional") do
         check cohort_label(cohort), visible: :all
       end
@@ -58,7 +58,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
       expect(DeliveryPartnership.where(delivery_partner:, lead_provider:, cohort:)).to exist
     end
 
-    scenario "removing a lead provider partnership" do
+    scenario "removing a course provider partnership" do
       # Create an existing partnership
       lead_provider = lead_providers.first
       cohort = cohorts.first
@@ -70,7 +70,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 
       visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
 
-      # The lead provider should be checked
+      # The course provider should be checked
       expect(page).to have_field("delivery_partner[lead_provider_id][]", with: lead_provider.id.to_s, checked: true, visible: :all)
 
       # The cohort should be checked
@@ -78,7 +78,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
         expect(page).to have_field(cohort_label(cohort), checked: true, visible: :all)
       end
 
-      # Uncheck the lead provider (this should also uncheck all cohorts via JS)
+      # Uncheck the course provider (this should also uncheck all cohorts via JS)
       uncheck lead_provider.name, visible: :all
 
       click_button "Save"
@@ -88,7 +88,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
       expect(DeliveryPartnership.find_by(id: delivery_partnership.id)).to be_nil
     end
 
-    scenario "removing a specific cohort from a lead provider partnership" do
+    scenario "removing a specific cohort from a course provider partnership" do
       # Create existing partnerships for two cohorts
       lead_provider = lead_providers.first
       cohort1 = cohorts.first
@@ -106,7 +106,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 
       visit edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner)
 
-      # The lead provider should be checked
+      # The course provider should be checked
       expect(page).to have_field("delivery_partner[lead_provider_id][]", with: lead_provider.id.to_s, checked: true, visible: :all)
 
       # Both cohorts should be checked

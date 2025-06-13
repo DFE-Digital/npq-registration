@@ -61,6 +61,8 @@ module ApplicationHelper
   end
 
   def lead_provider_approval_status_badge(lead_provider_approval_status)
+    return nil unless lead_provider_approval_status
+
     colour = {
       pending: "blue",
       accepted: "green",

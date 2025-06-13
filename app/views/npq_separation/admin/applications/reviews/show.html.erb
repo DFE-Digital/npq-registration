@@ -22,6 +22,11 @@
 <%=
   govuk_summary_list(card: { title: "Funding details" }) do |sl|
     sl.with_row do |row|
+      row.with_key(text: "Review status")
+      row.with_value(text: review_status_tag(@application.review_status))
+      row.with_action(text: "Change", visually_hidden_text: "review status", href: edit_npq_separation_admin_application_review_review_status_path(@application))
+    end
+    sl.with_row do |row|
       row.with_key(text: "Eligible for funding")
       row.with_value(text: boolean_red_green_tag(@application.eligible_for_funding))
       row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_funding_eligibility_path(@application))
@@ -98,6 +103,6 @@
   end
 %>
 
-<%= govuk_details(summary_text: "View registration as it appears on the Lead Provider API V3") do %>
+<%= govuk_details(summary_text: "View registration as it appears on the Course provider API V3") do %>
 <pre class="govuk-!-font-size-16 api-view"><code><%= JSON.pretty_generate API::ApplicationSerializer.render_as_hash(@application, view: :v3, root: "data") %></code></pre>
 <% end %>

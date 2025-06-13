@@ -34,6 +34,7 @@ class Application < ApplicationRecord
   scope :accepted, -> { where(lead_provider_approval_status: "accepted") }
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
+  scope :for_manual_review, -> { where.not(review_status: nil) }
 
   attr_accessor :version_note, :skip_touch_user_if_changed
 
@@ -78,6 +79,13 @@ class Application < ApplicationRecord
     deferred: "deferred",
     withdrawn: "withdrawn",
   }, _suffix: true
+
+  enum :review_status, {
+    "Needs review" => "needs_review",
+    "Awaiting information" => "awaiting_information",
+    "Re-register" => "reregister",
+    "Decision made" => "decision_made",
+  }, suffix: true
 
   validates :funded_place, inclusion: { in: [true, false] }, if: :validate_funded_place?
   validate :eligible_for_funded_place
