@@ -23,7 +23,7 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
 
   it "renders a link to each cohort page"
 
-  it "renders a link to each lead provider page" do
+  it "renders a link to each course provider page" do
     statements.each do |statement|
       expect(page).to have_link(statement.lead_provider.name, href: "/npq-separation/admin/lead-providers/#{statement.lead_provider.id}")
     end
@@ -32,7 +32,7 @@ RSpec.describe NpqSeparation::Admin::StatementsTableComponent, type: :component 
   context "when show_lead_provider: false" do
     let(:show_lead_provider) { false }
 
-    it "renders no lead provider column" do
+    it "renders no course provider column" do
       expect(rendered_content).not_to have_css("th", text: "Course provider")
     end
 

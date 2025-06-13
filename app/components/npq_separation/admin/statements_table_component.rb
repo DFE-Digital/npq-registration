@@ -1,6 +1,12 @@
 module NpqSeparation
   module Admin
     class StatementsTableComponent < ViewComponent::Base
+      STATE_COLOURS = {
+        open: "govuk-tag--grey",
+        payable: "govuk-tag--red",
+        paid: "govuk-tag--green",
+      }.freeze
+
       attr_reader :statements, :show_lead_provider, :caption
 
       def initialize(statements, show_lead_provider: true, caption: nil)
@@ -19,9 +25,9 @@ module NpqSeparation
         [
           ("Course provider" if show_lead_provider),
           "Cohort",
-          "Statement",
+          "Statement date",
           "Status",
-          govuk_visually_hidden("Action"),
+          "Actions",
         ].compact
       end
 
@@ -53,13 +59,16 @@ module NpqSeparation
       end
 
       def cohort_link(statement)
-        text = helpers.format_cohort(statement.cohort)
+        text = helpers.format_cohort_full(statement.cohort)
 
         govuk_link_to(text, "#", **metadata_link_arguments)
       end
 
       def statement_tag(statement)
-        govuk_tag(text: statement.state.capitalize)
+        govuk_tag(
+          text: statement.state.capitalize,
+          classes: STATE_COLOURS[statement.state.to_sym],
+        )
       end
 
       def metadata_link_arguments

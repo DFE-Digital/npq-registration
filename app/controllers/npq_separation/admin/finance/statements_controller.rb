@@ -32,15 +32,25 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
 private
 
   def statement_params
-    params.permit(:lead_provider_id, :cohort_id, :statement)
+    params.permit(:lead_provider_id, :cohort_id, :payment_status, :statement)
           .tap { extract_period _1 }
-          .select { _2.present? }
+          .tap { extract_state _1 }
+          .compact_blank
   end
 
   def extract_period(params)
     return unless (period = params.delete(:statement))
 
     params[:year], params[:month] = period.split("-")
+  end
+
+  def extract_state(params)
+    return unless (payment_status = params.delete(:payment_status))
+
+    params[:state] = {
+      "unpaid" => %w[open payable],
+      "paid" => %w[paid],
+    }.fetch(payment_status, [])
   end
 
   def show_authorising_statement_message(statement)

@@ -13,7 +13,7 @@ RSpec.feature "Listing statements", type: :feature do
   scenario "viewing the list of statements" do
     visit(npq_separation_admin_finance_statements_path)
 
-    expect(page).to have_css("h1", text: "Statements")
+    expect(page).to have_css("h1", text: "Finance")
 
     Statement.order(payment_date: :asc).limit(statements_per_page).each do |statement|
       expect(page).to have_link("View", href: npq_separation_admin_finance_statement_path(statement))

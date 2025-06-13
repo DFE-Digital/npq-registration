@@ -15,6 +15,13 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     expect(rendered).to have_selector("form[method=get][action='/npq-separation/admin/finance/statements']")
   end
 
+  it "has dropdown with state" do
+    expect(rendered).to have_selector("select#payment-status-field")
+    expect(rendered).to have_selector("select#payment-status-field option[value='']", text: "All")
+    expect(rendered).to have_selector("select#payment-status-field option[value='paid']", text: "Paid")
+    expect(rendered).to have_selector("select#payment-status-field option[value='unpaid']", text: "Unpaid")
+  end
+
   it "has dropdown with lead providers" do
     expect(rendered).to have_selector("select#lead-provider-id-field")
     expect(rendered).to have_selector("select#lead-provider-id-field option[value='#{lead_provider.id}']", text: lead_provider.name)

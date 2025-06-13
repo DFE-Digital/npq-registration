@@ -14,6 +14,10 @@ module NpqSeparation
         @lead_provider_id, @cohort_id = selection.values_at(:lead_provider_id, :cohort_id)
       end
 
+      def payment_status
+        selection[:payment_status].presence
+      end
+
       def lead_providers
         LeadProvider.all.alphabetical
       end
