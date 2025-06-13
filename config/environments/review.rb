@@ -1,8 +1,6 @@
 require Rails.root.join("config/environments/production")
 
 Rails.application.configure do
-  config.ssl_options = { redirect: { exclude: ->(request) { request.path.include?("/healthcheck") } } }
-
   config.after_initialize do
     Bullet.enable                       = true
     Bullet.bullet_logger                = true
