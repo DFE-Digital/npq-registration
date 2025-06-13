@@ -25,6 +25,15 @@ RSpec.feature "Statement", type: :feature do
     sign_in_as(create(:admin))
   end
 
+  scenario "shows side navigation with current statement highlighted" do
+    visit(npq_separation_admin_finance_statement_path(statement))
+
+    within "#side-navigation" do |side_navigation|
+      expect(side_navigation).to have_content("Finance statement")
+      expect(side_navigation).to have_content("#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
+    end
+  end
+
   scenario "see details" do
     visit(npq_separation_admin_finance_statement_path(statement))
 
