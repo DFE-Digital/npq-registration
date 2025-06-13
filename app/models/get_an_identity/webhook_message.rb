@@ -1,11 +1,11 @@
 class GetAnIdentity::WebhookMessage < ApplicationRecord
-  enum status: {
+  enum :status, {
     pending: "pending",
     processing: "processing",
     processed: "processed",
     failed: "failed",
     unhandled_message_type: "unhandled_message_type",
-  }, _suffix: true
+  }, suffix: true
 
   def processor_klass
     case message_type

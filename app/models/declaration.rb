@@ -42,7 +42,7 @@ class Declaration < ApplicationRecord
     .latest_first
   }
 
-  enum state: {
+  enum :state, {
     submitted: "submitted",
     eligible: "eligible",
     payable: "payable",
@@ -51,7 +51,7 @@ class Declaration < ApplicationRecord
     ineligible: "ineligible",
     awaiting_clawback: "awaiting_clawback",
     clawed_back: "clawed_back",
-  }, _suffix: true
+  }, suffix: true
 
   state_machine :state, initial: :submitted do
     event :mark_eligible do
@@ -94,9 +94,9 @@ class Declaration < ApplicationRecord
     completed: "completed",
   }, suffix: true, validate: true
 
-  enum state_reason: {
+  enum :state_reason, {
     duplicate: "duplicate",
-  }, _suffix: true
+  }, suffix: true
 
   validates :declaration_date, :declaration_type, presence: true
   validate :validate_declaration_date_within_schedule

@@ -27,14 +27,14 @@ RSpec.describe API::DocumentationController do
   end
 
   context "with v4" do
-    let(:make_request) { get api_documentation_path(version: "v4") }
+    before { get api_documentation_path(version: "v4") }
 
-    it { expect { make_request }.to raise_exception ActionController::RoutingError }
+    it { is_expected.to have_http_status :not_found }
   end
 
   context "without version" do
-    let(:make_request) { get api_documentation_path(version: "") }
+    before { get api_documentation_path(version: "") }
 
-    it { expect { make_request }.to raise_exception ActionController::RoutingError }
+    it { is_expected.to have_http_status :not_found }
   end
 end
