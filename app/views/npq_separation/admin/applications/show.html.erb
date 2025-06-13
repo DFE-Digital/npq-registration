@@ -83,7 +83,11 @@
   govuk_summary_list(card: { title: "Workplace" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Name")
-      row.with_value(text: @application.employer_name_to_display)
+      if @application.employer_urn.present?
+        row.with_value(text: govuk_link_to(@application.employer_name_to_display, npq_separation_admin_schools_path(q: @application.employer_urn)))
+      else
+        row.with_value(text: @application.employer_name_to_display)
+      end
     end
     sl.with_row do |row|
       row.with_key(text: "UK Provider Reference Number (UKPRN)")
