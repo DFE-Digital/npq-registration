@@ -54,6 +54,8 @@ RSpec.feature "User administration", type: :feature do
       within "#side-navigation" do |side_navigation|
         expect(side_navigation).to have_content("Overview")
         expect(side_navigation).to have_content(user.full_name)
+        expect(side_navigation).to have_link("All applications", href: "/npq-separation/admin/applications")
+        expect(side_navigation).to have_link("In review", href: "/npq-separation/admin/applications/reviews")
       end
     end
 
