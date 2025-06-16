@@ -23,7 +23,7 @@ The following environment variables are required:
 
 * `BIGQUERY_PROJECT_ID` contains the GCP BigQuery project ID
 * `BIGQUERY_TABLE_NAME` contains the name of the table to write to - set to `events`
-* `GOOGLE_CLOUD_CREDENTIALS` contains the GCP service account credentials in JSON format, set by the infra team
+* `GOOGLE_CLOUD_CREDENTIALS` contains the GCP service account credentials in JSON format, already set by the infra team via terraform
 
 
 ## Review apps
