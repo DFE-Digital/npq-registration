@@ -23,9 +23,9 @@ RSpec.feature "Sessions", type: :feature do
     page.fill_in "What’s your email address?", with: " User@example.com "
     page.click_button "Sign in"
 
-    code = ActionMailer::Base.deliveries.last.personalisation[:code]
-
     expect(page).to have_content("Check your email")
+
+    code = ActionMailer::Base.deliveries.last.personalisation[:code]
     page.fill_in "Enter your code", with: code
     page.click_button "Sign in"
 

@@ -1,7 +1,8 @@
-class EmailUpdatesController < ApplicationController
+class EmailUpdatesController < PublicPagesController
   before_action only: %i[new create] do
     redirect_to root_path unless current_user.persisted?
   end
+
   def new
     session["request_email_updates"] = nil
 

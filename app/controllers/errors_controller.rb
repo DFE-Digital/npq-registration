@@ -1,4 +1,4 @@
-class ErrorsController < ApplicationController
+class ErrorsController < PublicPagesController
   layout "application"
 
   before_action :set_format

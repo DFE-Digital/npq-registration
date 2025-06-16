@@ -1,4 +1,4 @@
-class SchoolsController < ApplicationController
+class SchoolsController < PublicPagesController
   def index
     schools = School
       .open

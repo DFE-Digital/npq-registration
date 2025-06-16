@@ -1,5 +1,5 @@
 module API
-  class GuidanceController < ApplicationController
+  class GuidanceController < PublicPagesController
     layout "api_guidance"
 
     def index

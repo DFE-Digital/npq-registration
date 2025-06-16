@@ -1,4 +1,4 @@
-class CookiePreferencesController < ApplicationController
+class CookiePreferencesController < PublicPagesController
   def create
     @form = Questionnaires::CookiePreferences.new(cookie_preferences_params)
 
