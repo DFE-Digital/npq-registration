@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe AdminHelper, type: :helper do
-  describe "#format_cohort_full" do
-    subject { format_cohort_full(cohort) }
+  describe "#format_cohort" do
+    subject { format_cohort(cohort) }
 
     let(:cohort) { FactoryBot.build(:cohort, start_year: 2025) }
 

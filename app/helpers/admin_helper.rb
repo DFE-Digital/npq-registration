@@ -1,5 +1,5 @@
 module AdminHelper
-  def format_cohort_full(cohort)
+  def format_cohort(cohort)
     "#{cohort.start_year} to #{cohort.start_year.next}"
   end
 

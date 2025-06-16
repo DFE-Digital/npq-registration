@@ -43,7 +43,7 @@
         :cohort_id,
         Cohort.all.order(start_year: :desc),
         :id,
-        -> { format_cohort_full _1 },
+        -> { format_cohort _1 },
         options: { selected: params[:cohort_id], include_blank: "All" },
         label: { text: "Year of application", size: "s" }
       )
