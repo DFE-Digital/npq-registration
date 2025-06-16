@@ -1,4 +1,4 @@
-class SessionWizardController < ApplicationController
+class SessionWizardController < PublicPagesController
   def show
     @wizard = SessionWizard.new(current_step: session_step, store:, session:)
     @form = @wizard.form

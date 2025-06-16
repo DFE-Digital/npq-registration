@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class SessionsController < PublicPagesController
   def destroy
     admin = current_admin
 

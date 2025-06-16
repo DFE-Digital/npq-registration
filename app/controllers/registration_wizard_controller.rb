@@ -1,4 +1,4 @@
-class RegistrationWizardController < ApplicationController
+class RegistrationWizardController < PublicPagesController
   before_action :registration_closed
   before_action :set_wizard
   before_action :set_form

@@ -1,6 +1,4 @@
-class AccountsController < ApplicationController
-  before_action :authenticate_user!
-
+class AccountsController < LoggedInController
   def show
     return unless current_user.applications.count == 1
 

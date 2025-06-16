@@ -1,4 +1,4 @@
-class MonitoringController < ApplicationController
+class MonitoringController < PublicPagesController
   skip_before_action :set_sentry_user, :initialize_store
 
   def healthcheck

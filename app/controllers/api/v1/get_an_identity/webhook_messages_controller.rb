@@ -1,9 +1,8 @@
 module API
   module V1
     module GetAnIdentity
-      class WebhookMessagesController < ApplicationController
-        skip_before_action :verify_authenticity_token
-
+      class WebhookMessagesController < ActionController::API
+        before_action :set_cache_headers
         before_action :log_incoming_message
         before_action :verify_signature!, only: :create
 
@@ -16,6 +15,10 @@ module API
         end
 
       private
+
+        def set_cache_headers
+          no_store
+        end
 
         def webhook_params
           params.permit(:notificationId, :timeUtc, :messageType, message: {})

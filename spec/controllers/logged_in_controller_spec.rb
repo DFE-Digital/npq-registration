@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ApplicationController do
+RSpec.describe LoggedInController do
   controller do
     def index
       head :ok
@@ -11,17 +11,17 @@ RSpec.describe ApplicationController do
     allow(Sentry).to receive(:set_user)
   end
 
-  it "sets caching headers" do
-    get :index
-
-    expect(response.headers).to include "Cache-Control" => "no-store"
-  end
-
   context "when user is not known" do
     it "does not set sentry user" do
       get :index
 
       expect(Sentry).not_to have_received(:set_user)
+    end
+
+    it "sets caching headers" do
+      get :index
+
+      expect(response.headers).to include "Cache-Control" => "no-store"
     end
   end
 
@@ -36,6 +36,12 @@ RSpec.describe ApplicationController do
       get :index
 
       expect(Sentry).to have_received(:set_user).with(id: user.id)
+    end
+
+    it "sets caching headers" do
+      get :index
+
+      expect(response.headers).to include "Cache-Control" => "no-store"
     end
   end
 end

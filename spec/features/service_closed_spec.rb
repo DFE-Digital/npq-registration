@@ -162,11 +162,8 @@ RSpec.feature "Service is closed", type: :feature do
     scenario "Register to email and unsubscribe" do
       visit "/"
       click_button "Sign in to your DfE Identity account"
-
-      visit new_email_update_path
-
-      # choose "Yes" # its not working for some reason
-      find_all(:label)[0].click # HACK: instead `choose "Yes"`
+      click_button "Request email updates"
+      page.choose("Yes", visible: :all)
       click_button "Request email updates"
 
       expect(page).to have_content("Your email request has been set up")
