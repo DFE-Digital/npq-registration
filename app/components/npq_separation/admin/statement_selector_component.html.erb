@@ -2,7 +2,7 @@
   <h2 class="govuk-heading-m">Filter statements by:</h2>
 
   <div class="govuk-grid-row">
-    <% unless sidebar %>
+    <% unless format_for_sidebar %>
       <div class="<%= grid_column_class %>">
         <%= f.govuk_collection_select :payment_status,
           ['Paid', 'Unpaid'],

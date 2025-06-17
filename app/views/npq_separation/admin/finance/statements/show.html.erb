@@ -17,7 +17,7 @@
   ) %>
 
   <hr class="govuk-section-break govuk-section-break--m">
-  <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, sidebar: true) %>
+  <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, format_for_sidebar: true) %>
 <% end %>
 
 <%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>

@@ -7,20 +7,20 @@ module NpqSeparation
 
       include StatementHelper
 
-      attr_reader :lead_provider_id, :cohort_id, :selection, :sidebar
+      attr_reader :cohort_id, :format_for_sidebar, :lead_provider_id, :selection
 
-      def initialize(selection, sidebar: false)
+      def initialize(selection, format_for_sidebar: false)
         @selection = selection
         @lead_provider_id, @cohort_id = selection.values_at(:lead_provider_id, :cohort_id)
-        @sidebar = sidebar
+        @format_for_sidebar = format_for_sidebar
       end
 
       def grid_column_class
-        sidebar ? "govuk-grid-column-full" : "govuk-grid-column-one-half"
+        format_for_sidebar ? "govuk-grid-column-full" : "govuk-grid-column-one-half"
       end
 
       def submit_button_text
-        sidebar ? "View" : "Search"
+        format_for_sidebar ? "View" : "Search"
       end
 
       def payment_status

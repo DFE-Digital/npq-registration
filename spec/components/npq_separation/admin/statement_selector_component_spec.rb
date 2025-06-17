@@ -56,7 +56,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
   end
 
   context "when sidebar mode is enabled" do
-    let(:instance) { described_class.new(statement, sidebar: true) }
+    let(:instance) { described_class.new(statement, format_for_sidebar: true) }
 
     it "does not have payment status dropdown" do
       expect(rendered).not_to have_selector(payment_status_selector)
