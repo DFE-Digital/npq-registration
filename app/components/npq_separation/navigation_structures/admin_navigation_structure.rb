@@ -102,7 +102,7 @@ module NpqSeparation
           ) => [],
           Node.new(
             name: "Settings",
-            href: "#",
+            href: npq_separation_admin_settings_webhook_messages_path,
             prefix: "/npq-separation/admin/settings",
           ) => webhook_messages_nodes,
           Node.new(
@@ -149,7 +149,7 @@ module NpqSeparation
           Node.new(
             name: "Webhook messages",
             href: npq_separation_admin_settings_webhook_messages_path,
-            prefix: "",
+            prefix: "/npq-separation/admin/settings/webhook-messages",
           ),
         ]
       end
