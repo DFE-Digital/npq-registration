@@ -8,18 +8,20 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
   let(:lead_provider)    { create :lead_provider }
   let!(:statement)       { create(:statement, lead_provider:) }
   let(:cohort)           { statement.cohort }
+  let(:instance)         { described_class.new(statement) }
 
-  let(:rendered) { render_inline(described_class.new(statement)) }
+  let(:rendered) { render_inline instance }
+  let(:payment_status_selector) { "select#payment-status-field" }
 
   it "has a form that GETs to correct action" do
     expect(rendered).to have_selector("form[method=get][action='/npq-separation/admin/finance/statements']")
   end
 
   it "has dropdown with state" do
-    expect(rendered).to have_selector("select#payment-status-field")
-    expect(rendered).to have_selector("select#payment-status-field option[value='']", text: "All")
-    expect(rendered).to have_selector("select#payment-status-field option[value='paid']", text: "Paid")
-    expect(rendered).to have_selector("select#payment-status-field option[value='unpaid']", text: "Unpaid")
+    expect(rendered).to have_selector(payment_status_selector)
+    expect(rendered).to have_selector("#{payment_status_selector} option[value='']", text: "All")
+    expect(rendered).to have_selector("#{payment_status_selector} option[value='paid']", text: "Paid")
+    expect(rendered).to have_selector("#{payment_status_selector} option[value='unpaid']", text: "Unpaid")
   end
 
   it "has dropdown with lead providers" do
@@ -38,7 +40,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
   end
 
   it "has submit button" do
-    expect(rendered).to have_selector("button[type=submit]")
+    expect(rendered).to have_selector("button[type=submit]", text: "Search")
   end
 
   it "defaults to selected lead provider" do
@@ -51,5 +53,22 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
 
   it "defaults to selected statement" do
     expect(rendered).to have_selector("select#statement-field option[selected]", text: statement_name(statement), visible: :all)
+  end
+
+  context "when sidebar mode is enabled" do
+    let(:instance) { described_class.new(statement, format_for_sidebar: true) }
+
+    it "does not have payment status dropdown" do
+      expect(rendered).not_to have_selector(payment_status_selector)
+    end
+
+    it "uses a single-column layout" do
+      expect(rendered).to have_selector(".govuk-grid-column-full", count: 3)
+      expect(rendered).not_to have_selector(".govuk-grid-column-one-half")
+    end
+
+    it "has a different label for the submit button" do
+      expect(rendered).to have_selector("button[type=submit]", text: "View")
+    end
   end
 end

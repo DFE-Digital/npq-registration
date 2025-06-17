@@ -1,9 +1,9 @@
-<div class="admin-search-box">
-  <%= form_with url: npq_separation_admin_finance_statements_path, method: :get do |f| %>
-    <h2 class="govuk-heading-m">Filter statements by:</h2>
+<%= form_with url: npq_separation_admin_finance_statements_path, method: :get do |f| %>
+  <h2 class="govuk-heading-m">Filter statements by:</h2>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
+  <div class="govuk-grid-row">
+    <% unless format_for_sidebar %>
+      <div class="<%= grid_column_class %>">
         <%= f.govuk_collection_select :payment_status,
           ['Paid', 'Unpaid'],
           :downcase,
@@ -12,40 +12,40 @@
           label: { text: "Status", size: "s" }
         %>
       </div>
+    <% end %>
 
-      <div class="govuk-grid-column-one-half">
-        <%= f.govuk_collection_select :statement,
-          statements,
-          :value,
-          :name,
-          label: { text: "Statement date", size: "s" },
-          options: { selected: selected_statement }
-        %>
-      </div>
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :statement,
+        statements,
+        :value,
+        :name,
+        label: { text: "Statement date", size: "s" },
+        options: { selected: selected_statement }
+      %>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :lead_provider_id,
+        lead_providers,
+        :id,
+        :name,
+        label: { text: "Course provider", size: "s" },
+        options: { selected: lead_provider_id, include_blank: "All" }
+      %>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <%= f.govuk_collection_select :lead_provider_id,
-          lead_providers,
-          :id,
-          :name,
-          label: { text: "Course provider", size: "s" },
-          options: { selected: lead_provider_id, include_blank: "All" }
-        %>
-      </div>
-
-      <div class="govuk-grid-column-one-half">
-        <%= f.govuk_collection_select :cohort_id,
-          cohorts,
-          :id,
-          :start_year,
-          label: { text: "Cohort", size: "s" },
-          options: { selected: cohort_id, include_blank: "All" }
-        %>
-      </div>
+    <div class="<%= grid_column_class %>">
+      <%= f.govuk_collection_select :cohort_id,
+        cohorts,
+        :id,
+        :start_year,
+        label: { text: "Cohort", size: "s" },
+        options: { selected: cohort_id, include_blank: "All" }
+      %>
     </div>
+  </div>
 
-    <%= f.govuk_submit "Search" %>
-  <% end %>
-</div>
+  <%= f.govuk_submit submit_button_text %>
+<% end %>

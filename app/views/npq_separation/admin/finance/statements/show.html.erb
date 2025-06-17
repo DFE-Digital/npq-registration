@@ -1,5 +1,3 @@
-<%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>
-
 <% content_for :side_navigation do %>
   <hr class="govuk-section-break govuk-section-break--m">
 
@@ -17,10 +15,13 @@
       )
     ]
   ) %>
+
+  <hr class="govuk-section-break govuk-section-break--m">
+  <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, format_for_sidebar: true) %>
 <% end %>
 
+<%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>
 
-<%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement) %>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-three-quarters">
     <p class="govuk-body govuk-!-margin-bottom-2">

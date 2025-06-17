@@ -1,7 +1,9 @@
 <h1 class="govuk-heading-l">Finance</h1>
 <p class="govuk-body">You can search for financial statements that are paid or unpaid.</p>
 
-<%= render NpqSeparation::Admin::StatementSelectorComponent.new(params) %>
+<div class="admin-search-box">
+  <%= render NpqSeparation::Admin::StatementSelectorComponent.new(params) %>
+</div>
 
 <%= render NpqSeparation::Admin::StatementsTableComponent.new(@statements) %>
 
