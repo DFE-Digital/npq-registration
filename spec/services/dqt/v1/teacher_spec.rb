@@ -59,6 +59,11 @@ RSpec.describe Dqt::V1::Teacher do
       .to_return(status: 200, body: response_hash.to_json, headers: {})
   end
 
+  let(:stub_api_timeout_request) do
+    stub_request(:get, "https://dqt-api.example.com/v1/teachers/#{trn}?birthdate=#{birthdate}")
+      .to_timeout
+  end
+
   describe ".find" do
     it "returns teacher record" do
       stub_api_request
@@ -103,6 +108,16 @@ RSpec.describe Dqt::V1::Teacher do
 
         expect(record["trn"]).to eql(trn)
         expect(record["active_alert"]).to be(false)
+      end
+    end
+
+    context "when the request times out" do
+      it "raises an error" do
+        stub_api_timeout_request
+
+        expect(Rails.logger).to receive(:error).with("DQT API request timed out: Net::OpenTimeout execution expired")
+
+        expect { subject.find(trn:, birthdate:) }.to raise_error(Timeout::Error)
       end
     end
   end

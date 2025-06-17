@@ -247,4 +247,32 @@ RSpec.describe Dqt::RecordCheck do
       end
     end
   end
+
+  context "when the DQT API times out" do
+    let(:mocked_dqt_timeouts) { 1 }
+
+    before do
+      calls = 0
+
+      allow(Dqt::V1::Teacher).to receive(:find).and_wrap_original do
+        raise Timeout::Error if (calls += 1) <= mocked_dqt_timeouts
+
+        default_api_response
+      end
+    end
+
+    context "with one timeout" do
+      it "retries and succeeds" do
+        expect { subject.call }.not_to raise_error
+      end
+    end
+
+    context "with more than one timeout" do
+      let(:mocked_dqt_timeouts) { 2 }
+
+      it "raises an error" do
+        expect { subject.call }.to raise_error(Timeout::Error)
+      end
+    end
+  end
 end

@@ -2,6 +2,7 @@
 
 module Dqt
   class RecordCheck
+    MAX_RETRIES = 1
     TITLES = %w[mr mrs miss ms dr prof rev].freeze
 
     CheckResult = Struct.new(
@@ -31,7 +32,12 @@ module Dqt
     end
 
     def dqt_record(padded_trn)
+      @dqt_record_retries ||= 0 # retry in case of network issues
       V1::Teacher.find(trn: padded_trn, nino:, birthdate: date_of_birth)
+    rescue Timeout::Error => e
+      raise e if (@dqt_record_retries += 1) > MAX_RETRIES
+
+      retry
     end
 
     def check_record

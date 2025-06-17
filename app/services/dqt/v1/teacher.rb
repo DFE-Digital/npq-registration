@@ -6,6 +6,7 @@ module Dqt
       format :json
       base_uri ENV["DQT_API_URL"]
       headers "Authorization" => "Bearer #{ENV["DQT_API_KEY"]}"
+      default_timeout 5.seconds
 
       def self.find(trn:, birthdate:, nino: nil)
         path = "/v1/teachers/#{trn}"
@@ -30,6 +31,9 @@ module Dqt
             "active_alert",
           )
         end
+      rescue Timeout::Error => e
+        Rails.logger.error("DQT API request timed out: #{e.class} #{e.message}")
+        raise e
       end
     end
   end
