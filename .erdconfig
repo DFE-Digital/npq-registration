@@ -13,7 +13,7 @@ polymorphism: false
 sort: true
 warn: true
 title: "Entity-Relationship Diagram (ERD)"
-exclude: "GetAnIdentity::WebhookMessage, PaperTrail::Version, EcfSyncRequestLog, Admin, ActiveRecord::SessionStore::Session, ClosedRegistrationUser, Delayed::Backend::ActiveRecord::Job, Flipper::Adapters::ActiveRecord::Gate, Flipper::Adapters::ActiveRecord::Feature"
+exclude: "ActiveRecord::SessionStore::Session, ActiveStorage::Attachment, ActiveStorage::Blob, ActiveStorage::VariantRecord, Admin, ClosedRegistrationUser, Delayed::Backend::ActiveRecord::Job, EcfSyncRequestLog, FinancialChangeLog, Flipper::Adapters::ActiveRecord::Feature, Flipper::Adapters::ActiveRecord::Gate, GetAnIdentity::WebhookMessage, NullUser, PaperTrail::Version"
 only: null
 only_recursion_depth: null
 prepend_primary: false
