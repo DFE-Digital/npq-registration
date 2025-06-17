@@ -40,7 +40,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
   end
 
   it "has submit button" do
-    expect(rendered).to have_selector("button[type=submit]")
+    expect(rendered).to have_selector("button[type=submit]", text: "Search")
   end
 
   it "defaults to selected lead provider" do
@@ -65,6 +65,10 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     it "uses a single-column layout" do
       expect(rendered).to have_selector(".govuk-grid-column-full", count: 3)
       expect(rendered).not_to have_selector(".govuk-grid-column-one-half")
+    end
+
+    it "has a different label for the submit button" do
+      expect(rendered).to have_selector("button[type=submit]", text: "View")
     end
   end
 end
