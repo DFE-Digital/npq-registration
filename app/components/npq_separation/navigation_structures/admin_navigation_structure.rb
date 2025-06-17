@@ -104,7 +104,7 @@ module NpqSeparation
             name: "Settings",
             href: npq_separation_admin_settings_webhook_messages_path,
             prefix: "/npq-separation/admin/settings",
-          ) => webhook_messages_nodes,
+          ) => settings_nodes,
           Node.new(
             name: "Closed registration users",
             href: npq_separation_admin_closed_registration_users_path,
@@ -144,7 +144,7 @@ module NpqSeparation
         end
       end
 
-      def webhook_messages_nodes
+      def settings_nodes
         [
           Node.new(
             name: "Webhook messages",
@@ -153,7 +153,6 @@ module NpqSeparation
           ),
         ]
       end
-
     end
   end
 end

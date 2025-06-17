@@ -1,6 +1,4 @@
-class NpqSeparation::Admin::Settings::WebhookMessagesController < AdminController
-  include Pagy::Backend
-
+class NpqSeparation::Admin::Settings::WebhookMessagesController < NpqSeparation::AdminController
   def index
     @pagy, @webhook_messages = pagy(scope)
   end
