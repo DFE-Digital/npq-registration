@@ -148,7 +148,7 @@ module NpqSeparation
         [
           Node.new(
             name: "Webhook messages",
-            href: npq_separation_admin_webhook_messages_path,
+            href: npq_separation_admin_settings_webhook_messages_path,
             prefix: "",
           ),
         ]
