@@ -273,11 +273,6 @@ Rails.application.routes.draw do
             end
           end
 
-          collection do
-            resources :unpaid, controller: "statements/unpaid", only: "index"
-            resources :paid, controller: "statements/paid", only: "index"
-          end
-
           member do
             resource :assurance_report, controller: "statements/assurance_reports", only: "show"
             resource :payment_authorisation, controller: "statements/payment_authorisations", only: %i[new create]
