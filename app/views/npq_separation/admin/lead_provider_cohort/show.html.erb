@@ -22,7 +22,7 @@
       structure:
         Cohort.order(start_year: :desc).map do |cohort|
           NpqSeparation::NavigationStructure::Node.new(
-            name: "Cohort #{format_cohort_full(cohort)}",
+            name: "Cohort #{format_cohort(cohort)}",
             href: npq_separation_admin_lead_provider_cohort_path(@lead_provider, cohort),
             prefix: "/npq-separation/admin/lead-providers/#{@lead_provider.id}/cohort/#{cohort.id}"
           )
@@ -33,7 +33,7 @@
 
 <%= tag.h1(@lead_provider.name, class: "govuk-heading-l") %>
 
-<%= tag.h2("Cohort #{format_cohort_full(@cohort)}", class: "govuk-heading-m") %>
+<%= tag.h2("Cohort #{format_cohort(@cohort)}", class: "govuk-heading-m") %>
 
 <p class="govuk-body">List of delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
 
