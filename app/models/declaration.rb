@@ -127,6 +127,26 @@ class Declaration < ApplicationRecord
       .or(where(secondary_delivery_partner: delivery_partner))
   }
 
+  def self.order_by_milestones
+    scope = order(Arel.sql(<<~SQL))
+      CASE declaration_type
+        WHEN 'completed' THEN 1
+        WHEN 'retained-2' THEN 2
+        WHEN 'retained-1' THEN 3
+        WHEN 'started' THEN 4
+      END
+    SQL
+    scope.order(Arel.sql(<<~SQL))
+      CASE state
+        WHEN 'submitted' THEN 1
+        WHEN 'eligible' THEN 1
+        WHEN 'payable' THEN 1
+        WHEN 'paid' THEN 1
+        ELSE 2
+      END
+    SQL
+  end
+
   def billable_statement
     statement_items.find(&:billable?)&.statement
   end

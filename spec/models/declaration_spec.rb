@@ -762,6 +762,29 @@ RSpec.describe Declaration, type: :model do
         it { is_expected.to include declaration_as_secondary }
       end
     end
+
+    describe ".order_by_milestone" do
+      let(:application) { create(:application, :accepted, cohort:, course:) }
+
+      before do
+        create(:declaration, :completed, :clawed_back)
+        create(:declaration, :completed, :payable)
+        create(:declaration, :payable, declaration_type: "started")
+        create(:declaration, :payable, declaration_type: "retained-1")
+        create(:declaration, :payable, declaration_type: "retained-2")
+      end
+
+      it "sorts declarations properly" do
+        declarations = Declaration.order_by_milestones
+        expected_types = %w[completed completed retained-2 retained-1 started]
+        expect(declarations.pluck(:declaration_type)).to eq expected_types
+      end
+
+      it "considers state when sorting" do
+        declarations = Declaration.order_by_milestones
+        expect(declarations.first.state).to eq("payable")
+      end
+    end
   end
 
   describe "#duplicate_declarations" do

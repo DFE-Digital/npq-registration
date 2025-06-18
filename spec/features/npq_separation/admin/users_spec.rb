@@ -80,6 +80,9 @@ RSpec.feature "User administration", type: :feature do
         .map { create(:application, user:, course: create(:course, _1)) }
         .sort_by { [_1.created_at, _1.id] }
 
+      applications.each do |a|
+        create(:declaration, :completed, application: a)
+      end
       visit npq_separation_admin_user_path(user)
 
       expect(page).to have_css("h1", text: user.full_name)
@@ -90,6 +93,7 @@ RSpec.feature "User administration", type: :feature do
           expect(summary_card).to have_summary_item("Eligible for funding", "No")
           expect(summary_card).to have_summary_item("Provider approval status", "Pending")
           expect(summary_card).to have_summary_item("Funded place", "–")
+          expect(summary_card).to have_summary_item("Training milestone reached", "completed")
           expect(summary_card).to have_summary_item("Registration submission date", application.created_at.to_fs(:govuk_short))
         end
       end

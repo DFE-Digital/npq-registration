@@ -29,6 +29,13 @@
         row.with_value(text: boolean_red_green_nil_tag(application.funded_place))
       end
 
+      if (declarations = application.declarations.order_by_milestones).any?
+        sl.with_row do |row|
+          row.with_key(text: "Training milestone reached")
+          row.with_value(text: declarations.first.declaration_type)
+        end
+      end
+
       sl.with_row do |row|
         row.with_key(text: "Registration submission date")
         row.with_value(text: application.created_at.to_fs(:govuk_short))
