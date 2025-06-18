@@ -16,7 +16,7 @@ RSpec.feature "User administration", type: :feature do
     scenario "viewing the list of users" do
       visit(npq_separation_admin_users_path)
 
-      expect(page).to have_css("h1", text: "All participants")
+      expect(page).to have_css("h1", text: "Users")
 
       User.all.find_each do |user|
         expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
@@ -39,7 +39,7 @@ RSpec.feature "User administration", type: :feature do
     scenario "searching for a user" do
       visit(npq_separation_admin_users_path)
 
-      fill_in("Search records", with: user.email)
+      fill_in("Find a user", with: user.email)
       click_on("Search")
 
       expect(page).to have_css("tbody tr", count: 1)

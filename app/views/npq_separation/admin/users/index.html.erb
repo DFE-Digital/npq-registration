@@ -1,12 +1,12 @@
-<h1 class="govuk-heading-l">All participants</h1>
+<h1 class="govuk-heading-l">Users</h1>
 
 <div class="admin-search-box">
   <%= form_with method: :get do |f| %>
     <%= f.govuk_text_field(
         :q,
         value: params[:q],
-        label: { text: "Search records", size: "s" },
-        hint: { text: 'Enter an applicant ID, TRN, email address, name, or school URN', size: "m"}
+        label: { text: "Find a user", size: "s" },
+        hint: { text: 'Search by the user’s name, email address, teacher reference number (TRN) or application ID', size: "m"}
       )
     %>
 
