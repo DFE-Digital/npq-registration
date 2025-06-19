@@ -27,6 +27,12 @@ class FundingEligibility
 
   NOT_IN_ENGLAND = :not_in_england
 
+  # TODO: should every status code have a description?
+  # missing:
+  #  - NO_INSTITUTION
+  #  - PREVIOUSLY_FUNDED
+  #  - REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+  #  - NOT_NEW_HEADTEACHER_REQUESTING_EHCO
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
     NOT_IN_ENGLAND => "funding_details.inside_catchment",
@@ -158,6 +164,7 @@ class FundingEligibility
     [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
   end
 
+  # TODO: test this method in the corresponding spec file: spec/services/funding_eligibility_spec.rb
   def get_description_for_funding_status
     status_code = funding_eligiblity_status_code
 

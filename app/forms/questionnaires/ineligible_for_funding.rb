@@ -2,15 +2,20 @@ module Questionnaires
   class IneligibleForFunding < Base
     include Helpers::Institution
 
-    NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
-    NOT_IN_ENGLAND = "not_in_england".freeze
-    EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
-    EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
-    LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
+    module Templates
+      NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
+      NOT_IN_ENGLAND = "not_in_england".freeze
+      EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
+      EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
+      LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
 
-    # Already funded
-    ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
-    ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
+      # Already funded
+      ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING = "already_funded/not_eligible_scholarship_funding".freeze
+      ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF = "already_funded/not_eligible_scholarship_funding_not_tsf".freeze
+
+      NOT_ENTITLED_EY_INSTITUTION = "not_entitled_ey_institution".freeze
+      NOT_A_PP50_INSTITUTION = "not_a_pp50_institution".freeze
+    end
 
     attr_accessor :version
 
@@ -41,31 +46,37 @@ module Questionnaires
     def ineligible_template
       @ineligible_template ||= case funding_eligiblity_status_code
                                when FundingEligibility::NOT_IN_ENGLAND
-                                 return NOT_IN_ENGLAND
+                                 return Templates::NOT_IN_ENGLAND
                                when FundingEligibility::NOT_LEAD_MENTOR_COURSE
-                                 return LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD
+                                 return Templates::LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD
                                when FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                                 return Templates::NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
                                  if tsf_elgible?
-                                   return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
+                                   return Templates::ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING
                                  else
-                                   return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
+                                   return Templates::ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
                                  end
                                when FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
-                                 return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                                 return Templates::EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
-                                 return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
+                                 return Templates::EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::NOT_ENTITLED_EY_INSTITUTION
-                                 return "not_entitled_ey_institution"
+                                 return Templates::NOT_ENTITLED_EY_INSTITUTION
                                when FundingEligibility::INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
-                                 return "not_a_pp50_institution"
+                                 return Templates::NOT_A_PP50_INSTITUTION
                                when FundingEligibility::NOT_ENTITLED_CHILDMINDER
-                                 return "not_entitled_ey_institution"
+                                 return Templates::NOT_ENTITLED_EY_INSTITUTION
                                when FundingEligibility::NO_INSTITUTION
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                                 return Templates::NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
-                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                                 return Templates::NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+                                 # TODO: return a template here
+                                 raise "Missing status code handling: #{funding_eligiblity_status_code}"
+                               when FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+                                 # TODO: return a template here
+                                 raise "Missing status code handling: #{funding_eligiblity_status_code}"
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
