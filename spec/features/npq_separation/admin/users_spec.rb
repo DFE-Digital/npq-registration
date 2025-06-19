@@ -81,7 +81,7 @@ RSpec.feature "User administration", type: :feature do
         .sort_by { [_1.created_at, _1.id] }
 
       applications.each do |a|
-        create(:declaration, :completed, application: a)
+        create(:declaration, :completed, :paid, application: a)
       end
       visit npq_separation_admin_user_path(user)
 
@@ -93,7 +93,7 @@ RSpec.feature "User administration", type: :feature do
           expect(summary_card).to have_summary_item("Eligible for funding", "No")
           expect(summary_card).to have_summary_item("Provider approval status", "Pending")
           expect(summary_card).to have_summary_item("Funded place", "–")
-          expect(summary_card).to have_summary_item("Training milestone reached", "completed")
+          expect(summary_card).to have_summary_item("Training milestone reached", "Completed (paid)")
           expect(summary_card).to have_summary_item("Registration submission date", application.created_at.to_fs(:govuk_short))
         end
       end

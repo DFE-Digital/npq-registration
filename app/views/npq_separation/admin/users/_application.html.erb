@@ -30,9 +30,10 @@
       end
 
       if (declarations = application.declarations.order_by_milestones).any?
+        declaration = declarations.first
         sl.with_row do |row|
           row.with_key(text: "Training milestone reached")
-          row.with_value(text: declarations.first.declaration_type)
+          row.with_value(text: "#{declaration.declaration_type.capitalize} (#{declaration.state})")
         end
       end
 
