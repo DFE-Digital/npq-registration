@@ -5,14 +5,5 @@ FactoryBot.define do
     end
 
     admin { create(:admin) }
-
-    after(:build) do |bulk_operation, evaluator|
-      tempfile = Tempfile.new.tap do |file|
-        file.write("#{BulkOperation::UpdateAndVerifyTrns::FILE_HEADERS.join(",")}\n")
-        file.write(evaluator.trns_to_update.map { |columns| columns.join(",") }.join("\n"))
-        file.rewind
-      end
-      bulk_operation.file.attach(tempfile.open)
-    end
   end
 end

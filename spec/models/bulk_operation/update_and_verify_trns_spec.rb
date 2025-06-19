@@ -74,7 +74,15 @@ RSpec.describe BulkOperation::UpdateAndVerifyTrns, type: :model do
   describe "#ids_to_update" do
     subject(:ids_to_update) { bulk_operation.ids_to_update }
 
-    let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation, trns_to_update: [%w[f43cbfc0-33f1-44e0-85d5-93d6fa12cdf3 1234567]]) }
+    let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation) }
+    let(:file) do
+      tempfile(
+        "#{BulkOperation::UpdateAndVerifyTrns::FILE_HEADERS.join(",")}\n" \
+        "f43cbfc0-33f1-44e0-85d5-93d6fa12cdf3,1234567\n",
+      )
+    end
+
+    before { bulk_operation.file.attach(file.open) }
 
     it "returns a CSV::Table object" do
       expect(ids_to_update).to be_a(CSV::Table)
@@ -84,10 +92,19 @@ RSpec.describe BulkOperation::UpdateAndVerifyTrns, type: :model do
 
   describe "#run!" do
     let(:trns_to_update) { [[user1.ecf_id, "1234567"], [user2.ecf_id, "2345678"]] }
-    let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation, admin: create(:admin), trns_to_update:) }
+    let(:bulk_operation) { create(:update_and_verify_trns_bulk_operation, admin: create(:admin)) }
     let(:instance) { described_class.new(bulk_operation:) }
     let(:user1) { create(:user, trn: "1000000") }
     let(:user2) { create(:user, trn: "1000001") }
+    let(:file) do
+      tempfile(
+        "#{BulkOperation::UpdateAndVerifyTrns::FILE_HEADERS.join(",")}\n" \
+        "#{trns_to_update.map { |ecf_id, trn| "#{ecf_id},#{trn}" }.join("\n")}" \
+        "\n",
+      )
+    end
+
+    before { bulk_operation.file.attach(file.open) }
 
     subject(:run) { bulk_operation.run! }
 
