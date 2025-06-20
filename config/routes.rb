@@ -193,8 +193,8 @@ Rails.application.routes.draw do
 
     namespace :admin do
       namespace :settings do
-        resources :webhook_messages, only: %i[index show] do
-          resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs"
+        resources :webhook_messages, only: %i[index show], path: "webhook-messages" do
+          resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs", path: "processing-jobs"
         end
       end
 
