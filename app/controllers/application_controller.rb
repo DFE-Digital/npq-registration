@@ -10,9 +10,7 @@ class ApplicationController < ActionController::Base
 private
 
   def authenticate_user!
-    if current_user.null_user?
-      redirect_to sign_in_path
-    end
+    redirect_to sign_in_path unless current_user
   end
 
   # If the user is logged in then we should retrieve from the logged in user record,
@@ -26,14 +24,12 @@ private
   helper_method :feature_flag_id
 
   def current_user
-    logged_in_user || NullUser.new(feature_flag_id:)
+    logged_in_user
   end
   helper_method :current_user
 
   def set_sentry_user
-    unless current_user.null_user?
-      Sentry.set_user(id: current_user.id)
-    end
+    Sentry.set_user(id: current_user.id) if current_user
   end
 
   # Use current_user instead!
