@@ -5,24 +5,6 @@ concurrency:
   cancel-in-progress: false
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Deploy environment"
-        required: true
-        type: choice
-        default: review
-        options:
-          - review
-      docker-image-tag:
-        description: "Docker image tag to deploy"
-        required: true
-        type: string
-      pull-request-number:
-        description: "PR number of review app to deploy to"
-        required: false
-        type: string
-
   push:
     branches:
       - main
@@ -71,33 +53,6 @@ jobs:
           snyk-token: ${{ secrets.SNYK_TOKEN }}
           max-cache: true
           reuse-cache: true
-
-  manual_deploy:
-    name: Manual deploy to ${{ inputs.environment }}
-    if: ${{ github.event_name == 'workflow_dispatch' }}
-    needs: [docker]
-    environment:
-      name: ${{ inputs.environment }}
-    runs-on: ubuntu-24.04
-    permissions:
-      id-token: write
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/deploy-environment-to-aks
-        name: Deploy app to ${{ inputs.environment }}
-        id: deploy_manual
-        with:
-          environment: ${{ inputs.environment }}
-          docker-image: ghcr.io/dfe-digital/npq-registration:${{ inputs.docker-image-tag }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ inputs.docker-image-tag }}
-          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
-          pull-request-number: ${{ inputs.pull-request-number }}
 
   deploy_review:
     name: Deploy review
