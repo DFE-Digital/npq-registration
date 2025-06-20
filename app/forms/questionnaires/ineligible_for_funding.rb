@@ -66,6 +66,10 @@ module Questionnaires
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::INELIGIBLE_INSTITUTION_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
+                               when FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+                                 return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
       raise "Missing status code handling: #{funding_eligiblity_status_code}"
