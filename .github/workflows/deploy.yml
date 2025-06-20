@@ -13,12 +13,14 @@ on:
         type: choice
         default: review
         options:
-          - staging
-          - sandbox
-          - production
+          - review
       docker-image-tag:
         description: "Docker image tag to deploy"
         required: true
+        type: string
+      pull-request-number:
+        description: "PR number of review app to deploy to"
+        required: false
         type: string
 
   push:
@@ -95,6 +97,7 @@ jobs:
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           current-commit-sha: ${{ inputs.docker-image-tag }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+          pull-request-number: ${{ inputs.pull-request-number }}
 
   deploy_review:
     name: Deploy review
