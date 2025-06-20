@@ -1,4 +1,4 @@
-class Admin::WebhookMessages::ProcessingJobsController < AdminController
+class NpqSeparation::Admin::Settings::WebhookMessages::ProcessingJobsController < NpqSeparation::AdminController
   def create
     @webhook_message = GetAnIdentity::WebhookMessage.find(params[:webhook_message_id])
     @webhook_message.update!(status: :pending)
