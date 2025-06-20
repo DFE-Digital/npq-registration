@@ -116,7 +116,7 @@ jobs:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ github.event.pull_request.number }}
-          current-commit-sha: ${{ github.sha }}
+          current-commit-sha: ${{ github.event.pull_request.head.sha }}
 
       - name: Post sticky pull request comment
         if: github.event_name == 'pull_request'

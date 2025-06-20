@@ -23,10 +23,10 @@ for ((i=1; i<=max_retries; i++)); do
     break
   fi
 
-  # if [[ $i -eq $max_retries ]]; then
-  #   echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
-  #   exit 1
-  # fi
+  if [[ $i -eq $max_retries ]]; then
+    echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
+    exit 1
+  fi
 
   sleep 1 # Wait for 1 second before retrying
 done
