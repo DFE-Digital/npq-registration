@@ -6,7 +6,7 @@
 
 ## 1. Introduction
 
-This document provides an overview of the data model for the NPQ application. It details the primary entities, their relationships, and the data flow within the application. This model is essential for developers and stakeholders to understand how data is structured, stored, and retrieved.
+This document provides an overview of the data model for the NPQ application. It details the primary entities, their relationships, and the data flow within the application. This model is for developers and stakeholders to understand how data is structured, stored, and retrieved.
 
 ## 2. Purpose of the Data Model
 
@@ -14,7 +14,7 @@ The data model for storing NPQ data is designed to:
 
 - Facilitate efficient data storage and retrieval.
 - Enable the business logic of the application by structuring data relationships.
-- Support data integrity, scalability, and performance optimization.
+- Support data integrity, scalability, and performance optimisation.
 
 ## 3. Entity-Relationship Diagram (ERD)
 
@@ -31,34 +31,39 @@ This diagram represents our current understanding of the data models:
 
    `Application` captures various attributes related to a user's employment, funding eligibility, and application status.
 
-2. **User** - Represents individuals applying for courses. Each `User` has an ID, email, and other identifying details, including a teacher reference number.
+1. **User** - Represents individuals applying for courses. Each `User` has an ID, email, and other identifying details, including a teacher reference number.
 
-3. **LeadProvider** - Provides a source for educational leads or courses. LeadProviders are linked to multiple entities:
+1. **LeadProvider** - Provides a source for educational leads or courses. LeadProviders are linked to multiple entities:
    - `Application` to associate a lead provider with specific applications.
    - `Declaration` to associate a lead provider with specific declarations.
    - `Statement` to track declarations and cohorts per provider.
    - `ApiToken` to allow access via API, with security tracking through hashed tokens and last used timestamps.
 
-4. **Course** - Represents educational courses available for application.
+1. **DeliveryPartner** - Represents the delivery partner for an application. They are linked to:
+   - `Declaration` - when a declaration is made, it is associated with a delivery partner, and optionally a secondary delivery partner.
+   - `LeadProvder` - a delivery partner can be associated with multiple lead providers.
+   - `Cohort` - a delivery partner can be associated with multiple cohorts.
+
+1. **Course** - Represents educational courses available for application.
    - Linked to `Application` to assign a course to an application.
-   - Connected to `CourseGroup` to organize courses by group and associate with `Schedule`.
+   - Connected to `CourseGroup` to organise courses by group and associate with `Schedule`.
 
-5. **Schedule** - Details the scheduling for different course groups and cohorts, including key dates like the start and application period for declarations.
+1. **Schedule** - Details the scheduling for different course groups and cohorts, including key dates like the start and application period for declarations.
 
-6. **Cohort** - Represents a group of participants starting in a given year. It links with:
+1. **Cohort** - Represents a group of participants starting in a given year. It links with:
    - `Application`, `Declaration`, `Schedule` and `Statement`, to track cohorts across applications, declarations, schedules and statements.
 
-7. **Declaration and Statement** - These entities track user declarations and statements associated with lead providers:
+1. **Declaration and Statement** - These entities track user declarations and statements associated with lead providers:
    - `Declaration` links to `Application`, `Cohort` and `ParticipantOutcome`, tracking users' declaration states and types.
    - `Statement` relates to `LeadProvider` and `Cohort` to represent payment deadlines, states, and reconciliation amounts.
 
-8. **Contract and ContractTemplate** - Defines the contractual relationships and terms related to statements and courses:
+1. **Contract and ContractTemplate** - Defines the contractual relationships and terms related to statements and courses:
    - `Contract` links `Statement`, `Course`, and `ContractTemplate`.
    - `ContractTemplate` captures detailed payment and service fee structures.
 
-9. **ParticipantOutcome** - Tracks user outcomes tied to declarations, including the outcome state and completion date.
+1. **ParticipantOutcome** - Tracks user outcomes tied to declarations, including the outcome state and completion date.
 
-10. **Auxiliary Entities**
+1. **Auxiliary Entities**
     - `School`, `PrivateChildcareProvider`, and `IttProvider` allow additional relationships with applications.
     - `ApiToken` enables secure API access for lead providers.
     - `ParticipantIdChange` keeps a record of changes in participant IDs for `User`.
@@ -75,7 +80,7 @@ This data model supports a structured system for NPQ applications, participant d
      - The `User` applying.
      - The specific `Course` and `Cohort` applied for.
      - A specific `Schedule` when the `Application` is accepted by a `LeadProvider` (related to timing and cohorts).
-     - Optional entities like `School`, `PrivateChildcareProvider`, and `IttProvider`, representing different organizational affiliations or employment details.
+     - Optional entities like `School`, `PrivateChildcareProvider`, and `IttProvider`, representing different organisational affiliations or employment details.
    - **Attributes**: The `Application` includes data on eligibility, funding, role, approval, and training status. This information is essential for tracking the participant's suitability and funding options.
 
    This application data flows to downstream entities that track the participant's progress and outcomes.
@@ -145,10 +150,10 @@ erDiagram
 
 ### 4.2. **Course Scheduling and Cohort Management**
 
-   - **Data Organization**: Courses (`Course`) are organized into `CourseGroup`s, which are further linked to specific `Schedule`s. `Schedule` connects each `CourseGroup` with `Cohort` entities that denote specific time frames, ensuring applications align with course timings.
+   - **Data Organisation**: Courses (`Course`) are organised into `CourseGroup`s, which are further linked to specific `Schedule`s. `Schedule` connects each `CourseGroup` with `Cohort` entities that denote specific time frames, ensuring applications align with course timings.
    - **Cohort Management**: The `Cohort` entity represents the year or session in which a group of participants starts. Each cohort can be associated with multiple applications and helps manage different program batches.
 
-   This organization ensures that courses are managed and tracked by cohorts and groups, making it easy to allocate schedules and track cohort-specific declarations and outcomes.
+   This organisation ensures that courses are managed and tracked by cohorts and groups, making it easy to allocate schedules and track cohort-specific declarations and outcomes.
 
 ```mermaid
 erDiagram
@@ -186,9 +191,9 @@ erDiagram
 
 ### 4.3. **Declaration and Statement Process**
 
-   - **Declarations**: As users participate in courses, they make progress and fulfill specific requirements represented by `Declaration` entities.
+   - **Declarations**: As users participate in courses, they make progress and fulfil specific requirements represented by `Declaration` entities.
      - **Attributes**: Each `Declaration` has a state (e.g., submitted, eligible, payable), type, and declaration date.
-     - **Association**: `Declaration` is linked to `Application`, allowing the system to track a participant's journey through different declarations.
+     - **Association**: `Declaration` is linked to `Application` (allowing the system to track a participant's journey through different declarations), and `DeliveryPartner`. A declaration can optionally have a secondary `DeliveryPartner`.
      - **Outcome Tracking**: A `ParticipantOutcome` entity links to `Declaration`, capturing the outcome and completion status of the user's declaration.
 
    - **Statements**: `Statement`s track financial aspects of user declarations for each `LeadProvider` and `Cohort`.
@@ -204,12 +209,16 @@ erDiagram
     StatementItem }|--|| Statement : ""
     StatementItem }|--|| Declaration : ""
 
+    DeliveryPartner ||--o{ Declaration : ""
+
     Declaration {
         uuid id
         uuid application_id
         string state
         string declaration_type
         date declaration_date
+        uuid delivery_partner_id
+        uuid secondary_delivery_partner_id
         datetime updated_at
     }
 
@@ -238,6 +247,11 @@ erDiagram
         date completion_date
         uuid declaration_id
         datetime created_at
+    }
+
+    DeliveryPartner {
+        uuid id
+        string name
     }
 ```
 
@@ -341,4 +355,4 @@ erDiagram
 
 ## 5. Notes
 
-* Document on `NPQ Contract` can be found [here](npq_contracts.md).
+* Details on NPQ Contracts can be found [here](npq_contracts.md).

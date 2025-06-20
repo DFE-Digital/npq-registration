@@ -14,6 +14,7 @@
 - PostgreSQL
 - NodeJS 20.15.1
 - Yarn 1.22.x
+- Graphviz
 1. Run `bundle install` to install the gem dependencies
 1. Run `yarn` to install node dependencies
 1. Run `bin/rails db:setup` to set up the database development and test schemas, and seed with test data
