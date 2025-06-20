@@ -3,7 +3,11 @@ class NpqSeparation::Admin::StatementsController < NpqSeparation::AdminControlle
   before_action :set_cohort
   before_action :store_uploads, only: :create
 
-  def new; end
+  def new
+    @service = Statements::BulkCreator.new(cohort: @cohort,
+                                           statements_csv_id: nil,
+                                           contracts_csv_id: nil)
+  end
 
   def create
     @service = Statements::BulkCreator.new(

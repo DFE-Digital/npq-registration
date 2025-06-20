@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :participant_outcome_api_request do
+  factory :participant_outcome_api_request, class: ParticipantOutcomeAPIRequest do
     participant_outcome
     ecf_id { SecureRandom.uuid }
 

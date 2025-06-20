@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Monitoring" do
   describe "GET /healthcheck" do
     let(:git_sha) { "911403d" }
-    let(:migration_version) { ApplicationRecord.connection.migration_context.current_version }
+    let(:migration_version) { ApplicationRecord.connection_pool.migration_context.current_version }
     let(:response_body) { JSON.parse(perform_request.body, symbolize_names: true) }
 
     before { allow(ENV).to receive(:[]).with("COMMIT_SHA") { git_sha } }
