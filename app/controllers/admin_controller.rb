@@ -1,6 +1,7 @@
 class AdminController < ApplicationController
   layout "application"
   before_action :require_admin
+  skip_before_action :authenticate_user!
 
   def show
     @last_seven_days = AdminService::DashboardStats.new(start_time: 7.days.ago)

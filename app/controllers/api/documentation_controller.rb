@@ -1,7 +1,7 @@
 require "api/version"
 
 module API
-  class DocumentationController < ApplicationController
+  class DocumentationController < PublicPagesController
     layout "api_docs"
 
     def index

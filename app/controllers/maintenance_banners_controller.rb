@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MaintenanceBannersController < ApplicationController
+class MaintenanceBannersController < PublicPagesController
   def dismiss
     cookies[:dismiss_maintenance_banner_until] = 1.week.from_now
 

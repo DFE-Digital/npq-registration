@@ -28,6 +28,12 @@ RSpec.describe API::V1::GetAnIdentity::WebhookMessagesController do
           expect(response).to be_successful
         end
 
+        it "sets caching headers" do
+          send_request
+
+          expect(response.headers).to include "Cache-Control" => "no-store"
+        end
+
         it "creates a ::GetAnIdentity::WebhookMessage record with the send_request body parsed into the record" do
           expect {
             send_request
