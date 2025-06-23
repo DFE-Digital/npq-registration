@@ -10,7 +10,7 @@ lead_providers.each do |lead_provider|
       application_count.times do
         application = FactoryBot.create(
           :application,
-          :eligible_for_funded_place,
+          :eligible_for_funded_place_do_not_update_cohort,
           :with_random_user,
           :with_random_work_setting,
           cohort: schedule.cohort,

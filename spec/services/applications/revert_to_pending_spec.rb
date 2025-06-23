@@ -4,7 +4,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
   subject(:instance) { described_class.new(application:) }
 
   let :application do
-    create(:application, :accepted) do |application|
+    create(:application, :accepted, :without_funded_place) do |application|
       create(:application_state, application:)
     end
   end
@@ -83,7 +83,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
 
     context "when status set to no" do
       let :application do
-        create(:application, :accepted, funded_place: true).tap do |application|
+        create(:application, :eligible_for_funded_place).tap do |application|
           create(:declaration, :voided, application:)
           create(:application_state, application:)
         end
@@ -114,7 +114,7 @@ RSpec.describe Applications::RevertToPending, type: :model do
 
     context "when already pending" do
       let :application do
-        create(:application, :pending, funded_place: true).tap do |application|
+        create(:application, :pending, :with_funded_place).tap do |application|
           create(:declaration, :voided, application:)
           create(:application_state, application:)
         end

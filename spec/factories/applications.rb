@@ -10,7 +10,7 @@ FactoryBot.define do
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
-    cohort { create(:cohort, :current) }
+    cohort { create(:cohort, :current, :without_funding_cap) }
     teacher_catchment { "england" }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
@@ -59,7 +59,7 @@ FactoryBot.define do
     trait :accepted do
       lead_provider_approval_status { :accepted }
       schedule { Schedule.find_by(cohort:, course_group: course.course_group) || create(:schedule, course_group: course.course_group, cohort:) }
-      funded_place { !!eligible_for_funding }
+      funded_place { cohort.funding_cap ? !!eligible_for_funding : nil }
       accepted_at { Time.zone.now }
       training_status { :active }
     end
@@ -76,9 +76,30 @@ FactoryBot.define do
       eligible_for_funding { true }
     end
 
-    trait :eligible_for_funded_place do
+    # used in the seeds
+    trait :eligible_for_funded_place_do_not_update_cohort do
       accepted
       eligible_for_funding
+      funded_place { true }
+    end
+
+    trait :eligible_for_funded_place do
+      accepted
+      with_funded_place
+    end
+
+    trait :with_funded_place do
+      eligible_for_funding
+      funded_place { true }
+
+      after(:create) do |application|
+        application.cohort.update!(funding_cap: true)
+      end
+    end
+
+    trait :without_funded_place do
+      eligible_for_funding { false }
+      funded_place { false }
 
       after(:create) do |application|
         application.cohort.update!(funding_cap: true)
@@ -119,7 +140,7 @@ FactoryBot.define do
     end
 
     trait :withdrawn do
-      lead_provider_approval_status { :accepted }
+      accepted
 
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:withdrawn])
@@ -132,7 +153,7 @@ FactoryBot.define do
     end
 
     trait :deferred do
-      lead_provider_approval_status { :accepted }
+      accepted
 
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:deferred])

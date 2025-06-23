@@ -22,5 +22,9 @@ FactoryBot.define do
     trait :with_funding_cap do
       funding_cap { true }
     end
+
+    trait :without_funding_cap do
+      funding_cap { false }
+    end
   end
 end

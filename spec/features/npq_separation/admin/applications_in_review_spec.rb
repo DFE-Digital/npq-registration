@@ -16,7 +16,7 @@ RSpec.feature "Applications in review", type: :feature do
   let!(:application_for_rtta_yes)                   { create(:application, :with_random_user, :manual_review, created_at: 4.days.ago, referred_by_return_to_teaching_adviser: "yes", school: nil, works_in_school: false) }
   let!(:application_for_rtta_no)                    { create(:application, :with_random_user, created_at: 3.days.ago, referred_by_return_to_teaching_adviser: "no") }
   let!(:application_eligible_for_funding)           { create(:application, :with_random_user, :manual_review, :eligible_for_funding, created_at: 11.days.ago, employment_type: "other") }
-  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :accepted, created_at: 12.days.ago, employment_type: "hospital_school", review_status: "decision_made") }
+  let!(:application_with_funding_decision)          { create(:application, :with_random_user, :accepted, :without_funded_place, created_at: 12.days.ago, employment_type: "hospital_school", review_status: "decision_made") }
 
   let(:serialized_application) { { application: 1 } }
 
