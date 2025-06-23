@@ -14,6 +14,9 @@ on:
         default: review
         options:
           - review
+          - staging
+          - production
+          - sandbox
       docker-image-tag:
         description: "Docker image tag to deploy"
         required: true
