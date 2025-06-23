@@ -56,7 +56,7 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ inputs.docker-image-tag }}
+          deploy-commit-sha: ${{ inputs.docker-image-tag }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
           pull-request-number: ${{ inputs.pull-request-number }}
 

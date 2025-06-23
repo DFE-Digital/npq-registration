@@ -6,8 +6,8 @@ if [[ -z $url ]]; then
   exit 1
 fi
 
-current_commit_sha=\"$2\"
-if [[ -z $current_commit_sha ]]; then
+deploy_commit_sha=\"$2\"
+if [[ -z $deploy_commit_sha ]]; then
   echo `date`" - smoke test failed (head sha is missing)"
   exit 1
 fi
@@ -18,13 +18,13 @@ for ((i=1; i<=max_retries; i++)); do
   response=$(curl -sL $url/healthcheck)
   response_sha=$(jq ".git_commit_sha" <<< $response)
   
-  if [[ $response_sha == $current_commit_sha ]]; then
+  if [[ $response_sha == $deploy_commit_sha ]]; then
     echo "✅ Correct version deployed"
     break
   fi
 
   if [[ $i -eq $max_retries ]]; then
-    echo "Fail: healthcheck sha is $response_sha but current commit is $current_commit_sha"
+    echo "Fail: healthcheck sha is $response_sha but deploy commit should be $deploy_commit_sha"
     exit 1
   fi
 

@@ -20,8 +20,8 @@ inputs:
   pull-request-number:
     description: The pull request number which triggered this deploy. If set, this will automatically seed the database.
     required: false
-  current-commit-sha:
-    description: The commit sha for the current commit
+  deploy-commit-sha:
+    description: The commit sha for the commit being deployed
     required: true
   statuscake-api-token:
     description: The Statuscake token
@@ -81,4 +81,4 @@ runs:
     - uses: ./.github/actions/smoke-test
       with:
         url: ${{ steps.apply-terraform.outputs.url }}
-        current-commit-sha: ${{ inputs.current-commit-sha }}
+        deploy-commit-sha: ${{ inputs.deploy-commit-sha }}

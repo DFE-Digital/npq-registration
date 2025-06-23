@@ -74,7 +74,7 @@ jobs:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           pull-request-number: ${{ github.event.pull_request.number }}
-          current-commit-sha: ${{ github.event.pull_request.head.sha }}
+          deploy-commit-sha: ${{ github.event.pull_request.head.sha }}
 
       - name: Post sticky pull request comment
         if: github.event_name == 'pull_request'
@@ -104,7 +104,7 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ github.sha }}
+          deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
       - name: Notify on failure
@@ -135,7 +135,7 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ github.sha }}
+          deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
       - name: Notify on failure
@@ -166,7 +166,7 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          current-commit-sha: ${{ github.sha }}
+          deploy-commit-sha: ${{ github.sha }}
           statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
 
       - name: Notify on failure
