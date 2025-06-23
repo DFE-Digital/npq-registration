@@ -15,12 +15,4 @@
       </div>
     </div>
   <% end %>
-
-  <%= c.with_tab(label: t(".sync_log")) do %>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <%= render partial: "admin/application_submissions/ecf_sync_request_log", locals: { logs: @application.ecf_sync_request_logs } %>
-      </div>
-    </div>
-  <% end %>
 <% end %>
