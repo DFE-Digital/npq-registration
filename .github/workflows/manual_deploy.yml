@@ -1,0 +1,65 @@
+name: "Manual deploy"
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deploy environment"
+        required: true
+        type: choice
+        default: review
+        options:
+          - review
+          - staging
+          - production
+          - sandbox
+      docker-image-tag:
+        description: "Docker image tag to deploy"
+        required: true
+        type: string
+      pull-request-number:
+        description: "PR number of review app to deploy to"
+        required: false
+        type: string
+
+env:
+  TERRAFORM_BASE: terraform/application
+  HEALTHCHECK_CMD: "healthcheck"
+
+permissions:
+  id-token: write
+  pull-requests: write
+  packages: write
+
+jobs:
+
+  manual_deploy:
+    name: Manual deploy to ${{ inputs.environment }}
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    environment:
+      name: ${{ inputs.environment }}
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/deploy-environment-to-aks
+        name: Deploy app to ${{ inputs.environment }}
+        id: deploy_manual
+        with:
+          environment: ${{ inputs.environment }}
+          docker-image: ghcr.io/dfe-digital/npq-registration:${{ inputs.docker-image-tag }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          deploy-commit-sha: ${{ inputs.docker-image-tag }}
+          statuscake-api-token: ${{ secrets.STATUSCAKE_API_TOKEN }}
+          pull-request-number: ${{ inputs.pull-request-number }}
+
