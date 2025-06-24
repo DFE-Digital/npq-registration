@@ -67,13 +67,13 @@ RSpec.describe Application do
       it { is_expected.to have_error(:schedule, :cohort_mismatch, "The schedule cohort must match the application cohort") }
     end
 
-    context "when accepted" do
+    context "when the cohort has a funding cap" do
       let(:cohort) { create(:cohort, :current, :with_funding_cap) }
 
-      context "when funding_cap" do
+      context "when accepted" do
         subject { build(:application, :accepted, cohort:) }
 
-        it "validates funded_place boolean" do
+        it "validates funded_place is boolean" do
           subject.funded_place = nil
 
           expect(subject).to have_error(:funded_place, :inclusion, "Set '#/funded_place' to true or false.")
@@ -97,6 +97,18 @@ RSpec.describe Application do
 
           expect(subject).to have_error(:schedule, :invalid_for_course, "The selected schedule is not valid for the course")
         end
+      end
+    end
+
+    context "when the cohort does not have a funding cap" do
+      let(:cohort) { create(:cohort, :current) }
+
+      subject { build(:application, :accepted, cohort:) }
+
+      it "validates funded_place is nil" do
+        subject.funded_place = false
+
+        expect(subject).to have_error(:funded_place, :should_not_be_set, "The '#//funded_place' field should not be set for cohorts that do not have a funding cap.")
       end
     end
   end
@@ -310,7 +322,9 @@ RSpec.describe Application do
 
   describe "#previously_funded?" do
     let(:user) { create(:user) }
-    let(:application) { create(:application, :previously_funded, user:, course: Course.ehco) }
+    let(:application) { create(:application, :previously_funded, user:, course: Course.ehco, cohort: cohort_with_funding_cap) }
+    let(:cohort_with_funding_cap) { create(:cohort, :with_funding_cap) }
+    let(:cohort_without_funding_cap) { create(:cohort, :without_funding_cap) }
     let(:previous_application) { user.applications.where.not(id: application.id).first! }
 
     subject { application }
@@ -319,7 +333,13 @@ RSpec.describe Application do
       it { is_expected.to be_previously_funded }
 
       context "when funded place is `nil`" do
-        before { previous_application.update!(funded_place: nil) }
+        before do
+          previous_application.update!(
+            cohort: cohort_without_funding_cap,
+            funded_place: nil,
+            schedule: Schedule.find_by(cohort: cohort_without_funding_cap, course_group: previous_application.course.course_group),
+          )
+        end
 
         it { is_expected.to be_previously_funded }
       end
@@ -353,7 +373,7 @@ RSpec.describe Application do
     end
 
     context "when the application has not been previously funded (previous application is not eligible for funding)" do
-      before { previous_application.update!(eligible_for_funding: false) }
+      before { previous_application.update!(eligible_for_funding: false, funded_place: false) }
 
       it { is_expected.not_to be_previously_funded }
     end

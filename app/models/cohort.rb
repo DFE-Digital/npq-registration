@@ -21,6 +21,7 @@ class Cohort < ApplicationRecord
               message: "Choose true or false for funding cap",
             }
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
+  validate :changing_funding_cap_with_dependent_applications
 
   def self.current(timestamp = Time.zone.today)
     where(registration_start_date: ..timestamp)
@@ -28,9 +29,17 @@ class Cohort < ApplicationRecord
       .first!
   end
 
+private
+
   def registration_start_date_matches_start_year
     return if registration_start_date.blank?
 
     errors.add(:registration_start_date, "year must match the start year") if registration_start_date.year != start_year
+  end
+
+  def changing_funding_cap_with_dependent_applications
+    return unless funding_cap_changed? && Application.where(cohort: self).any?
+
+    errors.add(:funding_cap, "Cannot change from false to true when there are existing applications for this cohort")
   end
 end

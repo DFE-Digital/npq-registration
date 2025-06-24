@@ -10,7 +10,7 @@ FactoryBot.define do
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
-    cohort { create(:cohort, :current, :without_funding_cap) }
+    cohort { Cohort.current || create(:cohort, :current, :without_funding_cap) }
     teacher_catchment { "england" }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
@@ -76,13 +76,6 @@ FactoryBot.define do
       eligible_for_funding { true }
     end
 
-    # used in the seeds
-    trait :eligible_for_funded_place_do_not_update_cohort do
-      accepted
-      eligible_for_funding
-      funded_place { true }
-    end
-
     trait :eligible_for_funded_place do
       accepted
       with_funded_place
@@ -90,27 +83,19 @@ FactoryBot.define do
 
     trait :with_funded_place do
       eligible_for_funding
-      funded_place { true }
-
-      after(:create) do |application|
-        application.cohort.update!(funding_cap: true)
-      end
+      funded_place { cohort.funding_cap ? true : nil }
     end
 
     trait :without_funded_place do
       eligible_for_funding { false }
-      funded_place { false }
-
-      after(:create) do |application|
-        application.cohort.update!(funding_cap: true)
-      end
+      funded_place { cohort.funding_cap ? false : nil }
     end
 
     trait :previously_funded do
       after(:create) do |application|
         course = application.course.rebranded_alternative_courses.first
 
-        create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
+        create(:application, :accepted, :eligible_for_funding, user: application.user, course:, cohort: application.cohort)
       end
     end
 
@@ -124,11 +109,6 @@ FactoryBot.define do
 
     trait :with_random_user do
       user { build(:user, :with_random_name) }
-    end
-
-    # DO NOT USE: Only for seeds, do not use in specs - it will lead to flaky specs
-    trait :with_random_eligible_for_funding_seeds_only do
-      eligible_for_funding { Faker::Boolean.boolean }
     end
 
     trait :with_participant_id_change do
