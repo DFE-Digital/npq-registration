@@ -19,7 +19,7 @@
       NPQ course.
     </p>
 
-    <% if current_user.persisted? %>
+    <% if current_user&.persisted? %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Sign up for email updates",
