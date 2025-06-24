@@ -42,4 +42,16 @@ RSpec.describe "Monitoring" do
       it { expect(response_body[:database]).to include({ connected: true, populated: false }) }
     end
   end
+
+  describe "GET /up" do
+    subject { get(up_path) && response }
+
+    it { is_expected.to be_successful }
+
+    context "when database not connected" do
+      before { allow(ApplicationRecord).to receive(:connected?).and_return false }
+
+      it { is_expected.to have_http_status :service_unavailable }
+    end
+  end
 end

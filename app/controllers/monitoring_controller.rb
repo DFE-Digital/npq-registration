@@ -12,6 +12,10 @@ class MonitoringController < PublicPagesController
     }
   end
 
+  def up
+    head(database_connected? ? :ok : :service_unavailable)
+  end
+
 private
 
   def status
