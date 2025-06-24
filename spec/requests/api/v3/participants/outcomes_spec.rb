@@ -32,6 +32,9 @@ RSpec.describe "Participants outcome endpoints", type: :request do
     it_behaves_like "an API index endpoint"
     it_behaves_like "an API index endpoint on a parent resource", "participant", "outcome"
     it_behaves_like "an API index endpoint with pagination"
+    it_behaves_like "an API endpoint that checks participant_id currency" do
+      let(:path) { api_v3_participants_outcomes_path(participant_id_change.from_participant_id) }
+    end
   end
 
   describe "POST /api/v3/participants/npq/:participant_id/outcomes" do

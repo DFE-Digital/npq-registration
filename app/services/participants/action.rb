@@ -10,7 +10,7 @@ module Participants
     attribute :course_identifier
 
     validates :lead_provider, presence: true
-    validates :participant_id, presence: true
+    validates :participant_id, presence: true, participant_id_currency: true
     validates :course_identifier, inclusion: { in: Course::IDENTIFIERS }, allow_blank: false
     validate :participant_exists
     validate :application_exists
