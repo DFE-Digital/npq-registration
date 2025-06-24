@@ -18,7 +18,7 @@ private
     if database_connected? && database_populated?
       :ok
     else
-      :internal_server_error
+      :service_unavailable
     end
   end
 
