@@ -7,7 +7,7 @@ namespace :courses do
       support
       ehco
     ].each do |name|
-      FactoryBot.create(:course_group, name:)
+      CourseGroup.find_or_create_by!(name:)
     end
 
     CourseService::DefinitionLoader.call
