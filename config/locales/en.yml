@@ -341,6 +341,11 @@ en:
               must_be_different: must be different
               schedule_not_found: There is no schedule for the current course in the specified cohort
               declarations_present: Cannot change cohort for an application with declarations
+        applications/change_lead_provider:
+          attributes:
+            lead_provider_id:
+              blank: "Choose a course provider"
+              unchanged: "You cannot change to the same course provider"
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:

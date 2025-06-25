@@ -10,7 +10,7 @@ module Applications
     attribute :lead_provider_id, :integer
 
     validates :application, presence: true
-    validates :lead_provider_id, presence: { message: "Choose a course provider" }
+    validates :lead_provider_id, presence: true
     validate :different_lead_provider, if: :application
 
     def change_lead_provider
@@ -36,7 +36,7 @@ module Applications
     end
 
     def different_lead_provider
-      errors.add(:lead_provider_id, :inclusion) if lead_provider_id == application.lead_provider.id
+      errors.add(:lead_provider_id, :unchanged) if lead_provider_id == application.lead_provider.id
     end
   end
 end
