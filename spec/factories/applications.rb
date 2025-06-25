@@ -10,7 +10,7 @@ FactoryBot.define do
     headteacher_status { "no" }
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
-    cohort { Cohort.current || create(:cohort, :current, :without_funding_cap) }
+    cohort { create(:cohort, :current) }
     teacher_catchment { "england" }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
@@ -18,6 +18,7 @@ FactoryBot.define do
     funding_choice { Application.funding_choices.keys.first }
     lead_mentor { false }
     ukprn { rand(10_000_000..99_999_999).to_s }
+    funded_place { cohort&.funding_cap ? !!eligible_for_funding : nil }
 
     trait :with_school do
       school
@@ -78,17 +79,18 @@ FactoryBot.define do
 
     trait :eligible_for_funded_place do
       accepted
-      with_funded_place
-    end
-
-    trait :with_funded_place do
       eligible_for_funding
       funded_place { cohort.funding_cap ? true : nil }
     end
 
+    trait :with_funded_place do
+      eligible_for_funding
+      funded_place { true }
+    end
+
     trait :without_funded_place do
       eligible_for_funding { false }
-      funded_place { cohort.funding_cap ? false : nil }
+      funded_place { false }
     end
 
     trait :previously_funded do

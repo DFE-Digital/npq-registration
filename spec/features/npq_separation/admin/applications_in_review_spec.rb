@@ -3,8 +3,8 @@ require "rails_helper"
 RSpec.feature "Applications in review", type: :feature do
   include Helpers::AdminLogin
 
-  let(:cohort_21) { create :cohort, start_year: 2021 }
-  let(:cohort_22) { create :cohort, start_year: 2022 }
+  let(:cohort_21) { create :cohort, :without_funding_cap, start_year: 2021 }
+  let(:cohort_22) { create :cohort, :without_funding_cap, start_year: 2022 }
 
   let!(:normal_application)                         { create(:application, :with_random_user) }
   let!(:application_for_hospital_school)            { create(:application, :with_random_user, :manual_review, created_at: 10.days.ago, employment_type: "hospital_school", employer_name: Faker::Company.name, cohort: cohort_21, referred_by_return_to_teaching_adviser: "yes") }

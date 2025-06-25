@@ -101,7 +101,7 @@ RSpec.describe Application do
     end
 
     context "when the cohort does not have a funding cap" do
-      let(:cohort) { create(:cohort, :current) }
+      let(:cohort) { create(:cohort, :without_funding_cap) }
 
       subject { build(:application, :accepted, cohort:) }
 
@@ -278,7 +278,7 @@ RSpec.describe Application do
       let(:application) { create(:application, lead_provider_approval_status: "pending", participant_outcome_state: nil) }
 
       before do
-        application.update!(lead_provider_approval_status: "accepted", participant_outcome_state: "passed")
+        application.update!(lead_provider_approval_status: "accepted", participant_outcome_state: "passed", funded_place: false)
       end
 
       it "has history of changes" do

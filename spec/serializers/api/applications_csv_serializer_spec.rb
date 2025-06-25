@@ -108,6 +108,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
           school: nil,
           schedule: nil,
           cohort: nil,
+          funded_place: nil,
         )
       end
 

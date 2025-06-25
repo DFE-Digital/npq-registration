@@ -65,7 +65,7 @@ RSpec.describe Cohort, type: :model do
 
         it "does not allow changing the funding_cap" do
           cohort.funding_cap = false
-          expect(cohort).to have_error(:funding_cap, "Cannot change from false to true when there are existing applications for this cohort")
+          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
         end
       end
 
@@ -74,7 +74,7 @@ RSpec.describe Cohort, type: :model do
 
         it "does not allow changing the funding_cap" do
           cohort.funding_cap = true
-          expect(cohort).to have_error(:funding_cap, "Cannot change from false to true when there are existing applications for this cohort")
+          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
         end
       end
     end
