@@ -337,6 +337,7 @@ en:
         applications/change_cohort:
           attributes:
             cohort_id:
+              blank: "Choose a cohort"
               must_be_different: must be different
               schedule_not_found: There is no schedule for the current course in the specified cohort
               declarations_present: Cannot change cohort for an application with declarations
