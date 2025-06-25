@@ -259,6 +259,17 @@ en:
               *ecf_id
         statement:
           attributes:
+            output_fee:
+              inclusion: "Choose yes or no for output fee"
+            month:
+              in: "Month must be a number between 1 and 12"
+              not_a_number: "Month must be a number between 1 and 12"
+              not_an_integer: "Month must be a number between 1 and 12"
+            year:
+              not_a_number: "Year must be a 4 digit number"
+              not_an_integer: "Year must be a 4 digit number"
+            lead_provider_id:
+              taken: "A statement for this lead provider, cohort, year and month already exists"
             ecf_id:
               *ecf_id
         statement_item:
