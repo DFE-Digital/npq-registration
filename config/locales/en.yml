@@ -175,6 +175,8 @@ en:
               too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
+            funding_cap:
+              inclusion: "Choose true or false for funding cap"
             ecf_id:
               *ecf_id
         contract_template:
