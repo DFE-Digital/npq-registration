@@ -208,6 +208,11 @@ en:
           attributes:
             ecf_id:
               *ecf_id
+        course_group:
+          attributes:
+            name:
+              blank: "Enter a unique course group name"
+              taken: "Course name already exist, enter a unique name"
         declaration:
           attributes:
             declaration_date:
