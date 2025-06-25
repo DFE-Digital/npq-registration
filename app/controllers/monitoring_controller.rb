@@ -9,17 +9,18 @@ class MonitoringController < PublicPagesController
         migration_version:,
         populated: database_populated?,
       },
+      redis: redis_connected?,
     }
   end
 
   def up
-    head(database_connected? ? :ok : :service_unavailable)
+    database_connected? ? head(:ok) : head(:service_unavailable)
   end
 
 private
 
   def status
-    if database_connected? && database_populated?
+    if database_connected? && database_populated? && redis_connected?
       :ok
     else
       :service_unavailable
@@ -42,5 +43,17 @@ private
 
   def migration_version
     ApplicationRecord.connection_pool.migration_context.current_version
+  end
+
+  def using_redis?
+    Rails.cache.is_a? ActiveSupport::Cache::RedisCacheStore
+  end
+
+  def redis_connected?
+    return true unless using_redis?
+
+    Rails.cache.redis.with(&:ping) == "PONG"
+  rescue Redis::BaseError
+    false
   end
 end

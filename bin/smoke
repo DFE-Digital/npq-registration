@@ -41,6 +41,15 @@ else
   exit 1
 fi
 
+redis_connected=$(jq ".redis" <<< $response)
+
+if [[ $redis_connected == 'true' ]]; then
+  echo "✅ Redis is connected"
+else
+  echo "Fail: redis is not connected"
+  exit 1
+fi
+
 database_connected=$(jq ".database.connected" <<< $response)
 
 if [[ $database_connected == 'true' ]]; then
