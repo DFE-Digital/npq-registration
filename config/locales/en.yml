@@ -267,6 +267,11 @@ en:
               *ecf_id
         user:
           attributes:
+            full_name:
+              blank: "Enter a full name"
+            email:
+              blank: "Enter an email address"
+              taken: "Email address must be unique"
             ecf_id:
               *ecf_id
   activemodel:
