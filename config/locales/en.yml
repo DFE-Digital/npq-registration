@@ -165,6 +165,14 @@ en:
               empty: Uploaded file is empty
               invalid: Uploaded file is wrong format
               malformed: Uploaded file is not a valid CSV
+        admin:
+          attributes:
+            full_name:
+              blank: "Enter a full name"
+              too_long: "Full name must be shorter than %{count} characters"
+            email:
+              blank: "Enter an email address"
+              too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
             ecf_id:
