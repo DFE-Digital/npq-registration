@@ -206,6 +206,9 @@ en:
               taken: "Can only have one contract for statement and course"
         course:
           attributes:
+            identifier:
+              blank: "Enter an identifier"
+              taken: "Identifier already exists, enter a unique one"
             ecf_id:
               *ecf_id
         course_group:

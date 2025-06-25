@@ -10,9 +10,7 @@ class Course < ApplicationRecord
   belongs_to :course_group, optional: true
 
   validates :name, presence: true
-  validates :identifier,
-            presence: { message: "Enter a identifier" },
-            uniqueness: { message: "Identifier already exists, enter a unique one" }
+  validates :identifier, presence: true, uniqueness: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   # npq-additional-support-offer is replaced by npq-early-headship-coaching-offer
