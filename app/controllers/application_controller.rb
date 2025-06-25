@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
   before_action :set_cache_headers
+  before_action :authenticate_user!
   before_action :set_sentry_user
   before_action :initialize_store
 
@@ -10,9 +11,7 @@ class ApplicationController < ActionController::Base
 private
 
   def authenticate_user!
-    if current_user.null_user?
-      redirect_to sign_in_path
-    end
+    raise "ApplicationController should not be used directly. Use a subclass instead."
   end
 
   # If the user is logged in then we should retrieve from the logged in user record,

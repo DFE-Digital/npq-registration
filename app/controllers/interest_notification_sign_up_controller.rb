@@ -1,4 +1,4 @@
-class InterestNotificationSignUpController < ApplicationController
+class InterestNotificationSignUpController < PublicPagesController
   before_action :set_notification_form, only: %i[new]
 
   def new; end

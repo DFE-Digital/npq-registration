@@ -1,4 +1,4 @@
-class PrivateChildcareProvidersController < ApplicationController
+class PrivateChildcareProvidersController < PublicPagesController
   def index
     private_childcare_providers = PrivateChildcareProvider
       .search_by_urn(params[:name])
