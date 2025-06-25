@@ -24,7 +24,6 @@ class Application < ApplicationRecord
   belongs_to :cohort, optional: true
   belongs_to :schedule, optional: true
 
-  has_many :ecf_sync_request_logs, as: :syncable, dependent: :destroy
   has_many :participant_id_changes, through: :user
   has_many :application_states
   has_many :declarations
@@ -130,10 +129,6 @@ class Application < ApplicationRecord
 
   def public_nursery?
     Questionnaires::KindOfNursery::KIND_OF_NURSERY_PUBLIC_OPTIONS.include?(kind_of_nursery)
-  end
-
-  def synced_to_ecf?
-    ecf_id.present?
   end
 
   def inside_uk_catchment?

@@ -79,47 +79,12 @@ RSpec.feature "admin", :rack_test_driver, type: :feature do
     # Test application search and show page
     selected_application = applications.sample
 
-    successful_sync_log = selected_application.ecf_sync_request_logs.create!(
-      status: :success,
-      sync_type: :application_creation,
-      created_at: 15.days.ago,
-    )
-
-    failed_sync_log = selected_application.ecf_sync_request_logs.create!(
-      status: :failed,
-      sync_type: :application_creation,
-      error_messages: %w[foobar],
-      created_at: 16.days.ago,
-    )
-
     page.fill_in "Search by email", with: selected_application.user.email
     page.click_button "Search"
 
     expect(page.find_all("table tbody tr").size).to be(1)
-
     click_link selected_application.user.email
     expect(page).to have_current_path(admin_application_path(id: selected_application.id))
-
-    expect(page).to have_link("ECF Sync Log", href: "#ecf-sync-log")
-
-    click_link "ECF Sync Log"
-    within "#log-row-#{successful_sync_log.id}" do
-      expect(page.text).to eq [
-        "Application Creation",
-        successful_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Success",
-        "-",
-      ].join(" ")
-    end
-
-    within "#log-row-#{failed_sync_log.id}" do
-      expect(page.text).to eq [
-        "Application Creation",
-        failed_sync_log.created_at.to_formatted_s(:govuk_short),
-        "Failed",
-        failed_sync_log.error_messages.join(", "),
-      ].join(" ")
-    end
 
     expect(page).to have_link("Back", href: admin_applications_url(q: selected_application.user.email))
   end
