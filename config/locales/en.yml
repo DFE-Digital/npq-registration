@@ -650,6 +650,12 @@ en:
           attributes:
             checks_done:
               accepted: Confirm all necessary assurance checks have been done before authorising this statement for payment
+        statements/bulk_creator:
+          attributes:
+            statements_csv_id:
+              blank: must be provided
+            contracts_csv_id:
+              blank: must be provided
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
