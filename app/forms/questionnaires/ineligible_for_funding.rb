@@ -1,5 +1,7 @@
 module Questionnaires
   class IneligibleForFunding < Base
+    class UnexpectedEligibilityStatusCode < StandardError; end
+
     include Helpers::Institution
 
     NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
@@ -68,7 +70,7 @@ module Questionnaires
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                end
 
-      raise "Missing status code handling: #{funding_eligiblity_status_code}"
+      raise UnexpectedEligibilityStatusCode, "Missing status code handling: #{funding_eligiblity_status_code}"
     end
 
     def funding_eligiblity_status_code
