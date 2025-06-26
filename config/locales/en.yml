@@ -662,6 +662,16 @@ en:
               inclusion: is not recognised
             course_identifier:
               inclusion: is not recognised
+        statements/bulk_creator/statement_row:
+          attributes:
+            year:
+              inclusion: "must be between 2020 and 2040"
+            month:
+              inclusion: "must be between 1 and 12"
+            deadline_date:
+              blank: "must be a date (e.g. YYYY-MM-DD)"
+            payment_date:
+              blank: "must be a date (e.g. YYYY-MM-DD)"
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
