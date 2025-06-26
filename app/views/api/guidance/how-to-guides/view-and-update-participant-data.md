@@ -226,6 +226,7 @@ The API will automatically assign schedules to participants depending on when co
 
 Successful requests will return a response body including updates to the `schedule_identifier` attribute.
 
+
 ### What if the declaration date and new schedule's milestone dates do not align? 
 
 The API will reject a schedule change if any submitted, eligible, payable or paid declarations have a `declaration_date` which does not align with the new schedule’s milestone dates.
@@ -248,6 +249,39 @@ For more detailed information, see the ['Notify that a participant is changing t
   }
 }
 ```
+
+
+## Updating cohort on a funded place application
+
+```
+PUT /api/v3/participants/npq/:id/change-schedule endpoint​
+```
+
+For an application that has been accepted, providers are able to change the cohort year via the API​.
+
+This will error if the user in question has declarations attached – this is because those declarations will be
+associated with the original cohort year. These will need to be voided first. After the cohort has been changed, the declarations can be re-submitted for the correct new cohort.​
+​
+
+### Other scenarios:​
+
+From cohort 2024 onwards, there are funding caps, which were not present in cohorts 2021, 2022, and 2023.
+For this reason, if you try change from cohort 2024 back to cohort 2022 for example, it will error and give the
+message: "You cannot change the '#/cohort' field from one with a funding cap to one without a funding cap"​
+
+You CAN change the cohort from one without a funding cap to one with a funding cap, so changing from
+cohort 2022 to cohort 2024 will work.​
+
+* Information must be filled out in the request body​.
+
+* Schedule identifier and/or cohort year can be changed. When just updating the cohort year, make sure the schedule identifier remains the correct one and unchanged​.
+
+* Course identifier for the specific npq course that the participant is on.​
+  
+* Cohort – fill out the cohort year that the participant is changing to​.
+
+* 200 response means that the request was successful and the cohort year updated.
+  
 
 ## Retrieve multiple NPQ outcomes for all participants
 
