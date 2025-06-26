@@ -656,6 +656,12 @@ en:
               blank: must be provided
             contracts_csv_id:
               blank: must be provided
+        statements/bulk_creator/contract_row:
+          attributes:
+            lead_provider_name:
+              inclusion: is not recognised
+            course_identifier:
+              inclusion: is not recognised
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"
