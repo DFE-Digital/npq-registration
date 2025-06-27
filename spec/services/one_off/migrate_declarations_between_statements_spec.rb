@@ -155,7 +155,7 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
           migrate
 
           expect(from_statement.reload).to have_attributes(from_statement_updates)
-          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} updated from: {\"output_fee\"=>true} to {\"output_fee\"=>false}")
+          expect(logged_output).to include("Statement #{from_statement.year}-#{from_statement.month} for #{from_statement.lead_provider.name} updated from: {\"output_fee\" => true} to {\"output_fee\" => false}")
         end
       end
 
@@ -171,8 +171,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
 
           expect(to_statement.reload).to have_attributes(to_statement_updates)
           expect(logged_output).to include("Statement #{to_statement.year}-#{to_statement.month} for #{to_statement.lead_provider.name} " \
-                                           "updated from: {\"deadline_date\"=>#{old_deadline_date.inspect}, \"payment_date\"=>#{old_payment_date.inspect}} " \
-                                           "to {\"deadline_date\"=>#{new_deadline_date.inspect}, \"payment_date\"=>#{new_payment_date.inspect}}")
+                                           "updated from: {\"deadline_date\" => #{old_deadline_date.inspect}, \"payment_date\" => #{old_payment_date.inspect}} " \
+                                           "to {\"deadline_date\" => #{new_deadline_date.inspect}, \"payment_date\" => #{new_payment_date.inspect}}")
         end
       end
 
