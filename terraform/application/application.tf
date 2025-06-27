@@ -56,6 +56,7 @@ module "web_application" {
 
   docker_image = var.docker_image
   command = var.command
+  probe_path = "/up"
 
   replicas   = var.webapp_replicas
   max_memory = var.webapp_memory_max

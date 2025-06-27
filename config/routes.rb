@@ -3,6 +3,7 @@ Rails.application.routes.draw do
              controllers: { omniauth_callbacks: "omniauth" }
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
+  get "/up", to: "monitoring#up"
 
   resources :schools, only: [:index]
   resources :institutions, only: [:index]
