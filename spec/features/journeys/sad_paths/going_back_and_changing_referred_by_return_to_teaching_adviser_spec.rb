@@ -1,5 +1,8 @@
 require "rails_helper"
 
+# This is the exact scenario from bug CPDNPQ-2812.
+# The main issue is the steps when clicking 'Back' are completely wrong.
+# The fix put in was just a quick fix - making the back steps correct will also fix the issue, but it's a larger piece of work (see CPDNPQ-3053).
 RSpec.feature "Sad journey", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include ApplicationHelper
