@@ -72,6 +72,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Teach First", visible: :all)
     end
 
+    # check_back_journey_is_correct # FIXME: this currently fails # TODO: apply this check to all journeys
+
     expect_page_to_have(path: "/registration/share-provider", submit_form: true) do
       expect(page).to have_text("Sharing your NPQ information")
       page.check("Yes, I agree to share my information", visible: :all)

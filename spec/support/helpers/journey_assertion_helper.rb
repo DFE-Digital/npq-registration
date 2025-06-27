@@ -9,6 +9,9 @@ module Helpers
     def expect_page_to_have(path:, submit_form: false, click_continue: false, submit_button_text: "Continue", axe_check: true, &block)
       expect(page).to have_current_path(path)
 
+      @steps_visited ||= []
+      @steps_visited << page.current_path unless page.current_path == "/"
+
       if axe_check && Capybara.current_driver != :rack_test
         expect(page).to(be_accessible)
       end
@@ -40,6 +43,17 @@ module Helpers
 
       expect(User.count).to be(1)
       expect(Application.count).to be(total_number_of_created_applications)
+    end
+
+    def check_back_journey_is_correct
+      starting_path = page.current_path
+      until page.current_path == "/registration/course-start-date"
+        page.click_link("Back")
+        back_steps ||= []
+        back_steps << page.current_path
+      end
+      expect(back_steps.reverse).to eq @steps_visited
+      visit starting_path
     end
   end
 end
