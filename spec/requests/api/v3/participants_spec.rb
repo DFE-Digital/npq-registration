@@ -32,6 +32,9 @@ RSpec.describe "Participant endpoints", type: :request do
     end
 
     it_behaves_like "an API show endpoint"
+    it_behaves_like "an API endpoint that checks participant_id currency" do
+      let(:path) { api_v3_participant_path(participant_id_change.from_participant_id) }
+    end
   end
 
   describe "PUT /api/v3/participants/:ecf_id/resume" do

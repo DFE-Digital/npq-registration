@@ -5,4 +5,8 @@ class ParticipantIdChange < ApplicationRecord
 
   validates :user, :from_participant_id, :to_participant_id, presence: true
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
+
+  def i18n_params
+    { from_participant_id:, to_participant_id: }
+  end
 end

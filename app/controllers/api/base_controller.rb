@@ -40,5 +40,23 @@ module API
     def set_cache_headers
       no_store
     end
+
+    def check_participant_id_change
+      return unless (participant_id_change = ParticipantIdChange.find_by(from_participant_id: params[:ecf_id]))
+
+      errors = [{
+        title: "Participant ID has been changed",
+        detail: I18n.t("participant_id.changed", **participant_id_change.i18n_params),
+        participant_id_changes: [
+          {
+            from_participant_id: participant_id_change.from_participant_id,
+            to_participant_id: participant_id_change.to_participant_id,
+            changed_at: participant_id_change.created_at.rfc3339,
+          },
+        ],
+      }]
+
+      render json: { errors: }, status: :gone
+    end
   end
 end
