@@ -70,7 +70,7 @@ group :development, :test do
   gem "dotenv-rails"
   gem "knapsack"
   gem "parallel_tests", "~> 5.2"
-  gem "rspec-rails", "~> 7.1"
+  gem "rspec-rails", "~> 8.0"
   gem "rspec-sonarqube-formatter", require: false
   gem "rswag-specs"
   gem "rubocop-govuk"
