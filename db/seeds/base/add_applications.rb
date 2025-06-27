@@ -104,17 +104,15 @@ LeadProvider.find_each do |lead_provider|
     FactoryBot.create_list(
       :application,
       2,
-      :eligible_for_funded_place,
+      :accepted,
+      :eligible_for_funding,
       :with_random_user,
       :with_random_work_setting,
       :with_participant_id_change,
       lead_provider:,
       course: all_courses.sample,
       funded_place: Faker::Boolean.boolean(true_ratio: 0.6),
-      cohort: Cohort.where(funding_cap: true).sample || all_cohorts.sample.tap do |c|
-                c.funding_cap = true
-                c.save!
-              end,
+      cohort: Cohort.where(funding_cap: true).sample,
     )
 
     # users with one not eligible for funded place application each (cohort funding_cap true)
@@ -128,10 +126,7 @@ LeadProvider.find_each do |lead_provider|
       lead_provider:,
       course: all_courses.sample,
       funded_place: false,
-      cohort: Cohort.where(funding_cap: true).sample || all_cohorts.sample.tap do |c|
-                c.funding_cap = true
-                c.save!
-              end,
+      cohort: Cohort.where(funding_cap: true).sample,
     )
 
     # users with one funded place nil application each (cohort funding_cap false)
@@ -141,14 +136,11 @@ LeadProvider.find_each do |lead_provider|
       :accepted,
       :with_random_user,
       :with_random_work_setting,
-      :with_random_eligible_for_funding_seeds_only,
       :with_participant_id_change,
+      eligible_for_funding: Faker::Boolean.boolean,
       lead_provider:,
       course: all_courses.sample,
-      cohort: Cohort.where(funding_cap: false).sample || all_cohorts.sample.tap do |c|
-                c.funding_cap = false
-                c.save!
-              end,
+      cohort: Cohort.where(funding_cap: false).sample,
     )
   end
 end

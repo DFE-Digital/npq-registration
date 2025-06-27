@@ -22,9 +22,9 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
     expect(Cohort.count).to eq(3)
 
     expect(page).to have_table(rows: [
-      ["2028 to 2029", "3 April 2028", "No"],
-      ["2027 to 2028", "3 April 2027", "No"],
-      ["2026 to 2027", "3 April 2026", "No"],
+      ["2028 to 2029", "3 April 2028", "Yes"],
+      ["2027 to 2028", "3 April 2027", "Yes"],
+      ["2026 to 2027", "3 April 2026", "Yes"],
     ])
   end
 
@@ -36,7 +36,7 @@ RSpec.feature "Managing cohorts", :ecf_api_disabled, type: :feature do
     within(".govuk-summary-list") do |summary_list|
       expect(summary_list).to have_summary_item("Start year", "2026")
       expect(summary_list).to have_summary_item("Registration start date", "3 April 2026")
-      expect(summary_list).to have_summary_item("Funding cap", "No")
+      expect(summary_list).to have_summary_item("Funding cap", "Yes")
     end
   end
 

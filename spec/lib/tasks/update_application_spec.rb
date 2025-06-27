@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe "update_application" do
   include_context "with default schedules"
 
+  let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+
   shared_examples "outputting an error" do
     it "outputs an error message" do
       expect { run_task }.to raise_error(RuntimeError, /Application not found: /)
@@ -14,7 +16,7 @@ RSpec.describe "update_application" do
 
     after { Rake::Task["update_application:accept"].reenable }
 
-    let(:application) { create(:application, :pending) }
+    let(:application) { create(:application, :pending, cohort:) }
 
     it "accepts the application" do
       run_task

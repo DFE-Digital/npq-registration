@@ -60,7 +60,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
   scenario "filtering applications by provider approval status" do
     application = applications_in_order.last
-    application.update! lead_provider_approval_status: :accepted
+    application.update! lead_provider_approval_status: :accepted, funded_place: false
 
     visit(npq_separation_admin_applications_path)
     select "Accepted", from: "Provider approval status"
@@ -131,6 +131,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application = applications_in_order.first
     application.update!(
       eligible_for_funding: true,
+      funded_place: true,
       lead_provider_approval_status: :accepted,
       funding_eligiblity_status_code: 123,
       employment_type: :full_time,

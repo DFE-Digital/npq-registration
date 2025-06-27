@@ -103,7 +103,7 @@ RSpec.feature "User administration", type: :feature do
           expect(summary_card).to have_summary_item("Provider", application.lead_provider.name)
           expect(summary_card).to have_summary_item("Eligible for funding", "No")
           expect(summary_card).to have_summary_item("Provider approval status", "Pending")
-          expect(summary_card).to have_summary_item("Funded place", "–")
+          expect(summary_card).to have_summary_item("Funded place", "No")
           expect(summary_card).to have_summary_item("Training milestone reached", "Completed (paid)")
           expect(summary_card).to have_summary_item("Registration submission date", application.created_at.to_fs(:govuk_short))
         end

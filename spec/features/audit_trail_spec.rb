@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.feature "Recording audit trail via papertrail", :versioning, type: :request do
   include Helpers::NPQSeparationAdminLogin
 
+  let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+
   describe "an admin making changes" do
     subject(:change_author) { application.versions.last.whodunnit }
 
@@ -13,7 +15,7 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
     end
 
     let :application do
-      create(:application, :accepted).tap do |application|
+      create(:application, :accepted, cohort:).tap do |application|
         create(:declaration, application:)
       end
     end
@@ -51,7 +53,7 @@ RSpec.feature "Recording audit trail via papertrail", :versioning, type: :reques
     let(:raw_token) { "a-token" }
     let(:course) { create :"npq-senior-leadership" }
     let(:lead_provider) { create :lead_provider }
-    let(:application) { create :application, lead_provider:, course: }
+    let(:application) { create :application, lead_provider:, course:, cohort: }
 
     let :headers do
       {

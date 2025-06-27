@@ -78,21 +78,19 @@ RSpec.describe Applications::ChangeFundedPlace, type: :model do
           expect(service).to have_error(:application, :cannot_change_funded_status_non_eligible, "This participant is not eligible for funding. Contact us if you think this is wrong.")
         end
 
-        it "is invalid if the cohort does not accept capping and we have a true funded_place param" do
-          cohort.update!(funding_cap: false)
+        context "when the cohort does not accept capping" do
+          let(:cohort) { create(:cohort, :current, :without_funding_cap) }
 
-          service.change
+          it "is invalid when we have a true funded_place param" do
+            service.change
+            expect(service).to have_error(:application, :cohort_does_not_accept_capping, "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
+          end
 
-          expect(service).to have_error(:application, :cohort_does_not_accept_capping, "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
-        end
-
-        it "is invalid if the cohort does not accept capping and we have a false funded_place param" do
-          params.merge!(funded_place: false)
-          cohort.update!(funding_cap: false)
-
-          service.change
-
-          expect(service).to have_error(:application, :cohort_does_not_accept_capping, "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
+          it "is invalid when we have a false funded_place param" do
+            params.merge!(funded_place: false)
+            service.change
+            expect(service).to have_error(:application, :cohort_does_not_accept_capping, "Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.")
+          end
         end
 
         context "when the application is not accepted" do

@@ -18,7 +18,7 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.not_to allow_value(nil).for(:funding_cap).with_message("Choose true or false for funding cap") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
 
-    describe "#registration_start_date_matches_start_year" do
+    describe "registration_start_date year should match start_year" do
       it "adds an error when the registration_start_date year does not match the start_year" do
         cohort = Cohort.new(start_year: 2022, registration_start_date: Date.new(2023, 4, 10))
 
@@ -34,7 +34,7 @@ RSpec.describe Cohort, type: :model do
       end
     end
 
-    describe "#start_year" do
+    describe "start_year" do
       it { is_expected.to validate_presence_of(:start_year) }
 
       it {
@@ -52,6 +52,30 @@ RSpec.describe Cohort, type: :model do
 
         new_cohort.valid?
         expect(new_cohort.errors[:start_year]).to include("has already been taken")
+      end
+    end
+
+    describe "changing funding_cap when there are applications" do
+      before do
+        create(:application, cohort: cohort)
+      end
+
+      context "when the funding cap is true" do
+        let(:cohort) { create(:cohort, :with_funding_cap) }
+
+        it "does not allow changing the funding_cap" do
+          cohort.funding_cap = false
+          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        end
+      end
+
+      context "when the funding cap is false" do
+        let(:cohort) { create(:cohort, :without_funding_cap) }
+
+        it "does not allow changing the funding_cap" do
+          cohort.funding_cap = true
+          expect(cohort).to have_error(:funding_cap, "Cannot change funding_cap when there are existing applications for this cohort")
+        end
       end
     end
   end
