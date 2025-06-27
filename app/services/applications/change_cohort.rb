@@ -10,7 +10,7 @@ module Applications
     attribute :cohort_id, :integer
 
     validates :application, presence: true
-    validates :cohort_id, presence: { message: "Choose a cohort" }
+    validates :cohort_id, presence: true
     validate :different_cohort, if: :application
     validate :declarations_present, if: :application
     validate :schedule_exists_in_new_cohort, if: :application

@@ -19,11 +19,11 @@ class User < ApplicationRecord
   has_many :participant_id_changes, -> { order("created_at desc") }
   has_many :declarations, through: :applications
 
-  validates :full_name, presence: { message: "Enter a full name" }
+  validates :full_name, presence: true
 
   validates :email,
-            presence: { message: "Enter an email address" },
-            uniqueness: { message: "Email address must be unique" },
+            presence: true,
+            uniqueness: true,
             notify_email: true
 
   validates :uid, uniqueness: { allow_blank: true }

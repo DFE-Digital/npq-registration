@@ -10,10 +10,10 @@ module Statements
       attribute :payment_date, :date
       attribute :output_fee, :boolean, default: false
 
-      validates :year, inclusion: { in: 2020..2040, message: "must be between 2020 and 2040" }
-      validates :month, inclusion: { in: 1..12, message: "must be between 1 and 12" }
-      validates :deadline_date, presence: { message: "must be a date (e.g. YYYY-MM-DD)" }
-      validates :payment_date, presence: { message: "must be a date (e.g. YYYY-MM-DD)" }
+      validates :year, inclusion: { in: 2020..2040 }
+      validates :month, inclusion: { in: 1..12 }
+      validates :deadline_date, presence: true
+      validates :payment_date, presence: true
 
       def self.example_csv
         <<~CSV.strip

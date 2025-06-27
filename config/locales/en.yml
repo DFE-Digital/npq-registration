@@ -165,8 +165,18 @@ en:
               empty: Uploaded file is empty
               invalid: Uploaded file is wrong format
               malformed: Uploaded file is not a valid CSV
+        admin:
+          attributes:
+            full_name:
+              blank: "Enter a full name"
+              too_long: "Full name must be shorter than %{count} characters"
+            email:
+              blank: "Enter an email address"
+              too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
+            funding_cap:
+              inclusion: "Choose true or false for funding cap"
             ecf_id:
               *ecf_id
         contract_template:
@@ -196,8 +206,16 @@ en:
               taken: "Can only have one contract for statement and course"
         course:
           attributes:
+            identifier:
+              blank: "Enter an identifier"
+              taken: "Identifier already exists, enter a unique one"
             ecf_id:
               *ecf_id
+        course_group:
+          attributes:
+            name:
+              blank: "Enter a unique course group name"
+              taken: "Course name already exist, enter a unique name"
         declaration:
           attributes:
             declaration_date:
@@ -241,6 +259,17 @@ en:
               *ecf_id
         statement:
           attributes:
+            output_fee:
+              inclusion: "Choose yes or no for output fee"
+            month:
+              in: "Month must be a number between 1 and 12"
+              not_a_number: "Month must be a number between 1 and 12"
+              not_an_integer: "Month must be a number between 1 and 12"
+            year:
+              not_a_number: "Year must be a 4 digit number"
+              not_an_integer: "Year must be a 4 digit number"
+            lead_provider_id:
+              taken: "A statement for this lead provider, cohort, year and month already exists"
             ecf_id:
               *ecf_id
         statement_item:
@@ -249,6 +278,11 @@ en:
               *ecf_id
         user:
           attributes:
+            full_name:
+              blank: "Enter a full name"
+            email:
+              blank: "Enter an email address"
+              taken: "Email address must be unique"
             ecf_id:
               *ecf_id
   activemodel:
@@ -303,9 +337,15 @@ en:
         applications/change_cohort:
           attributes:
             cohort_id:
+              blank: "Choose a cohort"
               must_be_different: must be different
               schedule_not_found: There is no schedule for the current course in the specified cohort
               declarations_present: Cannot change cohort for an application with declarations
+        applications/change_lead_provider:
+          attributes:
+            lead_provider_id:
+              blank: "Choose a course provider"
+              unchanged: "You cannot change to the same course provider"
         questionnaires/teacher_reference_number:
           attributes:
             trn_knowledge:
@@ -610,6 +650,28 @@ en:
           attributes:
             checks_done:
               accepted: Confirm all necessary assurance checks have been done before authorising this statement for payment
+        statements/bulk_creator:
+          attributes:
+            statements_csv_id:
+              blank: must be provided
+            contracts_csv_id:
+              blank: must be provided
+        statements/bulk_creator/contract_row:
+          attributes:
+            lead_provider_name:
+              inclusion: is not recognised
+            course_identifier:
+              inclusion: is not recognised
+        statements/bulk_creator/statement_row:
+          attributes:
+            year:
+              inclusion: "must be between 2020 and 2040"
+            month:
+              inclusion: "must be between 1 and 12"
+            deadline_date:
+              blank: "must be a date (e.g. YYYY-MM-DD)"
+            payment_date:
+              blank: "must be a date (e.g. YYYY-MM-DD)"
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

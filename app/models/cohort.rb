@@ -15,11 +15,7 @@ class Cohort < ApplicationRecord
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
-  validates :funding_cap,
-            inclusion: {
-              in: [true, false],
-              message: "Choose true or false for funding cap",
-            }
+  validates :funding_cap, inclusion: { in: [true, false] }
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
 
   def self.current(timestamp = Time.zone.today)

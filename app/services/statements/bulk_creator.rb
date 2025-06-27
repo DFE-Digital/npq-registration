@@ -4,8 +4,8 @@ module Statements
 
     attr_reader :cohort, :statements_csv_id, :contracts_csv_id
 
-    validates :statements_csv_id, presence: { message: "must be provided" }
-    validates :contracts_csv_id, presence: { message: "must be provided" }
+    validates :statements_csv_id, presence: true
+    validates :contracts_csv_id, presence: true
     validate :validate_statements_csv
     validate :validate_contracts_csv
     validate :validate_statement_uniqueness

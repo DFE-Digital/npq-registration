@@ -20,8 +20,8 @@ module Statements
       attribute :monthly_service_fee, :strict_decimal, default: nil
       attribute :service_fee_installments, :strict_integer, default: nil
 
-      validates :lead_provider_name, inclusion: { in: -> { LeadProvider.pluck(:name) }, message: "is not recognised" }
-      validates :course_identifier, inclusion: { in: -> { Course.pluck(:identifier) }, message: "is not recognised" }
+      validates :lead_provider_name, inclusion: { in: -> { LeadProvider.pluck(:name) } }
+      validates :course_identifier, inclusion: { in: -> { Course.pluck(:identifier) } }
       validates :recruitment_target, numericality: { greater_than: 0 }
       validates :per_participant, numericality: { greater_than: 0 }
       validates :monthly_service_fee, numericality: { greater_than_or_equal_to: 0 }

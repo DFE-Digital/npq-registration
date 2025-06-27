@@ -9,32 +9,10 @@ class Statement < ApplicationRecord
   has_many :declarations, through: :statement_items
   has_many :adjustments
 
-  validates :output_fee,
-            inclusion: {
-              in: [true, false],
-              message: "Choose yes or no for output fee",
-            }
-
-  validates :month,
-            numericality: {
-              in: 1..12,
-              only_integer: true,
-              message: "Month must be a number between 1 and 12",
-            }
-
-  validates :year,
-            numericality: {
-              in: 2020..2050,
-              only_integer: true,
-              message: "Year must be a 4 digit number",
-            }
-
-  validates :lead_provider_id,
-            uniqueness: {
-              scope: %i[cohort_id year month],
-              message: "A statement for this lead provider, cohort, year and month already exists",
-            }
-
+  validates :output_fee, inclusion: { in: [true, false] }
+  validates :month, numericality: { in: 1..12, only_integer: true }
+  validates :year, numericality: { in: 2020..2050, only_integer: true }
+  validates :lead_provider_id, uniqueness: { scope: %i[cohort_id year month] }
   validates :ecf_id, uniqueness: { case_sensitive: false }
 
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
