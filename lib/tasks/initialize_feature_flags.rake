@@ -5,3 +5,7 @@ namespace :feature_flags do
     Feature.initialize_feature_flags
   end
 end
+
+Rake::Task["db:migrate"].enhance do
+  Rake::Task["feature_flags:initialize"].invoke
+end
