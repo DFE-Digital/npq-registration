@@ -20,11 +20,11 @@ module NpqSeparation
         return {} unless @current_admin.super_admin?
 
         {
-          Node.new(
-            name: "Reopening email subscriptions",
-            href: npq_separation_admin_reopening_email_subscriptions_path,
-            prefix: "/npq-separation/admin/reopening-email-subscriptions",
-          ) => [],
+          # Node.new(
+          #   name: "Reopening email subscriptions",
+          #   href: npq_separation_admin_reopening_email_subscriptions_path,
+          #   prefix: "/npq-separation/admin/reopening-email-subscriptions",
+          # ) => [],
 
           Node.new(
             name: "Feature flags",
@@ -105,10 +105,15 @@ module NpqSeparation
             href: npq_separation_admin_settings_webhook_messages_path,
             prefix: "/npq-separation/admin/settings",
           ) => settings_nodes,
+          # Node.new(
+          #   name: "Closed registration users",
+          #   href: npq_separation_admin_closed_registration_users_path,
+          #   prefix: "/npq-separation/admin/closed-registration-users",
+          # ) => [],
           Node.new(
-            name: "Closed registration users",
-            href: npq_separation_admin_closed_registration_users_path,
-            prefix: "/npq-separation/admin/closed-registration-users",
+            name: "Closed registrations",
+            href: npq_separation_admin_registration_closed_index_path,
+            prefix: "",
           ) => [],
         }
       end
