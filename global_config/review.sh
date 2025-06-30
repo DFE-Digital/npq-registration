@@ -6,4 +6,4 @@ AZURE_RESOURCE_PREFIX=s189t01
 KV_PURGE_PROTECTION=false
 CONFIG_LONG=review
 NAMESPACE=cpd-development
-TERRAFORM_MODULES_TAG=main
+TERRAFORM_MODULES_TAG=2375-security-aks-containers-run-as-non-root-user-npq
