@@ -3,7 +3,7 @@
     <h1 class="govuk-heading-l">Closed registration users</h1>
     <div class="admin-search-box">
       <h2 class="govuk-heading-l">Add closed registration user</h2>
-      <%= form_for [:npq_separation, :admin, @user] do |f| %>
+      <%= form_for [:npq_separation, :admin, :registration_closed, @user] do |f| %>
         <%= f.govuk_error_summary %>
         <%= f.govuk_text_field :email, label: { text: "Email address" }, legend: { text: 'Provide course start date' } %>
         <%= f.govuk_submit "Add user" %>

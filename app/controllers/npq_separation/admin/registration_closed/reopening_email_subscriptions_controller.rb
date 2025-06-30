@@ -1,4 +1,4 @@
-class NpqSeparation::Admin::ReopeningEmailSubscriptionsController < NpqSeparation::AdminController
+class NpqSeparation::Admin::RegistrationClosed::ReopeningEmailSubscriptionsController < NpqSeparation::AdminController
   before_action :require_super_admin
 
   def index
@@ -21,7 +21,7 @@ class NpqSeparation::Admin::ReopeningEmailSubscriptionsController < NpqSeparatio
       flash[:success] = "Email '#{@user.email}' unsubscribed"
       @user.unsubscribe_from_email_updates
 
-      redirect_to npq_separation_admin_reopening_email_subscriptions_path
+      redirect_to npq_separation_admin_registration_closed_reopening_email_subscriptions_path
     end
   end
 end

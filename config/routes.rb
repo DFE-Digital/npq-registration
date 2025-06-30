@@ -206,21 +206,22 @@ Rails.application.routes.draw do
         resource :summary, only: :show, controller: "summary"
       end
 
-      resources :reopening_email_subscriptions do
-        member do
-          get "unsubscribe"
-          post "unsubscribe"
+      namespace :registration_closed, path: "registration-closed" do
+        resources :reopening_email_subscriptions do
+          member do
+            get "unsubscribe"
+            post "unsubscribe"
+          end
+          collection do
+            get "all_users"
+            get "senco"
+          end
         end
-        collection do
-          get "all_users"
-          get "senco"
-        end
-      end
-
-      resources :closed_registration_users do
-        member do
-          get "destroy"
-          delete "destroy"
+        resources :closed_registration_users do
+          member do
+            get "destroy"
+            delete "destroy"
+          end
         end
       end
 
