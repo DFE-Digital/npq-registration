@@ -64,9 +64,15 @@ RUN apk add --update --no-cache libpq tzdata yaml ${EXTRA_PACKAGES} && \
     cp /usr/share/zoneinfo/Europe/London /etc/localtime && \
     echo "Europe/London" > /etc/timezone
 
+# Create non-root user and group with specific UIDs/GIDs
+RUN addgroup -S appgroup -g 20001 && adduser -S appuser -G appgroup -u 10001
+
 # Copy files generated in the builder image
 COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+
+# Change ownership of the app directory to the non-root user
+RUN chown -R appuser:appgroup /app
 
 ARG COMMIT_SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
@@ -75,6 +81,9 @@ ENV AUTHORISED_HOSTS=127.0.0.1 \
 ENV PORT=8080
 
 EXPOSE ${PORT}
+
+# Switch to non-root user
+USER 10001
 
 SHELL ["/bin/sh", "-c"]
 CMD bundle exec rake db:migrate && exec bundle exec rails s -p ${PORT} --binding=0.0.0.0
