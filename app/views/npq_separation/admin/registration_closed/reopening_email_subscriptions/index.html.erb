@@ -1,7 +1,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-    <h1 class="govuk-heading-l">Users who've requested emails about registration reopening (<%= @all_users.count %>)</h1>
+    <h1 class="govuk-heading-l">Users who’ve requested emails about registration reopening (<%= @all_users.count %>)</h1>
 
     <%= govuk_button_link_to("Export all with SENCO interest", npq_separation_admin_registration_closed_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
     <%= govuk_button_link_to("Export all", npq_separation_admin_registration_closed_reopening_email_subscriptions_path(format: :csv)) %>
