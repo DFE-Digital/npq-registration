@@ -2,7 +2,7 @@ class CourseGroup < ApplicationRecord
   has_many :courses
   has_many :schedules
 
-  validates :name, presence: { message: "Enter a unique course group name" }, uniqueness: { message: "Course name already exist, enter a unique name" }
+  validates :name, presence: true, uniqueness: true
 
   scope :leadership_or_specialist, -> { where(name: %w[leadership specialist]) }
 
