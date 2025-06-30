@@ -76,4 +76,5 @@ ENV PORT=8080
 
 EXPOSE ${PORT}
 
-CMD bundle exec rake db:migrate && bundle exec rails s -p ${PORT} --binding=0.0.0.0
+SHELL ["/bin/sh", "-c"]
+CMD bundle exec rake db:migrate && exec bundle exec rails s -p ${PORT} --binding=0.0.0.0
