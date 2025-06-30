@@ -68,7 +68,7 @@ en:
     no_started_declarations: An NPQ participant who has not got a started declaration cannot be withdrawn. Please contact support for assistance
     declaration_must_be_before_withdrawal_date: "This participant withdrew from this course on %{withdrawal_date}. Enter a '#/declaration_date' that's on or before the withdrawal date."
     invalid_participant: "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again."
-    changed: "The participant_id '%{from_participant_id}' has been changed to '%{to_participant_id}'. Please use the updated participant_id."
+    changed: "The participant_id '%{from_participant_id}' has been replaced with '%{to_participant_id}'."
     application_not_found: "Your update cannot be made as an accepted application cannot be found for the given '#/participant_id' and '#/course_identifier'."
 
   declaration_date: &declaration_date
