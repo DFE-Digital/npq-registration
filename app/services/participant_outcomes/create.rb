@@ -19,7 +19,7 @@ module ParticipantOutcomes
     attribute :completion_date
 
     validates :lead_provider, presence: true
-    validates :participant_id, presence: true, participant_id_currency: true
+    validates :participant_id, presence: true, participant_id_change: true
     validates :course_identifier, inclusion: { in: PERMITTED_COURSES }, presence: true
     validates :state, inclusion: { in: STATES }, presence: true
     validates :completion_date, presence: true, format: { with: COMPLETION_DATE_FORMAT }

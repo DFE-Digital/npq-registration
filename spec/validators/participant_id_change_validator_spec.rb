@@ -2,13 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe ParticipantIdCurrencyValidator do
+RSpec.describe ParticipantIdChangeValidator do
   let(:klass) do
     Class.new do
       include ActiveModel::Model
       include ActiveModel::Validations
 
-      validates :participant_id, participant_id_currency: true
+      validates :participant_id, participant_id_change: true
 
       attr_reader :participant_id
 

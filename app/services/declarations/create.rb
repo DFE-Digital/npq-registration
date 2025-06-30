@@ -15,7 +15,7 @@ module Declarations
     attribute :secondary_delivery_partner_id
 
     validates :lead_provider, presence: true
-    validates :participant_id, presence: true, participant_id_currency: true
+    validates :participant_id, presence: true, participant_id_change: true
     validates :participant, participant_presence: true, participant_not_withdrawn: true
     validates :course_identifier, course_for_participant: true
     validates :declaration_date, declaration_date: true

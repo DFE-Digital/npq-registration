@@ -28,7 +28,7 @@ RSpec.describe ParticipantOutcomes::Create, type: :model do
     it { is_expected.to validate_inclusion_of(:course_identifier).in_array(described_class::PERMITTED_COURSES).with_message("The entered '#/course_identifier' is not recognised for the given participant. Check details and try again.") }
     it { is_expected.to validate_inclusion_of(:state).in_array(described_class::STATES).with_message("The attribute '#/state' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration.") }
 
-    it_behaves_like "a model that validates participant_id currency" do
+    it_behaves_like "a model that validates participant_id change" do
       subject { instance }
 
       let(:participant_id_change) { create(:participant_id_change, user: completed_declaration.user) }

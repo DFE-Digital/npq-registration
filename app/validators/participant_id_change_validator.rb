@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantIdCurrencyValidator < ActiveModel::Validator
+class ParticipantIdChangeValidator < ActiveModel::Validator
   def validate(record)
     return unless (participant_id_change = ParticipantIdChange.find_by(from_participant_id: record.participant_id))
 

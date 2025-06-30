@@ -41,7 +41,7 @@ RSpec.describe Declarations::Create, type: :model do
     it { is_expected.to validate_presence_of(:declaration_type).with_message("Enter a '#/declaration_type'.") }
     it { is_expected.to validate_presence_of(:declaration_date).with_message("Enter a '#/declaration_date'.") }
 
-    it_behaves_like "a model that validates participant_id currency" do
+    it_behaves_like "a model that validates participant_id change" do
       subject { service }
     end
 
