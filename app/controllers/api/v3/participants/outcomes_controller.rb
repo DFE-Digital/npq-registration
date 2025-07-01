@@ -4,6 +4,8 @@ module API
       class OutcomesController < BaseController
         include Pagination
 
+        before_action :check_participant_id_change, only: :index
+
         def index
           conditions = { participant_ids: participant.ecf_id }
           outcomes = outcomes_query(conditions:).participant_outcomes

@@ -91,11 +91,7 @@ module API
 
         field(:participant_id_changes) do |object, _options|
           (object.participant_id_changes || []).map do |participant_id_change|
-            {
-              from_participant_id: participant_id_change.from_participant_id,
-              to_participant_id: participant_id_change.to_participant_id,
-              changed_at: participant_id_change.created_at.rfc3339,
-            }
+            API::ParticipantIdChangeSerializer.render_as_hash(participant_id_change)
           end
         end
       end

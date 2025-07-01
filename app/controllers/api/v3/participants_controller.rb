@@ -4,6 +4,8 @@ module API
       include Pagination
       include FilterByDate
 
+      before_action :check_participant_id_change, only: :show
+
       def index
         conditions = { updated_since:, training_status:, from_participant_id:, sort: }
         participants = participants_query(conditions:).participants

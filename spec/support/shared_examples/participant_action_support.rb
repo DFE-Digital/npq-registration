@@ -45,6 +45,8 @@ RSpec.shared_examples "a participant action" do
       it { is_expected.to have_error(:participant_id, :invalid_participant, "Your update cannot be made as the '#/participant_id' is not recognised. Check participant details and try again.") }
     end
 
+    it_behaves_like "a model that validates participant_id change"
+
     context "when a non-existent course identifier is provided" do
       let(:course_identifier) { "non-existent-course-identifier" }
 
