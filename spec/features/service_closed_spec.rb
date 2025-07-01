@@ -54,7 +54,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed_registration_users"
       fill_in("Email address", with: email)
       click_on("Add user")
 
