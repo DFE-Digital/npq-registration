@@ -87,7 +87,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed_registration_users"
       fill_in("Email", with: email)
       click_on("Add user")
 
@@ -101,7 +101,7 @@ RSpec.feature "Service is closed", type: :feature do
         expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       end
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed_registration_users"
 
       click_link("Remove access")
       click_link("Remove access")
@@ -124,7 +124,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed_registration_users"
       fill_in("Email", with: other_email)
       click_on("Add user")
 
