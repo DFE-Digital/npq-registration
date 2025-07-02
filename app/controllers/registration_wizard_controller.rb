@@ -15,6 +15,12 @@ class RegistrationWizardController < PublicPagesController
     render @wizard.current_step
 
     @wizard.after_render
+  rescue ActionView::Template::Error => e
+    if e.cause.instance_of?(Questionnaires::IneligibleForFunding::UnexpectedEligibilityStatusCode)
+      redirect_to registration_wizard_show_path(:"course-start-date")
+    else
+      raise e
+    end
   end
 
   def update
