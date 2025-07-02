@@ -35,7 +35,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       let(:admin) { build_stubbed(:super_admin) }
 
       it "includes reopening email subscriptions" do
-        expect(subject[-3]).to have_attributes(name: "Closed registrations")
+        expect(subject[-3]).to have_attributes(name: "Registration closed")
         expect(subject[-3]).to have_attributes(href: "/npq-separation/admin/registration-closed")
       end
 

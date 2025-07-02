@@ -13,7 +13,7 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
 
   scenario "unsubscribe user" do
     visit("/npq-separation/admin")
-    click_link "Closed registrations"
+    click_link "Registration closed"
     click_link "Users who’ve requested emails about registration reopening"
     expect(page).to have_text("example@example.org")
     click_link "Unsubscribe"
@@ -23,7 +23,7 @@ RSpec.feature "Reopening Email Subscription Management", :rack_test_driver, type
 
   scenario "super admin exports users with SENCO interest as CSV" do
     visit("/npq-separation/admin")
-    click_link "Closed registrations"
+    click_link "Registration closed"
     click_link "Users who’ve requested emails about registration reopening"
     click_link "Export all with SENCO interest"
     expect(page.body).to eq("Name,Email\n  John Doe,example@example.org\n")

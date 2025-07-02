@@ -209,7 +209,7 @@ Rails.application.routes.draw do
       resources :registration_closed, only: %i[index], path: "registration-closed"
 
       namespace :registration_closed, path: "registration-closed" do
-        resources :reopening_email_subscriptions do
+        resources :reopening_email_subscriptions, path: "reopening-email-subscriptions" do
           member do
             get "unsubscribe"
             post "unsubscribe"
@@ -219,7 +219,7 @@ Rails.application.routes.draw do
             get "senco"
           end
         end
-        resources :closed_registration_users do
+        resources :closed_registration_users, path: "closed-registration-users" do
           member do
             get "destroy"
             delete "destroy"
