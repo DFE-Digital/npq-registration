@@ -344,7 +344,7 @@ RSpec.describe Applications::Query do
       end
 
       context "when there is a previous, accepted application that was eligible for funding and funded place is `nil`" do
-        let(:cohort) { create(:cohort, :without_funding_cap) }
+        let(:cohort) { create(:cohort, :previous, :without_funding_cap) }
 
         before do
           create(
