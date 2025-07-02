@@ -1,22 +1,23 @@
 require "rails_helper"
 
 # To update the id_token fixtures using real responses:
-# you will need to have 2 user accounts, onw with a TRN and one without
-# 1. remove the old fixtures from spec/fixtures/omniauth_hashes/
-# 2. in .env.test:
-#   comment out HOSTING_DOMAIN
-#   comment out the existing TRA_OIDC_* env vars, and copy the 5 TRA_OIDC_* env vars from .env
-# 3. set `regenerate_fixtures` to true below
-# 4. update `email_for_account_with_trn` to the email address for the account with a TRN
-# 5. update `email_for_account_without_trn` to the email address for the account without a TRN
-# 6. make sure your local server is not running on port 3000
-# 7. run the first 2 specs - be sure to follow the prompts from the command-line, and do not enter your code into the browser
+# you will need to have 2 user accounts, one with a TRN and one without
+# 1. copy the TRA_OIDC_* env vars and HOSTING_DOMAIN from your .env to your .env.test.local
+# 2. set `regenerate_fixtures` to true below
+# 3. update `email_for_account_with_trn` to the email address for the account with a TRN
+# 4. update `email_for_account_without_trn` to the email address for the account without a TRN
+# 5. make sure your local server is not running on port 3000 (or you can change the port of HOSTING_DOMAIN in your .env.test.local to something else)
+# 6. run the first 2 specs - be sure to follow the prompts from the command-line, and do not enter your code into the browser
 RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
   include Helpers::JourneyAssertionHelper
   include Helpers::JourneyStepHelper
 
-  before do
+  around do |example|
+    previous_webmock_allow_localhost = WebMock::Config.instance.allow_localhost
+    previous_webmock_allow = WebMock::Config.instance.allow
     WebMock.disable_net_connect!(allow_localhost: true, allow: URI(ENV["TRA_OIDC_DOMAIN"]).host)
+    example.run
+    WebMock.disable_net_connect!(allow_localhost: previous_webmock_allow_localhost, allow: previous_webmock_allow)
   end
 
   regenerate_fixtures = false # set to true to regenerate fixtures
@@ -68,7 +69,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
 
     expect(page).to have_current_path "/registration/course-start-date"
     File.open(fixtures_path.join("tra_openid_connect_auth_with_trn.json"), "w") do |file|
-      file.write strip_pii(User.last.raw_tra_provider_data).to_json
+      file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
     end
   end
 
@@ -77,7 +78,7 @@ RSpec.feature "DfE Sign In", :with_default_schedules, type: :feature do
 
     expect(page).to have_current_path "/registration/teacher-reference-number"
     File.open(fixtures_path.join("tra_openid_connect_auth_no_trn.json"), "w") do |file|
-      file.write strip_pii(User.last.raw_tra_provider_data).to_json
+      file.write JSON.pretty_generate(strip_pii(User.last.raw_tra_provider_data))
     end
   end
 

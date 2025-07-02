@@ -1,1 +1,48 @@
-{"uid":"e09db1cf-f8ca-439d-8ad9-9cbb71086803","info":{"name":"John Doe","urls":{"website":null},"email":"user@example.com","image":null,"phone":null,"gender":null,"nickname":null,"last_name":"Doe","first_name":"John","email_verified":"True"},"extra":{"raw_info":{"aud":"register-for-npq","azp":"register-for-npq","exp":1751386427,"iat":1751385227,"iss":"https://preprod.teaching-identity.education.gov.uk/","sub":"2a3e8f7d-4e41-4faf-9490-976f3964e54f","trn":"3006400","name":"John Doe","email":"user@example.com","nonce":"bc9bca2f69b87ede3127be99e48ae908","at_hash":"DW5Qsm5qBanOudNDGOrasw","oi_au_id":"8b479c65-a928-4084-904a-616c69aea187","birthdate":"1980-01-02","oi_tkn_id":"1ea71d66-0b4b-46c1-b489-d21ed8135cdc","given_name":"John","family_name":"Doe","email_verified":"True","preferred_name":"John Doe","trn_lookup_status":"Found"}},"provider":"tra_openid_connect","credentials":{"scope":"email openid profile trn","token":"sometoken","id_token":"someidtoken","expires_in":3599,"refresh_token":null}}
+{
+  "uid": "54967f42-003f-4500-a730-23ce89c4fa16",
+  "info": {
+    "name": "John Doe",
+    "urls": {
+      "website": null
+    },
+    "email": "user@example.com",
+    "image": null,
+    "phone": null,
+    "gender": null,
+    "nickname": null,
+    "last_name": "Doe",
+    "first_name": "John",
+    "email_verified": "True"
+  },
+  "extra": {
+    "raw_info": {
+      "aud": "register-for-npq",
+      "azp": "register-for-npq",
+      "exp": 1751468395,
+      "iat": 1751467195,
+      "iss": "https://preprod.teaching-identity.education.gov.uk/",
+      "sub": "2a3e8f7d-4e41-4faf-9490-976f3964e54f",
+      "trn": "3006400",
+      "name": "John Doe",
+      "email": "user@example.com",
+      "nonce": "aab29450530355d6edeeeca5c0da5b00",
+      "at_hash": "Cyn7-L-QOgytlBc_aBAdPQ",
+      "oi_au_id": "8b479c65-a928-4084-904a-616c69aea187",
+      "birthdate": "1980-01-02",
+      "oi_tkn_id": "3e296bad-14b8-4770-bf50-7c422dfa5338",
+      "given_name": "John",
+      "family_name": "Doe",
+      "email_verified": "True",
+      "preferred_name": "John Doe",
+      "trn_lookup_status": "Found"
+    }
+  },
+  "provider": "tra_openid_connect",
+  "credentials": {
+    "scope": "email openid profile trn",
+    "token": "sometoken",
+    "id_token": "someidtoken",
+    "expires_in": 3599,
+    "refresh_token": null
+  }
+}
