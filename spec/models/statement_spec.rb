@@ -240,4 +240,32 @@ RSpec.describe Statement, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#allow_adjustments?" do
+    subject { statement.allow_adjustments? }
+
+    context "when the statement is open" do
+      let(:statement) { build(:statement, :open) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the statement is payable" do
+      let(:statement) { build(:statement, :payable) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the statement is paid" do
+      let(:statement) { build(:statement, :paid) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the statement is marked as paid" do
+      let(:statement) { build(:statement, :paid, marked_as_paid_at: Time.zone.now) }
+
+      it { is_expected.to be false }
+    end
+  end
 end
