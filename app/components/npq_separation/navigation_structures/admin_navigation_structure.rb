@@ -102,7 +102,7 @@ module NpqSeparation
           Node.new(
             name: "Registration closed",
             href: npq_separation_admin_registration_closed_index_path,
-            prefix: "",
+            prefix: "/npq-separation/admin/registration-closed",
           ) => [],
         }
       end
