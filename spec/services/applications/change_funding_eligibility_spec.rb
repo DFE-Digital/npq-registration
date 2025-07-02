@@ -88,7 +88,7 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
     end
 
     context "with valid update from true to false" do
-      let(:application) { create(:application, :pending, :eligible_for_funding) }
+      let(:application) { create(:application, :pending, :eligible_for_funding, funded_place: false) }
 
       before { service.eligible_for_funding = false }
 

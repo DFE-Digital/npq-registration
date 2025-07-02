@@ -48,7 +48,7 @@ lead_providers.each do |lead_provider|
           end
 
           # create some voided declarations
-          if schedule.allowed_declaration_types.count < 4 && declaration_type == "retained-1"
+          if schedule.allowed_declaration_types.count < 4 && declaration_type == "retained-1" && declaration.statements.any?
             voidable_statement = declaration.statements.first
             helpers.travel_to voidable_statement.deadline_date + 1.month do
               Declarations::Void.new(declaration:).void

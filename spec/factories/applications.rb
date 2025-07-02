@@ -18,6 +18,7 @@ FactoryBot.define do
     funding_choice { Application.funding_choices.keys.first }
     lead_mentor { false }
     ukprn { rand(10_000_000..99_999_999).to_s }
+    funded_place { cohort&.funding_cap ? !!eligible_for_funding : nil }
 
     trait :with_school do
       school
@@ -59,7 +60,7 @@ FactoryBot.define do
     trait :accepted do
       lead_provider_approval_status { :accepted }
       schedule { Schedule.find_by(cohort:, course_group: course.course_group) || create(:schedule, course_group: course.course_group, cohort:) }
-      funded_place { !!eligible_for_funding }
+      funded_place { cohort.funding_cap ? !!eligible_for_funding : nil }
       accepted_at { Time.zone.now }
       training_status { :active }
     end
@@ -79,17 +80,24 @@ FactoryBot.define do
     trait :eligible_for_funded_place do
       accepted
       eligible_for_funding
+      funded_place { cohort.funding_cap ? true : nil }
+    end
 
-      after(:create) do |application|
-        application.cohort.update!(funding_cap: true)
-      end
+    trait :with_funded_place do
+      eligible_for_funding
+      funded_place { true }
+    end
+
+    trait :without_funded_place do
+      eligible_for_funding { false }
+      funded_place { false }
     end
 
     trait :previously_funded do
       after(:create) do |application|
         course = application.course.rebranded_alternative_courses.first
 
-        create(:application, :accepted, :eligible_for_funding, user: application.user, course:)
+        create(:application, :accepted, :eligible_for_funding, user: application.user, course:, cohort: application.cohort)
       end
     end
 
@@ -105,11 +113,6 @@ FactoryBot.define do
       user { build(:user, :with_random_name) }
     end
 
-    # DO NOT USE: Only for seeds, do not use in specs - it will lead to flaky specs
-    trait :with_random_eligible_for_funding_seeds_only do
-      eligible_for_funding { Faker::Boolean.boolean }
-    end
-
     trait :with_participant_id_change do
       after(:create) do |application|
         user = application.user
@@ -119,7 +122,7 @@ FactoryBot.define do
     end
 
     trait :withdrawn do
-      lead_provider_approval_status { :accepted }
+      accepted
 
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:withdrawn])
@@ -132,7 +135,7 @@ FactoryBot.define do
     end
 
     trait :deferred do
-      lead_provider_approval_status { :accepted }
+      accepted
 
       after(:create) do |application|
         application.update!(training_status: ApplicationState.states[:deferred])

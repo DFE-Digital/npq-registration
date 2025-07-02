@@ -20,7 +20,6 @@ module Participants
       return false if invalid?
 
       ActiveRecord::Base.transaction do
-        update_funded_place!
         update_application!
         participant.reload
       end
@@ -49,14 +48,11 @@ module Participants
         params[:cohort] = cohort
       end
 
+      if !application.cohort.funding_cap? && cohort.funding_cap?
+        params[:funded_place] = application.eligible_for_funding
+      end
+
       application.update!(params)
-    end
-
-    def update_funded_place!
-      return if application&.cohort&.funding_cap? && cohort.funding_cap?
-      return unless cohort.funding_cap?
-
-      application.update!(funded_place: application.eligible_for_funding)
     end
 
     def validate_new_schedule_found

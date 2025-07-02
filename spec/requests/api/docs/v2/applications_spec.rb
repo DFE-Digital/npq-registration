@@ -84,7 +84,7 @@ RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spe
                     "The NPQ application after changing the funded place",
                     "#/components/schemas/ApplicationResponse",
                     "#/components/schemas/ApplicationChangeFundedPlaceRequest" do
-      let(:application) { create(:application, :eligible_for_funded_place, lead_provider:) }
+      let(:application) { create(:application, :eligible_for_funded_place, lead_provider:, cohort:) }
       let(:resource) { application }
       let(:type) { "npq-application-change-funded-place" }
       let(:attributes) { { funded_place: true } }

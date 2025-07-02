@@ -11,10 +11,10 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
     let(:applications) do
       create_list(:application, 2,
                   :accepted,
+                  :without_funded_place,
                   :with_private_childcare_provider,
                   employer_name: "Employer Name",
-                  employment_role: "Employment Role",
-                  funded_place: true)
+                  employment_role: "Employment Role")
     end
     let(:rows) { CSV.parse(csv, headers: true) }
     let(:first_application) { applications.first }
@@ -108,6 +108,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
           school: nil,
           schedule: nil,
           cohort: nil,
+          funded_place: nil,
         )
       end
 
