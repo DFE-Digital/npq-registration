@@ -58,7 +58,7 @@ RSpec.feature "Service is closed", type: :feature do
       fill_in("Email address", with: email)
       click_on("Add user")
 
-      expect(page).to have_content("Added ")
+      expect(page).to have_content("Added #{email}")
 
       click_link("Sign out")
 
