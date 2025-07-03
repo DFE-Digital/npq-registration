@@ -14,7 +14,7 @@ class NpqSeparation::Admin::RegistrationClosed::ClosedRegistrationUsersControlle
       flash[:success] = "Added #{@user.email}"
       redirect_to npq_separation_admin_registration_closed_closed_registration_users_path
     else
-      flash[:error] = "Can not add #{@user.email}"
+      flash[:error] = "Cannot add #{@user.email}"
       render :index
     end
   end
