@@ -91,7 +91,7 @@ RSpec.feature "Service is closed", type: :feature do
       fill_in("Email", with: email)
       click_on("Add user")
 
-      expect(page).to have_content("Added ")
+      expect(page).to have_content("Added #{email}")
 
       visit "/closed_registration_exception"
 
@@ -105,7 +105,7 @@ RSpec.feature "Service is closed", type: :feature do
 
       click_link("Remove access")
       click_link("Remove access")
-      expect(page).to have_content("Access removed for ")
+      expect(page).to have_content("Access removed for #{email}")
 
       visit "/closed_registration_exception"
 
@@ -128,12 +128,12 @@ RSpec.feature "Service is closed", type: :feature do
       fill_in("Email", with: other_email)
       click_on("Add user")
 
-      expect(page).to have_content("Added ")
+      expect(page).to have_content("Added #{other_email}")
 
       click_link("Remove access")
       click_link("Remove access")
 
-      expect(page).to have_content("Access removed for ")
+      expect(page).to have_content("Access removed for #{other_email}")
 
       visit "/closed_registration_exception"
 
