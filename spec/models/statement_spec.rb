@@ -151,15 +151,15 @@ RSpec.describe Statement, type: :model do
     end
   end
 
-  describe "#marked_as_paid?" do
+  describe "#has_marked_as_paid_at_date?" do
     context "with a statement marked as paid" do
       subject { create(:statement, :paid) }
 
-      it { is_expected.to be_marked_as_paid }
+      it { is_expected.to have_marked_as_paid_at_date }
     end
 
     context "with a statement not marked as paid" do
-      it { is_expected.not_to be_marked_as_paid }
+      it { is_expected.not_to have_marked_as_paid_at_date }
     end
   end
 
@@ -236,34 +236,6 @@ RSpec.describe Statement, type: :model do
 
     context "with open statement with marked_as_paid_at_set" do
       let(:statement) { build(:statement, :open, marked_as_paid_at: Time.zone.now) }
-
-      it { is_expected.to be false }
-    end
-  end
-
-  describe "#allow_adjustments?" do
-    subject { statement.allow_adjustments? }
-
-    context "when the statement is open" do
-      let(:statement) { build(:statement, :open) }
-
-      it { is_expected.to be true }
-    end
-
-    context "when the statement is payable" do
-      let(:statement) { build(:statement, :payable) }
-
-      it { is_expected.to be true }
-    end
-
-    context "when the statement is paid" do
-      let(:statement) { build(:statement, :paid) }
-
-      it { is_expected.to be true }
-    end
-
-    context "when the statement is marked as paid" do
-      let(:statement) { build(:statement, :paid, marked_as_paid_at: Time.zone.now) }
 
       it { is_expected.to be false }
     end

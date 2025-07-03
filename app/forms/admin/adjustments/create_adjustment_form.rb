@@ -12,7 +12,7 @@ module Admin::Adjustments
     attribute :adjustment
 
     validate :adjustment_valid
-    validate :statement_open
+    validate :adjustment_allowed
 
     def initialize(*)
       super
@@ -47,10 +47,10 @@ module Admin::Adjustments
       errors.merge!(adjustment.errors) unless adjustment.valid?
     end
 
-    def statement_open
-      return if statement.open?
+    def adjustment_allowed
+      return unless statement.paid?
 
-      errors.add(:statement, :not_open)
+      errors.add(:statement, :adjustments_not_allowed)
     end
   end
 end

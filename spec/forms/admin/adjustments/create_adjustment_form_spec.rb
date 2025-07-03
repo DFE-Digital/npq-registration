@@ -13,7 +13,7 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
   describe "#save_adjustment" do
     subject(:save_adjustment) { form.save_adjustment }
 
-    context "when the adjustment is valid" do
+    shared_examples "saving an adjustment" do
       it "saves the adjustment" do
         expect { save_adjustment }.to change(statement.adjustments, :count).by(1)
       end
@@ -27,6 +27,22 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
 
       it "the form should be valid" do
         expect(form).to be_valid
+      end
+    end
+
+    shared_examples "not saving an adjustment" do
+      it { is_expected.to be false }
+
+      it "the form should not be valid" do
+        expect(form).not_to be_valid
+      end
+
+      it "sets the errors from the adjustment" do
+        form.valid?
+
+        expect(form.errors.messages).to include(
+          statement: ["Adjustments can no longer be made to this statement, as it is marked as paid"],
+        )
       end
     end
 
@@ -54,48 +70,26 @@ RSpec.describe Admin::Adjustments::CreateAdjustmentForm, type: :model do
       end
     end
 
+    context "when the statement is open" do
+      it_behaves_like "saving an adjustment"
+    end
+
     context "when the statement is payable" do
       let(:statement) { create(:statement, :payable) }
 
-      it "does not save the adjustment" do
-        expect { save_adjustment }.not_to change(statement.adjustments, :count)
-      end
-
-      it { is_expected.to be false }
-
-      it "the form should not be valid" do
-        expect(form).not_to be_valid
-      end
-
-      it "sets the errors from the adjustment" do
-        form.valid?
-
-        expect(form.errors.messages).to include(
-          statement: ["The statement has to be open for adjustments to be made"],
-        )
-      end
+      it_behaves_like "saving an adjustment"
     end
 
-    context "when the statement is paid" do
-      let(:statement) { create(:statement, :paid) }
+    context "when the statement is paid, but does not have marked_as_paid_at set" do
+      let(:statement) { create(:statement, :paid, marked_as_paid_at: nil) }
 
-      it "does not save the adjustment" do
-        expect { save_adjustment }.not_to change(statement.adjustments, :count)
-      end
+      it_behaves_like "not saving an adjustment"
+    end
 
-      it { is_expected.to be false }
+    context "when the statement is marked as paid" do
+      let(:statement) { create(:statement, :paid, marked_as_paid_at: Time.zone.now) }
 
-      it "the form should not be valid" do
-        expect(form).not_to be_valid
-      end
-
-      it "sets the errors from the adjustment" do
-        form.valid?
-
-        expect(form.errors.messages).to include(
-          statement: ["The statement has to be open for adjustments to be made"],
-        )
-      end
+      it_behaves_like "not saving an adjustment"
     end
   end
 end

@@ -39,7 +39,7 @@ class Statement < ApplicationRecord
     update!(marked_as_paid_at: Time.zone.now)
   end
 
-  def marked_as_paid?
+  def has_marked_as_paid_at_date?
     marked_as_paid_at.present? && paid?
   end
 
@@ -57,9 +57,5 @@ class Statement < ApplicationRecord
 
   def show_targeted_delivery_funding?
     cohort.start_year >= 2022
-  end
-
-  def allow_adjustments?
-    open?
   end
 end
