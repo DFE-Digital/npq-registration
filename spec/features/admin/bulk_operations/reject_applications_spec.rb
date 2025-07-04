@@ -24,7 +24,7 @@ RSpec.feature "reject applications", :rack_test_driver, type: :feature do
 
     scenario "reject applications" do
       visit npq_separation_admin_path
-      click_link "Bulk operations"
+      click_link "Bulk changes"
       click_link "Reject applications"
 
       expect(page).to have_content "No files have been uploaded"

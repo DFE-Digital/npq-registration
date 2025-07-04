@@ -293,9 +293,9 @@ Rails.application.routes.draw do
       end
       resources :admins, only: %i[index]
 
-      resources :bulk_operations, only: %i[index], path: "bulk-operations"
+      resources :bulk_operations, only: %i[index], path: "bulk-changes"
 
-      namespace :bulk_operations, path: "bulk-operations" do
+      namespace :bulk_operations, path: "bulk-changes" do
         resources :revert_applications_to_pending, controller: "revert_applications_to_pending", only: %i[index create show] do
           post "run", on: :member
         end

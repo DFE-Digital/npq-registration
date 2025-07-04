@@ -17,7 +17,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Finance" => "/npq-separation/admin/finance/statements",
       "Workplaces" => "/npq-separation/admin/schools",
       "Course providers" => "/npq-separation/admin/lead-providers",
-      "Bulk operations" => "/npq-separation/admin/bulk-operations",
+      "Bulk changes" => "/npq-separation/admin/bulk-changes",
       "Delivery partners" => "/npq-separation/admin/delivery-partners",
       "Settings" => "/npq-separation/admin/settings/webhook-messages",
     }.each_with_index do |(name, href), i|

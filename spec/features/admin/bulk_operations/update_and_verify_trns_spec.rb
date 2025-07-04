@@ -59,7 +59,7 @@ RSpec.feature "update and verify TRNs", :rack_test_driver, type: :feature do
 
     scenario "updating and verifying TRNs" do
       visit npq_separation_admin_path
-      click_link "Bulk operations"
+      click_link "Bulk changes"
       click_link "Update and verify TRNs"
 
       expect(page).to have_content "No files have been uploaded"
