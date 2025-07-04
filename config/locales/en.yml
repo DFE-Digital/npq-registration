@@ -306,7 +306,7 @@ en:
         admin/adjustments/create_adjustment_form: &create_adjustment_form
           attributes:
             statement:
-              not_open: The statement has to be open for adjustments to be made
+              adjustments_not_allowed: Adjustments can no longer be made to this statement, as it is marked as paid
         admin/adjustments/update_adjustment_form:
           <<: *create_adjustment_form
         admin/adjustments/destroy_adjustment_form:

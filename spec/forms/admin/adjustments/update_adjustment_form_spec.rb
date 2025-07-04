@@ -19,7 +19,7 @@ RSpec.describe Admin::Adjustments::UpdateAdjustmentForm, type: :model do
   describe "#save_adjustment" do
     subject(:save_adjustment) { form.save_adjustment }
 
-    context "when the adjustment is valid" do
+    shared_examples "updating an adjustment" do
       it "updates the adjustment description" do
         expect { save_adjustment }.to change { adjustment.reload.description }.from("old description").to("new description")
       end
@@ -57,29 +57,14 @@ RSpec.describe Admin::Adjustments::UpdateAdjustmentForm, type: :model do
       end
     end
 
+    context "when the statement is open" do
+      it_behaves_like "updating an adjustment"
+    end
+
     context "when the statement is payable" do
       let(:statement) { create(:statement, :payable) }
 
-      it { is_expected.to be false }
-
-      it "the form should not be valid" do
-        save_adjustment
-        expect(form).not_to be_valid
-      end
-
-      it "does not update the adjustment" do
-        expect { save_adjustment }.to not_change { adjustment.reload.description }
-          .and not_change(adjustment, :amount)
-      end
-
-      it "sets the errors from the adjustment" do
-        save_adjustment
-        form.valid?
-
-        expect(form.errors.messages).to include(
-          statement: ["The statement has to be open for adjustments to be made"],
-        )
-      end
+      it_behaves_like "updating an adjustment"
     end
 
     context "when the statement is paid" do
@@ -97,7 +82,7 @@ RSpec.describe Admin::Adjustments::UpdateAdjustmentForm, type: :model do
         form.valid?
 
         expect(form.errors.messages).to include(
-          statement: ["The statement has to be open for adjustments to be made"],
+          statement: ["Adjustments can no longer be made to this statement, as it is marked as paid"],
         )
       end
     end

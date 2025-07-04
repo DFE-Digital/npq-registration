@@ -8,7 +8,7 @@ module Admin::Adjustments
     attribute :statement
     attribute :adjustment
 
-    validate :statement_open
+    validate :adjustments_allowed
 
     delegate :id, :description, :amount, to: :adjustment
 
@@ -26,10 +26,10 @@ module Admin::Adjustments
 
   private
 
-    def statement_open
-      return if statement.open?
+    def adjustments_allowed
+      return unless statement.paid?
 
-      errors.add(:statement, :not_open)
+      errors.add(:statement, :adjustments_not_allowed)
     end
   end
 end

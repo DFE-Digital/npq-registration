@@ -11,7 +11,7 @@ module Admin::Adjustments
     attribute :adjustment
 
     validate :adjustment_valid
-    validate :statement_open
+    validate :adjustments_allowed
 
     delegate :id, to: :adjustment
 
@@ -34,10 +34,10 @@ module Admin::Adjustments
       errors.merge!(adjustment.errors) unless adjustment.valid?
     end
 
-    def statement_open
-      return if statement.open?
+    def adjustments_allowed
+      return unless statement.paid?
 
-      errors.add(:statement, :not_open)
+      errors.add(:statement, :adjustments_not_allowed)
     end
   end
 end

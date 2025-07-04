@@ -12,6 +12,12 @@ Cohort.all.find_each do |cohort|
       Statements::MarkAsPayable.new(statement:).mark
       Statements::MarkAsPaid.new(statement).mark
     end
+    # Set mark_as_paid_at for paid statements from 2023, to match production
+    Statement.where(state: "paid", year: 2023..).find_each do |statement|
+      helpers.travel_to statement.payment_date - 8.days do
+        statement.mark_as_paid_at!
+      end
+    end
 
     # Void some declarations on the previous paid output fee statement to create clawbacks on the latest statement
     helpers.travel_to latest_statement.deadline_date - 1.day do
