@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_21_091744) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -306,18 +306,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_21_091744) do
     t.index ["delivery_partner_id", "lead_provider_id", "cohort_id"], name: "idx_on_delivery_partner_id_lead_provider_id_cohort__10d5da32cd", unique: true
     t.index ["delivery_partner_id"], name: "index_delivery_partnerships_on_delivery_partner_id"
     t.index ["lead_provider_id"], name: "index_delivery_partnerships_on_lead_provider_id"
-  end
-
-  create_table "ecf_sync_request_logs", force: :cascade do |t|
-    t.integer "syncable_id", null: false
-    t.string "syncable_type", null: false
-    t.string "status", null: false
-    t.string "sync_type", null: false
-    t.jsonb "error_messages", default: []
-    t.jsonb "response_body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["syncable_id", "syncable_type"], name: "index_ecf_sync_request_logs_on_syncable_id_and_syncable_type"
   end
 
   create_table "financial_change_logs", force: :cascade do |t|
