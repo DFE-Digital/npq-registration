@@ -62,10 +62,6 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       expect(subject.raw_tra_provider_data).to eq JSON.parse(provider_data.to_json)
     end
 
-    it "sets updated_from_tra_at" do
-      expect(subject.updated_from_tra_at).to be_present
-    end
-
     context "when there is a preferred name" do
       it "sets full_name to the preferred name" do
         expect(subject.full_name).to eq provider_data_preferred_name
@@ -156,6 +152,10 @@ RSpec.describe Users::FindOrCreateFromProviderData do
       expect(subject.email).to eq provider_data_email
     end
 
+    it "sets updated_from_tra_at" do
+      expect(subject.updated_from_tra_at).to be_present
+    end
+
     it_behaves_like "a saved valid user with provider data assigned"
     it_behaves_like "not changing TRN attributes on existing user when there is no TRN in the provider data"
 
@@ -165,6 +165,10 @@ RSpec.describe Users::FindOrCreateFromProviderData do
 
       it "archives the clashing user" do
         expect { subject }.to change { clashing_user.reload.archived? }.from(false).to(true)
+      end
+
+      it "sets updated_from_tra_at" do
+        expect(subject.updated_from_tra_at).to be_present
       end
 
       it_behaves_like "a saved valid user with provider data assigned"
@@ -217,6 +221,10 @@ RSpec.describe Users::FindOrCreateFromProviderData do
         expect(subject.uid).to eq provider_data_uid
         expect(subject.provider).to eq "tra_openid_connect"
         expect(subject.email).to eq provider_data_email
+      end
+
+      it "sets updated_from_tra_at" do
+        expect(subject.updated_from_tra_at).to be_present
       end
 
       it_behaves_like "a saved valid user with provider data assigned"

@@ -50,7 +50,6 @@ module Users
       extra_info = provider_data.extra&.raw_info
 
       user.raw_tra_provider_data = provider_data
-      user.updated_from_tra_at = Time.zone.now
       user.full_name = extra_info&.preferred_name.presence || provider_data.info.name
 
       if extra_info&.birthdate.present?
@@ -63,6 +62,8 @@ module Users
         user.trn_verified = true
         user.trn_lookup_status = extra_info.trn_lookup_status
       end
+
+      user.set_updated_from_tra_at
     end
   end
 end
