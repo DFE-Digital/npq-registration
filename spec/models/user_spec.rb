@@ -29,6 +29,22 @@ RSpec.describe User do
         expect(version.object_changes["full_name"]).to eq(["Joe", "Changed Name"])
       end
     end
+
+    context "when user logs in" do
+      it "does not create a new version of attributes changed during login" do
+        with_versioning do
+          expect(PaperTrail).to be_enabled
+
+          expect {
+            subject.update!(
+              updated_at: 1.second.from_now,
+              updated_from_tra_at: 1.second.from_now,
+              feature_flag_id: SecureRandom.uuid,
+            )
+          }.not_to(change { subject.reload.versions.count })
+        end
+      end
+    end
   end
 
   describe "validations" do
