@@ -157,9 +157,10 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
 
       context "when moving from funding cohort to funding cohort" do
+        let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+        let(:new_cohort) { create(:cohort, :next, :with_funding_cap) }
+
         before do
-          cohort.update!(funding_cap: true)
-          new_cohort.update!(funding_cap: true)
           application.update!(funded_place: false, eligible_for_funding: true)
         end
 
@@ -171,8 +172,8 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
 
       context "when moving from non funding cohort to funding cohort" do
-        let(:cohort) { create(:cohort, :current, funding_cap: false) }
-        let(:new_cohort) { create(:cohort, :next, funding_cap: true) }
+        let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+        let(:new_cohort) { create(:cohort, :next, :with_funding_cap) }
         let!(:application) do
           create(
             :application,
@@ -208,10 +209,8 @@ RSpec.describe Participants::ChangeSchedule, type: :model do
       end
 
       context "when moving from funding cohort to non funding cohort" do
-        before do
-          cohort.update!(funding_cap: true)
-          new_cohort.update!(funding_cap: false)
-        end
+        let(:cohort) { create(:cohort, :current, :with_funding_cap) }
+        let(:new_cohort) { create(:cohort, :next, :without_funding_cap) }
 
         it "does not change the application to the new cohort" do
           expect(subject.change_schedule).to be_falsey

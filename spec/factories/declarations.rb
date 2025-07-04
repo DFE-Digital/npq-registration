@@ -9,7 +9,7 @@ FactoryBot.define do
 
     application { association :application, :accepted, user:, course: }
     lead_provider { application&.lead_provider || build(:lead_provider) }
-    cohort { application&.cohort || build(:cohort, :current) }
+    cohort { application&.cohort || build(:cohort, :current, :without_funding_cap) }
     declaration_type { "started" }
     declaration_date { Date.current }
     state { "submitted" }
