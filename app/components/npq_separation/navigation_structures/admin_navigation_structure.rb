@@ -91,9 +91,9 @@ module NpqSeparation
             prefix: "/npq-separation/admin/lead-providers",
           ) => [],
           Node.new(
-            name: "Bulk operations",
+            name: "Bulk changes",
             href: npq_separation_admin_bulk_operations_path,
-            prefix: "/npq-separation/admin/bulk-operations",
+            prefix: "/npq-separation/admin/bulk-changes",
           ) => [],
           Node.new(
             name: "Delivery partners",
