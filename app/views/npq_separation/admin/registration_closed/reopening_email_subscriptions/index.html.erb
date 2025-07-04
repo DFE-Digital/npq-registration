@@ -1,10 +1,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
 
-    <h1 class="govuk-heading-l">Users who've requested emails about registration reopening (<%= @all_users.count %>)</h1>
+    <h1 class="govuk-heading-l">Users who’ve requested emails about registration reopening (<%= @all_users.count %>)</h1>
 
-    <%= govuk_button_link_to("Export all with SENCO interest", npq_separation_admin_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
-    <%= govuk_button_link_to("Export all", npq_separation_admin_reopening_email_subscriptions_path(format: :csv)) %>
+    <%= govuk_button_link_to("Export all with SENCO interest", npq_separation_admin_registration_closed_reopening_email_subscriptions_path(senco_only: true, format: :csv), secondary: true) %>
+    <%= govuk_button_link_to("Export all", npq_separation_admin_registration_closed_reopening_email_subscriptions_path(format: :csv)) %>
 
     <table class="govuk-table">
       <thead class="govuk-table__head">
@@ -27,7 +27,7 @@
             <%= user.created_at.to_date.to_fs(:govuk_short) %>
           </td>
           <td class="govuk-table__cell">
-            <%= govuk_link_to "Unsubscribe", unsubscribe_npq_separation_admin_reopening_email_subscription_path(user.id) %>
+            <%= govuk_link_to "Unsubscribe", unsubscribe_npq_separation_admin_registration_closed_reopening_email_subscription_path(user.id) %>
           </td>
         </tr>
       <% end %>

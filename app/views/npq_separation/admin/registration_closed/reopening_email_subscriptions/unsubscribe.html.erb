@@ -1,0 +1,9 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">Do you want to unsubscribe <%= @user.email %>?</h1>
+    <div class="govuk-button-group">
+      <%= govuk_button_link_to("Unsubscribe", unsubscribe_npq_separation_admin_registration_closed_reopening_email_subscription_path(@user), method: :post) %>
+      <%= govuk_button_link_to("Back", npq_separation_admin_registration_closed_reopening_email_subscriptions_path, secondary: :true) %>
+    </div>
+  </div>
+</div>

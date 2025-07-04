@@ -54,11 +54,11 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed-registration-users"
       fill_in("Email address", with: email)
       click_on("Add user")
 
-      expect(page).to have_content("New closed registration user added")
+      expect(page).to have_content("Added #{email}")
 
       click_link("Sign out")
 
@@ -87,11 +87,11 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed-registration-users"
       fill_in("Email", with: email)
       click_on("Add user")
 
-      expect(page).to have_content("New closed registration user added")
+      expect(page).to have_content("Added #{email}")
 
       visit "/closed_registration_exception"
 
@@ -101,11 +101,11 @@ RSpec.feature "Service is closed", type: :feature do
         expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.course_start_date_one"))
       end
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed-registration-users"
 
       click_link("Remove access")
       click_link("Remove access")
-      expect(page).to have_content("Closed registration user was deleted")
+      expect(page).to have_content("Access removed for #{email}")
 
       visit "/closed_registration_exception"
 
@@ -124,16 +124,16 @@ RSpec.feature "Service is closed", type: :feature do
 
       sign_in_as(super_admin)
 
-      visit "/npq-separation/admin/closed_registration_users"
+      visit "/npq-separation/admin/registration-closed/closed-registration-users"
       fill_in("Email", with: other_email)
       click_on("Add user")
 
-      expect(page).to have_content("New closed registration user added")
+      expect(page).to have_content("Added #{other_email}")
 
       click_link("Remove access")
       click_link("Remove access")
 
-      expect(page).to have_content("Closed registration user was deleted")
+      expect(page).to have_content("Access removed for #{other_email}")
 
       visit "/closed_registration_exception"
 

@@ -1,16 +1,16 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
-    <h1 class="govuk-heading-l">Closed registration users</h1>
+    <h1 class="govuk-heading-l">Users who can access the service when it’s closed</h1>
     <div class="admin-search-box">
-      <h2 class="govuk-heading-l">Add closed registration user</h2>
-      <%= form_for [:npq_separation, :admin, @user] do |f| %>
+      <h2 class="govuk-heading-m">Add a user</h2>
+      <%= form_for [:npq_separation, :admin, :registration_closed, @user] do |f| %>
         <%= f.govuk_error_summary %>
         <%= f.govuk_text_field :email, label: { text: "Email address" }, legend: { text: 'Provide course start date' } %>
         <%= f.govuk_submit "Add user" %>
       <% end %>
     </div>
 
-    <h2 class="govuk-heading-l">Users with access to closed registration service</h2>
+    <h2 class="govuk-heading-m">Users with access</h2>
 
     <table class="govuk-table">
       <thead class="govuk-table__head">
@@ -42,7 +42,7 @@
             <% end %>
           </td>
           <td class="govuk-table__cell">
-            <%= govuk_link_to "Remove access", npq_separation_admin_closed_registration_user_path(user) %>
+            <%= govuk_link_to "Remove access", npq_separation_admin_registration_closed_closed_registration_user_path(user) %>
           </td>
         </tr>
       <% end %>
