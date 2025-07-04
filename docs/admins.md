@@ -1,32 +1,31 @@
 [< Back to Navigation](../README.md)
 
-# Admins and Superadmins
+# Admins and Super Admins
 
-1. [Admins](#admins)
-1. [Super Admins](#super-admins)
+The admin console can be accessed by navigating to `/admin` and logging in.
 
-The NPQ app supports two types of admin users: `admin` and `superadmin`. Admins can perform most actions in the app, but superadmins have additional permissions, such as being able to create and edit other admin users along with managing feature flags.
+`Admin` is a totally separate model to `User` and does not use DfE Identity sign-in. Unlike `User`s, `Admin`s are authenticated locally by our app.
 
-The admin console can be accessed by navigating to `/admin` and logging in. The panel itself can be found by cliking "Admin" once logged in.
+There are two types of admin users:
+- Admins can perform most actions in the admin console
+- Super Admins have additional permissions, such as being able to manage other admins and feature flags
 
-## Admins 
+The "Admins" screen itself can be found in the top navigation once logged in.
 
-Admins have the ability to access the admin panel and view/manage information regarding users and applications. They are able to retrigger syncs between NPQ and ECF for data that has failed to sync.
+> n.b. the Admins screen is not visible or accessible to regular Admins.
 
-Admin permissions are controlled by the `admin` boolean flag on the `users` table.
+## Creating and removing admins
 
-### Removing an admin
+Super Admins can create and remove Admin logins using the "Admins" section of the admin console.
 
-Super admins can remove admin status from any other user by visiting `/admin/admins`, finding the user in the interface and clicking "Remove as admin".
+## Creating and removing Super Admins
 
-## Super Admins
+An existing Admin can be elevated to a Super Admin using the "Make Super Admin" link in the "Admins" section of the admin console.
 
-Superadmins have the same permissions as admins, but also have the ability to manage other admin users and feature flags.
+This can also be done by a developer updating the `Admin#super_admin` boolean to `true` in a Rails console.
 
-They can elevate existing admins to super admin status.
+## Removing a Super Admin
 
-Super admin permissions are controlled by the `super_admin` boolean flag on the `users` table. Both it and admin must be set to true.
+Super Admins can be deleted (but not demoted) from the admin console.
 
-### Removing a superadmin
-
-Super admins cannot have their permissions removed from the interface, the only way to do this is to remove the `super_admin` flag from the user in the database.
+The only way to demote a Super Admin to a regular Admin is for a developer to update the `Admin#super_admin` boolean to `false` using a Rails console.
