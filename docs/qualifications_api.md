@@ -4,11 +4,11 @@
 
 ## Overview
 
-The Teaching Regulation Agency (TRA) is decommissioning the Database of Qualified Teachers (DQT) which currently holds NPQ qualifications data.
-The replacement, the Teacher Record Service (TRS), will not include NPQ qualification data.
+The Teaching Regulation Agency (TRA) has decommissioned the Database of Qualified Teachers (DQT) that held NPQ qualifications data. The replacement Teacher Record Service (TRS) will not include NPQ qualification data.
 
-NPQ Registration has an API that replaces this - the Qualifications API.
-This will return NPQ qualifications for a given user, based upon their Teacher Reference Number (TRN).
+NPQ Registration has an API that replaces this: the Qualifications API.
+
+This returns NPQ qualifications for a given user, based upon their Teacher Reference Number (TRN).
 It returns both qualifications that are currently held in NPQ registration and those that were previously stored in DQT.
 
 ## API usage
@@ -32,7 +32,7 @@ Example response:
  }
 }
 ```
-note: there can be multiple passed qualifications for the same npq_type (in the above example, NPQSL has been passed twice).
+> note: there can be multiple passed qualifications for the same npq_type (in the above example, NPQSL has been passed twice).
 
 If no qualifications are found for the TRN, the response will be:
 

@@ -22,7 +22,7 @@ The latest files (as of February 2025) are December 2024 data, which was release
 
 Download from the above link the CSV files named:
 - `Management information - childcare providers and inspections - most recent inspections data as at 31 December 2024`
-- rename this file to childcare_providers.csv
+- rename this file to `childcare_providers.csv`
 - `Management information - childcare providers and inspections - registered childminder agencies as at 31 December 2024`
 - reame this file to childminder_agencies.csv
 - delete the non-header rows from the files - the first line should be the CSV header

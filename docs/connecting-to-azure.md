@@ -28,18 +28,23 @@ but you may need to re-authenticate every once in a while.
    az login
    ```
 
-   You'll be asked to select development, test (used for review apps) or production.
+   You'll be asked to select development, test or production. See
+   [environments](environments.md) to look up which you need.
 
-3. Install kubectl:
+   Accessing production requires a
+   [PIM (Privileged Identity Management) request](#privileged-identity-management-requests).
+
+3. If you're not using Docker Compose, install kubectl:
 
    ```shell
    brew install Azure/kubelogin/kubelogin
    ```
 
-> Accessing production deployments requires a
-> [PIM (Privileged Identity Management) request](#privileged-identity-management-requests).
+## 2. Run commands on cloud resources
 
 ### Run a Rake task
+
+> If you're using Docker Compose, prefix these make commands with `docker compose run --rm ops`
 
 To get shell access on a review app for a given PR_NUMBER, run the following:
 
@@ -90,7 +95,7 @@ make review aks-download-tmp-file PULL_REQUEST_NUMBER=[PR_NUMBER] FILENAME=somef
 
 The file ends up locally in a subdirectory matching the pod name.
 
-### Privileged Identity Management requests
+## Privileged Identity Management requests
 
 Accessing resources in the production environment requires elevated privileges.
 We do this through Microsoft Entra Privileged Identity Management (PIM) request system.
@@ -103,13 +108,8 @@ To make a PIM request:
 3. Give a reason for your request and submit.
 4. The request must now be approved by another team member
 
-You can view all pending requests
+You can view and approve all pending requests
 [here](https://portal.azure.com/#view/Microsoft_Azure_PIMCommon/ApproveRequestMenuBlade/~/aadgroup).
-
-
-### Environments
-
-There are other environments apart from review apps and production, documented in [Environments](environments.md).
 
 ## Useful links
 
