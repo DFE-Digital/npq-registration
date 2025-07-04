@@ -691,13 +691,6 @@ en:
       pural_title: "Your NPQ registrations"
 
   admin:
-    application_submissions:
-      ecf_sync_request_log:
-        sync_type:
-          user_creation: "User Creation"
-          application_creation: "Application Creation"
-        success: "Success"
-        failed: "Failed"
     layout:
       title: "Admin"
       dashboard: "Dashboard"
@@ -718,13 +711,6 @@ en:
         sync_log: "ECF Sync Log"
         tabs: "Tabs"
         applications: "Applications"
-    ecf_sync_request_log:
-      failed: "Failed"
-      success: "Success"
-      sync_type:
-        user_lookup: "User Lookup"
-        user_creation: "User Creation"
-        application_creation: "Application Creation"
     webhook_messages:
       show:
         title: "Webhook Message"
