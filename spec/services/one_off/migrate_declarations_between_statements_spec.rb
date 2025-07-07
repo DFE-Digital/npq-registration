@@ -162,8 +162,8 @@ RSpec.describe OneOff::MigrateDeclarationsBetweenStatements, type: :model do
       context "when to_statement_updates are provided" do
         let!(:old_deadline_date) { to_statement.deadline_date }
         let!(:old_payment_date) { to_statement.payment_date }
-        let(:new_deadline_date) { 5.days.from_now.to_date }
-        let(:new_payment_date) { 2.days.from_now.to_date }
+        let(:new_deadline_date) { 2.days.from_now.to_date }
+        let(:new_payment_date) { 5.days.from_now.to_date }
         let(:to_statement_updates) { { deadline_date: new_deadline_date, payment_date: new_payment_date } }
 
         it "updates the to statements" do

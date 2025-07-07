@@ -31,6 +31,33 @@ RSpec.describe Statement, type: :model do
         end
       end
     end
+
+    describe "payment date validation" do
+      context "when the payment date is before the deadline date" do
+        let(:statement) { build(:statement, payment_date: 1.day.ago, deadline_date: Time.zone.today) }
+
+        it "returns an error" do
+          expect(statement).to be_invalid
+          expect(statement).to have_error(:payment_date, :invalid, "must be on or after the deadline date")
+        end
+      end
+
+      context "when there is no payment date" do
+        let(:statement) { build(:statement, payment_date: nil, deadline_date: Time.zone.today) }
+
+        it "is valid" do
+          expect(statement).to be_valid
+        end
+      end
+
+      context "when there is no deadline date" do
+        let(:statement) { build(:statement, payment_date: Time.zone.today, deadline_date: nil) }
+
+        it "is valid" do
+          expect(statement).to be_valid
+        end
+      end
+    end
   end
 
   describe "scopes" do

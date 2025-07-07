@@ -1,0 +1,32 @@
+<%= govuk_back_link href: npq_separation_admin_finance_statement_path(@statement) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @service,
+                 url: npq_separation_admin_finance_statements_change_payment_date_path(@statement) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_date_field :payment_date,
+        legend: { text: "Change output payment date", tag: "h1", size: "l" },
+        hint: { text: 'For example, 27 3 2023' } do %>
+          <div class="govuk-inset-text">
+            <p class="govuk-body">
+              <strong>Output payment date</strong>
+              <br/>
+              <%= @statement.payment_date.to_fs(:govuk_short) %>
+            </p>
+            <p class="govuk-body">
+              <strong>Output payment deadline</strong>
+              <br/>
+              <%= @statement.deadline_date.to_fs(:govuk_short) %>
+            </p>
+          </div>
+        <% end %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Change date" %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_finance_statement_path(@statement) %>
+      </div>
+    <% end %>
+  </div>
+</div>

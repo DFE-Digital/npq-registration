@@ -15,6 +15,8 @@ class Statement < ApplicationRecord
   validates :lead_provider_id, uniqueness: { scope: %i[cohort_id year month] }
   validates :ecf_id, uniqueness: { case_sensitive: false }
 
+  validate :payment_date_on_or_after_deadline_date
+
   scope :with_output_fee, ->(output_fee: true) { where(output_fee:) }
   scope :with_state, ->(*state) { where(state:) }
   scope :unpaid, -> { with_state(%w[open payable]) }
@@ -57,5 +59,14 @@ class Statement < ApplicationRecord
 
   def show_targeted_delivery_funding?
     cohort.start_year >= 2022
+  end
+
+private
+
+  def payment_date_on_or_after_deadline_date
+    return unless deadline_date && payment_date
+    return unless payment_date < deadline_date
+
+    errors.add :payment_date, :invalid
   end
 end
