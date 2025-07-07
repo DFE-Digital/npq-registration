@@ -2,42 +2,15 @@
 
 # Environments
 
-There are three permanent environments for NPQ and a fourth set of transient environments, the three permanent are sandbox, dev (Staging in Azure) , and production. The fourth transient set are review apps
+There are three permanent environments for NPQ, plus a review app for the life of each Pull Request:
 
-- [Environments](#environments)
-  - [Review Apps](#review-apps)
-  - [Staging](#staging)
-  - [Sandbox](#sandbox)
-  - [Production](#production)
+| Environment | URL | Used by | Purpose | Deployment trigger | Azure space | Deployed commit |
+| - | - | - | - | - | - | - |
+| Production | https://register-national-professional-qualifications.education.gov.uk | Real users | Live system | Merge to `main` | production | [View](https://register-national-professional-qualifications.education.gov.uk/healthcheck.json) |
+| Sandbox | https://npq-registration-sandbox-web.teacherservices.cloud | External users (e.g. lead providers) | Explore the service without affecting production data | Merge to `main` | production | [View](https://npq-registration-sandbox-web.teacherservices.cloud/healthcheck.json) |
+| Staging | https://npq-registration-staging-web.test.teacherservices.cloud | Team members | Production-like environment without real data | Merge to `main` | test | [View](https://npq-registration-staging-web.test.teacherservices.cloud/healthcheck.json)|
+| Review | https://npq-registration-review-_PR-NUMBER_-web.test.teacherservices.cloud | Team members | Review changes prior to merging | Open a PR (auto-destroyed on merge/close) | test | Per-app |
 
-## Review Apps
+Security in the `production` Azure space is configured for sensitive data. You need to log in with real admin credentials in these environments, and you'll need an Azure PIM to run `make` commands against them.
 
-- Deployed on raising a PR/merging to a branch (branching off `main` only). Destroyed when the PR is merged/closed.
-- Part of the `test` Azure space.
-- Used internally by team members to review changes prior to deploying.
-- https://npq-registration-review-<PR-NUMBER>-web.test.teacherservices.cloud
-
-## Staging
-
-- Deployed on merging to `main`.
-- Part of the `test` Azure space.
-- Used internally by team members as a production-like environment.
-- https://npq-registration-staging-web.test.teacherservices.cloud
-- [View deployed commit](https://npq-registration-staging-web.test.teacherservices.cloud/healthcheck.json)
-
-## Sandbox
-
-- Deployed on merging to `main`.
-- Part of the `production` Azure space.
-- Enables lead providers and other external users to explore the service without putting data into our production system.
-- Submitted applications are pushed to the sandbox ECF environment.
-- https://npq-registration-sandbox-web.teacherservices.cloud
-- [View deployed commit](https://npq-registration-sandbox-web.teacherservices.cloud/healthcheck.json)
-
-## Production
-
-- Deployed on merging to `main`.
-- Part of the `production` Azure space.
-- The production environment is the live system, users that are applying for NPQs fill in the forms in this system. Once submitted applications are pushed to the production ECF environment and then out to lead providers.
-- https://register-national-professional-qualifications.education.gov.uk
-- [View deployed commit](https://register-national-professional-qualifications.education.gov.uk/healthcheck.json)
+The `test` space should contain only seed/test data. Use dummy admin logins in these environments, and you won't need a PIM for `make`.

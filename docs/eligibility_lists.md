@@ -1,7 +1,8 @@
 ## NPQ Eligibility Lists
 
-Currently, NPQ uses five eligibility lists, which are processed in a [own initializer](.././config/initializers/pp50_institutions.rb).  
-The `pp50` designation refers to the 50% of UK schools receiving the highest pupil premium— extra funding provided for students from financially disadvantaged families.
+Currently, NPQ uses five eligibility lists, which are processed in [an initializer](.././config/initializers/pp50_institutions.rb).
+
+The `pp50` designation refers to the 50% of UK schools receiving the highest pupil premium — extra funding provided for students from financially disadvantaged families.
 
 ### File Location
 
@@ -9,10 +10,10 @@ The lists are stored in the [config/data/January2025](.././config/data/January20
 
 ## Eligibility Lists
 
-Currently there is 5 different lists. All lists are being processed and saved to a constant. Each constant is very simple hash where key is the institution identification number and value is always true. The hash is used for fast and simple lookup.
-The constants are being used in the methods that are later used in `FundingEligiblity` calculator.
+Lists are processed and saved to a constant. Each constant is a hash where key is the institution identification number and value is always true. The hash is used for fast and simple lookup.
+The constants are used in the methods called by the `FundingEligiblity` calculator.
 
-Example method using this list looks like that:
+Example method using this list:
 
 ```ruby
 def ey_eligible?
@@ -54,5 +55,5 @@ end
 
 ## Updating the Lists
 
-New lists should follow the same format as the existing ones.  
+New lists should follow the same format as the existing ones.
 If the format changes, updates must be made to the [initializer](.././config/initializers/pp50_institutions.rb).

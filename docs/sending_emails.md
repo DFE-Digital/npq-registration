@@ -1,9 +1,8 @@
 [< Back to Navigation](../README.md)
 
-# Emails
+# Sending emails
 
-Application is using GOV.uk [Notify](https://www.notifications.service.gov.uk/) system to send emails. Developers should
-have Notify accounts created during the onboarding process.
+Application is using GOV.uk [Notify](https://www.notifications.service.gov.uk/) system to send emails. Developers should have Notify accounts created during the onboarding process.
 
 ## Adding new email
 
@@ -12,14 +11,14 @@ New mailer is a file in `app/mailers`. The example file would look like this:
 ```ruby
 
 class SomeMailer < ApplicationMailer
-    def some_mailer_email(to:, data1:, data1:)
-        template_mail("template-uuid",
-        to:,
-        personalisation: {
-          data1:,
-          data2:,
-        })
-    end
+  def some_mailer_email(to:, data1:, data1:)
+    template_mail("template-uuid",
+      to:,
+      personalisation: {
+        data1:,
+        data2:,
+      })
+  end
 end
 ```
 
