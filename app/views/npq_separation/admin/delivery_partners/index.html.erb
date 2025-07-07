@@ -1,8 +1,13 @@
 <h1 class="govuk-heading-l">Delivery partners</h1>
 <p class="govuk-body">
-  Here’s a list of all delivery partners that help course providers deliver NPQs.
-  You can add a new delivery partner and assign them to course providers.
+  Delivery partners work with providers to deliver NPQs.
 </p>
+
+<h2 class="govuk-heading-m">Add a delivery partner</h2>
+
+<p class="govuk-body">You can add a new delivery partner and assign them to course providers.</p>
+
+<%= govuk_button_link_to "Add a delivery partner", new_npq_separation_admin_delivery_partner_path %>
 
 <div class="admin-search-box">
   <%= form_with method: :get do |f| %>
@@ -16,8 +21,6 @@
     <%= f.govuk_submit "Search" %>
   <% end %>
 </div>
-
-<%= govuk_button_link_to "Add a delivery partner", new_npq_separation_admin_delivery_partner_path %>
 
 <%=
   govuk_table do |table|
