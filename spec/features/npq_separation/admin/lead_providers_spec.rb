@@ -11,7 +11,7 @@ RSpec.feature "Listing and viewing course providers", type: :feature do
   scenario "viewing the list of course providers" do
     visit(npq_separation_admin_lead_providers_path)
 
-    expect(page).to have_css("h1", text: "Course providers")
+    expect(page).to have_css("h1", text: "Providers")
 
     LeadProvider.all.find_each do |lead_provider|
       expect(page).to have_link(lead_provider.name, href: npq_separation_admin_lead_provider_path(lead_provider))
