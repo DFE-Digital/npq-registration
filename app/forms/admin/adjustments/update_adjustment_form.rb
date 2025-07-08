@@ -2,8 +2,7 @@
 
 module Admin::Adjustments
   class UpdateAdjustmentForm
-    include ActiveModel::Model
-    include ActiveModel::Attributes
+    include Concerns::AdjustmentForm
 
     attribute :statement
     attribute :description
@@ -11,7 +10,6 @@ module Admin::Adjustments
     attribute :adjustment
 
     validate :adjustment_valid
-    validate :adjustments_allowed
 
     delegate :id, to: :adjustment
 
@@ -32,12 +30,6 @@ module Admin::Adjustments
 
     def adjustment_valid
       errors.merge!(adjustment.errors) unless adjustment.valid?
-    end
-
-    def adjustments_allowed
-      return unless statement.paid?
-
-      errors.add(:statement, :adjustments_not_allowed)
     end
   end
 end

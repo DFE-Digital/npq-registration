@@ -233,7 +233,7 @@ RSpec.feature "Adjustments", type: :feature do
       fill_in "adjustment[description]", with: "new adjustment"
       click_on "Continue"
 
-      expect(page).to have_text("Adjustments can no longer be made to this statement, as it is marked as paid")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.count).to be_zero
     end
 
@@ -247,7 +247,7 @@ RSpec.feature "Adjustments", type: :feature do
       fill_in "adjustment[description]", with: "adjustment edited"
       click_on "Continue"
 
-      expect(page).to have_text("Adjustments can no longer be made to this statement, as it is marked as paid")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.last.description).to eq("adjustment description")
     end
 
@@ -260,7 +260,7 @@ RSpec.feature "Adjustments", type: :feature do
 
       click_on "Remove"
 
-      expect(page).to have_text("Adjustments can no longer be made to this statement, as it is marked as paid")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.count).to eq 1
     end
   end
