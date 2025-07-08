@@ -16,9 +16,9 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Users" => "/npq-separation/admin/users",
       "Finance" => "/npq-separation/admin/finance/statements",
       "Workplaces" => "/npq-separation/admin/schools",
-      "Course providers" => "/npq-separation/admin/lead-providers",
-      "Bulk changes" => "/npq-separation/admin/bulk-changes",
+      "Providers" => "/npq-separation/admin/providers",
       "Delivery partners" => "/npq-separation/admin/delivery-partners",
+      "Bulk changes" => "/npq-separation/admin/bulk-changes",
       "Settings" => "/npq-separation/admin/settings/webhook-messages",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
