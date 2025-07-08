@@ -1,7 +1,7 @@
 <%= govuk_back_link(href: npq_separation_admin_delivery_partners_path) %>
 
-<h1 class="govuk-heading-l">Add a provider</h1>
-<p class="govuk-caption-m">Select all that apply</p>
+<h1 class="govuk-heading-l">Assign <%= @delivery_partner.name %> to provider</h1>
+<p class="govuk-caption-m">Select all providers and cohorts that apply</p>
 
 <%= form_with model: [:npq_separation, :admin, @delivery_partner], method: :patch, id: 'delivery-partnerships-form' do |form| %>
   <%= form.govuk_error_summary %>

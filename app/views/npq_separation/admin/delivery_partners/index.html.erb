@@ -35,7 +35,7 @@
           row.with_cell(text: delivery_partner.name)
           row.with_cell do
               safe_join [tag.div { govuk_link_to("Change name", edit_npq_separation_admin_delivery_partner_path(delivery_partner), class: "govuk-!-margin-bottom-0") },
-                tag.div { govuk_link_to("Assign provider", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") }]
+                tag.div { govuk_link_to("Assign to provider", edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner), class: "govuk-!-margin-bottom-0") }]
           end
         end
       end
