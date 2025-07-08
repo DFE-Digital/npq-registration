@@ -4,6 +4,14 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   include Helpers::AdminLogin
   include Helpers::MailHelper
 
+  RSpec::Matchers.define :have_application do |expected|
+    match do |_actual|
+      within("td:nth-child(1)") do
+        expect(page).to have_text(expected.user.full_name)
+      end
+    end
+  end
+
   let(:applications_per_page) { Pagy::DEFAULT[:limit] }
   let(:applications_in_order) { Application.order(created_at: :asc, id: :asc) }
 
@@ -18,9 +26,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_css("h1", text: "Applications")
 
     applications_in_order.limit(applications_per_page).each do |application|
-      expect(page).to have_link(application.ecf_id, href: npq_separation_admin_application_path(application.id))
       expect(page).to have_link(application.user.full_name, href: npq_separation_admin_user_path(application.user))
       expect(page).to have_text(application.employer_name_to_display)
+      expect(page).to have_link("View", href: npq_separation_admin_application_path(application.id))
     end
 
     expect(page).to have_css(".govuk-pagination__item--current", text: 1)
@@ -42,7 +50,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     click_on "Search"
 
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(applications_in_order[0].ecf_id)
+    expect(page).to have_application(applications_in_order[0])
   end
 
   scenario "filtering applications by application status" do
@@ -55,7 +63,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_select("Application status", selected: "Deferred")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(application.ecf_id)
+    expect(page).to have_application(application)
   end
 
   scenario "filtering applications by provider approval status" do
@@ -68,7 +76,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_select("Provider approval status", selected: "Accepted")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(application.ecf_id)
+    expect(page).to have_application(application)
   end
 
   scenario "filtering applications by year of application" do
@@ -82,7 +90,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_select("Year of application", selected: "2022 to 2023")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(application.ecf_id)
+    expect(page).to have_application(application)
   end
 
   scenario "filtering applications by work setting" do
@@ -95,7 +103,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect(page).to have_select("Work setting", selected: "A school")
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(application.ecf_id)
+    expect(page).to have_application(application)
   end
 
   scenario "simultaneously filtering and searching applications" do
@@ -122,7 +130,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     select approval_status_with_results, from: "Provider approval status"
     click_on "Search"
     expect(page).to have_css("table.govuk-table tbody tr", count: 1)
-    expect(page).to have_text(application.ecf_id)
+    expect(page).to have_application(application)
   end
 
   scenario "viewing application details" do
@@ -139,7 +147,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       employment_role: :headteacher,
     )
 
-    click_link(application.ecf_id)
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
 
     expect(page).to have_css("h1", text: application.user.full_name)
     expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
@@ -201,7 +211,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     payable_declaration = create(:declaration, :payable, application:, statement: payable_statement)
     paid_statement = create(:statement, :paid, declaration: payable_declaration)
 
-    click_link(application.ecf_id)
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
 
     expect(page).to have_css("h2", text: "Declarations")
 
@@ -430,7 +442,9 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     application = applications_in_order.first
 
-    click_link(application.ecf_id)
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
 
     within(".govuk-summary-list__row", text: "Notes") do
       click_on "Add note"
