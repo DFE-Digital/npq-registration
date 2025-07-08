@@ -3,14 +3,14 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">
-      Transfer course provider
+      Transfer provider
     </h1>
 
     <%= govuk_warning_text(text: "Before continuing with this transfer, make sure the provider has submitted their declarations for this application") %>
 
     <div class="govuk-inset-text">
       <p class="govuk-body">
-        <strong>Course provider</strong>
+        <strong>Provider</strong>
         <br/>
         <%= @application.lead_provider.name %>
       </p>
