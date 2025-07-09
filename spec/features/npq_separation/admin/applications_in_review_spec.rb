@@ -243,7 +243,7 @@ RSpec.feature "Applications in review", type: :feature do
       expect(summary_list).to have_summary_item("Last updated date", application.updated_at.to_fs(:govuk_short))
     end
 
-    find("summary", text: "View registration as it appears on the Course provider API V3").click
+    find("summary", text: "View registration as it appears on the provider API V3").click
     expect(page).to have_text JSON.pretty_generate(serialized_application)
   end
 

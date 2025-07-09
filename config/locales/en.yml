@@ -347,7 +347,7 @@ en:
         applications/change_lead_provider:
           attributes:
             lead_provider_id:
-              blank: "Choose a course provider"
+              blank: "Choose a provider"
               unchanged: "You cannot change to the same course provider"
         questionnaires/teacher_reference_number:
           attributes:
@@ -941,7 +941,7 @@ en:
       applications_change_funding_eligibility:
         eligible_for_funding: Is eligible for funding?
       applications_change_lead_provider:
-        lead_provider_id: Choose a different course provider
+        lead_provider_id: Choose a different provider
       applications_change_cohort:
         cohort_id: Choose a cohort
       registration_wizard:
