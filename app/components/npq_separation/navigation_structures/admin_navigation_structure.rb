@@ -97,7 +97,7 @@ module NpqSeparation
           Node.new(
             name: "Webhook messages",
             href: npq_separation_admin_webhook_messages_path,
-            prefix: "/npq-separation/admin/settings/webhook-messages",
+            prefix: "/npq-separation/admin/webhook-messages",
           ) => [],
           Node.new(
             name: "Registration closed",
