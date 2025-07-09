@@ -19,7 +19,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       "Course providers" => "/npq-separation/admin/lead-providers",
       "Bulk changes" => "/npq-separation/admin/bulk-changes",
       "Delivery partners" => "/npq-separation/admin/delivery-partners",
-      "Settings" => "/npq-separation/admin/settings/webhook-messages",
+      "Webhook messages" => "/npq-separation/admin/webhook-messages",
     }.each_with_index do |(name, href), i|
       it "#{name} with href #{href} is at position #{i + 1}" do
         expect(subject[i].name).to eql(name)
