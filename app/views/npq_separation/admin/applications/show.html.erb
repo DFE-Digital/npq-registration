@@ -17,12 +17,12 @@
       row.with_value(text: @application.course.identifier)
     end
     sl.with_row do |row|
-      row.with_key(text: "Course provider")
+      row.with_key(text: "Provider")
       row.with_value(text: @application.lead_provider.name)
       row.with_action(text: "Transfer", href: npq_separation_admin_applications_change_lead_provider_path(@application))
     end
     sl.with_row do |row|
-      row.with_key(text: "Course provider approval status")
+      row.with_key(text: "Provider approval status")
       row.with_value(text: @application.lead_provider_approval_status.try(:humanize))
       unless @application.pending_lead_provider_approval_status?
         row.with_action(
@@ -143,7 +143,7 @@
         end
 
         sl.with_row do |row|
-          row.with_key(text: "Course provider")
+          row.with_key(text: "Provider")
           row.with_value(text: declaration.lead_provider.name)
         end
 

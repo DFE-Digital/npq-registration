@@ -7,19 +7,15 @@
           NpqSeparation::NavigationStructure::Node.new(
             name: lead_provider.name,
             href: npq_separation_admin_lead_provider_path(lead_provider),
-            prefix: "/npq-separation/admin/lead-providers/#{lead_provider.id}",
+            prefix: "/npq-separation/admin/providers/#{lead_provider.id}",
           )
         end
     )
   %>
 <% end %>
 
-<h1 class="govuk-heading-l">Course providers</h1>
+<h1 class="govuk-heading-l">Providers</h1>
 
 <p class="govuk-body">
-  Here is a list of all course providers that offer national professional qualification (NPQ) courses.
-</p>
-
-<p class="govuk-body">
-  Select a course provider to reveal which delivery partners they work with to deliver NPQs.
+  Select a provider to see which delivery partners they work with to deliver NPQs.
 </p>

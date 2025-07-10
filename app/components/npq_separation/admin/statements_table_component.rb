@@ -23,7 +23,7 @@ module NpqSeparation
 
       def head
         [
-          ("Course provider" if show_lead_provider),
+          ("Provider" if show_lead_provider),
           "Cohort",
           "Statement date",
           "Status",

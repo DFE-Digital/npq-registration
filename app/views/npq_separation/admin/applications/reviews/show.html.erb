@@ -103,6 +103,6 @@
   end
 %>
 
-<%= govuk_details(summary_text: "View registration as it appears on the Course provider API V3") do %>
+<%= govuk_details(summary_text: "View registration as it appears on the provider API V3") do %>
 <pre class="govuk-!-font-size-16 api-view"><code><%= JSON.pretty_generate API::ApplicationSerializer.render_as_hash(@application, view: :v3, root: "data") %></code></pre>
 <% end %>

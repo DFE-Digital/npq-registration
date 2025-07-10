@@ -5,7 +5,7 @@
       structure:
       [
         NpqSeparation::NavigationStructure::Node.new(
-              name: "Course providers",
+              name: "Providers",
               href: npq_separation_admin_lead_providers_path,
         )
       ]
@@ -24,7 +24,7 @@
           NpqSeparation::NavigationStructure::Node.new(
             name: "Cohort #{format_cohort(cohort)}",
             href: npq_separation_admin_lead_provider_cohort_path(@lead_provider, cohort),
-            prefix: "/npq-separation/admin/lead-providers/#{@lead_provider.id}/cohort/#{cohort.id}"
+            prefix: "/npq-separation/admin/providers/#{@lead_provider.id}/cohort/#{cohort.id}"
           )
         end
     )
@@ -35,7 +35,7 @@
 
 <%= tag.h2("Cohort #{format_cohort(@cohort)}", class: "govuk-heading-m") %>
 
-<p class="govuk-body">List of delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
+<p class="govuk-body">Delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
 
 <%= govuk_table do |table|
       table.with_head do |head|

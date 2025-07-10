@@ -37,7 +37,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
 
     scenario "it allows creating a new delivery partner" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "Add a delivery partner"
+      click_link "add a delivery partner"
 
       expect(page).to have_content("Add a delivery partner")
 
@@ -53,7 +53,7 @@ RSpec.feature "NPQ Separation Admin Delivery Partners", type: :feature do
 
     scenario "when creating a delivery partner with invalid data, it shows validation errors" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "Add a delivery partner"
+      click_link(href: "/npq-separation/admin/delivery-partners/new")
 
       fill_in "Enter delivery partner name", with: ""
       click_button "Save"

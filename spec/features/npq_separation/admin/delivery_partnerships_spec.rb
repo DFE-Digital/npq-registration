@@ -20,12 +20,12 @@ RSpec.feature "NPQ Separation Admin Delivery Partnerships", type: :feature do
 
     scenario "viewing the edit page for a delivery partner's partnerships" do
       visit npq_separation_admin_delivery_partners_path
-      click_link "Assign course provider", match: :first
+      click_link "Assign to provider", match: :first
 
       expect(page).to have_current_path(edit_npq_separation_admin_delivery_partner_delivery_partnerships_path(delivery_partner))
 
       within "main" do
-        expect(page).to have_content("Add a course provider")
+        expect(page).to have_content("Assign #{delivery_partner.name} to provider")
 
         # All course providers are displayed
         lead_providers.each do |lead_provider|

@@ -10,7 +10,7 @@ RSpec.describe Applications::ChangeLeadProvider, type: :model do
 
   describe "validation" do
     it { is_expected.to validate_presence_of :application }
-    it { is_expected.to validate_presence_of(:lead_provider_id).with_message "Choose a course provider" }
+    it { is_expected.to validate_presence_of(:lead_provider_id).with_message "Choose a provider" }
 
     context "when lead_provider_id is not different to the current lead provider" do
       let(:lead_provider_id) { application.lead_provider.id }

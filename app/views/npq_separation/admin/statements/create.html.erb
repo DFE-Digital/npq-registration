@@ -2,7 +2,7 @@
 
 <h1 class="govuk-heading-l">Confirm new cohort <%= format_cohort(@cohort) %> statements</h1>
 
-<p class="govuk-body govuk-body--l"><%= @preview[:statements].count %> statements will be created for <%= pluralize @preview[:lead_providers_count], 'course provider' %> (<%= number_with_delimiter @statements.count %> statements in total).</p>
+<p class="govuk-body govuk-body--l"><%= @preview[:statements].count %> statements will be created for <%= pluralize @preview[:lead_providers_count], 'provider' %> (<%= number_with_delimiter @statements.count %> statements in total).</p>
 
 <%=
   govuk_details(summary_text: "Statement dates") do
@@ -76,4 +76,5 @@
   <div class="govuk-button-group">
     <%= f.govuk_submit "Create statements" %>
     <%= govuk_button_link_to "Cancel", new_npq_separation_admin_cohort_statement_path, secondary: true %>
+  </div>
 <% end %>
