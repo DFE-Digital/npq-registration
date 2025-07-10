@@ -447,7 +447,8 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         it "returns validation error" do
           expect(service.accept).to be_falsey
           expect(service.application.schedule).not_to eql(new_schedule)
-          expect(service.errors.messages_for(:schedule_identifier)).to include("The selected schedule is not valid for the course")
+          expect(service).to have_error(:schedule_identifier, :invalid_for_course, "The selected schedule is not valid for the course")
+          expect(service).to have_error_count(1)
         end
       end
 
@@ -456,7 +457,8 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
 
         it "returns validation error" do
           expect(service.accept).to be_falsey
-          expect(service).to have_error(:schedule_identifier, :invalid_for_course, "The selected schedule is not valid for the course")
+          expect(service).to have_error(:schedule_identifier, :not_found, "The selected schedule cannot be found in the application cohort")
+          expect(service).to have_error_count(1)
         end
       end
     end
