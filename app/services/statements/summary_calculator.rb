@@ -66,7 +66,7 @@ module Statements
 
     def contracts
       statement.contracts
-        .joins(:contract_template, :course)
+        .includes(:contract_template, :course)
         .where(contract_template: { special_course: false })
         .order("courses.identifier")
     end
