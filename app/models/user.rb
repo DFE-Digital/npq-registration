@@ -12,7 +12,7 @@ class User < ApplicationRecord
 
   devise :omniauthable, omniauth_providers: [:tra_openid_connect]
 
-  has_paper_trail meta: { note: :version_note }, ignore: [:raw_tra_provider_data]
+  has_paper_trail meta: { note: :version_note }, ignore: %i[raw_tra_provider_data updated_at feature_flag_id]
 
   has_many :applications, dependent: :destroy
   has_many :declarations, through: :applications
@@ -114,6 +114,12 @@ class User < ApplicationRecord
     end
   end
 
+  def set_updated_from_tra_at
+    return unless significant_change?
+
+    self.updated_from_tra_at = Time.zone.now
+  end
+
 private
 
   def touch_significantly_updated_at
@@ -125,8 +131,12 @@ private
     return if explicitly_updating_significantly_updated_at
 
     updated_at_touched = changed_attributes == %w[updated_at]
-    significant_change = (changed_attributes - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any?
 
-    update_column(:significantly_updated_at, updated_at) if updated_at_touched || significant_change
+    update_column(:significantly_updated_at, updated_at) if updated_at_touched || significant_change?
+  end
+
+  def significant_change?
+    (saved_changes.keys - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any? ||
+      (changes.keys - (INSIGNIFICANT_ATTRIBUTES + %w[updated_at])).any?
   end
 end

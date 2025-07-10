@@ -29,6 +29,36 @@ RSpec.describe User do
         expect(version.object_changes["full_name"]).to eq(["Joe", "Changed Name"])
       end
     end
+
+    context "when user logs in" do
+      it "does not create a new version when insignificant attributes remains unchanged" do
+        with_versioning do
+          expect(PaperTrail).to be_enabled
+
+          expect {
+            subject.update!(
+              updated_at: 1.second.from_now,
+              feature_flag_id: SecureRandom.uuid,
+            )
+          }.not_to(change { subject.reload.versions.count })
+        end
+      end
+
+      it "creates a new version when one of significant attributes changes" do
+        with_versioning do
+          expect(PaperTrail).to be_enabled
+
+          expect {
+            subject.update!(
+              updated_at: 1.second.from_now,
+              updated_from_tra_at: 1.second.from_now,
+              trn: "1212121",
+              feature_flag_id: SecureRandom.uuid,
+            )
+          }.to(change { subject.reload.versions.count })
+        end
+      end
+    end
   end
 
   describe "validations" do
@@ -327,6 +357,31 @@ RSpec.describe User do
 
     it "returns the feature_flag_id prefixed with 'User;'" do
       expect(user.flipper_id).to eq("User;#{feature_flag_id}")
+    end
+  end
+
+  describe "#set_updated_from_tra_at" do
+    let(:user) { create(:user, updated_from_tra_at: nil).reload }
+
+    context "when significant attribute does change" do
+      before do
+        user.trn = "1231234"
+        user.set_updated_from_tra_at
+      end
+
+      it "changes updated_from_tra_at" do
+        expect(user.updated_from_tra_at).to be_present
+      end
+    end
+
+    context "when significant attribute does not change" do
+      before do
+        user.set_updated_from_tra_at
+      end
+
+      it "changes updated_from_tra_at" do
+        expect(user.updated_from_tra_at).not_to be_present
+      end
     end
   end
 
