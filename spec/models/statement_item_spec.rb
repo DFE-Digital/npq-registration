@@ -83,6 +83,14 @@ RSpec.describe StatementItem, type: :model do
     end
   end
 
+  describe "paper_trail" do
+    subject { create(:statement_item) }
+
+    it "has paper trail" do
+      expect(subject).to be_versioned
+    end
+  end
+
   describe "State transition" do
     describe ".mark_payable" do
       let(:statement_item) { create(:statement_item, :eligible) }

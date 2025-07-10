@@ -3,6 +3,8 @@ class StatementItem < ApplicationRecord
   REFUNDABLE_STATES = %w[awaiting_clawback clawed_back].freeze
   NOT_ELIGIBLE_STATES = %w[ineligible voided].freeze
 
+  has_paper_trail ignore: [:updated_at]
+
   belongs_to :statement
   belongs_to :declaration
 
