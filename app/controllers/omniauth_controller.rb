@@ -1,6 +1,6 @@
 class OmniauthController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: %i[tra_openid_connect]
-  skip_before_action :authenticate_user!, only: %i[tra_openid_connect failure]
+  skip_before_action :authenticate_user!
 
   def tra_openid_connect
     # Let user continue using current TRA login
