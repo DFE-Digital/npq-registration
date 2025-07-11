@@ -102,20 +102,20 @@
   govuk_table do |table|
     table.with_head do |header|
       header.with_row do |row|
-        row.with_cell(text: "Application ID")
+        row.with_cell(text: "Submitted")
         row.with_cell(text: "Name")
         row.with_cell(text: "Review Status")
         row.with_cell(text: "Eligible for funding")
         row.with_cell(text: "Provider approval status")
         row.with_cell(text: "Notes", classes: 'govuk-!-width-one-third')
-        row.with_cell(text: "Registration submitted date")
+        row.with_cell(text: "Actions")
       end
     end
 
     table.with_body do |body|
       @applications.each do |application|
         body.with_row do |row|
-          row.with_cell(text: govuk_link_to(application.ecf_id, npq_separation_admin_application_review_path(application.id)))
+          row.with_cell(text: application.created_at.to_formatted_s(:govuk_short))
           row.with_cell do
             concat govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user))
             concat tag.p(application.employment_type.try(:humanize), class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
@@ -125,7 +125,7 @@
           row.with_cell(text: boolean_red_green_tag(application.eligible_for_funding))
           row.with_cell(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
           row.with_cell(text: application.notes)
-          row.with_cell(text: application.created_at.to_formatted_s(:govuk_short))
+          row.with_cell(text: govuk_link_to("View", npq_separation_admin_application_review_path(application.id)))
         end
       end
     end

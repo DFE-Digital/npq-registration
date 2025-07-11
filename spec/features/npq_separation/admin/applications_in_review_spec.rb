@@ -39,13 +39,13 @@ RSpec.feature "Applications in review", type: :feature do
       application_for_rtta_yes,
     ].map do |application|
       [
-        application.ecf_id,
+        application.created_at.to_fs(:govuk_short),
         [application.user.full_name, application.employment_type.try(:humanize), application.employer_name].compact.join,
         application.review_status,
         application.eligible_for_funding ? "Yes" : "No",
         application.lead_provider_approval_status.humanize,
         application.notes.to_s,
-        application.created_at.to_fs(:govuk_short),
+        "View",
       ]
     end
 
@@ -192,7 +192,9 @@ RSpec.feature "Applications in review", type: :feature do
     application = application_with_funding_decision.reload
     application.user.update! uid: SecureRandom.uuid
 
-    click_on application.ecf_id
+    within("tr", text: application.user.full_name) do
+      click_link("View")
+    end
 
     expect(page).to have_css("h1", text: application.user.full_name)
 
@@ -248,7 +250,9 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "adding and editing notes" do
-    click_on application_for_hospital_school.ecf_id
+    within("tr", text: application_for_hospital_school.user.full_name) do
+      click_link("View")
+    end
 
     within(".govuk-summary-list__row", text: "Notes") do
       click_on "Add note"
