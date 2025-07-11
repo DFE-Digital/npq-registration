@@ -3,15 +3,35 @@ require "rails_helper"
 RSpec.feature "visiting steps that no not exist", type: :feature do
   include_context "Stub Get An Identity Omniauth Responses"
 
-  scenario "visiting steps that used to exist", :no_js do
-    visit "/registration/confirmation"
-    expect(page).to have_current_path "/registration/course-start-date"
+  context "when not logged in" do
+    scenario "visiting steps that used to exist", :no_js do
+      visit "/registration/confirmation"
+      expect(page).to have_current_path "/"
 
-    visit "/registration/about_npq"
-    expect(page).to have_current_path "/registration/course-start-date"
+      visit "/registration/about_npq"
+      expect(page).to have_current_path "/"
 
-    visit "/registration/choosen_start_date"
-    expect(page).to have_current_path "/registration/course-start-date"
+      visit "/registration/choosen_start_date"
+      expect(page).to have_current_path "/"
+    end
+  end
+
+  context "when logged in" do
+    before do
+      visit "/"
+      page.click_button("Start now")
+    end
+
+    scenario "visiting steps that used to exist", :no_js do
+      visit "/registration/confirmation"
+      expect(page).to have_current_path "/registration/course-start-date"
+
+      visit "/registration/about_npq"
+      expect(page).to have_current_path "/registration/course-start-date"
+
+      visit "/registration/choosen_start_date"
+      expect(page).to have_current_path "/registration/course-start-date"
+    end
   end
 
   scenario "visiting steps that never existed", :no_js do
