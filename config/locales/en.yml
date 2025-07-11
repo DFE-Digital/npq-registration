@@ -275,6 +275,8 @@ en:
               taken: "A statement for this lead provider, cohort, year and month already exists"
             ecf_id:
               *ecf_id
+            payment_date:
+              invalid: must be on or after the deadline date
         statement_item:
           attributes:
             ecf_id:
@@ -675,6 +677,20 @@ en:
               blank: "must be a date (e.g. YYYY-MM-DD)"
             payment_date:
               blank: "must be a date (e.g. YYYY-MM-DD)"
+        statements/change_deadline_date:
+          attributes:
+            deadline_date:
+              blank: Output payment deadline can't be blank
+              invalid: Output payment deadline cannot be after the Output payment date
+            statement:
+              blank: Statement not found
+        statements/change_payment_date:
+          attributes:
+            payment_date:
+              blank: Output payment date can't be blank
+              invalid: Output payment date cannot be before the Output payment deadline
+            statement:
+              blank: Statement not found
 
   omniauth_providers:
     tra_openid_connect: "Get an Identity"

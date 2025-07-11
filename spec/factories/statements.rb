@@ -14,7 +14,7 @@ FactoryBot.define do
     month { months_from_start_of_2021 % 12 + 1 }
     year { 2021 + months_from_start_of_2021 / 12 }
     deadline_date { Faker::Date.forward(days: 30) }
-    payment_date { Faker::Date.forward(days: 30) }
+    payment_date { deadline_date ? deadline_date + 3.days : Faker::Date.forward(days: 30) }
     cohort { create(:cohort, :current) }
     lead_provider { declaration&.lead_provider || build(:lead_provider) }
     reconcile_amount { Faker::Number.decimal(l_digits: 3, r_digits: 2) }

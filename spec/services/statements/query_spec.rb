@@ -12,9 +12,9 @@ RSpec.describe Statements::Query do
     end
 
     it "orders statements by payment date in ascending order" do
-      statement1 = create(:statement, payment_date: 2.days.ago)
-      statement2 = create(:statement, payment_date: 1.day.ago)
-      statement3 = create(:statement, payment_date: Time.zone.now)
+      statement1 = create(:statement, deadline_date: 2.days.ago, payment_date: 2.days.ago)
+      statement2 = create(:statement, deadline_date: 2.days.ago, payment_date: 1.day.ago)
+      statement3 = create(:statement, deadline_date: 2.days.ago, payment_date: Time.zone.now)
 
       query = described_class.new
 

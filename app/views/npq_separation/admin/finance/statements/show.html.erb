@@ -31,6 +31,7 @@
     <p class="govuk-body govuk-!-margin-bottom-2">
       <strong>Output payment date:</strong>
       <%= @statement.payment_date.to_fs(:govuk) %>
+      &nbsp;<%= govuk_link_to "Change", npq_separation_admin_finance_statements_change_payment_date_path(@statement) %>
     </p>
     <p class="govuk-body govuk-!-margin-bottom-2">
       <strong>Status:</strong>
