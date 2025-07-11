@@ -39,7 +39,7 @@ class Statement < ApplicationRecord
     update!(marked_as_paid_at: Time.zone.now)
   end
 
-  def marked_as_paid?
+  def marked_as_paid_with_date?
     marked_as_paid_at.present? && paid?
   end
 

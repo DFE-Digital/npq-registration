@@ -2,8 +2,7 @@
 
 module Admin::Adjustments
   class CreateAdjustmentForm
-    include ActiveModel::Model
-    include ActiveModel::Attributes
+    include Concerns::AdjustmentForm
 
     attribute :created_adjustment_ids
     attribute :statement
@@ -12,7 +11,6 @@ module Admin::Adjustments
     attribute :adjustment
 
     validate :adjustment_valid
-    validate :statement_open
 
     def initialize(*)
       super
@@ -45,12 +43,6 @@ module Admin::Adjustments
 
     def adjustment_valid
       errors.merge!(adjustment.errors) unless adjustment.valid?
-    end
-
-    def statement_open
-      return if statement.open?
-
-      errors.add(:statement, :not_open)
     end
   end
 end

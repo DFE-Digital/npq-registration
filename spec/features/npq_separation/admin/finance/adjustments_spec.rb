@@ -216,7 +216,7 @@ RSpec.feature "Adjustments", type: :feature do
     scenario "statement is marked as payable" do
       visit(npq_separation_admin_finance_statement_path(payable_statement))
 
-      expect(page).not_to have_link "Make adjustment"
+      expect(page).to have_link "Make adjustment"
     end
 
     scenario "statement is marked as paid" do
@@ -225,42 +225,42 @@ RSpec.feature "Adjustments", type: :feature do
       expect(page).not_to have_link "Make adjustment"
     end
 
-    scenario "statement moved to payable whilst creating adjustment" do
+    scenario "statement moved to paid whilst creating adjustment" do
       visit(new_npq_separation_admin_finance_statement_adjustment_path(statement))
 
-      statement.update!(state: :payable)
+      statement.update!(state: :paid)
 
       fill_in "adjustment[description]", with: "new adjustment"
       click_on "Continue"
 
-      expect(page).to have_text("The statement has to be open for adjustments to be made")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.count).to be_zero
     end
 
-    scenario "statement moved to payable whilst editing adjustment" do
+    scenario "statement moved to paid whilst editing adjustment" do
       adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100)
 
       visit(edit_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment))
 
-      statement.update!(state: :payable)
+      statement.update!(state: :paid)
 
       fill_in "adjustment[description]", with: "adjustment edited"
       click_on "Continue"
 
-      expect(page).to have_text("The statement has to be open for adjustments to be made")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.last.description).to eq("adjustment description")
     end
 
-    scenario "statement moved to payable whilst deleting adjustment" do
+    scenario "statement moved to paid whilst deleting adjustment" do
       adjustment = create(:adjustment, statement:, description: "adjustment description", amount: 100)
 
       visit(delete_npq_separation_admin_finance_statement_adjustment_path(statement, adjustment))
 
-      statement.update!(state: :payable)
+      statement.update!(state: :paid)
 
       click_on "Remove"
 
-      expect(page).to have_text("The statement has to be open for adjustments to be made")
+      expect(page).to have_text I18n.t("activemodel.errors.models.admin/adjustments/create_adjustment_form.attributes.statement.adjustments_not_allowed")
       expect(Adjustment.count).to eq 1
     end
   end

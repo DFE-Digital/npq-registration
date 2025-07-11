@@ -2,13 +2,10 @@
 
 module Admin::Adjustments
   class DestroyAdjustmentForm
-    include ActiveModel::Model
-    include ActiveModel::Attributes
+    include Concerns::AdjustmentForm
 
     attribute :statement
     attribute :adjustment
-
-    validate :statement_open
 
     delegate :id, :description, :amount, to: :adjustment
 
@@ -22,14 +19,6 @@ module Admin::Adjustments
       adjustment.destroy # rubocop:disable Rails/SaveBang - we don't want to raise an error if destroy fails
 
       adjustment.destroyed?
-    end
-
-  private
-
-    def statement_open
-      return if statement.open?
-
-      errors.add(:statement, :not_open)
     end
   end
 end

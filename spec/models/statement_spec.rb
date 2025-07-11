@@ -151,15 +151,15 @@ RSpec.describe Statement, type: :model do
     end
   end
 
-  describe "#marked_as_paid?" do
+  describe "#marked_as_paid_with_date?" do
     context "with a statement marked as paid" do
       subject { create(:statement, :paid) }
 
-      it { is_expected.to be_marked_as_paid }
+      it { is_expected.to be_marked_as_paid_with_date }
     end
 
     context "with a statement not marked as paid" do
-      it { is_expected.not_to be_marked_as_paid }
+      it { is_expected.not_to be_marked_as_paid_with_date }
     end
   end
 
