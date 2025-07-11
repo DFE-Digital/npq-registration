@@ -95,10 +95,10 @@ module NpqSeparation
             prefix: "/npq-separation/admin/bulk-changes",
           ) => [],
           Node.new(
-            name: "Settings",
-            href: npq_separation_admin_settings_webhook_messages_path,
-            prefix: "/npq-separation/admin/settings",
-          ) => settings_nodes,
+            name: "Webhook messages",
+            href: npq_separation_admin_webhook_messages_path,
+            prefix: "/npq-separation/admin/webhook-messages",
+          ) => [],
           Node.new(
             name: "Registration closed",
             href: npq_separation_admin_registration_closed_index_path,
@@ -136,16 +136,6 @@ module NpqSeparation
             prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
           )
         end
-      end
-
-      def settings_nodes
-        [
-          Node.new(
-            name: "Webhook messages",
-            href: npq_separation_admin_settings_webhook_messages_path,
-            prefix: "/npq-separation/admin/settings/webhook-messages",
-          ),
-        ]
       end
     end
   end
