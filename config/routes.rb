@@ -193,9 +193,9 @@ Rails.application.routes.draw do
     get "admin", to: "admin/dashboards/summary#show"
 
     namespace :admin do
-        resources :webhook_messages, only: %i[index show], path: "webhook-messages" do
-          resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs", path: "processing-jobs"
-        end
+      resources :webhook_messages, only: %i[index show], path: "webhook-messages" do
+        resources :processing_jobs, only: %i[create], controller: "webhook_messages/processing_jobs", path: "processing-jobs"
+      end
 
       resources :features, only: %i[index show update]
       resources :admins, only: %i[index new create destroy]
