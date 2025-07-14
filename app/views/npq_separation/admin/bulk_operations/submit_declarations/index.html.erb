@@ -1,0 +1,86 @@
+<h1 class="govuk-heading-l">Submit declarations for providers</h1>
+
+<%= form_for @bulk_operation, url: npq_separation_admin_bulk_operations_submit_declarations_path, method: :post, multipart: true do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <p class="govuk-body">You can submit multiple declarations for a provider by uploading a CSV file.</p>
+  <p class="govuk-body">You can do this when:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>a provider has no access to the API</li>
+    <li>there are outstanding declarations that need to be submitted</li>
+  </ul>
+
+  <h2 class="govuk-heading-m">Create your CSV file</h2>
+
+  <p class="govuk-body">Your file must include the following column headers:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>participant_id</li>
+    <li>declaration_type</li>
+    <li>declaration_date</li>
+    <li>course_identifier</li>
+    <li>delivery_partner_id</li>
+    <li>lead_provider_name</li>
+  </ul>
+
+  <p class="govuk-body">
+    For example:
+    <pre>
+      participant_id,declaration_type,declaration_date,course_identifier,delivery_partner_id,lead_provider_name
+      1234567890,declaration_type,2021-01-01,course_identifier,1234567890,"Lead provider name"
+    </pre>
+  </p>
+
+
+  <div class="govuk-form-group">
+    <%= f.govuk_file_field :file,
+      label: { text: "Upload file", tag: "h2", size: "m" },
+      hint: { text: "Maximum file size is 256MB. File must be in CSV format." },
+      javascript: true
+    %>
+  </div>
+
+  <%= f.govuk_submit "Upload file" %>
+<% end %>
+
+<h2 class="govuk-heading-m">Uploaded files</h2>
+
+<%=
+  if @bulk_operations.empty?
+    tag.p("No files have been uploaded", class: "govuk-body")
+  else
+    govuk_table do |table|
+      table.with_head do |header|
+        header.with_row do |row|
+          row.with_cell(text: "Bulk operation")
+          row.with_cell(text: "Number of rows")
+          row.with_cell(text: "Date created")
+          row.with_cell(text: "Date started")
+          row.with_cell
+        end
+      end
+
+      table.with_body do |body|
+        @bulk_operations.each do |bulk_operation|
+          body.with_row do |row|
+            row.with_cell(text: govuk_link_to(bulk_operation.file.filename, npq_separation_admin_bulk_operations_submit_declaration_path(bulk_operation)))
+            row.with_cell(text: bulk_operation.row_count)
+            row.with_cell(text: bulk_operation.created_at.to_formatted_s(:govuk_short))
+            row.with_cell(text: bulk_operation.started_at&.to_formatted_s(:govuk_short))
+            row.with_cell do
+              unless bulk_operation.started?
+                form_with url: run_npq_separation_admin_bulk_operations_submit_declaration_path(bulk_operation) do |f|
+                  tag.div(class: "govuk-button-group bulk-operation-action-button-group") do
+                    f.govuk_submit "Submit declarations", class: "bulk-operation-action-button"
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+%>
+<%= govuk_pagination(pagy: @pagy) %>
