@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Application endpoints", type: :request do
+RSpec.describe "Application endpoints", skip: Rails.configuration.x.disable_legacy_api, type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Applications::Query }
   let(:serializer) { API::ApplicationSerializer }
