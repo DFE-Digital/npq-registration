@@ -73,6 +73,6 @@ module NpqRegistration
                                                secure: !Rails.env.local?,
                                                expire_after: 2.weeks
 
-    config.x.disable_legacy_api = true
+    config.x.disable_legacy_api = false
   end
 end
