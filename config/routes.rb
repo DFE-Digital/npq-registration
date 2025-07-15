@@ -65,12 +65,14 @@ Rails.application.routes.draw do
     get "guidance/*page", to: "guidance#show", as: :guidance_page
     get "docs/:version", to: "documentation#index", as: :documentation
 
+    namespace :v1 do
+      namespace :get_an_identity do
+        resource :webhook_messages, only: %i[create]
+      end
+    end
+
     unless Rails.configuration.x.disable_legacy_api
       namespace :v1 do
-        namespace :get_an_identity do
-          resource :webhook_messages, only: %i[create]
-        end
-
         defaults format: :json do
           resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
             member do

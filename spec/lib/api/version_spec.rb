@@ -5,7 +5,11 @@ RSpec.describe API::Version do
   describe ".all" do
     subject { described_class.all }
 
-    it { is_expected.to match_array(%i[v1 v2 v3]) }
+    if Rails.configuration.x.disable_legacy_api
+      it { is_expected.to match_array(%i[v3]) }
+    else
+      it { is_expected.to match_array(%i[v1 v2 v3]) }
+    end
   end
 
   describe ".exists?" do
