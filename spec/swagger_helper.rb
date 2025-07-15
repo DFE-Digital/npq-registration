@@ -98,14 +98,17 @@ RSpec.configure do |config|
       },
     }
   }.tap do |hash|
-    v1_v2_participant_declaration_requests = {
-      ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
-      ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
-      ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
-      ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
-    }
-    hash["v1/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
-    hash["v2/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    unless Rails.configuration.x.disable_legacy_api
+      v1_v2_participant_declaration_requests = {
+        ParticipantDeclarationRequest: PARTICIPANT_DECLARATION_REQUEST,
+        ParticipantDeclarationStartedRequest: PARTICIPANT_DECLARATION_STARTED_REQUEST,
+        ParticipantDeclarationRetainedRequest: PARTICIPANT_DECLARATION_RETAINED_REQUEST,
+        ParticipantDeclarationCompletedRequest: PARTICIPANT_DECLARATION_COMPLETED_REQUEST,
+      }
+      hash["v1/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+      hash["v2/swagger.yaml"][:components][:schemas].merge!(v1_v2_participant_declaration_requests)
+    end
+
     hash["v3/swagger.yaml"][:components][:schemas].merge!(
       ParticipantDeclarationRequest: V3_PARTICIPANT_DECLARATION_REQUEST,
       ParticipantDeclarationStartedRequest: V3_PARTICIPANT_DECLARATION_STARTED_REQUEST,
