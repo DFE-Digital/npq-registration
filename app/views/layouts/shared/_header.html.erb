@@ -1,8 +1,6 @@
 <%=
   govuk_header(service_name: "Register for a national professional qualification", service_url: root_path) do |header|
     if current_admin
-      header.with_navigation_item(text: "Legacy Admin", href: admin_path)
-      header.with_navigation_item(text: "Separation Admin", href: npq_separation_admin_path)
       header.with_navigation_item(text: "Sign out", href: sign_out_user_path)
     elsif current_user.actual_user?
       header.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")

@@ -58,18 +58,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :admin do
-    resources :applications, only: %i[index show] do
-      # This routes are only written for review apps in order to update the external statuses
-      member do
-        patch "update_approval_status"
-        patch "update_participant_outcome"
-      end
-    end
-    resources :schools, only: %i[index show]
-  end
-
-  get "/admin", to: "admin#show"
+  get "/admin", to: redirect("/npq-separation/admin")
 
   namespace :api do
     get :guidance, to: "guidance#index"

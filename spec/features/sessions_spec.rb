@@ -29,7 +29,6 @@ RSpec.feature "Sessions", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button "Sign in"
 
-    expect(page).to have_content("Register for a national professional qualification")
-    expect(page).to have_content("Admin")
+    expect(page).to have_content("Summary")
   end
 end
