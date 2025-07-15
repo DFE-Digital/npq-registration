@@ -54,7 +54,5 @@ private
     else
       service.errors.full_messages.join(", ")
     end
-  rescue StandardError => e
-    "Error: #{e.message}"
   end
 end
