@@ -2,14 +2,14 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## V1 and V2 APIs are deactivated in sandbox
+## V1 and V2 APIs are removed from sandbox
 ### 28 July 2025
 
 <strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
 
-The legacy V1 and V2 APIs have now been removed from `sandbox` ahead of removal from `production`.
+We've removed the legacy V1 and V2 APIs from the `sandbox` environment.
 
-V1 and V2 APIs will be removed from `production` on 8 August 2025. 
+These APIs will be removed from `production` on 8 August 2025. If you're still using them, you'll need to switch to the latest version before this date.
 
 
 ## Delivery partner endpoints and declarations are now available in production
