@@ -6,9 +6,9 @@ If you have any questions or comments about these notes, please contact DfE via 
 
 <strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
 
-The legacy V1 and V2 APIs have now been removed from `sandbox` ahead of removal from `production`.
+We've removed the legacy V1 and V2 APIs from the `sandbox` environment.
 
-V1 and V2 APIs will be removed from `production` on 8 August 2025. 
+These APIs will be removed from `production` on 8 August 2025. If you're still using them, you'll need to switch to the latest version before this date.
 
 
 ## 19 May 2025
