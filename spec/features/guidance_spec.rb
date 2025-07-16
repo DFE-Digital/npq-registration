@@ -45,7 +45,7 @@ RSpec.feature "Guidance", type: :feature do
       visit "/api/guidance/test-environments"
 
       expect(page).not_to have_content("#What are the test environments")
-      expect(page).to have_content("What are the test environments")
+      expect(page).to have_content("The test environments are used to test.")
     end
   end
 
