@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: DFE-Digital/github-actions/build-docker-image@master
+      - uses: DFE-Digital/github-actions/build-docker-image@snyk-testing
         id: build-docker-image
         with:
           docker-repository: ghcr.io/dfe-digital/npq-registration
