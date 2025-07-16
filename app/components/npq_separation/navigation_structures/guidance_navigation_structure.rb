@@ -14,8 +14,8 @@ module NpqSeparation
           ) => [],
           Node.new(
             name: "How the API works",
-            href: api_guidance_page_path(page: "API-introduction"),
-            prefix: "/api/guidance/API-introduction",
+            href: api_guidance_page_path(page: "api-introduction"),
+            prefix: "/api/guidance/api-introduction",
           ) => [],
           Node.new(
             name: "Test environments",
