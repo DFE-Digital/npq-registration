@@ -68,7 +68,7 @@
     end
     sl.with_row do |row|
       row.with_key(text: "Schedule identifier")
-      row.with_value(text: @application.schedule_id)
+      row.with_value(text: @application.schedule_id.presence || "-" )
     end
     sl.with_row do |row|
       row.with_key(text: "Funding choice")
