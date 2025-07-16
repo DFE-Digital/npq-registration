@@ -22,7 +22,7 @@ jobs:
 
     - name: Build without cache and push docker image
       id: build-image
-      uses: DFE-Digital/github-actions/build-docker-image@master
+      uses: DFE-Digital/github-actions/build-docker-image@testing-snyk
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         context: .
