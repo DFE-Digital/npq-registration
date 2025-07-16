@@ -4,6 +4,8 @@ class RegistrationWizardController < PublicPagesController
   before_action :set_form
   before_action :check_end_of_journey, only: %i[update]
 
+  rescue_from RegistrationWizard::RemovedStep, with: :redirect_to_course_start_date
+
   def show
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
@@ -17,7 +19,7 @@ class RegistrationWizardController < PublicPagesController
     @wizard.after_render
   rescue ActionView::Template::Error => e
     if e.cause.instance_of?(Questionnaires::IneligibleForFunding::UnexpectedEligibilityStatusCode)
-      redirect_to registration_wizard_show_path(:"course-start-date")
+      redirect_to_course_start_date
     else
       raise e
     end
@@ -58,6 +60,10 @@ class RegistrationWizardController < PublicPagesController
   end
 
 private
+
+  def redirect_to_course_start_date
+    redirect_to registration_wizard_show_path("course-start-date")
+  end
 
   def set_wizard
     @wizard = RegistrationWizard.new(current_step: params[:step].underscore, store:, params: wizard_params, request:, current_user:)
