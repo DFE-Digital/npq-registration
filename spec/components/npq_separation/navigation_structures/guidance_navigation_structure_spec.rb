@@ -6,6 +6,7 @@ RSpec.describe NpqSeparation::NavigationStructures::GuidanceNavigationStructure,
 
     {
       "Get started" => "/api/guidance/get-started",
+      "How the API works" => "/api/guidance/api-introduction",
       "Test environments" => "/api/guidance/test-environments",
       "What's new" => "/api/guidance/release-notes",
     }.each_with_index do |(name, href), i|
