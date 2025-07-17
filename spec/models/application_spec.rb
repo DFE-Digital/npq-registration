@@ -486,6 +486,20 @@ RSpec.describe Application do
 
       it { is_expected.not_to be_fundable }
     end
+
+    context "when it was previously funded" do
+      let(:user) { create(:user) }
+
+      subject(:application) { create(:application, :eligible_for_funding, :previously_funded, user:, course: Course.ehco) }
+
+      it { is_expected.not_to be_fundable }
+
+      context "when is marked eligible by policy" do
+        before { application.update!(funding_eligiblity_status_code: :marked_funded_by_policy) }
+
+        it { is_expected.to be_fundable }
+      end
+    end
   end
 
   describe "touch user when application changes" do

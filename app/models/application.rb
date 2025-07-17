@@ -97,7 +97,7 @@ class Application < ApplicationRecord
   # ECF and NPQ. In the mid term we will perform this calculation on NPQ and
   # store the value in the `eligible_for_funding` attribute.
   def eligible_for_dfe_funding?(with_funded_place: false)
-    if previously_funded?
+    if previously_funded? && funding_eligiblity_status_code != "marked_funded_by_policy"
       false
     else
       funding_eligibility(with_funded_place:)
