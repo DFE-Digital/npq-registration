@@ -40,7 +40,7 @@ module "application_configuration" {
 }
 
 module "web_application" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=2375-security-aks-containers-run-as-non-root-user-npq"
+  source = "./vendor/modules/aks//aks/application"
 
   is_web = true
 
@@ -66,7 +66,7 @@ module "web_application" {
 }
 
 module "worker_application" {
-  source = "git::https://github.com/DFE-Digital/terraform-modules.git//aks/application?ref=2375-security-aks-containers-run-as-non-root-user-npq"
+  source = "./vendor/modules/aks//aks/application"
 
   is_web = false
 

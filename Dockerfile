@@ -72,14 +72,7 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 # Change ownership only for directories that need write access
-RUN chown -R appuser:appgroup /app/tmp /app/public/api/docs /app/log
-
-# # Make everything read-only (with execute for directories)
-# RUN chmod -R a-w /app && \
-#     find /app -type d -exec chmod +x {} \;
-
-# # Grant write access only to directories that need it
-# RUN chmod -R u+w /app/tmp /app/public/api/docs /app/log
+RUN chown -R appuser:appgroup /app/tmp /app/public/api/docs
 
 ARG COMMIT_SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
