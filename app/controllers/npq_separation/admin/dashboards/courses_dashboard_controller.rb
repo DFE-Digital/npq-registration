@@ -1,5 +1,6 @@
 class NpqSeparation::Admin::Dashboards::CoursesDashboardController < NpqSeparation::AdminController
   def show
-    @applications = Application.where(cohort: Cohort.current)
+    @cohort = Cohort.find_by(id: params[:cohort_id]) || Cohort.current
+    @applications = Application.where(cohort: @cohort)
   end
 end

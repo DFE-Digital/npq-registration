@@ -15,4 +15,28 @@
 
 <h1 class="govuk-heading-l">Courses dashboard</h1>
 
+<div class="admin-search-box">
+  <%= form_with method: :get do |f| %>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <%=
+          f.govuk_collection_select(
+            :cohort_id,
+            Cohort.all.order(start_year: :desc),
+            :id,
+            ->(cohort) { cohort.start_year.to_s },
+            options: { selected: params[:cohort_id], include_blank: "All" },
+            label: { text: "Search by cohort", size: "s" },
+            )
+        %>
+      </div>
+    </div>
+
+    <%= f.govuk_submit "Search" %>
+  <% end %>
+</div>
+
+<h2 class="govuk-heading-m">Number of applications received for courses</h2>
+
 <%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :course) %>
