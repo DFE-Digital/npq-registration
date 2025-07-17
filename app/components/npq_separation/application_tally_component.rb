@@ -12,10 +12,15 @@ module NpqSeparation
       applications.joins(dimension).pluck(column).tally.sort
     end
 
+    def total_row
+      rows.sum { |_, count| count }
+    end
+
   private
 
     def column
       "#{dimension.to_s.pluralize}.name"
     end
+
   end
 end
