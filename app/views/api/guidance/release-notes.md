@@ -3,7 +3,9 @@
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
 
-## 19 May 2025
+## Delivery partner endpoints and declarations are now live 
+
+### 19 May 2025
 
 **PRODUCTION**
 
@@ -17,7 +19,9 @@ This requirement does not apply to overseas applicants.
 
 
 
-## 14 April 2025
+## Delivery partner endpoints and declarations added to sandbox
+
+### 14 April 2025
 
 **SANDBOX**
 
@@ -33,7 +37,11 @@ Starting from 28 April 2025, the `delivery_partner_id` will be required for coho
 
 
 
-## 27 November 2024
+## Standalone NPQ API is now live
+
+### 27 November 2024
+
+**PRODUCTION**
 
 We've launched the live standalone National Professional Qualifications (NPQs) API following a 3-month test phase.
 
@@ -62,7 +70,11 @@ To ensure everything runs smoothly, we recommend providers take the following po
 
 Providers can contact us via their dedicated DfE Slack channel if they’ve got any suggestions or concerns.
 
-## 13 August 2024
+## Standalone NPQ API available for testing
+
+### 13 August 2024
+
+**sandbox**
 
 We’ve released a minimum viable product (MVP) version of the standalone National Professional Qualifications (NPQ) API for providers to test ahead of its full launch at the end of November 2024. 
 
