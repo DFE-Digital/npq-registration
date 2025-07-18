@@ -1,7 +1,10 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "NPQ Participants endpoint", openapi_spec: "v2/swagger.yaml", skip: Rails.configuration.x.disable_legacy_api, type: :request do
+RSpec.describe "NPQ Participants endpoint",
+               openapi_spec: !Rails.configuration.x.disable_legacy_api && "v2/swagger.yaml",
+               skip: Rails.configuration.x.disable_legacy_api,
+               type: :request do
   include_context "with authorization for api doc request"
 
   let(:course) { create(:course, :early_headship_coaching_offer) }

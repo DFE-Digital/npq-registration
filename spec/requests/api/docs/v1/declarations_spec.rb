@@ -1,7 +1,10 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "Declarations endpoints", openapi_spec: "v1/swagger.yaml", skip: Rails.configuration.x.disable_legacy_api, type: :request do
+RSpec.describe "Declarations endpoints",
+               openapi_spec: !Rails.configuration.x.disable_legacy_api && "v1/swagger.yaml",
+               skip: Rails.configuration.x.disable_legacy_api,
+               type: :request do
   include_context "with authorization for api doc request"
 
   it_behaves_like "an API index Csv endpoint documentation",
