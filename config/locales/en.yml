@@ -117,6 +117,7 @@ en:
     invalidates_declaration: Changing schedule would invalidate existing declarations. Please void them first.
     schedule_has_not_changed: The participant already has the specified schedule
     invalid_for_course: The selected schedule is not valid for the course
+    not_found: The selected schedule cannot be found in the application cohort
 
   state: &state
     blank: "The '#/%{parameterized_attribute}' is missing from your request. Please include a 'passed' or 'failed' value and try again."
