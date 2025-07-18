@@ -37,7 +37,7 @@ module NpqSeparation
       def admin_nodes
         {
           Node.new(
-            name: "Dashboard",
+            name: "Dashboards",
             href: npq_separation_admin_path,
             prefix: "/npq-separation/admin/dashboard",
           ) => [],

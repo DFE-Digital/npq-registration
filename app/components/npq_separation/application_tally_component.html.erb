@@ -14,6 +14,12 @@
           row.with_cell(text: count, numeric: true)
         end
       end
+
+      # Add total row
+      body.with_row(classes: "govuk-table__row--bold") do |row|
+        row.with_cell(text: 'Total', header: true)
+        row.with_cell(text: total_row, numeric: true)
+      end
     end
   end
 %>

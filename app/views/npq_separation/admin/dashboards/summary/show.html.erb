@@ -1,4 +1,21 @@
-<h1 class="govuk-heading-l">Summary</h1>
+<% content_for :side_navigation do %>
+  <%= render NpqSeparation::SubNavigationComponent.new(
+    request.path,
+    structure: [
+      NpqSeparation::NavigationStructure::Node.new(
+        name: "Courses dashboard",
+        href: npq_separation_admin_dashboards_courses_dashboard_path,
+        prefix: "/npq-separation/admin/dashboards/courses_dashboard",
+        ),
+      NpqSeparation::NavigationStructure::Node.new(
+        name: "Providers dashboard",
+        href: npq_separation_admin_dashboards_providers_dashboard_path,
+        prefix: "/npq-separation/admin/dashboards/providers_dashboard",
+        )
+    ]
+  ) %>
+<% end %>
 
-<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :course) %>
-<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :lead_provider, dimension_header: "Provider") %>
+<h1 class="govuk-heading-l">Dashboards</h1>
+
+<p class="govuk-body">See how many applications there have been for different courses and providers.</p>
