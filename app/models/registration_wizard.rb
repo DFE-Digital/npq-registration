@@ -6,6 +6,7 @@ class RegistrationWizard
   include ActionView::Helpers::TranslationHelper
 
   class InvalidStep < StandardError; end
+  class RemovedStep < StandardError; end
 
   Answer = Struct.new(:key, :value, :change_step)
 
@@ -62,6 +63,12 @@ class RegistrationWizard
     cannot_register_yet
   ].freeze
 
+  REMOVED_REGISTRATION_STEPS = %i[
+    about_npq
+    choosen_start_date
+    confirmation
+  ].freeze
+
   attr_reader :current_step, :params, :store, :request, :current_user
 
   delegate :before_render,
@@ -74,6 +81,8 @@ class RegistrationWizard
   class << self
     def validate_step!(step)
       return step.to_sym if VALID_REGISTRATION_STEPS.include?(step.to_sym)
+
+      raise RemovedStep, "This step has been removed: #{step}" if REMOVED_REGISTRATION_STEPS.include?(step.to_sym)
 
       raise InvalidStep, "Could not find step: #{step}"
     end
