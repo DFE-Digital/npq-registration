@@ -17,21 +17,6 @@ Our objectives are centered around how we can make it easier for applicants to r
   <div class="govuk-grid-column-one-third">
     <h2 id="now" class="govuk-heading-m">Now</h2>
     <p class="govuk-body-m">We are:</p>
-    <p class="govuk-body-m"><strong>Improving the user journey</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>Understanding how we can adapt the service to better accommodate overseas and self-funded applicants in the future.</li>
-      <li>Maintaining and making general day-to-day improvements to the registration service.</li>
-    </ul>
-    <p class="govuk-body-m"><strong>Giving providers the ability to indicate the Delivery Partner with API Declarations</strong></p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>For 2024 cohort declarations or later, the Delivery Partner ID must be provided.</li>
-      <li>The exception is for Overseas applicants, where you must not include a Delivery Partner ID.</li>
-    </ul>
-  </div>
-
-  <div class="govuk-grid-column-one-third">
-    <h2 id="next" class="govuk-heading-m">Next</h2>
-    <p class="govuk-body-m">We will:</p>
     <p class="govuk-body-m"><strong>Help providers identify records more easily</strong></p>
     <ul class="govuk-list govuk-list--bullet">
       <li>Include the Application ID within the API response body for the Participant Declarations endpoint.</li>
@@ -47,17 +32,31 @@ Our objectives are centered around how we can make it easier for applicants to r
     <p class="govuk-body-m"><strong>Process applications more efficiently</strong></p>
     <ul class="govuk-list govuk-list--bullet">
       <li>Ability to reject a previously accepted application with no declarations.</li>
-      <li>Explore the ability to change the application cohort for funded places, to allow applicants to register.</li>
     </ul>
+        <p class="govuk-body-m"><strong>Technical debt</strong></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Deprecate the legacy versions of the API (v1 & v2), now that providers have migrated to v3 since separating from ECF.</li>
+    </ul>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <h2 id="next" class="govuk-heading-m">Next</h2>
+    <p class="govuk-body-m">We will:</p>
+            <p class="govuk-body-m"><strong>Improve the registration sign-in process</strong></p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Introduce the GOV.UK One Login system to make signing into the NPQ registration service simpler and more secure.</li>
+
+
   </div>
 
   <div class="govuk-grid-column-one-third">
     <h2 id="later" class="govuk-heading-m">Later</h2>
     <p class="govuk-body-m">We plan to:</p>
-    <p class="govuk-body-m"><strong>Technical debt</strong></p>
+        <p class="govuk-body-m"><strong> Allow users to check their funding eligiblity without making a registration</strong></p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>Deprecate the legacy versions of the API (v1 & v2), now that providers have migrated to v3 since separating from ECF.</li>
-    </ul>
+      <li>Explore ways to clearly show a user whether they'll be eligible for scholarship funding without making a registration.</li>
+
+
   </div>
 
 </div>
