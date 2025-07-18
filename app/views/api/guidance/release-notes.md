@@ -2,10 +2,18 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## 17 July 2025
+
+<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
+
+We've removed the legacy V1 and V2 APIs from the `sandbox` environment.
+
+These APIs will be removed from `production` on 8 August 2025. If you're still using them, you'll need to switch to the latest version before this date.
+
 
 ## 19 May 2025
 
-**PRODUCTION**
+<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
 
 The delivery partner API changes released in the sandbox environment on 14 April 2025 are now live in production.
 
@@ -19,7 +27,7 @@ This requirement does not apply to overseas applicants.
 
 ## 14 April 2025
 
-**SANDBOX**
+<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
 
 We’ve made updates in the sandbox environment to improve how lead providers interact with the service.
 
