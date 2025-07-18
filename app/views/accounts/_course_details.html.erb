@@ -58,12 +58,6 @@
             <%= govuk_tag(text: "Unsuccessful", colour: "red") %>
           <% end %>
         </dd>
-        <!-- This code is only written for review apps in order to update the external statuses -->
-        <% if Rails.env.review? %>
-          <dd class="govuk-summary-list__actions">
-            <%= link_to 'Update Status', update_approval_status_admin_application_path(application), method: :patch %>
-          </dd>
-        <% end %>
       </div>
 
       <% if application.lead_provider_approval_status.blank? || pending?(application) %>
@@ -88,34 +82,14 @@
             Course outcome
           </dt>
           <dd class="govuk-summary-list__value">
-              <% if application.latest_participant_outcome_state.capitalize == "Passed" %>
-                <%= govuk_tag(text: "Passed", colour: "green") %>
-                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
-              <% elsif application.latest_participant_outcome_state.capitalize == "Failed" %>
-                <%= govuk_tag(text: "Not passed", colour: "red") %>
-                <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
-              <% end %>
+            <% if application.latest_participant_outcome_state.capitalize == "Passed" %>
+              <%= govuk_tag(text: "Passed", colour: "green") %>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.passed_html")  %></p>
+            <% elsif application.latest_participant_outcome_state.capitalize == "Failed" %>
+              <%= govuk_tag(text: "Not passed", colour: "red") %>
+              <p class="govuk-!-margin-top-2 govuk-!-margin-bottom-0"><%= t("course.outcome.failed")  %></p>
+            <% end %>
           </dd>
-          <!-- This code is only written for review apps in order to update the external statuses -->
-          <% if Rails.env.review? %>
-            <dd class="govuk-summary-list__actions">
-              <%= link_to 'Update Outcome', update_participant_outcome_admin_application_path(application), method: :patch %>
-            </dd>
-          <% end %>
-        </div>
-      <% elsif Rails.env.review? %>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Course outcome
-          </dt>
-          <dd class="govuk-summary-list__value">
-            <%= govuk_tag(text: "N/A", colour: "red") %>
-          </dd>
-          <% if accepted?(application)%>
-            <dd class="govuk-summary-list__actions">
-              <%= link_to 'Update Outcome', update_participant_outcome_admin_application_path(application), method: :patch %>
-            </dd>
-          <% end %>
         </div>
       <% end %>
     </dl>
