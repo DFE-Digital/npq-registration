@@ -37,6 +37,11 @@ en:
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     cohort_does_not_accept_capping: Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.
     cannot_change_funded_place: You cannot change the funded place because declarations have been submitted. You will need to void the existing declarations and resubmit them after changing the funded place.
+    attributes:
+      lead_provider: Provider
+      notes: Notes
+      eligible_for_funding: Eligible for funding
+      funding_eligiblity_status_code: Funding eligibility status code
 
   declaration: &declaration
     blank: You must specify a declaration

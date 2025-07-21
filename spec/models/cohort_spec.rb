@@ -105,4 +105,10 @@ RSpec.describe Cohort, type: :model do
       end
     end
   end
+
+  describe "#name" do
+    subject { cohort.name }
+
+    it { is_expected.to eq cohort.start_year }
+  end
 end

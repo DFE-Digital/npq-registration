@@ -247,6 +247,20 @@ RSpec.feature "Applications in review", type: :feature do
 
     find("summary", text: "View registration as it appears on the provider API V3").click
     expect(page).to have_text JSON.pretty_generate(serialized_application)
+
+    # check side nav
+
+    within "#side-navigation" do
+      click_link application.course.name
+      expect(page).to have_current_path(npq_separation_admin_application_review_path(application))
+    end
+
+    visit npq_separation_admin_application_review_path(application)
+
+    within "#side-navigation" do
+      click_link "Application history"
+      expect(page).to have_current_path(npq_separation_admin_applications_reviews_history_path(application))
+    end
   end
 
   scenario "adding and editing notes" do

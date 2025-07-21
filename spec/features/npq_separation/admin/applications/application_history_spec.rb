@@ -1,0 +1,47 @@
+require "rails_helper"
+
+RSpec.feature "viewing application history", :versioning, type: :feature do
+  include Helpers::AdminLogin
+
+  let(:application) { create(:application) }
+
+  before do
+    sign_in_as(create(:admin))
+  end
+
+  context "when there are no changes to the application" do
+    scenario "viewing application history" do
+      visit npq_separation_admin_application_path(application)
+      click_link "Application history"
+
+      expect(page).to have_css("h1", text: "Application history")
+      expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
+      expect(page).to have_css("p", text: "Email: #{application.user.email}")
+      expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not verified")
+
+      expect(page).to have_content("No changes have been made to this application.")
+    end
+  end
+
+  context "when there are changes to the application" do
+    let(:application) { create(:application, :accepted, cohort:, lead_provider: LeadProvider.first) }
+    let(:cohort) { create(:cohort, start_year: 2024) }
+    let(:older_cohort) { create(:cohort, start_year: 2023) }
+
+    before do
+      PaperTrail.request.whodunnit = "test user"
+      create(:schedule, cohort: older_cohort, course_group: application.course.course_group, identifier: application.schedule.identifier)
+      Applications::ChangeCohort.new(application:, cohort_id: older_cohort.id).change_cohort
+      Applications::ChangeLeadProvider.new(application:, lead_provider_id: LeadProvider.last.id).change_lead_provider
+      Applications::ChangeFundingEligibility.new(application:, eligible_for_funding: true).change_funding_eligibility
+    end
+
+    scenario "viewing application history" do
+      visit npq_separation_admin_applications_history_path(application)
+      expect(page).to have_css("h2", text: "Cohort changed from 2024 to 2023, Schedule changed from #{Schedule.first.name} to #{Schedule.last.name}")
+      expect(page).to have_content("by test user")
+      expect(page).to have_css("h2", text: "Provider changed from Ambition Institute to UCL Institute of Education")
+      expect(page).to have_css("h2", text: "Eligible for funding changed to true, Funding eligibility status code changed to marked_funded_by_policy")
+    end
+  end
+end
