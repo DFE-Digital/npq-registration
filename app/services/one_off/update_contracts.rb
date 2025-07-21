@@ -1,6 +1,6 @@
 module OneOff
   class UpdateContracts
-    def self.call(year:, month:, cohort_year:, csv_path:)
+    def self.call(year:, month:, cohort_year:, csv_path:, dry_run: true)
       csv_file = CSV.read(csv_path, headers: true)
 
       ActiveRecord::Base.transaction do
@@ -22,8 +22,11 @@ module OneOff
 
           contract.contract_template = new_template
           contract.save!
+
           Rails.logger.info("[UpdateContract] Contract #{contract.id} got template updated: #{old_template.id} to #{new_template.id}")
         end
+
+        raise ActiveRecord::Rollback if dry_run
       end
     end
   end

@@ -34,7 +34,7 @@ RSpec.describe OneOff::UpdateContracts do
 
     context "when operation is successful" do
       it "changes the contract templates" do
-        OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+        OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run: false)
 
         expect(contract_1.reload.contract_template).not_to eq(contract_template_1)
         expect(contract_2.reload.contract_template).not_to eq(contract_template_2)
@@ -61,7 +61,7 @@ RSpec.describe OneOff::UpdateContracts do
         it "has proper output" do
           allow(Rails.logger).to receive(:info)
 
-          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run: false)
 
           expect(Rails.logger)
             .to have_received(:info).with(expected_message)
@@ -86,8 +86,20 @@ RSpec.describe OneOff::UpdateContracts do
 
       it "raises the exception" do
         expect {
-          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run: false)
         }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when dry run is true" do
+      it "does not change any templates" do
+        OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run: true)
+
+        expect(contract_1.reload.contract_template).to eq(contract_template_1)
+        expect(contract_2.reload.contract_template).to eq(contract_template_2)
+
+        expect(contract_1.reload.contract_template.per_participant).to eq(100.0)
+        expect(contract_2.reload.contract_template.per_participant).to eq(200.0)
       end
     end
   end
