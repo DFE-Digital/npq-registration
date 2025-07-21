@@ -17,13 +17,25 @@ module OneOff
 
           contract = contracts.first
           old_template = contract.contract_template
-          new_template = old_template.new_from_existing(per_participant: row["per_participant"])
-          new_template.save!
 
-          contract.contract_template = new_template
-          contract.save!
+          existing_template = old_template.find_from_existing(per_participant: row["per_participant"])
 
-          Rails.logger.info("[UpdateContract] Contract #{contract.id} got template updated: #{old_template.id} to #{new_template.id}")
+          if existing_template
+            contract.contract_template = existing_template
+            Rails.logger.info("[UpdateContract] Found existing template: #{existing_template.id}")
+          else
+            new_template = old_template.new_from_existing(per_participant: row["per_participant"])
+            new_template.save!
+            Rails.logger.info("[UpdateContract] New template created: #{new_template.id}")
+            contract.contract_template = new_template
+          end
+
+          if contract.changed?
+            contract.save!
+            Rails.logger.info("[UpdateContract] Contract #{contract.id} got template updated: #{old_template.id} to #{contract.contract_template.id}")
+          else
+            Rails.logger.info("[UpdateContract] Contract #{contract.id} template remains unchanged: #{old_template.id}")
+          end
         end
 
         raise ActiveRecord::Rollback if dry_run

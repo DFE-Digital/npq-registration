@@ -35,4 +35,22 @@ RSpec.describe ContractTemplate, type: :model do
       expect(new_attributes.attributes.except("created_at", "updated_at", "id", "ecf_id")).to eq(contract_template.attributes.except("created_at", "updated_at", "id", "ecf_id"))
     end
   end
+
+  describe "#find_from_existing" do
+    subject { contract_template.find_from_existing(per_participant: 123.0) }
+
+    let!(:contract_template) { create(:contract_template, per_participant: 123.0) }
+
+    context "when a matching contract template exists" do
+      it "returns the existing contract template" do
+        expect(subject).to eq(contract_template)
+      end
+    end
+
+    context "when no matching contract template exists" do
+      subject { contract_template.find_from_existing(per_participant: 321.0) }
+
+      it { is_expected.to be_nil }
+    end
+  end
 end
