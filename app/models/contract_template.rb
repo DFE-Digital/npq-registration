@@ -35,4 +35,18 @@ class ContractTemplate < ApplicationRecord
 
     ContractTemplate.new(new_attributes)
   end
+
+  def find_from_existing(attributes_to_override)
+    ContractTemplate.where(
+      special_course: special_course,
+      per_participant: attributes_to_override[:per_participant],
+      output_payment_percentage: output_payment_percentage,
+      number_of_payment_periods: number_of_payment_periods,
+      service_fee_percentage: service_fee_percentage,
+      service_fee_installments: service_fee_installments,
+      recruitment_target: recruitment_target,
+      monthly_service_fee: monthly_service_fee,
+      targeted_delivery_funding_per_participant: targeted_delivery_funding_per_participant,
+    ).first
+  end
 end

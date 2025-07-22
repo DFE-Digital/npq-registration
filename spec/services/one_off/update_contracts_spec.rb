@@ -26,15 +26,18 @@ RSpec.describe OneOff::UpdateContracts do
     let(:contract_template_2) { create(:contract_template, per_participant: 200) }
     let!(:contract_1) { create(:contract, contract_template: contract_template_1, statement: statement_1, course: course_1) }
     let!(:contract_2) { create(:contract, contract_template: contract_template_2, statement: statement_2, course: course_2) }
+    let(:dry_run) { false }
 
     before do
       csv_file.write(csv_content)
       csv_file.rewind
     end
 
+    subject { described_class.call(year: 2024, month: 12, cohort_year: 2024, csv_path:, dry_run:) }
+
     context "when operation is successful" do
       it "changes the contract templates" do
-        OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+        subject
 
         expect(contract_1.reload.contract_template).not_to eq(contract_template_1)
         expect(contract_2.reload.contract_template).not_to eq(contract_template_2)
@@ -61,7 +64,7 @@ RSpec.describe OneOff::UpdateContracts do
         it "has proper output" do
           allow(Rails.logger).to receive(:info)
 
-          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+          subject
 
           expect(Rails.logger)
             .to have_received(:info).with(expected_message)
@@ -86,8 +89,38 @@ RSpec.describe OneOff::UpdateContracts do
 
       it "raises the exception" do
         expect {
-          OneOff::UpdateContracts.call(year: 2024, month: 12, cohort_year: 2024, csv_path:)
+          subject
         }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context "when there is already a contract template that matches all attributes" do
+      let!(:existing_template_1) { create(:contract_template, per_participant: 1000) }
+      let!(:existing_template_2) { create(:contract_template, per_participant: 2000) }
+
+      it "does not create a new contract template" do
+        expect { subject }.not_to change(ContractTemplate, :count)
+      end
+
+      it "updates the contract to use the existing contract template" do
+        subject
+
+        expect(contract_1.reload.contract_template).to eq(existing_template_1)
+        expect(contract_2.reload.contract_template).to eq(existing_template_2)
+      end
+    end
+
+    context "when dry run is true" do
+      let(:dry_run) { true }
+
+      it "does not change any templates" do
+        subject
+
+        expect(contract_1.reload.contract_template).to eq(contract_template_1)
+        expect(contract_2.reload.contract_template).to eq(contract_template_2)
+
+        expect(contract_1.reload.contract_template.per_participant).to eq(100.0)
+        expect(contract_2.reload.contract_template.per_participant).to eq(200.0)
       end
     end
   end
