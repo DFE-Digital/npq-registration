@@ -13,8 +13,8 @@
 
       <%= f.govuk_text_field :per_participant,
         prefix_text: "£",
-         label: { text: "Change payment per participant", tag: "h1", size: "l"},
-         hint: { text: "Do not enter commas or pound signs, for example: enter 19000 for £19,000" } do %>
+        label: { text: "Change payment per participant", tag: "h1", size: "l"},
+        hint: { text: "Do not enter commas or pound signs, for example: enter 19000 for £19,000" } do %>
 
         <div class="govuk-inset-text">
           <p class="govuk-body">
@@ -28,7 +28,7 @@
             <%= @contract.recruitment_target %>
           </p>
           <p class="govuk-body">
-            <strong>Current payment amount per participant</strong>
+            <strong>Current payment per participant</strong>
             <br/>
             <%= number_to_currency(@contract.per_participant) %>
           </p>

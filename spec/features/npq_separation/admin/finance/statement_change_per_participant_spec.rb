@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.feature "Statement - change payment amount per participant", type: :feature do
+RSpec.feature "Statement - change payment per participant", type: :feature do
   include Helpers::AdminLogin
 
   let(:statement) { create(:statement) }
@@ -45,7 +45,7 @@ RSpec.feature "Statement - change payment amount per participant", type: :featur
     click_button "Continue"
     click_button "Confirm and submit"
 
-    expect(page).to have_content("#{contract.course.name} payment amount per participant changed")
+    expect(page).to have_content("#{contract.course.name} payment per participant changed")
     expect(contract.reload.per_participant).to eq(123)
   end
 
