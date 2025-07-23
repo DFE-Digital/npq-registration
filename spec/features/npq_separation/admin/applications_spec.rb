@@ -179,7 +179,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       expect(summary_list).to have_summary_item("Funded place", "")
       expect(summary_list).to have_summary_item("Status code", application.funding_eligiblity_status_code.humanize)
       expect(summary_list).to have_summary_item("Schedule cohort", application.cohort.start_year)
-      expect(summary_list).to have_summary_item("Schedule identifier", application.schedule_id)
+      expect(summary_list).to have_summary_item("Schedule identifier", application.schedule&.identifier || "-")
       expect(summary_list).to have_summary_item("Funding choice", application.funding_choice&.capitalize)
       expect(summary_list).to have_summary_item("Notes", "No notes")
     end
