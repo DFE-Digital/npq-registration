@@ -191,8 +191,8 @@ Rails.application.routes.draw do
       resources :super_admins, only: %i[update]
       namespace :dashboards do
         resource :summary, only: :show, controller: "summary"
-        resource :courses_dashboard, only: [:show], controller: "courses_dashboard"
-        resource :providers_dashboard, only: [:show], controller: "providers_dashboard"
+        resource :courses_dashboard, only: [:show], controller: "courses_dashboard", path: "courses-dashboard"
+        resource :providers_dashboard, only: [:show], controller: "providers_dashboard", path: "providers-dashboard"
       end
 
       resources :registration_closed, only: %i[index], path: "registration-closed"
