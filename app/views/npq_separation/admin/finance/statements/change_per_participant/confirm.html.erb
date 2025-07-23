@@ -1,0 +1,44 @@
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+  <%= render "npq_separation/admin/finance/statements/statement_side_navigation" %>
+<% end %>
+
+<%= govuk_back_link href: npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract) %>
+
+<h1 class="govuk-heading-l">Check your changes before submitting</h1>
+
+<p class="govuk-body">
+  You are about to change the payment per participant for the course: <strong><%= @contract.course.name %></strong>.
+<p>
+
+<%=
+  govuk_table do |table|
+    table.with_head do |head|
+      head.with_row do |row|
+        row.with_cell(text: "Old payment amount per participant")
+        row.with_cell(text: "New payment amount per participant")
+        row.with_cell(text: "Action")
+      end
+    end
+
+    table.with_body do |body|
+      body.with_row do |row|
+        row.with_cell(text: number_to_currency(@contract.per_participant))
+        row.with_cell(text: number_to_currency(@service.per_participant))
+        row.with_cell do
+          govuk_link_to("Change", npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract))
+        end
+      end
+    end
+  end
+%>
+
+<%= form_for @service,
+  url: confirmed_npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract) do |f| %>
+
+  <div class="govuk-button-group">
+    <%= f.hidden_field :per_participant, value: @service.per_participant %>
+    <%= f.govuk_submit "Confirm and submit" %>
+    <%= govuk_link_to t("shared.cancel"), npq_separation_admin_finance_statement_path(@statement) %>
+  </div>
+<% end %>

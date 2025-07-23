@@ -3,6 +3,12 @@ require "rails_helper"
 RSpec.describe ContractTemplate, type: :model do
   subject { build(:contract_template) }
 
+  describe "paper_trail" do
+    it "enables paper trail" do
+      expect(ContractTemplate.new).to be_versioned
+    end
+  end
+
   describe "relationships" do
     it { is_expected.to have_many(:contracts) }
   end

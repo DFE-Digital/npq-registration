@@ -644,6 +644,12 @@ en:
               <<: *application
             funded_place:
               <<: *funded_place
+        contracts/change_per_participant:
+          attributes:
+            per_participant:
+              blank: Enter the new amount
+              not_a_number: Amount must be a number, without commas, decimal points, or the £ symbol
+              greater_than_or_equal_to: Amount must be a positive number
         qualified_teachers_api_sender:
           already_successfully_sent_to_api: "This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)"
           already_unsuccessfully_sent_to_api: "This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)"
