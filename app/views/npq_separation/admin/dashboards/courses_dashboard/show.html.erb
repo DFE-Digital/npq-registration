@@ -39,4 +39,27 @@
 
 <h2 class="govuk-heading-m">Number of applications received for courses</h2>
 
-<%= render NpqSeparation::ApplicationTallyComponent.new(@applications, :course) %>
+<%=
+  govuk_table do |table|
+    table.with_head do |header|
+      header.with_row do |row|
+        row.with_cell(text: "Course name")
+        row.with_cell(text: 'Applications', numeric: true)
+      end
+    end
+
+    table.with_body do |body|
+      @rows.each do |bucket, count|
+        body.with_row do |row|
+          row.with_cell(text: bucket)
+          row.with_cell(text: count, numeric: true)
+        end
+      end
+
+      body.with_row(classes: "govuk-table__row--bold") do |row|
+        row.with_cell(text: 'Total', header: true)
+        row.with_cell(text: @rows.sum { |_,count| count }, numeric: true)
+      end
+    end
+  end
+%>
