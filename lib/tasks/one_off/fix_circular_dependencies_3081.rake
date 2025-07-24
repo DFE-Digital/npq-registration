@@ -23,13 +23,16 @@ namespace :one_off do
 
         next unless to_user.trn == from_user.trn
 
-        ParticipantIdChange.where(from_participant_id: change.to_participant_id, to_participant_id: from_user.ecf_id).destroy_all
-        change.destroy!
-
-        if to_user.significantly_updated_at > from_user.significantly_updated_at
-          Users::MergeAndArchive.new(user_to_merge: from_user, user_to_keep: to_user).call(dry_run: false)
+        if to_user.archived?
+          change.destroy!
         else
-          Users::MergeAndArchive.new(user_to_merge: to_user, user_to_keep: from_user).call(dry_run: false)
+          ParticipantIdChange.where(from_participant_id: change.to_participant_id, to_participant_id: from_user.ecf_id).destroy_all
+          change.destroy!
+          if to_user.significantly_updated_at > from_user.significantly_updated_at
+            Users::MergeAndArchive.new(user_to_merge: from_user, user_to_keep: to_user).call(dry_run: false)
+          else
+            Users::MergeAndArchive.new(user_to_merge: to_user, user_to_keep: from_user).call(dry_run: false)
+          end
         end
       end
     end

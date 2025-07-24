@@ -99,6 +99,30 @@ RSpec.describe "ParticipantIDChange cleanup tasks" do
           expect { run_task }.not_to(change { to_user.reload.archived? })
         end
       end
+
+      context "when to_user is archived" do
+        context "when checking the ParticipantIdChange record" do
+          let(:participant_id_change) { ParticipantIdChange.first }
+          let(:to_user) { create(:user, trn: "1234", trn_verified: false, significantly_updated_at: 1.day.ago) }
+
+          before do
+            Users::Archiver.new(user: to_user).archive!
+            run_task
+          end
+
+          it "has only one record" do
+            expect(ParticipantIdChange.count).to eq 1
+          end
+
+          it "has the proper from_user" do
+            expect(participant_id_change.from_participant_id).to eq to_user.ecf_id
+          end
+
+          it "has the proper to_user" do
+            expect(participant_id_change.to_participant_id).to eq from_user.ecf_id
+          end
+        end
+      end
     end
   end
 end
