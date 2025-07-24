@@ -36,7 +36,7 @@ module NpqSeparation
           change_to = change[1]
         end
 
-        I18n.t("#{record.class.model_name.i18n_key}.attributes.#{label}", default: label.humanize).tap do |output_string|
+        record.class.human_attribute_name(label).tap do |output_string|
           output_string << " changed"
           output_string << " from #{change_from}" if change_from
           output_string << " to #{change_to}" if change_to
@@ -46,8 +46,14 @@ module NpqSeparation
       def format_change(label, change)
         return unless change
 
-        object = label.classify.constantize.find(change)
-        object.respond_to?(:name) ? object.name : "ID: #{change}"
+        fallback = "ID: #{change}"
+        reflection = record.class.reflections[label]
+        if reflection
+          object = reflection.klass.find(change)
+          object.respond_to?(:name) ? object.name : fallback
+        else
+          fallback
+        end
       end
 
       def show_whodunnit(whodunnit)
@@ -62,6 +68,8 @@ module NpqSeparation
         else
           whodunnit
         end
+      rescue ActiveRecord::RecordNotFound
+        whodunnit
       end
     end
   end

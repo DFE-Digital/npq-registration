@@ -19,7 +19,8 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
     let(:original_lead_provider) { LeadProvider.first }
     let(:original_itt_provider) { create(:itt_provider) }
     let(:new_lead_provider) { LeadProvider.last }
-    let(:application) { create(:application, :accepted, cohort:, lead_provider: original_lead_provider, itt_provider: original_itt_provider) }
+    let(:original_ecf_id) { SecureRandom.uuid }
+    let(:application) { create(:application, :accepted, cohort:, lead_provider: original_lead_provider, itt_provider: original_itt_provider, ecf_id: original_ecf_id) }
     let(:cohort) { create(:cohort, start_year: 2024) }
     let(:older_cohort) { create(:cohort, start_year: 2023) }
     let(:whodunnit) { nil }
@@ -60,6 +61,15 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
       it "shows the admin user who made the changes" do
         expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header p.moj-timeline__byline",
                                     text: "by #{admin.full_name}")
+      end
+
+      context "when the admin user has been deleted" do
+        before { admin.destroy }
+
+        it "shows the change using the whodunnit string" do
+          expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header p.moj-timeline__byline",
+                                      text: "by #{whodunnit}")
+        end
       end
     end
 
@@ -105,6 +115,17 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
       it "shows the change using an ID" do
         expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
                                     text: "Itt provider changed from ID: #{original_itt_provider.id} to ID: #{application.itt_provider.id}")
+      end
+    end
+
+    context "when the change is on _id attribute that is not an association" do
+      let(:new_ecf_id) { SecureRandom.uuid }
+
+      before { application.update!(ecf_id: new_ecf_id) }
+
+      it "shows the change using an ID" do
+        expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
+                                    text: "Ecf changed from ID: #{original_ecf_id} to ID: #{new_ecf_id}")
       end
     end
   end
