@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "an API index endpoint documentation", :exceptions_app do |url, tag, resource_description, filter_schema_ref, response_schema_ref, default_sortable, sorting_schema_ref = nil|
+  next if url =~ %r{/api/v[12]/} && Rails.configuration.x.disable_legacy_api
+
   path url do
     get "Retrieve multiple #{resource_description}" do
       tags tag

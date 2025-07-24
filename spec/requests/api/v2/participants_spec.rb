@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Participant endpoints", type: :request do
+RSpec.describe "Participant endpoints", skip: Rails.configuration.x.disable_legacy_api, type: :request do
   let(:current_lead_provider) { create(:lead_provider) }
   let(:query) { Participants::Query }
   let(:serializer) { API::ParticipantSerializer }
