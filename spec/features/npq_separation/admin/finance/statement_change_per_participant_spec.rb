@@ -5,13 +5,12 @@ require "rails_helper"
 RSpec.feature "Statement - change payment per participant", type: :feature do
   include Helpers::AdminLogin
 
-  let(:statement) { create(:statement) }
-  let(:contract) { Contract.joins(:course).order(identifier: :asc).first }
+  let(:statement) { create(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+  let!(:contract) { create(:contract, course: create(:course, :leading_teaching), statement:) }
+  let(:future_statement) { create(:statement, month: Time.zone.today.month + 1, year: Time.zone.today.year, lead_provider: statement.lead_provider) }
+  let!(:future_contract) { create(:contract, course: contract.course, statement: future_statement) }
 
   before do
-    create(:contract, course: create(:course, :leading_teaching), statement:)
-    create(:contract, course: create(:course, :leading_behaviour_culture), statement:)
-    create(:contract, course: create(:course, :leading_primary_mathmatics), statement:)
     sign_in_as(create(:admin))
   end
 
@@ -45,8 +44,9 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
     click_button "Continue"
     click_button "Confirm and submit"
 
-    expect(page).to have_content("#{contract.course.name} payment per participant changed")
+    expect(page).to have_content("#{contract.course.name} payment per participant changed for all #{statement.lead_provider.name} statements in cohort #{statement.cohort.start_year} from the current month onwards")
     expect(contract.reload.per_participant).to eq(123)
+    expect(future_contract.reload.per_participant).to eq(123)
   end
 
   scenario "back and cancel links" do
@@ -88,6 +88,30 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
 
     click_link "Cancel"
     expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
+  end
+
+  context "when attempting to update a past statement" do
+    let(:statement) { create(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
+
+    scenario "change links should not appear" do
+      visit(npq_separation_admin_finance_statement_path(statement))
+      find("span", text: "Contract Information").click
+      within("#contract-information tbody tr:nth-of-type(1)") do
+        expect(page).not_to have_link("Change")
+      end
+    end
+  end
+
+  context "when attempting to update a paid statement" do
+    let(:statement) { create(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
+
+    scenario "change links should not appear" do
+      visit(npq_separation_admin_finance_statement_path(statement))
+      find("span", text: "Contract Information").click
+      within("#contract-information tbody tr:nth-of-type(1)") do
+        expect(page).not_to have_link("Change")
+      end
+    end
   end
 
   scenario "edge-case - updating the hidden field value on the confirmation screen" do

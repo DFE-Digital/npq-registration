@@ -29,7 +29,7 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
     end
 
     it "does not allow non-numeric characters" do
-      expect(subject).not_to allow_value("£1234.56").for(:per_participant).with_message("Amount must be a number, without commas, decimal points, or the £ symbol")
+      expect(subject).not_to allow_value("£1234.56").for(:per_participant).with_message("Amount must be a number, without commas, or the £ symbol")
     end
 
     it "does not allow negative numbers" do

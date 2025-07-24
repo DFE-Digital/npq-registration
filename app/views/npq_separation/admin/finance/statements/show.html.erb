@@ -105,7 +105,9 @@
                 row.with_cell(text: contract.contract_template.recruitment_target)
                 row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
                 row.with_cell do
+                  unless @statement.past? || @statement.paid?
                    govuk_link_to("Change", npq_separation_admin_finance_statement_change_per_participant_path(@statement, contract))
+                  end
                 end
               end
             end

@@ -16,7 +16,21 @@
         label: { text: "Change payment per participant", tag: "h1", size: "l"},
         hint: { text: "Do not enter commas or pound signs, for example: enter 19000 for £19,000" } do %>
 
+        <p class="govuk-body">
+          This will change the payment per participant for all statements for the current cohort, provider and course, from this month onwards.
+        </p>
+
         <div class="govuk-inset-text">
+          <p class="govuk-body">
+            <strong>Cohort</strong>
+            <br/>
+            <%= @statement.cohort.start_year %>
+          </p>
+          <p class="govuk-body">
+            <strong>Provider</strong>
+            <br/>
+            <%= @statement.lead_provider.name %>
+          </p>
           <p class="govuk-body">
             <strong>Course name</strong>
             <br/>

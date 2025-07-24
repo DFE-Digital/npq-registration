@@ -61,6 +61,10 @@ class Statement < ApplicationRecord
     cohort.start_year >= 2022
   end
 
+  def past?
+    Date.new(year, month) < Date.current.beginning_of_month
+  end
+
 private
 
   def payment_date_on_or_after_deadline_date

@@ -651,7 +651,7 @@ en:
             per_participant:
               blank: Enter the new amount
               greater_than_or_equal_to: Amount must be a positive number
-              not_a_number: Amount must be a number, without commas, decimal points, or the £ symbol
+              not_a_number: Amount must be a number, without commas, or the £ symbol
             statement:
               paid: The statement is already paid and cannot be changed
         qualified_teachers_api_sender:
