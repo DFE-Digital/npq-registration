@@ -25,6 +25,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     it { is_expected.to have_link(application.employer_name_to_display, href: npq_separation_admin_schools_path(q: application.school.urn)) }
     it { is_expected.to have_summary_item "Unique reference number (URN)", application.school.urn }
     it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", application.school.ukprn }
+    it { is_expected.to have_summary_item "Schedule identifier", application.schedule.identifier }
 
     context "with application overview summary card" do
       subject { Capybara.string(render).find(".govuk-summary-card", text: "Application overview") }
@@ -56,5 +57,6 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     it { is_expected.to have_summary_item "Course", application.course.name }
     it { is_expected.to have_summary_item "Unique reference number (URN)", "" }
     it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", "" }
+    it { is_expected.to have_summary_item "Schedule identifier", "-" }
   end
 end
