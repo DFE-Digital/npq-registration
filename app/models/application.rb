@@ -137,7 +137,7 @@ class Application < ApplicationRecord
   end
 
   def inside_catchment?
-    %w[england].include?(teacher_catchment)
+    %w[england].include?(teacher_catchment) || (cohort.start_year < 2024 && !!school&.urn&.starts_with?("1"))
   end
 
   def new_headteacher?
