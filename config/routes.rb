@@ -296,6 +296,10 @@ Rails.application.routes.draw do
           post "run", on: :member
         end
 
+        resources :submit_declarations, controller: "submit_declarations", only: %i[index create show] do
+          post "run", on: :member
+        end
+
         resources :update_and_verify_trns, controller: "update_and_verify_trns", only: %i[index create show] do
           post "run", on: :member
         end

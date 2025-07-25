@@ -75,7 +75,7 @@ en:
 
   declaration_date: &declaration_date
     blank: "Enter a '#/%{parameterized_attribute}'."
-    invalid: "Enter a valid RCF3339 '#/%{parameterized_attribute}'."
+    invalid: "Enter a valid RFC3339 '#/%{parameterized_attribute}'."
     declaration_before_schedule_start: "Enter a '#/%{parameterized_attribute}' that's on or after the schedule start."
     future_declaration_date: "The '#/%{parameterized_attribute}' value cannot be a future date. Check the date and try again."
 
