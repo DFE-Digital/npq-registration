@@ -9,7 +9,7 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
     subject { instance.primary_structure }
 
     {
-      "Dashboard" => "/npq-separation/admin",
+      "Dashboards" => "/npq-separation/admin",
       "Applications" => "/npq-separation/admin/applications",
       "Cohorts" => "/npq-separation/admin/cohorts",
       "Courses" => "/npq-separation/admin/courses",
