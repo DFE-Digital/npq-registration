@@ -32,6 +32,14 @@ module Contracts
       true
     end
 
+    def start_date
+      @start_date ||= Time.zone.today
+    end
+
+    def end_date
+      @end_date ||= Date.new(last_statement.year, last_statement.month)
+    end
+
   private
 
     def contract_belongs_to_statement
@@ -47,7 +55,7 @@ module Contracts
     end
 
     def current_and_future_statements
-      (Time.zone.today..Date.new(last_statement.year, last_statement.month)).map { |d| [d.year, d.month] }.uniq.map { |year, month|
+      (start_date..end_date).map { |d| [d.year, d.month] }.uniq.map { |year, month|
         Statement.find_by(year:, month:, cohort: statement.cohort, lead_provider: statement.lead_provider)
       }.compact
     end

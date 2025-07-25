@@ -8,7 +8,10 @@
 <h1 class="govuk-heading-l">Check your changes before submitting</h1>
 
 <p class="govuk-body">
-  You are about to change the payment per participant for the course: <strong><%= @contract.course.name %></strong>.
+  You are about to change the <strong><%= @contract.course.name %></strong> payment per participant
+  for all <strong><%= @statement.lead_provider.name %></strong> contracts
+  in the <strong><%= @statement.cohort.start_year %> cohort</strong>
+  from <%= Time.zone.today.strftime("%B %Y") %> onwards.
 <p>
 
 <%=

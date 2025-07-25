@@ -44,7 +44,10 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
     click_button "Continue"
     click_button "Confirm and submit"
 
-    expect(page).to have_content("#{contract.course.name} payment per participant changed for all #{statement.lead_provider.name} statements in cohort #{statement.cohort.start_year} from the current month onwards")
+    expect(page).to have_content("#{contract.course.name} payment per participant changed" \
+                                 " for all #{statement.lead_provider.name} contracts"\
+                                 " in the #{statement.cohort.start_year} cohort" \
+                                 " from #{Time.zone.today.strftime('%B %Y')} onwards")
     expect(contract.reload.per_participant).to eq(123)
     expect(future_contract.reload.per_participant).to eq(123)
   end

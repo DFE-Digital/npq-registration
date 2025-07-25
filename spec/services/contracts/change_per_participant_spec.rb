@@ -124,4 +124,20 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
       end
     end
   end
+
+  describe "#start_date" do
+    before { freeze_time }
+
+    it "returns the start date as today" do
+      expect(service.start_date).to eq(Time.zone.today)
+    end
+  end
+
+  describe "#end_date" do
+    before { freeze_time }
+
+    it "returns the end date as the month and year of the last statement" do
+      expect(service.end_date).to eq(Date.new(future_statement.year, future_statement.month))
+    end
+  end
 end
