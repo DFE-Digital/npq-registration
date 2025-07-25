@@ -11,7 +11,7 @@ FactoryBot.define do
     lead_provider_approval_status { :pending }
     ecf_id { SecureRandom.uuid }
     cohort { create(:cohort, :current) }
-    teacher_catchment { "england" }
+    teacher_catchment { cohort && cohort.start_year > 2023 ? "england" : nil }
     teacher_catchment_country { "United Kingdom of Great Britain and Northern Ireland" }
     teacher_catchment_iso_country_code { "GBR" }
     itt_provider
