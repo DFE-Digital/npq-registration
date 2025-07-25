@@ -21,6 +21,5 @@ module NpqSeparation
     def column
       "#{dimension.to_s.pluralize}.name"
     end
-
   end
 end
