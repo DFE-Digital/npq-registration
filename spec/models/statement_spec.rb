@@ -267,4 +267,26 @@ RSpec.describe Statement, type: :model do
       it { is_expected.to be false }
     end
   end
+
+  describe "#past?" do
+    subject { statement }
+
+    context "when the statement is in the past" do
+      let(:statement) { build(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
+
+      it { is_expected.to be_past }
+    end
+
+    context "when the statement is in the current month" do
+      let(:statement) { build(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+
+      it { is_expected.not_to be_past }
+    end
+
+    context "when the statement is in the future" do
+      let(:statement) { build(:statement, month: Time.zone.today.month + 1, year: Time.zone.today.year) }
+
+      it { is_expected.not_to be_past }
+    end
+  end
 end

@@ -1,4 +1,6 @@
 class ContractTemplate < ApplicationRecord
+  has_paper_trail
+
   has_many :contracts
 
   validates :number_of_payment_periods,

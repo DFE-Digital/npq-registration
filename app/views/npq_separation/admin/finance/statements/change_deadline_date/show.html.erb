@@ -1,3 +1,8 @@
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+  <%= render "npq_separation/admin/finance/statements/statement_side_navigation" %>
+<% end %>
+
 <%= govuk_back_link href: npq_separation_admin_finance_statement_path(@statement) %>
 
 <div class="govuk-grid-row">
