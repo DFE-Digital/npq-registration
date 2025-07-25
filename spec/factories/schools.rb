@@ -1,5 +1,5 @@
 FactoryBot.define do
-  sequence(:urn) { |n| sprintf("%06d", n % 1_000_000) }
+  sequence(:urn) { |n| sprintf("1%05d", n % 1_000_000) }
   sequence(:ukprn) { |n| sprintf("%08d", n % 100_000_000) }
 
   factory :school do
