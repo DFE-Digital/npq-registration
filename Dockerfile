@@ -72,7 +72,7 @@ COPY --from=builder /app /app
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 
 # Change ownership only for directories that need write access
-RUN chown -R appuser:appgroup /app/tmp /app/public/api/docs
+RUN chown -R appuser:appgroup /app/tmp /app/public/api/docs/**/swagger.yaml
 
 ARG COMMIT_SHA
 ENV AUTHORISED_HOSTS=127.0.0.1 \
