@@ -9,10 +9,10 @@ RSpec.feature "Viewing summary dashboard", type: :feature do
   end
 
   scenario "viewing the summary tables" do
-    visit(npq_separation_admin_dashboards_summary_path)
+    visit(npq_separation_admin_dashboards_providers_dashboard_path)
 
-    expect(page).to have_css("h1", text: "Dashboards")
-    expect(page).to have_link("Courses dashboard")
-    expect(page).to have_link("Providers dashboard")
+    expect(page).to have_css("h1", text: "Providers dashboard")
+    expect(page).to have_css("th", text: "Provider")
+    expect(page).to have_css("th", text: "Applications")
   end
 end
