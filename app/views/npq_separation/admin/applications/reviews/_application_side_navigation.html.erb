@@ -11,13 +11,13 @@
       structure: [
         NpqSeparation::NavigationStructure::Node.new(
           name: "#{@application.course.name}, #{@application.created_at.to_date.to_fs(:govuk)}",
-          href: npq_separation_admin_application_path(@application),
-          prefix: %r{/npq-separation/admin/applications/\d+$},
+          href: npq_separation_admin_application_review_path(@application),
+          prefix: %r{/npq-separation/admin/applications/reviews/\d+$},
         ),
         NpqSeparation::NavigationStructure::Node.new(
           name: "Application history",
-          href: npq_separation_admin_applications_history_path(@application),
-          prefix: %r{/npq-separation/admin/applications/\d+/history$},
+          href: npq_separation_admin_applications_reviews_history_path(@application),
+          prefix: %r{/npq-separation/admin/applications/reviews/\d+/history$},
         ),
       ],
     )

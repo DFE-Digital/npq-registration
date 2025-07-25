@@ -1,0 +1,28 @@
+<% if request.path =~ /reviews/ %>
+  <%= render "npq_separation/admin/applications/reviews/application_side_navigation" %>
+<% else %>
+  <%= render "npq_separation/admin/applications/application_side_navigation" %>
+<% end %>
+
+<h1 class="govuk-heading-l">Application history</h1>
+<h2 class="govuk-heading-m govuk-!-margin-bottom-2"><%= @application.user.full_name %></h2>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>User ID:</strong>
+  <%= @application.user.ecf_id %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>Email:</strong>
+  <%= @application.user.email %>
+</p>
+
+<p class="govuk-body govuk-!-margin-bottom-2">
+  <strong>TRN:</strong>
+  <%= @application.user.trn %>
+  <%= trn_verified_badge(@application.user) %>
+</p>
+
+<br>
+
+<%= render NpqSeparation::Admin::HistoryComponent.new(record: @application) %>

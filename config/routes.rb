@@ -218,6 +218,13 @@ Rails.application.routes.draw do
         collection do
           resources :reviews, controller: "applications/reviews", as: "application_reviews", only: %i[index show] do
             resource :review_status, controller: "applications/review_statuses", only: %i[edit update]
+            member do
+              namespace :applications, path: nil do
+                namespace :reviews, path: nil do
+                  resource :history, controller: "/npq_separation/admin/applications/history", only: %i[show]
+                end
+              end
+            end
           end
         end
         member do
@@ -228,6 +235,7 @@ Rails.application.routes.draw do
             resource :change_lead_provider, controller: "change_lead_provider", only: %i[show create]
             resource :notes, only: %i[edit update]
             resource :change_cohort, controller: "change_cohort", only: %i[show create]
+            resource :history, controller: "history", only: %i[show]
           end
         end
       end
