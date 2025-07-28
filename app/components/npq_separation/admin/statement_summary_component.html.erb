@@ -8,7 +8,7 @@
             govuk_link_to "Save as PDF",
               "javascript:void(0)",
               onclick: "window.formattedPrint(this)",
-              data: { filename: "#{statement.lead_provider.name} #{statement_name(statement)} NPQ Statement (#{statement.cohort.start_year} Cohort)" }
+              data: { filename: "#{statement.lead_provider.name} #{statement_name(statement)} NPQ Statement (#{statement.cohort.name} Cohort)" }
           %>
         </strong>
       </p>

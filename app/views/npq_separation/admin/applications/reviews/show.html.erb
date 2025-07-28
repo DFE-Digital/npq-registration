@@ -73,7 +73,7 @@
   govuk_summary_list(card: { title: "Schedule" }) do |sl|
     sl.with_row do |row|
       row.with_key(text: "Cohort")
-      row.with_value(text: @application.cohort.start_year)
+      row.with_value(text: @application.cohort.name)
     end
     sl.with_row do |row|
       row.with_key(text: "Schedule identifier")

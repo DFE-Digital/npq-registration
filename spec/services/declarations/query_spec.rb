@@ -92,7 +92,7 @@ RSpec.describe Declarations::Query do
         it "filters by cohort" do
           create(:declaration, cohort: cohort_2023)
           declaration = create(:declaration, cohort: cohort_2024)
-          query = described_class.new(cohort_start_years: "2024")
+          query = described_class.new(cohort_names: "2024")
 
           expect(query.declarations).to contain_exactly(declaration)
         end
@@ -101,13 +101,13 @@ RSpec.describe Declarations::Query do
           declaration1 = create(:declaration, cohort: cohort_2023)
           declaration2 = create(:declaration, cohort: cohort_2024)
           create(:declaration, cohort: cohort_2025)
-          query = described_class.new(cohort_start_years: "2023,2024")
+          query = described_class.new(cohort_names: "2023,2024")
 
           expect(query.declarations).to contain_exactly(declaration1, declaration2)
         end
 
         it "returns no declarations if no cohorts are found" do
-          query = described_class.new(cohort_start_years: "0000")
+          query = described_class.new(cohort_names: "0000")
 
           expect(query.declarations).to be_empty
         end
@@ -115,13 +115,13 @@ RSpec.describe Declarations::Query do
         it "doesn't filter by cohort when none supplied" do
           condition_string = %("cohort"."start_year" =)
 
-          expect(described_class.new(cohort_start_years: 2021).scope.to_sql).to include(condition_string)
+          expect(described_class.new(cohort_names: 2021).scope.to_sql).to include(condition_string)
           expect(described_class.new.scope.to_sql).not_to include(condition_string)
         end
 
         it "does not filter by cohort if blank" do
           condition_string = %("start_year")
-          query = described_class.new(cohort_start_years: " ")
+          query = described_class.new(cohort_names: " ")
 
           expect(query.scope.to_sql).not_to include(condition_string)
         end

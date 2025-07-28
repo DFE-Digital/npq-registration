@@ -39,7 +39,7 @@ module API
         application.user.ecf_id,
         application.course.identifier,
         application.schedule&.identifier,
-        application.cohort.start_year.to_s,
+        application.cohort.name.to_s,
         application.ecf_id,
         application.eligible_for_funding,
         application.training_status,

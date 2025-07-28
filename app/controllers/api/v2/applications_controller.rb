@@ -5,7 +5,7 @@ module API
       include FilterByDate
 
       def index
-        conditions = { cohort_start_years:, updated_since: }
+        conditions = { cohort_names:, updated_since: }
         applications = applications_query(conditions:).applications
 
         respond_to do |format|
@@ -64,7 +64,7 @@ module API
         applications_query.application(ecf_id: application_params[:ecf_id])
       end
 
-      def cohort_start_years
+      def cohort_names
         application_params.dig(:filter, :cohort)
       end
 

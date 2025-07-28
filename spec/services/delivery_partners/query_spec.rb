@@ -47,7 +47,7 @@ RSpec.describe DeliveryPartners::Query do
     end
 
     context "when filtering by cohort" do
-      subject(:query) { described_class.new lead_provider: lead_provider_1, cohort_start_year: cohort_22.start_year }
+      subject(:query) { described_class.new lead_provider: lead_provider_1, cohort_name: cohort_22.name }
 
       it "returns delivery partners for the specified cohort" do
         expect(query.delivery_partners).to eq([delivery_partner_2])

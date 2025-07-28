@@ -24,7 +24,7 @@ RSpec.describe API::StatementSerializer, type: :serializer do
     subject(:attributes) { JSON.parse(described_class.render(statement))["attributes"] }
 
     it "serializes the `cohort start year`" do
-      cohort.start_year = 2025
+      cohort.name = 2025
 
       expect(attributes["cohort"]).to eq("2025")
     end

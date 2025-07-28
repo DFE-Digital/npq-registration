@@ -98,8 +98,8 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
 
     describe "cohort serialization" do
       it "serializes the `cohort`" do
-        cohort.start_year = 2025
-        expect(attributes["cohort"]).to eq(cohort.start_year.to_s)
+        cohort.name = 2025
+        expect(attributes["cohort"]).to eq(cohort.name)
       end
 
       context "when `cohort` is `nil`" do

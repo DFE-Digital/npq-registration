@@ -1,6 +1,6 @@
 module AdminHelper
   def format_cohort(cohort)
-    "#{cohort.start_year} to #{cohort.start_year.next}"
+    "#{cohort.name} to #{cohort.start_year.next}" # FIXME: cohort names
   end
 
   def format_address(school)

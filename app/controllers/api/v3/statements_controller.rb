@@ -15,7 +15,7 @@ module API
     private
 
       def statements_query
-        conditions = { lead_provider: current_lead_provider, cohort_start_years:, updated_since: }
+        conditions = { lead_provider: current_lead_provider, cohort_names:, updated_since: }
 
         Statements::Query.new(**conditions.compact)
       end
@@ -24,7 +24,7 @@ module API
         params.permit(:ecf_id, filter: %i[cohort updated_since])
       end
 
-      def cohort_start_years
+      def cohort_names
         statement_params.dig(:filter, :cohort)
       end
 

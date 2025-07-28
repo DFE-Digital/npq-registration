@@ -5,11 +5,11 @@ module Statements
 
     attr_reader :scope
 
-    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, state: :ignore, output_fee: true)
+    def initialize(lead_provider: :ignore, cohort_names: :ignore, updated_since: :ignore, state: :ignore, output_fee: true)
       @scope = Statement.distinct.includes(:lead_provider, :cohort)
 
       where_lead_provider_is(lead_provider)
-      where_cohort_start_year_in(cohort_start_years)
+      where_cohort_name_in(cohort_names)
       where_updated_since(updated_since)
       where_state_is(state)
       where_output_fee_is(output_fee)
@@ -34,10 +34,10 @@ module Statements
       scope.merge!(Statement.where(lead_provider:))
     end
 
-    def where_cohort_start_year_in(cohort_start_years)
-      return if ignore?(filter: cohort_start_years)
+    def where_cohort_name_in(cohort_names)
+      return if ignore?(filter: cohort_names)
 
-      scope.merge!(Statement.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
+      scope.merge!(Statement.where(cohort: { start_year: extract_conditions(cohort_names) }))
     end
 
     def where_updated_since(updated_since)

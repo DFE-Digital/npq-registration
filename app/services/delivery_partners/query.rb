@@ -6,12 +6,12 @@ module DeliveryPartners
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider:, cohort_start_year: :ignore, sort: nil)
+    def initialize(lead_provider:, cohort_name: :ignore, sort: nil)
       @scope = all_delivery_partners
       @sort = sort
 
       where_lead_provider_is(lead_provider)
-      where_cohort_start_year(cohort_start_year)
+      where_cohort_name(cohort_name)
     end
 
     def delivery_partners
@@ -31,10 +31,10 @@ module DeliveryPartners
       scope.merge!(DeliveryPartner.where(delivery_partnerships: { lead_provider: lead_provider }))
     end
 
-    def where_cohort_start_year(cohort_start_year)
-      return if ignore?(filter: cohort_start_year)
+    def where_cohort_name(cohort_name)
+      return if ignore?(filter: cohort_name)
 
-      scope.merge!(DeliveryPartner.where(delivery_partnerships: { cohorts: { start_year: cohort_start_year } }))
+      scope.merge!(DeliveryPartner.where(delivery_partnerships: { cohorts: { start_year: cohort_name } }))
     end
 
     def order_by

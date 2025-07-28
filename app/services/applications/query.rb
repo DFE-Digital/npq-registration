@@ -6,7 +6,7 @@ module Applications
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider: :ignore, cohort_start_years: :ignore, updated_since: :ignore, lead_provider_approval_status: :ignore, participant_ids: :ignore, sort: nil)
+    def initialize(lead_provider: :ignore, cohort_names: :ignore, updated_since: :ignore, lead_provider_approval_status: :ignore, participant_ids: :ignore, sort: nil)
       # The subquery is an optimization so that we don't have to perform
       # a separate query for each record as part of Application#previously_funded?
       @scope = all_applications.select(
@@ -30,7 +30,7 @@ module Applications
 
       where_lead_provider_approval_status_in(lead_provider_approval_status)
       where_lead_provider_is(lead_provider)
-      where_cohort_start_year_in(cohort_start_years)
+      where_cohort_name_in(cohort_names)
       where_updated_since(updated_since)
       where_participant_ids_in(participant_ids)
     end
@@ -60,10 +60,10 @@ module Applications
       scope.merge!(Application.where(lead_provider:))
     end
 
-    def where_cohort_start_year_in(cohort_start_years)
-      return if ignore?(filter: cohort_start_years)
+    def where_cohort_name_in(cohort_names)
+      return if ignore?(filter: cohort_names)
 
-      scope.merge!(Application.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
+      scope.merge!(Application.where(cohort: { start_year: extract_conditions(cohort_names) }))
     end
 
     def where_updated_since(updated_since)

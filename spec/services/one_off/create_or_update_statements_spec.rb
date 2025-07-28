@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe OneOff::CreateOrUpdateStatements do
   describe ".call" do
     let(:cohort_year) { 2021 }
+    let(:cohort_name) { cohort_year }
     let(:csv_file) { Tempfile.new }
     let(:csv_path) { csv_file.path }
 
@@ -43,18 +44,18 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
       it "creates a new statement" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
         }.to change(Statement, :count).by(1)
       end
 
       it "creates a new contracts" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
         }.to change(Contract, :count).by(2)
       end
 
       it "creates log records" do
-        OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+        OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
 
         statement = Statement.order("created_at DESC").first
 
@@ -80,14 +81,14 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
       it "updates a statement" do
         expect {
-          OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+          OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
         }.to change { statement_1.reload.output_fee }.from(true).to(false)
           .and change(statement_1, :deadline_date).to(Date.new(2025, 1, 25))
           .and change(statement_1, :payment_date).to(Date.new(2025, 2, 25))
       end
 
       it "creates log records" do
-        OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+        OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
 
         log = FinancialChangeLog.first
         expect(log.operation_description).to eq("OneOff 2520")
@@ -113,7 +114,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
         it "throws an exception" do
           expect {
-            OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+            OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
           }.to raise_error(ArgumentError)
         end
       end
@@ -128,7 +129,7 @@ RSpec.describe OneOff::CreateOrUpdateStatements do
 
         it "throws an exception" do
           expect {
-            OneOff::CreateOrUpdateStatements.new.call(cohort_year:, csv_path:)
+            OneOff::CreateOrUpdateStatements.new.call(cohort_name:, csv_path:)
           }.to raise_error(KeyError)
         end
       end

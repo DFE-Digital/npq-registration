@@ -5,14 +5,14 @@ module Declarations
 
     attr_reader :scope, :sort
 
-    def initialize(lead_provider: :ignore, updated_since: :ignore, participant_ids: :ignore, cohort_start_years: :ignore)
+    def initialize(lead_provider: :ignore, updated_since: :ignore, participant_ids: :ignore, cohort_names: :ignore)
       @scope = all_declarations
       @sort = sort
 
       where_lead_provider_is(lead_provider)
       where_updated_since(updated_since)
       where_participant_ids_in(participant_ids)
-      where_cohort_start_year_in(cohort_start_years)
+      where_cohort_name_in(cohort_names)
     end
 
     def declarations
@@ -47,10 +47,10 @@ module Declarations
       scope.merge!(Declaration.where(user: { ecf_id: extract_conditions(participant_ids, uuids: true) }))
     end
 
-    def where_cohort_start_year_in(cohort_start_years)
-      return if ignore?(filter: cohort_start_years)
+    def where_cohort_name_in(cohort_names)
+      return if ignore?(filter: cohort_names)
 
-      scope.merge!(Declaration.where(cohort: { start_year: extract_conditions(cohort_start_years) }))
+      scope.merge!(Declaration.where(cohort: { start_year: extract_conditions(cohort_names) }))
     end
 
     def all_declarations

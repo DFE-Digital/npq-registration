@@ -53,7 +53,7 @@ namespace :delivery_partners do
         raise "Delivery Partnerships already exist" unless DeliveryPartnership.count.zero?
 
         lead_providers = LeadProvider.all.index_by(&:ecf_id)
-        cohorts = Cohort.all.index_by(&:start_year).transform_keys(&:to_s)
+        cohorts = Cohort.all.index_by(&:name).transform_keys(&:to_s)
         delivery_partners = DeliveryPartner.all.index_by(&:ecf_id)
 
         CSV.foreach(args[:import_file], headers: true) do |row|
@@ -85,7 +85,7 @@ namespace :delivery_partners do
             .find_each(batch_size: 500) do |partnership|
           csv << [
             partnership.lead_provider.ecf_id,
-            partnership.cohort.start_year,
+            partnership.cohort.name,
             partnership.delivery_partner.ecf_id,
           ]
         end

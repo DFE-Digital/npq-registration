@@ -41,8 +41,8 @@ class Cohort < ApplicationRecord
     start_year
   end
 
-  def name
-    start_year
+  def name=(name)
+    self.start_year = name
   end
 
 private
