@@ -3,7 +3,7 @@
   <%= render "npq_separation/admin/finance/statements/statement_side_navigation" %>
 <% end %>
 
-<%= govuk_back_link href: npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract) %>
+<%= govuk_back_link href: npq_separation_admin_finance_change_per_participant_path(@contract) %>
 
 <h1 class="govuk-heading-l">Check your changes before submitting</h1>
 
@@ -29,7 +29,7 @@
         row.with_cell(text: number_to_currency(@contract.per_participant))
         row.with_cell(text: number_to_currency(@service.per_participant))
         row.with_cell do
-          govuk_link_to("Change", npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract))
+          govuk_link_to("Change", npq_separation_admin_finance_change_per_participant_path(@contract))
         end
       end
     end
@@ -37,7 +37,7 @@
 %>
 
 <%= form_for @service,
-  url: confirmed_npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract) do |f| %>
+  url: confirmed_npq_separation_admin_finance_change_per_participant_path(@contract) do |f| %>
 
   <div class="govuk-button-group">
     <%= f.hidden_field :per_participant, value: @service.per_participant %>

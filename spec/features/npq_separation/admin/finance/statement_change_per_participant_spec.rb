@@ -30,7 +30,7 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
     # check change link
     click_link "Change"
 
-    expect(page).to have_current_path(npq_separation_admin_finance_statement_change_per_participant_path(statement, contract))
+    expect(page).to have_current_path(npq_separation_admin_finance_change_per_participant_path(contract))
 
     # check error message
 
@@ -83,7 +83,7 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
 
     # check back
     click_link "Back"
-    expect(page).to have_current_path(npq_separation_admin_finance_statement_change_per_participant_path(statement, contract))
+    expect(page).to have_current_path(npq_separation_admin_finance_change_per_participant_path(contract))
 
     # check cancel
     fill_in "contracts-change-per-participant-per-participant-field", with: "123"

@@ -6,17 +6,14 @@ module Contracts
     include ActiveModel::Attributes
     include ActiveModel::Validations::Callbacks
 
-    attribute :statement
     attribute :contract
     attribute :per_participant
 
     after_validation :round_per_participant
 
     validates :per_participant, presence: true, numericality: { greater_than_or_equal_to: 0 }
-    validates :statement, presence: true
     validates :contract, presence: true
-    validate :contract_belongs_to_statement, if: -> { contract.present? }
-    validate :statement_not_paid, if: -> { statement.present? }
+    validate :statement_not_paid, if: -> { contract&.statement.present? }
 
     def change
       return false if invalid?
@@ -42,26 +39,20 @@ module Contracts
 
   private
 
-    def contract_belongs_to_statement
-      return if contract.statement == statement
-
-      errors.add(:contract, :does_not_belong_to_statement)
-    end
-
     def statement_not_paid
       return unless current_and_future_statements.any?(&:paid?)
 
-      errors.add(:statement, :paid)
+      errors.add(:contract, :statement_paid)
     end
 
     def current_and_future_statements
       (start_date..end_date).map { |d| [d.year, d.month] }.uniq.map { |year, month|
-        Statement.find_by(year:, month:, cohort: statement.cohort, lead_provider: statement.lead_provider)
+        Statement.find_by(year:, month:, cohort: contract.statement.cohort, lead_provider: contract.statement.lead_provider)
       }.compact
     end
 
     def last_statement
-      Statement.where(cohort: statement.cohort, lead_provider: statement.lead_provider).order(:year, :month).last
+      Statement.where(cohort: contract.statement.cohort, lead_provider: contract.statement.lead_provider).order(:year, :month).last
     end
 
     def round_per_participant

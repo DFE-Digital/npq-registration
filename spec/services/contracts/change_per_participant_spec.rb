@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Contracts::ChangePerParticipant, type: :model do
-  subject(:service) { described_class.new(statement: future_statement, contract: future_contract, per_participant:) }
+  subject(:service) { described_class.new(contract: future_contract, per_participant:) }
 
   let(:lead_provider) { create(:lead_provider) }
   let(:statement) { create(:statement, lead_provider:) }
@@ -36,10 +36,6 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
       expect(subject).not_to allow_value("-1234.56").for(:per_participant).with_message("Amount must be a positive number")
     end
 
-    it "does not allow a nil statement" do
-      expect(subject).not_to allow_value(nil).for(:statement)
-    end
-
     it "does not allow a nil contract" do
       expect(subject).not_to allow_value(nil).for(:contract)
     end
@@ -51,16 +47,7 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
 
       it "does not allow changes" do
         expect(subject).not_to be_valid
-        expect(subject).to have_error(:statement, :paid, "The statement is already paid and cannot be changed")
-      end
-    end
-
-    context "when a contract is not associated with the statement" do
-      subject { described_class.new(statement: future_statement, contract: contract_for_other_course, per_participant:) }
-
-      it "does not allow changes" do
-        expect(subject).not_to be_valid
-        expect(subject).to have_error(:contract, :does_not_belong_to_statement, "The contract does not belong to the specified statement")
+        expect(subject).to have_error(:contract, :statement_paid, "The statement for this contract is already paid and cannot be changed")
       end
     end
   end

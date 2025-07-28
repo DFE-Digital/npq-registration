@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @service,
-                 url: npq_separation_admin_finance_statement_change_per_participant_path(@statement, @contract) do |f| %>
+                 url: npq_separation_admin_finance_change_per_participant_path(@contract) do |f| %>
       <%= f.govuk_error_summary %>
 
       <%= f.govuk_text_field :per_participant,
