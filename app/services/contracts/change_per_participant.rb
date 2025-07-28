@@ -46,9 +46,11 @@ module Contracts
     end
 
     def current_and_future_statements
-      (start_date..end_date).map { |d| [d.year, d.month] }.uniq.map { |year, month|
-        Statement.find_by(year:, month:, cohort: contract.statement.cohort, lead_provider: contract.statement.lead_provider)
-      }.compact
+      periods_for_current_and_future_statements = (start_date..end_date).map { |d| [d.year, d.month] }
+      Statement
+        .where(cohort: contract.statement.cohort, lead_provider: contract.statement.lead_provider)
+        .to_a
+        .select { |s| periods_for_current_and_future_statements.include? [s.year, s.month] }
     end
 
     def last_statement
