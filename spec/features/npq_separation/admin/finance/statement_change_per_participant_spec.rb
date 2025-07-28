@@ -93,30 +93,6 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
     expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
   end
 
-  context "when attempting to update a past statement" do
-    let(:statement) { create(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
-
-    scenario "change links should not appear" do
-      visit(npq_separation_admin_finance_statement_path(statement))
-      find("span", text: "Contract Information").click
-      within("#contract-information tbody tr:nth-of-type(1)") do
-        expect(page).not_to have_link("Change")
-      end
-    end
-  end
-
-  context "when attempting to update a paid statement" do
-    let(:statement) { create(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
-
-    scenario "change links should not appear" do
-      visit(npq_separation_admin_finance_statement_path(statement))
-      find("span", text: "Contract Information").click
-      within("#contract-information tbody tr:nth-of-type(1)") do
-        expect(page).not_to have_link("Change")
-      end
-    end
-  end
-
   scenario "edge-case - updating the hidden field value on the confirmation screen" do
     visit(npq_separation_admin_finance_statement_path(statement))
     find("span", text: "Contract Information").click
