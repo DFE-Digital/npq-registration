@@ -19,10 +19,26 @@ class Cohort < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validate :changing_funding_cap_with_dependent_applications
 
-  def self.current(timestamp = Time.zone.today)
-    where(registration_start_date: ..timestamp)
-      .order(start_year: :desc)
-      .first!
+  class << self
+    def current(timestamp = Time.zone.today)
+      where(registration_start_date: ..timestamp)
+        .order(start_year: :desc)
+        .first!
+    end
+
+    def by_name(name)
+      where(start_year: name)
+    end
+
+    def find_by(columns)
+      name_col = columns.delete(:name)
+      columns.merge!(start_year: name_col) if name_col
+      super(columns)
+    end
+  end
+
+  def name
+    start_year
   end
 
   def name

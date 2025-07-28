@@ -111,4 +111,38 @@ RSpec.describe Cohort, type: :model do
 
     it { is_expected.to eq cohort.start_year }
   end
+
+  describe ".by_name" do
+    before { cohorts }
+
+    let :cohorts do
+      (2021..2025)
+        .map { |start_year| create(:cohort, start_year:) }
+        .index_by(&:start_year)
+    end
+
+    it "matches on year" do
+      expect(Cohort.by_name(2022).to_a).to match_array(cohorts.values_at(2022))
+    end
+
+    it "matches multiple years" do
+      expect(Cohort.by_name([2022, 2023]).to_a).to match_array(cohorts.values_at(2022, 2023))
+    end
+  end
+
+  describe ".find_by" do
+    before { cohorts }
+
+    let :cohorts do
+      (2021..2025)
+        .map { |start_year| create(:cohort, start_year:) }
+        .index_by(&:start_year)
+    end
+
+    it { expect(Cohort.find_by(start_year: 2022)).to eq cohorts[2022] }
+    it { expect(Cohort.find_by(id: cohorts[2022].id)).to eq cohorts[2022] }
+
+    it { expect(Cohort.find_by(id: cohorts[2022].id, name: 2022)).to eq cohorts[2022] }
+    it { expect(Cohort.find_by(id: cohorts[2023].id, name: 2022)).to be_nil }
+  end
 end
