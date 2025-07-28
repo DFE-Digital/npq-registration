@@ -11,7 +11,7 @@
   You are about to change the <strong><%= @contract.course.name %></strong> payment per participant
   for all <strong><%= @statement.lead_provider.name %></strong> contracts
   in the <strong><%= @statement.cohort.start_year %> cohort</strong>
-  from <%= Time.zone.today.strftime("%B %Y") %> onwards.
+  from <%= Time.zone.today.to_fs(:govuk_approx) %> onwards.
 <p>
 
 <%=
