@@ -1,8 +1,6 @@
 require Rails.root.join("config/environments/production")
 
 Rails.application.configure do
-  config.x.disable_legacy_api = true
-
   config.after_initialize do
     Bullet.enable                       = true
     Bullet.bullet_logger                = false
