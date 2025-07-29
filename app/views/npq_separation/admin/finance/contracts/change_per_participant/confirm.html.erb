@@ -8,10 +8,12 @@
 <h1 class="govuk-heading-l">Check your changes before submitting</h1>
 
 <p class="govuk-body">
-  You are about to change the <strong><%= @contract.course.name %></strong> payment per participant
-  for all <strong><%= @statement.lead_provider.name %></strong> contracts
-  in the <strong><%= @statement.cohort.start_year %> cohort</strong>
-  from <%= Time.zone.today.to_fs(:govuk_approx) %> onwards.
+  You are about to change the payment per participant amount for the <strong><%= @contract.course.name %></strong>.
+</p>
+<p class="govuk-body">
+  This change will apply to all <strong><%= @statement.lead_provider.name %></strong> contracts
+  in the <strong><%= @statement.cohort.start_year %> cohort</strong>,
+  starting from <%= Time.zone.today.to_fs(:govuk_approx) %> onwards.
 <p>
 
 <%=
