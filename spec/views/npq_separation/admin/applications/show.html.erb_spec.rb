@@ -59,4 +59,11 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     it { is_expected.to have_summary_item "UK Provider Reference Number (UKPRN)", "" }
     it { is_expected.to have_summary_item "Schedule identifier", "-" }
   end
+
+  describe "a row for a user without a date of birth" do
+    let(:application) { build_stubbed :application, user: }
+    let(:user) { build_stubbed :user, date_of_birth: nil }
+
+    it { is_expected.to have_text "Date of birth: Not provided", normalize_ws: true }
+  end
 end
