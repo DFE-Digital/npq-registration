@@ -11,7 +11,7 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
   let!(:future_contract) { create(:contract, course: contract.course, statement: future_statement) }
 
   before do
-    sign_in_as(create(:admin))
+    sign_in_as(create(:admin, super_admin: true))
   end
 
   scenario "updating per participant amount" do

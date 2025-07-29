@@ -9,22 +9,35 @@ RSpec.describe "npq_separation/admin/finance/statements/show", type: :view do
     assign(:statement, statement)
     assign(:special_contracts, [])
     assign(:contracts, [contract])
+    without_partial_double_verification { allow(view).to receive(:current_admin).and_return(admin_user) }
   end
 
-  context "when the statement is in the current month" do
+  context "when the user is a super admin" do
+    let(:admin_user) { create(:admin, super_admin: true) }
+
+    context "when the statement is in the current month" do
+      let(:statement) { build(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
+
+      it { is_expected.to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
+    end
+
+    context "when the statement is in the past" do
+      let(:statement) { build(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
+
+      it { is_expected.not_to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
+    end
+
+    context "when the statement is paid" do
+      let(:statement) { build(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
+
+      it { is_expected.not_to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
+    end
+  end
+
+  context "when the user is not a super admin" do
+    let(:admin_user) { create(:admin) }
+
     let(:statement) { build(:statement, month: Time.zone.today.month, year: Time.zone.today.year) }
-
-    it { is_expected.to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
-  end
-
-  context "when the statement is in the past" do
-    let(:statement) { build(:statement, month: Time.zone.today.month - 1, year: Time.zone.today.year) }
-
-    it { is_expected.not_to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
-  end
-
-  context "when the statement is paid" do
-    let(:statement) { build(:statement, :paid, month: Time.zone.today.month, year: Time.zone.today.year) }
 
     it { is_expected.not_to have_link("Change", href: npq_separation_admin_finance_change_per_participant_path(contract), visible: :all) }
   end

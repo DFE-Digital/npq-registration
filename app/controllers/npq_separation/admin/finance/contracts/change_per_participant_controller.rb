@@ -5,6 +5,7 @@ module NpqSeparation
     module Finance
       module Contracts
         class ChangePerParticipantController < NpqSeparation::AdminController
+          before_action :require_super_admin
           before_action :set_contract, :set_statement, :set_service
 
           def create

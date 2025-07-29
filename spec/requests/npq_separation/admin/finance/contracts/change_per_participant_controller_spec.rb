@@ -46,23 +46,19 @@ RSpec.describe NpqSeparation::Admin::Finance::Contracts::ChangePerParticipantCon
     describe "#show" do
       before { get npq_separation_admin_finance_change_per_participant_path(contract) }
 
-      it { is_expected.to have_http_status :success }
+      it { is_expected.to redirect_to sign_in_path }
     end
 
     describe "#create" do
       before { post npq_separation_admin_finance_change_per_participant_path(contract), params: }
 
-      it { is_expected.to have_http_status :success }
+      it { is_expected.to redirect_to sign_in_path }
     end
 
     describe "#confirmed" do
       before { post confirmed_npq_separation_admin_finance_change_per_participant_path(contract), params: }
 
-      it { is_expected.to redirect_to npq_separation_admin_finance_statement_path(contract.statement) }
-
-      it "flashes success" do
-        expect(flash[:success]).to match(/payment per participant changed/i)
-      end
+      it { is_expected.to redirect_to sign_in_path }
     end
   end
 
