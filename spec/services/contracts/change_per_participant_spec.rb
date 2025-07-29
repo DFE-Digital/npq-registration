@@ -80,6 +80,10 @@ RSpec.describe Contracts::ChangePerParticipant, type: :model do
       it "does not update contracts for statements for other providers" do
         expect { subject }.not_to(change { contract_for_other_provider.reload.contract_template })
       end
+
+      it "does not update contracts for statements for other courses" do
+        expect { subject }.not_to(change { contract_for_other_course.reload.contract_template })
+      end
     end
 
     context "when there isn't a matching contract template" do
