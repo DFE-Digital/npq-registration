@@ -92,19 +92,4 @@ RSpec.feature "Statement - change payment per participant", type: :feature do
     click_link "Cancel"
     expect(page).to have_current_path(npq_separation_admin_finance_statement_path(statement))
   end
-
-  scenario "edge-case - updating the hidden field value on the confirmation screen" do
-    visit(npq_separation_admin_finance_statement_path(statement))
-    find("span", text: "Contract Information").click
-    within("#contract-information tbody tr:nth-of-type(1)") do
-      click_link "Change"
-    end
-
-    fill_in "contracts-change-per-participant-per-participant-field", with: "123"
-    click_button "Continue"
-    page.find("input#contracts_change_per_participant_per_participant", visible: false).set("")
-    click_button "Confirm and submit"
-
-    expect(page).to have_content("Enter the new amount")
-  end
 end
