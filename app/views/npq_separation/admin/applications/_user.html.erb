@@ -12,7 +12,7 @@
 
 <p class="govuk-body govuk-!-margin-bottom-2">
   <strong>Date of birth:</strong>
-  <%= user.date_of_birth.to_fs(:govuk_short) %>
+  <%= user.date_of_birth.try(:to_fs, :govuk_short) || 'Not provided' %>
   |
   <strong>National Insurance:</strong>
   <%= user.national_insurance_number.presence || 'Not provided' %>

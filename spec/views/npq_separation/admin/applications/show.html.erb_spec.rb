@@ -50,6 +50,8 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
       build_stubbed :application, cohort: nil, itt_provider: nil, school: nil
     end
 
+    before { application.user.date_of_birth = nil }
+
     it { is_expected.to have_css "h1", text: application.user.full_name }
     it { is_expected.to have_text "TRN: #{application.user.trn}", normalize_ws: true }
     it { is_expected.to have_summary_item "Application ID", application.ecf_id }
