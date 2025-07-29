@@ -75,13 +75,13 @@ RSpec.describe Declarations::Create, type: :model do
     context "when declaration date is invalid" do
       before { params[:declaration_date] = "2023-19-01T11:21:55Z" }
 
-      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RCF3339 '#/declaration_date'.") }
+      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RFC3339 '#/declaration_date'.") }
     end
 
     context "when declaration time is invalid" do
       before { params[:declaration_date] = "2023-19-01T29:21:55Z" }
 
-      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RCF3339 '#/declaration_date'.") }
+      it { is_expected.to have_error(:declaration_date, :invalid, "Enter a valid RFC3339 '#/declaration_date'.") }
     end
 
     context "when the declaration_date is in the future" do
