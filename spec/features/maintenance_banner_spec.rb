@@ -19,7 +19,7 @@ RSpec.feature "Maintenance banner" do
   end
 
   scenario "viewing an API docs path" do
-    visit api_documentation_path(version: "v1")
+    visit api_documentation_path(version: "v3")
     expect(page).to have_text(/This service will be unavailable from/)
   end
 
@@ -37,7 +37,7 @@ RSpec.feature "Maintenance banner" do
     end
 
     scenario "viewing the API docs" do
-      visit api_documentation_path(version: "v1")
+      visit api_documentation_path(version: "v3")
       expect(page).not_to have_text(/This service will be unavailable from/)
     end
   end
