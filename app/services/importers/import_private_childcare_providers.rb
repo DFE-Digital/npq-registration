@@ -73,8 +73,8 @@ module Importers
         local_authority: wrapped_csv_row.column(:local_authority),
         ofsted_region: wrapped_csv_row.column(:ofsted_region),
         places: wrapped_csv_row.column(:places),
-        postcode: wrapped_csv_row.column(:postcode),
-        postcode_without_spaces: wrapped_csv_row.postcode_without_spaces,
+        postcode: strip_whitespace(wrapped_csv_row.column(:postcode)),
+        postcode_without_spaces: strip_whitespace(wrapped_csv_row.postcode_without_spaces),
         provider_compulsory_childcare_register_flag: wrapped_csv_row.provider_compulsory_childcare_register_flag,
         provider_early_years_register_flag: wrapped_csv_row.provider_early_years_register_flag,
         provider_name: translate_unicode_characters(wrapped_csv_row.column(:provider_name)),
@@ -102,6 +102,10 @@ module Importers
 
     def translate_unicode_characters(string)
       string.tr("\u0096", "\u2013")
+    end
+
+    def strip_whitespace(string)
+      string.gsub(/\A\p{Space}+|\p{Space}+\z/, "")
     end
 
     class ChildcareProviderWrappedCSVRow

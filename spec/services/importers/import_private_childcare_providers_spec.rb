@@ -392,7 +392,7 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
         end
 
         it "imports rows as PrivateChildcareProvider records" do
-          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(2)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(3)
 
           expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
             "address_1" => "108 Regent Studios",
@@ -440,9 +440,18 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           })
         end
 
+        it "strips whitespace (including unicode non-breaking spaces) from the postcode" do
+          run_import
+
+          expect(find_and_slice_private_childcare_provider("CA000026")).to include({
+            "postcode" => "IP13 0RD",
+            "postcode_without_spaces" => "IP130RD",
+          })
+        end
+
         it "returns the correct number of imported records" do
           run_import
-          expect(subject.imported_records).to eq(2)
+          expect(subject.imported_records).to eq(3)
         end
 
         context "with incorrect parser" do
