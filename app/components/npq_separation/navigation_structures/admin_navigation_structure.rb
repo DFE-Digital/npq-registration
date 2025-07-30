@@ -143,12 +143,12 @@ module NpqSeparation
           Node.new(
             name: "Courses dashboard",
             href: npq_separation_admin_dashboard_path("courses-dashboard"),
-            prefix: "",
+            prefix: "/npq-separation/admin/dashboards/courses-dashboard",
             ),
           Node.new(
             name: "Providers dashboard",
             href: npq_separation_admin_dashboard_path("providers-dashboard"),
-            prefix: "",
+            prefix: "/npq-separation/admin/dashboards/providers-dashboard",
             ),
         ]
       end
