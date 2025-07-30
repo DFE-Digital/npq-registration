@@ -72,7 +72,5 @@ module NpqRegistration
     config.session_store :active_record_store, key: "_npq_registration_session",
                                                secure: !Rails.env.local?,
                                                expire_after: 2.weeks
-
-    config.x.disable_legacy_api = false
   end
 end

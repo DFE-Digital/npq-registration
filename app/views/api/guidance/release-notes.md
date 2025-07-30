@@ -2,19 +2,10 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
-## V1 and V2 APIs are removed from sandbox
-### 28 July 2025
-
-<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
-
-We've removed the legacy V1 and V2 APIs from the `sandbox` environment.
-
-These APIs will be removed from `production` on 8 August 2025. If you're still using them, you'll need to switch to the latest version before this date.
-
-
 ## Delivery partner endpoints and declarations are now available in production
 ### 19 May 2025
-<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+
+**PRODUCTION**
 
 The delivery partner API changes released in the sandbox environment on 14 April 2025 are now live in production.
 
@@ -28,7 +19,7 @@ This requirement does not apply to overseas applicants.
 ## Delivery partner endpoints and declarations added to sandbox for testing
 ### 14 April 2025
 
-<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
+**SANDBOX**
 
 We’ve made updates in the sandbox environment to improve how lead providers interact with the service.
 
@@ -43,7 +34,7 @@ Starting from 28 April 2025, the `delivery_partner_id` will be required for coho
 
 ## Standalone NPQ API now available in production
 ### 27 November 2024
-<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+**PRODUCTION**
 
 We've launched the live standalone National Professional Qualifications (NPQs) API following a 3-month test phase.
 
@@ -74,7 +65,7 @@ Providers can contact us via their dedicated DfE Slack channel if they’ve got 
 
 ## Standalone NPQ API added to sandbox for testing 
 ### 13 August 2024
-<strong class="govuk-tag govuk-tag--yellow">SANDBOX</strong>
+**SANDBOX**
 
 We’ve released a minimum viable product (MVP) version of the standalone National Professional Qualifications (NPQ) API for providers to test ahead of its full launch at the end of November 2024. 
 

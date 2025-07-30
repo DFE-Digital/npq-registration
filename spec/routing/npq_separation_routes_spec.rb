@@ -1,11 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "NPQ separation routes" do
-  context "with legacy api versions", skip: Rails.configuration.x.disable_legacy_api do
-    it { expect(get(api_v1_applications_path)).to route_to("api/v1/applications#index", format: :json) }
-    it { expect(get(api_v2_applications_path)).to route_to("api/v2/applications#index", format: :json) }
-  end
-
+  it { expect(get(api_v1_applications_path)).to route_to("api/v1/applications#index", format: :json) }
+  it { expect(get(api_v2_applications_path)).to route_to("api/v2/applications#index", format: :json) }
   it { expect(get(api_v3_applications_path)).to route_to("api/v3/applications#index", format: :json) }
 
   it { expect(get(npq_separation_admin_admins_path)).to route_to("npq_separation/admin/admins#index") }

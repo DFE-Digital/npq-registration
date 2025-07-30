@@ -69,43 +69,8 @@ Rails.application.routes.draw do
       namespace :get_an_identity do
         resource :webhook_messages, only: %i[create]
       end
-    end
 
-    unless Rails.configuration.x.disable_legacy_api
-      namespace :v1 do
-        defaults format: :json do
-          resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
-            member do
-              post :reject, path: "reject"
-              post :accept, path: "accept"
-              put :change_funded_place, path: "change-funded-place"
-            end
-          end
-
-          resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
-
-          resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
-            member do
-              put :change_schedule, path: "change-schedule"
-              put :defer
-              put :resume
-              put :withdraw
-
-              scope module: :participants do
-                resources :outcomes, only: %i[create index], as: :participants_outcomes
-              end
-            end
-          end
-
-          resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
-            member do
-              put :void, path: "void"
-            end
-          end
-        end
-      end
-
-      namespace :v2, defaults: { format: :json } do
+      defaults format: :json do
         resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
           member do
             post :reject, path: "reject"
@@ -113,8 +78,6 @@ Rails.application.routes.draw do
             put :change_funded_place, path: "change-funded-place"
           end
         end
-
-        resources :enrolments, path: "npq-enrolments", only: %i[index]
 
         resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
 
@@ -135,6 +98,39 @@ Rails.application.routes.draw do
           member do
             put :void, path: "void"
           end
+        end
+      end
+    end
+
+    namespace :v2, defaults: { format: :json } do
+      resources :applications, path: "npq-applications", only: %i[index show], param: :ecf_id do
+        member do
+          post :reject, path: "reject"
+          post :accept, path: "accept"
+          put :change_funded_place, path: "change-funded-place"
+        end
+      end
+
+      resources :enrolments, path: "npq-enrolments", only: %i[index]
+
+      resources :participant_outcomes, only: %i[index], path: "participants/npq/outcomes", as: :participant_outcomes
+
+      resources :participants, only: %i[index show], path: "participants/npq", param: :ecf_id do
+        member do
+          put :change_schedule, path: "change-schedule"
+          put :defer
+          put :resume
+          put :withdraw
+
+          scope module: :participants do
+            resources :outcomes, only: %i[create index], as: :participants_outcomes
+          end
+        end
+      end
+
+      resources :declarations, only: %i[create show index], path: "participant-declarations", param: :ecf_id do
+        member do
+          put :void, path: "void"
         end
       end
     end

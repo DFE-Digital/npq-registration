@@ -1,7 +1,7 @@
 require "rails_helper"
 require "swagger_helper"
 
-RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spec: "v2/swagger.yaml", skip: Rails.configuration.x.disable_legacy_api, type: :request do
+RSpec.describe "NPQ Applications endpoint", :with_default_schedules, openapi_spec: "v2/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }

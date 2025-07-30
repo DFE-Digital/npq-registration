@@ -1,5 +1,5 @@
 APPLICATION_ACCEPT_REQUEST = {
-  v3: {
+  v1: {
     description: "A NPQ application acceptance request",
     type: :object,
     required: %i[data],
@@ -33,11 +33,8 @@ APPLICATION_ACCEPT_REQUEST = {
     },
   },
 }.tap { |h|
-  unless Rails.configuration.x.disable_legacy_api
-    h[:v1] = h[:v3].deep_dup
-    h[:v2] = h[:v3].deep_dup
-  end
-
+  h[:v2] = h[:v1].deep_dup
+  h[:v3] = h[:v2].deep_dup
   h[:v3][:properties][:data][:properties][:attributes][:properties][:schedule_identifier] = {
     description: "The new schedule of the participant",
     nullable: false,

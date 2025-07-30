@@ -12,19 +12,12 @@ RSpec.describe "Rate limiting" do
     set_request_ip(ip)
   end
 
-  endpoints = [
+  [
     "/api/guidance",
+    "/api/docs/v1",
+    "/api/docs/v2",
     "/api/docs/v3",
-  ]
-
-  unless Rails.configuration.x.disable_legacy_api
-    endpoints += [
-      "/api/docs/v1",
-      "/api/docs/v2",
-    ]
-  end
-
-  endpoints.each do |public_api_path|
+  ].each do |public_api_path|
     context "when requesting the public API path #{public_api_path}" do
       let(:path) { public_api_path }
 
