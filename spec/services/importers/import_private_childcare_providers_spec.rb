@@ -198,13 +198,16 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           run_import
           expect(subject.import_errors).to eq({})
         end
+      end
 
-        context "with incorrect parser" do
-          let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow }
+      context "with a row that uses a unicode character 'start of guarded area' U+0096 () instead of an en dash (–) in the provider name" do
+        # File contains sample of real data
+        # also, this file is deliberately encoded in ISO-8859-1, as that what the latest files are
+        let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample_wrong_unicode.csv" }
 
-          it "raises an error" do
-            expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
-          end
+        it "translates the unicode character to an en dash" do
+          run_import
+          expect(PrivateChildcareProvider.first.provider_name).to eq("Little Tots – Peterborough Mother & Baby Nursery")
         end
       end
 

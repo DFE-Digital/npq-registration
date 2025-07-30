@@ -23,7 +23,7 @@ module Importers
   private
 
     def check_header_valid
-      header = CSV.open(file_name, "r", &:first).compact.map(&:downcase)
+      header = CSV.open(file_name, "r:ISO-8859-1", &:first).compact.map(&:downcase)
       missing_columns = csv_row_parser.columns.values - header
       unless missing_columns.empty?
         raise "Header invalid: missing columns #{missing_columns.join(", ")}"
@@ -43,6 +43,7 @@ module Importers
         headers: true,
         col_sep: ",",
         quote_char: '"',
+        encoding: "ISO-8859-1",
         header_converters: ->(header) { header&.downcase },
       }
     end
@@ -76,7 +77,7 @@ module Importers
         postcode_without_spaces: wrapped_csv_row.postcode_without_spaces,
         provider_compulsory_childcare_register_flag: wrapped_csv_row.provider_compulsory_childcare_register_flag,
         provider_early_years_register_flag: wrapped_csv_row.provider_early_years_register_flag,
-        provider_name: wrapped_csv_row.column(:provider_name),
+        provider_name: translate_unicode_characters(wrapped_csv_row.column(:provider_name)),
         region: wrapped_csv_row.column(:region),
         registered_person_name: wrapped_csv_row.column(:registered_person_name),
         registered_person_urn: wrapped_csv_row.column(:registered_person_urn),
@@ -99,6 +100,10 @@ module Importers
       @import_errors[row_number_for_errors] << e.message
     end
 
+    def translate_unicode_characters(string)
+      string.tr("\u0096", "\u2013")
+    end
+
     class ChildcareProviderWrappedCSVRow
       attr_reader :csv_row
 
@@ -114,7 +119,7 @@ module Importers
           address_2: "provider address line 2",
           address_3: "provider address line 3",
           town: "provider town",
-          postcode: "provider postcode",
+          postcode: "postcode",
           region: "region",
           local_authority: "local authority",
           ofsted_region: "ofsted region",
@@ -174,13 +179,13 @@ module Importers
 
       def self.columns
         {
-          provider_urn: "ca reference",
+          provider_urn: "provider urn",
           provider_name: "provider name",
           provider_status: "provider status",
-          address_1: "provider address 1",
-          address_2: "provider address 2",
-          address_3: "provider address 3",
-          postcode: "provider postcode",
+          address_1: "provider address line 1",
+          address_2: "provider address line 2",
+          address_3: "provider address line 3",
+          postcode: "postcode",
           local_authority: "local authority",
           individual_register_combinations: "individual register combinations",
         }
