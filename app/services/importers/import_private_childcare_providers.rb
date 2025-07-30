@@ -213,6 +213,20 @@ module Importers
         case raw_data
         when "EYR, CCR, VCR"
           %w[CCR VCR EYR]
+        when "CCR-VCR"
+          %w[CCR VCR]
+        when "EYR-CCR"
+          %w[CCR EYR]
+        when "EYR-VCR"
+          %w[VCR EYR]
+        when "EYR only"
+          %w[EYR]
+        when "CCR only"
+          %w[CCR]
+        when "VCR only"
+          %w[VCR]
+        when "ALL"
+          %w[CCR VCR EYR]
         else
           raise "Unknown Individual Register combinations value: #{raw_data}"
         end

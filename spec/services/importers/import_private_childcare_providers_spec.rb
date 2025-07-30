@@ -392,7 +392,7 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
         end
 
         it "imports rows as PrivateChildcareProvider records" do
-          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(3)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(10)
 
           expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
             "address_1" => "108 Regent Studios",
@@ -451,7 +451,7 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
 
         it "returns the correct number of imported records" do
           run_import
-          expect(subject.imported_records).to eq(3)
+          expect(subject.imported_records).to eq(10)
         end
 
         context "with incorrect parser" do
@@ -588,7 +588,6 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
     end
 
     context "with file that doesn't exist" do
-      # File contains sample of real data
       let(:file_name) { "spec/fixtures/files/fake_file.csv" }
       let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow }
 
