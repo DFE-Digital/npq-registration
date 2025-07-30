@@ -1,7 +1,5 @@
 class NpqSeparation::Admin::DashboardsController < NpqSeparation::AdminController
-
-  def index
-  end
+  def index; end
 
   def show
     @dashboard = params[:name]
