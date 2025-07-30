@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Viewing summary dashboard", type: :feature do
+RSpec.feature "Viewing the providers dashboard", type: :feature do
   include Helpers::AdminLogin
 
   before do
@@ -8,8 +8,8 @@ RSpec.feature "Viewing summary dashboard", type: :feature do
     sign_in_as(create(:admin))
   end
 
-  scenario "viewing the summary tables" do
-    visit(npq_separation_admin_dashboards_providers_dashboard_path)
+  scenario "viewing the providers dashboard table" do
+    visit(npq_separation_admin_dashboard_path("providers-dashboard"))
 
     expect(page).to have_css("h1", text: "Providers dashboard")
     expect(page).to have_css("th", text: "Provider")
@@ -20,7 +20,7 @@ RSpec.feature "Viewing summary dashboard", type: :feature do
     test_provider = create(:lead_provider, name: "Filtered Provider")
     create(:application, cohort: Cohort.current, lead_provider: test_provider)
 
-    visit npq_separation_admin_dashboards_providers_dashboard_path
+    visit npq_separation_admin_dashboard_path("providers-dashboard")
 
     select Cohort.current.start_year.to_s, from: "Search by cohort"
     click_button "Search"
