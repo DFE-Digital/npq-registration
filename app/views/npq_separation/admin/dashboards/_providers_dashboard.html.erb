@@ -1,18 +1,3 @@
-<% content_for :side_navigation do %>
-  <%=
-    render NpqSeparation::SubNavigationComponent.new(
-      request.path,
-      structure:
-        [
-          NpqSeparation::NavigationStructure::Node.new(
-            name: "Dashboards",
-            href: npq_separation_admin_path,
-            )
-        ]
-    )
-  %>
-<% end %>
-
 <h1 class="govuk-heading-l">Providers dashboard</h1>
 
 <div class="admin-search-box">

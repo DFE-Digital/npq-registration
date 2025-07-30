@@ -1,0 +1,16 @@
+<% content_for :side_navigation do %>
+  <%=
+    render NpqSeparation::SubNavigationComponent.new(
+      request.path,
+      structure:
+        [
+          NpqSeparation::NavigationStructure::Node.new(
+            name: "Dashboards",
+            href: npq_separation_admin_dashboards_path,
+            )
+        ]
+    )
+  %>
+<% end %>
+
+<%= render_dashboard_partial(@dashboard) %>

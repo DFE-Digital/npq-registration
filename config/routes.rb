@@ -179,7 +179,7 @@ Rails.application.routes.draw do
   end
 
   namespace :npq_separation, path: "npq-separation" do
-    get "admin", to: "admin/dashboards/summary#show"
+    get "admin", to: "admin/dashboards#index"
 
     namespace :admin do
       resources :webhook_messages, only: %i[index show], path: "webhook-messages" do
@@ -189,12 +189,7 @@ Rails.application.routes.draw do
       resources :features, only: %i[index show update]
       resources :admins, only: %i[index new create destroy]
       resources :super_admins, only: %i[update]
-      namespace :dashboards do
-        resource :summary, only: :show, controller: "summary"
-        resource :courses_dashboard, only: [:show], controller: "courses_dashboard", path: "courses-dashboard"
-        resource :providers_dashboard, only: [:show], controller: "providers_dashboard", path: "providers-dashboard"
-      end
-
+      resources :dashboards, only: %i[index show], controller: "dashboards", path: "dashboards", param: "name"
       resources :registration_closed, only: %i[index], path: "registration-closed"
 
       namespace :registration_closed, path: "registration-closed" do
