@@ -8,7 +8,7 @@
         <%=
           f.govuk_collection_select(
             :cohort_id,
-            Cohort.where("start_year <= ?", Time.zone.now.year).order(start_year: :desc),
+            Cohort.order(start_year: :desc),
             :id,
             ->(cohort) { cohort.start_year.to_s },
             options: { selected: params[:cohort_id], include_blank: "All" },
