@@ -1,6 +1,4 @@
-class MonitoringController < PublicPagesController
-  skip_before_action :set_sentry_user, :initialize_store
-
+class MonitoringController < ActionController::Base
   def healthcheck
     render status:, json: {
       git_commit_sha: ENV["COMMIT_SHA"],
