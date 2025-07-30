@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Viewing summary dashboard", type: :feature do
+RSpec.feature "Viewing the dashboard introduction", type: :feature do
   include Helpers::AdminLogin
 
   before do
@@ -8,8 +8,8 @@ RSpec.feature "Viewing summary dashboard", type: :feature do
     sign_in_as(create(:admin))
   end
 
-  scenario "viewing the summary tables" do
-    visit(npq_separation_admin_dashboards_summary_path)
+  scenario "Viewing the dashboard introduction" do
+    visit(npq_separation_admin_dashboards_path)
 
     expect(page).to have_css("h1", text: "Dashboards")
     expect(page).to have_link("Courses dashboard")
