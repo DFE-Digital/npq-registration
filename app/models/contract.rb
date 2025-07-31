@@ -1,4 +1,6 @@
 class Contract < ApplicationRecord
+  has_paper_trail
+
   belongs_to :statement
   belongs_to :course
   belongs_to :contract_template

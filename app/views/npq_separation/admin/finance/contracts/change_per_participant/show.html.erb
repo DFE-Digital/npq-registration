@@ -1,0 +1,58 @@
+<% content_for :side_navigation do %>
+  <hr class="govuk-section-break govuk-section-break--m">
+  <%= render "npq_separation/admin/finance/statements/statement_side_navigation" %>
+<% end %>
+
+<%= govuk_back_link href: npq_separation_admin_finance_statement_path(@statement) %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @service,
+                 url: npq_separation_admin_finance_change_per_participant_path(@contract) do |f| %>
+      <%= f.govuk_error_summary %>
+
+      <%= f.govuk_text_field :per_participant,
+        prefix_text: "£",
+        label: { text: "Change payment per participant", tag: "h1", size: "l"},
+        hint: { text: "Do not enter commas or pound signs, for example: enter 19000 for £19,000" } do %>
+
+        <p class="govuk-body">
+          This will change the payment per participant for all contracts for the current cohort, provider and course, from this month onwards.
+        </p>
+
+        <div class="govuk-inset-text">
+          <p class="govuk-body">
+            <strong>Cohort</strong>
+            <br/>
+            <%= @statement.cohort.start_year %>
+          </p>
+          <p class="govuk-body">
+            <strong>Provider</strong>
+            <br/>
+            <%= @statement.lead_provider.name %>
+          </p>
+          <p class="govuk-body">
+            <strong>Course name</strong>
+            <br/>
+            <%= @contract.course.name %>
+          </p>
+          <p class="govuk-body">
+            <strong>Recruitment target</strong>
+            <br/>
+            <%= @contract.recruitment_target %>
+          </p>
+          <p class="govuk-body">
+            <strong>Current payment per participant</strong>
+            <br/>
+            <%= number_to_currency(@contract.per_participant) %>
+          </p>
+        </div>
+      <% end %>
+
+      <div class="govuk-button-group">
+        <%= f.govuk_submit "Continue" %>
+        <%= govuk_link_to t("shared.cancel"), npq_separation_admin_finance_statement_path(@statement) %>
+      </div>
+    <% end %>
+  </div>
+</div>

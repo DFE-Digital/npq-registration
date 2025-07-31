@@ -3,6 +3,12 @@ require "rails_helper"
 RSpec.describe Contract, type: :model do
   subject { build(:contract) }
 
+  describe "paper_trail" do
+    it "enables paper trail" do
+      expect(Contract.new).to be_versioned
+    end
+  end
+
   describe "relationships" do
     it { is_expected.to belong_to(:statement) }
     it { is_expected.to belong_to(:course) }

@@ -648,6 +648,15 @@ en:
               <<: *application
             funded_place:
               <<: *funded_place
+        contracts/change_per_participant:
+          attributes:
+            contract:
+              does_not_belong_to_statement: The contract does not belong to the specified statement
+              statement_paid: The statement for this contract is already paid and cannot be changed
+            per_participant:
+              blank: Enter the new amount
+              greater_than_or_equal_to: Amount must be a positive number
+              not_a_number: Amount must be a number, without commas, or the £ symbol
         qualified_teachers_api_sender:
           already_successfully_sent_to_api: "This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)"
           already_unsuccessfully_sent_to_api: "This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)"

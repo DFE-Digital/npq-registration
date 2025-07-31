@@ -1,20 +1,7 @@
 <% content_for :side_navigation do %>
   <hr class="govuk-section-break govuk-section-break--m">
 
-  <%= render NpqSeparation::SubNavigationComponent.new(
-    request.path,
-    heading: {
-      text: "Finance statement",
-      visible: true
-    },
-    structure: [
-      NpqSeparation::NavigationStructure::Node.new(
-        name: "#{@statement.lead_provider.name}, #{statement_name(@statement)}",
-        href: npq_separation_admin_finance_statement_path(@statement),
-        prefix: npq_separation_admin_finance_statement_path(@statement)
-      )
-    ]
-  ) %>
+  <%= render "statement_side_navigation" %>
 
   <hr class="govuk-section-break govuk-section-break--m">
   <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, format_for_sidebar: true) %>
@@ -100,13 +87,14 @@
     <% end %>
 
     <%=
-      govuk_details(summary_text: "Contract Information") do
+      govuk_details(summary_text: "Contract Information", id: "contract-information") do
         govuk_table do |table|
           table.with_head do |head|
             head.with_row do |row|
               row.with_cell(text: "Course")
               row.with_cell(text: "Recruitment target")
-              row.with_cell(text: "Payment amount per participant")
+              row.with_cell(text: "Payment per participant")
+              row.with_cell(text: "Action")
             end
           end
 
@@ -116,6 +104,11 @@
                 row.with_cell(text: contract.course.name)
                 row.with_cell(text: contract.contract_template.recruitment_target)
                 row.with_cell(text: number_to_currency(contract.contract_template.per_participant))
+                row.with_cell do
+                  if current_admin.super_admin? && !(@statement.past? || @statement.paid?)
+                   govuk_link_to("Change", npq_separation_admin_finance_change_per_participant_path(contract))
+                  end
+                end
               end
             end
           end

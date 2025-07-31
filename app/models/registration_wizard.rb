@@ -194,7 +194,7 @@ class RegistrationWizard
     end
 
     if course.npqs?
-      value = store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].strftime("%B %Y")}" : t("senco_in_role")
+      value = store["senco_in_role_status"] ? "Yes – since #{store["senco_start_date"].to_fs(:govuk_approx)}" : t("senco_in_role")
       array << Answer.new("Special educational needs co-ordinator (SENCO)", value, :senco_in_role)
     end
 
