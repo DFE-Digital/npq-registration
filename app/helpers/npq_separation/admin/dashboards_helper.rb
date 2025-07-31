@@ -6,7 +6,7 @@ module NpqSeparation::Admin::DashboardsHelper
     when "courses-dashboard"
       render "courses_dashboard"
     else
-      raise ActionController::RoutingError.new('Not Found')
+      raise ActionController::RoutingError, "Not Found"
     end
   end
 end
