@@ -6,6 +6,9 @@ RSpec.feature "Viewing the courses dashboard", type: :feature do
   before do
     create :cohort, :current
     sign_in_as(create(:admin))
+
+    # create(:application, :accepted, course: create(:course, name: "Course one"), cohort: Cohort.current)
+    # create(:application, :accepted, course: create(:course, name: "Course two"), cohort: Cohort.current)
   end
 
   scenario "viewing the courses dashboard table" do
@@ -16,15 +19,20 @@ RSpec.feature "Viewing the courses dashboard", type: :feature do
     expect(page).to have_css("th", text: "Applications")
   end
 
-  scenario "filtering courses dashboard by a single cohort" do
-    test_course = create(:course, name: "Filtered Course")
-    create(:application, course: test_course, cohort: Cohort.current)
+  scenario "filtering courses dashboard by a single cohort updates application counts" do
+    course = create(:course, name: "Test Course")
+    current_cohort = Cohort.current
+    previous_cohort = create(:cohort, start_year: current_cohort.start_year - 1)
+    create_list(:application, 2, course: course, cohort: current_cohort)
+
+    create(:application, course: course, cohort: previous_cohort)
 
     visit npq_separation_admin_dashboard_path("courses-dashboard")
 
-    select Cohort.current.start_year.to_s, from: "Search by cohort"
+    select previous_cohort.start_year.to_s, from: "Search by cohort"
     click_button "Search"
 
-    expect(page).to have_content("Filtered Course")
+    expect(page).to have_content("Test Course")
+    expect(page).to have_content("1")
   end
 end
