@@ -11,7 +11,7 @@ module NpqSeparation
     private
 
       def build_changes
-        record.versions.where(event: "update")
+        record.versions.where(event: "update").where.not(object_changes: nil)
           .select { |version| (version.object_changes.keys - %w[updated_at]).any? }
           .pluck(:created_at, :whodunnit, :object_changes)
           .map do |created_at, whodunnit, object_changes|

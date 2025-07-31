@@ -8,6 +8,8 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
   let(:time_2) { Time.zone.local(2025, 1, 1, 15, 0, 0) }
   let(:time_3) { Time.zone.local(2025, 1, 1, 16, 0, 0) }
   let(:time_4) { Time.zone.local(2025, 1, 1, 17, 0, 0) }
+  let(:cohort) { create(:cohort, start_year: 2024) }
+  let(:older_cohort) { create(:cohort, start_year: 2023) }
 
   before { travel_to time_1 }
 
@@ -21,8 +23,6 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
     let(:new_lead_provider) { LeadProvider.last }
     let(:original_ecf_id) { SecureRandom.uuid }
     let(:application) { create(:application, :accepted, cohort:, lead_provider: original_lead_provider, itt_provider: original_itt_provider, ecf_id: original_ecf_id) }
-    let(:cohort) { create(:cohort, start_year: 2024) }
-    let(:older_cohort) { create(:cohort, start_year: 2023) }
     let(:whodunnit) { nil }
 
     before do
@@ -127,6 +127,18 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
         expect(subject).to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title",
                                     text: "Ecf changed from ID: #{original_ecf_id} to ID: #{new_ecf_id}")
       end
+    end
+  end
+
+  # not sure how this happens, but there are plenty of versions like this in production
+  context "when there is a version with no object_changes" do
+    before do
+      Applications::ChangeCohort.new(application:, cohort_id: older_cohort.id).change_cohort
+      application.versions.last.update!(object_changes: nil)
+    end
+
+    it "does not show the version in the history" do
+      expect(subject).not_to have_css(".moj-timeline .moj-timeline__item .moj-timeline__header h2.moj-timeline__title")
     end
   end
 end
