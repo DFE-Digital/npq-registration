@@ -35,5 +35,6 @@ namespace :private_childcare_providers do
     logger.info("Imported Records: #{importer.imported_records}")
     logger.info("Updated Records: #{importer.updated_records}")
     logger.info("Import Errors: #{importer.import_errors}")
+    logger.info("Import Error count: #{importer.import_errors.count}")
   end
 end
