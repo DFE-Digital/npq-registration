@@ -128,6 +128,21 @@ RSpec.describe NpqSeparation::Admin::HistoryComponent, :versioning, type: :compo
                                     text: "Ecf changed from ID: #{original_ecf_id} to ID: #{new_ecf_id}")
       end
     end
+
+    context "when a block is given" do
+      subject do
+        render_inline(described_class.new(record: application) do |application, version_created_at, object_changes|
+          "#{application.id} changed at #{version_created_at} with changes: #{object_changes.except('updated_at')}"
+        end)
+      end
+
+      it "renders inset text with the block content" do
+        expect(subject).to have_css(
+          ".moj-timeline .moj-timeline__item div.govuk-inset-text",
+          text: %(#{application.id} changed at 2025-01-01 16:00:00 UTC with changes: {"lead_provider_id" => [#{original_lead_provider.id}, #{new_lead_provider.id}]}),
+        )
+      end
+    end
   end
 
   # not sure how this happens, but there are plenty of versions like this in production

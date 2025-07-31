@@ -50,4 +50,17 @@ RSpec.describe ApplicationState do
       end
     end
   end
+
+  describe ".lookup_reason" do
+    subject(:reason) { described_class.lookup_reason(application: application_state.application, created_at: Time.zone.now, state: "deferred") }
+
+    before { freeze_time }
+
+    let!(:application) { create(:application) }
+    let(:application_state) { create(:application_state, :deferred, application:, created_at: application.created_at + 0.5, reason: "other") }
+
+    it "returns the reason for the application state" do
+      expect(reason).to eq(application_state.reason)
+    end
+  end
 end
