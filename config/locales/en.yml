@@ -140,6 +140,10 @@ en:
       admin: "%R on %d/%m/%Y"
 
   activerecord:
+    attributes:
+      application:
+        lead_provider: Provider
+        funding_eligiblity_status_code: Funding eligibility status code
     errors:
       models:
         adjustment:

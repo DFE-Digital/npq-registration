@@ -1,0 +1,22 @@
+<% if @changes&.any? %>
+  <div class="moj-timeline">
+    <% @changes.each do |change| %>
+      <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+          <h2 class="moj-timeline__title"><%= change[:title] %></h2>
+          <p class="moj-timeline__byline">by <%= change[:by] %></p>
+        </div>
+        <p class="moj-timeline__date">
+          <time datetime="<%= change[:at].rfc3339 %>"><%= change[:at].to_fs(:govuk_short) %></time>
+        </p>
+        <% if change[:description].present? %>
+        <div class="govuk-inset-text">
+          Reason for change: <%= change[:description] %>
+        </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="govuk-body">No changes have been made to this <%= @record.model_name.human.downcase %>.</p>
+<% end %>

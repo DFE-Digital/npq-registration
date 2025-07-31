@@ -25,6 +25,10 @@ class Cohort < ApplicationRecord
       .first!
   end
 
+  def name
+    start_year
+  end
+
 private
 
   def registration_start_date_matches_start_year
