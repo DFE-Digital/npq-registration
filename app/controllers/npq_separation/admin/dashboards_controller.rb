@@ -1,5 +1,4 @@
 class NpqSeparation::Admin::DashboardsController < NpqSeparation::AdminController
-
   def show
     @dashboard = params[:name]
     if params[:cohort_id].present?
