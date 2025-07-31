@@ -18,9 +18,8 @@ RSpec.feature "Viewing the providers dashboard", type: :feature do
 
   scenario "filtering providers dashboard by a single cohort updates application counts" do
     test_provider = create(:lead_provider, name: "Test Provider")
-    current_cohort = Cohort.current
-    previous_cohort = create(:cohort, start_year: current_cohort.start_year - 1)
-
+    current_cohort = create(:cohort, :current)
+    previous_cohort = create(:cohort, :previous)
     create_list(:application, 2, cohort: current_cohort, lead_provider: test_provider)
 
     create(:application, cohort: previous_cohort, lead_provider: test_provider)

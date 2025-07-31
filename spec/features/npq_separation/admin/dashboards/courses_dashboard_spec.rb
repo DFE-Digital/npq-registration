@@ -6,9 +6,6 @@ RSpec.feature "Viewing the courses dashboard", type: :feature do
   before do
     create :cohort, :current
     sign_in_as(create(:admin))
-
-    # create(:application, :accepted, course: create(:course, name: "Course one"), cohort: Cohort.current)
-    # create(:application, :accepted, course: create(:course, name: "Course two"), cohort: Cohort.current)
   end
 
   scenario "viewing the courses dashboard table" do
@@ -21,8 +18,8 @@ RSpec.feature "Viewing the courses dashboard", type: :feature do
 
   scenario "filtering courses dashboard by a single cohort updates application counts" do
     course = create(:course, name: "Test Course")
-    current_cohort = Cohort.current
-    previous_cohort = create(:cohort, start_year: current_cohort.start_year - 1)
+    current_cohort = create(:cohort, :current)
+    previous_cohort = create(:cohort, :previous)
     create_list(:application, 2, course: course, cohort: current_cohort)
 
     create(:application, course: course, cohort: previous_cohort)
