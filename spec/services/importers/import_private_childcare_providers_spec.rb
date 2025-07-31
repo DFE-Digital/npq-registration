@@ -198,6 +198,14 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           run_import
           expect(subject.import_errors).to eq({})
         end
+
+        context "with headers missing" do
+          let(:file_name) { "spec/fixtures/files/example_csv.csv" }
+
+          it "raises an error" do
+            expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
+          end
+        end
       end
 
       context "with a row that uses a unicode character 'start of guarded area' U+0096 () instead of an en dash (–) in the provider name" do
@@ -454,8 +462,8 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           expect(subject.imported_records).to eq(10)
         end
 
-        context "with incorrect parser" do
-          let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow }
+        context "with headers missing" do
+          let(:file_name) { "spec/fixtures/files/example_csv.csv" }
 
           it "raises an error" do
             expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)

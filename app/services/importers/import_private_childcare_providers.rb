@@ -25,6 +25,7 @@ module Importers
     def check_header_valid
       header = CSV.open(file_name, "r:ISO-8859-1", &:first).compact.map(&:downcase)
       missing_columns = csv_row_parser.columns.values - header
+
       unless missing_columns.empty?
         raise "Header invalid: missing columns #{missing_columns.join(", ")}"
       end
