@@ -80,6 +80,7 @@ end
 
 group :development do
   gem "brakeman"
+  gem "foreman", "~> 0.90.0"
   gem "i18n-debug"
   gem "listen", ">= 3.0.5", "< 3.10"
   gem "rails-erd"
