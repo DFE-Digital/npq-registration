@@ -29,7 +29,7 @@ RSpec.describe NpqSeparation::Admin::DashboardsController, type: :request do
     end
   end
 
-  ["providers-dashboard", "courses-dashboard"].each do |dashboard_name|
+  %w[providers-dashboard courses-dashboard].each do |dashboard_name|
     describe("GET /npq-separation/admin/dashboards/#{dashboard_name}") do
       subject { get(npq_separation_admin_dashboard_path(name: dashboard_name)) && response }
 
