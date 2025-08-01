@@ -199,12 +199,23 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           expect(subject.import_errors).to eq({})
         end
 
-        context "with incorrect parser" do
-          let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildminderAgencyWrappedCSVRow }
+        context "with headers missing" do
+          let(:file_name) { "spec/fixtures/files/example_csv.csv" }
 
           it "raises an error" do
             expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
           end
+        end
+      end
+
+      context "with a row that uses a unicode character 'start of guarded area' U+0096 () instead of an en dash (–) in the provider name" do
+        # File contains sample of real data
+        # also, this file is deliberately encoded in ISO-8859-1, as that what the latest files are
+        let(:file_name) { "spec/fixtures/files/private_childcare_providers_sample_wrong_unicode.csv" }
+
+        it "translates the unicode character to an en dash" do
+          run_import
+          expect(PrivateChildcareProvider.first.provider_name).to eq("Little Tots – Peterborough Mother & Baby Nursery")
         end
       end
 
@@ -389,7 +400,7 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
         end
 
         it "imports rows as PrivateChildcareProvider records" do
-          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(2)
+          expect { run_import }.to change(PrivateChildcareProvider, :count).from(0).to(10)
 
           expect(find_and_slice_private_childcare_provider("CA000006")).to eq({
             "address_1" => "108 Regent Studios",
@@ -437,13 +448,22 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
           })
         end
 
-        it "returns the correct number of imported records" do
+        it "strips whitespace (including unicode non-breaking spaces) from the postcode" do
           run_import
-          expect(subject.imported_records).to eq(2)
+
+          expect(find_and_slice_private_childcare_provider("CA000026")).to include({
+            "postcode" => "IP13 0RD",
+            "postcode_without_spaces" => "IP130RD",
+          })
         end
 
-        context "with incorrect parser" do
-          let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow }
+        it "returns the correct number of imported records" do
+          run_import
+          expect(subject.imported_records).to eq(10)
+        end
+
+        context "with headers missing" do
+          let(:file_name) { "spec/fixtures/files/example_csv.csv" }
 
           it "raises an error" do
             expect { run_import }.to raise_error(/Header invalid/).and not_change(PrivateChildcareProvider, :count)
@@ -576,7 +596,6 @@ RSpec.describe Importers::ImportPrivateChildcareProviders do
     end
 
     context "with file that doesn't exist" do
-      # File contains sample of real data
       let(:file_name) { "spec/fixtures/files/fake_file.csv" }
       let(:csv_row_parser) { Importers::ImportPrivateChildcareProviders::ChildcareProviderWrappedCSVRow }
 

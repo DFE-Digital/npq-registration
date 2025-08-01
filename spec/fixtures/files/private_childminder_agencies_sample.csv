@@ -1,3 +1,11 @@
-CA Reference,Provider Status,Provider Type,Individual Register Combinations,Provider Name,Provider Address 1,Provider Address 2,Provider Address 3,Provider Postcode,Local Authority,CA - Most recent inspection date,CA - Most recent inspection outcome
+Provider URN,Provider Status,Provider Type,Individual Register Combinations,Provider Name,Provider Address line 1,Provider Address line 2,Provider Address line 3,Postcode,Local Authority,CA - Most recent inspection date,CA - Most recent inspection outcome
 CA000006,Active,Childminder Agency,"EYR, CCR, VCR",Daryel Care,108 Regent Studios,1 Thane Villas  ,London ,N7 7PH ,Islington ,,
 CA000012,Active,Childminder Agency,"EYR, CCR, VCR",City Childcare Childminding Agency,157 - 159 St. Barnabas Road ,Woodford Green ,Essex ,IG8 7DG,Redbridge,,
+CA000026,Active,Childminder agency,"EYR, CCR, VCR",Suffolk Childcare Agency Limited,"High House, High Street ",Wickham Market ,,IP13 0RD ,Suffolk,,
+EY438649,Active,Childminder,EYR-CCR,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Bromley
+EY390477,Active,Childminder,ALL,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Cambridgeshire
+2660522,Active,Childminder,CCR-VCR,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Merton
+2589593,Active,Childminder,EYR-VCR,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,North Northamptonshire
+2745342,Active,Childminder,EYR only,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Kent
+EY467474,Active,Childminder,CCR only,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Devon
+EY308474,Active,Childminder,VCR only,REDACTED,REDACTED,REDACTED,REDACTED,REDACTED,Essex
