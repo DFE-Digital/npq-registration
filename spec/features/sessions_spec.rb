@@ -29,6 +29,6 @@ RSpec.feature "Sessions", type: :feature do
     page.fill_in "Enter your code", with: code
     page.click_button "Sign in"
 
-    expect(page).to have_content("Summary")
+    expect(page).to have_content("Dashboards")
   end
 end

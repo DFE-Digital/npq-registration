@@ -9,7 +9,11 @@ module NpqSeparation
     end
 
     def rows
-      applications.joins(dimension).pluck(column).tally.sort
+      applications.joins(dimension).group(column).count.sort
+    end
+
+    def total_row
+      rows.sum { |_, count| count }
     end
 
   private
