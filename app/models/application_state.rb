@@ -19,6 +19,6 @@ class ApplicationState < ApplicationRecord
 
   def self.lookup_reason(application:, created_at:, state:)
     time_range = (created_at - LOOKUP_REASON_TIME_VARIANCE_SECONDS)..(created_at + LOOKUP_REASON_TIME_VARIANCE_SECONDS)
-    find_by(application:, created_at: time_range, state:)&.reason
+    order(id: :desc).find_by(application:, created_at: time_range, state:)&.reason
   end
 end
