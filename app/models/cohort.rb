@@ -10,8 +10,17 @@ class Cohort < ApplicationRecord
             numericality: {
               greater_than_or_equal_to: 2021,
               less_than: 2030,
-            },
-            uniqueness: true
+            }
+
+  validates :name,
+            presence: true,
+            uniqueness: { case_sensitive: false },
+            length: { maximum: 10 }
+
+  validates :description,
+            presence: true,
+            uniqueness: { case_sensitive: false },
+            length: { within: 5..50 }
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
@@ -23,10 +32,6 @@ class Cohort < ApplicationRecord
     where(registration_start_date: ..timestamp)
       .order(start_year: :desc)
       .first!
-  end
-
-  def name
-    start_year
   end
 
 private

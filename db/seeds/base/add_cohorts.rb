@@ -1,5 +1,5 @@
 (2021..2023).each do |start_year|
-  FactoryBot.create(:cohort, :without_funding_cap, start_year: start_year)
+  FactoryBot.create(:cohort, :without_funding_cap, start_year:)
 end
 
 # Ensure Cohort.next is always created
@@ -9,3 +9,5 @@ next_cohort_start_year = Date.current.year + (Date.current.month < registration_
 (2024..next_cohort_start_year).each do |start_year|
   FactoryBot.create(:cohort, :with_funding_cap, start_year:)
 end
+
+FactoryBot.create(:cohort, :with_funding_cap, start_year: 2025, suffix: 2, description: "2025 Autumn cohort")
