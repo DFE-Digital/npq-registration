@@ -71,11 +71,13 @@ RSpec.describe BulkOperation::SubmitDeclarations do
   describe "#run!" do
     subject(:run) { bulk_operation.run! }
 
+    let(:csv_file) { tempfile(csv) }
+
     before do
       create(:contract, statement:, course:)
       create(:delivery_partnership, cohort:, delivery_partner:, lead_provider:)
 
-      bulk_operation.file.attach(tempfile(csv).open)
+      bulk_operation.file.attach(csv_file.open)
       bulk_operation.save!
     end
 
