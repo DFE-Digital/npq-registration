@@ -37,10 +37,10 @@ module NpqSeparation
       def admin_nodes
         {
           Node.new(
-            name: "Dashboard",
+            name: "Dashboards",
             href: npq_separation_admin_path,
             prefix: "/npq-separation/admin/dashboard",
-          ) => [],
+          ) => dashboard_nodes,
           Node.new(
             name: "Applications",
             href: npq_separation_admin_applications_path,
@@ -136,6 +136,21 @@ module NpqSeparation
             prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
           )
         end
+      end
+
+      def dashboard_nodes
+        [
+          Node.new(
+            name: "Courses dashboard",
+            href: npq_separation_admin_dashboard_path("courses-dashboard"),
+            prefix: "/npq-separation/admin/dashboards/courses-dashboard",
+          ),
+          Node.new(
+            name: "Providers dashboard",
+            href: npq_separation_admin_dashboard_path("providers-dashboard"),
+            prefix: "/npq-separation/admin/dashboards/providers-dashboard",
+          ),
+        ]
       end
     end
   end
