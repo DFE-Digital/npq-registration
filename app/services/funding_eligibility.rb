@@ -138,8 +138,6 @@ class FundingEligibility
         FUNDED_ELIGIBILITY_RESULT
       when "LocalAuthority"
         FUNDED_ELIGIBILITY_RESULT
-      when "NilClass" # bit of stretch, but can be nil only when private ey setting is selected
-        NOT_ON_EARLY_YEARS_REGISTER
       else
         INELIGIBLE_INSTITUTION_TYPE
       end
@@ -164,7 +162,8 @@ class FundingEligibility
     return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
     return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
 
-    I18n.t(FUNDING_STATUS_CODE_DESCRIPTIONS[status_code]).html_safe
+    key = FUNDING_STATUS_CODE_DESCRIPTIONS[status_code]
+    I18n.t(key).html_safe if key
   end
 
 private
