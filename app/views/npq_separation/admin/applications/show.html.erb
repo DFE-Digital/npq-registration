@@ -32,8 +32,10 @@
     end
     sl.with_row do |row|
       row.with_key(text: "Training status")
-      row.with_value(text: @application.training_status.try(:humanize))
-      row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_training_status_path(@application))
+      row.with_value(text: @application.lead_provider_approval_status == 'pending' ? '-' : @application.training_status.try(:humanize))
+      unless @application.lead_provider_approval_status == 'pending'
+        row.with_action(text: "Change", href: new_npq_separation_admin_applications_change_training_status_path(@application))
+      end
     end
     sl.with_row do |row|
       row.with_key(text: "Created")
