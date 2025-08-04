@@ -19,7 +19,7 @@ module Cohorts
 
     def previous_cohort
       @previous_cohort ||= Cohort.where("start_year < ?", @cohort.start_year)
-                                 .order(start_year: :desc)
+                                 .order(name: :desc)
                                  .first
     end
 
