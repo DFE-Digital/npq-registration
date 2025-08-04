@@ -59,9 +59,7 @@ module NpqSeparation
       end
 
       def cohort_link(statement)
-        text = helpers.format_cohort(statement.cohort)
-
-        govuk_link_to(text, "#", **metadata_link_arguments)
+        govuk_link_to(statement.cohort.description, "#", **metadata_link_arguments)
       end
 
       def statement_tag(statement)

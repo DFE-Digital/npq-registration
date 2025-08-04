@@ -1,8 +1,4 @@
 module AdminHelper
-  def format_cohort(cohort)
-    "#{cohort.name} to #{cohort.start_year.next}" # FIXME: cohort names
-  end
-
   def format_address(school)
     keys = %i[address_1 address_2 address_3 town county postcode]
     parts = keys.map { |k| school[k] }.compact_blank

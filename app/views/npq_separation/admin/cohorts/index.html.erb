@@ -15,7 +15,7 @@
     table.with_body do |body|
       @cohorts.each do |cohort|
         body.with_row do |row|
-          row.with_cell(text: govuk_link_to(format_cohort(cohort), npq_separation_admin_cohort_path(cohort)))
+          row.with_cell(text: govuk_link_to(cohort.description, npq_separation_admin_cohort_path(cohort)))
           row.with_cell(text: cohort.registration_start_date.to_date.to_fs(:govuk))
           row.with_cell(text: boolean_red_green_tag(cohort.funding_cap))
         end
