@@ -10,8 +10,20 @@ class Cohort < ApplicationRecord
             numericality: {
               greater_than_or_equal_to: 2021,
               less_than: 2030,
-            },
-            uniqueness: true
+            }
+
+  validates :suffix,
+            presence: true,
+            uniqueness: { scope: :start_year },
+            numericality: {
+              greater_than_or_equal_to: 1,
+              less_than_or_equal_to: 9,
+            }
+
+  validates :description,
+            presence: true,
+            uniqueness: { case_sensitive: false },
+            length: { within: 5..50 }
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
@@ -21,12 +33,12 @@ class Cohort < ApplicationRecord
 
   def self.current(timestamp = Time.zone.today)
     where(registration_start_date: ..timestamp)
-      .order(start_year: :desc)
+      .order(start_year: :desc, suffix: :desc)
       .first!
   end
 
   def name
-    start_year
+    suffix == 1 ? start_year.to_s : identifier
   end
 
 private

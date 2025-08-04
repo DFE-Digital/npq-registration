@@ -176,10 +176,23 @@ en:
               too_long: "Email must be shorter than %{count} characters"
         cohort:
           attributes:
+            description:
+              blank: Enter a description for the Cohort
+              too_long: Description must be shorter than %{count} characters
+              taken: Description is used by another Cohort already
+            start_year:
+              blank: Enter the start year for the Cohort
+            suffix:
+              blank: Enter the numeric suffix for the Cohort
+              taken: Another cohort exists for that start year and suffix
+              less_than_or_equal_to: Suffix must be %{count} or less
+              greater_than_or_equal_to: Suffix must be %{count} or more
             funding_cap:
-              inclusion: "Choose true or false for funding cap"
+              inclusion: Choose true or false for funding cap
             ecf_id:
               *ecf_id
+            registration_start_date:
+              blank: Enter the start date for the cohorts registration period
         contract_template:
           attributes:
             number_of_payment_periods: &integer_greater_than_or_equal_to_zero

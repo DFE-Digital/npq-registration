@@ -7,9 +7,15 @@
 </h1>
 
 <%= form_with model: [:npq_separation, :admin, @cohort] do |f| %>
+  <%= f.govuk_text_field :description %>
+
   <%= f.govuk_number_field :start_year,
                            label: { text: "Start year" },
-                           class: 'govuk-input--width-4' %>
+                           width: 4 %>
+
+  <%= f.govuk_number_field :suffix,
+                           label: { text: "Suffix" },
+                           width: 2 %>
 
   <%= f.govuk_check_box :funding_cap,
                         1,
@@ -19,8 +25,8 @@
                         label: { text: "Funding cap" } %>
 
   <%= f.govuk_date_field :registration_start_date,
-                         legend: { text: 'Registration start date' },
-                         class: 'govuk-!-margin-top-5' %>
+                         legend: { text: "Registration start date" },
+                         class: "govuk-!-margin-top-5" %>
 
-  <%= f.govuk_submit @cohort.new_record? ? 'Create cohort' : 'Update cohort' %>
+  <%= f.govuk_submit @cohort.new_record? ? "Create cohort" : "Update cohort" %>
 <% end %>

@@ -45,14 +45,25 @@ RSpec.describe Cohort, type: :model do
               .is_less_than(2030),
           )
       }
+    end
 
-      it "validates uniqueness of start_year" do
-        existing_cohort = create :cohort, start_year: 2025
-        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
+    describe "#suffix" do
+      it { is_expected.to have_attributes suffix: 1 } # default value when not set
+      it { is_expected.to validate_presence_of :suffix }
+      it { is_expected.to validate_uniqueness_of(:suffix).scoped_to(:start_year) }
+      it { is_expected.to validate_numericality_of(:suffix).is_in(1..9) }
+    end
 
-        new_cohort.valid?
-        expect(new_cohort.errors[:start_year]).to include("has already been taken")
-      end
+    describe "#description" do
+      it { is_expected.to validate_presence_of(:description) }
+      it { is_expected.to validate_uniqueness_of(:description).case_insensitive }
+      it { is_expected.to validate_length_of(:description).is_at_least(5).is_at_most(50) }
+    end
+
+    describe "#name" do
+      subject { create :cohort, start_year: 2029, suffix: 3 }
+
+      it { is_expected.to have_attributes name: "2029-3" }
     end
 
     describe "changing funding_cap when there are applications" do
@@ -82,16 +93,16 @@ RSpec.describe Cohort, type: :model do
 
   describe ".current" do
     it "returns the closest cohort in the past" do
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
       current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
+      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
       _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
 
       expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
     end
 
     it "includes the Cohort starting exactly on the current date" do
-      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
       current_cohort = create(:cohort, start_year: 2022, registration_start_date: Date.new(2022, 4, 10))
+      _older_cohort = create(:cohort, start_year: 2021, registration_start_date: Date.new(2021, 4, 10))
       _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
 
       expect(Cohort.current(Date.new(2022, 4, 10))).to eq(current_cohort)
@@ -104,11 +115,27 @@ RSpec.describe Cohort, type: :model do
         expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
+
+    it "when there are multiple cohorts for the past year" do
+      current_cohort = create(:cohort, start_year: 2022, suffix: 2, registration_start_date: Date.new(2022, 4, 10))
+      _older_cohort = create(:cohort, start_year: 2022, suffix: 1, registration_start_date: Date.new(2022, 1, 10))
+      _future_cohort = create(:cohort, start_year: 2023, registration_start_date: Date.new(2023, 4, 10))
+
+      expect(Cohort.current(Date.new(2022, 4, 11))).to eq(current_cohort)
+    end
   end
 
   describe "#name" do
     subject { cohort.name }
 
-    it { is_expected.to eq cohort.start_year }
+    context "with suffix of 1" do
+      it { is_expected.to eq cohort.start_year.to_s }
+    end
+
+    context "with any other suffix" do
+      let(:cohort) { create(:cohort, suffix: 3) }
+
+      it { is_expected.to eq "#{cohort.start_year}-#{cohort.suffix}" }
+    end
   end
 end
