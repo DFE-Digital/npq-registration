@@ -3,7 +3,7 @@ FactoryBot.define do
     sequence(:start_year, 0) { |n| 2021 + n % 9 }
     registration_start_date { Date.new(start_year, 4, 3) }
     funding_cap { true }
-    name { start_year.to_s }
+    name { "#{start_year}b" }
     description { "#{start_year} to #{start_year&.next}" }
 
     initialize_with do
