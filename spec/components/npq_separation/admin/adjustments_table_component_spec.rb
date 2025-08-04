@@ -6,7 +6,7 @@ RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component
   let(:statement) { create(:statement) }
   let(:adjustment_1) { create(:adjustment, statement:, amount: 100) }
   let(:adjustment_2) { create(:adjustment, statement:, amount: 200) }
-  let(:adjustment_3) { create(:adjustment, statement:, amount: -300) }
+  let(:adjustment_3) { create(:adjustment, statement:, amount: -250) }
   let(:adjustments) { [adjustment_1, adjustment_2, adjustment_3] }
   let(:show_total) { nil }
   let(:show_actions) { nil }
@@ -21,7 +21,7 @@ RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component
     it { is_expected.to have_css "tbody td", text: adjustment_2.description }
     it { is_expected.to have_css "tbody td", text: "£#{adjustment_2.amount}" }
     it { is_expected.to have_css "tbody td", text: adjustment_3.description }
-    it { is_expected.to have_css "tbody td", text: "‑£300" }
+    it { is_expected.to have_css "tbody td", text: "‑£250" }
 
     context "when show_actions is true" do
       let(:show_actions) { true }
@@ -39,14 +39,14 @@ RSpec.describe NpqSeparation::Admin::AdjustmentsTableComponent, type: :component
   describe "adjustment total" do
     context "when show_total is false" do
       it { is_expected.not_to have_css "tbody th", text: t(".total") }
-      it { is_expected.not_to have_css "tbody td", text: "£0.00" }
+      it { is_expected.not_to have_css "tbody td", text: "£50.00" }
     end
 
     context "when show_total is true" do
       let(:show_total) { true }
 
       it { is_expected.to have_css "tbody th", text: t(".total") }
-      it { is_expected.to have_css "tbody th", text: "£0.00" }
+      it { is_expected.to have_css "tbody th", text: "£50.00" }
     end
   end
 end
