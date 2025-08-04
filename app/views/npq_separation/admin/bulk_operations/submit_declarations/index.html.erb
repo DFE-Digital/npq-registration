@@ -22,13 +22,15 @@
     <li>course_identifier</li>
     <li>delivery_partner_id</li>
     <li>lead_provider_name</li>
+    <li>has_passed (TRUE or FALSE for "completed" declarations, otherwise blank)</li>
   </ul>
 
   <p class="govuk-body">
     For example:
     <pre>
-      participant_id,declaration_type,declaration_date,course_identifier,delivery_partner_id,lead_provider_name
-      1234567890,declaration_type,2021-01-01T00:00:00Z,course_identifier,1234567890,"Lead provider name"
+      participant_id,declaration_type,declaration_date,course_identifier,delivery_partner_id,lead_provider_name,has_passed
+      1234567890,started,2021-01-01T00:00:00Z,course_identifier,1234567890,"Lead provider name",
+      1234567891,completed,2021-01-01T00:00:00Z,course_identifier,1234567890,"Lead provider name",TRUE
     </pre>
   </p>
 

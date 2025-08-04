@@ -1,6 +1,6 @@
 class BulkOperation::SubmitDeclarations < BulkOperation
   HEADERS = true
-  FILE_HEADERS = %w[participant_id declaration_type declaration_date course_identifier delivery_partner_id lead_provider_name].freeze
+  FILE_HEADERS = %w[participant_id declaration_type declaration_date course_identifier delivery_partner_id lead_provider_name has_passed].freeze
 
   def run!
     result = {}
@@ -47,6 +47,7 @@ private
       declaration_date: row["declaration_date"],
       course_identifier: row["course_identifier"],
       delivery_partner_id: row["delivery_partner_id"],
+      has_passed: row["has_passed"].presence.try(:downcase),
     )
 
     if service.create_declaration
