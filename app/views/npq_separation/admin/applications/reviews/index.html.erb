@@ -88,7 +88,7 @@
           :cohort_id,
           Cohort.all.order(start_year: :desc),
           :id,
-          -> { format_cohort _1 },
+          :description,
           options: { selected: params[:cohort_id], include_blank: true },
           label: { text: "Year of registration", size: "s" },
           form_group: { class: "govuk-grid-column-one-half" },
