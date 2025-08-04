@@ -37,14 +37,6 @@ class Cohort < ApplicationRecord
     end
   end
 
-  def name
-    start_year
-  end
-
-  def name=(name)
-    self.start_year = name
-  end
-
 private
 
   def registration_start_date_matches_start_year
