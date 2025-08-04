@@ -109,7 +109,7 @@ RSpec.describe Applications::Query do
         it "filters by cohort" do
           create(:application, cohort: cohort_2023)
           application = create(:application, cohort: cohort_2024)
-          query = described_class.new(cohort_names: "2024")
+          query = described_class.new(cohort_names: cohort_2024.name)
 
           expect(query.applications).to contain_exactly(application)
         end
@@ -118,13 +118,13 @@ RSpec.describe Applications::Query do
           application1 = create(:application, cohort: cohort_2023)
           application2 = create(:application, cohort: cohort_2024)
           create(:application, cohort: cohort_2025)
-          query = described_class.new(cohort_names: "2023,2024")
+          query = described_class.new(cohort_names: "#{cohort_2023.name},#{cohort_2024.name}")
 
           expect(query.applications).to contain_exactly(application1, application2)
         end
 
         it "returns no applications if no cohorts are found" do
-          query = described_class.new(cohort_names: "0000")
+          query = described_class.new(cohort_names: "0000b")
 
           expect(query.applications).to be_empty
         end

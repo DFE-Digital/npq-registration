@@ -96,7 +96,7 @@ RSpec.describe Statements::Query do
         it "filters by cohort" do
           _statement = create(:statement, cohort: cohort_2023)
           statement = create(:statement, cohort: cohort_2024)
-          query = described_class.new(cohort_names: "2024")
+          query = described_class.new(cohort_names: cohort_2024.name)
 
           expect(query.statements).to eq([statement])
         end
@@ -106,10 +106,10 @@ RSpec.describe Statements::Query do
           statement2 = create(:statement, cohort: cohort_2024)
           statement3 = create(:statement, cohort: cohort_2025)
 
-          query1 = described_class.new(cohort_names: "2023,2024")
+          query1 = described_class.new(cohort_names: "#{cohort_2023.name},#{cohort_2024.name}")
           expect(query1.statements).to contain_exactly(statement1, statement2)
 
-          query2 = described_class.new(cohort_names: %w[2024 2025])
+          query2 = described_class.new(cohort_names: [cohort_2024.name, cohort_2025.name])
           expect(query2.statements).to contain_exactly(statement2, statement3)
         end
 

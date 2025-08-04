@@ -92,7 +92,7 @@ RSpec.describe Declarations::Query do
         it "filters by cohort" do
           create(:declaration, cohort: cohort_2023)
           declaration = create(:declaration, cohort: cohort_2024)
-          query = described_class.new(cohort_names: "2024")
+          query = described_class.new(cohort_names: cohort_2024.name)
 
           expect(query.declarations).to contain_exactly(declaration)
         end
@@ -101,7 +101,7 @@ RSpec.describe Declarations::Query do
           declaration1 = create(:declaration, cohort: cohort_2023)
           declaration2 = create(:declaration, cohort: cohort_2024)
           create(:declaration, cohort: cohort_2025)
-          query = described_class.new(cohort_names: "2023,2024")
+          query = described_class.new(cohort_names: "#{cohort_2023.name},#{cohort_2024.name}")
 
           expect(query.declarations).to contain_exactly(declaration1, declaration2)
         end
@@ -120,7 +120,7 @@ RSpec.describe Declarations::Query do
         end
 
         it "does not filter by cohort if blank" do
-          condition_string = %("start_year")
+          condition_string = %("name")
           query = described_class.new(cohort_names: " ")
 
           expect(query.scope.to_sql).not_to include(condition_string)

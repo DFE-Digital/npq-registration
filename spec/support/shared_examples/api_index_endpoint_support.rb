@@ -138,15 +138,15 @@ RSpec.shared_examples "an API index endpoint with filter by cohort" do
       create_resource(lead_provider: current_lead_provider, cohort: cohort_2024)
       create_resource(lead_provider: current_lead_provider, cohort: cohort_2025)
 
-      api_get(path, params: { filter: { cohort: "2023,2024" } })
+      api_get(path, params: { filter: { cohort: "#{cohort_2023.name},#{cohort_2024.name}" } })
 
       expect(parsed_response["data"].size).to eq(2)
     end
 
     it "calls the correct query" do
-      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, cohort_names: "2023,2024")).and_call_original
+      expect(query).to receive(:new).with(a_hash_including(lead_provider: current_lead_provider, cohort_names: "#{cohort_2023.name},#{cohort_2024.name}")).and_call_original
 
-      api_get(path, params: { filter: { cohort: "2023,2024" } })
+      api_get(path, params: { filter: { cohort: "#{cohort_2023.name},#{cohort_2024.name}" } })
     end
   end
 end

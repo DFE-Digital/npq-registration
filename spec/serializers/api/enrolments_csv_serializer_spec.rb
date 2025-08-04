@@ -21,7 +21,7 @@ RSpec.describe API::EnrolmentsCsvSerializer, type: :serializer do
         participant_id: first_application.user.ecf_id,
         course_identifier: first_application.course.identifier,
         schedule_identifier: first_application.schedule.identifier,
-        cohort: first_application.cohort.start_year.to_s,
+        cohort: first_application.cohort.name,
         npq_application_id: first_application.ecf_id,
         eligible_for_funding: first_application.eligible_for_funding.to_s,
         training_status: first_application.training_status,

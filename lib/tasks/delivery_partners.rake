@@ -59,7 +59,7 @@ namespace :delivery_partners do
         CSV.foreach(args[:import_file], headers: true) do |row|
           DeliveryPartnership.create!(
             lead_provider: lead_providers[row["Lead Provider ECF Id"]],
-            cohort: cohorts[row["Cohort Start Year"]],
+            cohort: cohorts[row["Cohort"]],
             delivery_partner: delivery_partners[row["Delivery Partner ECF Id"]],
           )
         end
@@ -77,7 +77,7 @@ namespace :delivery_partners do
       raise "Export file not specified" if args[:export_file].blank?
 
       CSV.open(args[:export_file], "w") do |csv|
-        csv << ["Lead Provider ECF Id", "Cohort Start Year", "Delivery Partner ECF Id"]
+        csv << ["Lead Provider ECF Id", "Cohort", "Delivery Partner ECF Id"]
 
         DeliveryPartnership
             .order(id: :asc)
