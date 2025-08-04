@@ -1,6 +1,6 @@
 <%= govuk_back_link href: npq_separation_admin_cohort_path(@cohort) %>
 
-<h1 class="govuk-heading-l">Create new cohort <%= format_cohort(@cohort) %> statements</h1>
+<h1 class="govuk-heading-l">Create new cohort <%= @cohort.description %> statements</h1>
 
 <%= render partial: 'errors', object: @service.errors if @service.try(:errors).present? %>
 
