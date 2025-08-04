@@ -50,7 +50,7 @@ module Declarations
     def where_cohort_name_in(cohort_names)
       return if ignore?(filter: cohort_names)
 
-      scope.merge!(Declaration.where(cohort: { start_year: extract_conditions(cohort_names) }))
+      scope.merge!(Declaration.where(cohort: { name: extract_conditions(cohort_names) }))
     end
 
     def all_declarations
