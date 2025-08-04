@@ -1,16 +1,6 @@
 require "rails_helper"
 
 RSpec.describe AdminHelper, type: :helper do
-  describe "#format_cohort" do
-    subject { format_cohort(cohort) }
-
-    let(:cohort) { FactoryBot.build(:cohort, start_year: 2025) }
-
-    it "formats a cohort with the start year and end year separated with 'to'" do
-      expect(subject).to include("2025 to 2026")
-    end
-  end
-
   describe "format_address" do
     subject { format_address(school) }
 

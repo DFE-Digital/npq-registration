@@ -3,7 +3,7 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
   before_action :cohort, only: %i[show edit update destroy]
 
   def index
-    @pagy, @cohorts = pagy(Cohort.all.order(start_year: :desc))
+    @pagy, @cohorts = pagy(Cohort.all.order(name: :desc))
   end
 
   def show; end
@@ -15,6 +15,8 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
 
   def create
     @cohort = Cohort.new(cohort_params)
+    @cohort.name = @cohort.start_year
+    @cohort.description = "#{@cohort.start_year} to #{@cohort.start_year&.next}"
 
     if @cohort.save
       Cohorts::CopyDeliveryPartnersJob.perform_later(@cohort.id)
