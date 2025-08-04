@@ -55,7 +55,13 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
 private
 
   def cohort_params
-    params.require(:cohort).permit(:start_year, :registration_start_date, :funding_cap)
+    params.require(:cohort).permit(
+      :start_year,
+      :registration_start_date,
+      :funding_cap,
+      :suffix,
+      :description,
+    )
   end
 
   def cohort
