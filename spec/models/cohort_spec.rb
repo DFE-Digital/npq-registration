@@ -17,6 +17,10 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.to allow_value(%w[true false]).for(:funding_cap).with_message("Choose true or false for funding cap") }
     it { is_expected.not_to allow_value(nil).for(:funding_cap).with_message("Choose true or false for funding cap") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+    it { is_expected.to validate_presence_of :description }
+    it { is_expected.to validate_uniqueness_of(:description).case_insensitive }
 
     describe "registration_start_date year should match start_year" do
       it "adds an error when the registration_start_date year does not match the start_year" do
@@ -45,14 +49,6 @@ RSpec.describe Cohort, type: :model do
               .is_less_than(2030),
           )
       }
-
-      it "validates uniqueness of start_year" do
-        existing_cohort = create :cohort, start_year: 2025
-        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
-
-        new_cohort.valid?
-        expect(new_cohort.errors[:start_year]).to include("has already been taken")
-      end
     end
 
     describe "changing funding_cap when there are applications" do
@@ -104,45 +100,5 @@ RSpec.describe Cohort, type: :model do
         expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
-  end
-
-  describe "#name" do
-    subject { cohort.name }
-
-    it { is_expected.to eq cohort.start_year }
-  end
-
-  describe ".by_name" do
-    before { cohorts }
-
-    let :cohorts do
-      (2021..2025)
-        .map { |start_year| create(:cohort, start_year:) }
-        .index_by(&:start_year)
-    end
-
-    it "matches on year" do
-      expect(Cohort.by_name(2022).to_a).to match_array(cohorts.values_at(2022))
-    end
-
-    it "matches multiple years" do
-      expect(Cohort.by_name([2022, 2023]).to_a).to match_array(cohorts.values_at(2022, 2023))
-    end
-  end
-
-  describe ".find_by" do
-    before { cohorts }
-
-    let :cohorts do
-      (2021..2025)
-        .map { |start_year| create(:cohort, start_year:) }
-        .index_by(&:start_year)
-    end
-
-    it { expect(Cohort.find_by(start_year: 2022)).to eq cohorts[2022] }
-    it { expect(Cohort.find_by(id: cohorts[2022].id)).to eq cohorts[2022] }
-
-    it { expect(Cohort.find_by(id: cohorts[2022].id, name: 2022)).to eq cohorts[2022] }
-    it { expect(Cohort.find_by(id: cohorts[2023].id, name: 2022)).to be_nil }
   end
 end

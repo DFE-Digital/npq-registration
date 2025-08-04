@@ -10,8 +10,7 @@ class Cohort < ApplicationRecord
             numericality: {
               greater_than_or_equal_to: 2021,
               less_than: 2030,
-            },
-            uniqueness: true
+            }
 
   validates :registration_start_date, presence: true
   validate :registration_start_date_matches_start_year
@@ -19,15 +18,14 @@ class Cohort < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validate :changing_funding_cap_with_dependent_applications
 
+  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :description, presence: true, uniqueness: { case_sensitive: false }
+
   class << self
     def current(timestamp = Time.zone.today)
       where(registration_start_date: ..timestamp)
         .order(start_year: :desc)
         .first!
-    end
-
-    def by_name(name)
-      where(start_year: name)
     end
 
     def find_by(columns)
