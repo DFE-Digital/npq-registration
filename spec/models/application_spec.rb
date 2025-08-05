@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Application do
-  subject { create(:application) }
+  subject(:application) { create(:application) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:user) }
@@ -219,8 +219,66 @@ RSpec.describe Application do
   end
 
   describe "#inside_catchment?" do
-    it { expect(build(:application, teacher_catchment: "england")).to be_inside_catchment }
-    it { expect(build(:application, teacher_catchment: "scotland")).not_to be_inside_catchment }
+    subject { create(:application, cohort:, school:, teacher_catchment:).inside_catchment? }
+
+    context "when the application is in the 2023 cohort or earlier" do
+      let(:cohort) { create(:cohort, start_year: 2023) }
+
+      context "when the teacher_catchment is not set" do
+        let(:teacher_catchment) { nil }
+
+        context "when the application has an English school" do
+          let(:school) { create(:school, urn: "100000") }
+
+          it { is_expected.to be true }
+        end
+
+        context "when the application has a Welsh school" do
+          let(:school) { create(:school, urn: "401344") }
+
+          it { is_expected.to be false }
+        end
+
+        context "when the application has a school that is a children's centre" do
+          let(:school) { create(:school, urn: "20001") }
+
+          it { is_expected.to be false }
+        end
+
+        context "when the application has no school" do
+          let(:school) { nil }
+
+          it { is_expected.to be false }
+        end
+      end
+    end
+
+    context "when the application is in the 2024 cohort or later" do
+      let(:cohort) { create(:cohort, start_year: 2024) }
+      let(:school) { nil }
+
+      context "when the teacher_catchment is not set" do
+        let(:teacher_catchment) { nil }
+
+        context "when the application has an English school" do
+          let(:school) { create(:school, urn: "100000") }
+
+          it { is_expected.to be false }
+        end
+      end
+
+      context "when the teacher_catchment is set to England" do
+        let(:teacher_catchment) { "england" }
+
+        it { is_expected.to be true }
+      end
+
+      context "when the teacher_catchment is set to Scotland" do
+        let(:teacher_catchment) { "scotland" }
+
+        it { is_expected.to be false }
+      end
+    end
   end
 
   describe "#inside_uk_catchment?" do
