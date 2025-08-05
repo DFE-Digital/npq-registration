@@ -18,7 +18,9 @@ class Cohort < ApplicationRecord
   validates :ecf_id, uniqueness: { case_sensitive: false }, allow_nil: true
   validate :changing_funding_cap_with_dependent_applications
 
-  validates :name, presence: true, uniqueness: { case_sensitive: false }
+  validates :name, presence: true,
+                   uniqueness: { case_sensitive: false },
+                   format: { with: %r{\A[a-z0-9-]+\z} }
   validates :description, presence: true, uniqueness: { case_sensitive: false }
 
   class << self

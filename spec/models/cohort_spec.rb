@@ -22,6 +22,10 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_uniqueness_of(:description).case_insensitive }
 
+    it { is_expected.to allow_value("2024-2").for :name }
+    it { is_expected.to allow_value("2024b").for :name }
+    it { is_expected.not_to allow_value("2024 2").for :name }
+
     describe "registration_start_date year should match start_year" do
       it "adds an error when the registration_start_date year does not match the start_year" do
         cohort = Cohort.new(start_year: 2022, registration_start_date: Date.new(2023, 4, 10))
