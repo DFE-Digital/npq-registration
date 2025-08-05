@@ -86,12 +86,11 @@ class FundingEligibility
 
   def funding_eligiblity_status_code
     return NOT_IN_ENGLAND unless inside_catchment?
+    return PREVIOUSLY_FUNDED if previously_funded?
 
     @funding_eligiblity_status_code ||= begin
       if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider))
         if lead_mentor_course?
-          return PREVIOUSLY_FUNDED if previously_funded?
-
           return FUNDED_ELIGIBILITY_RESULT
         else
           return NOT_LEAD_MENTOR_COURSE
@@ -114,8 +113,6 @@ class FundingEligibility
           return NO_INSTITUTION
         end
       end
-
-      return PREVIOUSLY_FUNDED if previously_funded?
 
       case institution.class.name
       when "School"
