@@ -15,6 +15,7 @@ RSpec.describe Applications::ChangeTrainingStatus, type: :model do
 
     describe "#training_status" do
       context "when application is pending" do
+        let(:training_status) { "active" }
         let(:application) { create(:application, :pending) }
 
         it { is_expected.not_to be_valid }
