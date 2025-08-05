@@ -12,11 +12,7 @@ class FundingEligibility
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
-  # School
-  SCHOOL_OUTSIDE_CATCHMENT = :school_outside_catchment
-
   # Early Years
-  EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
   NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
@@ -30,8 +26,6 @@ class FundingEligibility
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
     NOT_IN_ENGLAND => "funding_details.inside_catchment",
-    EARLY_YEARS_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
-    SCHOOL_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
@@ -91,8 +85,10 @@ class FundingEligibility
   end
 
   def funding_eligiblity_status_code
+    return NOT_IN_ENGLAND unless inside_catchment?
+
     @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
+      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider))
         if lead_mentor_course?
           return PREVIOUSLY_FUNDED if previously_funded?
 
@@ -101,8 +97,6 @@ class FundingEligibility
           return NOT_LEAD_MENTOR_COURSE
         end
       end
-
-      return NOT_IN_ENGLAND unless inside_catchment?
 
       unless institution
         if query_store
