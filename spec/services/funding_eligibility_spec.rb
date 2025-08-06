@@ -146,16 +146,9 @@ RSpec.describe FundingEligibility do
           allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
         end
 
-        %i[
-          senco
-          leading_primary_mathmatics
-          headship
-          senior_leadership
-          leading_literacy
-          early_years_leadership
-        ].each do |course|
-          context "when user has selected the #{course} course" do
-            let(:course) { build(:course, course) }
+        Course::IDENTIFIERS.each do |identifier|
+          context "when user has selected the #{identifier} course" do
+            let(:course) { build(:course, identifier:) }
 
             it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
           end
@@ -174,6 +167,7 @@ RSpec.describe FundingEligibility do
           senior_leadership: [false, :ineligible_establishment_not_a_pp50, I18n.t("funding_details.not_a_pp50")],
           early_years_leadership: [false, :not_entitled_ey_institution, I18n.t("funding_details.not_entitled_ey_institution")],
           leading_literacy: [false, :ineligible_establishment_not_a_pp50, I18n.t("funding_details.not_a_pp50")],
+          # TODO: test the other 6 courses?
         }.each do |course, eligibility|
           context "when user has selected the #{course} course" do
             let(:course) { build(:course, course) }
@@ -196,9 +190,9 @@ RSpec.describe FundingEligibility do
       it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
     end
 
-    context "and the course is not NPQLTD or NPQS" do
-      Course.all.reject { |c| c.npqltd? || c.npqs? }.each do |course|
-        let(:course) { course }
+    context "and the course is not NPQLTD, NPQS or EHCO" do
+      (Course::IDENTIFIERS - [Course::NPQ_LEADING_TEACHING_DEVELOPMENT, Course::NPQ_SENCO, Course::NPQ_EARLY_HEADSHIP_COACHING_OFFER]).each do |identifier|
+        let(:course) { build(:course, identifier:) }
 
         it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
       end
