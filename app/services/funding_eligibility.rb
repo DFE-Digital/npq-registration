@@ -86,7 +86,7 @@ class FundingEligibility
     @funding_eligiblity_status_code ||= begin
       if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
         if lead_mentor_course?
-          return PREVIOUSLY_FUNDED if previously_funded?
+          # return PREVIOUSLY_FUNDED if previously_funded? # TODO: not tested
 
           return FUNDED_ELIGIBILITY_RESULT
         else
@@ -102,12 +102,12 @@ class FundingEligibility
           # maybe because Questionnaires::MathsEligibilityTeachingForMastery does not pass in new_headtecher to the initializer
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
-          return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
+          # return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school? # TODO: not tested
 
           if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
             return NO_INSTITUTION
           elsif query_store.works_in_other?
-            return INELIGIBLE_INSTITUTION_TYPE
+            # return INELIGIBLE_INSTITUTION_TYPE # TODO: not tested
           end
         else
           return NO_INSTITUTION
@@ -120,19 +120,19 @@ class FundingEligibility
       when "School"
         return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
-        return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
+        # return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment? # TODO: not tested
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         unless course.eyl?
-          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
+          # return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved? # TODO: not tested
           return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
-        return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
-        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
+        # return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment? # TODO: not tested
+        # return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder? # TODO: not tested
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
         return NOT_ENTITLED_CHILDMINDER if course.eyl? && childminder? && !institution.on_childminders_list?
