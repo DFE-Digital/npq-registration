@@ -98,6 +98,8 @@ class FundingEligibility
 
       unless institution
         if query_store
+          # not sure why we're using the query store for the line below, instead of using the method new_headteacher?
+          # maybe because Questionnaires::MathsEligibilityTeachingForMastery does not pass in new_headtecher to the initializer
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?

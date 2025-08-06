@@ -60,6 +60,35 @@ RSpec.describe FundingEligibility do
     it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
   end
 
+  context "studying npq-early-headship-coaching-offer" do
+    let(:course) { create(:course, :early_headship_coaching_offer) }
+
+    context "when not in England" do
+      let(:inside_catchment) { false }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :not_in_england,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+    end
+
+    context "when in England but not eligible" do
+      let(:inside_catchment) { true }
+      let(:new_headteacher) { false }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :not_new_headteacher_requesting_ehco,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+    end
+
+    context "when there is no institution and they are not a new headteacher according to the query store" do
+      let(:institution) { nil }
+      let(:query_store) { instance_double(RegistrationQueryStore, new_headteacher?: false) }
+
+      # weird mix of status code being one thing, and the description being something else - not sure if this is correct
+      it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer"),
+                                             ineligible_institution_type: true
+    end
+  end
+
   context "when institution is a School" do
     %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
       context "eligible establishment_type_code #{eligible_gias_code}" do
