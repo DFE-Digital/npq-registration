@@ -98,6 +98,7 @@ class FundingEligibility
 
       unless institution
         if query_store
+          # not sure why we're using the query store for the lines below, instead of using the methods that check the initialized attributes
           return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
           return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
           return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
@@ -118,18 +119,16 @@ class FundingEligibility
       when "School"
         return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
-        return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         unless course.eyl?
-          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
+          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved? # TODO: check if this line is needed, result may be correct without it
           return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
-        return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?

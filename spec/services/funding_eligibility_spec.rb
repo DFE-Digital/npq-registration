@@ -7,6 +7,7 @@ RSpec.describe FundingEligibility do
                         inside_catchment:,
                         trn:,
                         get_an_identity_id:,
+                        lead_mentor_for_accredited_itt_provider:,
                         approved_itt_provider:,
                         lead_mentor:,
                         new_headteacher:,
@@ -27,6 +28,7 @@ RSpec.describe FundingEligibility do
   let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
   let(:query_store) { instance_double(RegistrationQueryStore, work_setting: work_setting) }
   let(:institution) { build(:school, :funding_eligible_establishment_type_code, urn: "100000") }
+  let(:lead_mentor_for_accredited_itt_provider) { nil }
 
   RSpec.shared_examples "funding eligibility" do |funded:, status_code:, description: nil, ineligible_institution_type: false|
     it "returns funded? #{funded}" do
@@ -58,6 +60,35 @@ RSpec.describe FundingEligibility do
     let(:course) { Course.find_by(identifier: "npq-early-years-leadership") }
 
     it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
+  end
+
+  context "studying npq-early-headship-coaching-offer" do
+    let(:course) { create(:course, :early_headship_coaching_offer) }
+
+    context "when not in England" do
+      let(:inside_catchment) { false }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :not_in_england,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+    end
+
+    context "when in England but not eligible" do
+      let(:inside_catchment) { true }
+      let(:new_headteacher) { false }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :not_new_headteacher_requesting_ehco,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+    end
+
+    context "when there is no institution and they are not a new headteacher according to the query store" do
+      let(:institution) { nil }
+      let(:query_store) { instance_double(RegistrationQueryStore, new_headteacher?: false) }
+
+      # weird mix of status code being one thing, and the description being something else - not sure if this is correct
+      it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type,
+                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer"),
+                                             ineligible_institution_type: true
+    end
   end
 
   context "when institution is a School" do
@@ -133,6 +164,14 @@ RSpec.describe FundingEligibility do
             let(:course) { build(:course, :additional_support_offer) }
 
             it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_type, description: I18n.t("funding_details.ineligible_setting")
+
+            context "when the course is not nursery approved" do
+              (Course::IDENTIFIERS - Course::LA_NURSERY_APPROVED).each do |identifier|
+                let(:course) { build(:course, identifier:) }
+
+                it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_type, description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+              end
+            end
           end
         end
       end
@@ -176,6 +215,24 @@ RSpec.describe FundingEligibility do
           end
         end
       end
+
+      context "when the user has selected a non-NPQEYL course" do
+        let(:course) { build(:course, :senior_leadership) }
+
+        context "when the institution is a LA nursery school" do
+          before do
+            allow(institution).to receive(:local_authority_nursery_school?).and_return(true)
+          end
+
+          context "when the course is nursery approved" do
+            (Course::IDENTIFIERS - Course::LA_NURSERY_APPROVED).each do |identifier|
+              let(:course) { build(:course, identifier:) }
+
+              it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
+            end
+          end
+        end
+      end
     end
   end
 
@@ -188,11 +245,58 @@ RSpec.describe FundingEligibility do
       let(:course) { build(:course, :leading_teaching_development) }
 
       it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
+
+      context "when there are accepted applications" do
+        let(:user) { build(:user, :with_get_an_identity_id, uid: get_an_identity_id) }
+        let(:cohort) { build(:cohort, :current) }
+
+        before do
+          create(:application, :accepted, user:, course:, cohort:, funded_place: true, eligible_for_funding: true, targeted_delivery_funding_eligibility: true)
+        end
+
+        it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Leading teacher development NPQ")
+      end
     end
 
     context "and the course is not NPQLTD, NPQS or EHCO" do
       (Course::IDENTIFIERS - [Course::NPQ_LEADING_TEACHING_DEVELOPMENT, Course::NPQ_SENCO, Course::NPQ_EARLY_HEADSHIP_COACHING_OFFER]).each do |identifier|
         let(:course) { build(:course, identifier:) }
+
+        it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
+      end
+    end
+
+    context "and lead_mentor_for_accredited_itt_provider is true" do
+      let(:lead_mentor_for_accredited_itt_provider) { true }
+
+      context "and the course is NPQLTD" do
+        let(:course) { build(:course, :leading_teaching_development) }
+
+        context "when there are accepted applications" do
+          let(:user) { build(:user, :with_get_an_identity_id, uid: get_an_identity_id) }
+          let(:course_group) { create(:course_group, name: "specialist") }
+          let(:course) { build(:course, :leading_teaching_development, course_group:) }
+
+          before do
+            create(:application, :accepted, user:, course:, funded_place: true, eligible_for_funding: true, targeted_delivery_funding_eligibility: true)
+          end
+
+          it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Leading teacher development NPQ")
+        end
+
+        context "when there are no accepted applications" do
+          it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
+        end
+      end
+
+      context "and the course is NPQLPM" do
+        let(:course) { build(:course, identifier: Course::NPQ_LEADING_PRIMARY_MATHEMATICS) }
+
+        it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
+      end
+
+      context "and the course is NPQSENCO" do
+        let(:course) { build(:course, identifier: Course::NPQ_SENCO) }
 
         it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
       end
@@ -265,6 +369,13 @@ RSpec.describe FundingEligibility do
         it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
       end
 
+      context "when the nursery is a childminder" do
+        let(:institution) { build(:private_childcare_provider, early_years_individual_registers: %w[EYR]) }
+        let(:query_store) { instance_double(RegistrationQueryStore, childminder?: true) }
+
+        it_behaves_like "funding eligibility", funded: false, status_code: :not_entitled_childminder, description: I18n.t("funding_details.not_entitled_childminder")
+      end
+
       context "when the institution is an unknown class" do
         let(:unknown_instituion_class) { Class.new }
         let(:institution) { TestInstitutionClass.new }
@@ -286,6 +397,18 @@ RSpec.describe FundingEligibility do
       let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: true) }
 
       it_behaves_like "funding eligibility", funded: false, status_code: :referred_by_return_to_teaching_adviser
+    end
+
+    context "when local authority supply teacher" do
+      let(:query_store) { instance_double(RegistrationQueryStore, local_authority_supply_teacher?: true, referred_by_return_to_teaching_adviser?: false) }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
+    end
+
+    context "when virutal teacher" do
+      let(:query_store) { instance_double(RegistrationQueryStore, employment_type_local_authority_virtual_school?: true, referred_by_return_to_teaching_adviser?: false, local_authority_supply_teacher?: false) }
+
+      it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
     end
 
     describe "no_institution code" do
@@ -318,6 +441,12 @@ RSpec.describe FundingEligibility do
 
       context "when user is working in other" do
         let(:works_in_other) { true }
+
+        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type, description: I18n.t("funding_details.ineligible_setting"), ineligible_institution_type: true
+      end
+
+      context "when the query store says the user works in other" do
+        let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: false, local_authority_supply_teacher?: false, employment_type_local_authority_virtual_school?: false, employment_type_hospital_school?: false, young_offender_institution?: false, works_in_other?: true) }
 
         it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type, description: I18n.t("funding_details.ineligible_setting"), ineligible_institution_type: true
       end
