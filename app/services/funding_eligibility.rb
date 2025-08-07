@@ -12,11 +12,7 @@ class FundingEligibility
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
-  # School
-  SCHOOL_OUTSIDE_CATCHMENT = :school_outside_catchment
-
   # Early Years
-  EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
   NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
@@ -30,8 +26,6 @@ class FundingEligibility
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
     NOT_IN_ENGLAND => "funding_details.inside_catchment",
-    EARLY_YEARS_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
-    SCHOOL_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
@@ -83,18 +77,17 @@ class FundingEligibility
   end
 
   def funding_eligiblity_status_code
-    @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
-        if lead_mentor_course?
-          return PREVIOUSLY_FUNDED if previously_funded?
+    return NOT_IN_ENGLAND unless inside_catchment?
+    return PREVIOUSLY_FUNDED if previously_funded?
 
+    @funding_eligiblity_status_code ||= begin
+      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider))
+        if lead_mentor_course?
           return FUNDED_ELIGIBILITY_RESULT
         else
           return NOT_LEAD_MENTOR_COURSE
         end
       end
-
-      return NOT_IN_ENGLAND unless inside_catchment?
 
       unless institution
         if query_store
@@ -112,13 +105,10 @@ class FundingEligibility
         end
       end
 
-      return PREVIOUSLY_FUNDED if previously_funded?
-
       case institution.class.name
       when "School"
         return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
-        return SCHOOL_OUTSIDE_CATCHMENT unless inside_catchment?
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         unless course.eyl?
@@ -129,7 +119,6 @@ class FundingEligibility
 
         FUNDED_ELIGIBILITY_RESULT
       when "PrivateChildcareProvider"
-        return EARLY_YEARS_OUTSIDE_CATCHMENT unless inside_catchment?
         return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
         return EARLY_YEARS_INVALID_NPQ unless course.eyl?
         return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
