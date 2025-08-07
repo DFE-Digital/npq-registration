@@ -121,8 +121,8 @@ class FundingEligibility
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
 
         unless course.eyl?
-          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved? # TODO: check if this line is needed, result may be correct without it
-          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
+          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved?
+          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50?(work_setting)
           return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
         end
 
