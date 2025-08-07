@@ -17,7 +17,6 @@ RSpec.describe Applications::ChangeTrainingStatus, type: :model do
       let(:application) { create(:application, :pending) }
 
       context "when training status is nil" do
-
         it "returns an error message" do
           expect(service).to have_error(:training_status, :inclusion, "Choose a valid training status")
           expect(service).to have_error_count(1)
