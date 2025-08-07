@@ -13,7 +13,27 @@ RSpec.describe Applications::ChangeTrainingStatus, type: :model do
     it { is_expected.to validate_presence_of :application }
     it { is_expected.to validate_inclusion_of(:training_status).in_array(%w[active deferred withdrawn]) }
 
-    describe "#reason" do
+    context "when provider approval status pending" do
+      let(:application) { create(:application, :pending) }
+
+      context "when training status is nil" do
+        it "returns an error message" do
+          expect(service).to have_error(:training_status, :inclusion, "Choose a valid training status")
+          expect(service).to have_error_count(1)
+        end
+      end
+
+      context "when training status is set" do
+        let(:training_status) { "active" }
+
+        it "returns an error message" do
+          expect(service).to have_error(:training_status, :pending_lead_provider_approval_status, "You cannot change the training status of an application which is in a pending state")
+          expect(service).to have_error_count(1)
+        end
+      end
+    end
+
+    context "when checking whether a reason is required based on training status" do
       context "with training_status set to blank" do
         let(:training_status) { nil }
 

@@ -21,6 +21,7 @@ module Applications
     validates :training_status, inclusion: Application.training_statuses.values
     validates :reason, inclusion: { in: :valid_reasons }, if: :reason_required?
     validate :do_not_defer_if_without_declarations, if: :application
+    validate :do_not_change_status_of_pending_application, if: :application
 
     before_validation(unless: :reason_required?) { self.reason = nil }
 
@@ -88,6 +89,14 @@ module Applications
 
       if application.declarations.empty?
         errors.add(:training_status, :invalid_deferral_no_declarations)
+      end
+    end
+
+    def do_not_change_status_of_pending_application
+      return if errors.any?
+
+      if application.lead_provider_approval_status == "pending"
+        errors.add(:training_status, :pending_lead_provider_approval_status)
       end
     end
   end
