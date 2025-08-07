@@ -327,7 +327,7 @@ en:
             training_status:
               inclusion: Choose a valid training status
               invalid_deferral_no_declarations: You cannot defer an NPQ participant that has no declarations
-              pending_lead_provider_approval_status: You cannot change the training status of an application which is in a pending state.
+              pending_lead_provider_approval_status: You cannot change the training status of an application which is in a pending state
             reason:
               inclusion: Choose a valid reason for the training status change
         applications/change_funding_eligibility:

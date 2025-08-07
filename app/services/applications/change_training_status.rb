@@ -93,6 +93,8 @@ module Applications
     end
 
     def do_not_change_status_of_pending_application
+      return if errors.any?
+
       if application.lead_provider_approval_status == "pending"
         errors.add(:training_status, :pending_lead_provider_approval_status)
       end
