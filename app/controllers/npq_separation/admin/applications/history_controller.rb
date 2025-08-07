@@ -9,7 +9,7 @@ module NpqSeparation
       private
 
         def set_application
-          @application = Application.find(params[:id])
+          @application = Application.eager_load(:application_states).find(params[:id])
         end
       end
     end

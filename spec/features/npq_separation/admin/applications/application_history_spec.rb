@@ -34,6 +34,8 @@ RSpec.feature "viewing application history", :versioning, type: :feature do
       Applications::ChangeCohort.new(application:, cohort_id: older_cohort.id).change_cohort
       Applications::ChangeLeadProvider.new(application:, lead_provider_id: LeadProvider.last.id).change_lead_provider
       Applications::ChangeFundingEligibility.new(application:, eligible_for_funding: true).change_funding_eligibility
+      create(:declaration, application:)
+      Applications::ChangeTrainingStatus.new(application:, training_status: Application.training_statuses[:deferred], reason: "other").change_training_status
     end
 
     scenario "viewing application history" do
@@ -42,6 +44,8 @@ RSpec.feature "viewing application history", :versioning, type: :feature do
       expect(page).to have_content("by test user")
       expect(page).to have_css("h2", text: "Provider changed from Ambition Institute to UCL Institute of Education")
       expect(page).to have_css("h2", text: "Eligible for funding changed to true, Funding eligibility status code changed to marked_funded_by_policy")
+      expect(page).to have_css("h2", text: "Training status changed from active to deferred")
+      expect(page).to have_css("div.govuk-inset-text", text: "Reason for training status change: other")
     end
   end
 end
