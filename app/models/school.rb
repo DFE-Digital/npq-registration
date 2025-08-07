@@ -104,7 +104,7 @@ class School < ApplicationRecord
     ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.include?(establishment_type_code)
   end
 
-  def pp50_institution?(work_setting)
+  def pp50?(work_setting)
     if work_setting == Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING
       !!PP50_FE_UKPRN_HASH[ukprn.to_s]
     else
