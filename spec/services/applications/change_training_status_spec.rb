@@ -13,7 +13,7 @@ RSpec.describe Applications::ChangeTrainingStatus, type: :model do
     it { is_expected.to validate_presence_of :application }
     it { is_expected.to validate_inclusion_of(:training_status).in_array(%w[active deferred withdrawn]) }
 
-    context "when provider approval status pending, training_status cannot be set" do
+    context "when provider approval status pending" do
       let(:application) { create(:application, :pending) }
 
       context "when training status is nil" do
