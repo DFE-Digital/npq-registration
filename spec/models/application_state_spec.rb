@@ -50,33 +50,4 @@ RSpec.describe ApplicationState do
       end
     end
   end
-
-  describe ".lookup_reason" do
-    subject(:reason) { described_class.lookup_reason(application: application_state.application, created_at: Time.zone.now, state: "deferred") }
-
-    before { freeze_time }
-
-    let!(:application) { create(:application) }
-    let(:application_state) { create(:application_state, :deferred, application:, created_at: application.created_at + 0.5, reason: "other") }
-
-    it "returns the reason for the application state" do
-      expect(reason).to eq(application_state.reason)
-    end
-
-    context "when there is more than one application state within the time range" do
-      before do
-        create(:application_state, :deferred, application:, created_at: application.created_at + 0.4, reason: "career-break")
-      end
-
-      it "returns the most recent application state within the time range" do
-        expect(reason).to eq(application_state.reason)
-      end
-    end
-
-    context "when no application state matches the criteria" do
-      it "returns nil" do
-        expect(described_class.lookup_reason(application: application, created_at: Time.zone.now, state: "active")).to be_nil
-      end
-    end
-  end
 end

@@ -190,6 +190,15 @@ class Application < ApplicationRecord
     declarations.completed.billable_or_voidable.latest_first.first&.participant_outcomes&.latest&.state
   end
 
+  def lookup_state_change_reason(changed_at:, changed_status:)
+    variance = 0.5
+    application_states.find { |application_state|
+      application_state.created_at >= changed_at - variance &&
+        application_state.created_at <= changed_at + variance &&
+        application_state.state == changed_status
+    }&.reason
+  end
+
 private
 
   def funding_eligibility(with_funded_place:)

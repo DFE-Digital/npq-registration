@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Application do
-  subject { create(:application) }
+  subject(:application) { create(:application) }
 
   describe "relationships" do
     it { is_expected.to belong_to(:user) }
@@ -605,6 +605,34 @@ RSpec.describe Application do
 
       it "returns nil" do
         expect(subject).to be_nil
+      end
+    end
+  end
+
+  describe "#lookup_state_change_reason" do
+    subject(:lookup_state_change_reason) { application.lookup_state_change_reason(changed_at: Time.zone.now, changed_status: "deferred") }
+
+    before { freeze_time }
+
+    let!(:application_state) { create(:application_state, :deferred, application:, created_at: application.created_at + 0.5, reason: "other") }
+
+    it "returns the reason for the application state" do
+      expect(lookup_state_change_reason).to eq(application_state.reason)
+    end
+
+    context "when there is more than one application state within the time range" do
+      before do
+        create(:application_state, :deferred, application:, created_at: application.created_at + 0.4, reason: "career-break")
+      end
+
+      it "returns the most recent application state within the time range" do
+        expect(lookup_state_change_reason).to eq(application_state.reason)
+      end
+    end
+
+    context "when no application state matches the criteria" do
+      it "returns nil" do
+        expect(application.lookup_state_change_reason(changed_at: Time.zone.now, changed_status: "active")).to be_nil
       end
     end
   end
