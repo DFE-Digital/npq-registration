@@ -63,7 +63,7 @@ module Questionnaires
 
     def requirements_met?
       # The user has to have logged in via GAI to reach this question
-      wizard.store.present? && query_store.current_user.present?
+      wizard.store.present? && query_store.current_user
     end
 
     def next_step
@@ -129,9 +129,9 @@ module Questionnaires
       # Load info from current_user into store if it isn't already set
       # This way this info will be pre-populated in the forms.
       # This is useful for when the user is logged in and we already know this info.
-      @full_name ||= query_store.current_user.full_name
-      @trn ||= query_store.current_user.trn
-      @date_of_birth ||= query_store.current_user.date_of_birth # rubocop:disable Naming/MemoizedInstanceVariableName
+      @full_name ||= query_store.current_user&.full_name
+      @trn ||= query_store.current_user&.trn
+      @date_of_birth ||= query_store.current_user&.date_of_birth # rubocop:disable Naming/MemoizedInstanceVariableName
     end
 
     def after_save
@@ -141,7 +141,7 @@ module Questionnaires
       wizard.store["verified_trn"] = verified_trn
       wizard.store["active_alert"] = active_alert?
 
-      if query_store.current_user.actual_user?
+      if query_store.current_user
         query_store.current_user.update!(
           trn: trn_to_store,
           full_name:,

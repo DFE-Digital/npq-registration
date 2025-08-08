@@ -80,11 +80,6 @@ RSpec.describe User do
     }
   end
 
-  describe "actual_user? and null_user? methods" do
-    it { expect(User.new).to be_actual_user }
-    it { expect(User.new).not_to be_null_user }
-  end
-
   describe "touch_significantly_updated_at" do
     let(:user) { travel_to(1.day.ago) { create(:user, :without_significantly_updated_at) } }
     let(:significant_change) { { full_name: "New Name" } }
