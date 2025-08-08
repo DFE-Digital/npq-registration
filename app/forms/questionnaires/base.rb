@@ -102,6 +102,7 @@ module Questionnaires
       # a lead provider and a course to have been selected.
       wizard.store.present? &&
         query_store.current_user.present? &&
+        previous_step_valid? &&
         wizard.store.keys != %w[current_user]
     end
 
@@ -122,6 +123,12 @@ module Questionnaires
         divider:,
         revealed_question:,
       )
+    end
+
+    def previous_step_valid?
+      return true unless previous_step
+
+      wizard.send(:form_for_step, previous_step).valid?
     end
   end
 end
