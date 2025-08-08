@@ -53,6 +53,14 @@ class FundingEligibility
               :query_store
 
   delegate :childminder?, :work_setting, to: :query_store
+  delegate :eligibility_data, to: :class, private: true
+  delegate :rise_school?, to: :eligibility_data, private: true
+
+  class << self
+    def eligibility_data
+      @eligibility_data ||= FundingEligibilityData.new
+    end
+  end
 
   def initialize(institution:,
                  course:,
