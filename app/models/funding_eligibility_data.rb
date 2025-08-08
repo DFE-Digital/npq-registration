@@ -8,7 +8,7 @@ class FundingEligibilityData
   def rise_school?(school_or_urn)
     urn = school_or_urn.is_a?(School) ? school_or_urn.urn : school_or_urn
 
-    rise_data.key?(urn.to_i)
+    rise_urns.include?(urn.to_i)
   end
 
 private
@@ -21,14 +21,14 @@ private
     end
   end
 
-  def rise_data
-    @rise_data ||= load_rise_data
+  def rise_urns
+    @rise_urns ||= load_rise_urns
   end
 
-  def load_rise_data
-    {}.tap do |rise_data|
+  def load_rise_urns
+    Set.new.tap do |rise_urns|
       CSV.read(@data_file_path.join("rise.csv"), headers: true).each do |row|
-        rise_data[row["School URN"].to_i] = row.to_h
+        rise_urns << row["School URN"].to_i
       end
     end
   end
