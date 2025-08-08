@@ -1,21 +1,35 @@
-<% content_for :side_navigation do %>
-  <%=
-    render NpqSeparation::SubNavigationComponent.new(
-      request.path,
-      structure:
-        LeadProvider.order(:name).map do |lead_provider|
-          NpqSeparation::NavigationStructure::Node.new(
-            name: lead_provider.name,
-            href: npq_separation_admin_lead_provider_path(lead_provider),
-            prefix: "/npq-separation/admin/providers/#{lead_provider.id}",
-          )
-        end
-    )
-  %>
-<% end %>
-
 <h1 class="govuk-heading-l">Providers</h1>
 
 <p class="govuk-body">
   Select a provider to see which delivery partners they work with to deliver NPQs.
 </p>
+
+<ul class="govuk-list">
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/1/cohort/5">Ambition Institute</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/2/cohort/5">Best Practice Network</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/3/cohort/5">Church of England</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/4/cohort/5">LLSE</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/5/cohort/5">National Institute of Teaching</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/6/cohort/5">School-Led Network</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/8/cohort/5">Teach First</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/7/cohort/5">Teacher Development Trust</a>
+  </li>
+  <li>
+    <a class="govuk-link" href="/npq-separation/admin/providers/9/cohort/5">UCL Institute of Education</a>
+  </li>
+</ul>

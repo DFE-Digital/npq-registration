@@ -1,8 +1,6 @@
 <% content_for :side_navigation do %>
   <hr class="govuk-section-break govuk-section-break--m">
 
-  <%= render "statement_side_navigation" %>
-
   <hr class="govuk-section-break govuk-section-break--m">
   <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, format_for_sidebar: true) %>
 <% end %>
