@@ -50,7 +50,7 @@ module NpqSeparation
             name: "Cohorts",
             href: npq_separation_admin_cohorts_path,
             prefix: "/npq-separation/admin/cohorts",
-          ) => cohort_nodes,
+          ) => [],
           Node.new(
             name: "Courses",
             href: npq_separation_admin_courses_path,
@@ -60,20 +60,12 @@ module NpqSeparation
             name: "Users",
             href: npq_separation_admin_users_path,
             prefix: "/npq-separation/admin/users",
-          ) => application_nodes,
+          ) => [],
           Node.new(
             name: "Finance",
             href: npq_separation_admin_finance_statements_path,
             prefix: "/npq-separation/admin/finance",
-          ) => [
-            Node.new(
-              name: "Statements",
-              href: npq_separation_admin_finance_statements_path,
-              prefix: "/npq-separation/admin/finance/statements",
-              nodes: [],
-            ),
-            Node.new(name: "Cohorts", href: "/npq-separation/admin/cohorts", prefix: "/npq-separation/admin/cohorts"),
-          ],
+          ) => [],
           Node.new(
             name: "Workplaces",
             href: npq_separation_admin_schools_path,
@@ -120,22 +112,6 @@ module NpqSeparation
             prefix: /\/npq-separation\/admin\/applications\/reviews$/,
           ),
         ]
-      end
-
-      def cohort_nodes
-        [
-          Node.new(
-            name: "All cohorts",
-            href: npq_separation_admin_cohorts_path,
-            prefix: /\/npq-separation\/admin\/cohorts$/,
-          ),
-        ] + Cohort.order(start_year: :desc).map do |cohort|
-          Node.new(
-            name: "Cohort #{format_cohort(cohort)}",
-            href: npq_separation_admin_cohort_path(cohort),
-            prefix: "/npq-separation/admin/cohorts/#{cohort.id}",
-          )
-        end
       end
 
       def dashboard_nodes
