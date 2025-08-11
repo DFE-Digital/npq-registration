@@ -112,8 +112,8 @@ class School < ApplicationRecord
     end
   end
 
-  def ey_eligible?
-    !!EY_OFSTED_URN_HASH[urn.to_s] || !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+  def eyl_disadvantaged?
+    !!EY_OFSTED_URN_HASH[urn.to_s]
   end
 
   def la_disadvantaged_nursery?
