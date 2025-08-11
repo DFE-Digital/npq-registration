@@ -2,6 +2,14 @@
 
 If you have any questions or comments about these notes, please contact DfE via Slack or email.
 
+## V1 and V2 APIs are removed from production
+### 8 August 2025
+
+<strong class="govuk-tag govuk-tag--green">PRODUCTION</strong>
+
+The legacy V1 and V2 APIs have now been removed from the `production` environment.
+
+
 ## V1 and V2 APIs are removed from sandbox
 ### 28 July 2025
 
