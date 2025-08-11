@@ -409,7 +409,7 @@ RSpec.describe Statements::SummaryCalculator do
   end
 
   describe "Contract with special_course" do
-    let!(:maths_course) { create(:course, :leading_primary_mathmatics) }
+    let!(:maths_course) { create(:course, :leading_primary_mathematics) }
     let!(:leading_maths_contract) do
       create(
         :contract,
