@@ -5,31 +5,9 @@
 </p>
 
 <ul class="govuk-list">
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/1/cohort/5">Ambition Institute</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/2/cohort/5">Best Practice Network</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/3/cohort/5">Church of England</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/4/cohort/5">LLSE</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/5/cohort/5">National Institute of Teaching</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/6/cohort/5">School-Led Network</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/8/cohort/5">Teach First</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/7/cohort/5">Teacher Development Trust</a>
-  </li>
-  <li>
-    <a class="govuk-link" href="/npq-separation/admin/providers/9/cohort/5">UCL Institute of Education</a>
-  </li>
+  <% LeadProvider.order(:name).each do |lead_provider| %>
+    <li>
+      <%= link_to lead_provider.name, npq_separation_admin_lead_provider_path(lead_provider), class: "govuk-link" %>
+    </li>
+  <% end %>
 </ul>
