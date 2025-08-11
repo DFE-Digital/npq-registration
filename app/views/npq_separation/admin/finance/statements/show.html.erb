@@ -1,7 +1,3 @@
-<% content_for :side_navigation do %>
-  <%= render NpqSeparation::Admin::StatementSelectorComponent.new(@statement, format_for_sidebar: true) %>
-<% end %>
-
 <%= tag.h1("#{@statement.lead_provider.name}, #{statement_name(@statement)}", class: "govuk-heading-l") %>
 
 <div class="govuk-grid-row">
