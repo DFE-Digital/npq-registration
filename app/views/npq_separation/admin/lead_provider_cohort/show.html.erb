@@ -3,10 +3,6 @@
   <%=
     render NpqSeparation::SubNavigationComponent.new(
       request.path,
-      heading: {
-        text: @lead_provider.name,
-        visible: true
-      },
       structure:
         Cohort.order(start_year: :desc).map do |cohort|
           NpqSeparation::NavigationStructure::Node.new(
