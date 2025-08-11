@@ -185,6 +185,24 @@ RSpec.describe School do
     end
   end
 
+  describe "#eligible_establishment?" do
+    subject { school.eligible_establishment? }
+
+    let(:school) { build(:school, establishment_type_code: code) }
+
+    context "when establishment_type_code is in the list" do
+      let(:code) { School::ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.first }
+
+      it { is_expected.to be true }
+    end
+
+    context "when establishment_type_code is not in the list" do
+      let(:code) { "-1" }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe "check PP50 CSV files are valid" do
     let(:school) { create(:school, urn:) }
 
