@@ -30,19 +30,24 @@ class Course < ApplicationRecord
   ].freeze
 
   ONLY_PP50 = %w[
-    npq-leading-literacy
+    npq-leading-primary-mathematics
     npq-leading-behaviour-culture
-    npq-leading-teaching-development
+    npq-leading-literacy
     npq-leading-teaching
+    npq-leading-teaching-development
     npq-senior-leadership
     npq-executive-leadership
     npq-early-years-leadership
   ].freeze
 
+  EYL_DISADVANTAGED = %w[
+    npq-early-years-leadership
+  ].freeze
+
   LA_NURSERY_APPROVED = %w[
     npq-senco
-    npq-leading-primary-mathematics
     npq-headship
+    npq-early-years-leadership
   ].freeze
 
   # Two courses do not have short codes:
