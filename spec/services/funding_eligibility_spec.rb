@@ -5,589 +5,408 @@ RSpec.describe FundingEligibility do
     described_class.new(institution:,
                         course:,
                         inside_catchment:,
-                        trn:,
-                        get_an_identity_id:,
-                        lead_mentor_for_accredited_itt_provider:,
+                        trn: "1234567",
+                        get_an_identity_id: SecureRandom.uuid,
                         approved_itt_provider:,
-                        lead_mentor:,
-                        new_headteacher:,
+                        lead_mentor: nil,
+                        new_headteacher: nil,
                         query_store:)
   end
 
-  let(:course) { build(:course, :additional_support_offer) }
+  let(:store) do
+    {
+      work_setting:,
+      kind_of_nursery:,
+      employment_type:,
+      referred_by_return_to_teaching_adviser:,
+      ehco_headteacher: new_headteacher,
+      ehco_new_headteacher: new_headteacher,
+    }.stringify_keys
+  end
+
   let(:inside_catchment) { true }
-  let(:trn) { "1234567" }
-  let(:get_an_identity_id) { SecureRandom.uuid }
-  let(:previously_funded) { false }
-  let(:course_identifier) { course.identifier }
-  let(:eyl_funding_eligible) { false }
   let(:approved_itt_provider) { nil }
-  let(:lead_mentor) { nil }
-  let(:eligible_ey_urn) { "EY364275" }
-  let(:new_headteacher) { true }
-  let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
-  let(:query_store) { instance_double(RegistrationQueryStore, work_setting: work_setting) }
-  let(:institution) { build(:school, :funding_eligible_establishment_type_code, urn: "100000") }
-  let(:lead_mentor_for_accredited_itt_provider) { nil }
+  let(:institution) { nil }
+  let(:work_setting) { nil }
+  let(:kind_of_nursery) { nil }
+  let(:employment_type) { nil }
+  let(:referred_by_return_to_teaching_adviser) { nil }
+  let(:new_headteacher) { "no" }
+  let(:query_store) { RegistrationQueryStore.new(store:) }
 
-  RSpec.shared_examples "funding eligibility" do |funded:, status_code:, description: nil, ineligible_institution_type: false|
-    it "returns funded? #{funded}" do
-      expect(subject.funded?).to eq funded
-    end
-
-    it "returns funding_eligiblity_status_code #{status_code}" do
-      expect(subject.funding_eligiblity_status_code).to eq status_code
-    end
-
-    it "returns get_description_for_funding_status" do
-      expect(subject.get_description_for_funding_status).to eq description
-    end
-
-    it "returns ineligible_institution_type? as #{ineligible_institution_type}" do
-      expect(subject.ineligible_institution_type?).to eq ineligible_institution_type
-    end
-  end
-
-  Course::IDENTIFIERS.each do |identifier|
-    context "studying #{identifier}" do
-      let(:course) { Course.find_by(identifier: identifier) }
-
-      it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-    end
-  end
-
-  context "studying npq-early-years-leadership" do
-    let(:course) { Course.find_by(identifier: "npq-early-years-leadership") }
-
-    it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-  end
-
-  context "studying npq-early-headship-coaching-offer" do
-    let(:course) { create(:course, :early_headship_coaching_offer) }
-
-    context "when not in England" do
+  RSpec.shared_examples "general rules" do
+    context "and the applicant is outside England" do
       let(:inside_catchment) { false }
 
-      it_behaves_like "funding eligibility", funded: false, status_code: :not_in_england,
-                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
+      it { is_expected.to eq :not_in_england }
     end
 
-    context "when in England but not eligible" do
-      let(:inside_catchment) { true }
-      let(:new_headteacher) { false }
-
-      it_behaves_like "funding eligibility", funded: false, status_code: :not_new_headteacher_requesting_ehco,
-                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
-    end
-
-    context "when there is no institution and they are not a new headteacher according to the query store" do
-      let(:institution) { nil }
-      let(:query_store) { instance_double(RegistrationQueryStore, new_headteacher?: false) }
-
-      # weird mix of status code being one thing, and the description being something else - not sure if this is correct
-      it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type,
-                                             description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer"),
-                                             ineligible_institution_type: true
-    end
-  end
-
-  context "when institution is a School" do
-    %w[1 2 3 5 6 7 8 10 12 14 15 18 24 26 28 31 32 33 34 35 36 38 39 40 41 42 43 44 45 46].each do |eligible_gias_code|
-      context "eligible establishment_type_code #{eligible_gias_code}" do
-        let(:institution) { build(:school, establishment_type_code: eligible_gias_code, urn:) }
-        let(:course) { build(:course, :headship) }
-        let(:urn) { "123" }
-        let(:cohort) { build(:cohort, :current) }
-
-        it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-
-        context "when previously funded" do
-          let(:previously_funded) { true }
-
-          before do
-            user = build(:user, trn:)
-            create(:application, :previously_funded, user:, course:)
-          end
-
-          it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: "You have already been allocated scholarship funding for the Headship NPQ."
-
-          context "for 2023 or earlier cohort" do
-            let(:cohort) { build(:cohort, start_year: 2023) }
-
-            it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: "You have already been allocated scholarship funding for the Headship NPQ."
-          end
-        end
-
-        context "when school offering funding for the NPQEYL course" do
-          context "and school is on the eligible list" do
-            let(:urn) { eligible_ey_urn }
-
-            context "when user has selected the NPQEYL course" do
-              let(:course) { build(:course, :early_years_leadership) }
-
-              it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-            end
-          end
-
-          context "when user has selected the NPQEYL course" do
-            let(:course) { build(:course, :early_years_leadership) }
-
-            it_behaves_like "funding eligibility", funded: false, status_code: :not_entitled_ey_institution, description: I18n.t("funding_details.not_entitled_ey_institution")
-          end
-
-          context "when user has not selected the NPQEYL course" do
-            let(:course) { build(:course, :headship) }
-
-            it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-          end
-        end
-      end
-    end
-
-    %w[11 25 27 29 30 37 56].each do |ineligible_gias_code|
-      context "ineligible establishment_type_code #{ineligible_gias_code}" do
-        let(:institution) { build(:school, establishment_type_code: ineligible_gias_code, urn:) }
-        let(:urn) { "123" }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_type, description: I18n.t("funding_details.ineligible_setting")
-
-        context "when school offering funding for the NPQEYL course" do
-          let(:urn) { eligible_ey_urn }
-
-          context "when user has selected the NPQEYL course" do
-            let(:course) { build(:course, :early_years_leadership) }
-
-            it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-          end
-
-          context "when user has not selected the NPQEYL course" do
-            let(:course) { build(:course, :additional_support_offer) }
-
-            it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_type, description: I18n.t("funding_details.ineligible_setting")
-
-            context "when the course is not nursery approved" do
-              (Course::IDENTIFIERS - Course::LA_NURSERY_APPROVED).each do |identifier|
-                let(:course) { build(:course, identifier:) }
-
-                it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_type, description: I18n.t("funding_details.not_eligible_ehco", course_name: "the Early headship coaching offer")
-              end
-            end
-          end
-        end
-      end
-    end
-
-    context "when school is LA nursery" do
-      let(:institution) { build(:school, :non_pp50, establishment_type_code: "15") }
-
-      context "when LA disadvantaged nursery" do
-        before do
-          allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
-        end
-
-        Course::IDENTIFIERS.each do |identifier|
-          context "when user has selected the #{identifier} course" do
-            let(:course) { build(:course, identifier:) }
-
-            it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-          end
-        end
-      end
-
-      context "when not LA disadvantaged nursery" do
-        before do
-          allow(institution).to receive(:la_disadvantaged_nursery?).and_return(false)
-        end
-
-        {
-          senco: [true, :funded, I18n.t("funding_details.scholarship_eligibility")],
-          leading_primary_mathmatics: [true, :funded, I18n.t("funding_details.scholarship_eligibility")],
-          headship: [true, :funded, I18n.t("funding_details.scholarship_eligibility")],
-          senior_leadership: [false, :ineligible_establishment_not_a_pp50, I18n.t("funding_details.not_a_pp50")],
-          early_years_leadership: [false, :not_entitled_ey_institution, I18n.t("funding_details.not_entitled_ey_institution")],
-          leading_literacy: [false, :ineligible_establishment_not_a_pp50, I18n.t("funding_details.not_a_pp50")],
-          # TODO: test the other 6 courses?
-        }.each do |course, eligibility|
-          context "when user has selected the #{course} course" do
-            let(:course) { build(:course, course) }
-
-            it_behaves_like "funding eligibility", funded: eligibility[0], status_code: eligibility[1], description: eligibility[2]
-          end
-        end
-      end
-
-      context "when the user has selected a non-NPQEYL course" do
-        let(:course) { build(:course, :senior_leadership) }
-
-        context "when the institution is a LA nursery school" do
-          before do
-            allow(institution).to receive(:local_authority_nursery_school?).and_return(true)
-          end
-
-          context "when the course is nursery approved" do
-            (Course::IDENTIFIERS - Course::LA_NURSERY_APPROVED).each do |identifier|
-              let(:course) { build(:course, identifier:) }
-
-              it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-            end
-          end
-        end
-      end
-    end
-  end
-
-  context "when there is no institution with at an approved ITT provider and they are a lead mentor" do
-    let(:institution) { nil }
-    let(:approved_itt_provider) { true }
-    let(:lead_mentor) { true }
-
-    context "and the course is NPQLTD" do
-      let(:course) { build(:course, :leading_teaching_development) }
-
-      it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-
-      context "when there are accepted applications" do
-        let(:user) { build(:user, :with_get_an_identity_id, uid: get_an_identity_id) }
-        let(:cohort) { build(:cohort, :current) }
-
-        before do
-          create(:application, :accepted, user:, course:, cohort:, funded_place: true, eligible_for_funding: true, targeted_delivery_funding_eligibility: true)
-        end
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Leading teacher development NPQ")
-      end
-    end
-
-    context "and the course is not NPQLTD, NPQS or EHCO" do
-      (Course::IDENTIFIERS - [Course::NPQ_LEADING_TEACHING_DEVELOPMENT, Course::NPQ_SENCO, Course::NPQ_EARLY_HEADSHIP_COACHING_OFFER]).each do |identifier|
-        let(:course) { build(:course, identifier:) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
-      end
-    end
-
-    context "and lead_mentor_for_accredited_itt_provider is true" do
-      let(:lead_mentor_for_accredited_itt_provider) { true }
-
-      context "and the course is NPQLTD" do
-        let(:course) { build(:course, :leading_teaching_development) }
-
-        context "when there are accepted applications" do
-          let(:user) { build(:user, :with_get_an_identity_id, uid: get_an_identity_id) }
-          let(:course_group) { create(:course_group, name: "specialist") }
-          let(:course) { build(:course, :leading_teaching_development, course_group:) }
-
-          before do
-            create(:application, :accepted, user:, course:, funded_place: true, eligible_for_funding: true, targeted_delivery_funding_eligibility: true)
-          end
-
-          it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Leading teacher development NPQ")
-        end
-
-        context "when there are no accepted applications" do
-          it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-        end
-      end
-
-      context "and the course is NPQLPM" do
-        let(:course) { build(:course, identifier: Course::NPQ_LEADING_PRIMARY_MATHEMATICS) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
-      end
-
-      context "and the course is NPQSENCO" do
-        let(:course) { build(:course, identifier: Course::NPQ_SENCO) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_lead_mentor_course, description: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
-      end
-    end
-  end
-
-  context "when institution is a LocalAuthority" do
-    let(:institution) { build(:local_authority) }
-
-    it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-
-    context "when previously funded" do
-      let(:previously_funded) { true }
-
+    context "and the applicant has previously received funding" do
       before do
-        user = build(:user, trn:)
-        create(:application, :previously_funded, user:, course:)
+        user = build(:user, :with_get_an_identity_id, uid: funding_eligibility.get_an_identity_id)
+        create(:application, :with_funded_place, :accepted, user:, course:)
       end
 
-      it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Additional Support Offer NPQ")
+      it { is_expected.to eq :previously_funded }
     end
   end
 
-  context "when institution is a PrivateChildcareProvider" do
-    context "when does not meets all the funding criteria" do
-      let(:institution) { build(:private_childcare_provider, :on_early_years_register) }
-      let(:course) { build(:course, :early_years_leadership) }
-      let(:inside_catchment) { true }
-      let(:previously_funded) { true }
+  RSpec.shared_examples "funding eligibility status codes" do |course_results|
+    course_results.each do |course_identifier, result|
+      context "and the course is #{course_identifier}" do
+        let(:course) { build(:course, course_identifier) }
 
-      context "when previously funded" do
-        before do
-          user = build(:user, trn:)
-          create(:application, :previously_funded, user:, course:)
+        include_examples "general rules"
+
+        it { is_expected.to eq result }
+      end
+    end
+
+    context "and the course is early headship coaching offer" do
+      let(:course) { build(:course, :early_headship_coaching_offer) }
+
+      include_examples "general rules"
+
+      it "is not eligible for funding" do
+        expect(funding_eligibility.funding_eligiblity_status_code).to eq :not_new_headteacher_requesting_ehco
+      end
+
+      context "and the applicant is a new headteacher" do
+        let(:new_headteacher) { "yes" }
+
+        include_examples "general rules"
+
+        it "is eligible for funding" do
+          expect(funding_eligibility.funding_eligiblity_status_code).to eq :funded
         end
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :previously_funded, description: I18n.t("funding_details.previously_funded", course_name: "the Early years leadership NPQ")
-      end
-
-      context "when outside catchment" do
-        let(:inside_catchment) { false }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_in_england, description: I18n.t("funding_details.inside_catchment")
-      end
-
-      context "when NPQ course is not Early Year Leadership" do
-        let(:course) { build(:course, :additional_support_offer) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :early_years_invalid_npq, description: I18n.t("funding_details.ineligible_setting")
-      end
-
-      context "when institution is not on early years register" do
-        let(:institution) { build(:private_childcare_provider, provider_urn: EY_OFSTED_URN_HASH.first.first, early_years_individual_registers: []) }
-        let(:query_store) { instance_double(RegistrationQueryStore, childminder?: false) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_on_early_years_register, description: I18n.t("funding_details.no_Ofsted")
-      end
-
-      context "when the childminder is not on the childminders list" do
-        let(:institution) { build(:private_childcare_provider, early_years_individual_registers: %w[EYR]) }
-        let(:query_store) { instance_double(RegistrationQueryStore, childminder?: true) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_entitled_childminder, description: "You’re not eligible for scholarship funding for the NPQ as you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
-      end
-
-      context "when the childminder is on the childminders list" do
-        let(:institution) { build(:private_childcare_provider, provider_urn: CHILDMINDERS_OFSTED_URN_HASH.first.first, early_years_individual_registers: %w[EYR]) }
-        let(:query_store) { instance_double(RegistrationQueryStore, childminder?: true) }
-
-        it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-      end
-
-      context "when the nursery is a childminder" do
-        let(:institution) { build(:private_childcare_provider, early_years_individual_registers: %w[EYR]) }
-        let(:query_store) { instance_double(RegistrationQueryStore, childminder?: true) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :not_entitled_childminder, description: I18n.t("funding_details.not_entitled_childminder")
-      end
-
-      context "when the institution is an unknown class" do
-        let(:unknown_instituion_class) { Class.new }
-        let(:institution) { TestInstitutionClass.new }
-
-        before do
-          stub_const("TestInstitutionClass", unknown_instituion_class)
-        end
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type, description: I18n.t("funding_details.ineligible_setting"), ineligible_institution_type: true
       end
     end
   end
 
-  context "when there is no institution" do
-    let(:institution) { nil }
-    let(:inside_catchment) { true }
-
-    context "when user is referred by return to teaching adviser" do
-      let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: true) }
-
-      it_behaves_like "funding eligibility", funded: false, status_code: :referred_by_return_to_teaching_adviser
-    end
-
-    context "when local authority supply teacher" do
-      let(:query_store) { instance_double(RegistrationQueryStore, local_authority_supply_teacher?: true, referred_by_return_to_teaching_adviser?: false) }
-
-      it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
-    end
-
-    context "when virutal teacher" do
-      let(:query_store) { instance_double(RegistrationQueryStore, employment_type_local_authority_virtual_school?: true, referred_by_return_to_teaching_adviser?: false, local_authority_supply_teacher?: false) }
-
-      it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
-    end
-
-    describe "no_institution code" do
-      let(:young_offender) { false }
-      let(:hospital) { false }
-      let(:works_in_other) { false }
-
-      let(:query_store) do
-        instance_double(RegistrationQueryStore,
-                        young_offender_institution?: young_offender,
-                        local_authority_supply_teacher?: false,
-                        employment_type_local_authority_virtual_school?: false,
-                        employment_type_hospital_school?: hospital,
-                        referred_by_return_to_teaching_adviser?: false,
-                        works_in_other?: works_in_other)
-      end
-      let(:course) { build(:course, :headship) }
-
-      context "when user is working in young offender institution" do
-        let(:young_offender) { true }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
-      end
-
-      context "when user is working in hospital school" do
-        let(:hospital) { true }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
-      end
-
-      context "when user is working in other" do
-        let(:works_in_other) { true }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type, description: I18n.t("funding_details.ineligible_setting"), ineligible_institution_type: true
-      end
-
-      context "when the query store says the user works in other" do
-        let(:query_store) { instance_double(RegistrationQueryStore, referred_by_return_to_teaching_adviser?: false, local_authority_supply_teacher?: false, employment_type_local_authority_virtual_school?: false, employment_type_hospital_school?: false, young_offender_institution?: false, works_in_other?: true) }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_institution_type, description: I18n.t("funding_details.ineligible_setting"), ineligible_institution_type: true
-      end
-
-      context "when there is no query store" do
-        let(:query_store) { nil }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :no_institution, ineligible_institution_type: true
-      end
-    end
-  end
-
-  context "when school is only on one list but provides both normal and FE" do
-    let(:urn) { "123" }
-    let(:ukprn) { "123" }
-    let(:institution) { build(:school, establishment_type_code: 28, urn:, ukprn:) } # 28 is academy
-    let(:course) { build(:course, :leading_literacy) }
-
-    context "when only school is on PP50 list" do
+  RSpec.shared_examples "school policy" do
+    context "and the institution is an eligible establishment type" do
       before do
-        stub_const("PP50_SCHOOLS_URN_HASH", { "123" => true })
+        allow(institution).to receive(:eligible_establishment?).and_return(true)
       end
 
-      context "when school is chosen as work setting" do
-        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+      include_examples "funding eligibility status codes", {
+        senco: :funded,
+        headship: :funded,
+        leading_primary_mathematics: :ineligible_establishment_not_a_pp50,
+        leading_behaviour_culture: :ineligible_establishment_not_a_pp50,
+        leading_literacy: :ineligible_establishment_not_a_pp50,
+        leading_teaching: :ineligible_establishment_not_a_pp50,
+        leading_teaching_development: :ineligible_establishment_not_a_pp50,
+        senior_leadership: :ineligible_establishment_not_a_pp50,
+        executive_leadership: :ineligible_establishment_not_a_pp50,
+        early_years_leadership: :ineligible_establishment_not_a_pp50,
+      }
 
-        it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-      end
+      context "and the institution is on the PP50 list" do
+        before do
+          allow(institution).to receive(:pp50?).and_return(true)
+        end
 
-      context "when FE is chosen as work setting" do
-        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
-
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_not_a_pp50, description: I18n.t("funding_details.not_a_pp50")
+        include_examples "funding eligibility status codes", {
+          senco: :funded,
+          headship: :funded,
+          leading_primary_mathematics: :funded,
+          leading_behaviour_culture: :funded,
+          leading_literacy: :funded,
+          leading_teaching: :funded,
+          leading_teaching_development: :funded,
+          senior_leadership: :funded,
+          executive_leadership: :funded,
+          early_years_leadership: :funded,
+        }
       end
     end
 
-    context "when only FE is on PP50 list" do
+    context "and the institution is a non-eligible establishment type" do
       before do
-        stub_const("PP50_FE_UKPRN_HASH", { "123" => true })
+        allow(institution).to receive(:eligible_establishment?).and_return(false)
       end
 
-      context "when FE is chosen as work setting" do
-        let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+      ineligible = {
+        senco: :ineligible_establishment_type,
+        headship: :ineligible_establishment_type,
+        leading_primary_mathematics: :ineligible_establishment_type,
+        leading_behaviour_culture: :ineligible_establishment_type,
+        leading_literacy: :ineligible_establishment_type,
+        leading_teaching: :ineligible_establishment_type,
+        leading_teaching_development: :ineligible_establishment_type,
+        senior_leadership: :ineligible_establishment_type,
+        executive_leadership: :ineligible_establishment_type,
+        early_years_leadership: :ineligible_establishment_type,
+      }
 
-        it_behaves_like "funding eligibility", funded: true, status_code: :funded, description: I18n.t("funding_details.scholarship_eligibility")
-      end
+      include_examples "funding eligibility status codes", ineligible
 
-      context "when school is chosen as work setting" do
-        let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+      context "and the institution is on the PP50 list" do
+        before do
+          allow(institution).to receive(:pp50?).and_return(true)
+        end
 
-        it_behaves_like "funding eligibility", funded: false, status_code: :ineligible_establishment_not_a_pp50, description: I18n.t("funding_details.not_a_pp50")
+        include_examples "funding eligibility status codes", ineligible
       end
     end
   end
 
-  describe "#possible_funding_for_non_pp50_and_fe?" do
-    subject { funding_eligibility.possible_funding_for_non_pp50_and_fe? }
+  describe "#funding_eligiblity_status_code" do
+    subject { funding_eligibility.funding_eligiblity_status_code }
 
-    context "when course is pp50" do
-      Course::ONLY_PP50.each do |identifier|
-        let(:course) { Course.find_by(identifier: identifier) }
-
-        context "when institution is a school" do
-          let(:institution) { build(:school) }
-
-          it { is_expected.to be true }
-        end
-
-        context "when institution is not a school" do
-          let(:institution) { build(:local_authority) }
-
-          it { is_expected.to be false }
-        end
-      end
+    before do
+      allow_any_instance_of(PrivateChildcareProvider).to receive(:on_childminders_list?).and_return(false)
+      allow_any_instance_of(PrivateChildcareProvider).to receive(:eyl_disadvantaged?).and_return(false)
+      allow_any_instance_of(School).to receive(:la_disadvantaged_nursery?).and_return(false)
+      allow_any_instance_of(School).to receive(:eyl_disadvantaged?).and_return(false)
+      allow_any_instance_of(School).to receive(:pp50?).and_return(false)
     end
 
-    context "when course is not pp50" do
-      (Course::IDENTIFIERS - Course::ONLY_PP50).each do |identifier|
-        let(:course) { Course.find_by(identifier: identifier) }
+    context "when the work setting is 'Early years or childcare'" do
+      let(:work_setting) { "early_years_or_childcare" }
+
+      default_eligibility = {
+        senco: :early_years_invalid_npq,
+        headship: :early_years_invalid_npq,
+        leading_primary_mathematics: :early_years_invalid_npq,
+        leading_behaviour_culture: :early_years_invalid_npq,
+        leading_literacy: :early_years_invalid_npq,
+        leading_teaching: :early_years_invalid_npq,
+        leading_teaching_development: :early_years_invalid_npq,
+        senior_leadership: :early_years_invalid_npq,
+        executive_leadership: :early_years_invalid_npq,
+        early_years_leadership: :not_entitled_ey_institution,
+      }
+
+      context "and the institution is a Local authority-maintained nursery" do
+        let(:kind_of_nursery) { "local_authority_maintained_nursery" }
+        let(:institution) { build(:school, :local_authority_nursery_school) }
+
+        include_examples "funding eligibility status codes", default_eligibility.merge({
+          senco: :ineligible_establishment_type,
+          headship: :ineligible_establishment_type,
+          early_years_leadership: :ineligible_establishment_type,
+        })
+
+        context "and the institution is on the LA disadvantaged nursery list" do
+          before do
+            allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
+          end
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            senco: :funded,
+            headship: :funded,
+            early_years_leadership: :funded,
+          })
+        end
+      end
+
+      context "and the institution is a pre-school or nursery" do
+        let(:kind_of_nursery) { "preschool_class_as_part_of_school" }
         let(:institution) { build(:school) }
 
-        it { is_expected.to be false }
+        include_examples "funding eligibility status codes", default_eligibility
+
+        context "and the institution is on the EYL disadvantaged list" do
+          before do
+            allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
+          end
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            early_years_leadership: :funded,
+          })
+        end
+      end
+
+      context "and the institution is a private nursery" do
+        let(:kind_of_nursery) { "private_nursery" }
+        let(:institution) { build(:private_childcare_provider) }
+
+        include_examples "funding eligibility status codes", default_eligibility
+
+        context "and the institution is on the EYL disadvantaged list" do
+          before do
+            allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
+          end
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            early_years_leadership: :funded,
+          })
+        end
+      end
+
+      context "and the institution is a childminder" do
+        let(:kind_of_nursery) { "childminder" }
+        let(:institution) { build(:private_childcare_provider) }
+
+        include_examples "funding eligibility status codes", default_eligibility.merge({
+          early_years_leadership: :not_entitled_childminder,
+        })
+
+        context "and the institution is on the childminders list" do
+          before do
+            allow(institution).to receive(:on_childminders_list?).and_return(true)
+          end
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            early_years_leadership: :funded,
+          })
+        end
+      end
+
+      context "and the institution is another early years setting" do
+        let(:kind_of_nursery) { "another_early_years_setting" }
+        let(:institution) { build(:private_childcare_provider) }
+
+        include_examples "funding eligibility status codes", default_eligibility
+
+        context "and the institution is on the EYL disadvantaged list" do
+          before do
+            allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
+          end
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            early_years_leadership: :funded,
+          })
+        end
+      end
+    end
+
+    context "when the work setting is 'A school'" do
+      let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+      let(:institution) { build(:school) }
+
+      include_examples "school policy"
+    end
+
+    context "when the work setting is 'An academy trust'" do
+      let(:work_setting) { Questionnaires::WorkSetting::AN_ACADEMY_TRUST }
+      let(:institution) { build(:school) }
+
+      include_examples "school policy"
+    end
+
+    context "when the work setting is 'A 16 to 19 educational setting'" do
+      let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
+      let(:institution) { build(:school) }
+
+      include_examples "school policy"
+    end
+
+    context "when the work setting is 'Another setting'" do
+      let(:work_setting) { "another_setting" }
+
+      default_eligibility = {
+        senco: :subject_to_review,
+        headship: :subject_to_review,
+        leading_primary_mathematics: :ineligible_establishment_type,
+        leading_behaviour_culture: :ineligible_establishment_type,
+        leading_literacy: :ineligible_establishment_type,
+        leading_teaching: :ineligible_establishment_type,
+        leading_teaching_development: :ineligible_establishment_type,
+        senior_leadership: :ineligible_establishment_type,
+        executive_leadership: :ineligible_establishment_type,
+        early_years_leadership: :ineligible_establishment_type,
+      }
+
+      context "and the employment type is a virtual school" do
+        let(:employment_type) { "local_authority_virtual_school" }
+
+        include_examples "funding eligibility status codes", default_eligibility.merge
+      end
+
+      context "and the employment type is a hospital school" do
+        let(:employment_type) { "hospital_school" }
+
+        include_examples "funding eligibility status codes", default_eligibility
+      end
+
+      context "and the employment type is a young offender institution" do
+        let(:employment_type) { "young_offender_institution" }
+
+        include_examples "funding eligibility status codes", default_eligibility
+      end
+
+      context "and the employment type is a local authority supply teacher" do
+        let(:employment_type) { "local_authority_supply_teacher" }
+
+        include_examples "funding eligibility status codes", default_eligibility
+      end
+
+      context "and the employment type is as a lead mentor for an accredited ITT provider" do
+        let(:employment_type) { "lead_mentor_for_accredited_itt_provider" }
+
+        default_eligibility = {
+          senco: :not_lead_mentor_course,
+          headship: :not_lead_mentor_course,
+          leading_primary_mathematics: :not_lead_mentor_course,
+          leading_behaviour_culture: :not_lead_mentor_course,
+          leading_literacy: :not_lead_mentor_course,
+          leading_teaching: :not_lead_mentor_course,
+          leading_teaching_development: :ineligible_establishment_type,
+          senior_leadership: :not_lead_mentor_course,
+          executive_leadership: :not_lead_mentor_course,
+          early_years_leadership: :not_lead_mentor_course,
+        }
+
+        include_examples "funding eligibility status codes", default_eligibility
+
+        context "and the ITT provider is approved" do
+          let(:approved_itt_provider) { true }
+
+          include_examples "funding eligibility status codes", default_eligibility.merge({
+            leading_teaching_development: :funded,
+          })
+        end
+      end
+    end
+
+    context "when the work setting is 'Other'" do
+      let(:work_setting) { "other" }
+
+      include_examples "funding eligibility status codes", {
+        senco: :ineligible_establishment_type,
+        headship: :ineligible_establishment_type,
+        leading_primary_mathematics: :ineligible_establishment_type,
+        leading_behaviour_culture: :ineligible_establishment_type,
+        leading_literacy: :ineligible_establishment_type,
+        leading_teaching: :ineligible_establishment_type,
+        leading_teaching_development: :ineligible_establishment_type,
+        senior_leadership: :ineligible_establishment_type,
+        executive_leadership: :ineligible_establishment_type,
+        early_years_leadership: :ineligible_establishment_type,
+      }
+
+      context "and there is a return to teaching adviser referral" do
+        let(:referred_by_return_to_teaching_adviser) { "yes" }
+
+        include_examples "funding eligibility status codes", {
+          senco: :referred_by_return_to_teaching_adviser,
+          headship: :referred_by_return_to_teaching_adviser,
+          leading_primary_mathematics: :referred_by_return_to_teaching_adviser,
+          leading_behaviour_culture: :referred_by_return_to_teaching_adviser,
+          leading_literacy: :referred_by_return_to_teaching_adviser,
+          leading_teaching: :referred_by_return_to_teaching_adviser,
+          leading_teaching_development: :referred_by_return_to_teaching_adviser,
+          senior_leadership: :referred_by_return_to_teaching_adviser,
+          executive_leadership: :referred_by_return_to_teaching_adviser,
+          early_years_leadership: :referred_by_return_to_teaching_adviser,
+        }
       end
     end
   end
 
-  describe "#previously_received_targeted_funding_support?" do
-    subject { funding_eligibility.previously_received_targeted_funding_support? }
+  describe "#get_description_for_funding_status" do
+    subject { funding_eligibility.get_description_for_funding_status }
 
-    context "when the user has accepted applications" do
-      let(:user) { build(:user, :with_get_an_identity_id, uid: get_an_identity_id) }
-      let(:cohort) { build(:cohort, :current) }
-      let(:targeted_delivery_funding_eligibility) { true }
-      let(:funded_place) { false }
+    let(:course) { build(:course, :early_headship_coaching_offer) }
 
-      before do
-        create(:application, :accepted, user:, course:, cohort:, funded_place:, eligible_for_funding:, targeted_delivery_funding_eligibility:)
-      end
-
-      context "with eligible for funding" do
-        let(:eligible_for_funding) { true }
-
-        context "with funded place" do
-          let(:funded_place) { true }
-
-          context "with targeted_delivery_funding_eligibility" do
-            let(:targeted_delivery_funding_eligibility) { true }
-
-            it { is_expected.to be true }
-          end
-
-          context "without targeted_delivery_funding_eligibility" do
-            let(:targeted_delivery_funding_eligibility) { false }
-
-            it { is_expected.to be false }
-          end
-        end
-
-        context "with funded place nil" do
-          let(:cohort) { build(:cohort, start_year: 2023, funding_cap: false) }
-          let(:funded_place) { nil }
-
-          it { is_expected.to be true }
-        end
-
-        context "without funded place" do
-          let(:funded_place) { false }
-
-          it { is_expected.to be false }
-        end
-      end
-
-      context "without eligible for funding" do
-        let(:eligible_for_funding) { false }
-
-        it { is_expected.to be false }
-      end
+    before do
+      allow_any_instance_of(CourseHelper).to receive(:localise_sentence_embedded_course_name).with(course).and_return("Localised Course Name")
+      allow(I18n).to receive(:t).with("funding_details.not_eligible_ehco", course_name: "Localised Course Name").and_return("message")
     end
 
-    context "when the user does not have accepted applications" do
-      it { is_expected.to be false }
-    end
+    it { is_expected.to eq "message" }
   end
 end

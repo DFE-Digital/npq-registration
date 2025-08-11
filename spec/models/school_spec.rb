@@ -215,15 +215,11 @@ RSpec.describe School do
     end
 
     context "PP50 Schools (PP50_SCHOOLS_URN_HASH)" do
-      subject { school.ey_eligible? }
+      subject { school.pp50?(Questionnaires::WorkSetting::A_SCHOOL) }
 
       let(:urn) { "100006" } # URN taken from data file
 
       it { is_expected.to be true }
-
-      it "school should not be in EY_OFSTED_URN_HASH" do
-        expect(EY_OFSTED_URN_HASH[urn]).to be_nil
-      end
     end
 
     context "PP50 Further Education (PP50_FE_UKPRN_HASH)" do
@@ -235,7 +231,7 @@ RSpec.describe School do
     end
 
     context "Early Years Schools (EY_OFSTED_URN_HASH)" do
-      subject { school.ey_eligible? }
+      subject { school.eyl_disadvantaged? }
 
       let(:urn) { "150014" } # URN taken from data file
 

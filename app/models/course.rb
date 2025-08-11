@@ -124,6 +124,10 @@ class Course < ApplicationRecord
     LA_NURSERY_APPROVED.include?(identifier)
   end
 
+  def eyl_disadvantaged?
+    EYL_DISADVANTAGED.include?(identifier)
+  end
+
   def rebranded_alternative_courses
     rebranded_identifiers = [NPQ_ADDITIONAL_SUPPORT_OFFER, NPQ_EARLY_HEADSHIP_COACHING_OFFER].freeze
 
