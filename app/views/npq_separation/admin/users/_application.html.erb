@@ -1,5 +1,7 @@
-<%- title = "#{application.course.name} registration" -%>
-<%- actions = [govuk_link_to("View full registration", npq_separation_admin_application_path(application))] -%>
+<h2 class="govuk-heading-m">Applications</h2>
+
+<%- title = "#{application.course.name}" -%>
+<%- actions = [govuk_link_to("View full application", npq_separation_admin_application_path(application))] -%>
 
 <div class="admin-application-card">
   <%=
