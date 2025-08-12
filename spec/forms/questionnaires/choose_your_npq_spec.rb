@@ -92,6 +92,30 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
 
       it { is_expected.to be(:senco_in_role) }
     end
+
+    context "when the funding eligibility status is eligible" do
+      before do
+        allow_any_instance_of(FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(:funded)
+      end
+
+      it { is_expected.to be :possible_funding }
+    end
+
+    context "when the funding eligibility status is subject to review" do
+      before do
+        allow_any_instance_of(FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(:subject_to_review)
+      end
+
+      it { is_expected.to be :possible_funding }
+    end
+
+    context "when the funding eligibility status is ineligible" do
+      before do
+        allow_any_instance_of(FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(:ineligible_institution_type)
+      end
+
+      it { is_expected.to be :ineligible_for_funding }
+    end
   end
 
   describe "#previous_step" do
