@@ -75,8 +75,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("list of settings that are eligible")
-      expect(page).to have_text("leading primary mathematics")
+      expect(page).to have_text("you do not work in one of the eligible settings")
+      expect(page).to have_text("Senior leadership")
 
       page.click_link("Continue")
     end
