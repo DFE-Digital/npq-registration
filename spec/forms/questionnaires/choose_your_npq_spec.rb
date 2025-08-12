@@ -74,6 +74,24 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
         end
       end
     end
+
+    context "when the course is EHCO" do
+      let(:course) { create(:course, :early_headship_coaching_offer) }
+
+      it { is_expected.to be(:npqh_status) }
+    end
+
+    context "when the course is NPQLPM" do
+      let(:course) { create(:course, :leading_primary_mathematics) }
+
+      it { is_expected.to be(:maths_eligibility_teaching_for_mastery) }
+    end
+
+    context "when the course is NPQS" do
+      let(:course) { create(:course, :senco) }
+
+      it { is_expected.to be(:senco_in_role) }
+    end
   end
 
   describe "#previous_step" do
