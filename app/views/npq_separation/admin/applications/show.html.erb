@@ -1,9 +1,14 @@
 <%= render "application_side_navigation" %>
 
-<%= render "npq_separation/admin/applications/user", user: @application.user %>
+<h1 class="govuk-heading-l">Application overview</h1>
 
 <%=
-  govuk_summary_list(card: { title: "Application overview" }) do |sl|
+  govuk_summary_list(card: { title: "Overview" }) do |sl|
+    sl.with_row do |row|
+      row.with_key(text: "Name")
+      row.with_value(text: @application.user.full_name)
+      row.with_action(text: "View user", href: npq_separation_admin_user_path(@application.user))
+    end
     sl.with_row do |row|
       row.with_key(text: "Application ID")
       row.with_value(text: @application.ecf_id)
