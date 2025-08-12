@@ -18,48 +18,42 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
   end
 
   describe "#next_step" do
-    subject do
-      described_class.new(course_identifier:)
+    subject { instance.next_step }
+
+    let(:instance) { described_class.new(course_identifier: course.identifier) }
+    let(:course) { create(:course, :leading_behaviour_culture) }
+    let(:lead_provider) { LeadProvider.for(course:).first }
+    let(:store) do
+      {
+        course_identifier: course.identifier,
+        lead_provider_id: lead_provider.id,
+      }.stringify_keys
     end
 
-    let(:course_identifier) { create(:course, :leading_behaviour_culture).identifier }
+    before do
+      instance.wizard = RegistrationWizard.new(
+        current_step: :choose_your_npq,
+        store:,
+        request: nil,
+        current_user: create(:user),
+      )
+    end
 
     context "when changing answers" do
       before do
-        subject.flag_as_changing_answer
+        instance.flag_as_changing_answer
       end
 
       context "nothing was actually changed" do
         let(:course) { create(:course, :early_headship_coaching_offer) }
-        let(:lead_provider) { LeadProvider.for(course:).first }
-        let(:store) do
-          {
-            course_identifier: course.identifier,
-            lead_provider_id: lead_provider.id,
-          }.stringify_keys
-        end
-        let(:request) { nil }
 
-        before do
-          subject.wizard = RegistrationWizard.new(
-            current_step: :choose_your_npq,
-            store:,
-            request:,
-            current_user: create(:user),
-          )
-        end
-
-        it "returns check_answers" do
-          expect(subject.next_step).to be(:check_answers)
-        end
+        it { is_expected.to be :check_answers }
       end
 
       context "when changing to something other than headship" do
         let(:course) { create(:course, :leading_teaching) }
         let(:school) { create(:school) }
         let(:previous_course) { create(:course, :headship) }
-        let(:lead_providers) { LeadProvider.for(course:) }
-        let(:lead_provider) { lead_providers.first }
         let(:store) do
           {
             course_identifier: previous_course.identifier,
@@ -68,30 +62,15 @@ RSpec.describe Questionnaires::ChooseYourNpq, type: :model do
             lead_provider_id: lead_provider.id,
           }.stringify_keys
         end
-        let(:request) { nil }
-
-        before do
-          subject.wizard = RegistrationWizard.new(
-            current_step: :choose_your_npq,
-            store:,
-            request:, current_user: create(:user)
-          )
-        end
 
         context "when lead provider is valid for new course" do
-          let(:lead_providers) { LeadProvider.for(course:) }
-
-          it "returns check_answers" do
-            expect(subject.next_step).to be(:check_answers)
-          end
+          it { is_expected.to be(:check_answers) }
         end
 
         context "when lead provider is not valid for new course" do
-          let(:lead_providers) { [LeadProvider.create(name: :foo)] }
+          let(:lead_provider) { LeadProvider.create(name: :foo) }
 
-          it "redirects you towards picking your provider flow" do
-            expect(subject.next_step).to be(:ineligible_for_funding)
-          end
+          it { is_expected.to be :ineligible_for_funding }
         end
       end
     end
