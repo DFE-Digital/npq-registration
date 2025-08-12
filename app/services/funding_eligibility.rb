@@ -45,7 +45,6 @@ class FundingEligibility
               :trn,
               :approved_itt_provider,
               :lead_mentor,
-              :employment_role,
               :get_an_identity_id,
               :lead_mentor_for_accredited_itt_provider,
               :query_store
@@ -69,7 +68,6 @@ class FundingEligibility
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,
-                 employment_role: nil,
                  query_store: nil)
     @institution = institution
     @course = course
@@ -79,7 +77,6 @@ class FundingEligibility
     @lead_mentor = lead_mentor
     @get_an_identity_id = get_an_identity_id
     @trn = trn
-    @employment_role = employment_role
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     @query_store = query_store
   end
