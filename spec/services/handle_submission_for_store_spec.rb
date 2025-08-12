@@ -27,6 +27,7 @@ RSpec.describe HandleSubmissionForStore do
 
   before do
     travel_to(Date.new(cohort.start_year, 9, 26))
+    allow_any_instance_of(School).to receive(:pp50?).and_return(false)
   end
 
   describe "#call" do
@@ -103,13 +104,13 @@ RSpec.describe HandleSubmissionForStore do
           "course_id" => course.id,
           "schedule_id" => nil,
           "ecf_id" => last_application.ecf_id,
-          "eligible_for_funding" => true,
+          "eligible_for_funding" => false,
           "employer_name" => nil,
           "employment_type" => nil,
           "employment_role" => nil,
           "funded_place" => nil,
           "funding_choice" => nil,
-          "funding_eligiblity_status_code" => "funded",
+          "funding_eligiblity_status_code" => "ineligible_establishment_not_a_pp50",
           "headteacher_status" => nil,
           "kind_of_nursery" => nil,
           "itt_provider_id" => nil,
@@ -234,7 +235,7 @@ RSpec.describe HandleSubmissionForStore do
           "lead_mentor" => false,
           "lead_provider_approval_status" => "pending",
           "participant_outcome_state" => nil,
-          "funding_eligiblity_status_code" => "early_years_invalid_npq",
+          "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
           "headteacher_status" => nil,
           "lead_provider_id" => lead_provider.id,
           "notes" => nil,
