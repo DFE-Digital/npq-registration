@@ -85,6 +85,10 @@ class FundingEligibility
     funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
   end
 
+  def subject_to_review?
+    funding_eligiblity_status_code.in? [SUBJECT_TO_REVIEW, REFERRED_BY_RETURN_TO_TEACHING_ADVISER]
+  end
+
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
       return NOT_IN_ENGLAND unless @inside_catchment
