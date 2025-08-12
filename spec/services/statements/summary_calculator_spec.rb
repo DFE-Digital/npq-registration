@@ -219,14 +219,14 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "when there are clawbacks" do
-      let(:paid_statement) { create(:statement, :paid, lead_provider:) }
+      let(:paid_statement) { create(:statement, :paid, lead_provider:, cohort:) }
 
       let!(:declaration) do
         travel_to paid_statement.deadline_date do
-          create(:declaration, :paid, declaration_type: "retained-1", lead_provider:, application:, statement: paid_statement)
+          create(:declaration, :paid, declaration_type: "retained-1", lead_provider:, application:, cohort:, statement: paid_statement)
         end
       end
-      let!(:statement) { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
+      let!(:statement) { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:, cohort:) }
 
       before do
         travel_to statement.deadline_date do
