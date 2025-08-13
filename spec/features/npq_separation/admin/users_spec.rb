@@ -53,14 +53,13 @@ RSpec.feature "User administration", type: :feature do
 
       expect(page).to have_css("h1", text: user.full_name)
 
-        within(".govuk-summary-card", text: "Overview") do |summary_card|
-          expect(summary_card).to have_summary_item("User ID", user.ecf_id)
-          expect(summary_card).to have_summary_item("Email", user.email)
-          expect(summary_card).to have_summary_item("Date of birth", user.date_of_birth.to_fs(:govuk_short))
-          expect(summary_card).to have_summary_item("National Insurance number", user.national_insurance_number)
-          expect(summary_card).to have_summary_item("TRN", user.trn, "Not verified")
-          expect(summary_card).to have_summary_item("Get an Identity ID", user.uid)
-        end
+      within(".govuk-summary-card", text: "Overview") do |summary_card|
+        expect(summary_card).to have_summary_item("User ID", user.ecf_id)
+        expect(summary_card).to have_summary_item("Email", user.email)
+        expect(summary_card).to have_summary_item("Date of birth", user.date_of_birth.to_fs(:govuk_short))
+        expect(summary_card).to have_summary_item("National Insurance number", user.national_insurance_number)
+        expect(summary_card).to have_summary_item("TRN", user.trn, "Not verified")
+        expect(summary_card).to have_summary_item("Get an Identity ID", user.uid)
       end
     end
 
