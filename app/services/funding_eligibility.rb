@@ -49,7 +49,11 @@ class FundingEligibility
               :lead_mentor_for_accredited_itt_provider,
               :query_store
 
-  delegate :childminder?, :work_setting, to: :query_store
+  delegate :childminder?,
+           :referred_by_return_to_teaching_adviser?,
+           :work_setting,
+           to: :query_store
+
   delegate :eligibility_data, to: :class, private: true
   delegate :rise_school?, to: :eligibility_data, private: true
 
@@ -100,14 +104,11 @@ class FundingEligibility
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
 
-      if query_store.referred_by_return_to_teaching_adviser?
-        return REFERRED_BY_RETURN_TO_TEACHING_ADVISER
-      end
-
       case query_store.work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
       when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
+      when *Questionnaires::WorkSetting::OTHER_SETTINGS then other_settings_policy
       else INELIGIBLE_ESTABLISHMENT_TYPE
       end
     end
@@ -186,6 +187,14 @@ private
 
     if query_store.employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
       SUBJECT_TO_REVIEW
+    else
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
+  end
+
+  def other_settings_policy
+    if referred_by_return_to_teaching_adviser?
+      REFERRED_BY_RETURN_TO_TEACHING_ADVISER
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
     end
