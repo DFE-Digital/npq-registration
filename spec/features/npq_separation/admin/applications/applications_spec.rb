@@ -276,7 +276,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(outcome.application_id)
 
-    expect(page).to have_css("h1", text: outcome.user.full_name)
+    expect(page).to have_css("h1", text: "Application overview")
 
     within(".govuk-table tbody tr:first-of-type td:last-of-type") do |action_cell|
       expect(action_cell).to have_button("Resend")
@@ -284,7 +284,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       click_button("Resend")
     end
 
-    expect(page).to have_css("h1", text: outcome.user.full_name)
+    expect(page).to have_css("h1", text: "Application overview")
     expect(page).to have_css(".govuk-notification-banner--success", text: /rescheduled/i)
   end
 

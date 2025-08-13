@@ -89,7 +89,7 @@ RSpec.feature "User administration", type: :feature do
 
       expect(page).to have_css("h1", text: user.full_name)
       applications.each do |application|
-        within(".govuk-summary-card", text: "#{application.course.name}") do |summary_card|
+        within(".govuk-summary-card", text: application.course.name.to_s) do |summary_card|
           expect(summary_card).to have_summary_item("NPQ course", application.course.name)
           expect(summary_card).to have_summary_item("Provider", application.lead_provider.name)
           expect(summary_card).to have_summary_item("Eligible for funding", "No")
