@@ -1,0 +1,380 @@
+Source,LAName,URN,EstablishmentName,CategoryofProvider
+SC,Milton Keynes,126565,Moorlands Centre Nursery School,Local authority nursery school
+SC,Derbyshire,112470,Gamesley Early Excellence Centre,Local authority nursery school
+SC,Birmingham,103138,Bloomsbury Nursery School,Local authority nursery school
+SC,Newcastle upon Tyne,108431,Monkchester Road Nursery School,Local authority nursery school
+SC,Newcastle upon Tyne,108427,Ashfield Nursery School,Local authority nursery school
+SC,Birmingham,103121,Brearley Nursery School,Local authority nursery school
+SC,Wirral,104986,Ganneys Meadow Nursery School and Family Centre,Local authority nursery school
+SC,Birmingham,103144,Castle Vale Nursery School,Local authority nursery school
+SC,Birmingham,103141,Newtown Nursery School,Local authority nursery school
+SC,Wandsworth,100990,Balham Nursery School,Local authority nursery school
+SC,Birmingham,103145,Osborne Nursery School,Local authority nursery school
+SC,Lambeth,100550,Triangle Nursery School,Local authority nursery school
+SC,Birmingham,103131,Rubery Nursery School,Local authority nursery school
+SC,Bristol City of,108906,Hartcliffe Nursery School and Children's Centre,Local authority nursery school
+SC,Sunderland,108748,Hylton Red House Nursery School,Local authority nursery school
+SC,Lambeth,100552,Ethelred Nursery School and Children's Centre,Local authority nursery school
+SC,Liverpool,104505,Everton Nursery School and Family Centre,Local authority nursery school
+SC,Bury,105283,Hoyle Nursery School,Local authority nursery school
+SC,Wirral,104984,Somerville Nursery School,Local authority nursery school
+SC,North Yorkshire,121268,Brougham Street Nursery School,Local authority nursery school
+SC,Durham,113986,Horden Nursery School,Local authority nursery school
+SC,Wolverhampton,104278,Low Hill Nursery School,Local authority nursery school
+SC,Darlington,113982,Borough Road Nursery School,Local authority nursery school
+SC,Westminster,101105,Dorothy Gardner Nursery School,Local authority nursery school
+SC,Walsall,104141,Ogley Hay Nursery School,Local authority nursery school
+SC,Kingston upon Hull City of,117692,McMillan Nursery School,Local authority nursery school
+SC,Westminster,132151,Portman Early Childhood Centre,Local authority nursery school
+SC,Wirral,104985,Castleway Nursery School,Local authority nursery school
+SC,Lambeth,100553,Maytree Nursery School,Local authority nursery school
+SC,Southwark,100771,The Grove Nursery School,Local authority nursery school
+SC,Nottingham,135108,The Nottingham Nursery School and Training Centre,Local authority nursery school
+SC,Birmingham,103150,Edith Cadbury Nursery School,Local authority nursery school
+SC,Bristol City of,108898,Rosemary Nursery School and Children's Centre,Local authority nursery school
+SC,Kensington and Chelsea,100472,Golborne & Maxilla Nursery School,Local authority nursery school
+SC,Bradford,132815,Canterbury Nursery School and Centre for Children and Families,Local authority nursery school
+SC,Durham,113972,Aclet Close Nursery School,Local authority nursery school
+SC,Birmingham,103133,Weoley Castle Nursery School,Local authority nursery school
+SC,Birmingham,103137,Lillian De Lissa Nursery School,Local authority nursery school
+SC,Manchester,105385,Collyhurst Nursery School,Local authority nursery school
+SC,Liverpool,104507,Abercromby Nursery School,Local authority nursery school
+SC,Walsall,104137,Valley Nursery School,Local authority nursery school
+SC,Stoke-on-Trent,123970,Bentilee Nursery School,Local authority nursery school
+SC,Birmingham,103127,West Heath Nursery School,Local authority nursery school
+SC,Rotherham,106826,Arnold Nursery School and Children's Centre,Local authority nursery school
+SC,Lancashire,119071,Ightenhill Nursery School,Local authority nursery school
+SC,Wandsworth,100991,Eastwood Nursery School,Local authority nursery school
+SC,Southwark,100770,Nell Gwynn Nursery School,Local authority nursery school
+SC,Bristol City of,134241,Knowle West Early Years Centre,Local authority nursery school
+SC,Birmingham,103126,Marsh Hill Nursery School,Local authority nursery school
+SC,Lancashire,119066,Duke Street Nursery School,Local authority nursery school
+SC,Southwark,100767,Kintore Way Nursery School and Children's Centre,Local authority nursery school
+SC,Westmorland and Furness,112093,Hindpool Nursery School,Local authority nursery school
+SC,Devon,113050,Chestnut Nursery,Local authority nursery school
+SC,Lancashire,119083,Stoneygate Nursery School,Local authority nursery school
+SC,Norfolk,120767,Earlham Nursery School,Local authority nursery school
+SC,Wakefield,132014,The Castle Nursery School,Local authority nursery school
+SC,Kirklees,107592,Flatts Nursery School,Local authority nursery school
+SC,Bristol City of,108896,Ilminster Avenue Nursery School,Local authority nursery school
+SC,Hackney,100213,Comet Nursery School and Children's Centre,Local authority nursery school
+SC,Walsall,104136,Rowley View Nursery School,Local authority nursery school
+SC,Birmingham,103136,Jakeman Nursery School,Local authority nursery school
+SC,Cornwall,111789,Camborne Nursery School,Local authority nursery school
+SC,Lancashire,119067,Highfield Nursery School,Local authority nursery school
+SC,Rochdale,105757,Howard Street Nursery School,Local authority nursery school
+SC,Derby,112471,Lord Street Nursery School,Local authority nursery school
+SC,Lincolnshire,120365,The Lincoln St Giles Nursery School,Local authority nursery school
+SC,Wolverhampton,104280,Eastfield Nursery School,Local authority nursery school
+SC,Sunderland,108753,Pennywell Early Years Centre,Local authority nursery school
+SC,Brent,101489,Curzon Nursery School & Family Wellbeing Centre,Local authority nursery school
+SC,Sefton,104848,Greenacre Community Nursery School,Local authority nursery school
+SC,Lambeth,100551,Effra Nursery School and Children's Centre,Local authority nursery school
+SC,Lancashire,119086,Fairfield Nursery School,Local authority nursery school
+SC,Bristol City of,108895,Little Hayes Nursery School,Local authority nursery school
+SC,Sefton,104847,Cambridge Nursery School,Local authority nursery school
+SC,Hammersmith and Fulham,100318,Bayonne Nursery School,Local authority nursery school
+SC,Haringey,102071,Pembury House Nursery School,Local authority nursery school
+SC,Lancashire,119078,Bradley Nursery School,Local authority nursery school
+SC,Blackburn with Darwen,119084,Longshaw Nursery School,Local authority nursery school
+SC,Sunderland,108749,Usworth Colliery Nursery School,Local authority nursery school
+SC,East Riding of Yorkshire,117695,Bridlington Nursery School,Local authority nursery school
+SC,Cambridgeshire,110593,The Fields Nursery School,Local authority nursery school
+SC,Tower Hamlets,100884,Columbia Market Nursery School,Local authority nursery school
+SC,Lancashire,133372,Taywood Nursery School,Local authority nursery school
+SC,Westminster,101106,Mary Paterson Nursery School,Local authority nursery school
+SC,Kensington and Chelsea,100473,St Anne's & Avondale Park Nursery School,Local authority nursery school
+SC,Reading,109748,Blagdon Nursery School,Local authority nursery school
+SC,Milton Keynes,110197,Knowles Nursery School,Local authority nursery school
+SC,Haringey,102072,Rowland Hill Nursery School,Local authority nursery school
+SC,Bradford,107187,Lilycroft Nursery School,Local authority nursery school
+SC,Birmingham,103140,Adderley Nursery School,Local authority nursery school
+SC,Hertfordshire,117067,Greenfield Nursery School,Local authority nursery school
+SC,Birmingham,103130,Allens Croft Nursery School,Local authority nursery school
+SC,Brent,101492,Granville Plus Nursery School,Local authority nursery school
+SC,Birmingham,103125,Highfield Nursery School,Local authority nursery school
+SC,Walsall,104134,Sandbank Nursery School,Local authority nursery school
+SC,Lancashire,134991,Appletree Nursery School,Local authority nursery school
+SC,Leicestershire,142677,Wigston Menphys Nursery School,Local authority nursery school
+SC,Peterborough,110599,Caverstede Nursery School,Local authority nursery school
+SC,Newham,102706,Oliver Thomas Nursery School,Local authority nursery school
+SC,Bristol City of,108893,St Philips Marsh Nursery School and Barton Hill Childrens Centre/Cashmore Early Years Centre,Local authority nursery school
+SC,Bristol City of,108900,Speedwell Nursery School,Local authority nursery school
+SC,Lancashire,119090,Newtown Nursery School,Local authority nursery school
+SC,Lancashire,119079,Walton Lane Nursery School,Local authority nursery school
+SC,Lewisham,100667,Clyde Nursery School.,Local authority nursery school
+SC,Southwark,100769,Dulwich Wood Nursery School,Local authority nursery school
+SC,South Tyneside,132799,The Sue Hedley Nursery School,Local authority nursery school
+SC,Stockport,106015,Hollywood Park Nursery School,Local authority nursery school
+SC,Tower Hamlets,100887,Alice Model Nursery School,Local authority nursery school
+SC,Camden,100005,Thomas Coram Centre,Local authority nursery school
+SC,Brighton and Hove,114351,Royal Spa Nursery School,Local authority nursery school
+SC,Derby,112475,Walbrook Nursery School,Local authority nursery school
+SC,Bristol City of,108902,St Werburghs Park Nursery School,Local authority nursery school
+SC,Lancashire,119064,Lee Royd Nursery School,Local authority nursery school
+SC,Cambridgeshire,110597,Colleges Nursery School,Local authority nursery school
+SC,Birmingham,103134,Highters Heath Nursery School,Local authority nursery school
+SC,Lancashire,119093,Hillside Nursery School,Local authority nursery school
+SC,Durham,113970,Oxhill Nursery School,Local authority nursery school
+SC,Walsall,104140,Alumwell Nursery School,Local authority nursery school
+SC,Warwickshire,125491,Stockingford Maintained Nursery School,Local authority nursery school
+SC,Birmingham,103135,Gracelands Nursery School,Local authority nursery school
+SC,Coventry,103633,Hillfields Nursery School,Local authority nursery school
+SC,Birmingham,103129,Kings Norton Nursery School,Local authority nursery school
+SC,Derby,112479,Ashgate Nursery School,Local authority nursery school
+SC,Wolverhampton,104285,Bushbury Nursery School,Local authority nursery school
+SC,Warrington,110956,Sandy Lane Nursery and Forest School,Local authority nursery school
+SC,Lancashire,119074,Stoneyholme Nursery School,Local authority nursery school
+SC,Leicestershire,142678,"Sketchley Hill Menphys Nursery School, Burbage",Local authority nursery school
+SC,Birmingham,103124,St Thomas Centre Nursery School,Local authority nursery school
+SC,Newham,102700,Edith Kerrison Nursery School,Local authority nursery school
+SC,Wigan,106397,Hindley Nursery School,Local authority nursery school
+SC,North Northamptonshire,121782,Ronald Tree Nursery School,Local authority nursery school
+SC,Brent,101490,Fawood Nursery School & Family Wellbeing Centre,Local authority nursery school
+SC,Hampshire,134844,Lanterns Nursery School and Extended Services,Local authority nursery school
+SC,Hammersmith and Fulham,100316,Vanessa Nursery School,Local authority nursery school
+SC,Lancashire,119095,McMillan Nursery School,Local authority nursery school
+SC,Luton,109419,Rothesay Nursery School,Local authority nursery school
+SC,Croydon,131723,Thornton Heath Nursery School,Local authority nursery school
+SC,Birmingham,103142,Shenley Fields Nursery School,Local authority nursery school
+SC,Lincolnshire,126564,Boston Nursery School,Local authority nursery school
+SC,Ealing,101858,Maples Nursery School and Children's Centre,Local authority nursery school
+SC,Cambridgeshire,110598,Huntingdon Nursery School,Local authority nursery school
+SC,Cumberland,112088,Cleator Moor Nursery School,Local authority nursery school
+SC,Dudley,103766,Netherton Park Nursery School,Local authority nursery school
+SC,North Yorkshire,121267,Childhaven Community Nursery School,Local authority nursery school
+SC,Liverpool,104506,Ellergreen Nursery School and Childcare Centre,Local authority nursery school
+SC,Hampshire,130861,Bushy Leaze Early Years Centre,Local authority nursery school
+SC,Lancashire,119088,Woodfield Nursery School,Local authority nursery school
+SC,Wakefield,108134,Harewood Centre Nursery School,Local authority nursery school
+SC,Newham,102702,Rebecca Cheetham Nursery and Children's Centre,Local authority nursery school
+SC,Sunderland,108751,Oxclose Nursery School,Local authority nursery school
+SC,Luton,109421,Chapel Street Nursery School,Local authority nursery school
+SC,Birmingham,103139,Featherstone Nursery School,Local authority nursery school
+SC,Bolton,105145,The Orchards Nursery School,Local authority nursery school
+SC,Luton,131175,The Gill Blowers Nursery School,Local authority nursery school
+SC,Tower Hamlets,100882,Childrens House Nursery School,Local authority nursery school
+SC,Wolverhampton,132018,Bilston Nursery School,Local authority nursery school
+SC,Birmingham,103120,Bordesley Green East Nursery School,Local authority nursery school
+SC,Derby,112476,Stonehill Nursery School,Local authority nursery school
+SC,Islington,100384,Margaret McMillan Nursery School,Local authority nursery school
+SC,Staffordshire,123967,Oaklands Nursery School,Local authority nursery school
+SC,Lincolnshire,126562,"The Kingsdown Nursery School, Lincoln",Local authority nursery school
+SC,Norfolk,120766,King's Lynn Nursery School,Local authority nursery school
+SC,Birmingham,103128,Goodway Nursery School,Local authority nursery school
+SC,Newcastle upon Tyne,108430,Newburn Manor Nursery School,Local authority nursery school
+SC,Rotherham,106827,Rawmarsh Nursery School and Childrens Centre,Local authority nursery school
+SC,Newham,102703,Ronald Openshaw Nursery School,Local authority nursery school
+SC,Lancashire,119070,Rosegrove Nursery School,Local authority nursery school
+SC,Slough,109765,Chalvey Nursery School & Early Years Centre,Local authority nursery school
+SC,Bristol City of,108894,Filton Avenue Nursery School,Local authority nursery school
+SC,Lancashire,119096,Whitegate Nursery School,Local authority nursery school
+SC,Walsall,104138,Millfields Nursery School,Local authority nursery school
+SC,Hammersmith and Fulham,100315,Randolph Beresford Early Years Centre,Local authority nursery school
+SC,Croydon,131724,Selhurst Nursery School and Children's Centre,Local authority nursery school
+SC,Hackney,100212,Wentworth Nursery School and Children's Centre,Local authority nursery school
+SC,Warwickshire,125484,Atherstone Nursery School,Local authority nursery school
+SC,Wolverhampton,104283,Windsor Nursery School,Local authority nursery school
+SC,Hertfordshire,117079,Ludwick Nursery School,Local authority nursery school
+SC,Lancashire,119100,Staghills Nursery School,Local authority nursery school
+SC,Waltham Forest,103027,Low Hall Nursery School,Local authority nursery school
+SC,Birmingham,103132,Washwood Heath Nursery School,Local authority nursery school
+SC,Hertfordshire,117069,Birchwood Nursery School,Local authority nursery school
+SC,Sheffield,106973,Broomhall Nursery School,Local authority nursery school
+SC,South Tyneside,108661,Clervaux Nursery School,Local authority nursery school
+SC,Greenwich,100099,Abbey Wood Nursery School,Local authority nursery school
+SC,Stockport,106016,Lark Hill Nursery School,Local authority nursery school
+SC,Derby,112472,Central Community Nursery School,Local authority nursery school
+SC,Bradford,107185,Strong Close Nursery School,Local authority nursery school
+SC,West Berkshire,109757,Victoria Park Nursery School & Family Hub,Local authority nursery school
+SC,Sheffield,106975,Grace Owen Nursery School,Local authority nursery school
+SC,Slough,109763,Lea Nursery School,Local authority nursery school
+SC,Wigan,106398,Douglas Valley Nursery School,Local authority nursery school
+SC,Liverpool,104503,Chatham Place Nursery School,Local authority nursery school
+SC,West Sussex,125807,Bognor Regis Nursery School,Local authority nursery school
+SC,Hertfordshire,117080,Peartree Way Nursery School,Local authority nursery school
+SC,Lincolnshire,120364,Wyndham Park Nursery School,Local authority nursery school
+SC,Islington,100385,Kate Greenaway Nursery School and Children's Centre,Local authority nursery school
+SC,Lancashire,119065,Rockwood Nursery School,Local authority nursery school
+SC,Bradford,107190,St Edmund's Nursery School & Children's Centre,Local authority nursery school
+SC,Bristol City of,108904,Redcliffe Childrens Centre and Maintained Nursery School,Local authority nursery school
+SC,Lancashire,119097,Bacup Nursery School,Local authority nursery school
+SC,Ealing,101862,Greenfields Nursery School and Children's Centre,Local authority nursery school
+SC,Sefton,104845,Crossens Nursery School,Local authority nursery school
+SC,Westminster,101104,Tachbrook Nursery School,Local authority nursery school
+SC,Bradford,107188,Abbey Green Nursery School,Local authority nursery school
+SC,Durham,113976,Etherley Lane Nursery School,Local authority nursery school
+SC,Gateshead,108320,Bensham Grove Nursery School,Local authority nursery school
+SC,Lambeth,100554,Holmewood Nursery School,Local authority nursery school
+SC,Croydon,101702,Crosfield Nursery School,Local authority nursery school
+SC,Oxfordshire,122970,Slade Nursery School,Local authority nursery school
+SC,Durham,113991,Tudhoe Moor Nursery School,Local authority nursery school
+SC,Brighton and Hove,114350,Tarnerland Nursery School,Local authority nursery school
+SC,Bedford,109417,Peter Pan Nursery School,Local authority nursery school
+SC,Stockport,106018,Reddish Vale Nursery School,Local authority nursery school
+SC,Lancashire,133060,Reedley Hallows Nursery School,Local authority nursery school
+SC,North Northamptonshire,121783,Croyland Nursery School & Day Nursery,Local authority nursery school
+SC,Greenwich,100102,Robert Owen Nursery School,Local authority nursery school
+SC,West Northamptonshire,121785,Gloucester Nursery School,Local authority nursery school
+SC,Bedford,109413,Cherry Trees Nursery School,Local authority nursery school
+SC,Hertfordshire,117076,Kingswood Nursery School,Local authority nursery school
+SC,Warwickshire,125486,Bedworth Heath Nursery School,Local authority nursery school
+SC,Norfolk,120765,Emneth Nursery School,Local authority nursery school
+SC,West Northamptonshire,131151,Camrose Early Years Centre for Children & Families,Local authority nursery school
+SC,Kingston upon Thames,102560,Surbiton Hill Nursery School,Local authority nursery school
+SC,Derby,112474,Harrington Nursery School,Local authority nursery school
+SC,Durham,113989,Rosemary Lane Nursery School,Local authority nursery school
+SC,Cambridgeshire,136931,King's Hedges Nursery School,Local authority nursery school
+SC,Slough,109761,Baylis Court Nursery School,Local authority nursery school
+SC,Islington,100386,North Islington Nursery School,Local authority nursery school
+SC,Ealing,101861,South Acton Childrens Centre,Local authority nursery school
+SC,Wandsworth,100992,Somerset Nursery School and Children's Centre,Local authority nursery school
+SC,Surrey,124912,Dorking Nursery School,Local authority nursery school
+SC,Halton,110957,Aspiring Foundations Federated Nursery Schools - Ditton Nursery School,Local authority nursery school
+SC,Manchester,105384,Martenscroft Nursery School & Children's Centre,Local authority nursery school
+SC,Newham,102705,Sheringham Nursery School & Children's Centre,Local authority nursery school
+SC,Greenwich,100098,Pound Park Nursery School,Local authority nursery school
+SC,Harrow,133668,Hillview Nursery School,Local authority nursery school
+SC,North Northamptonshire,131232,Pen Green Centre for Children and Their Families,Local authority nursery school
+SC,Buckinghamshire,110195,Henry Allen Nursery School,Local authority nursery school
+SC,Surrey,124913,The Wharf Nursery School,Local authority nursery school
+SC,Warwickshire,125490,Warwick Nursery School,Local authority nursery school
+SC,Walsall,104135,Fullbrook Nursery School,Local authority nursery school
+SC,Walsall,104139,Lane Head Nursery School,Local authority nursery school
+SC,Durham,113975,Seaham Harbour Nursery School,Local authority nursery school
+SC,Essex,114699,Woodcroft Nursery School,Local authority nursery school
+SC,West Sussex,125810,Boundstone Nursery School,Local authority nursery school
+SC,Reading,109751,Norcot Early Years Centre,Local authority nursery school
+SC,Croydon,101705,Tunstall Nursery School,Local authority nursery school
+SC,Darlington,113983,George Dent Nursery School,Local authority nursery school
+SC,Reading,109752,New Bridge Nursery School,Local authority nursery school
+SC,Luton,109423,Pastures Way Nursery School,Local authority nursery school
+SC,Lancashire,119101,Basnett Street Nursery School,Local authority nursery school
+SC,Wakefield,108137,Crigglestone Nursery School,Local authority nursery school
+SC,Hertfordshire,117066,Arlesdene Nursery School and Pre-School,Local authority nursery school
+SC,Plymouth,113051,Ham Drive Nursery School and Day Care,Local authority nursery school
+SC,Birmingham,103122,Garretts Green Nursery School,Local authority nursery school
+SC,Bristol City of,108905,The Limes Nursery School,Local authority nursery school
+SC,Surrey,124911,Chertsey Nursery School,Local authority nursery school
+SC,Slough,109760,Slough Centre Nursery School,Local authority nursery school
+SC,Sunderland,108750,Hetton Lyons Nursery School,Local authority nursery school
+SC,Central Bedfordshire,109422,Westfield Nursery School,Local authority nursery school
+SC,Bolton,105144,Grosvenor Nursery School and Day Care Centre,Local authority nursery school
+SC,Bradford,107189,Midland Road Nursery School,Local authority nursery school
+SC,West Berkshire,109755,Hungerford Nursery School Centre for Children,Local authority nursery school
+SC,Devon,134674,West Exe Nursery School,Local authority nursery school
+SC,Derbyshire,112483,Pinxton Nursery School,Local authority nursery school
+SC,Hertfordshire,117072,Rye Park Nursery School,Local authority nursery school
+SC,Hampshire,115830,Haven Early Years Centre,Local authority nursery school
+SC,Hammersmith and Fulham,100317,James Lee Nursery School,Local authority nursery school
+SC,Barnet,101254,St Margaret's Nursery School,Local authority nursery school
+SC,Durham,113971,Wingate Community Nursery School,Local authority nursery school
+SC,Essex,114698,Tanglewood Nursery School,Local authority nursery school
+SC,Derbyshire,112485,Alfreton Nursery School,Local authority nursery school
+SC,Cheshire East,110953,Westminster Nursery School,Local authority nursery school
+SC,York,121266,St Paul's Nursery School,Local authority nursery school
+SC,Oxfordshire,122983,Wheatley Nursery School,Local authority nursery school
+SC,Waltham Forest,103028,Church Hill Nursery School,Local authority nursery school
+SC,Lancashire,119089,Ribblesdale Nursery School,Local authority nursery school
+SC,Suffolk,124525,Highfield Nursery School,Local authority nursery school
+SC,Haringey,102073,Woodlands Park Nursery School and Childrens Centre,Local authority nursery school
+SC,Surrey,133731,Guildford Nursery School,Local authority nursery school
+SC,Bristol City of,108901,St Pauls Nursery School & Children's Centre,Local authority nursery school
+SC,Wolverhampton,104279,Ashmore Park Nursery School,Local authority nursery school
+SC,Warwickshire,125488,Kenilworth Nursery School & Early Years Training Centre,Local authority nursery school
+SC,Worcestershire,132104,Evesham Nursery School,Local authority nursery school
+SC,Ealing,101860,Grove House Nursery School & Children's Centre,Local authority nursery school
+SC,West Northamptonshire,121786,Wallace Road Nursery School,Local authority nursery school
+SC,Birmingham,137796,Selly Oak Nursery School,Local authority nursery school
+SC,West Sussex,125808,Chichester Nursery School,Local authority nursery school
+SC,Cumberland,112090,Frizington Nursery School,Local authority nursery school
+SC,Newham,102701,Kay Rowe Nursery School,Local authority nursery school
+SC,Oxfordshire,122974,The ACE Centre Nursery School,Local authority nursery school
+SC,Greenwich,100097,Rachel McMillan Nursery School and Children's Centre,Local authority nursery school
+SC,Luton,109418,Hart Hill Nursery School,Local authority nursery school
+SC,Reading,109750,Caversham Nursery School,Local authority nursery school
+SC,Sunderland,108746,Houghton Le Spring Nursery School,Local authority nursery school
+SC,East Riding of Yorkshire,117699,Hornsea Nursery School,Local authority nursery school
+SC,Plymouth,113052,Plym Bridge Nursery School and Day Care,Local authority nursery school
+SC,Newham,102704,St Stephen's Nursery School,Local authority nursery school
+SC,Lincolnshire,126563,The Gainsborough Nursery School,Local authority nursery school
+SC,Croydon,101704,Purley Nursery School,Local authority nursery school
+SC,Cambridgeshire,110594,Homerton Early Years Centre,Local authority nursery school
+SC,Oxfordshire,122969,Grandpont Nursery School,Local authority nursery school
+SC,Waltham Forest,103030,Acacia Nursery,Local authority nursery school
+SC,Oxfordshire,122972,Lydalls Nursery School,Local authority nursery school
+SC,West Northamptonshire,121788,Parklands Nursery School,Local authority nursery school
+SC,Halton,110959,Aspiring Foundations Federated Nursery Schools - Warrington Road Nursery School,Local authority nursery school
+SC,Tower Hamlets,100886,Rachel Keeling Nursery School,Local authority nursery school
+SC,Hertfordshire,117077,Oxhey Nursery School,Local authority nursery school
+SC,Richmond upon Thames,102882,Windham Nursery School,Local authority nursery school
+SC,Hertfordshire,117070,Heath Lane Nursery School,Local authority nursery school
+SC,Telford and Wrekin,123347,Madeley Nursery School,Local authority nursery school
+SC,Birmingham,103123,Perry Beeches Nursery School,Local authority nursery school
+SC,Windsor and Maidenhead,109756,Maidenhead Nursery School,Local authority nursery school
+SC,Oxfordshire,122967,Comper Nursery School,Local authority nursery school
+SC,Cambridgeshire,110595,Histon Early Years Centre,Local authority nursery school
+SC,Warwickshire,125487,Whitnash Nursery School,Local authority nursery school
+SC,Wolverhampton,104281,Phoenix Nursery School,Local authority nursery school
+SC,Lewisham,100668,Chelwood Nursery School,Local authority nursery school
+SC,Hertfordshire,133975,Muriel Green Nursery School,Local authority nursery school
+SC,Rotherham,106828,Aughton Early Years Centre,Local authority nursery school
+SC,Durham,113977,Langley Moor Nursery School,Local authority nursery school
+SC,Hertfordshire,117078,Tenterfield Nursery School,Local authority nursery school
+SC,Rochdale,105760,Sunny Brow Nursery School,Local authority nursery school
+SC,North Northamptonshire,121784,Highfield Nursery School,Local authority nursery school
+SC,Cambridgeshire,110596,Brunswick Nursery School,Local authority nursery school
+SC,Derbyshire,112481,Flagg Nursery School,Local authority nursery school
+SC,Buckinghamshire,110199,Bowerdean Nursery School,Local authority nursery school
+SC,East Riding of Yorkshire,131416,Hedon Nursery School,Local authority nursery school
+SC,St. Helens,131447,Rainhill Community Nursery,Local authority nursery school
+SC,Derbyshire,112478,Ripley Nursery School,Local authority nursery school
+SC,North East Lincolnshire,117700,Scartho Nursery School,Local authority nursery school
+SC,Derbyshire,112477,New Mills Nursery School,Local authority nursery school
+SC,North Tyneside,108563,Sir James Knott Memorial Nursery School,Local authority nursery school
+SC,East Riding of Yorkshire,117698,Beverley Manor Nursery School,Local authority nursery school
+SC,Blackburn with Darwen,119092,Brunel Nursery School,Local authority nursery school
+SC,Liverpool,104504,East Prescot Road Nursery School,Local authority nursery school
+SC,Hertfordshire,117065,Weston Way Nursery School,Local authority nursery school
+SC,Hillingdon,102365,McMillan Nursery School,Local authority nursery school
+SC,Westmorland and Furness,112091,Kendal Nursery School,Local authority nursery school
+SC,Cumberland,112089,Parkview Nursery School,Local authority nursery school
+SC,Hertfordshire,117071,York Road Nursery School,Local authority nursery school
+SC,West Sussex,125809,Horsham Nursery School,Local authority nursery school
+SC,Wokingham,109759,The Ambleside Centre,Local authority nursery school
+SC,Derby,112480,Whitecross Nursery School,Local authority nursery school
+SC,Telford and Wrekin,123348,Oakengates Nursery School,Local authority nursery school
+SC,Hertfordshire,117068,Batford Nursery School,Local authority nursery school
+SC,Central Bedfordshire,109415,Willow Nursery School,Local authority nursery school
+SC,Southampton,115831,Hardmoor Nursery & Early Years Centre - Part of the Learning Federation Partnership of Schools,Local authority nursery school
+SC,South Tyneside,108665,Boldon Nursery School,Local authority nursery school
+SC,Bradford,107186,Hirst Wood Nursery School,Local authority nursery school
+SC,West Northamptonshire,121787,Whitehills Nursery School,Local authority nursery school
+SC,Stockport,106021,Freshfield Nursery School,Local authority nursery school
+SC,Cornwall,111790,Truro Nursery School,Local authority nursery school
+SC,Derbyshire,112469,Hadfield Nursery School,Local authority nursery school
+SC,Luton,109420,Grasmere Nursery School,Local authority nursery school
+SC,Derbyshire,112484,South Normanton Nursery School,Local authority nursery school
+SC,Lancashire,119080,Moorgate Nursery School,Local authority nursery school
+SC,Reading,109749,Blagrave Nursery School,Local authority nursery school
+SC,Halton,110958,Birchfield Nursery School,Local authority nursery school
+SC,Sunderland,108752,Mill Hill Nursery School,Local authority nursery school
+SC,Windsor and Maidenhead,109758,The Lawns Nursery School,Local authority nursery school
+SC,Barnet,101253,Moss Hall Nursery School,Local authority nursery school
+SC,Kent,118229,Northfleet Nursery School,Local authority nursery school
+SC,Durham,113985,Beechdale Nursery School,Local authority nursery school
+SC,Barnet,101252,Hampden Way Nursery School,Local authority nursery school
+SC,South Tyneside,108663,Helen Gibson Nursery School,Local authority nursery school
+SC,Barnet,101251,Brookhill Nursery School,Local authority nursery school
+SC,Kensington and Chelsea,100474,Chelsea Open Air Nursery School,Local authority nursery school
+SC,Windsor and Maidenhead,109754,Cookham Nursery School,Local authority nursery school
+SC,Blackburn with Darwen,119091,Ashworth Nursery School,Local authority nursery school
+SC,Oxfordshire,122968,Headington Quarry Foundation Stage School,Local authority nursery school
+SC,Brent,101491,College Green School and Services,Local authority nursery school
+SC,North East Lincolnshire,117697,Great Coates Village Nursery School,Local authority nursery school
+SC,Sutton,102956,Thomas Wall Nursery School,Local authority nursery school
+SC,Slough,109762,Cippenham Nursery School,Local authority nursery school
+SC,Blackburn with Darwen,119099,Turncroft Nursery School,Local authority nursery school
+SC,Sutton,102955,Spencer Nursery School,Local authority nursery school
+SC,North Yorkshire,121269,Otley Street Community Nursery School,Local authority nursery school
+SC,Staffordshire,123962,Hednesford Nursery School,Local authority nursery school
