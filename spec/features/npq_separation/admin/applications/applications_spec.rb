@@ -151,17 +151,12 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       click_link("View")
     end
 
-    expect(page).to have_css("h1", text: application.user.full_name)
-    expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
-    expect(page).to have_css("p", text: "Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)} | National Insurance: Not provided")
-    expect(page).to have_css("p", text: "Email: #{application.user.email}")
-    expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not verified")
-
     summary_lists = all(".govuk-summary-list")
 
-    expect(page).to have_css("h2", text: "Application overview")
+    expect(page).to have_css("h2", text: "Overview")
 
     within(summary_lists[0]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.user.full_name)
       expect(summary_list).to have_summary_item("Application ID", application.ecf_id)
       expect(summary_list).to have_summary_item("Course", application.course.name)
       expect(summary_list).to have_summary_item("Course identifier", application.course.identifier)
@@ -273,7 +268,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     user = applications_in_order.first.user
 
-    expect(page).to have_link(user.full_name, href: npq_separation_admin_user_path(user))
+    expect(page).to have_text(user.full_name)
   end
 
   scenario "resending outcome to qualified teachers api" do
@@ -298,7 +293,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
 
     within(".govuk-summary-list__row", text: "Provider approval status") do |summary_list_row|
       expect(summary_list_row).to have_text "Accepted"
@@ -312,7 +307,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "Yes", visible: :all
     click_button "Change status to Pending"
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     within(".govuk-summary-list__row", text: "Provider approval status") do |summary_list_row|
       expect(summary_list_row).to have_text "Pending"
       expect(summary_list_row).not_to have_link("Change")
@@ -325,7 +320,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
 
     within(".govuk-summary-list__row", text: "Training status") do |summary_list|
       expect(summary_list).to have_text "Active"
@@ -340,7 +335,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     select Applications::ChangeTrainingStatus::REASON_OPTIONS["deferred"].first
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     within(".govuk-summary-list__row", text: "Training status") do |summary_list|
       expect(summary_list).to have_text "Deferred"
       click_on "Change"
@@ -350,7 +345,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "Active", visible: :all
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     within(".govuk-summary-list__row", text: "Training status") do |summary_list|
       expect(summary_list).to have_text "Active"
     end
@@ -360,7 +355,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     application = create(:application)
 
     visit npq_separation_admin_application_path(application)
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
 
     within(".govuk-summary-list__row", text: application.lead_provider.name) do
       click_link("Transfer")
@@ -374,7 +369,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "Best Practice Network", visible: :all
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     expect(page).to have_summary_item("Provider", "Best Practice Network")
   end
 
@@ -383,7 +378,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     visit npq_separation_admin_application_path(application)
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
       expect(summary_list_row).to have_text "No"
       click_link("Change")
@@ -397,8 +392,8 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 
+    expect(page).to have_css("h1", text: "Application details")
     expect(page).to have_content("Funding eligibility has been changed to ‘Yes’")
-    expect(page).to have_css("h1", text: application.user.full_name)
     within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
       expect(summary_list_row).to have_text "Yes"
       click_link("Change")
@@ -408,7 +403,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     choose "No", visible: :all
     click_button "Continue"
 
-    expect(page).to have_css("h1", text: application.user.full_name)
+    expect(page).to have_css("h1", text: "Application details")
     within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
       expect(summary_list_row).to have_text "No"
     end
