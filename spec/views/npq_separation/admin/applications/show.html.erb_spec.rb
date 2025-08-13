@@ -25,7 +25,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
     context "with application overview summary card" do
       subject { Capybara.string(render).find(".govuk-summary-card", text: "Overview") }
 
-      it { is_expected.to have_summary_item "Name", application.user.full_name}
+      it { is_expected.to have_summary_item "Name", application.user.full_name }
       it { is_expected.to have_summary_item "Application ID", application.ecf_id }
       it { is_expected.to have_summary_item "Provider", application.lead_provider.name }
       it { is_expected.to have_summary_item "Course", application.course.name }
