@@ -193,22 +193,16 @@ RSpec.feature "Applications in review", type: :feature do
     application.user.update! uid: SecureRandom.uuid
 
     within("tr", text: application.user.full_name) do
-      click_link("View")
+      click_link("View application")
     end
 
-    expect(page).to have_css("h1", text: application.user.full_name)
-
-    expect(page).to have_text("User ID: #{application.user.ecf_id}")
-    expect(page).to have_text("Email: #{application.user.email}")
-    expect(page).to have_text("Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)}")
-    expect(page).to have_text("National Insurance: Not provided")
-    expect(page).to have_text("TRN: #{application.user.trn} Not verified")
-    expect(page).to have_text("Get an Identity ID: #{application.user.uid}")
+    expect(page).to have_css("h1", text: "Application overview")
 
     summary_lists = all(".govuk-summary-list")
 
-    expect(page).to have_css("h2", text: "Course details")
+    expect(page).to have_css("h2", text: "Overview")
     within(summary_lists[0]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.user.full_name)
       expect(summary_list).to have_summary_item("NPQ course", "#{application.course.name} (#{application.course.short_code})")
       expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
@@ -251,7 +245,7 @@ RSpec.feature "Applications in review", type: :feature do
     # check side nav
 
     within "#side-navigation" do
-      click_link application.course.name
+      click_link "Application overview"
       expect(page).to have_current_path(npq_separation_admin_application_review_path(application))
     end
 
