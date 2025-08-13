@@ -93,6 +93,10 @@ class FundingEligibility
     funding_eligiblity_status_code.in? [SUBJECT_TO_REVIEW, REFERRED_BY_RETURN_TO_TEACHING_ADVISER]
   end
 
+  def previously_funded?
+    accepted_applications.any?
+  end
+
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
       return NOT_IN_ENGLAND unless @inside_catchment
@@ -214,10 +218,6 @@ private
     return User.none if trn.blank?
 
     User.where(trn:)
-  end
-
-  def previously_funded?
-    accepted_applications.any?
   end
 
   def accepted_applications
