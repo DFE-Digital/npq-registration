@@ -302,7 +302,6 @@ RSpec.feature "Applications in review", type: :feature do
   end
 
   scenario "viewing user details" do
-
     application = create(:application, :manual_review)
 
     visit npq_separation_admin_application_review_path(application)
