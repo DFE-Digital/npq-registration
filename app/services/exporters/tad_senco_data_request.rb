@@ -1,7 +1,6 @@
 class Exporters::TadSencoDataRequest
-  def initialize(cohort:, schedules:, file:)
+  def initialize(cohort:, file:)
     @cohort = cohort
-    @schedules = schedules
     @file = file
   end
 
@@ -11,9 +10,8 @@ class Exporters::TadSencoDataRequest
 
   def applications
     course_id = Course.where(identifier: "npq-senco").pluck(:id)
-    schedule_id = @schedules.pluck(:id)
 
-    Application.where(schedule_id:, course_id:).includes(:user, :lead_provider, :school, :private_childcare_provider, :cohort, :declarations)
+    Application.where(course_id:, cohort: @cohort).includes(:user, :lead_provider, :school, :private_childcare_provider, :cohort, :declarations)
   end
 
 private
@@ -50,6 +48,7 @@ private
           application.training_status,
           application.headteacher_status,
           application.cohort.start_year,
+          application.schedule&.identifier,
         ]
       end
     end
@@ -88,6 +87,7 @@ private
       "Training Status",
       "Headteacher Status",
       "Cohort",
+      "Schedule Identifier",
     ]
   end
 end
