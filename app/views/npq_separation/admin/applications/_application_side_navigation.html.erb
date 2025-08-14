@@ -1,10 +1,11 @@
 <% content_for :side_navigation do %>
-  <h2 class="govuk-heading-s">
-    <%= @application.user.full_name %>, <%= @application.course.name %>, <%= @application.created_at.to_date.to_fs(:govuk) %>
-  </h2>
   <%=
     render NpqSeparation::SubNavigationComponent.new(
       request.path,
+      heading: {
+        text: "#{@application.user.full_name}, #{@application.course.name}, #{@application.created_at.to_date.to_fs(:govuk)}",
+        visible: true
+      },
       structure: [
         NpqSeparation::NavigationStructure::Node.new(
           name: "Application details",

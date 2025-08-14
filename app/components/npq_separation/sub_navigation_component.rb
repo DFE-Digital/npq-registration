@@ -32,6 +32,7 @@ module NpqSeparation
       heading_text = heading[:text].presence || "Navigation"
       heading_class = class_names(
         "x-govuk-sub-navigation__heading",
+        "govuk-heading-s",
         "govuk-visually-hidden" => !heading[:visible],
       )
 
