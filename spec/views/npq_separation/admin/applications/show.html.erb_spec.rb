@@ -20,7 +20,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
                                        lead_provider: application.lead_provider
     end
 
-    it { is_expected.to have_css "h1", text: "Application overview" }
+    it { is_expected.to have_css "h1", text: "Application details" }
 
     context "with application overview summary card" do
       subject { Capybara.string(render).find(".govuk-summary-card", text: "Overview") }
@@ -46,7 +46,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
       build_stubbed :application, cohort: nil, itt_provider: nil, school: nil
     end
 
-    it { is_expected.to have_css "h1", text: "Application overview" }
+    it { is_expected.to have_css "h1", text: "Application details" }
     it { is_expected.to have_summary_item "Application ID", application.ecf_id }
     it { is_expected.to have_summary_item "Provider", application.lead_provider.name }
     it { is_expected.to have_summary_item "Course", application.course.name }

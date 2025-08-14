@@ -196,7 +196,7 @@ RSpec.feature "Applications in review", type: :feature do
       click_link("View application")
     end
 
-    expect(page).to have_css("h1", text: "Application overview")
+    expect(page).to have_css("h1", text: "Application details")
 
     summary_lists = all(".govuk-summary-list")
 
@@ -245,7 +245,7 @@ RSpec.feature "Applications in review", type: :feature do
     # check side nav
 
     within "#side-navigation" do
-      click_link "Application overview"
+      click_link "Application details"
       expect(page).to have_current_path(npq_separation_admin_application_review_path(application))
     end
 
