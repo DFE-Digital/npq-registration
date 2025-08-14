@@ -77,11 +77,14 @@ module Applications
     def other_accepted_applications_with_same_course_and_cohort
       return if application.blank?
 
+      not_withdrawn_training_statuses = Application.training_statuses.except(:withdrawn).keys.append(nil)
+
       @other_accepted_applications_with_same_course_and_cohort ||= Application
         .where(lead_provider_approval_status: "accepted",
                course: course.rebranded_alternative_courses,
                user: [user, same_trn_users].flatten.compact.uniq,
-               cohort:)
+               cohort:,
+               training_status: not_withdrawn_training_statuses)
         .where.not(id: application.id)
     end
 
