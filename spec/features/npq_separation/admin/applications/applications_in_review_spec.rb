@@ -301,6 +301,33 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).to have_current_path(npq_separation_admin_application_path(application_for_hospital_school))
   end
 
+  scenario "viewing user details" do
+
+    application = create(:application, :manual_review)
+
+    visit npq_separation_admin_application_review_path(application)
+
+    within(".govuk-summary-card", text: "Overview") do
+      within(".govuk-summary-list__row", text: "Name") do
+        expect(page).to have_text(application.user.full_name)
+        click_link("View user")
+      end
+    end
+
+    expect(page).to have_current_path(npq_separation_admin_user_path(application.user))
+    expect(page).to have_css("h1", text: application.user.full_name)
+
+    within(".govuk-summary-card", text: application.course.name) do
+      click_link("View full application")
+    end
+
+    expect(page).to have_current_path(npq_separation_admin_application_path(application))
+
+    within(first(".govuk-summary-list__row", text: "Name")) do
+      expect(page).to have_text(application.user.full_name)
+    end
+  end
+
   scenario "Applications should display in correct order" do
     first_record = application_for_young_offender_institution.user.full_name
     second_record = application_for_hospital_school.user.full_name
