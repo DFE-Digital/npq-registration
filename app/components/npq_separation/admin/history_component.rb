@@ -3,14 +3,14 @@ module NpqSeparation
     class HistoryComponent < ViewComponent::Base
       attr_reader :record, :changes
 
-      def initialize(record:)
+      def initialize(record:, &)
         @record = record
-        @changes = build_changes
+        @changes = build_changes(&)
       end
 
     private
 
-      def build_changes
+      def build_changes(&block)
         record.versions.where(event: "update").where.not(object_changes: nil)
           .select { |version| (version.object_changes.keys - %w[updated_at]).any? }
           .pluck(:created_at, :whodunnit, :object_changes)
@@ -21,6 +21,7 @@ module NpqSeparation
                 .map { |key, value| show_object_changes(key, value) }.join(", "),
               by: show_whodunnit(whodunnit),
               at: created_at,
+              description: block_given? ? block.call(record, created_at, object_changes) : nil,
             }
           end
       end
