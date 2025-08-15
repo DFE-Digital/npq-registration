@@ -50,4 +50,20 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
       end
     end
   end
+
+  describe "#sub_structure" do
+    describe "Dashboards" do
+      subject { instance.sub_structure("Dashboards") }
+
+      it "the first entry is Courses dashboard" do
+        expect(subject.first.name).to eql("Courses dashboard")
+        expect(subject.first.href).to eql("/npq-separation/admin/dashboards/courses-dashboard")
+      end
+
+      it "the second entry is Providers dashboard" do
+        expect(subject.second.name).to eql("Providers dashboard")
+        expect(subject.second.href).to eql("/npq-separation/admin/dashboards/providers-dashboard")
+      end
+    end
+  end
 end
