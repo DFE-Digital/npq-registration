@@ -17,6 +17,14 @@ RSpec.describe Cohort, type: :model do
     it { is_expected.to allow_value(%w[true false]).for(:funding_cap).with_message("Choose true or false for funding cap") }
     it { is_expected.not_to allow_value(nil).for(:funding_cap).with_message("Choose true or false for funding cap") }
     it { is_expected.to validate_uniqueness_of(:ecf_id).case_insensitive.with_message("ECF ID must be unique").allow_nil }
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_uniqueness_of(:name).case_insensitive }
+    it { is_expected.to validate_presence_of :description }
+    it { is_expected.to validate_uniqueness_of(:description).case_insensitive }
+
+    it { is_expected.to allow_value("2024-2").for :name }
+    it { is_expected.to allow_value("2024b").for :name }
+    it { is_expected.not_to allow_value("2024 2").for :name }
 
     describe "registration_start_date year should match start_year" do
       it "adds an error when the registration_start_date year does not match the start_year" do
@@ -45,14 +53,6 @@ RSpec.describe Cohort, type: :model do
               .is_less_than(2030),
           )
       }
-
-      it "validates uniqueness of start_year" do
-        existing_cohort = create :cohort, start_year: 2025
-        new_cohort = Cohort.new(start_year: existing_cohort.start_year)
-
-        new_cohort.valid?
-        expect(new_cohort.errors[:start_year]).to include("has already been taken")
-      end
     end
 
     describe "changing funding_cap when there are applications" do
@@ -104,11 +104,5 @@ RSpec.describe Cohort, type: :model do
         expect { Cohort.current }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
-  end
-
-  describe "#name" do
-    subject { cohort.name }
-
-    it { is_expected.to eq cohort.start_year }
   end
 end

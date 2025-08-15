@@ -77,7 +77,7 @@ module API
         application.employment_role,
         application.created_at.rfc3339,
         updated_at(application),
-        application.cohort&.start_year&.to_s,
+        application.cohort&.name&.to_s,
         application.ineligible_for_funding_reason,
         application.targeted_delivery_funding_eligibility,
         teacher_catchment(application),

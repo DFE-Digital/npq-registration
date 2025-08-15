@@ -48,7 +48,7 @@ module API
             {
               course_identifier: application.course.identifier,
               schedule_identifier: application&.schedule&.identifier,
-              cohort: application.cohort&.start_year&.to_s,
+              cohort: application.cohort&.name&.to_s,
               npq_application_id: application.ecf_id,
               eligible_for_funding: application.eligible_for_funding,
               training_status: application.training_status,
@@ -75,7 +75,7 @@ module API
               email: object.email,
               course_identifier: application.course.identifier,
               schedule_identifier: application&.schedule&.identifier,
-              cohort: application.cohort&.start_year&.to_s,
+              cohort: application.cohort&.name&.to_s,
               npq_application_id: application.ecf_id,
               eligible_for_funding: application.eligible_for_funding,
               training_status: application.training_status,

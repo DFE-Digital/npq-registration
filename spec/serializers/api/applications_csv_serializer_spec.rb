@@ -51,7 +51,7 @@ RSpec.describe API::ApplicationsCsvSerializer, type: :serializer do
         teacher_catchment_iso_country_code: "GBR",
         itt_provider: first_application.itt_provider.legal_name,
         lead_mentor: first_application.lead_mentor.to_s,
-        cohort: first_application.cohort.start_year.to_s,
+        cohort: first_application.cohort.name,
         created_at: first_application.created_at.rfc3339,
         updated_at: first_application.updated_at.rfc3339,
       })

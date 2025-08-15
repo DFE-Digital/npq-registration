@@ -32,7 +32,7 @@ module NpqSeparation
       end
 
       def cohorts
-        Cohort.all.order(:start_year)
+        Cohort.all.order(:name)
       end
 
       def statements

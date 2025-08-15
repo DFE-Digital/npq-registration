@@ -6,7 +6,7 @@ module API
       include FilterByParticipantIds
 
       def index
-        conditions = { updated_since:, participant_ids:, cohort_start_years: }
+        conditions = { updated_since:, participant_ids:, cohort_names: }
         declarations = declarations_query(conditions:).declarations
                          .includes(:delivery_partner, :secondary_delivery_partner)
 
@@ -89,7 +89,7 @@ module API
         raise ActionController::BadRequest, I18n.t(:invalid_data_structure)
       end
 
-      def cohort_start_years
+      def cohort_names
         params.dig(:filter, :cohort)
       end
 

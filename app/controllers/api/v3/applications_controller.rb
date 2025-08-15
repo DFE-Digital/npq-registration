@@ -6,7 +6,7 @@ module API
       include FilterByParticipantIds
 
       def index
-        conditions = { cohort_start_years:, participant_ids:, updated_since:, sort: }
+        conditions = { cohort_names:, participant_ids:, updated_since:, sort: }
         applications = applications_query(conditions:).applications
 
         render json: to_json(paginate(applications))
@@ -57,7 +57,7 @@ module API
         applications_query.application(ecf_id: application_params[:ecf_id])
       end
 
-      def cohort_start_years
+      def cohort_names
         application_params.dig(:filter, :cohort)
       end
 

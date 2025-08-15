@@ -13,7 +13,7 @@ RSpec.describe Declarations::StatementAttacher, type: :model do
     context "when the next output fee statement does not exist" do
       before { statement.update!(output_fee: false) }
 
-      it { expect(instance).to have_error(:declaration, :no_output_fee_statement, "You cannot submit or void declarations for the #{declaration.cohort.start_year} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
+      it { expect(instance).to have_error(:declaration, :no_output_fee_statement, "You cannot submit or void declarations for the #{declaration.cohort.name} cohort. The funding contract for this cohort has ended. Get in touch if you need to discuss this with us.") }
     end
 
     context "when the declaration is not in an attachable state" do

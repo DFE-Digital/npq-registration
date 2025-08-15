@@ -38,7 +38,7 @@ RSpec.describe API::DeliveryPartnerSerializer, type: :serializer do
       end
 
       it "serializes the cohorts" do
-        expect(attributes["cohort"]).to eq([cohort_21.start_year, cohort_22.start_year])
+        expect(attributes["cohort"]).to eq([cohort_21.name, cohort_22.name])
       end
 
       it "serializes the `created_at`" do

@@ -41,9 +41,9 @@
     <%=
       f.govuk_collection_select(
         :cohort_id,
-        Cohort.all.order(start_year: :desc),
+        Cohort.all.order(name: :desc),
         :id,
-        -> { format_cohort _1 },
+        :description,
         options: { selected: params[:cohort_id], include_blank: "All" },
         label: { text: "Year of application", size: "s" }
       )

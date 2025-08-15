@@ -4,7 +4,7 @@ module API
       include Pagination
 
       def index
-        conditions = { cohort_start_year:, sort: }
+        conditions = { cohort_name:, sort: }
         delivery_partners = query(conditions:).delivery_partners
 
         render json: to_json(paginate(delivery_partners))
@@ -25,7 +25,7 @@ module API
         query.delivery_partner(ecf_id: delivery_partner_params[:ecf_id])
       end
 
-      def cohort_start_year
+      def cohort_name
         delivery_partner_params.dig(:filter, :cohort)
       end
 
