@@ -102,7 +102,7 @@
           row.with_cell(text: application.created_at.to_fs(:govuk_short))
           row.with_cell(text: application.user.full_name)
           row.with_cell(text: application.employer_name_to_display)
-          row.with_cell(text: govuk_link_to("View application", npq_separation_admin_application_path(application.id)))
+          row.with_cell(text: govuk_link_to("View", npq_separation_admin_application_path(application.id)))
         end
       end
     end
