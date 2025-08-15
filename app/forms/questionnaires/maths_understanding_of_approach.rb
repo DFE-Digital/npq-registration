@@ -31,18 +31,14 @@ module Questionnaires
     end
 
     def next_step
-      if !wizard.query_store.teacher_catchment_england? || wizard.query_store.kind_of_nursery_private? || wizard.query_store.lead_mentor_for_accredited_itt_provider? ||
-          wizard.query_store.employment_type_other?
-        :ineligible_for_funding
-      elsif wizard.query_store.works_in_another_setting? && maths_understanding_of_approach != "cannot_show" ||
-          wizard.query_store.referred_by_return_to_teaching_adviser?
-        :possible_funding
-      elsif wizard.query_store.works_in_school? && !state_funded_school?
-        :ineligible_for_funding
-      elsif %w[taken_a_similar_course another_way].include?(maths_understanding_of_approach)
-        :funding_eligibility_maths
-      else
+      if maths_understanding_of_approach == "cannot_show"
         :maths_cannot_register
+      elsif funding_eligibility_calculator.funded?
+        :funding_eligibility_maths
+      elsif funding_eligibility_calculator.subject_to_review?
+        :possible_funding
+      else
+        :ineligible_for_funding
       end
     end
 
@@ -52,16 +48,20 @@ module Questionnaires
 
   private
 
-    def state_funded_school?
-      school.eligible_establishment?
+    def funding_eligibility_calculator
+      @funding_eligibility_calculator ||= FundingEligibility.new(
+        course:,
+        institution:,
+        approved_itt_provider: approved_itt_provider?,
+        lead_mentor: lead_mentor_for_accredited_itt_provider?,
+        inside_catchment: inside_catchment?,
+        trn:,
+        get_an_identity_id:,
+        query_store:,
+      )
     end
 
-    def institution_identifier
-      wizard.store["institution_identifier"]
-    end
-
-    def school
-      institution(source: institution_identifier)
-    end
+    delegate :inside_catchment?, :approved_itt_provider?, :lead_mentor_for_accredited_itt_provider?, :trn,
+             :get_an_identity_id, :course, to: :query_store
   end
 end

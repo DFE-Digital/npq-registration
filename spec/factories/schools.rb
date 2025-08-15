@@ -38,6 +38,10 @@ FactoryBot.define do
       eyl_funding_eligible { true }
     end
 
+    trait :local_authority_nursery_school do
+      establishment_type_code { "15" }
+    end
+
     trait :closed do
       establishment_status_code { 2 }
     end

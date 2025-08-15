@@ -27,6 +27,7 @@ RSpec.describe HandleSubmissionForStore do
 
   before do
     travel_to(Date.new(cohort.start_year, 9, 26))
+    allow_any_instance_of(School).to receive(:pp50?).and_return(false)
   end
 
   describe "#call" do
@@ -103,13 +104,13 @@ RSpec.describe HandleSubmissionForStore do
           "course_id" => course.id,
           "schedule_id" => nil,
           "ecf_id" => last_application.ecf_id,
-          "eligible_for_funding" => true,
+          "eligible_for_funding" => false,
           "employer_name" => nil,
           "employment_type" => nil,
           "employment_role" => nil,
           "funded_place" => nil,
           "funding_choice" => nil,
-          "funding_eligiblity_status_code" => "funded",
+          "funding_eligiblity_status_code" => "ineligible_establishment_not_a_pp50",
           "headteacher_status" => nil,
           "kind_of_nursery" => nil,
           "itt_provider_id" => nil,
@@ -234,7 +235,7 @@ RSpec.describe HandleSubmissionForStore do
           "lead_mentor" => false,
           "lead_provider_approval_status" => "pending",
           "participant_outcome_state" => nil,
-          "funding_eligiblity_status_code" => "early_years_invalid_npq",
+          "funding_eligiblity_status_code" => "not_new_headteacher_requesting_ehco",
           "headteacher_status" => nil,
           "lead_provider_id" => lead_provider.id,
           "notes" => nil,
@@ -608,48 +609,12 @@ RSpec.describe HandleSubmissionForStore do
 
       it { is_expected.to be_nil }
 
-      context "when referred_by_return_to_teaching_adviser is set" do
-        let :store do
-          build :registration_wizard_store, referred_by_return_to_teaching_adviser: "yes"
+      context "when funding eligibility is subject to review" do
+        before do
+          allow_any_instance_of(FundingEligibility).to receive(:funding_eligiblity_status_code).and_return(FundingEligibility::SUBJECT_TO_REVIEW)
         end
 
         it { is_expected.to eq "Needs review" }
-      end
-
-      %w[
-        hospital_school
-        lead_mentor_for_accredited_itt_provider
-        local_authority_supply_teacher
-        local_authority_virtual_school
-        young_offender_institution
-        other
-      ].each do |employment_type|
-        context "when employment_type is set to #{employment_type}" do
-          let :store do
-            build :registration_wizard_store, employment_type:,
-                                              work_setting: "another_setting"
-          end
-
-          it { is_expected.to eq "Needs review" }
-        end
-      end
-
-      context "when employment_type is set to a non in-review type" do
-        let :store do
-          build :registration_wizard_store, employment_type: "something else",
-                                            work_setting: "another_setting"
-        end
-
-        it { is_expected.to be_nil }
-      end
-
-      context "when employment_type is not relevant" do
-        let :store do
-          build :registration_wizard_store, employment_type: "hospital_school",
-                                            work_setting: "early_years_or_childcare"
-        end
-
-        it { is_expected.to be_nil }
       end
     end
   end

@@ -1,6 +1,8 @@
 class FundingEligibility
   include CourseHelper
+
   FUNDED_ELIGIBILITY_RESULT = :funded
+  SUBJECT_TO_REVIEW = :subject_to_review
 
   NO_INSTITUTION = :no_institution
   INELIGIBLE_ESTABLISHMENT_TYPE = :ineligible_establishment_type
@@ -12,11 +14,7 @@ class FundingEligibility
   # EHCO
   NOT_NEW_HEADTEACHER_REQUESTING_EHCO = :not_new_headteacher_requesting_ehco
 
-  # School
-  SCHOOL_OUTSIDE_CATCHMENT = :school_outside_catchment
-
   # Early Years
-  EARLY_YEARS_OUTSIDE_CATCHMENT = :early_years_outside_catchment
   NOT_ON_EARLY_YEARS_REGISTER = :not_on_early_years_register
   EARLY_YEARS_INVALID_NPQ = :early_years_invalid_npq
   NOT_ENTITLED_EY_INSTITUTION = :not_entitled_ey_institution
@@ -30,8 +28,6 @@ class FundingEligibility
   FUNDING_STATUS_CODE_DESCRIPTIONS = {
     FUNDED_ELIGIBILITY_RESULT => "funding_details.scholarship_eligibility",
     NOT_IN_ENGLAND => "funding_details.inside_catchment",
-    EARLY_YEARS_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
-    SCHOOL_OUTSIDE_CATCHMENT => "funding_details.inside_catchment",
     INELIGIBLE_INSTITUTION_TYPE => "funding_details.ineligible_setting",
     EARLY_YEARS_INVALID_NPQ => "funding_details.ineligible_setting",
     NOT_LEAD_MENTOR_COURSE => "funding_details.ineligible_setting",
@@ -40,6 +36,8 @@ class FundingEligibility
     NOT_ON_EARLY_YEARS_REGISTER => "funding_details.no_Ofsted",
     NOT_ENTITLED_EY_INSTITUTION => "funding_details.not_entitled_ey_institution",
     NOT_ENTITLED_CHILDMINDER => "funding_details.not_entitled_childminder",
+    NOT_NEW_HEADTEACHER_REQUESTING_EHCO => "funding_details.not_eligible_ehco",
+    PREVIOUSLY_FUNDED => "funding_details.previously_funded",
   }.freeze
 
   attr_reader :institution,
@@ -47,20 +45,17 @@ class FundingEligibility
               :trn,
               :approved_itt_provider,
               :lead_mentor,
-              :employment_role,
               :get_an_identity_id,
               :lead_mentor_for_accredited_itt_provider,
               :query_store
 
-  delegate :childminder?, :work_setting, to: :query_store
-  delegate :eligibility_data, to: :class, private: true
-  delegate :rise_school?, to: :eligibility_data, private: true
-
-  class << self
-    def eligibility_data
-      @eligibility_data ||= FundingEligibilityData.new
-    end
-  end
+  delegate :childminder?,
+           :employment_type,
+           :lead_mentor_for_accredited_itt_provider?,
+           :new_headteacher?,
+           :referred_by_return_to_teaching_adviser?,
+           :work_setting,
+           to: :query_store
 
   def initialize(institution:,
                  course:,
@@ -71,7 +66,6 @@ class FundingEligibility
                  approved_itt_provider: false,
                  lead_mentor: false,
                  new_headteacher: false,
-                 employment_role: nil,
                  query_store: nil)
     @institution = institution
     @course = course
@@ -81,7 +75,6 @@ class FundingEligibility
     @lead_mentor = lead_mentor
     @get_an_identity_id = get_an_identity_id
     @trn = trn
-    @employment_role = employment_role
     @lead_mentor_for_accredited_itt_provider = lead_mentor_for_accredited_itt_provider
     @query_store = query_store
   end
@@ -90,105 +83,121 @@ class FundingEligibility
     funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
   end
 
+  def subject_to_review?
+    funding_eligiblity_status_code.in? [SUBJECT_TO_REVIEW, REFERRED_BY_RETURN_TO_TEACHING_ADVISER]
+  end
+
+  def previously_funded?
+    accepted_applications.any?
+  end
+
   def funding_eligiblity_status_code
     @funding_eligiblity_status_code ||= begin
-      if approved_itt_provider && (!npqlpm_or_senco? || (npqlpm_or_senco? && lead_mentor_for_accredited_itt_provider && inside_catchment?))
-        if lead_mentor_course?
-          return PREVIOUSLY_FUNDED if previously_funded?
-
-          return FUNDED_ELIGIBILITY_RESULT
-        else
-          return NOT_LEAD_MENTOR_COURSE
-        end
-      end
-
-      return NOT_IN_ENGLAND unless inside_catchment?
-
-      unless institution
-        if query_store
-          # not sure why we're using the query store for the lines below, instead of using the methods that check the initialized attributes
-          return INELIGIBLE_INSTITUTION_TYPE if course.ehco? && !query_store.new_headteacher?
-          return REFERRED_BY_RETURN_TO_TEACHING_ADVISER if query_store.referred_by_return_to_teaching_adviser?
-          return NO_INSTITUTION if query_store.local_authority_supply_teacher? || query_store.employment_type_local_authority_virtual_school?
-
-          if query_store.employment_type_hospital_school? || query_store.young_offender_institution?
-            return NO_INSTITUTION
-          elsif query_store.works_in_other?
-            return INELIGIBLE_INSTITUTION_TYPE
-          end
-        else
-          return NO_INSTITUTION
-        end
-      end
-
+      return NOT_IN_ENGLAND unless @inside_catchment
       return PREVIOUSLY_FUNDED if previously_funded?
 
-      case institution.class.name
-      when "School"
-        return FUNDED_ELIGIBILITY_RESULT if institution.la_disadvantaged_nursery?
-        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible?
-        return NOT_NEW_HEADTEACHER_REQUESTING_EHCO if course.ehco? && !new_headteacher?
+      if course.ehco?
+        return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
 
-        unless course.eyl?
-          return FUNDED_ELIGIBILITY_RESULT if institution.local_authority_nursery_school? && course.la_nursery_approved? # TODO: check if this line is needed, result may be correct without it
-          return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50 if course.only_pp50? && !institution.pp50_institution?(work_setting)
-          return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
-        end
+        return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
+      end
 
-        FUNDED_ELIGIBILITY_RESULT
-      when "PrivateChildcareProvider"
-        return NOT_ENTITLED_EY_INSTITUTION if course.eyl? && !institution.ey_eligible? && !childminder?
-        return EARLY_YEARS_INVALID_NPQ unless course.eyl?
-        return NOT_ON_EARLY_YEARS_REGISTER unless institution.on_early_years_register?
-        return NOT_ENTITLED_CHILDMINDER if course.eyl? && childminder? && !institution.on_childminders_list?
-
-        FUNDED_ELIGIBILITY_RESULT
-      when "LocalAuthority"
-        FUNDED_ELIGIBILITY_RESULT
-      else
-        INELIGIBLE_INSTITUTION_TYPE
+      case work_setting
+      when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
+      when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
+      when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
+      when *Questionnaires::WorkSetting::OTHER_SETTINGS then other_settings_policy
+      else INELIGIBLE_ESTABLISHMENT_TYPE
       end
     end
   end
 
-  def possible_funding_for_non_pp50_and_fe?
-    course.only_pp50? && institution.is_a?(School)
-  end
-
-  def previously_received_targeted_funding_support?
-    accepted_applications.with_targeted_delivery_funding_eligibility.any?
-  end
-
-  def ineligible_institution_type?
-    [NO_INSTITUTION, INELIGIBLE_INSTITUTION_TYPE].include?(funding_eligiblity_status_code)
-  end
-
   def get_description_for_funding_status
-    status_code = funding_eligiblity_status_code
+    key = FUNDING_STATUS_CODE_DESCRIPTIONS.fetch(funding_eligiblity_status_code)
+    course_name = localise_sentence_embedded_course_name(course)
 
-    return I18n.t("funding_details.not_eligible_ehco", course_name: localise_sentence_embedded_course_name(course)) if not_england_ehco? || not_eligible_england_ehco?
-    return I18n.t("funding_details.previously_funded", course_name: localise_sentence_embedded_course_name(course)) if status_code == PREVIOUSLY_FUNDED
-
-    key = FUNDING_STATUS_CODE_DESCRIPTIONS[status_code]
-    I18n.t(key).html_safe if key
+    I18n.t(key, course_name:).html_safe if key
   end
 
 private
 
-  def inside_catchment?
-    @inside_catchment
+  def childcare_policy
+    if institution.try(:local_authority_nursery_school?)
+      return EARLY_YEARS_INVALID_NPQ unless course.la_nursery_approved?
+      return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.la_disadvantaged_nursery?
+
+      return FUNDED_ELIGIBILITY_RESULT
+    end
+
+    if childminder?
+      if course.eyl?
+        return FUNDED_ELIGIBILITY_RESULT if institution.on_childminders_list?
+
+        return NOT_ENTITLED_CHILDMINDER
+      end
+
+      return EARLY_YEARS_INVALID_NPQ
+    end
+
+    if course.eyl?
+      return FUNDED_ELIGIBILITY_RESULT if institution.eyl_disadvantaged?
+
+      return NOT_ENTITLED_EY_INSTITUTION
+    end
+
+    EARLY_YEARS_INVALID_NPQ
   end
 
-  def new_headteacher?
-    @new_headteacher
+  def school_policy
+    return FUNDED_ELIGIBILITY_RESULT if institution.rise?
+
+    return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
+
+    if course.only_pp50?
+      return FUNDED_ELIGIBILITY_RESULT if institution.pp50?(work_setting)
+
+      return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
+    end
+
+    FUNDED_ELIGIBILITY_RESULT
   end
 
-  def lead_mentor_course?
-    course.npqltd?
+  def another_setting_policy
+    if lead_mentor_for_accredited_itt_provider?
+      if course.npqltd?
+        return FUNDED_ELIGIBILITY_RESULT if approved_itt_provider
+
+        return INELIGIBLE_ESTABLISHMENT_TYPE
+      end
+
+      return NOT_LEAD_MENTOR_COURSE
+    end
+
+    eligible_employment_types = %w[
+      local_authority_virtual_school
+      hospital_school
+      young_offender_institution
+      local_authority_supply_teacher
+    ]
+
+    eligible_course_identifiers = %w[
+      npq-senco
+      npq-headship
+    ]
+
+    if employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
+      SUBJECT_TO_REVIEW
+    else
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
   end
 
-  def npqlpm_or_senco?
-    course.npqlpm? || course.npqs?
+  def other_settings_policy
+    if referred_by_return_to_teaching_adviser?
+      REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+    else
+      INELIGIBLE_ESTABLISHMENT_TYPE
+    end
   end
 
   def users
@@ -207,10 +216,6 @@ private
     User.where(trn:)
   end
 
-  def previously_funded?
-    accepted_applications.any?
-  end
-
   def accepted_applications
     @accepted_applications ||= begin
       application_ids = users.flat_map do |user|
@@ -224,13 +229,5 @@ private
 
       Application.where(id: application_ids)
     end
-  end
-
-  def not_england_ehco?
-    funding_eligiblity_status_code == NOT_IN_ENGLAND && course.ehco?
-  end
-
-  def not_eligible_england_ehco?
-    inside_catchment? && course.ehco? unless funding_eligiblity_status_code == FUNDED_ELIGIBILITY_RESULT
   end
 end

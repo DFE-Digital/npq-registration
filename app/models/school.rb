@@ -104,7 +104,7 @@ class School < ApplicationRecord
     ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.include?(establishment_type_code)
   end
 
-  def pp50_institution?(work_setting)
+  def pp50?(work_setting)
     if work_setting == Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING
       !!PP50_FE_UKPRN_HASH[ukprn.to_s]
     else
@@ -112,11 +112,15 @@ class School < ApplicationRecord
     end
   end
 
-  def ey_eligible?
-    !!EY_OFSTED_URN_HASH[urn.to_s] || !!PP50_SCHOOLS_URN_HASH[urn.to_s]
+  def eyl_disadvantaged?
+    !!EY_OFSTED_URN_HASH[urn.to_s]
   end
 
   def la_disadvantaged_nursery?
     !!LA_DISADVANTAGED_NURSERIES[urn.to_s]
+  end
+
+  def rise?
+    FundingEligibilityData.new.rise_school?(urn.to_s)
   end
 end

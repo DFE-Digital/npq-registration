@@ -17,12 +17,11 @@ module Questionnaires
     def next_step
       wizard.store["ehco_new_headteacher"] = ehco_new_headteacher
 
-      case funding_eligiblity_status_code
-      when FundingEligibility::FUNDED_ELIGIBILITY_RESULT
+      if funding_eligibility.funded?
         :ehco_possible_funding
-      when FundingEligibility::NO_INSTITUTION, FundingEligibility::REFERRED_BY_RETURN_TO_TEACHING_ADVISER
+      elsif funding_eligibility.subject_to_review?
         :possible_funding
-      when FundingEligibility::PREVIOUSLY_FUNDED
+      elsif funding_eligibility.previously_funded?
         :ehco_previously_funded
       else
         :ehco_funding_not_available
@@ -48,7 +47,7 @@ module Questionnaires
 
   private
 
-    def funding_eligiblity_status_code
+    def funding_eligibility
       FundingEligibility.new(
         course:,
         institution:,
@@ -58,7 +57,7 @@ module Questionnaires
         trn:,
         get_an_identity_id:,
         query_store:,
-      ).funding_eligiblity_status_code
+      )
     end
 
     delegate :approved_itt_provider?,

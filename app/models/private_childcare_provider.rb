@@ -82,7 +82,7 @@ class PrivateChildcareProvider < ApplicationRecord
     early_years_individual_registers.include?("EYR")
   end
 
-  def ey_eligible?
+  def eyl_disadvantaged?
     !!EY_OFSTED_URN_HASH[provider_urn.to_s]
   end
 
