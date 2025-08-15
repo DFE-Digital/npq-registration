@@ -4,6 +4,7 @@
   <%= render "npq_separation/admin/applications/application_side_navigation" %>
 <% end %>
 
+<span class="govuk-caption-m"><%= @application.user.full_name %>, <%= @application.course.name %>, <%= @application.created_at.to_date.to_fs(:govuk_short) %></span>
 <h1 class="govuk-heading-l">Application history</h1>
 
 <%=

@@ -146,7 +146,7 @@
           row.with_cell(text: boolean_red_green_tag(application.eligible_for_funding))
           row.with_cell(text: lead_provider_approval_status_badge(application.lead_provider_approval_status))
           row.with_cell(text: application.notes)
-          row.with_cell(text: govuk_link_to("View application", npq_separation_admin_application_review_path(application.id)))
+          row.with_cell(text: govuk_link_to("View", npq_separation_admin_application_review_path(application.id)))
         end
       end
     end
