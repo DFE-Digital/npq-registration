@@ -184,4 +184,44 @@ RSpec.describe School do
       end
     end
   end
+
+  describe "check PP50 CSV files are valid" do
+    let(:school) { create(:school, urn:) }
+
+    context "Local Authority Disadvantaged Nurseries (LA_DISADVANTAGED_NURSERIES)" do
+      subject { school.la_disadvantaged_nursery? }
+
+      let(:urn) { "126565" } # URN taken from data file
+
+      it { is_expected.to be true }
+    end
+
+    context "PP50 Schools (PP50_SCHOOLS_URN_HASH)" do
+      subject { school.ey_eligible? }
+
+      let(:urn) { "100006" } # URN taken from data file
+
+      it { is_expected.to be true }
+
+      it "school should not be in EY_OFSTED_URN_HASH" do
+        expect(EY_OFSTED_URN_HASH[urn]).to be_nil
+      end
+    end
+
+    context "PP50 Further Education (PP50_FE_UKPRN_HASH)" do
+      subject { school.pp50_institution?(Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING) }
+
+      let(:school) { create(:school, ukprn: "10000599") } # UKPRN taken from data file
+
+      it { is_expected.to be true }
+    end
+
+    context "Early Years Schools (EY_OFSTED_URN_HASH)" do
+      subject { school.ey_eligible? }
+
+      let(:urn) { "150014" } # URN taken from data file
+
+      it { is_expected.to be true }
+    end
+  end
 end
