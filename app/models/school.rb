@@ -119,4 +119,8 @@ class School < ApplicationRecord
   def la_disadvantaged_nursery?
     !!LA_DISADVANTAGED_NURSERIES[urn.to_s]
   end
+
+  def rise?
+    FundingEligibilityData.new.rise_school?(urn.to_s)
+  end
 end

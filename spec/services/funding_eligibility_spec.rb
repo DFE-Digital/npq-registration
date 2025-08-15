@@ -102,6 +102,25 @@ RSpec.describe FundingEligibility do
         early_years_leadership: :ineligible_establishment_not_a_pp50,
       }
 
+      context "and the institution is on the RISE list" do
+        before do
+          allow(institution).to receive(:rise?).and_return(true)
+        end
+
+        include_examples "funding eligibility status codes", {
+          senco: :funded,
+          headship: :funded,
+          leading_primary_mathematics: :funded,
+          leading_behaviour_culture: :funded,
+          leading_literacy: :funded,
+          leading_teaching: :funded,
+          leading_teaching_development: :funded,
+          senior_leadership: :funded,
+          executive_leadership: :funded,
+          early_years_leadership: :funded,
+        }
+      end
+
       context "and the institution is on the PP50 list" do
         before do
           allow(institution).to receive(:pp50?).and_return(true)
@@ -161,6 +180,7 @@ RSpec.describe FundingEligibility do
       allow_any_instance_of(School).to receive(:la_disadvantaged_nursery?).and_return(false)
       allow_any_instance_of(School).to receive(:eyl_disadvantaged?).and_return(false)
       allow_any_instance_of(School).to receive(:pp50?).and_return(false)
+      allow_any_instance_of(School).to receive(:rise?).and_return(false)
     end
 
     context "when the work setting is 'Early years or childcare'" do

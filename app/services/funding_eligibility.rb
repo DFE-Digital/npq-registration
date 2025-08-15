@@ -57,15 +57,6 @@ class FundingEligibility
            :work_setting,
            to: :query_store
 
-  delegate :eligibility_data, to: :class, private: true
-  delegate :rise_school?, to: :eligibility_data, private: true
-
-  class << self
-    def eligibility_data
-      @eligibility_data ||= FundingEligibilityData.new
-    end
-  end
-
   def initialize(institution:,
                  course:,
                  inside_catchment:,
@@ -158,6 +149,8 @@ private
   end
 
   def school_policy
+    return FUNDED_ELIGIBILITY_RESULT if institution.rise?
+
     return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
 
     if course.only_pp50?
