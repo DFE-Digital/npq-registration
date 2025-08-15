@@ -4,7 +4,7 @@ RSpec.describe Exporters::TadSencoDataRequest do
   let(:file) { Tempfile.new }
   let(:course) { create(:course, :senco) }
   let(:cohort) { create(:cohort, start_year: 2024) }
-  let(:schedule) { create(:schedule, cohort: cohort, course_group: course.course_group, name: "Schedule Autumn 2024") }
+  let(:other_cohort) { create(:cohort, start_year: 2023) }
   let(:user) { create(:user, full_name: "John Doe", email: "john@example.com") }
 
   let(:application) do
@@ -14,7 +14,6 @@ RSpec.describe Exporters::TadSencoDataRequest do
       :eligible_for_funding,
       user:,
       course:,
-      schedule:,
       cohort:,
     )
   end
@@ -27,17 +26,28 @@ RSpec.describe Exporters::TadSencoDataRequest do
       user:,
       course: create(:course, :senior_leadership),
       cohort:,
-      schedule:,
+    )
+  end
+
+  let(:application_in_other_cohort) do
+    create(
+      :application,
+      :accepted,
+      :eligible_for_funding,
+      user:,
+      course:,
+      cohort: other_cohort,
     )
   end
 
   before do
     application
     non_senco_application
+    application_in_other_cohort
   end
 
   subject do
-    described_class.new(cohort: cohort, schedules: [schedule], file: file)
+    described_class.new(cohort: cohort, file: file)
   end
 
   describe "#applications" do
@@ -79,6 +89,7 @@ RSpec.describe Exporters::TadSencoDataRequest do
         "Training Status",
         "Headteacher Status",
         "Cohort",
+        "Schedule Identifier",
       ]
     end
     let(:expected_data) do
@@ -110,6 +121,7 @@ RSpec.describe Exporters::TadSencoDataRequest do
         application.training_status,
         application.headteacher_status,
         cohort.start_year,
+        application.schedule&.identifier,
       ]
     end
 
