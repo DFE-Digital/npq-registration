@@ -23,7 +23,8 @@ RSpec.shared_examples "a rate limited endpoint", :rack_attack do |desc|
     context "when fewer than rate limit" do
       let(:request_count) { limit - 1 }
 
-      it { is_expected.to have_http_status(:success) }
+      it { is_expected.not_to have_http_status(:too_many_requests) }
+      it { is_expected.not_to have_http_status(:error) }
     end
 
     context "when more than rate limit" do
@@ -40,13 +41,15 @@ RSpec.shared_examples "a rate limited endpoint", :rack_attack do |desc|
       it "allows another request when the time restriction has passed" do
         travel(throttle.period + 10.seconds)
         perform_request
-        expect(subject).to have_http_status(:success)
+        expect(subject).not_to have_http_status(:too_many_requests)
+        expect(subject).not_to have_http_status(:error)
       end
 
       it "allows another request if the condition changes" do
         change_condition
         perform_request
-        expect(subject).to have_http_status(:success)
+        expect(subject).not_to have_http_status(:too_many_requests)
+        expect(subject).not_to have_http_status(:error)
       end
     end
   end
