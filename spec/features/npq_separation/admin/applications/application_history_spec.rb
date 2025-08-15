@@ -15,9 +15,6 @@ RSpec.feature "viewing application history", :versioning, type: :feature do
       click_link "Application history"
 
       expect(page).to have_css("h1", text: "Application history")
-      expect(page).to have_css("p", text: "User ID: #{application.user.ecf_id}")
-      expect(page).to have_css("p", text: "Email: #{application.user.email}")
-      expect(page).to have_css("p", text: "TRN: #{application.user.trn} Not verified")
 
       expect(page).to have_content("No changes have been made to this application.")
     end

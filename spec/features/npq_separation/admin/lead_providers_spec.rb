@@ -39,10 +39,5 @@ RSpec.feature "Listing and viewing course providers", type: :feature do
 
     click_link("Cohort 2023 to 2024")
     expect(page).to have_table(with_rows: ["Delivery partner" => delivery_partner_23.name])
-
-    within "#side-navigation" do
-      click_link "Providers"
-    end
-    expect(page).to have_current_path(npq_separation_admin_lead_providers_path)
   end
 end

@@ -52,32 +52,17 @@ RSpec.describe NpqSeparation::NavigationStructures::AdminNavigationStructure, ty
   end
 
   describe "#sub_structure" do
-    describe "Cohorts" do
-      subject { instance.sub_structure("Cohorts") }
+    describe "Dashboards" do
+      subject { instance.sub_structure("Dashboards") }
 
-      before do
-        (2026..2028).map { create :cohort, start_year: _1 }
+      it "the first entry is Courses dashboard" do
+        expect(subject.first.name).to eql("Courses dashboard")
+        expect(subject.first.href).to eql("/npq-separation/admin/dashboards/courses-dashboard")
       end
 
-      it "the first entry is 'All cohorts'" do
-        expect(subject.first.name).to eql("All cohorts")
-      end
-
-      it "has an entry for each cohort" do
-        expect(subject.drop(1).map(&:name)).to eq([
-          "Cohort 2028 to 2029",
-          "Cohort 2027 to 2028",
-          "Cohort 2026 to 2027",
-        ])
-      end
-    end
-
-    describe "Finance" do
-      subject { instance.sub_structure("Finance") }
-
-      it "the first entry is Statements" do
-        expect(subject.first.name).to eql("Statements")
-        expect(subject.first.href).to eql("/npq-separation/admin/finance/statements")
+      it "the second entry is Providers dashboard" do
+        expect(subject.second.name).to eql("Providers dashboard")
+        expect(subject.second.href).to eql("/npq-separation/admin/dashboards/providers-dashboard")
       end
     end
   end
