@@ -34,6 +34,7 @@ class Application < ApplicationRecord
   scope :eligible_for_funding, -> { where(eligible_for_funding: true) }
   scope :with_targeted_delivery_funding_eligibility, -> { where(targeted_delivery_funding_eligibility: true) }
   scope :for_manual_review, -> { where.not(review_status: nil) }
+  scope :not_withdrawn, -> { where.not(training_status: "withdrawn").or(where(training_status: nil)) }
 
   attr_accessor :version_note, :skip_touch_user_if_changed
 

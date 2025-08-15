@@ -78,6 +78,7 @@ module Applications
       return if application.blank?
 
       @other_accepted_applications_with_same_course_and_cohort ||= Application
+        .not_withdrawn
         .where(lead_provider_approval_status: "accepted",
                course: course.rebranded_alternative_courses,
                user: [user, same_trn_users].flatten.compact.uniq,
