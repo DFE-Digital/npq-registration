@@ -389,15 +389,15 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       click_link("Change")
     end
 
-    expect(page).to have_css("h1", text: application.user.full_name)
-    click_button "Continue"
-
-    expect(page).to have_css(".govuk-error-message", text: "Choose whether the Application is eligible for funding")
+    expect(page).to have_css("h1", text: "Is #{application.user.full_name} eligible for funding?")
+    expect(page.find_field("No", visible: :all)).to be_checked
     choose "Yes", visible: :all
+
     perform_enqueued_jobs { click_button "Continue" }
 
     expect_mail_to_have_been_sent(to: application.user.email, template_id: ApplicationFundingEligibilityMailer::ELIGIBLE_FOR_FUNDING_TEMPLATE)
 
+    expect(page).to have_content("Funding eligibility has been changed to ‘Yes’")
     expect(page).to have_css("h1", text: application.user.full_name)
     within(".govuk-summary-list__row", text: "Eligible for funding") do |summary_list_row|
       expect(summary_list_row).to have_text "Yes"

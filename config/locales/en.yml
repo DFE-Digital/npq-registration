@@ -333,10 +333,10 @@ en:
         applications/change_funding_eligibility:
           attributes:
             base:
-              declaration_exists: "Eligibility can not be changed because a billable or submitted declaration exists"
+              declaration_exists: There are submitted or billed declarations - these must be voided or clawed back by the provider before you can update funding eligibility
               funded_application: "Eligibility can not be changed because the application is funded"
             eligible_for_funding:
-              inclusion: Choose whether the Application is eligible for funding
+              inclusion: Select an option to continue
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
