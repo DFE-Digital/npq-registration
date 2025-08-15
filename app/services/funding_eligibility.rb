@@ -50,6 +50,9 @@ class FundingEligibility
               :query_store
 
   delegate :childminder?,
+           :employment_type,
+           :lead_mentor_for_accredited_itt_provider?,
+           :new_headteacher?,
            :referred_by_return_to_teaching_adviser?,
            :work_setting,
            to: :query_store
@@ -103,12 +106,12 @@ class FundingEligibility
       return PREVIOUSLY_FUNDED if previously_funded?
 
       if course.ehco?
-        return FUNDED_ELIGIBILITY_RESULT if query_store.new_headteacher?
+        return FUNDED_ELIGIBILITY_RESULT if new_headteacher?
 
         return NOT_NEW_HEADTEACHER_REQUESTING_EHCO
       end
 
-      case query_store.work_setting
+      case work_setting
       when *Questionnaires::WorkSetting::CHILDCARE_SETTINGS then childcare_policy
       when *Questionnaires::WorkSetting::SCHOOL_SETTINGS then school_policy
       when *Questionnaires::WorkSetting::ANOTHER_SETTING_SETTINGS then another_setting_policy
@@ -135,7 +138,7 @@ private
       return FUNDED_ELIGIBILITY_RESULT
     end
 
-    if query_store.childminder?
+    if childminder?
       if course.eyl?
         return FUNDED_ELIGIBILITY_RESULT if institution.on_childminders_list?
 
@@ -167,7 +170,7 @@ private
   end
 
   def another_setting_policy
-    if query_store.employment_type == "lead_mentor_for_accredited_itt_provider"
+    if lead_mentor_for_accredited_itt_provider?
       if course.npqltd?
         return FUNDED_ELIGIBILITY_RESULT if approved_itt_provider
 
@@ -189,7 +192,7 @@ private
       npq-headship
     ]
 
-    if query_store.employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
+    if employment_type.in?(eligible_employment_types) && course.identifier.in?(eligible_course_identifiers)
       SUBJECT_TO_REVIEW
     else
       INELIGIBLE_ESTABLISHMENT_TYPE
