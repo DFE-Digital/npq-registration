@@ -1,9 +1,9 @@
 require "csv"
-PP50_SCHOOLS_CSV    = "config/data/Autumn2025/Schools_PP50_Autumn_2025.csv".freeze
-PP50_FE_CSV         = "config/data/Autumn2025/FE_PP50_Autumn_2025.csv".freeze # FE is further education
+PP50_SCHOOLS_CSV    = "config/data/autumn_2025/Schools_PP50_Autumn_2025.csv".freeze
+PP50_FE_CSV         = "config/data/autumn_2025/FE_PP50_Autumn_2025.csv".freeze # FE is further education
 EY_CHILDMINDERS_CSV = "config/data/January2025/NPQ_EY_Childminders_2025_cohort.csv".freeze # EY is early years
-EY_SCHOOLS_CSV      = "config/data/Autumn2025/NPQ_Disadvantaged_EY_2025_cohort.csv".freeze
-EY_LA_NURSERIES_CSV = "config/data/Autumn2025/NPQ_LA_Nursery_Schools_2025_cohort.csv".freeze # LA is local authority
+EY_SCHOOLS_CSV      = "config/data/autumn_2025/NPQ_Disadvantaged_EY_2025_cohort.csv".freeze
+EY_LA_NURSERIES_CSV = "config/data/autumn_2025/NPQ_LA_Nursery_Schools_2025_cohort.csv".freeze # LA is local authority
 
 fe = CSV.table(PP50_FE_CSV)
 childminders = CSV.table(EY_CHILDMINDERS_CSV)
