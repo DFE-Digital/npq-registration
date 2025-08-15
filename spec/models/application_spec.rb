@@ -216,6 +216,20 @@ RSpec.describe Application do
         end
       end
     end
+
+    describe ".not_withdrawn" do
+      subject { described_class.not_withdrawn.to_a }
+
+      let!(:no_training_status_application) { create(:application, training_status: nil) }
+      let!(:active_application) { create(:application, :accepted) }
+      let!(:deferred_application) { create(:application, :deferred) }
+
+      before do
+        create(:application, :withdrawn)
+      end
+
+      it { is_expected.to contain_exactly(no_training_status_application, active_application, deferred_application) }
+    end
   end
 
   describe "#inside_catchment?" do
