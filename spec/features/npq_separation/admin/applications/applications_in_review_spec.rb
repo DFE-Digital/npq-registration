@@ -193,7 +193,7 @@ RSpec.feature "Applications in review", type: :feature do
     application.user.update! uid: SecureRandom.uuid
 
     within("tr", text: application.user.full_name) do
-      click_link("View application")
+      click_link("View")
     end
 
     expect(page).to have_css("h1", text: "Application details")
