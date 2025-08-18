@@ -1,1 +1,9 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+User-agent: *
+Disallow: /account
+Disallow: /admin
+Disallow: /npq-separation/admin
+Disallow: /registration
+Disallow: /session
+Disallow: /sign-in
+Disallow: /sign-out
