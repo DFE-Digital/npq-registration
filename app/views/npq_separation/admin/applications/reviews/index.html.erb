@@ -1,23 +1,4 @@
-<% content_for :side_navigation do %>
-  <%=
-    render NpqSeparation::SubNavigationComponent.new(
-      request.path,
-      structure:
-        [
-          NpqSeparation::NavigationStructure::Node.new(
-            name: "All applications",
-            href: npq_separation_admin_applications_path,
-            prefix: /\/npq-separation\/admin\/applications(?!\/reviews)$/,
-            ),
-          NpqSeparation::NavigationStructure::Node.new(
-            name: "In review",
-            href: npq_separation_admin_application_reviews_path,
-            prefix: /\/npq-separation\/admin\/applications\/reviews$/,
-            ),
-        ]
-    )
-  %>
-<% end %>
+<%= render "npq_separation/admin/applications/applications_side_navigation" %>
 
 <h1 class="govuk-heading-l">Registrations in review</h1>
 

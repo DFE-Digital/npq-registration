@@ -6,12 +6,12 @@
         NpqSeparation::NavigationStructure::Node.new(
           name: "Application details",
           href: npq_separation_admin_application_path(@application),
-          prefix: %r{/npq-separation/admin/applications/\d+$},
+          prefix: %r{/npq-separation/admin/applications(?:/reviews)?/\d+$},
         ),
         NpqSeparation::NavigationStructure::Node.new(
           name: "Application history",
           href: npq_separation_admin_applications_history_path(@application),
-          prefix: %r{/npq-separation/admin/applications/\d+/history$},
+          prefix: %r{/npq-separation/admin/applications(?:/reviews)?/\d+/history$},
         ),
       ],
     )
