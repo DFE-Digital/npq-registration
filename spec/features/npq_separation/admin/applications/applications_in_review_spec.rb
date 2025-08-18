@@ -196,6 +196,10 @@ RSpec.feature "Applications in review", type: :feature do
       click_link("View")
     end
 
+    expect(page).to have_css(
+      ".govuk-caption-m",
+      text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}",
+    )
     expect(page).to have_css("h1", text: "Application details")
 
     summary_lists = all(".govuk-summary-list")

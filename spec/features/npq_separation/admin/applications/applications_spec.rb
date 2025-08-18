@@ -153,6 +153,11 @@ RSpec.feature "Listing and viewing applications", type: :feature do
 
     summary_lists = all(".govuk-summary-list")
 
+    expect(page).to have_css(
+      ".govuk-caption-m",
+      text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}",
+    )
+    expect(page).to have_css("h1", text: "Application details")
     expect(page).to have_css("h2", text: "Overview")
 
     within(summary_lists[0]) do |summary_list|

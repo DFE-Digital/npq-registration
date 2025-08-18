@@ -20,6 +20,7 @@ RSpec.describe "npq_separation/admin/applications/show.html.erb", type: :view do
                                        lead_provider: application.lead_provider
     end
 
+    it { is_expected.to have_css(".govuk-caption-m", text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}") }
     it { is_expected.to have_css "h1", text: "Application details" }
 
     context "with application overview summary card" do
