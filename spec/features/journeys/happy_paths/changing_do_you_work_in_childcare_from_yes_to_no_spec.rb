@@ -126,9 +126,14 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      page.click_button("Continue")
+      page.click_on("Continue")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      expect(page).to have_text("How are you funding your course?")
+      page.choose("I am paying", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -146,6 +151,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         {
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
+          "Course funding" => "I am paying",
           "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
           "Work setting" => "Another setting",
@@ -188,12 +194,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "employment_role" => nil,
       "employment_type" => "hospital_school",
       "funded_place" => nil,
-      "funding_choice" => nil,
+      "funding_choice" => "self",
       "itt_provider_id" => nil,
       "lead_mentor" => false,
       "lead_provider_approval_status" => "pending",
       "participant_outcome_state" => nil,
-      "funding_eligiblity_status_code" => "no_institution",
+      "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "headteacher_status" => nil,
       "kind_of_nursery" => nil,
       "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id,
@@ -220,7 +226,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "senco_in_role" => nil,
       "senco_start_date" => nil,
       "on_submission_trn" => nil,
-      "review_status" => "Needs review",
+      "review_status" => nil,
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
@@ -228,13 +234,14 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
+        "funding" => "self",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",
         "employer_name" => "Big company",
         "employment_type" => "hospital_school",
         "funding_amount" => nil,
-        "funding_eligiblity_status_code" => "no_institution",
+        "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "targeted_delivery_funding_eligibility" => false,

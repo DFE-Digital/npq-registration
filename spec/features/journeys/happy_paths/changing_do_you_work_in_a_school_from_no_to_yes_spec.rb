@@ -62,9 +62,14 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       page.choose("Senior leadership", visible: :all)
     end
 
-    expect_page_to_have(path: "/registration/possible-funding", submit_form: false) do
+    expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      page.click_button("Continue")
+      page.click_on("Continue")
+    end
+
+    expect_page_to_have(path: "/registration/funding-your-npq", submit_form: true) do
+      expect(page).to have_text("How are you funding your course?")
+      page.choose("I am paying", visible: :all)
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
@@ -82,6 +87,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
         {
           "Course start" => "Before #{application_course_start_date}",
           "Course" => "Senior leadership",
+          "Course funding" => "I am paying",
           "Employment type" => "In an independent hospital education organisation",
           "Employer" => "Big company",
           "Provider" => "Teach First",
