@@ -119,6 +119,10 @@ class FundingEligibility
     I18n.t(key, course_name:).html_safe if key
   end
 
+  def possible_funding_for_non_pp50_and_fe?
+    course.only_pp50? && institution.is_a?(School)
+  end
+
 private
 
   def childcare_policy

@@ -429,4 +429,32 @@ RSpec.describe FundingEligibility do
 
     it { is_expected.to eq "message" }
   end
+
+  describe "#possible_funding_for_non_pp50_and_fe?" do
+    subject { funding_eligibility.possible_funding_for_non_pp50_and_fe? }
+
+    let(:course) { build((Course::IDENTIFIERS - Course::ONLY_PP50).first) }
+    let(:institution) { build(:private_childcare_provider) }
+
+    it { is_expected.to be_falsey }
+
+    context "when the course is only PP50" do
+      let(:course) { build(Course::ONLY_PP50.first) }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when the institution is a school" do
+      let(:institution) { build(:school) }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context "when the course is only PP50 and the institution is a school" do
+      let(:course) { build(Course::ONLY_PP50.first) }
+      let(:institution) { build(:school) }
+
+      it { is_expected.to be_truthy }
+    end
+  end
 end
