@@ -7,7 +7,9 @@ module NpqSeparation
         before_action :set_application
 
         def new
-          @funding_eligibility = ::Applications::ChangeFundingEligibility.new(application: @application, eligible_for_funding: @application.eligible_for_funding)
+          @funding_eligibility =
+            ::Applications::ChangeFundingEligibility.new(application: @application,
+                                                         eligible_for_funding: @application.eligible_for_funding)
         end
 
         def create
@@ -16,7 +18,8 @@ module NpqSeparation
 
           if @funding_eligibility.change_funding_eligibility
             if @application.previous_changes["eligible_for_funding"]
-              flash[:success] = "Funding eligibility has been changed to ‘#{@application.eligible_for_funding ? 'Yes' : 'No'}’"
+              flash[:success] =
+                "Funding eligibility has been changed to ‘#{@application.eligible_for_funding ? 'Yes' : 'No'}’"
             end
             redirect_to npq_separation_admin_application_path(@application)
           else
