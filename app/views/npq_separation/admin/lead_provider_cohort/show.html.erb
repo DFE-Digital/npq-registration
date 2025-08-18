@@ -15,9 +15,8 @@
   %>
 <% end %>
 
-<%= tag.h1(@lead_provider.name, class: "govuk-heading-l") %>
-
-<%= tag.h2("Cohort #{format_cohort(@cohort)}", class: "govuk-heading-m") %>
+<span class="govuk-caption-l"><%= @lead_provider.name %></span>
+<%= tag.h1("Cohort #{format_cohort(@cohort)}", class: "govuk-heading-l") %>
 
 <p class="govuk-body">Delivery partners linked to <%= @lead_provider.name %> for this cohort.</p>
 
