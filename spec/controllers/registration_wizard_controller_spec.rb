@@ -17,5 +17,33 @@ RSpec.describe RegistrationWizardController do
       patch :update, params: { step: "course-start-date", registration_wizard: { course_start_date: "yes" } }
       expect(session["registration_store"]["course_start_date"]).to eql("yes")
     end
+
+    context "when step is being skipped" do
+      before do
+        allow_any_instance_of(Questionnaires::CourseStartDate)
+          .to receive(:skip_step?).and_return(true)
+      end
+
+      it "redirects to x page" do
+        patch :update, params: { step: "course-start-date",
+                                 registration_wizard: { course_start_date: "yes" } }
+
+        expect(response).to redirect_to registration_wizard_show_path("provider-check")
+      end
+    end
+
+    context "when form requirements are not met" do
+      before do
+        allow_any_instance_of(Questionnaires::CourseStartDate)
+          .to receive(:requirements_met?).and_return(false)
+      end
+
+      it "redirects to home page" do
+        patch :update, params: { step: "course-start-date",
+                                 registration_wizard: { course_start_date: "yes" } }
+
+        expect(response).to redirect_to root_path
+      end
+    end
   end
 end
