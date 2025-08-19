@@ -1,5 +1,19 @@
 CSV.read(Rails.root.join("db/seeds/data/private_childcare_providers.csv"), headers: true).tap do |data|
-  Rails.logger.info("Importing 1000 private childcare providers")
+  import_count = 0
+  batch = []
 
-  PrivateChildcareProvider.insert_all(data.first(1000).map(&:to_h))
+  data.each do |row|
+    batch << row.to_h
+    next unless batch.length >= 1000
+
+    Rails.logger.info("Importing #{import_count += 1000} private childcare providers")
+
+    PrivateChildcareProvider.insert_all(batch)
+    batch = []
+  end
+
+  unless batch.empty?
+    Rails.logger.info("Importing #{import_count + batch.length} private childcare providers")
+    PrivateChildcareProvider.insert_all(batch)
+  end
 end
