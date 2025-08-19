@@ -7,13 +7,13 @@
           name: "Application details",
           href: npq_separation_admin_application_review_path(@application),
           prefix: %r{/npq-separation/admin/applications/reviews/\d+$},
-          ),
+        ),
         NpqSeparation::NavigationStructure::Node.new(
           name: "Application history",
           href: npq_separation_admin_applications_reviews_history_path(@application),
           prefix: %r{/npq-separation/admin/applications/reviews/\d+/history$},
-          ),
+        ),
       ],
-      )
+    )
   %>
 <% end %>
