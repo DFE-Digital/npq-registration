@@ -12,7 +12,7 @@ RSpec.feature "Statement", type: :feature do
     [
       create(:contract, course: create(:course, :leading_teaching), statement:),
       create(:contract, course: create(:course, :leading_behaviour_culture), statement:),
-      create(:contract, course: create(:course, :leading_primary_mathmatics), statement:),
+      create(:contract, course: create(:course, :leading_primary_mathematics), statement:),
     ]
   end
 

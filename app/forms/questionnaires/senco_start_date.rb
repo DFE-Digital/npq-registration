@@ -41,9 +41,7 @@ module Questionnaires
     def next_step
       if funding_eligibility.funded?
         :funding_eligibility_senco
-      elsif works_in_another_setting? && !employment_type_other? && funding_eligibility.funding_eligiblity_status_code == FundingEligibility::NO_INSTITUTION
-        :possible_funding
-      elsif referred_by_return_to_teaching_adviser?
+      elsif funding_eligibility.subject_to_review?
         :possible_funding
       else
         :ineligible_for_funding

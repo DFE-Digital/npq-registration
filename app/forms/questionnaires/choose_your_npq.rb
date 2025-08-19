@@ -87,23 +87,7 @@ module Questionnaires
         :maths_eligibility_teaching_for_mastery
       elsif course.npqs?
         :senco_in_role
-      elsif referred_by_return_to_teaching_adviser?
-        :possible_funding
-      elsif works_in_another_setting?
-        if employment_type_other?
-          :ineligible_for_funding
-        elsif lead_mentor?
-          if course.npqltd? && inside_catchment?
-            :possible_funding
-          else
-            :ineligible_for_funding
-          end
-        elsif inside_catchment?
-          :possible_funding
-        else
-          :ineligible_for_funding
-        end
-      elsif eligible_for_funding?
+      elsif funding_eligibility_calculator.funded? || funding_eligibility_calculator.subject_to_review?
         :possible_funding
       else
         :ineligible_for_funding

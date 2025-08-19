@@ -74,14 +74,6 @@ class User < ApplicationRecord
     uid if get_an_identity_provider?
   end
 
-  def actual_user?
-    true
-  end
-
-  def null_user?
-    false
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end

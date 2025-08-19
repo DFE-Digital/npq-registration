@@ -11,7 +11,24 @@ RSpec.shared_examples "leadership and specialist #schedule" do
 
   let(:date) { Date.new(2025, 6, 1) }
 
-  context "when the course is only in the spring schedule (like the 2025 cohort)" do
+  context "when the course is in the autumn schedule for the 2025 cohort" do
+    let!(:autumn_schedule) { create(:schedule, autumn_schedule_identifier, course_group:, cohort:) }
+    let(:cohort) { create(:cohort, start_year: 2025) }
+
+    context "when at the start of the autumn registration window" do
+      let(:date) { Date.new(2025, 9, 8) }
+
+      it { is_expected.to eq(autumn_schedule) }
+    end
+
+    context "when at the end of the autumn registration window" do
+      let(:date) { Date.new(2026, 1, 31) }
+
+      it { is_expected.to eq(autumn_schedule) }
+    end
+  end
+
+  context "when the course is in the spring schedule for the 2025 cohort" do
     let!(:spring_schedule) { create(:schedule, spring_schedule_identifier, course_group:, cohort:) }
     let(:cohort) { create(:cohort, start_year: 2025) }
 

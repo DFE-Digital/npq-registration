@@ -10,7 +10,9 @@ module CourseGroups
     delegate :schedules, to: :course_group
 
     def schedule
-      if autumn_schedule_2024?(schedule_date) && cohort.start_year == 2025
+      if autumn_schedule_2025?(schedule_date) && cohort.start_year == 2025
+        schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
+      elsif autumn_schedule_2024?(schedule_date) && cohort.start_year == 2025
         schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
       elsif autumn_schedule_2024?(schedule_date) && cohort.start_year == 2024
         schedules.find_by!(cohort:, identifier: "npq-leadership-autumn")
@@ -22,6 +24,10 @@ module CourseGroups
         # Default
         schedules.find_by!(cohort:, identifier: "npq-leadership-spring")
       end
+    end
+
+    def autumn_schedule_2025?(date)
+      (Date.new(2025, 8, 1)..Date.new(2026, 4, 30)).include?(date)
     end
 
     def autumn_schedule_2024?(date)

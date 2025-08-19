@@ -70,7 +70,7 @@ FactoryBot.define do
       course_group { create(:course_group, name: "specialist") }
     end
 
-    trait :leading_primary_mathmatics do
+    trait :leading_primary_mathematics do
       sequence(:name) { |n| "NPQ Leading Primary Mathematics Course #{n}" }
       identifier { "npq-leading-primary-mathematics" }
       course_group { create(:course_group, name: "specialist") }
@@ -92,7 +92,7 @@ FactoryBot.define do
     factory :"npq-early-years-leadership", traits: [:early_years_leadership]
     factory :"npq-additional-support-offer", traits: [:additional_support_offer]
     factory :"npq-early-headship-coaching-offer", traits: [:early_headship_coaching_offer]
-    factory :"npq-leading-primary-mathematics", traits: [:leading_primary_mathmatics]
+    factory :"npq-leading-primary-mathematics", traits: [:leading_primary_mathematics]
     factory :"npq-senco", traits: [:senco]
   end
 end

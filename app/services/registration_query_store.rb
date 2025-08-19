@@ -62,28 +62,32 @@ class RegistrationQueryStore
     end
   end
 
+  def employment_type
+    store["employment_type"]
+  end
+
   def lead_mentor_for_accredited_itt_provider?
-    store["employment_type"] == "lead_mentor_for_accredited_itt_provider"
+    employment_type == "lead_mentor_for_accredited_itt_provider"
   end
 
   def employment_type_other?
-    store["employment_type"] == "other"
+    employment_type == "other"
   end
 
   def employment_type_local_authority_virtual_school?
-    store["employment_type"] == "local_authority_virtual_school"
+    employment_type == "local_authority_virtual_school"
   end
 
   def local_authority_supply_teacher?
-    store["employment_type"] == "local_authority_supply_teacher"
+    employment_type == "local_authority_supply_teacher"
   end
 
   def employment_type_hospital_school?
-    store["employment_type"] == "hospital_school"
+    employment_type == "hospital_school"
   end
 
   def young_offender_institution?
-    store["employment_type"] == "young_offender_institution"
+    employment_type == "young_offender_institution"
   end
 
   def teacher_catchment_england?

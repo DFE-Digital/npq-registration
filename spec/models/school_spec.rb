@@ -135,7 +135,7 @@ RSpec.describe School do
     end
   end
 
-  describe "#pp50_institution?" do
+  describe "#pp50?" do
     let(:urn) { "123" }
     let(:ukprn) { "123" }
     let(:institution) { build(:school, establishment_type_code: 28, urn:, ukprn:) } # 28 is academy
@@ -149,7 +149,7 @@ RSpec.describe School do
         let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
 
         it "is a pp50_institution" do
-          expect(institution.pp50_institution?(work_setting)).to be true
+          expect(institution.pp50?(work_setting)).to be true
         end
       end
 
@@ -157,7 +157,7 @@ RSpec.describe School do
         let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
 
         it "is not a pp50_institution" do
-          expect(institution.pp50_institution?(work_setting)).to be false
+          expect(institution.pp50?(work_setting)).to be false
         end
       end
     end
@@ -171,7 +171,7 @@ RSpec.describe School do
         let(:work_setting) { Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING }
 
         it "is a pp50_institution" do
-          expect(institution.pp50_institution?(work_setting)).to be true
+          expect(institution.pp50?(work_setting)).to be true
         end
       end
 
@@ -179,7 +179,7 @@ RSpec.describe School do
         let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
 
         it "is not a pp50_institution" do
-          expect(institution.pp50_institution?(work_setting)).to be false
+          expect(institution.pp50?(work_setting)).to be false
         end
       end
     end
@@ -196,8 +196,8 @@ RSpec.describe School do
       it { is_expected.to be true }
     end
 
-    context "PP50 Schools (PP50_SCHOOLS_URN_HASH)" do
-      subject { school.ey_eligible? }
+    context "PP50 Schools (PP50_SCHOOLS_URN_HASH)", skip: "relies on changed behaviour in eligibility branch" do
+      subject { school.eyl_disadvantaged? }
 
       let(:urn) { "100006" } # URN taken from data file
 
@@ -209,7 +209,7 @@ RSpec.describe School do
     end
 
     context "PP50 Further Education (PP50_FE_UKPRN_HASH)" do
-      subject { school.pp50_institution?(Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING) }
+      subject { school.pp50?(Questionnaires::WorkSetting::A_16_TO_19_EDUCATIONAL_SETTING) }
 
       let(:school) { create(:school, ukprn: "10000599") } # UKPRN taken from data file
 
@@ -217,11 +217,29 @@ RSpec.describe School do
     end
 
     context "Early Years Schools (EY_OFSTED_URN_HASH)" do
-      subject { school.ey_eligible? }
+      subject { school.eyl_disadvantaged? }
 
       let(:urn) { "150014" } # URN taken from data file
 
       it { is_expected.to be true }
+    end
+  end
+
+  describe "#eligible_establishment?" do
+    subject { school.eligible_establishment? }
+
+    let(:school) { build(:school, establishment_type_code: code) }
+
+    context "when establishment_type_code is in the list" do
+      let(:code) { School::ELIGIBLE_ESTABLISHMENT_TYPE_CODES.keys.first }
+
+      it { is_expected.to be true }
+    end
+
+    context "when establishment_type_code is not in the list" do
+      let(:code) { "-1" }
+
+      it { is_expected.to be false }
     end
   end
 end

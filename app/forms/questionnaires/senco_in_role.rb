@@ -34,19 +34,12 @@ module Questionnaires
       if senco_in_role == "yes"
         wizard.store["senco_in_role_status"] = true
         :senco_start_date
-      elsif funding_eligibility.funded?
-        wizard.store["senco_in_role_status"] = false
-        :funding_eligibility_senco
       else
         wizard.store["senco_in_role_status"] = false
 
-        if works_in_another_setting?
-          if funding_eligibility.funding_eligiblity_status_code == FundingEligibility::NO_INSTITUTION
-            :possible_funding
-          else
-            :ineligible_for_funding
-          end
-        elsif referred_by_return_to_teaching_adviser?
+        if funding_eligibility.funded?
+          :funding_eligibility_senco
+        elsif funding_eligibility.subject_to_review?
           :possible_funding
         else
           :ineligible_for_funding

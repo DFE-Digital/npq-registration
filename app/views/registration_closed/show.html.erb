@@ -16,7 +16,7 @@
       Sign up for email updates to find out when registration reopens. You can also express interest in the special education needs coordinator (SENCO) NPQ course.
     </p>
 
-    <% if current_user.persisted? %>
+    <% if current_user&.persisted? %>
       <%=
         render GovukComponent::ContinueButtonComponent.new(
           text: "Sign up for email updates",
