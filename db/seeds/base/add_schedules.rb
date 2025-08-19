@@ -12,7 +12,6 @@
   end
 end
 
-# cohorts from 2026 onwards have all schedules
 Cohort.where(start_year: 2025..).find_each do |cohort|
   %i[
     npq_ehco_december
