@@ -121,6 +121,6 @@ class School < ApplicationRecord
   end
 
   def rise?
-    FundingEligibilityData.new.rise_school?(urn.to_s)
+    FundingEligibilityData.rise_school?(urn.to_s)
   end
 end
