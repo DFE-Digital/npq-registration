@@ -1,7 +1,9 @@
 require "rails_helper"
 
 RSpec.describe RegistrationWizardController do
-  before { session["user_id"] = create(:user).id }
+  before { session["user_id"] = current_user.id }
+
+  let(:current_user) { create(:user) }
 
   describe "#show" do
     subject(:page_response) { make_request && response }
@@ -13,22 +15,35 @@ RSpec.describe RegistrationWizardController do
   end
 
   describe "#update" do
+    let(:wizard_params) { { course_start_date: "yes" } }
+
     it "persists data to session" do
-      patch :update, params: { step: "course-start-date", registration_wizard: { course_start_date: "yes" } }
+      patch :update, params: { step: "course-start-date", registration_wizard: wizard_params }
       expect(session["registration_store"]["course_start_date"]).to eql("yes")
     end
 
     context "when step is being skipped" do
       before do
+        allow(RegistrationWizard).to receive(:new).and_return(wizard)
+        allow(wizard).to receive(:save!).and_call_original
         allow_any_instance_of(Questionnaires::CourseStartDate)
           .to receive(:skip_step?).and_return(true)
       end
 
-      it "redirects to x page" do
+      let :wizard do
+        RegistrationWizard.new(current_step: "course_start_date",
+                               store: {},
+                               params: wizard_params,
+                               request:,
+                               current_user:)
+      end
+
+      it "redirects to course-start-date page" do
         patch :update, params: { step: "course-start-date",
                                  registration_wizard: { course_start_date: "yes" } }
 
         expect(response).to redirect_to registration_wizard_show_path("provider-check")
+        expect(wizard).not_to have_received(:save!)
       end
     end
 
