@@ -12,7 +12,7 @@ module GetAnIdentity
       end
 
       def uid
-        message_json["uid"]
+        message_json["userId"]
       end
 
       def email
@@ -20,10 +20,7 @@ module GetAnIdentity
       end
 
       def full_name
-        [
-          message_json["firstName"],
-          message_json["lastName"],
-        ].join(" ")
+        message_json["preferredName"]
       end
 
       def date_of_birth
@@ -52,7 +49,7 @@ module GetAnIdentity
     private
 
       def message_json
-        webhook_message.message
+        webhook_message.message["user"]
       end
     end
   end

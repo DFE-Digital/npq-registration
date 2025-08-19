@@ -23,12 +23,12 @@
                 row.with_cell(text: webhook_message.message_id)
                 row.with_cell(text: webhook_message_status_tag(webhook_message))
                 row.with_cell(text: webhook_message.sent_at.to_fs(:govuk_short))
-                row.with_cell(text: govuk_link_to("View", admin_webhook_message_path(webhook_message)))
+                row.with_cell(text: govuk_link_to("View", npq_separation_admin_webhook_message_path(webhook_message)))
               end
             end
           else
             body.with_row do |row|
-              row.with_cell(text: "No Webhook Messages received yet")
+              row.with_cell(text: "No Webhook messages received yet")
               row.with_cell
               row.with_cell
               row.with_cell

@@ -3,7 +3,6 @@ module API
     module GetAnIdentity
       class WebhookMessagesController < ActionController::API
         before_action :set_cache_headers
-        before_action :log_incoming_message
         before_action :verify_signature!, only: :create
 
         def create
@@ -28,10 +27,6 @@ module API
           return if signature_valid?
 
           head :unauthorized
-        end
-
-        def log_incoming_message
-          Sentry.capture_message("GetAnIdentity webhook message received")
         end
 
         def signature_valid?

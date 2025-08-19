@@ -4,6 +4,6 @@ class NpqSeparation::Admin::WebhookMessages::ProcessingJobsController < NpqSepar
     @webhook_message.update!(status: :pending)
     @webhook_message.enqueue_processing_job
 
-    redirect_to admin_webhook_message_path(@webhook_message)
+    redirect_to npq_separation_admin_webhook_message_path(@webhook_message)
   end
 end
