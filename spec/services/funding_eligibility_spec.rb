@@ -34,11 +34,21 @@ RSpec.describe FundingEligibility do
   let(:new_headteacher) { "no" }
   let(:query_store) { RegistrationQueryStore.new(store:) }
 
+  RSpec.shared_examples "funding eligibility" do |result|
+    it "returns the funding eligibility status code #{result}" do
+      expect(funding_eligibility.funding_eligiblity_status_code).to eq result
+    end
+
+    it "has a funding eligibility status description" do
+      expect { funding_eligibility.get_description_for_funding_status }.not_to raise_error
+    end
+  end
+
   RSpec.shared_examples "general rules" do
     context "and the applicant is outside England" do
       let(:inside_catchment) { false }
 
-      it { is_expected.to eq :not_in_england }
+      include_examples "funding eligibility", :not_in_england
     end
 
     context "and the applicant has previously received funding" do
@@ -47,18 +57,17 @@ RSpec.describe FundingEligibility do
         create(:application, :with_funded_place, :accepted, user:, course:)
       end
 
-      it { is_expected.to eq :previously_funded }
+      include_examples "funding eligibility", :previously_funded
     end
   end
 
-  RSpec.shared_examples "funding eligibility status codes" do |course_results|
+  RSpec.shared_examples "funding eligibility status codes by course" do |course_results|
     course_results.each do |course_identifier, result|
       context "and the course is #{course_identifier}" do
         let(:course) { build(:course, course_identifier) }
 
         include_examples "general rules"
-
-        it { is_expected.to eq result }
+        include_examples "funding eligibility", result
       end
     end
 
@@ -66,19 +75,13 @@ RSpec.describe FundingEligibility do
       let(:course) { build(:course, :early_headship_coaching_offer) }
 
       include_examples "general rules"
-
-      it "is not eligible for funding" do
-        expect(funding_eligibility.funding_eligiblity_status_code).to eq :not_new_headteacher_requesting_ehco
-      end
+      include_examples "funding eligibility", :not_new_headteacher_requesting_ehco
 
       context "and the applicant is a new headteacher" do
         let(:new_headteacher) { "yes" }
 
         include_examples "general rules"
-
-        it "is eligible for funding" do
-          expect(funding_eligibility.funding_eligiblity_status_code).to eq :funded
-        end
+        include_examples "funding eligibility", :funded
       end
     end
   end
@@ -89,7 +92,7 @@ RSpec.describe FundingEligibility do
         allow(institution).to receive(:eligible_establishment?).and_return(true)
       end
 
-      include_examples "funding eligibility status codes", {
+      include_examples "funding eligibility status codes by course", {
         senco: :funded,
         headship: :funded,
         leading_primary_mathematics: :ineligible_establishment_not_a_pp50,
@@ -107,7 +110,7 @@ RSpec.describe FundingEligibility do
           allow(institution).to receive(:rise?).and_return(true)
         end
 
-        include_examples "funding eligibility status codes", {
+        include_examples "funding eligibility status codes by course", {
           senco: :funded,
           headship: :funded,
           leading_primary_mathematics: :funded,
@@ -126,7 +129,7 @@ RSpec.describe FundingEligibility do
           allow(institution).to receive(:pp50?).and_return(true)
         end
 
-        include_examples "funding eligibility status codes", {
+        include_examples "funding eligibility status codes by course", {
           senco: :funded,
           headship: :funded,
           leading_primary_mathematics: :funded,
@@ -159,14 +162,14 @@ RSpec.describe FundingEligibility do
         early_years_leadership: :ineligible_establishment_type,
       }
 
-      include_examples "funding eligibility status codes", ineligible
+      include_examples "funding eligibility status codes by course", ineligible
 
       context "and the institution is on the PP50 list" do
         before do
           allow(institution).to receive(:pp50?).and_return(true)
         end
 
-        include_examples "funding eligibility status codes", ineligible
+        include_examples "funding eligibility status codes by course", ineligible
       end
     end
   end
@@ -203,7 +206,7 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "local_authority_maintained_nursery" }
         let(:institution) { build(:school, :local_authority_nursery_school) }
 
-        include_examples "funding eligibility status codes", default_eligibility.merge({
+        include_examples "funding eligibility status codes by course", default_eligibility.merge({
           senco: :ineligible_establishment_type,
           headship: :ineligible_establishment_type,
           early_years_leadership: :ineligible_establishment_type,
@@ -214,7 +217,7 @@ RSpec.describe FundingEligibility do
             allow(institution).to receive(:la_disadvantaged_nursery?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             senco: :funded,
             headship: :funded,
             early_years_leadership: :funded,
@@ -226,14 +229,14 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "preschool_class_as_part_of_school" }
         let(:institution) { build(:school) }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the institution is on the EYL disadvantaged list" do
           before do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             early_years_leadership: :funded,
           })
         end
@@ -243,14 +246,14 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "private_nursery" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the institution is on the EYL disadvantaged list" do
           before do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             early_years_leadership: :funded,
           })
         end
@@ -260,7 +263,7 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "childminder" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes", default_eligibility.merge({
+        include_examples "funding eligibility status codes by course", default_eligibility.merge({
           early_years_leadership: :not_entitled_childminder,
         })
 
@@ -269,7 +272,7 @@ RSpec.describe FundingEligibility do
             allow(institution).to receive(:on_childminders_list?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             early_years_leadership: :funded,
           })
         end
@@ -279,14 +282,14 @@ RSpec.describe FundingEligibility do
         let(:kind_of_nursery) { "another_early_years_setting" }
         let(:institution) { build(:private_childcare_provider) }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the institution is on the EYL disadvantaged list" do
           before do
             allow(institution).to receive(:eyl_disadvantaged?).and_return(true)
           end
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             early_years_leadership: :funded,
           })
         end
@@ -333,25 +336,25 @@ RSpec.describe FundingEligibility do
       context "and the employment type is a virtual school" do
         let(:employment_type) { "local_authority_virtual_school" }
 
-        include_examples "funding eligibility status codes", default_eligibility.merge
+        include_examples "funding eligibility status codes by course", default_eligibility.merge
       end
 
       context "and the employment type is a hospital school" do
         let(:employment_type) { "hospital_school" }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the employment type is a young offender institution" do
         let(:employment_type) { "young_offender_institution" }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the employment type is a local authority supply teacher" do
         let(:employment_type) { "local_authority_supply_teacher" }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
       end
 
       context "and the employment type is as a lead mentor for an accredited ITT provider" do
@@ -370,12 +373,12 @@ RSpec.describe FundingEligibility do
           early_years_leadership: :not_lead_mentor_course,
         }
 
-        include_examples "funding eligibility status codes", default_eligibility
+        include_examples "funding eligibility status codes by course", default_eligibility
 
         context "and the ITT provider is approved" do
           let(:approved_itt_provider) { true }
 
-          include_examples "funding eligibility status codes", default_eligibility.merge({
+          include_examples "funding eligibility status codes by course", default_eligibility.merge({
             leading_teaching_development: :funded,
           })
         end
@@ -385,7 +388,7 @@ RSpec.describe FundingEligibility do
     context "when the work setting is 'Other'" do
       let(:work_setting) { "other" }
 
-      include_examples "funding eligibility status codes", {
+      include_examples "funding eligibility status codes by course", {
         senco: :ineligible_establishment_type,
         headship: :ineligible_establishment_type,
         leading_primary_mathematics: :ineligible_establishment_type,
@@ -401,7 +404,7 @@ RSpec.describe FundingEligibility do
       context "and there is a return to teaching adviser referral" do
         let(:referred_by_return_to_teaching_adviser) { "yes" }
 
-        include_examples "funding eligibility status codes", {
+        include_examples "funding eligibility status codes by course", {
           senco: :referred_by_return_to_teaching_adviser,
           headship: :referred_by_return_to_teaching_adviser,
           leading_primary_mathematics: :referred_by_return_to_teaching_adviser,

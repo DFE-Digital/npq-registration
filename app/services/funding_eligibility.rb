@@ -38,6 +38,8 @@ class FundingEligibility
     NOT_ENTITLED_CHILDMINDER => "funding_details.not_entitled_childminder",
     NOT_NEW_HEADTEACHER_REQUESTING_EHCO => "funding_details.not_eligible_ehco",
     PREVIOUSLY_FUNDED => "funding_details.previously_funded",
+    REFERRED_BY_RETURN_TO_TEACHING_ADVISER => "funding_details.subject_to_review",
+    SUBJECT_TO_REVIEW => "funding_details.subject_to_review",
   }.freeze
 
   attr_reader :institution,
