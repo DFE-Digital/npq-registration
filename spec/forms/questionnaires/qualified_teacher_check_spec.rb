@@ -180,6 +180,16 @@ RSpec.describe Questionnaires::QualifiedTeacherCheck, type: :model do
     end
   end
 
+  describe "#requirements_met?" do
+    it { is_expected.to be_requirements_met }
+
+    context "without current user" do
+      let(:current_user) { nil }
+
+      it { is_expected.not_to be_requirements_met }
+    end
+  end
+
   describe "#next_step" do
     subject do
       described_class.new(
