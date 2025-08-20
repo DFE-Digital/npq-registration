@@ -57,13 +57,7 @@ module Users
         user.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
       end
 
-      # The user's TRN should remain unchanged if the TRA returns an empty TRN
-      if extra_info&.trn.present?
-        user.trn = extra_info.trn
-        user.trn_verified = true
-        user.trn_lookup_status = extra_info.trn_lookup_status
-      end
-
+      user.assign_attributes(user.trn_update_params(trn: extra_info&.trn, trn_lookup_status: extra_info&.trn_lookup_status))
       user.set_updated_from_tra_at
     end
   end

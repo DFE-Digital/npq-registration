@@ -418,4 +418,99 @@ RSpec.describe User do
       expect(user.reload.email).to eq("foo@example.com")
     end
   end
+
+  describe "#trn_update_params" do
+    let(:user) { create(:user, trn:, trn_lookup_status:, trn_verified:) }
+    let(:trn) { "1234567" }
+    let(:trn_verified) { false }
+    let(:trn_lookup_status) { nil }
+
+    subject { user.trn_update_params(trn: new_trn, trn_lookup_status: new_trn_lookup_status) }
+
+    context "when TRN is blank" do
+      let(:new_trn) { nil }
+      let(:new_trn_lookup_status) { nil }
+
+      it "returns no parameters" do # The user's TRN should remain unchanged if the TRA returns an empty TRN
+        expect(subject).to eq({})
+      end
+    end
+
+    context "when TRN is present" do
+      context "when the TRN is the same as the user's current TRN" do
+        let(:new_trn) { trn }
+        let(:new_trn_lookup_status) { "None" }
+
+        context "when the user's TRN is verified" do
+          let(:trn_verified) { true }
+
+          it "does not return any parameters" do # when a user's TRN has been manually verified, we do not want to override it
+            expect(subject).to eq({})
+          end
+
+          context "when the new trn_lookup_status is Found" do
+            let(:new_trn_lookup_status) { "Found" }
+
+            it "returns the TRN lookup status only" do # this updates manually verified TRNs with the latest lookup status
+              expect(subject).to eq({ trn_lookup_status: new_trn_lookup_status })
+            end
+          end
+        end
+
+        context "when the user's TRN is not verified" do
+          let(:trn_verified) { false }
+
+          it "returns the TRN lookup status only" do
+            expect(subject).to eq({ trn_lookup_status: new_trn_lookup_status })
+          end
+
+          context "when the new trn_lookup_status is Found" do
+            let(:new_trn_lookup_status) { "Found" }
+
+            it "returns the trn_verified and trn_lookup_status" do
+              expect(subject).to eq(
+                {
+                  trn_verified: true,
+                  trn_lookup_status: new_trn_lookup_status,
+                },
+              )
+            end
+          end
+        end
+      end
+
+      context "when the TRN is different from the user's current TRN" do
+        let(:new_trn) { "2345678" }
+        let(:new_trn_lookup_status) { "None" }
+
+        it "returns all parameters" do
+          expect(subject).to eq(
+            {
+              trn: new_trn,
+              trn_verified: false,
+              trn_lookup_status: new_trn_lookup_status,
+            },
+          )
+        end
+
+        context "when the new trn_lookup_status is Found" do
+          let(:new_trn_lookup_status) { "Found" }
+
+          it "returns the TRN as verified" do
+            expect(subject[:trn_verified]).to be(true)
+          end
+        end
+
+        %w[None Pending Failed].each do |status|
+          context "when the new trn_lookup_status is #{status}" do
+            let(:new_trn_lookup_status) { status }
+
+            it "returns the TRN as not verified" do
+              expect(subject[:trn_verified]).to be(false)
+            end
+          end
+        end
+      end
+    end
+  end
 end
