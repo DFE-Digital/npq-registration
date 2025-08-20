@@ -112,6 +112,29 @@ class User < ApplicationRecord
     self.updated_from_tra_at = Time.zone.now
   end
 
+  def trn_update_params(trn:, trn_lookup_status:)
+    return {} if trn.blank?
+
+    if self.trn != trn
+      {
+        trn: trn,
+        trn_verified: trn_lookup_status == "Found",
+        trn_lookup_status:,
+      }
+    elsif !trn_verified? && trn_lookup_status == "Found"
+      {
+        trn_verified: true,
+        trn_lookup_status:,
+      }
+    elsif !trn_verified? || trn_lookup_status == "Found"
+      {
+        trn_lookup_status:,
+      }
+    else
+      {}
+    end
+  end
+
 private
 
   def touch_significantly_updated_at

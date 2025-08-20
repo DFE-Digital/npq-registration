@@ -38,10 +38,6 @@ module GetAnIdentity
         message_json["trnLookupStatus"]
       end
 
-      def trn_verified
-        trn_lookup_status == "Found"
-      end
-
       def sent_at
         webhook_message.sent_at
       end

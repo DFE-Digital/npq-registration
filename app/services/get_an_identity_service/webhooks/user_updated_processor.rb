@@ -73,12 +73,11 @@ module GetAnIdentityService
         {
           full_name: decorated_message.full_name,
           date_of_birth: decorated_message.date_of_birth,
-          trn: decorated_message.trn,
-          trn_verified: decorated_message.trn_verified,
-          trn_lookup_status: decorated_message.trn_lookup_status,
           email: decorated_message.email,
           updated_from_tra_at: decorated_message.sent_at,
-        }
+        }.tap do |params|
+          params.merge!(user.trn_update_params(trn: decorated_message.trn, trn_lookup_status: decorated_message.trn_lookup_status))
+        end
       end
     end
   end
