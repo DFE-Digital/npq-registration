@@ -6,8 +6,6 @@ class Feature
   CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
-  DECLARATIONS_REQUIRE_DELIVERY_PARTNER = "Declarations require delivery partner".freeze
-  INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API = "Include delivery partners in declarations API".freeze
   LP_SELF_SERVE = "Lead provider self serve".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
@@ -17,8 +15,6 @@ class Feature
     CLOSED_REGISTRATION_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
-    DECLARATIONS_REQUIRE_DELIVERY_PARTNER,
-    INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API,
     LP_SELF_SERVE,
   ].freeze
 
@@ -68,14 +64,6 @@ class Feature
 
     def dfe_analytics_enabled?
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
-    end
-
-    def declarations_require_delivery_partner?
-      Flipper.enabled?(DECLARATIONS_REQUIRE_DELIVERY_PARTNER)
-    end
-
-    def include_delivery_partners_in_declarations_api?
-      Flipper.enabled?(INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
     end
 
     def lp_self_serve?
