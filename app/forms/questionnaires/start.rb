@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def next_step
-      if query_store.current_user
+      if query_store.current_user.present?
         first_questionnaire_step
       else
         # This shouldn't really be reached, in this situation the user should have been

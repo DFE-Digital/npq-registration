@@ -25,12 +25,14 @@ private
   helper_method :feature_flag_id
 
   def current_user
-    logged_in_user
+    logged_in_user || NullUser.new(feature_flag_id:)
   end
   helper_method :current_user
 
   def set_sentry_user
-    Sentry.set_user(id: current_user.id) if current_user
+    unless current_user.null_user?
+      Sentry.set_user(id: current_user.id)
+    end
   end
 
   # Use current_user instead!

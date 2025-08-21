@@ -2,7 +2,7 @@
   govuk_header(service_name: "Register for a national professional qualification", service_url: root_path) do |header|
     if current_admin
       header.with_navigation_item(text: "Sign out", href: sign_out_user_path)
-    elsif current_user
+    elsif current_user.actual_user?
       header.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")
 
       if current_user.applications.any?

@@ -5,7 +5,7 @@ module Questionnaires
     end
 
     def requirements_met?
-      query_store.current_user
+      query_store.current_user&.actual_user?
     end
 
     def next_step

@@ -28,9 +28,6 @@ class RegistrationWizardController < PublicPagesController
   def update
     @form.flag_as_changing_answer if params[:changing_answer] == "1"
 
-    return redirect_to registration_wizard_show_path(@wizard.next_step_path) if @wizard.skip_step?
-    return redirect_to root_path unless @form.requirements_met?
-
     if @form.valid?
       if @form.redirect_to_change_path?
         redirect_to registration_wizard_show_change_path(@wizard.next_step_path)
