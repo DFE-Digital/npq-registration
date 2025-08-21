@@ -34,12 +34,6 @@ end
 - Schools are instances of the `School` model.
 - Uses `PP50_FE_UKPRN_HASH` for lookup in the code.
 
-### Childminders
-**File:** `NPQ_EY_Childminders_2025_cohort.csv`
-- Matches institutions using the `ofsted_urn` field from the document.
-- Institutions are instances of the `PrivateChildcareProvider` model.
-- Uses `CHILDMINDERS_OFSTED_URN_HASH` for lookup in the code.
-
 ### Early Years Settings
 **File:** `NPQ_Disadvantaged_EY_2025_cohort.csv`
 - Matches institutions using both `urn` and `ofsted_urn` fields from the document.
