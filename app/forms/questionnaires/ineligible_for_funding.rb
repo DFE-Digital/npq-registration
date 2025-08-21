@@ -6,7 +6,7 @@ module Questionnaires
 
     NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING = "not_eligible_for_scholarship_funding".freeze
     NOT_IN_ENGLAND = "not_in_england".freeze
-    EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
+    EARLY_YEARS_INELIGIBLE_ESTABLISHMENT = "early_years/outside_catchment_or_not_on_early_years_register".freeze
     EARLY_YEARS_NOT_APPLYING_FOR_NPQEY = "early_years/not_applying_for_NPQEY".freeze
     LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD = "lead_mentor/not_applying_for_NPQLTD".freeze
 
@@ -46,7 +46,7 @@ module Questionnaires
                                  return NOT_IN_ENGLAND
                                when FundingEligibility::NOT_LEAD_MENTOR_COURSE
                                  return LEAD_MENTOR_NOT_APPLYING_FOR_NPQLTD
-                               when FundingEligibility::SCHOOL_OUTSIDE_CATCHMENT, FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
+                               when FundingEligibility::INELIGIBLE_ESTABLISHMENT_TYPE
                                  return NOT_ELIGIBLE_FOR_SCHOLARSHIP_FUNDING
                                when FundingEligibility::PREVIOUSLY_FUNDED
                                  if tsf_elgible?
@@ -54,8 +54,8 @@ module Questionnaires
                                  else
                                    return ALREADY_FUNDED_NOT_ELIGIBLE_SCHOLARSHIP_FUNDING_NOT_TSF
                                  end
-                               when FundingEligibility::EARLY_YEARS_OUTSIDE_CATCHMENT, FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
-                                 return EARLY_YEARS_OUTSIDE_CATCHMENT_OR_INELIGIBLE_ESTABLISHMENT
+                               when FundingEligibility::NOT_ON_EARLY_YEARS_REGISTER
+                                 return EARLY_YEARS_INELIGIBLE_ESTABLISHMENT
                                when FundingEligibility::EARLY_YEARS_INVALID_NPQ
                                  return EARLY_YEARS_NOT_APPLYING_FOR_NPQEY
                                when FundingEligibility::NOT_ENTITLED_EY_INSTITUTION
