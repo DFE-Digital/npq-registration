@@ -26,12 +26,10 @@ module API
       end
 
       view :delivery_partner_fields do
-        feature_flag_checker = ->(*) { Feature.include_delivery_partners_in_declarations_api? }
-
-        field(:delivery_partner_id, if: feature_flag_checker) { |declaration| declaration.delivery_partner&.ecf_id }
-        field(:delivery_partner_name, if: feature_flag_checker) { |declaration| declaration.delivery_partner&.name }
-        field(:secondary_delivery_partner_id, if: feature_flag_checker) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
-        field(:secondary_delivery_partner_name, if: feature_flag_checker) { |declaration| declaration.secondary_delivery_partner&.name }
+        field(:delivery_partner_id) { |declaration| declaration.delivery_partner&.ecf_id }
+        field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
+        field(:secondary_delivery_partner_id) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
+        field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
       end
 
       view :v3 do
