@@ -4,14 +4,23 @@ module NpqSeparation
   module Admin
     module Applications
       class ChangeFundingEligibilitiesController < NpqSeparation::AdminController
-        before_action :set_application, :set_change_funding_eligility
+        before_action :set_application
 
-        def new; end
+        def new
+          @funding_eligibility =
+            ::Applications::ChangeFundingEligibility.new(application: @application,
+                                                         eligible_for_funding: @application.eligible_for_funding)
+        end
 
         def create
+          @funding_eligibility = ::Applications::ChangeFundingEligibility.new(application: @application)
           @funding_eligibility.assign_attributes(funding_eligibility_params)
 
           if @funding_eligibility.change_funding_eligibility
+            if @application.previous_changes["eligible_for_funding"]
+              flash[:success] =
+                "Funding eligibility has been changed to ‘#{@application.eligible_for_funding ? 'Yes' : 'No'}’"
+            end
             redirect_to npq_separation_admin_application_path(@application)
           else
             render :new, status: :unprocessable_entity
@@ -22,11 +31,6 @@ module NpqSeparation
 
         def set_application
           @application = Application.find(params[:id])
-        end
-
-        def set_change_funding_eligility
-          @funding_eligibility =
-            ::Applications::ChangeFundingEligibility.new(application: @application)
         end
 
         def funding_eligibility_params
