@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /account
+Disallow: /admin
+Disallow: /npq-separation/admin
+Disallow: /registration
+Disallow: /session
+Disallow: /sign-in
+Disallow: /sign-out

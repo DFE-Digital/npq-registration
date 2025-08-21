@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   get "/healthcheck", to: "monitoring#healthcheck", format: :json
   get "/up", to: "monitoring#up"
+  get "/robots", to: "robots_txt#show", format: :text, as: "robots_txt"
 
   resources :schools, only: [:index]
   resources :institutions, only: [:index]
