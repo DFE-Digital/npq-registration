@@ -207,7 +207,7 @@ RSpec.feature "Applications in review", type: :feature do
     expect(page).to have_css("h2", text: "Overview")
     within(summary_lists[0]) do |summary_list|
       expect(summary_list).to have_summary_item("Name", application.user.full_name)
-      expect(summary_list).to have_summary_item("NPQ course", "#{application.course.name} (#{application.course.short_code})")
+      expect(summary_list).to have_summary_item("Course", application.course.name)
       expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
     end
