@@ -194,6 +194,23 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
             expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
           end
         end
+
+        context "when one of the applications is withdrawn" do
+          let(:application) do
+            create(
+              :application,
+              :withdrawn,
+              user:,
+              course:,
+              lead_provider:,
+              cohort:,
+            )
+          end
+
+          it "allows the other application to be accepted" do
+            expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
+          end
+        end
       end
 
       context "when the other npq applicaton belongs to a different user but with the same teacher profile TRN" do
@@ -240,6 +257,23 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
           end
 
           it "allows both applications to be accepted" do
+            expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
+          end
+        end
+
+        context "when one of the applications is withdrawn" do
+          let(:application) do
+            create(
+              :application,
+              :withdrawn,
+              user:,
+              course:,
+              lead_provider:,
+              cohort:,
+            )
+          end
+
+          it "allows the other application to be accepted" do
             expect { service.accept }.to change { other_application.reload.lead_provider_approval_status }.to("accepted")
           end
         end
