@@ -1,1 +1,7 @@
+<% content_for :cross_programme_dashboards_link do %>
+  <p class="govuk-body">
+    Visit the <%= govuk_link_to "cross-programme dashboards", "https://educationgovuk.sharepoint.com/sites/lvewp00660", new_tab: true %> and explore our NPQ data dashboards for more insights.
+  </p>
+<% end %>
+
 <%= render_dashboard_partial(@dashboard) %>
