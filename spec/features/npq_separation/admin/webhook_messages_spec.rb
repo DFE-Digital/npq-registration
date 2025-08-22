@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.feature "Webhook messages", type: :feature do
+RSpec.feature "Webhook messages", :no_js, type: :feature do
   include Helpers::AdminLogin
 
   let!(:webhook_message) { create(:get_an_identity_webhook_message) }
@@ -24,5 +24,13 @@ RSpec.feature "Webhook messages", type: :feature do
 
     expect(page).to have_css("h1", text: "Webhook message")
     expect(page).to have_content('"preferredName": "John Doe"')
+  end
+
+  scenario "enqueueing a webhook message for retrying processing" do
+    visit(npq_separation_admin_webhook_messages_path)
+    click_link "View"
+    expect {
+      click_link "Queue retry"
+    }.to have_enqueued_job(::GetAnIdentity::ProcessWebhookMessageJob)
   end
 end
