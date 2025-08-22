@@ -57,7 +57,7 @@ module Users
         user.date_of_birth = Date.parse(extra_info.birthdate, "%Y-%m-%d")
       end
 
-      user.assign_attributes(user.trn_update_params(trn: extra_info&.trn, trn_lookup_status: extra_info&.trn_lookup_status))
+      user.set_trn_from_provider_data(trn: extra_info&.trn, trn_lookup_status: extra_info&.trn_lookup_status)
       user.set_updated_from_tra_at
     end
   end

@@ -112,17 +112,17 @@ class User < ApplicationRecord
     self.updated_from_tra_at = Time.zone.now
   end
 
-  def trn_update_params(trn:, trn_lookup_status:)
+  def set_trn_from_provider_data(trn:, trn_lookup_status:)
     trn_lookup_status_found = (trn_lookup_status == "Found")
     trn_unchanged = (self.trn == trn)
 
-    return {} if trn.blank? || (trn_verified? && trn_unchanged && !trn_lookup_status_found)
+    return if trn.blank? || (trn_verified? && trn_unchanged && !trn_lookup_status_found)
 
-    {
+    assign_attributes(
       trn:,
       trn_verified: trn_lookup_status_found,
       trn_lookup_status:,
-    }
+    )
   end
 
 private
