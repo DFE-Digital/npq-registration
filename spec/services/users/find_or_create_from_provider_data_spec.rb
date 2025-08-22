@@ -12,6 +12,7 @@ RSpec.describe Users::FindOrCreateFromProviderData do
   let(:provider_data_date_of_birth) { "1980-12-13" }
   let(:provider_data_first_name) { "John" }
   let(:provider_data_last_name) { "Doe" }
+  let(:provider_data_trn_lookup_status) { "Found" }
 
   let(:provider_data) do
     OpenStruct.new({
@@ -24,7 +25,7 @@ RSpec.describe Users::FindOrCreateFromProviderData do
         trn: provider_data_trn,
         name: provider_data_name,
         preferred_name: provider_data_preferred_name,
-        trn_lookup_status: "Found",
+        provider_data_trn_lookup_status:,
       }),
       credentials: OpenStruct.new({
         "token" => SecureRandom.uuid,
@@ -42,7 +43,7 @@ RSpec.describe Users::FindOrCreateFromProviderData do
           "trn" => provider_data_trn,
           "given_name" => provider_data_first_name,
           "family_name" => provider_data_last_name,
-          "trn_lookup_status" => "Found",
+          "trn_lookup_status" => provider_data_trn_lookup_status,
         }),
       }),
     })
@@ -93,12 +94,30 @@ RSpec.describe Users::FindOrCreateFromProviderData do
         expect(subject.trn).to eq provider_data_trn
       end
 
-      it "sets trn_verified to true" do
-        expect(subject.trn_verified).to be true
+      context "when trn_lookup_status is Found" do
+        let(:provider_data_trn_lookup_status) { "Found" }
+
+        it "sets trn_verified to true" do
+          expect(subject.trn_verified).to be true
+        end
+
+        it "sets trn_lookup_status" do
+          expect(subject.trn_lookup_status).to eq "Found"
+        end
       end
 
-      it "sets trn_lookup_status" do
-        expect(subject.trn_lookup_status).to eq "Found"
+      %w[None Pending Failed].each do |lookup_status|
+        context "when trn_lookup_status is #{lookup_status}" do
+          let(:provider_data_trn_lookup_status) { lookup_status }
+
+          it "sets trn_verified to false" do
+            expect(subject.trn_verified).to be false
+          end
+
+          it "sets trn_lookup_status" do
+            expect(subject.trn_lookup_status).to eq provider_data_trn_lookup_status
+          end
+        end
       end
     end
 
@@ -107,8 +126,14 @@ RSpec.describe Users::FindOrCreateFromProviderData do
 
       it "does not set the TRN" do
         expect { subject }.not_to change(subject, :trn)
-        expect(subject.trn_verified).to be false
-        expect(subject.trn_lookup_status).to be_nil
+      end
+
+      it "does not change trn_verified" do
+        expect { subject }.not_to change(subject, :trn_verified)
+      end
+
+      it "does not change trn_lookup_status" do
+        expect { subject }.not_to change(subject, :trn_lookup_status)
       end
     end
 
@@ -144,7 +169,18 @@ RSpec.describe Users::FindOrCreateFromProviderData do
   end
 
   context "when the user with UID already exists" do
-    let(:existing_user) { create(:user, :with_get_an_identity_id, uid: provider_data_uid, email: provider_data_email, trn: "0000000") }
+    let(:existing_user) do
+      create(:user,
+             :with_get_an_identity_id,
+             uid: provider_data_uid,
+             email: provider_data_email,
+             trn: "0000000",
+             trn_verified:,
+             trn_lookup_status:)
+    end
+
+    let(:trn_verified) { false }
+    let(:trn_lookup_status) { "Failed" }
 
     before { existing_user }
 
@@ -158,6 +194,54 @@ RSpec.describe Users::FindOrCreateFromProviderData do
 
     it_behaves_like "a saved valid user with provider data assigned"
     it_behaves_like "not changing TRN attributes on existing user when there is no TRN in the provider data"
+
+    context "when the user has a verified TRN" do
+      let(:trn_verified) { true }
+
+      context "when the provider data has a TRN that is the same as the user's current TRN" do
+        let(:provider_data_trn) { "0000000" }
+
+        context "when the trn_lookup_status is Found" do
+          let(:trn_lookup_status) { "Found" }
+
+          it "updates the trn_lookup_status to Found" do
+            subject
+            expect(existing_user.reload.trn_lookup_status).to eq("Found")
+          end
+        end
+
+        context "when the trn_lookup_status is not Found" do
+          let(:provider_data_trn_lookup_status) { "None" }
+
+          it "does not change trn_verified" do
+            subject
+            expect(existing_user.reload.trn_verified).to be true
+          end
+
+          it "does not change trn_lookup_status" do
+            subject
+            expect(existing_user.reload.trn_lookup_status).to eq trn_lookup_status
+          end
+        end
+      end
+
+      context "when the provider data has a TRN that is different from the user's current TRN" do
+        let(:provider_data_trn) { "2345678" }
+        let(:provider_data_trn_lookup_status) { "None" }
+
+        it "updates the TRN" do
+          expect { subject }.to change { existing_user.reload.trn }.from("0000000").to("2345678")
+        end
+
+        it "updates trn_verified" do
+          expect { subject }.to change { existing_user.reload.trn_verified }.from(true).to(false)
+        end
+
+        it "updates trn_lookup_status" do
+          expect { subject }.to change { existing_user.reload.trn_lookup_status }.from("Failed").to("None")
+        end
+      end
+    end
 
     context "when there is a clashing user with the same email" do
       let(:existing_user) { create(:user, :with_get_an_identity_id, uid: provider_data_uid, trn: "0000000") }
