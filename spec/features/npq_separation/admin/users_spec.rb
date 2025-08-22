@@ -88,6 +88,7 @@ RSpec.feature "User administration", type: :feature do
       visit npq_separation_admin_user_path(user)
 
       expect(page).to have_css("h1", text: user.full_name)
+      expect(page).to have_css("h2", text: "Applications", count: 1)
       applications.each do |application|
         within(".govuk-summary-card", text: application.course.name.to_s) do |summary_card|
           expect(summary_card).to have_summary_item("NPQ course", application.course.name)
