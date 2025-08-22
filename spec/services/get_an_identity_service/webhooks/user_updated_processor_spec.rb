@@ -29,6 +29,8 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
 
   subject { described_class.call(webhook_message:) }
 
+  before { freeze_time }
+
   context "when passed the correct message_type" do
     let(:message_type) { "UserUpdated" }
     let(:message) do
