@@ -451,8 +451,14 @@ RSpec.describe User do
           context "when the new trn_lookup_status is Found" do
             let(:new_trn_lookup_status) { "Found" }
 
-            it "returns the TRN lookup status only" do # this updates manually verified TRNs with the latest lookup status
-              expect(subject).to eq({ trn_lookup_status: new_trn_lookup_status })
+            it "returns the TRN parameters" do # this updates manually verified TRNs with the latest lookup status
+              expect(subject).to eq(
+                {
+                  trn:,
+                  trn_verified: true,
+                  trn_lookup_status: new_trn_lookup_status,
+                },
+              )
             end
           end
         end
@@ -460,21 +466,14 @@ RSpec.describe User do
         context "when the user's TRN is not verified" do
           let(:trn_verified) { false }
 
-          it "returns the TRN lookup status only" do
-            expect(subject).to eq({ trn_lookup_status: new_trn_lookup_status })
-          end
-
-          context "when the new trn_lookup_status is Found" do
-            let(:new_trn_lookup_status) { "Found" }
-
-            it "returns the trn_verified and trn_lookup_status" do
-              expect(subject).to eq(
-                {
-                  trn_verified: true,
-                  trn_lookup_status: new_trn_lookup_status,
-                },
-              )
-            end
+          it "returns the TRN parameters" do
+            expect(subject).to eq(
+              {
+                trn:,
+                trn_verified: false,
+                trn_lookup_status: new_trn_lookup_status,
+              },
+            )
           end
         end
       end
@@ -483,7 +482,7 @@ RSpec.describe User do
         let(:new_trn) { "2345678" }
         let(:new_trn_lookup_status) { "None" }
 
-        it "returns all parameters" do
+        it "returns the TRN parameters" do
           expect(subject).to eq(
             {
               trn: new_trn,
@@ -493,20 +492,22 @@ RSpec.describe User do
           )
         end
 
-        context "when the new trn_lookup_status is Found" do
-          let(:new_trn_lookup_status) { "Found" }
+        context "with different trn_lookup_statuses" do
+          context "when the new trn_lookup_status is Found" do
+            let(:new_trn_lookup_status) { "Found" }
 
-          it "returns the TRN as verified" do
-            expect(subject[:trn_verified]).to be(true)
+            it "returns the TRN as verified" do
+              expect(subject[:trn_verified]).to be(true)
+            end
           end
-        end
 
-        %w[None Pending Failed].each do |status|
-          context "when the new trn_lookup_status is #{status}" do
-            let(:new_trn_lookup_status) { status }
+          %w[None Pending Failed].each do |status|
+            context "when the new trn_lookup_status is #{status}" do
+              let(:new_trn_lookup_status) { status }
 
-            it "returns the TRN as not verified" do
-              expect(subject[:trn_verified]).to be(false)
+              it "returns the TRN as not verified" do
+                expect(subject[:trn_verified]).to be(false)
+              end
             end
           end
         end

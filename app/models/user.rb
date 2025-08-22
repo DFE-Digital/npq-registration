@@ -113,26 +113,16 @@ class User < ApplicationRecord
   end
 
   def trn_update_params(trn:, trn_lookup_status:)
-    return {} if trn.blank?
+    trn_lookup_status_found = (trn_lookup_status == "Found")
+    trn_unchanged = (self.trn == trn)
 
-    if self.trn != trn
-      {
-        trn: trn,
-        trn_verified: trn_lookup_status == "Found",
-        trn_lookup_status:,
-      }
-    elsif !trn_verified? && trn_lookup_status == "Found"
-      {
-        trn_verified: true,
-        trn_lookup_status:,
-      }
-    elsif !trn_verified? || trn_lookup_status == "Found"
-      {
-        trn_lookup_status:,
-      }
-    else
-      {}
-    end
+    return {} if trn.blank? || (trn_verified? && trn_unchanged && !trn_lookup_status_found)
+
+    {
+      trn:,
+      trn_verified: trn_lookup_status_found,
+      trn_lookup_status:,
+    }
   end
 
 private
