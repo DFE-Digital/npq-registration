@@ -69,14 +69,14 @@ runs:
         DOCKER_IMAGE: ${{ inputs.docker-image }}
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
-    - name: Seed database
-      if: inputs.pull-request-number != '' && inputs.environment != 'production'
-      shell: bash
-      run: |
-        make ci review get-cluster-credentials
-        kubectl exec -n cpd-development deployment/npq-registration-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && RAILS_ENV=${{ inputs.environment }} /usr/local/bin/bundle exec rails db:seed:replant"
-      env:
-        PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
+    # - name: Seed database
+    #   if: inputs.pull-request-number != '' && inputs.environment != 'production'
+    #   shell: bash
+    #   run: |
+    #     make ci review get-cluster-credentials
+    #     kubectl exec -n cpd-development deployment/npq-registration-review-${{ inputs.pull-request-number }}-web -- sh -c "cd /app && RAILS_ENV=${{ inputs.environment }} /usr/local/bin/bundle exec rails db:seed:replant"
+    #   env:
+    #     PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
     - uses: ./.github/actions/smoke-test
       with:
