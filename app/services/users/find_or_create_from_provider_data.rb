@@ -11,14 +11,15 @@ module Users
 
     def call
       user = User.find_by(provider: provider_data.provider, uid: provider_data.uid, archived_at: nil)
+      provider_email = provider_data.info.email.downcase
 
       if user
-        check_and_archive_clashing_user(provider_data.info.email, user)
-        user.assign_attributes(email: provider_data.info.email)
+        check_and_archive_clashing_user(provider_email, user)
+        user.assign_attributes(email: provider_email)
       else
         Rails.logger.info("[GAI] User not found using UID, UID=#{provider_data.uid}, using email to find user")
         check_if_supplied_uid_matches_archived_account # CPDNPQ-2647
-        user = User.find_or_initialize_by(email: provider_data.info.email, archived_at: nil)
+        user = User.find_or_initialize_by(email: provider_email, archived_at: nil)
         user.assign_attributes(provider: provider_data.provider, uid: provider_data.uid)
       end
 

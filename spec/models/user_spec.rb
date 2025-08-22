@@ -406,4 +406,16 @@ RSpec.describe User do
       end
     end
   end
+
+  context "when email has upcase characters" do
+    let(:user) { build(:user, email: "Foo@example.com") }
+
+    before do
+      user.save
+    end
+
+    it "downcases email during saving" do
+      expect(user.reload.email).to eq("foo@example.com")
+    end
+  end
 end

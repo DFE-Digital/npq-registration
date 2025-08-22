@@ -161,6 +161,7 @@ RSpec.describe Users::FindOrCreateFromProviderData do
 
     context "when there is a clashing user with the same email" do
       let(:existing_user) { create(:user, :with_get_an_identity_id, uid: provider_data_uid, trn: "0000000") }
+
       let!(:clashing_user) { create(:user, email: provider_data_email) }
 
       it "archives the clashing user" do
@@ -243,6 +244,17 @@ RSpec.describe Users::FindOrCreateFromProviderData do
 
         it_behaves_like "a saved valid user with provider data assigned"
       end
+    end
+  end
+
+  context "when the provider email is cased differently but the same otherwise" do
+    let(:provider_data_email) { "Foo@example.com" }
+    let(:clashing_downcase_email) { "foo@example.com" }
+
+    let!(:existing_user) { create(:user, email: clashing_downcase_email, trn: "0000000") }
+
+    it "returns existing user" do
+      expect(subject).to eq(existing_user)
     end
   end
 end
