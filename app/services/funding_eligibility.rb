@@ -137,9 +137,7 @@ private
 
     if childminder?
       if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if institution.on_childminders_list?
-
-        return NOT_ENTITLED_CHILDMINDER
+        return FUNDED_ELIGIBILITY_RESULT
       end
 
       return EARLY_YEARS_INVALID_NPQ

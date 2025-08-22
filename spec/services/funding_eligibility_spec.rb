@@ -178,7 +178,6 @@ RSpec.describe FundingEligibility do
     subject { funding_eligibility.funding_eligiblity_status_code }
 
     before do
-      allow_any_instance_of(PrivateChildcareProvider).to receive(:on_childminders_list?).and_return(false)
       allow_any_instance_of(PrivateChildcareProvider).to receive(:eyl_disadvantaged?).and_return(false)
       allow_any_instance_of(School).to receive(:la_disadvantaged_nursery?).and_return(false)
       allow_any_instance_of(School).to receive(:eyl_disadvantaged?).and_return(false)
@@ -264,18 +263,8 @@ RSpec.describe FundingEligibility do
         let(:institution) { build(:private_childcare_provider) }
 
         include_examples "funding eligibility status codes by course", default_eligibility.merge({
-          early_years_leadership: :not_entitled_childminder,
+          early_years_leadership: :funded,
         })
-
-        context "and the institution is on the childminders list" do
-          before do
-            allow(institution).to receive(:on_childminders_list?).and_return(true)
-          end
-
-          include_examples "funding eligibility status codes by course", default_eligibility.merge({
-            early_years_leadership: :funded,
-          })
-        end
       end
 
       context "and the institution is another early years setting" do
