@@ -196,19 +196,17 @@ RSpec.feature "Applications in review", type: :feature do
       click_link("View")
     end
 
-    expect(page).to have_css("h1", text: application.user.full_name)
-
-    expect(page).to have_text("User ID: #{application.user.ecf_id}")
-    expect(page).to have_text("Email: #{application.user.email}")
-    expect(page).to have_text("Date of birth: #{application.user.date_of_birth.to_fs(:govuk_short)}")
-    expect(page).to have_text("National Insurance: Not provided")
-    expect(page).to have_text("TRN: #{application.user.trn} Not verified")
-    expect(page).to have_text("Get an Identity ID: #{application.user.uid}")
+    expect(page).to have_css(
+      ".govuk-caption-m",
+      text: "#{application.user.full_name}, #{application.course.name}, #{application.created_at.to_date.to_fs(:govuk_short)}",
+    )
+    expect(page).to have_css("h1", text: "Application details")
 
     summary_lists = all(".govuk-summary-list")
 
-    expect(page).to have_css("h2", text: "Course details")
+    expect(page).to have_css("h2", text: "Overview")
     within(summary_lists[0]) do |summary_list|
+      expect(summary_list).to have_summary_item("Name", application.user.full_name)
       expect(summary_list).to have_summary_item("NPQ course", "#{application.course.name} (#{application.course.short_code})")
       expect(summary_list).to have_summary_item("Provider", application.lead_provider.name)
       expect(summary_list).to have_summary_item("Provider approval status", application.lead_provider_approval_status.humanize)
@@ -251,7 +249,7 @@ RSpec.feature "Applications in review", type: :feature do
     # check side nav
 
     within "#side-navigation" do
-      click_link application.course.name
+      click_link "Application details"
       expect(page).to have_current_path(npq_separation_admin_application_review_path(application))
     end
 
@@ -305,6 +303,32 @@ RSpec.feature "Applications in review", type: :feature do
     visit(edit_npq_separation_admin_applications_notes_path(application_for_hospital_school))
     click_on "Cancel"
     expect(page).to have_current_path(npq_separation_admin_application_path(application_for_hospital_school))
+  end
+
+  scenario "viewing user details" do
+    application = create(:application, :manual_review)
+
+    visit npq_separation_admin_application_review_path(application)
+
+    within(".govuk-summary-card", text: "Overview") do
+      within(".govuk-summary-list__row", text: "Name") do
+        expect(page).to have_text(application.user.full_name)
+        click_link("View user")
+      end
+    end
+
+    expect(page).to have_current_path(npq_separation_admin_user_path(application.user))
+    expect(page).to have_css("h1", text: application.user.full_name)
+
+    within(".govuk-summary-card", text: application.course.name) do
+      click_link("View full application")
+    end
+
+    expect(page).to have_current_path(npq_separation_admin_application_path(application))
+
+    within(first(".govuk-summary-list__row", text: "Name")) do
+      expect(page).to have_text(application.user.full_name)
+    end
   end
 
   scenario "Applications should display in correct order" do

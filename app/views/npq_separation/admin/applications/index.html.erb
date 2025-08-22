@@ -1,3 +1,5 @@
+<%= render "applications_side_navigation" %>
+
 <h1 class="govuk-heading-l">Applications</h1>
 
 <div class="admin-search-box">
@@ -79,7 +81,7 @@
       @applications.each do |application|
         body.with_row do |row|
           row.with_cell(text: application.created_at.to_fs(:govuk_short))
-          row.with_cell(text: govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user)))
+          row.with_cell(text: application.user.full_name)
           row.with_cell(text: application.employer_name_to_display)
           row.with_cell(text: govuk_link_to("View", npq_separation_admin_application_path(application.id)))
         end

@@ -48,35 +48,26 @@ RSpec.feature "User administration", type: :feature do
   end
 
   feature "viewing a user" do
-    scenario "shows side navigation with current user" do
-      visit(npq_separation_admin_user_path(user))
-
-      within "#side-navigation" do |side_navigation|
-        expect(side_navigation).to have_content("Overview")
-        expect(side_navigation).to have_content(user.full_name)
-        expect(side_navigation).to have_link("All applications", href: "/npq-separation/admin/applications")
-        expect(side_navigation).to have_link("In review", href: "/npq-separation/admin/applications/reviews")
-      end
-    end
-
     scenario "shows user details" do
       visit npq_separation_admin_user_path(user)
 
       expect(page).to have_css("h1", text: user.full_name)
 
-      expect(page).to have_content("User ID: #{user.ecf_id}")
-      expect(page).to have_content("Email: #{user.email}")
-      expect(page).to have_content("Date of birth: #{user.date_of_birth.to_fs(:govuk_short)}")
-      expect(page).to have_content("National Insurance: #{user.national_insurance_number}")
-      expect(page).to have_content("TRN: #{user.trn} Not verified")
-      expect(page).to have_content("Get an Identity ID: #{user.uid}")
+      within(".govuk-summary-card", text: "Overview") do |summary_card|
+        expect(summary_card).to have_summary_item("User ID", user.ecf_id)
+        expect(summary_card).to have_summary_item("Email", user.email)
+        expect(summary_card).to have_summary_item("Date of birth", user.date_of_birth.to_fs(:govuk_short))
+        expect(summary_card).to have_summary_item("National Insurance number", user.national_insurance_number)
+        expect(summary_card).to have_summary_item("TRN", user.trn, "Not verified")
+        expect(summary_card).to have_summary_item("Get an Identity ID", user.uid)
+      end
     end
 
     scenario "renders when attributes with method chains are nil" do
       user.update!(date_of_birth: nil)
       visit npq_separation_admin_user_path(user)
 
-      expect(page).to have_content("Date of birth:")
+      expect(page).to have_content("Date of birth")
     end
 
     scenario "shows a message if the user has no applications" do
@@ -98,7 +89,7 @@ RSpec.feature "User administration", type: :feature do
 
       expect(page).to have_css("h1", text: user.full_name)
       applications.each do |application|
-        within(".govuk-summary-card", text: "#{application.course.name} registration") do |summary_card|
+        within(".govuk-summary-card", text: application.course.name.to_s) do |summary_card|
           expect(summary_card).to have_summary_item("NPQ course", application.course.name)
           expect(summary_card).to have_summary_item("Provider", application.lead_provider.name)
           expect(summary_card).to have_summary_item("Eligible for funding", "No")
@@ -128,7 +119,11 @@ RSpec.feature "User administration", type: :feature do
       click_on("Continue")
 
       expect(page).to have_css("h1", text: user.full_name)
-      expect(page).to have_content("TRN: 2345678 Verified - manually")
+
+      within(".govuk-summary-card", text: "Overview") do |summary_card|
+        expect(summary_card).to have_summary_item("TRN", "2345678", "Verified - manually")
+      end
+
       expect(user.reload.trn).to eq "2345678"
     end
   end

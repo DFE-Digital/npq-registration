@@ -1,51 +1,70 @@
 <%= govuk_back_link(href: url_for(:back)) %>
 
-<% content_for :side_navigation do %>
-  <hr class="govuk-section-break govuk-section-break--m">
+<h1 class="govuk-heading-l"><%= @user.full_name %></h1>
 
-  <%= render NpqSeparation::SubNavigationComponent.new(
-    request.path,
-    heading: {
-      text: @user.full_name,
-      visible: true
-    },
-    structure: [
-      NpqSeparation::NavigationStructure::Node.new(
-        name: "Overview",
-        href: npq_separation_admin_user_path(@user),
-        prefix: npq_separation_admin_user_path(@user)
-      )
-    ]
-  ) %>
-<% end %>
-
-<h1 class="govuk-heading-l govuk-!-margin-bottom-1"><%= @user.full_name %></h1>
-
-<p class="govuk-body govuk-!-margin-bottom-2">
-  <strong>User ID:</strong>
-  <%= @user.ecf_id %>
-</p>
-<p class="govuk-body govuk-!-margin-bottom-2">
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-<p class="govuk-body govuk-!-margin-bottom-2">
-  <strong>Date of birth:</strong>
-  <%= @user.date_of_birth.try(:to_fs, :govuk_short) %>
-  |
-  <strong>National Insurance:</strong>
-  <%= @user.national_insurance_number %>
-</p>
-<p class="govuk-body govuk-!-margin-bottom-2">
-  <strong>TRN:</strong>
-  <%= @user.trn %>
-  <%= trn_verified_badge(@user) %>
-  <%= govuk_link_to "Change", npq_separation_admin_users_change_trn_path(@user) %>
-</p>
-<p class="govuk-body govuk-!-margin-bottom-6">
-  <strong>Get an Identity ID:</strong>
-  <%= @user.uid %>
-</p>
+<div class="govuk-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">
+      Overview
+    </h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          User ID
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.ecf_id %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Email
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.email %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Date of birth
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.date_of_birth.try(:to_fs, :govuk_short) %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          National Insurance number
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.national_insurance_number %>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          TRN
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.trn %>
+          <%= trn_verified_badge(@user) %>
+        <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="<%= npq_separation_admin_users_change_trn_path(@user) %>">Change<span class="govuk-visually-hidden"> age (Lead tenant)</span></a>
+        </dd>
+        </dd>
+      </div>
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Get an Identity ID
+        </dt>
+        <dd class="govuk-summary-list__value">
+          <%= @user.uid %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
 
 <% if @applications.none? %>
   <p class="govuk-body">This user has no applications.</p>
