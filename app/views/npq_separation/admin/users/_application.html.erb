@@ -5,7 +5,7 @@
   <%=
     govuk_summary_list(card: { title:, actions: }) do |sl|
       sl.with_row do |row|
-        row.with_key(text: "NPQ course")
+        row.with_key(text: "Course")
         row.with_value(text: application.course.name)
       end
 

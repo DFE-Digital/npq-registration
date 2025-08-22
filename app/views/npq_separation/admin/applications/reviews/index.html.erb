@@ -119,7 +119,7 @@
         body.with_row do |row|
           row.with_cell(text: application.created_at.to_formatted_s(:govuk_short))
           row.with_cell do
-            concat govuk_link_to(application.user.full_name, npq_separation_admin_user_path(application.user))
+            concat tag.p(application.user.full_name, class: "govuk-body")
             concat tag.p(application.employment_type.try(:humanize), class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
             concat tag.p(application.employer_name_to_display, class: 'govuk-body-s govuk-!-margin-top-1 govuk-!-margin-bottom-1')
           end
