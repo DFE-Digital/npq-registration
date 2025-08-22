@@ -22,7 +22,7 @@ module GetAnIdentityService
           return more_recent_data_recorded_success
         end
 
-        if user.update(update_params)
+        if update_user
           webhook_message.make_processed!
         else
           record_error(user.errors.full_messages.join(", "))
@@ -33,6 +33,7 @@ module GetAnIdentityService
 
     private
 
+      delegate :trn, :trn_lookup_status, to: :decorated_message
       delegate :decorated_message, to: :webhook_message
 
       def record_error(message)
@@ -69,15 +70,15 @@ module GetAnIdentityService
         @user ||= User.find_by_get_an_identity_id(decorated_message.uid)
       end
 
-      def update_params
-        {
+      def update_user
+        user.assign_attributes({
           full_name: decorated_message.full_name,
           date_of_birth: decorated_message.date_of_birth,
           email: decorated_message.email,
           updated_from_tra_at: decorated_message.sent_at,
-        }.tap do |params|
-          params.merge!(user.trn_update_params(trn: decorated_message.trn, trn_lookup_status: decorated_message.trn_lookup_status))
-        end
+        })
+        user.set_trn_from_provider_data(trn:, trn_lookup_status:)
+        user.save # rubocop:disable Rails/SaveBang - return value is used by caller
       end
     end
   end
