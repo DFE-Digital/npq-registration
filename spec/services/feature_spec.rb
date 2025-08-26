@@ -113,22 +113,6 @@ RSpec.describe Feature do
     end
   end
 
-  describe ".declarations_require_delivery_partner?" do
-    context "when disabled" do
-      it "returns false" do
-        expect(Feature).not_to be_declarations_require_delivery_partner
-      end
-    end
-
-    context "when enabled" do
-      before { Flipper.enable(Feature::DECLARATIONS_REQUIRE_DELIVERY_PARTNER) }
-
-      it "returns true" do
-        expect(Feature).to be_declarations_require_delivery_partner
-      end
-    end
-  end
-
   describe ".include_untested_api_attributes?" do
     context "when disabled" do
       it "returns false" do

@@ -319,8 +319,6 @@ RSpec.describe Declarations::Create, type: :model do
     end
 
     context "with the declarations_require_delivery_partner feature flag enabled" do
-      before { allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true) }
-
       it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
       it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
 
