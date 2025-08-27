@@ -36,12 +36,13 @@ module GetAnIdentityService
       delegate :trn, :trn_lookup_status, to: :decorated_message
       delegate :decorated_message, to: :webhook_message
 
-      def record_error(message)
+      def record_error(message, send_to_sentry: true)
         webhook_message.update!(
           status: :failed,
           status_comment: message,
           processed_at: Time.zone.now,
         )
+        Sentry.capture_message("[GAI webhook] #{message}") if send_to_sentry
         false
       end
 
@@ -50,7 +51,7 @@ module GetAnIdentityService
       end
 
       def no_user_found_failure
-        record_error("No user found with get_an_identity_id: #{decorated_message.uid}")
+        record_error("No user found with get_an_identity_id: #{decorated_message.uid}", send_to_sentry: false)
       end
 
       def incorrect_format_failure
