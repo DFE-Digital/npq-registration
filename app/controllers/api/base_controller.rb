@@ -52,5 +52,9 @@ module API
 
       render json: { errors: }, status: :gone
     end
+
+    def additional_fields
+      request.headers["HTTP_X_ADDITIONAL_FIELD_LIST"]&.split(",")&.map(&:to_sym) || []
+    end
   end
 end

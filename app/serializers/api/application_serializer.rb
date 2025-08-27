@@ -40,7 +40,14 @@ module API
         ].compact.max
       end
 
+      view :extra_fields do
+        extra_fields_checker = ->(field_name, _obj, options) { options[:additional_fields].include? field_name }
+
+        field(:some_extra_field, if: extra_fields_checker) { |_| "some_extra_field_value"}
+      end
+
       view :v3 do
+        include_view :extra_fields
         field(:schedule_identifier) { |a| a.schedule&.identifier }
       end
     end
