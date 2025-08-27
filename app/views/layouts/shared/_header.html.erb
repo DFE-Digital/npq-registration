@@ -1,17 +1,17 @@
 <%= govuk_header %>
 <%=
-  govuk_service_navigation do |sn|
-    sn.with_service_name(service_name: "Register for a national professional qualification", service_url: root_path)
+  govuk_service_navigation do |service_navigation|
+    service_navigation.with_service_name(service_name: "Register for a national professional qualification", service_url: root_path)
     if current_admin
-      sn.with_navigation_item(text: "Sign out", href: sign_out_user_path)
+      service_navigation.with_navigation_item(text: "Sign out", href: sign_out_user_path)
     elsif current_user
-      sn.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")
+      service_navigation.with_navigation_item(href: identity_link_uri(request.original_url), text: "DfE Identity account")
 
       if current_user.applications.any?
-        sn.with_navigation_item(href: application_count_based_account_url, text: "NPQ account")
+        service_navigation.with_navigation_item(href: application_count_based_account_url, text: "NPQ account")
       end
 
-      sn.with_navigation_item(href: sign_out_user_path, text: "Sign out")
+      service_navigation.with_navigation_item(href: sign_out_user_path, text: "Sign out")
     end
   end
 %>
