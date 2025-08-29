@@ -32,7 +32,7 @@ class NpqSeparation::Admin::Finance::StatementsController < NpqSeparation::Admin
 private
 
   def statement_params
-    params.permit(:lead_provider_id, :cohort_id, :payment_status, :statement)
+    params.permit(:lead_provider_id, :cohort_id, :payment_status, :statement, :output_fee)
           .tap { extract_period _1 }
           .tap { extract_state _1 }
           .compact_blank

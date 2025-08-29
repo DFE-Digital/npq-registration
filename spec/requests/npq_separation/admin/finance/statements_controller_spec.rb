@@ -11,7 +11,7 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
     [
       create(:statement, cohort:, lead_provider:, year: 2024, month: 10),
       create(:statement, cohort:, lead_provider:, year: 2024, month: 11),
-      create(:statement, cohort:, lead_provider:, year: 2024, month: 12),
+      create(:statement, cohort:, lead_provider:, year: 2024, month: 12, output_fee: false),
     ]
   end
 
@@ -52,6 +52,18 @@ RSpec.describe NpqSeparation::Admin::Finance::StatementsController, type: :reque
       end
 
       it { is_expected.to have_http_status(:ok) }
+    end
+
+    context "with params matching multiple statements using output fee" do
+      let(:params) do
+        {
+          output_fee: "true",
+        }
+      end
+
+      it { is_expected.to have_attributes body: %r{October 2024</td>} }
+      it { is_expected.to have_attributes body: %r{November 2024</td>} }
+      it { is_expected.not_to have_attributes body: %r{December 2024</td>} }
     end
 
     context "with params matching no statement statement" do

@@ -47,5 +47,17 @@
     </div>
   </div>
 
+  <div class="govuk-grid-row">
+    <% unless format_for_sidebar %>
+      <div class="<%= grid_column_class %>">
+        <%= f.govuk_select :output_fee,
+          options_for_select({ "Yes" => true, "No" => false }, output_fee),
+          options: { include_blank: 'All' },
+          label: { text: "Payment run", size: "s" }
+        %>
+      </div>
+    <% end %>
+  </div>
+
   <%= f.govuk_submit submit_button_text %>
 <% end %>

@@ -27,6 +27,10 @@ module NpqSeparation
         selection[:payment_status].presence
       end
 
+      def output_fee
+        selection[:output_fee]
+      end
+
       def lead_providers
         LeadProvider.all.alphabetical
       end
@@ -45,7 +49,7 @@ module NpqSeparation
       end
 
       def selected_statement
-        selection[:statement].presence || selection.values_at(:year, :month).join("-")
+        selection[:statement].presence
       end
     end
   end

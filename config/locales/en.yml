@@ -144,6 +144,8 @@ en:
       application:
         lead_provider: Provider
         funding_eligiblity_status_code: Funding eligibility status code
+      statement:
+        output_fee: Payment run
     errors:
       models:
         adjustment:
