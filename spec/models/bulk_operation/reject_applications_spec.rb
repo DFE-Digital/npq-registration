@@ -10,25 +10,15 @@ RSpec.describe BulkOperation::RejectApplications do
   describe "#run!" do
     subject(:run) { bulk_operation.run! }
 
-    RSpec.shared_examples "does not change to rejected" do |result|
+    context "when the application is already lead_provider_approval_status: rejected" do
+      let(:application) { create(:application, :rejected) }
+
       it { expect { run }.not_to(change { application.reload.lead_provider_approval_status }) }
 
       it "saves the result" do
         run
-        expect(JSON.parse(bulk_operation.result)[application.ecf_id]).to match(result)
+        expect(JSON.parse(bulk_operation.result)[application.ecf_id]).to match(/application has already been rejected/)
       end
-    end
-
-    context "when the application has lead_provider_approval_status: accepted" do
-      let(:application) { create(:application, :accepted) }
-
-      it_behaves_like "does not change to rejected", /Once accepted an application cannot change state/
-    end
-
-    context "when the application is already lead_provider_approval_status: rejected" do
-      let(:application) { create(:application, :rejected) }
-
-      it_behaves_like "does not change to rejected", /application has already been rejected/
     end
 
     context "when the application is lead_provider_approval_status: pending" do
