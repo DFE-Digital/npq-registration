@@ -59,4 +59,5 @@ class CreateContractRakeTask
     end
   end
 end
+
 CreateContractRakeTask.new
