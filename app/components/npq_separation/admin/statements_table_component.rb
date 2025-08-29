@@ -27,6 +27,7 @@ module NpqSeparation
           "Cohort",
           "Statement date",
           "Status",
+          "Payment run",
           "Actions",
         ].compact
       end
@@ -38,6 +39,7 @@ module NpqSeparation
             cohort_link(statement),
             helpers.statement_name(statement),
             statement_tag(statement),
+            payment_run_tag(statement),
             view_link(statement),
           ].compact
         end
@@ -65,10 +67,14 @@ module NpqSeparation
       end
 
       def statement_tag(statement)
-        govuk_tag(
+        helpers.govuk_tag(
           text: statement.state.capitalize,
           classes: STATE_COLOURS[statement.state.to_sym],
         )
+      end
+
+      def payment_run_tag(statement)
+        helpers.boolean_red_green_tag(statement.output_fee)
       end
 
       def metadata_link_arguments
