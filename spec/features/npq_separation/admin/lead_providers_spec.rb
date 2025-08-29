@@ -30,8 +30,9 @@ RSpec.feature "Listing and viewing course providers", type: :feature do
     visit(npq_separation_admin_lead_providers_path)
     click_link(lead_provider.name)
 
-    expect(page).to have_css("h1", text: lead_provider.name)
-    expect(page).to have_css("h2", text: "Cohort 2025 to 2026")
+    expect(page).to have_css(".govuk-caption-l", text: lead_provider.name)
+    expect(page).to have_css("h1", text: "Cohort 2025 to 2026")
+
     expect(page).to have_table(with_rows: ["Delivery partner" => delivery_partner_25.name])
 
     click_link("Cohort 2024 to 2025")
@@ -39,10 +40,5 @@ RSpec.feature "Listing and viewing course providers", type: :feature do
 
     click_link("Cohort 2023 to 2024")
     expect(page).to have_table(with_rows: ["Delivery partner" => delivery_partner_23.name])
-
-    within "#side-navigation" do
-      click_link "Providers"
-    end
-    expect(page).to have_current_path(npq_separation_admin_lead_providers_path)
   end
 end

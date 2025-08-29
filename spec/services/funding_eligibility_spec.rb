@@ -178,7 +178,6 @@ RSpec.describe FundingEligibility do
     subject { funding_eligibility.funding_eligiblity_status_code }
 
     before do
-      allow_any_instance_of(PrivateChildcareProvider).to receive(:on_childminders_list?).and_return(false)
       allow_any_instance_of(PrivateChildcareProvider).to receive(:eyl_disadvantaged?).and_return(false)
       allow_any_instance_of(School).to receive(:la_disadvantaged_nursery?).and_return(false)
       allow_any_instance_of(School).to receive(:eyl_disadvantaged?).and_return(false)

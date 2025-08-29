@@ -35,7 +35,7 @@ end
 - Uses `PP50_FE_UKPRN_HASH` for lookup in the code.
 
 ### Childminders
-**File:** `NPQ_EY_Childminders_2025_cohort.csv`
+**File:** `NPQ_OFSTED_Childminders_2025_cohort.csv`
 - Matches institutions using the `ofsted_urn` field from the document.
 - Institutions are instances of the `PrivateChildcareProvider` model.
 - Uses `CHILDMINDERS_OFSTED_URN_HASH` for lookup in the code.
