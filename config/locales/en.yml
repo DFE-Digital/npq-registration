@@ -32,11 +32,11 @@ en:
     has_another_accepted_application: The participant has already had an application accepted for this course.
     not_eligible_for_funded_place: The participant is not eligible for funding, so '#/funded_place' cannot be set to true.
     has_already_been_rejected: This NPQ application has already been rejected
-    cannot_change_from_accepted: Once accepted an application cannot change state
     cannot_change_funded_status_from_non_accepted: You must accept the application before attempting to change the '#/funded_place' setting.
     cannot_change_funded_status_non_eligible: This participant is not eligible for funding. Contact us if you think this is wrong.
     cohort_does_not_accept_capping: Leave the '#/funded_place' field blank. It's only needed for participants starting NPQs from autumn 2024 onwards.
     cannot_change_funded_place: You cannot change the funded place because declarations have been submitted. You will need to void the existing declarations and resubmit them after changing the funded place.
+    cannot_reject_with_declarations: This application has declarations that prevent it from being rejected. Void the declarations first, or contact us for assistance.
 
   declaration: &declaration
     blank: You must specify a declaration

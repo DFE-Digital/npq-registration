@@ -16,9 +16,28 @@ RSpec.describe Applications::Reject, type: :model do
     end
 
     context "when the application is accepted" do
-      let(:application) { create(:application, :accepted) }
+      invalid_states = %w[submitted eligible payable paid]
 
-      it { is_expected.to have_error(:application, :cannot_change_from_accepted, "Once accepted an application cannot change state") }
+      let(:application) { create(:application, :accepted) }
+      let(:message) { I18n.t("activemodel.errors.models.applications/reject.attributes.application.cannot_reject_with_declarations") }
+
+      before { create(:declaration, application:, state:) }
+
+      invalid_states.each do |state|
+        context "with a #{state} declaration" do
+          let(:state) { state }
+
+          it { is_expected.to have_error(:application, :cannot_reject_with_declarations, message) }
+        end
+      end
+
+      Declaration.states.keys.without(invalid_states).each do |state|
+        context "with a #{state} declaration" do
+          let(:state) { state }
+
+          it { is_expected.not_to have_error(:application, :cannot_reject_with_declarations, message) }
+        end
+      end
     end
   end
 
