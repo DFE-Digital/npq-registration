@@ -99,7 +99,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
     expect_page_to_have(path: "/registration/check-answers", submit_form: true, submit_button_text: "Submit") do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "Before #{application_course_start_date}",
+          "Course start" => "In #{application_course_start_date}",
           "Workplace in England" => "Yes",
           "Work setting" => "A school",
           "Course" => "Early headship coaching offer",
@@ -196,7 +196,7 @@ RSpec.feature "Happy journeys", :rack_test_driver, :with_default_schedules, type
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "Before #{application_course_start_date}",
+        "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-early-headship-coaching-offer",
         "ehco_headteacher" => "yes",
