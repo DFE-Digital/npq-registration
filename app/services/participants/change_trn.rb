@@ -17,7 +17,7 @@ module Participants
     def change_trn
       return false if invalid?
 
-      user.update(trn:, trn_verified: true) # rubocop:disable Rails/SaveBang - return value is used by caller
+      user.update(trn:, trn_verified: true, trn_lookup_status: nil) # rubocop:disable Rails/SaveBang - return value is used by caller
     end
 
   private

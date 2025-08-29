@@ -22,7 +22,7 @@ module GetAnIdentityService
           return more_recent_data_recorded_success
         end
 
-        if user.update(update_params)
+        if update_user
           webhook_message.make_processed!
         else
           record_error(user.errors.full_messages.join(", "))
@@ -33,14 +33,16 @@ module GetAnIdentityService
 
     private
 
+      delegate :trn, :trn_lookup_status, to: :decorated_message
       delegate :decorated_message, to: :webhook_message
 
-      def record_error(message)
+      def record_error(message, send_to_sentry: true)
         webhook_message.update!(
           status: :failed,
           status_comment: message,
           processed_at: Time.zone.now,
         )
+        Sentry.capture_message("[GAI webhook] #{message}") if send_to_sentry
         false
       end
 
@@ -49,7 +51,7 @@ module GetAnIdentityService
       end
 
       def no_user_found_failure
-        record_error("No user found with get_an_identity_id: #{decorated_message.uid}")
+        record_error("No user found with get_an_identity_id: #{decorated_message.uid}", send_to_sentry: false)
       end
 
       def incorrect_format_failure
@@ -69,16 +71,15 @@ module GetAnIdentityService
         @user ||= User.find_by_get_an_identity_id(decorated_message.uid)
       end
 
-      def update_params
-        {
+      def update_user
+        user.assign_attributes({
           full_name: decorated_message.full_name,
           date_of_birth: decorated_message.date_of_birth,
-          trn: decorated_message.trn,
-          trn_verified: decorated_message.trn_verified,
-          trn_lookup_status: decorated_message.trn_lookup_status,
           email: decorated_message.email,
           updated_from_tra_at: decorated_message.sent_at,
-        }
+        })
+        user.set_trn_from_provider_data(trn:, trn_lookup_status:)
+        user.save # rubocop:disable Rails/SaveBang - return value is used by caller
       end
     end
   end

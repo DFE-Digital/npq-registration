@@ -12,37 +12,30 @@ module GetAnIdentity
       end
 
       def uid
-        message_json["uid"]
+        message_json.fetch("userId")
       end
 
       def email
-        message_json["emailAddress"]
+        message_json.fetch("emailAddress")
       end
 
       def full_name
-        [
-          message_json["firstName"],
-          message_json["lastName"],
-        ].join(" ")
+        message_json.fetch("preferredName")
       end
 
       def date_of_birth
-        raw_dob = message_json["dateOfBirth"]
+        raw_dob = message_json.fetch("dateOfBirth")
         return if raw_dob.blank?
 
         Date.parse(raw_dob, "%Y-%m-%d")
       end
 
       def trn
-        message_json["trn"]
+        message_json.fetch("trn")
       end
 
       def trn_lookup_status
-        message_json["trnLookupStatus"]
-      end
-
-      def trn_verified
-        trn_lookup_status == "Found"
+        message_json.fetch("trnLookupStatus")
       end
 
       def sent_at
@@ -52,7 +45,7 @@ module GetAnIdentity
     private
 
       def message_json
-        webhook_message.message
+        webhook_message.message["user"]
       end
     end
   end
