@@ -25,7 +25,7 @@ class EylUsers3181
       task eyl_users: :environment do
         CSV.open(FILENAME, "w") do |csv|
           csv << CSV_HEADERS
-          applications.each do |application|
+          applications.find_each(batch_size: 500) do |application|
             csv << [
               application.user.full_name,
               application.user.email,
@@ -55,7 +55,8 @@ private
   end
 
   def started?(application)
-    !!application.declarations.find { |declaration| declaration.declaration_type == "started" }
+    application.declarations.any?(&:started_declaration_type?)
   end
 end
+
 EylUsers3181.new

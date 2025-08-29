@@ -3,6 +3,18 @@ require "rails_helper"
 RSpec.describe "one_off:eyl_users" do
   subject(:run_task) { Rake::Task["one_off:eyl_users"].invoke }
 
+  before do
+    create(:declaration, user: user_with_eyl_course, application:, course:)
+    create(:declaration, user: user_with_eyl_course, application: application_2, course:)
+    create(:declaration, user: user_with_eyl_deferred, application: application_deferred, course:)
+    create(:declaration, user: user_with_eyl_withdrawn, application: application_withdrawn, course:)
+    create(:declaration, user: user_with_other_course, application: application_other_course, course: other_course)
+    stub_const("EylUsers3181::FILENAME", file.path)
+  end
+
+  after { file.unlink }
+
+  let(:file) { Tempfile.new }
   let(:course) { create(:course, :early_years_leadership) }
   let(:other_course) { create(:course, :senior_leadership) }
   let(:user_with_eyl_course) { create(:user) }
@@ -75,24 +87,14 @@ RSpec.describe "one_off:eyl_users" do
     CSV.generate_lines(
       [
         EylUsers3181::CSV_HEADERS,
-        expected_data_for_application_with_no_declarations,
         expected_data_for_application,
         expected_data_for_application_2,
+        expected_data_for_application_with_no_declarations,
       ],
     )
   end
 
   let(:actual_csv) { File.read(EylUsers3181::FILENAME) }
-
-  before do
-    create(:declaration, user: user_with_eyl_course, application:, course:)
-    create(:declaration, user: user_with_eyl_course, application: application_2, course:)
-    create(:declaration, user: user_with_eyl_deferred, application: application_deferred, course:)
-    create(:declaration, user: user_with_eyl_withdrawn, application: application_withdrawn, course:)
-    create(:declaration, user: user_with_other_course, application: application_other_course, course: other_course)
-  end
-
-  after { File.unlink(EylUsers3181::FILENAME) }
 
   it "creates a CSV file with EYL users" do
     run_task
