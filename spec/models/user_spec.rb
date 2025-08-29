@@ -512,4 +512,24 @@ RSpec.describe User do
       end
     end
   end
+
+  describe "#trn_lookup_status_found?" do
+    subject { user.trn_lookup_status_found? }
+
+    let(:user) { build(:user, trn_lookup_status:) }
+
+    context "when trn_lookup_status is 'Found'" do
+      let(:trn_lookup_status) { "Found" }
+
+      it { is_expected.to be true }
+    end
+
+    [nil, "None", "Pending", "Failed"].each do |status|
+      context "when trn_lookup_status is #{status.inspect}" do
+        let(:trn_lookup_status) { status }
+
+        it { is_expected.to be false }
+      end
+    end
+  end
 end
