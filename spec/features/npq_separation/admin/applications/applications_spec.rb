@@ -441,9 +441,10 @@ RSpec.feature "Listing and viewing applications", type: :feature do
   end
 
   scenario "changing schedule cohort" do
+    future_cohort = create(:cohort, start_year: 3.years.from_now.year)
     application = create(:application, cohort: Cohort.first)
     create(:schedule, :npq_leadership_autumn, cohort: application.cohort)
-    create(:schedule, :npq_leadership_spring, cohort: create(:cohort, start_year: 2025))
+    create(:schedule, :npq_leadership_spring, cohort: future_cohort)
 
     visit npq_separation_admin_application_path(application)
 
@@ -456,11 +457,11 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     click_button "Continue"
     expect(page).to have_css(".govuk-error-message", text: "Choose a cohort")
 
-    choose "2025", visible: :all
+    choose future_cohort.start_year.to_s, visible: :all
     click_button "Continue"
 
     within(".govuk-summary-list__row", text: "Schedule cohort") do |row|
-      expect(row).to have_text("2025")
+      expect(row).to have_text(future_cohort.start_year.to_s)
     end
   end
 

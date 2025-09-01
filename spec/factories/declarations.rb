@@ -70,7 +70,7 @@ FactoryBot.define do
     end
 
     trait :with_delivery_partner do
-      delivery_partner { create(:delivery_partner, lead_provider:) }
+      delivery_partner { create(:delivery_partner, lead_providers: { cohort => lead_provider }) }
     end
   end
 end

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "update_application" do
   include_context "with default schedules"
 
-  let(:cohort) { create(:cohort, :current, :without_funding_cap) }
+  let(:cohort) { create(:cohort, :previous, :without_funding_cap) }
 
   shared_examples "outputting an error" do
     it "outputs an error message" do
@@ -69,7 +69,7 @@ RSpec.describe "update_application" do
     after { Rake::Task["update_application:withdraw"].reenable }
 
     let(:participant) { create(:user) }
-    let(:application) { create(:application, :with_declaration, user: participant) }
+    let(:application) { create(:application, :with_declaration, user: participant, cohort:) }
 
     it "withdraws the application" do
       run_task
@@ -126,7 +126,7 @@ RSpec.describe "update_application" do
     end
 
     context "when the application has declarations" do
-      let(:application) { create(:application, :with_declaration) }
+      let(:application) { create(:application, :with_declaration, cohort:) }
 
       it "raises an error" do
         expect { run_task }.to raise_error(RuntimeError, "Cannot change cohort for an application with declarations")
@@ -165,7 +165,7 @@ RSpec.describe "update_application" do
     end
 
     context "when the application has declarations" do
-      let(:application) { create(:application, :with_declaration) }
+      let(:application) { create(:application, :with_declaration, cohort:) }
 
       it "raises an error" do
         expect { run_task }.to raise_error(RuntimeError, "Cannot change schedule for an application with declarations")
