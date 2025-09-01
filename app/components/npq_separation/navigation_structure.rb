@@ -14,7 +14,11 @@ module NpqSeparation
     #             this isn't done on the fly so we can pass the value along from
     #             the primary nav to the sub nav
     # * nodes   - a list of nodes that sit under this one in the structure
-    Node = Struct.new(:name, :href, :prefix, :current, :nodes, keyword_init: true)
+    Node = Struct.new(:name, :href, :prefix, :current, :nodes, keyword_init: true) do
+      def to_service_navigation_item
+        { text: name, href: href, active_when: prefix }
+      end
+    end
 
     def primary_structure
       structure.keys

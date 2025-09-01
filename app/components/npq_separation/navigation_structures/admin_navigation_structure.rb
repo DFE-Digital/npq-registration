@@ -8,6 +8,10 @@ module NpqSeparation
         @current_admin = current_admin
       end
 
+      def service_navigation_items
+        structure.keys.map(&:to_service_navigation_item)
+      end
+
     private
 
       # Returns a hash where the keys are primary nodes and the values are

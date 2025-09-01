@@ -19,8 +19,6 @@
     <div class="govuk-width-container">
       <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, structure: admin_navigation_structure) %>
 
-      <%= render(primary_navigation) %>
-
       <main class="govuk-main-wrapper" id="main-content">
         <%= render partial: "layouts/shared/messages" %>
 
