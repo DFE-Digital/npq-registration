@@ -87,7 +87,7 @@ RSpec.describe Statements::SummaryCalculator do
 
         travel_to 1.month.from_now do
           create(:statement, :next_output_fee, lead_provider:, cohort: application.cohort)
-          Declarations::Void.new(declaration: awaiting_clawback).void || raise("Failed to void")
+          Declarations::Void.new(declaration: awaiting_clawback).void || raise("Could not void")
         end
       end
 
