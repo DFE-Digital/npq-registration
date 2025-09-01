@@ -30,6 +30,10 @@ module NpqSeparation
       structure.fetch(primary_section)
     end
 
+    def service_navigation_items
+      primary_structure.map(&:to_service_navigation_item)
+    end
+
   private
 
     def structure = fail(NotImplementedError)
