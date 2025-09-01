@@ -5,7 +5,7 @@ RSpec.describe NpqSeparation::ServiceNavigationComponent, type: :component do
 
   let(:actor)     { nil }
   let(:component) { described_class.new(actor:, request:) }
-  let(:request)   { double(path: "/", original_url: "https://www.example.com") }
+  let(:request)   { instance_double(ActionDispatch::Request, path: "/", original_url: "https://www.example.com") }
 
   before { allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(actor) }
 

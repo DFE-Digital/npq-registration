@@ -51,7 +51,7 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   let(:default_to_first_section) { false }
 
   subject do
-    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_path, default_to_first_section: default_to_first_section), heading:)
+    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_path, default_to_first_section:), heading:)
   end
 
   it "renders a visually hidden level 2 heading" do
