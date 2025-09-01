@@ -151,7 +151,7 @@ FactoryBot.define do
     # setting it to false
     before(:create) do |schedule, evaluator|
       if schedule.applies_from.future? && evaluator.change_applies_dates
-        schedule.applies_from = Date.current - 1.week
+        schedule.applies_from = Date.current - 1.month
         schedule.applies_to = Date.current + 1.month
       end
     end
