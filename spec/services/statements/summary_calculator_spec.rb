@@ -75,7 +75,23 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "when there are clawbacks" do
-      let(:application) do
+      before do
+        awaiting_clawback = travel_to 2.months.ago do
+          application
+
+          earlier_statement =
+            create(:statement, :next_output_fee, lead_provider:, cohort: application.cohort)
+
+          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement: earlier_statement)
+        end
+
+        travel_to 1.month.from_now do
+          create(:statement, :next_output_fee, lead_provider:, cohort: application.cohort)
+          Declarations::Void.new(declaration: awaiting_clawback).void || raise("Failed to void")
+        end
+      end
+
+      let :application do
         create(
           :application,
           :accepted,
@@ -86,21 +102,14 @@ RSpec.describe Statements::SummaryCalculator do
         )
       end
 
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
-          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement:)
-        end
-      end
       let(:expected_total_clawbacks) { 260 }
 
-      before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
-        end
-      end
-
       it "deducts the clawbacks from the total" do
-        expect(subject.total_payment).to match_bigdecimal(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding - expected_total_clawbacks)
+        expect(subject.total_payment)
+          .to match_bigdecimal(default_total +
+                               expected_total_output_payment +
+                               expected_total_targeted_delivery_funding -
+                               expected_total_clawbacks)
       end
     end
 
