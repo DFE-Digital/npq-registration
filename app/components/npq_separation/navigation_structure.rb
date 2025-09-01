@@ -24,8 +24,14 @@ module NpqSeparation
       structure.keys
     end
 
-    def sub_structure(primary_section_name)
-      primary_section = structure.keys.find { |section| section.name == primary_section_name } or fail(SectionNotFoundError)
+    def sub_structure(path, default_to_first_section: false)
+      primary_section = primary_structure.find { |section| path.start_with?(section.prefix) }
+
+      if primary_section.nil?
+        fail(SectionNotFoundError) unless default_to_first_section
+
+        primary_section = primary_structure.first
+      end
 
       structure.fetch(primary_section)
     end

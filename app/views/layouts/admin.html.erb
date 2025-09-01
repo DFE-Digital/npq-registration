@@ -17,8 +17,6 @@
     <%= render partial: "layouts/shared/header" %>
 
     <div class="govuk-width-container">
-      <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, structure: admin_navigation_structure) %>
-
       <main class="govuk-main-wrapper" id="main-content">
         <%= render partial: "layouts/shared/messages" %>
 
@@ -27,7 +25,7 @@
             <%=
               render NpqSeparation::SubNavigationComponent.new(
                 request.path,
-                structure: admin_navigation_structure.sub_structure(primary_navigation.current_section.name),
+                structure: admin_navigation_structure.sub_structure(request.path, default_to_first_section: true),
               )
             %>
 
