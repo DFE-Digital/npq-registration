@@ -7,16 +7,16 @@ RSpec.describe Declarations::Create, type: :model do
   let(:cohort) { create(:cohort, :current) }
   let(:course_group) { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
   let(:course) { create(:course, :senior_leadership, course_group:) }
-  let!(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
-  let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:) }
+  let(:schedule) { create(:schedule, :npq_leadership_autumn, course_group:, cohort:) }
+  let(:application) { create(:application, :accepted, cohort:, course:, lead_provider:, schedule:) }
   let(:participant) { application.user }
   let(:participant_id) { participant.ecf_id }
   let(:declaration_type) { "started" }
   let(:declaration_date) { schedule.applies_from + 1.hour }
   let(:course_identifier) { course.identifier }
   let(:has_passed) { true }
-  let!(:delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
-  let!(:secondary_delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
+  let(:delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
+  let(:secondary_delivery_partner_id) { create(:delivery_partner, lead_providers: { cohort => lead_provider }).ecf_id }
   let(:params) do
     {
       lead_provider:,
@@ -463,10 +463,10 @@ RSpec.describe Declarations::Create, type: :model do
       before do
         travel_to(1.month.ago) do
           application
-          create(:declaration, application:, declaration_type:, declaration_date: 1.month.ago)
-          create(:declaration, application:, declaration_type: "retained-1", declaration_date: 1.month.ago)
-          create(:declaration, application:, declaration_type: "retained-2", declaration_date: 1.month.ago)
-          create(:declaration, application:, declaration_type: "completed", declaration_date: 1.month.ago)
+          create(:declaration, application:, declaration_type: "started")
+          create(:declaration, application:, declaration_type: "retained-1")
+          create(:declaration, application:, declaration_type: "retained-2")
+          create(:declaration, application:, declaration_type: "completed")
         end
         newer_application
       end
