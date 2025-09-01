@@ -51,7 +51,7 @@ module ApplicationHelper
   end
 
   def application_course_start_date
-    "spring 2025"
+    "autumn 2025"
   end
 
   def show_otp_code_in_ui(current_env, admin)
