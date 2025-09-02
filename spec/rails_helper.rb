@@ -162,6 +162,10 @@ RSpec.configure do |config|
     example.run
     Capybara.current_driver = Capybara.default_driver
   end
+
+  config.around(:each, type: :feature) do |example|
+    Time.use_zone("London") { example.run }
+  end
 end
 
 Shoulda::Matchers.configure do |config|
