@@ -123,18 +123,6 @@ en:
     blank: "The '#/%{parameterized_attribute}' is missing from your request. Please include a 'passed' or 'failed' value and try again."
     inclusion: "The attribute '#/%{parameterized_attribute}' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration."
 
-  participant_outcomes:
-    na: "N/A"
-    declaration_outcomes: "Declaration Outcomes"
-    passed: "Passed"
-    failed: "Failed"
-    passed_and_recorded: "Passed and recorded"
-    failed_and_recorded: "Failed and recorded"
-    passed_but_not_recorded: "Passed but not recorded"
-    failed_but_not_recorded: "Failed but not recorded"
-    pending: "Pending"
-    resend: "Resend"
-
   time:
     formats:
       admin: "%R on %d/%m/%Y"
