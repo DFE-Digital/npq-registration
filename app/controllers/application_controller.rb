@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  around_action :set_time_zone
   before_action :clear_null_user_sessions
   before_action :set_cache_headers
   before_action :authenticate_user!
@@ -44,7 +45,7 @@ private
   def current_admin
     return unless session[:admin_id]
 
-    if session[:admin_sign_in_at].nil? || session[:admin_sign_in_at] < Time.zone.now.beginning_of_day
+    if session[:admin_sign_in_at].nil? || session[:admin_sign_in_at] < Time.zone.now.utc.beginning_of_day
       reset_session
       nil
     else
@@ -69,5 +70,10 @@ private
       reset_session
       redirect_to root_path
     end
+  end
+
+  def set_time_zone(&block)
+    # Show times in UK local time, ie BST in summer and UTC in winter
+    Time.use_zone("London", &block)
   end
 end
