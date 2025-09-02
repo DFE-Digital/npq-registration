@@ -245,10 +245,6 @@ en:
               *completion_date
             ecf_id:
               *ecf_id
-        participant_outcome_api_request:
-          attributes:
-            ecf_id:
-              *ecf_id
         schedule:
           attributes:
             ecf_id:

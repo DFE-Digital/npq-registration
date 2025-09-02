@@ -23,11 +23,6 @@ RSpec.describe ParticipantOutcomes::Query do
       let!(:outcome1) { create(:participant_outcome) }
       let!(:outcome2) { create(:participant_outcome) }
 
-      before do
-        create(:participant_outcome_api_request, participant_outcome: outcome1)
-        create(:participant_outcome_api_request, participant_outcome: outcome1)
-      end
-
       it "does not return duplicate outcomes" do
         query = described_class.new
         expect(query.participant_outcomes).to contain_exactly(outcome1, outcome2)

@@ -1,6 +1,5 @@
 class ParticipantOutcome < ApplicationRecord
   belongs_to :declaration
-  has_many :participant_outcome_api_requests
 
   validates :ecf_id, uniqueness: { case_sensitive: false }
   validates :state, presence: true
