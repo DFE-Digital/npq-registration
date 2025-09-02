@@ -92,8 +92,6 @@ shared:
     - state
     - completion_date
     - declaration_id
-    - qualified_teachers_api_request_successful
-    - sent_to_qualified_teachers_api_at
     - created_at
     - updated_at
     - ecf_id

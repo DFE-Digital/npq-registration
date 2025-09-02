@@ -276,23 +276,6 @@ RSpec.feature "Listing and viewing applications", type: :feature do
     expect(page).to have_text(user.full_name)
   end
 
-  scenario "resending outcome to qualified teachers api" do
-    outcome = create(:participant_outcome, :unsuccessfully_sent_to_qualified_teachers_api)
-
-    visit npq_separation_admin_application_path(outcome.application_id)
-
-    expect(page).to have_css("h1", text: "Application details")
-
-    within(".govuk-table tbody tr:first-of-type td:last-of-type") do |action_cell|
-      expect(action_cell).to have_button("Resend")
-
-      click_button("Resend")
-    end
-
-    expect(page).to have_css("h1", text: "Application details")
-    expect(page).to have_css(".govuk-notification-banner--success", text: /rescheduled/i)
-  end
-
   scenario "viewing user details" do
     application = create(:application, :accepted)
 
