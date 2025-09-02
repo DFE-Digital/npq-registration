@@ -642,14 +642,6 @@ en:
               blank: Enter the new amount
               greater_than_or_equal_to: Amount must be a positive number
               not_a_number: Amount must be a number, without commas, or the £ symbol
-        qualified_teachers_api_sender:
-          already_successfully_sent_to_api: "This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)"
-          already_unsuccessfully_sent_to_api: "This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)"
-          attributes:
-            participant_outcome_id:
-              blank: "The property '#/missing_participant_outcome_id' must be present"
-            participant_outcome:
-              blank: "There's no participant outcome for the given ID"
         statements/payment_authorisation_form:
           attributes:
             checks_done:
