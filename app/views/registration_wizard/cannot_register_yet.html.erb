@@ -7,11 +7,20 @@
 %>
   <h1 class="govuk-heading-xl">You cannot register yet</h1>
 
-  <p class="govuk-body">Registrations are currently only open for courses starting before <%= application_course_start_date %>.</p>
+  <p class="govuk-body">Registrations are currently only open for courses starting in autumn 2025.</p>
 
-  <p class="govuk-body">
-    Registrations for courses starting later in the year usually open in the spring.
-    <%= link_to "Request email updates to tell you when registration opens", new_email_update_path, class: "govuk-link" %>.
-    You can also tell us about your interest in the special educational needs coordinator (SENCO) NPQ course.
+  <p class="govuk-body">The next cohort will begin their course in autumn 2026.</p>
+
+  <h2 class="govuk-heading-m">Stay informed</h2>
+
+  <p class="govuk-body">You can sign up for email updates to:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>find out when NPQ registration opens</li>
+    <li>tell us if you’re interested in the special educational needs co-ordinator (SENCO) NPQ</li>
+  </ul>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <%= govuk_link_to "Sign up for updates", new_email_update_path %>
   </p>
 <% end %>

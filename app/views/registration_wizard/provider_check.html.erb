@@ -1,3 +1,7 @@
+<%= content_for :before_submit do %>
+  <%= govuk_warning_text(text: "If you enter your information incorrectly, it may result in you not being offered a funded place on an NPQ course.") %>
+<% end %>
+
 <%=
   render(
     'registration_wizard/shared/questions_page',

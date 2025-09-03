@@ -52,11 +52,11 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     School.create!(urn: 100_002, name: "open newcastle school", address_1: "street 3", town: "newcastle", establishment_status_code: "1")
 
     expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-      page.fill_in "Where is your workplace located?", with: "manchester"
+      page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: "manchester"
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode.")
+      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.choose_school"))
 
       within ".npq-js-reveal" do
         page.fill_in "What is the name of your workplace?", with: "open"
@@ -80,7 +80,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/funding-eligibility-maths", submit_form: true) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("You’re eligible for scholarship funding for the Leading primary mathematics NPQ, but this does not guarantee funding for your course.")
+      expect(page).to have_text("You’re eligible for scholarship funding for the Leading primary mathematics NPQ, but this does not guarantee a funded place is available.")
     end
 
     expect_page_to_have(path: "/registration/choose-your-provider", submit_form: true) do
