@@ -95,7 +95,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "Before #{application_course_start_date}",
+          "Course start" => "In #{application_course_start_date}",
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Work setting" => "Early years or childcare",
@@ -141,7 +141,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "employment_role" => nil,
       "funded_place" => nil,
       "funding_choice" => "school",
-      "funding_eligiblity_status_code" => "ineligible_establishment_type",
+      "funding_eligiblity_status_code" => "early_years_invalid_npq",
       "headteacher_status" => nil,
       "itt_provider_id" => nil,
       "lead_mentor" => false,
@@ -176,12 +176,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "Before #{application_course_start_date}",
+        "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
-        "funding_eligiblity_status_code" => "ineligible_establishment_type",
+        "funding_eligiblity_status_code" => "early_years_invalid_npq",
         "institution_identifier" => "School-100000",
         "institution_location" => "manchester",
         "institution_name" => js ? "" : "open",

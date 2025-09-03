@@ -23,7 +23,7 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
         end
       end
 
-      it { is_expected.to include(/billable or submitted declaration exists/i) }
+      it { is_expected.to eq [I18n.t("activemodel.errors.models.applications/change_funding_eligibility.attributes.base.declaration_exists")] }
     end
 
     context "with application with submitted declarations" do
@@ -37,7 +37,7 @@ RSpec.describe Applications::ChangeFundingEligibility, type: :model do
         end
       end
 
-      it { is_expected.to include(/billable or submitted declaration exists/i) }
+      it { is_expected.to eq [I18n.t("activemodel.errors.models.applications/change_funding_eligibility.attributes.base.declaration_exists")] }
     end
 
     context "with application with funded place" do

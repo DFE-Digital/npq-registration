@@ -12,7 +12,7 @@ RSpec.feature "Statement", type: :feature do
     [
       create(:contract, course: create(:course, :leading_teaching), statement:),
       create(:contract, course: create(:course, :leading_behaviour_culture), statement:),
-      create(:contract, course: create(:course, :leading_primary_mathmatics), statement:),
+      create(:contract, course: create(:course, :leading_primary_mathematics), statement:),
     ]
   end
 
@@ -23,15 +23,6 @@ RSpec.feature "Statement", type: :feature do
     create(:schedule, :npq_specialist_spring)
 
     sign_in_as(create(:admin))
-  end
-
-  scenario "shows side navigation with current statement highlighted" do
-    visit(npq_separation_admin_finance_statement_path(statement))
-
-    within "#side-navigation" do |side_navigation|
-      expect(side_navigation).to have_content("Finance statement")
-      expect(side_navigation).to have_content("#{statement.lead_provider.name}, #{Date::MONTHNAMES[statement.month]} #{statement.year}")
-    end
   end
 
   scenario "see details" do

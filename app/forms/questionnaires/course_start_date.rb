@@ -42,12 +42,12 @@ module Questionnaires
     end
 
     def requirements_met?
-      query_store.current_user&.actual_user?
+      query_store.current_user
     end
 
     def next_step
       if course_start_date == "yes"
-        wizard.store["course_start"] = "Before #{application_course_start_date}"
+        wizard.store["course_start"] = "In #{application_course_start_date}"
         wizard.current_user.update!(notify_user_for_future_reg: false)
         :provider_check
       else

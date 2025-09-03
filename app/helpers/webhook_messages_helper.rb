@@ -2,12 +2,10 @@ module WebhookMessagesHelper
   def webhook_message_status_tag(webhook_message)
     text = webhook_message.status
 
-    colour = case status
-             when "pending"
-               "grey"
+    colour = case text
              when "processed"
                "green"
-             when "unhandled_message_type", "error"
+             when "unhandled_message_type", "error", "failed"
                "red"
              else
                "grey"

@@ -71,10 +71,14 @@ RSpec.describe Participants::ChangeTrn, type: :model do
     end
 
     context "when trn_verified is false" do
-      let(:user) { create(:user, trn: original_trn) }
+      let(:user) { create(:user, trn: original_trn, trn_lookup_status: "Failed") }
 
       it "updates trn_verified to true" do
         expect { subject }.to change(user, :trn_verified).from(false).to(true)
+      end
+
+      it "updates trn_lookup_status to nil" do
+        expect { subject }.to change(user, :trn_lookup_status).to(nil)
       end
     end
   end

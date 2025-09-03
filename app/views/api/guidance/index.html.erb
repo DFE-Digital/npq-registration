@@ -104,6 +104,7 @@
   </div>
 </div>
 
+<%- unless Rails.configuration.x.disable_legacy_api -%>
 <div class="govuk-width-container">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full-from-desktop">
@@ -119,6 +120,7 @@
     </div>
   </div>
 </div>
+<%- end -%>
 
 <div class="govuk-width-container">
   <div class="govuk-grid-row">

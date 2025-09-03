@@ -1,11 +1,11 @@
-<%- title = "#{application.course.name} registration" -%>
-<%- actions = [govuk_link_to("View full registration", npq_separation_admin_application_path(application))] -%>
+<%- title = "#{application.course.name}" -%>
+<%- actions = [govuk_link_to("View full application", npq_separation_admin_application_path(application))] -%>
 
 <div class="admin-application-card">
   <%=
     govuk_summary_list(card: { title:, actions: }) do |sl|
       sl.with_row do |row|
-        row.with_key(text: "NPQ course")
+        row.with_key(text: "Course")
         row.with_value(text: application.course.name)
       end
 

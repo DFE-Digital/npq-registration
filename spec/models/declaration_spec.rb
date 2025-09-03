@@ -154,20 +154,18 @@ RSpec.describe Declaration, type: :model do
         end
       end
 
-      context "with existing declarations after enabling feature flag" do
+      context "with existing declarations" do
+        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
+        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
+
         subject(:declaration) { create(:declaration, cohort:) }
 
         before do
           declaration
 
-          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
-
           declaration.mark_eligible!
           declaration.reload
         end
-
-        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
-        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
 
         it { is_expected.to be_eligible_state }
       end
@@ -895,7 +893,7 @@ RSpec.describe Declaration, type: :model do
     context "without cohort" do
       before { allow(lead_provider).to receive(:delivery_partners_for_cohort) }
 
-      let(:declaration) { build(:declaration, lead_provider:, cohort: nil) }
+      let(:declaration) { build(:declaration, delivery_partner: nil, lead_provider:, cohort: nil) }
 
       it { is_expected.to be_empty }
 

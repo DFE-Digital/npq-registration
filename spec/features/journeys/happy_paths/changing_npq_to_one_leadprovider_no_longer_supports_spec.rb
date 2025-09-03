@@ -75,8 +75,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("list of settings that are eligible")
-      expect(page).to have_text("leading primary mathematics")
+      expect(page).to have_text("you do not work in one of the eligible settings")
+      expect(page).to have_text("Senior leadership")
 
       page.click_link("Continue")
     end
@@ -99,7 +99,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_form: false) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "Before #{application_course_start_date}",
+          "Course start" => "In #{application_course_start_date}",
           "Course" => "Senior leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "Best Practice Network",
@@ -145,7 +145,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     expect_page_to_have(path: "/registration/check-answers", submit_button_text: "Submit", submit_form: true) do
       expect_check_answers_page_to_have_answers(
         {
-          "Course start" => "Before #{application_course_start_date}",
+          "Course start" => "In #{application_course_start_date}",
           "Course" => "Early years leadership",
           "Course funding" => "My workplace is covering the cost",
           "Provider" => "National Institute of Teaching",
@@ -226,7 +226,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "Before #{application_course_start_date}",
+        "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-early-years-leadership",
         "email_template" => "not_on_ofsted_register",

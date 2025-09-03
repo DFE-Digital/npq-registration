@@ -6,6 +6,7 @@ class Feature
   CLOSED_REGISTRATION_ENABLED = "Closed registration enabled".freeze
   DFE_ANALYTICS_ENABLED = "DfE Analytics Enabled".freeze
   MAINTENANCE_BANNER = "Maintenance banner".freeze
+  LP_SELF_SERVE = "Lead provider self serve".freeze
 
   # This constant 'registers' all the feature flags we are using. We must not use a feature flag that is
   # not included in this array. This approach will make tracking feature flags much easier.
@@ -14,6 +15,7 @@ class Feature
     CLOSED_REGISTRATION_ENABLED,
     MAINTENANCE_BANNER,
     DFE_ANALYTICS_ENABLED,
+    LP_SELF_SERVE,
   ].freeze
 
   class << self
@@ -62,6 +64,10 @@ class Feature
 
     def dfe_analytics_enabled?
       Flipper.enabled?(DFE_ANALYTICS_ENABLED)
+    end
+
+    def lp_self_serve?
+      Flipper.enabled?(LP_SELF_SERVE)
     end
 
   private

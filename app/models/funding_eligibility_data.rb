@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 class FundingEligibilityData
+  class << self
+    delegate :rise_school?, to: :instance
+
+    def instance
+      @instance ||= new
+    end
+  end
+
   def initialize(data_file_path = default_data_file_path)
     @data_file_path = data_file_path
   end

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
+  before_action :clear_null_user_sessions
   before_action :set_cache_headers
   before_action :authenticate_user!
   before_action :set_sentry_user
@@ -25,14 +26,12 @@ private
   helper_method :feature_flag_id
 
   def current_user
-    logged_in_user || NullUser.new(feature_flag_id:)
+    logged_in_user
   end
   helper_method :current_user
 
   def set_sentry_user
-    unless current_user.null_user?
-      Sentry.set_user(id: current_user.id)
-    end
+    Sentry.set_user(id: current_user.id) if current_user
   end
 
   # Use current_user instead!
@@ -62,5 +61,13 @@ private
 
   def set_cache_headers
     no_store
+  end
+
+  def clear_null_user_sessions
+    if session.key?(:registration_store) &&
+        session[:registration_store][:current_user].is_a?(NullUser)
+      reset_session
+      redirect_to root_path
+    end
   end
 end

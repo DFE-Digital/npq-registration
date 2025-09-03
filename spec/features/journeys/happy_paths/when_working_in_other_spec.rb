@@ -79,7 +79,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       expect_check_answers_page_to_have_answers(
         {
           "Course funding" => "My workplace is covering the cost",
-          "Course start" => "Before #{application_course_start_date}",
+          "Course start" => "In #{application_course_start_date}",
           "Course" => "Senior leadership",
           "Work setting" => "Other",
           "Referred by return to teaching adviser" => "No",
@@ -122,7 +122,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "employment_type" => nil,
       "funded_place" => nil,
       "funding_choice" => "school",
-      "funding_eligiblity_status_code" => "ineligible_institution_type",
+      "funding_eligiblity_status_code" => "ineligible_establishment_type",
       "employment_role" => nil,
       "kind_of_nursery" => nil,
       "itt_provider_id" => nil,
@@ -158,12 +158,12 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
       "raw_application_data" => {
         "can_share_choices" => "1",
         "chosen_provider" => "yes",
-        "course_start" => "Before #{application_course_start_date}",
+        "course_start" => "In #{application_course_start_date}",
         "course_start_date" => "yes",
         "course_identifier" => "npq-senior-leadership",
         "email_template" => "not_eligible_scholarship_funding_not_tsf",
         "funding" => "school",
-        "funding_eligiblity_status_code" => "ineligible_institution_type",
+        "funding_eligiblity_status_code" => "ineligible_establishment_type",
         "lead_provider_id" => LeadProvider.find_by(name: "Teach First").id.to_s,
         "submitted" => true,
         "funding_amount" => nil,

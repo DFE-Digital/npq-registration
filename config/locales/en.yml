@@ -333,10 +333,10 @@ en:
         applications/change_funding_eligibility:
           attributes:
             base:
-              declaration_exists: "Eligibility can not be changed because a billable or submitted declaration exists"
+              declaration_exists: There are submitted or billed declarations - these must be voided or clawed back by the provider before you can update funding eligibility
               funded_application: "Eligibility can not be changed because the application is funded"
             eligible_for_funding:
-              inclusion: Choose whether the Application is eligible for funding
+              inclusion: Select an option to continue
         applications/revert_to_pending:
           attributes:
             change_status_to_pending:
@@ -742,17 +742,6 @@ en:
         sync_log: "ECF Sync Log"
         tabs: "Tabs"
         applications: "Applications"
-    webhook_messages:
-      show:
-        title: "Webhook Message"
-        message_id: "Message ID"
-        message_type: "Message Type"
-        status: "Status"
-        sent_at: "Sent at"
-        created_at: "Received at"
-        processed_at: "Processed at"
-        status_comment: "Status Comment"
-        message: "Message"
 
   course:
     embedded_sentence:
@@ -880,6 +869,17 @@ en:
             banner:
               title: "Authorising for payment"
               content: "Requested at %{statement_marked_as_paid_at}. This may take up to 15 minutes. Refresh to see the updated statement."
+      webhook_messages:
+        show:
+          title: "Webhook message"
+          message_id: "Message ID"
+          message_type: "Message Type"
+          status: "Status"
+          sent_at: "Sent at"
+          created_at: "Received at"
+          processed_at: "Processed at"
+          status_comment: "Status Comment"
+          message: "Message"
 
   funding_details:
     ineligible_setting: "You’re not eligible for scholarship funding as you do not work in one of the eligible settings, such as state-funded schools."
@@ -893,6 +893,7 @@ en:
     not_entitled_ey_institution: "You’re not eligible for scholarship funding for the NPQ as your workplace is not in the <a class=\"govuk-link\" href=\"https://www.gov.uk/guidance/funding-for-national-professional-qualifications-npqs#scholarship-funding-for-autumn-2024\">list of settings that are eligible for funding</a>."
     not_entitled_childminder: "You’re not eligible for scholarship funding for the NPQ as you or your employer is not registered on the Ofsted early years register or with a registered Childminder Agency."
     scholarship_eligibility: "You’re not eligible for scholarship funding."
+    subject_to_review: "You may be eligible for scholarship funding, subject to review of your application by DfE."
   provider_details:
     expired_status_when_service_is_closed: "Your registration has expired but you can register again later for courses starting in October 2024. You'll receive an email when registrations open. This is usually around June."
   course_start_details:
@@ -1012,9 +1013,9 @@ en:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
         maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
-        course_start_date_one: "NPQs usually start every spring and autumn."
+        course_start_date_one: "NPQs usually start every autumn."
         course_start_date_two: "The early headship coaching offer starts at different times throughout the year depending on the provider."
-        course_start_date_three: "Registrations are currently open for courses starting in spring 2025."
+        course_start_date_three: "Registrations are currently open for courses starting in autumn 2025."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           a_school_html: "Includes:<ul><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"

@@ -74,14 +74,6 @@ class User < ApplicationRecord
     uid if get_an_identity_provider?
   end
 
-  def actual_user?
-    true
-  end
-
-  def null_user?
-    false
-  end
-
   def flipper_id
     "User;#{retrieve_or_persist_feature_flag_id}"
   end
@@ -118,6 +110,19 @@ class User < ApplicationRecord
     return unless significant_change?
 
     self.updated_from_tra_at = Time.zone.now
+  end
+
+  def set_trn_from_provider_data(trn:, trn_lookup_status:)
+    trn_lookup_status_found = (trn_lookup_status == "Found")
+    trn_unchanged = (self.trn == trn)
+
+    return if trn.blank? || (trn_verified? && trn_unchanged && !trn_lookup_status_found)
+
+    assign_attributes(
+      trn:,
+      trn_verified: trn_lookup_status_found,
+      trn_lookup_status:,
+    )
   end
 
 private

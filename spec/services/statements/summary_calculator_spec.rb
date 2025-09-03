@@ -5,8 +5,8 @@ require "rails_helper"
 RSpec.describe Statements::SummaryCalculator do
   let(:cohort) { create(:cohort, :current) }
   let(:lead_provider) { create :lead_provider }
-  let(:statement) { create(:statement, lead_provider:, reconcile_amount: 0) }
-  let(:application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:) }
+  let(:statement) { create(:statement, :next_output_fee, lead_provider:, reconcile_amount: 0, cohort:) }
+  let(:application) { create(:application, :accepted, :eligible_for_funding, course:, lead_provider:, cohort:) }
   let(:declaration_type) { "started" }
 
   let!(:course) { create(:course, :leading_teaching) }
@@ -75,7 +75,23 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "when there are clawbacks" do
-      let(:application) do
+      before do
+        awaiting_clawback = travel_to 2.months.ago do
+          application
+
+          earlier_statement =
+            create(:statement, :next_output_fee, lead_provider:, cohort: application.cohort)
+
+          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement: earlier_statement)
+        end
+
+        travel_to 1.month.from_now do
+          create(:statement, :next_output_fee, lead_provider:, cohort: application.cohort)
+          Declarations::Void.new(declaration: awaiting_clawback).void || raise("Could not void")
+        end
+      end
+
+      let :application do
         create(
           :application,
           :accepted,
@@ -86,21 +102,14 @@ RSpec.describe Statements::SummaryCalculator do
         )
       end
 
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
-          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement:)
-        end
-      end
       let(:expected_total_clawbacks) { 260 }
 
-      before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
-        end
-      end
-
       it "deducts the clawbacks from the total" do
-        expect(subject.total_payment).to match_bigdecimal(default_total + expected_total_output_payment + expected_total_targeted_delivery_funding - expected_total_clawbacks)
+        expect(subject.total_payment)
+          .to match_bigdecimal(default_total +
+                               expected_total_output_payment +
+                               expected_total_targeted_delivery_funding -
+                               expected_total_clawbacks)
       end
     end
 
@@ -134,17 +143,22 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "when there are clawbacks" do
-      let!(:declaration) do
-        travel_to(1.month.ago) { create(:declaration, :paid, lead_provider:, statement: paid_statement) }
-      end
-      let(:paid_statement)     { create(:statement, :paid, lead_provider:) }
-
-      let!(:statement)         { create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:) }
-
       before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration:).void
+        declaration = travel_to(1.month.ago) do
+          create(:declaration, :paid, lead_provider:, statement: paid_statement, cohort:)
         end
+
+        statement
+
+        travel_to statement.deadline_date do
+          Declarations::Void.new(declaration:).void || raise("Could not void")
+        end
+      end
+
+      let(:paid_statement) { create(:statement, :paid, lead_provider:) }
+
+      let :statement do
+        create(:statement, :next_output_fee, deadline_date: paid_statement.deadline_date + 1.month, lead_provider:, cohort:)
       end
 
       it "does not count them" do
@@ -333,6 +347,18 @@ RSpec.describe Statements::SummaryCalculator do
     end
 
     context "with declaration" do
+      before do
+        earlier_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
+
+        awaiting_clawback = travel_to(earlier_statement.deadline_date) do
+          create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement: earlier_statement)
+        end
+
+        travel_to statement.deadline_date do
+          Declarations::Void.new(declaration: awaiting_clawback).void || raise("Could not void")
+        end
+      end
+
       let(:declaration_type) { "started" }
 
       let(:application) do
@@ -343,19 +369,8 @@ RSpec.describe Statements::SummaryCalculator do
           course:,
           lead_provider:,
           targeted_delivery_funding_eligibility: true,
+          cohort:,
         )
-      end
-
-      let!(:to_be_awaiting_clawed_back) do
-        travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
-          create(:declaration, :paid, declaration_type:, application:, lead_provider:)
-        end
-      end
-
-      before do
-        travel_to statement.deadline_date do
-          Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
-        end
       end
 
       it "returns total targeted delivery funding refundable" do
@@ -374,18 +389,19 @@ RSpec.describe Statements::SummaryCalculator do
         lead_provider:,
         eligible_for_funding: true,
         targeted_delivery_funding_eligibility: true,
+        cohort:,
       )
     end
 
-    let!(:to_be_awaiting_clawed_back) do
-      travel_to create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:).deadline_date do
+    before do
+      earlier_statement = create(:statement, :next_output_fee, deadline_date: statement.deadline_date - 1.month, lead_provider:)
+
+      awaiting_clawback = travel_to(earlier_statement.deadline_date) do
         create(:declaration, :paid, declaration_type:, application:, lead_provider:, statement:)
       end
-    end
 
-    before do
       travel_to statement.deadline_date do
-        Declarations::Void.new(declaration: to_be_awaiting_clawed_back).void
+        Declarations::Void.new(declaration: awaiting_clawback).void || raise("Could not void")
       end
     end
 
@@ -409,7 +425,7 @@ RSpec.describe Statements::SummaryCalculator do
   end
 
   describe "Contract with special_course" do
-    let!(:maths_course) { create(:course, :leading_primary_mathmatics) }
+    let!(:maths_course) { create(:course, :leading_primary_mathematics) }
     let!(:leading_maths_contract) do
       create(
         :contract,

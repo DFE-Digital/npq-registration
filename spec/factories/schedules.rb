@@ -66,7 +66,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
       applies_from { Date.new(cohort.start_year, 12, 1) }
-      applies_to { Date.new(cohort.start_year, 12, 1) }
+      applies_to { Date.new(cohort.start_year, 12, 31) }
     end
 
     trait :npq_ehco_june do
@@ -76,7 +76,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
       applies_from { Date.new(cohort.start_year + 1, 6, 1) }
-      applies_to { Date.new(cohort.start_year + 1, 6, 1) }
+      applies_to { Date.new(cohort.start_year + 1, 10, 31) }
     end
 
     trait :npq_ehco_march do
@@ -86,7 +86,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
       applies_from { Date.new(cohort.start_year + 1, 3, 1) }
-      applies_to { Date.new(cohort.start_year + 1, 3, 1) }
+      applies_to { Date.new(cohort.start_year + 1, 5, 31) }
     end
 
     trait :npq_ehco_november do
@@ -96,7 +96,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "ehco") || create(:course_group, name: "ehco") }
 
       applies_from { Date.new(cohort.start_year, 11, 1) }
-      applies_to { Date.new(cohort.start_year, 11, 1) }
+      applies_to { Date.new(cohort.start_year, 11, 30) }
     end
 
     trait :npq_leadership_autumn do
@@ -106,7 +106,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
 
       applies_from { Date.new(cohort.start_year, 10, 1) }
-      applies_to { Date.new(cohort.start_year, 11, 1) }
+      applies_to { Date.new(cohort.start_year, 12, 31) }
     end
 
     trait :npq_leadership_spring do
@@ -116,7 +116,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "leadership") || create(:course_group, name: "leadership") }
 
       applies_from { Date.new(cohort.start_year + 1, 1, 1) }
-      applies_to { Date.new(cohort.start_year + 1, 1, 1) }
+      applies_to { Date.new(cohort.start_year + 1, 3, 31) }
     end
 
     trait :npq_specialist_autumn do
@@ -126,7 +126,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
 
       applies_from { Date.new(cohort.start_year, 10, 1) }
-      applies_to { Date.new(cohort.start_year, 11, 1) }
+      applies_to { Date.new(cohort.start_year, 12, 31) }
 
       allowed_declaration_types { %w[started retained-1 completed] }
     end
@@ -138,7 +138,7 @@ FactoryBot.define do
       course_group { CourseGroup.find_by(name: "specialist") || create(:course_group, name: "specialist") }
 
       applies_from { Date.new(cohort.start_year + 1, 1, 1) }
-      applies_to { Date.new(cohort.start_year + 1, 1, 1) }
+      applies_to { Date.new(cohort.start_year + 1, 3, 31) }
 
       allowed_declaration_types { %w[started retained-1 completed] }
     end
@@ -151,7 +151,7 @@ FactoryBot.define do
     # setting it to false
     before(:create) do |schedule, evaluator|
       if schedule.applies_from.future? && evaluator.change_applies_dates
-        schedule.applies_from = Date.current - 1.week
+        schedule.applies_from = Date.current - 1.month
         schedule.applies_to = Date.current + 1.month
       end
     end
