@@ -65,17 +65,14 @@ RSpec.describe ParticipantOutcomes::Query do
         end
 
         it "doesn't filter by created since when none supplied" do
-          condition_string = %("created_at")
-
-          expect(described_class.new(created_since: 2.days.ago).scope.to_sql).to include(condition_string)
-          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(created_since: 2.days.ago).scope).to constrain_attribute("created_at")
+          expect(described_class.new.scope).not_to constrain_attribute("created_at")
         end
 
         it "does not filter by created since if an empty string is supplied" do
-          condition_string = %("created_at")
           query = described_class.new(created_since: " ")
 
-          expect(query.scope.to_sql).not_to include(condition_string)
+          expect(query.scope).not_to constrain_attribute("created_at")
         end
       end
 
@@ -104,17 +101,14 @@ RSpec.describe ParticipantOutcomes::Query do
         end
 
         it "doesn't filter by participant_ids when none supplied" do
-          condition_string = %("ecf_id")
-
-          expect(described_class.new(participant_ids: SecureRandom.uuid).scope.to_sql).to include(condition_string)
-          expect(described_class.new.scope.to_sql).not_to include(condition_string)
+          expect(described_class.new(participant_ids: SecureRandom.uuid).scope).to constrain_attribute("ecf_id")
+          expect(described_class.new.scope).not_to constrain_attribute("ecf_id")
         end
 
         it "does not filter by participant_ids if an empty string is supplied" do
-          condition_string = %("ecf_id")
           query = described_class.new(participant_ids: " ")
 
-          expect(query.scope.to_sql).not_to include(condition_string)
+          expect(query.scope).not_to constrain_attribute("ecf_id")
         end
       end
     end
