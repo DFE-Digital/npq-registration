@@ -56,7 +56,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-      expect(page).to have_text(I18n.t("helpers.hint.registration_wizard.choose_school"))
+      expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"))
 
       within ".npq-js-reveal" do
         page.fill_in "What is the name of your workplace?", with: "open"
