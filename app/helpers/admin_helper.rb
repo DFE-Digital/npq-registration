@@ -16,6 +16,19 @@ module AdminHelper
     @admin_navigation_structure ||= NpqSeparation::NavigationStructures::AdminNavigationStructure.new(current_admin)
   end
 
+  def admin_service_navigation_items
+    return [] unless current_admin
+
+    [
+      *admin_navigation_structure.service_navigation_items,
+      {
+        href: sign_out_user_path,
+        text: "Sign out",
+        html_attributes: { style: "margin-left: auto;" },
+      },
+    ]
+  end
+
   def review_status_tag(review_status)
     case review_status
     when "Needs review"

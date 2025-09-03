@@ -93,4 +93,23 @@ module ApplicationHelper
       govuk_tag(text: "Verified", colour: "green") + " - #{verified_method}"
     end
   end
+
+  def service_navigation_items
+    return [] unless current_user
+
+    [
+      { href: identity_link_uri(request.original_url), text: "DfE Identity account" },
+      npq_account_navigation_item,
+      { href: sign_out_user_path, text: "Sign out" },
+    ].compact
+  end
+
+  def npq_account_navigation_item
+    return unless current_user.applications.any?
+
+    {
+      href: application_count_based_account_url,
+      text: "NPQ account",
+    }
+  end
 end
