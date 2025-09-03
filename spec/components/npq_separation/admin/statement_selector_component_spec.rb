@@ -112,7 +112,7 @@ RSpec.describe NpqSeparation::Admin::StatementSelectorComponent, type: :componen
     end
   end
 
-  context "when the context param is present" do
+  context "when the cohort param is present" do
     let(:cohort_param) { cohort.id }
 
     it "defaults to selected cohort" do
