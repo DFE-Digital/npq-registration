@@ -7,7 +7,7 @@ module Applications
 
     validates :application, presence: true
     validate :not_already_rejected
-    validate :cannot_change_from_accepted
+    validate :no_billable_or_changeable_declarations
 
     def reject
       return false unless valid?
@@ -27,11 +27,11 @@ module Applications
       errors.add(:application, :has_already_been_rejected)
     end
 
-    def cannot_change_from_accepted
+    def no_billable_or_changeable_declarations
       return unless application
-      return unless application.accepted_lead_provider_approval_status?
+      return unless application.declarations.billable_or_changeable.any?
 
-      errors.add(:application, :cannot_change_from_accepted)
+      errors.add(:application, :cannot_reject_with_declarations)
     end
   end
 end
