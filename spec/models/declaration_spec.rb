@@ -61,7 +61,15 @@ RSpec.describe Declaration, type: :model do
         }
       end
 
+      it { is_expected.to validate_presence_of(:delivery_partner_id) }
       it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
+
+      context "when no delivery partner provided" do
+        let(:declaration) { build(:declaration, delivery_partner: nil) }
+
+        it { is_expected.not_to validate_absence_of(:delivery_partner_id) }
+        it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
+      end
 
       it "allows delivery_partner who is on the available partners list" do
         expect(declaration).to allow_value(delivery_partner.id).for(:delivery_partner_id)
@@ -82,15 +90,10 @@ RSpec.describe Declaration, type: :model do
           .not_to allow_value(old_cohort_partner.id).for(:secondary_delivery_partner_id)
       end
 
-      describe "delivery partner validations" do
+      describe "skipping validation for certain cases" do
         let(:declaration) { build(:declaration, cohort:, delivery_partner: nil) }
         let(:cohort) { create(:cohort, start_year: cohort_start_year) }
         let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
-
-        it { is_expected.to validate_presence_of(:delivery_partner_id) }
-        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
-        it { is_expected.not_to validate_absence_of(:delivery_partner_id) }
-        it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
 
         context "with earlier cohort" do
           let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
