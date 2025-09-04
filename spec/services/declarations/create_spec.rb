@@ -324,14 +324,12 @@ RSpec.describe Declarations::Create, type: :model do
       let(:delivery_partner_id) { SecureRandom.uuid }
       let(:secondary_delivery_partner_id) { nil }
 
-      it { is_expected.not_to be_valid }
       it { is_expected.to have_error(:delivery_partner_id, :not_found, "The property '#/delivery_partner_id' does not exist") }
     end
 
     context "when the secondary delivery partner does not exist" do
       let(:secondary_delivery_partner_id) { SecureRandom.uuid }
 
-      it { is_expected.not_to be_valid }
       it { is_expected.to have_error(:secondary_delivery_partner_id, :not_found, "The property '#/secondary_delivery_partner_id' does not exist") }
     end
 
