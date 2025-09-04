@@ -4,12 +4,12 @@ module Helpers
       build_sample_schools
 
       expect_page_to_have(path: "/registration/find-school", submit_form: true) do
-        page.fill_in "Where is your workplace located?", with: location
+        page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: location
       end
 
       if js
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode.")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js:)
 
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: name
@@ -21,7 +21,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-school", submit_form: true) do
-          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode.")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_school_html"), js:)
 
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
@@ -29,7 +29,7 @@ module Helpers
 
           page.click_button("Continue")
 
-          expect(page).to have_text("Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools.")
+          expect(page).to have_text(I18n.t("helpers.label.registration_wizard.choose_school_fallback", institution_location: location))
           page.choose "open #{location} school"
         end
       end
@@ -39,7 +39,7 @@ module Helpers
       if js
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           expect(page).to have_text("What is the name of your workplace?")
-          expect(page).to have_text("Search for your workplace in #{location}")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: "open"
           end
@@ -49,7 +49,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_text("Search for your workplace in #{location}")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
 
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name

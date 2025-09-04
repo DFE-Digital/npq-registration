@@ -17,7 +17,7 @@ RSpec.feature "Service is closed", type: :feature do
     page.click_button("Sign up for email updates")
 
     expect(page).to have_current_path(new_email_update_path)
-    expect(page).to have_content("Request email updates about registration opening")
+    expect(page).to have_content("Get email updates about registration opening")
     expect(page).to be_accessible
   end
 

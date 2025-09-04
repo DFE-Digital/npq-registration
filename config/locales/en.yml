@@ -949,7 +949,8 @@ en:
         maths_cannot_register: "You cannot register for the leading primary mathematics NPQ"
         cannot_register_yet: "You cannot register yet"
         check_answers: "Check your answers and confirm"
-        institution_location: Where is your workplace located?
+        institution_location: What is the first part of your workplace postcode?
+        find_childcare_provider: What is the first part of your workplace postcode?
         possible_funding: "You may qualify for DfE scholarship funding"
         school_not_in_england: "School or college must be in England, Guernsey, Jersey or the Isle of Man"
         ineligible_for_funding: "DfE scholarship funding is not available"
@@ -957,7 +958,6 @@ en:
         dont_have_teacher_reference_number: "Get a Teacher Reference Number (TRN) to register for an NPQ"
         employment_role: "What is your role?"
         employer_name: "What organisation are you employed by?"
-        find_childcare_provider: "Where is your workplace located?"
         teacher_reference_number: "Teacher reference number (TRN)"
         trn: "Teacher reference number (TRN)"
         full_name: "Full name"
@@ -1001,7 +1001,7 @@ en:
         has_ofsted_urn: "Do you or your employer have an Ofsted unique reference number (URN)?"
         qualified_teacher_check: "Check your details"
         date_of_birth: "Date of birth"
-        email_updates_status: "Do you want to register for the special educational needs co-ordinator (SENCO) NPQ when registration opens?"
+        email_updates_status: "Are you interested in the special educational needs co-ordinator (SENCO) NPQ?"
         senco_in_role: "Do you work as a special educational needs co-ordinator (SENCO)?"
         senco_start_date: "When did you become a SENCO?"
         funding_eligibility_senco: "Funding"
@@ -1013,9 +1013,9 @@ en:
         choose_your_npq_html: "To register for an NPQ and the <a href=\"https://professional-development-for-teachers-leaders.education.gov.uk/early-headship-coaching-offer\" class=\"govuk-link\">Early headship coaching offer</a>, submit 2 separate registrations."
         maths_eligibility_teaching_for_mastery_html_one: "You need to be able to demonstrate that you have an understanding of mastery approaches to teaching maths."
         maths_eligibility_teaching_for_mastery_two_html: "You can demonstrate this if you’ve taken at least one year of the <a href=\"https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme\" class=\"govuk-link\">primary maths Teaching for Mastery programme</a>."
-        course_start_date_one: "NPQs usually start every autumn."
-        course_start_date_two: "The early headship coaching offer starts at different times throughout the year depending on the provider."
-        course_start_date_three: "Registrations are currently open for courses starting in autumn 2025."
+        course_start_date_one: "NPQ courses start once a year every autumn."
+        course_start_date_two: "Registrations are currently open for courses starting in autumn 2025."
+        course_start_date_three: "Early headship coaching offer start dates vary by provider and are throughout the year."
         maths_understanding_of_approach_html: "Your provider will ask you for details."
         work_setting_options:
           a_school_html: "Includes:<ul><li>local authority maintained schools (some may provide hospital education, for example pupil referral units, alternative provision or special schools)</li><li>secure children’s homes and secure training centres</li></ul>"
@@ -1037,14 +1037,13 @@ en:
           - All the information you enter for your NPQ registration will be shared with external organisations including auditors, evaluators, relevant bodies and training providers – this allows your provider to register you onto their course.
           - "For more information about who we share your data with read our <a href=\"https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ\" class=\"govuk-link\">privacy notice</a>."
           - If you do not agree to share your information you will not be able to progress with your NPQ.
-        choose_childcare_provider: "Search for your workplace in %{institution_location}"
+        choose_childcare_provider_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the workplace that matches the postcode you gave."
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
-        choose_school: "Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools, rather than the trust's postcode."
-        choose_school_search: "Start your search by entering the name of your school or 16 to 19 educational setting. If you work for a trust, enter the name of one of their schools."
+        choose_school_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the school that matches the postcode you gave."
+        choose_school_search: "Start your search by entering the name of your workplace. If you work for a trust, enter the name of one of their schools."
         choose_private_childcare_provider: "For example a 7 digit number (1234567) or a 6 digit number sometimes prefixed with EY (EY456789)"
         choose_private_childcare_provider_search: "Enter your or your employer’s URN"
-        find_childcare_provider: "Enter the town, city or the first part of the postcode - for example Chester or CH1. If you work for a trust, enter the details for one of its schools rather than the trust’s postcode."
-        institution_location: "Enter the town, city or the first part of the postcode - for example Chester or CH1. If you work for a trust, enter the details for one of its schools rather than the trust’s postcode."
+        institution_location_html: "Enter <strong>just the first part of your workplace postcode</strong>, for example SW19. If you work for a trust, use the postcode of one of its schools."
         maths_eligibility_teaching_for_mastery_hint: "You may be able to demonstrate your understanding of mastery approaches to teaching maths another way"
         course_start_date_hint: "You can also select this option if you have already started"
         maths_understanding_of_approach_hint: "For example, a reference from a professional who has supported your mastery professional development."
@@ -1169,8 +1168,8 @@ en:
         choose_childcare_provider_fallback: "Select your workplace in %{institution_location}"
 
         choose_school: "What is the name of your workplace?"
-        choose_school_search: "School or 16 to 19 educational setting not shown above"
-        choose_school_fallback: "Select your school or 16 to 19 educational setting in %{institution_location}"
+        choose_school_search: "Workplace not shown above"
+        choose_school_fallback: "Select your workplace in %{institution_location}"
 
         choose_private_childcare_provider: "Enter your or your employer’s unique reference number (URN)"
         choose_private_childcare_provider_search: "My employer is not shown above"

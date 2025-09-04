@@ -14,7 +14,6 @@ module Questionnaires
       [
         QuestionTypes::TextField.new(
           name: QUESTION_NAME,
-          locale_name: :find_childcare_provider,
         ),
       ]
     end

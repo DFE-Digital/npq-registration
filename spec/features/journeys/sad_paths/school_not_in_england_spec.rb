@@ -55,7 +55,7 @@ RSpec.feature "Sad journeys", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/choose-school", submit_form: false) do
-      expected_text = js ? "What is the name of your workplace?" : "Select your school or 16 to 19 educational setting in wrexham"
+      expected_text = js ? "What is the name of your workplace?" : "Select your workplace in wrexham"
       expect(page).to have_text(expected_text)
     end
 

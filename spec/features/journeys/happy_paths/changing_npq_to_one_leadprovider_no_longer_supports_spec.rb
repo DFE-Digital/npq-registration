@@ -62,8 +62,8 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
     end
 
     expect_page_to_have(path: "/registration/find-childcare-provider", submit_form: true) do
-      expect(page).to have_text("Where is your workplace located?")
-      page.fill_in "Where is your workplace located?", with: "manchester"
+      expect(page).to have_text(I18n.t("helpers.title.registration_wizard.institution_location"))
+      page.fill_in I18n.t("helpers.title.registration_wizard.institution_location"), with: "manchester"
     end
 
     choose_a_childcare_provider(js:, location: "manchester", name: "open")
@@ -120,7 +120,7 @@ RSpec.feature "Happy journeys", :with_default_schedules, type: :feature do
 
     expect_page_to_have(path: "/registration/ineligible-for-funding/change", submit_form: false) do
       expect(page).to have_text("Funding")
-      expect(page).to have_text("Early years leadership NPQ as your workplace is not in the list of EY settings that are eligible for funding")
+      expect(page).to have_text("Early years leadership NPQ course as your workplace is not in the list of EY settings that are eligible for funding")
       expect(page).to have_text("This means that you would need to pay for the course another way")
 
       page.click_link("Continue")

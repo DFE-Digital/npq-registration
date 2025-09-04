@@ -1,9 +1,10 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column">
     <% if Feature.registration_closed?(current_user) %>
-      <h1 class="govuk-heading-xl">Request email updates about registration opening</h1>
+      <h1 class="govuk-heading-xl">Get email updates about registration opening</h1>
     <% else %>
-      <h1 class="govuk-heading-xl">Request email updates about registration opening for courses starting after <%= application_course_start_date %></h1>
+      <h1 class="govuk-heading-xl">Get email updates</h1>
+      <p class="govuk-body">We’ll let you know when registration opens for courses starting in autumn 2026</p>
     <% end %>
   </div>
 </div>
