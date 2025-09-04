@@ -7,13 +7,17 @@
 %>
 
 <%= govuk_details(summary_text: "My workplace is not listed") do %>
-  <p>
-    If your workplace is not listed, check the spelling or try entering part of the name.
-  </p>
+  <p>You can:</p>
+
+  <ul class="govuk-list govuk-list--bullet">
+    <li>check the spelling and try entering part of the name</li>
+    <li>make sure the <%= govuk_link_to "name matches the postcode", "https://get-information-schools.service.gov.uk/Search?SelectedTab=Establishments", new_tab: true %> you entered</li>
+    <li>make sure your web browser settings have JavaScript enabled</li>
+  </ul>
 
   <p>
     If it’s still not listed,
-    <%= mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
+    <%= govuk_mail_to "continuing-professional-development@digital.education.gov.uk", "contact us", target: "_blank" %>
     for support.
   </p>
 <% end %>

@@ -1,5 +1,7 @@
 <% question_text = t("helpers.label.registration_wizard.#{question.name_locale_key}") %>
-<% hint_text = t("helpers.hint.registration_wizard.#{question.name_locale_key}", **question.data_attributes) %>
+<% hint_text =
+  t("helpers.hint.registration_wizard.#{question.name_locale_key}", **question.data_attributes, default: nil) ||
+    t("helpers.hint.registration_wizard.#{question.name_locale_key}_html", **question.data_attributes).html_safe  %>
 
 <% if question.display_no_javascript_fallback_form? %>
   <%=
