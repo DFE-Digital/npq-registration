@@ -30,8 +30,10 @@ module API
         field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
         field(:secondary_delivery_partner_id) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
         field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
+        lp_self_serve_feature_flag_checker = ->(*) { Feature.lp_self_serve? }
 
         field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
+        field(:application_id, if: lp_self_serve_feature_flag_checker) { |declaration| declaration.application.ecf_id }
         field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
         field(:uplift_paid?, name: :uplift_paid)
         field(:lead_provider_name)
