@@ -256,6 +256,32 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
       it "serializes the `schedule_identifier`" do
         expect(attributes["schedule_identifier"]).to eq(application.schedule.identifier)
       end
+
+      context "when LP_SELF_SERVE feature flag is on" do
+        let(:application) { build(:application, :senco, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
+
+        before do
+          Flipper.enable(Feature::LP_SELF_SERVE)
+        end
+
+        it "serializes the `works_as_senco`" do
+          expect(attributes["works_as_senco"]).to eq(application.senco_in_role)
+        end
+
+        it "serializes the `senco_start_date`" do
+          expect(attributes["senco_start_date"]).to eq(application.senco_start_date.to_json)
+        end
+      end
+
+      context "when LP_SELF_SERVE feature flag is off" do
+        it "does not serialize the `works_as_senco`" do
+          expect(attributes).not_to have_key("works_as_senco")
+        end
+
+        it "does not serialize the `senco_start_date`" do
+          expect(attributes).not_to have_key("senco_start_date")
+        end
+      end
     end
   end
 end
