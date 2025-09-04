@@ -1037,7 +1037,7 @@ en:
           - All the information you enter for your NPQ registration will be shared with external organisations including auditors, evaluators, relevant bodies and training providers – this allows your provider to register you onto their course.
           - "For more information about who we share your data with read our <a href=\"https://www.gov.uk/government/publications/privacy-information-education-providers-workforce-including-teachers/privacy-information-education-providers-workforce-including-teachers#NPQ\" class=\"govuk-link\">privacy notice</a>."
           - If you do not agree to share your information you will not be able to progress with your NPQ.
-        choose_childcare_provider: "Search for your workplace in %{institution_location}"
+        choose_childcare_provider_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the workplace that matches the postcode you gave."
         choose_childcare_provider_search: "Search for your workplace in %{institution_location}"
         choose_school_html: "Begin entering the name of your workplace, then select from the drop-down box that appears. For example, enter <strong>‘St Luk’</strong> and select <strong>‘St Lukes Primary School’</strong>.<br>If you work for a trust, enter the name of the school that matches the postcode you gave."
         choose_school_search: "Start your search by entering the name of your workplace. If you work for a trust, enter the name of one of their schools."

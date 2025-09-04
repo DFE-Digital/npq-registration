@@ -39,7 +39,7 @@ module Helpers
       if js
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
           expect(page).to have_text("What is the name of your workplace?")
-          expect(page).to have_text("Search for your workplace in #{location}")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
           within ".npq-js-reveal" do
             page.fill_in "What is the name of your workplace?", with: "open"
           end
@@ -49,7 +49,7 @@ module Helpers
         end
       else
         expect_page_to_have(path: "/registration/choose-childcare-provider", submit_form: true) do
-          expect(page).to have_text("Search for your workplace in #{location}")
+          expect(page).to have_html(I18n.t("helpers.hint.registration_wizard.choose_childcare_provider_html"), js:)
 
           within ".npq-js-hidden" do
             page.fill_in "What is the name of your workplace?", with: name
