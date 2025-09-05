@@ -18,7 +18,7 @@
     "rails-ujs": "^5.2.8",
     "sass": "^1.92.0",
     "svg-pan-zoom": "^3.6.2",
-    "swagger-ui-dist": "^5.28.0",
+    "swagger-ui-dist": "^5.28.1",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1"
   },
