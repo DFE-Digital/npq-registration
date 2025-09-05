@@ -15,8 +15,6 @@
   <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
   <%= render partial: "layouts/api_guidance/header" %>
-  <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, default_to_first_section: false, structure: guidance_navigation_structure) %>
-  <%= render(primary_navigation) %>
 
   <% if !@page.index_page? %>
     <div class="govuk-width-container">

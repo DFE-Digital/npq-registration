@@ -15,7 +15,16 @@
 
     <a tabindex="0" href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <%= render partial: "layouts/shared/header" %>
+    <%= govuk_header %>
+
+    <%=
+      govuk_service_navigation(
+        current_path: request.path,
+        navigation_items: service_navigation_items,
+        service_name: "Register for a national professional qualification",
+        service_url: root_path,
+      )
+    %>
 
     <aside class="govuk-width-container">
       <%= render GovukComponent::PhaseBannerComponent.new(
