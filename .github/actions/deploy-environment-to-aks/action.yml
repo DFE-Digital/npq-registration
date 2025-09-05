@@ -70,7 +70,7 @@ runs:
         PULL_REQUEST_NUMBER: ${{ inputs.pull-request-number }}
 
     - name: Seed database
-      if: inputs.pull-request-number != '' && inputs.environment != 'production'
+      if: inputs.pull-request-number != '' && inputs.environment == 'review'
       shell: bash
       run: |
         make ci review get-cluster-credentials
