@@ -13,7 +13,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
 
   context "when admin is logged in" do
     before do
-      travel_to Time.zone.now.beginning_of_day + 5.minutes do
+      travel_to Time.zone.now.utc.beginning_of_day + 5.minutes do
         create :cohort, :current
 
         sign_in_as_admin
@@ -21,7 +21,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
     end
 
     it "shows the admin landing page" do
-      travel_to Time.zone.now.end_of_day - 5.minutes do
+      travel_to Time.zone.now.utc.end_of_day - 5.minutes do
         expect(admin_response).to have_http_status :success
       end
     end
@@ -33,7 +33,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
 
   context "when admin session is from yesterday" do
     before do
-      travel_to Time.zone.now.beginning_of_day - 1.minute do
+      travel_to Time.zone.now.utc.beginning_of_day - 1.minute do
         create :cohort, :current
 
         sign_in_as_admin
@@ -41,7 +41,7 @@ RSpec.describe NpqSeparation::AdminController, type: :request do
     end
 
     it "redirects to the sign in page" do
-      travel_to Time.zone.now.beginning_of_day + 1.minute do
+      travel_to Time.zone.now.utc.beginning_of_day + 1.minute do
         expect(admin_response).to redirect_to(sign_in_path)
       end
     end
