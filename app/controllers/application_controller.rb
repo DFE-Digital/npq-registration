@@ -73,7 +73,9 @@ private
   end
 
   def set_time_zone(&block)
-    # Show times in UK local time, ie BST in summer and UTC in winter
+    # Display times in UK local time in web UI, ie UTC+1 in summer and UTC+0 in winter
+    # Not using config.time_zone because this also impacts times on the API
+    # and we have a lot of specs which set up date assuming datetimes are in UTC
     Time.use_zone("London", &block)
   end
 end
