@@ -261,10 +261,6 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :participant_outcomes, only: %i[] do
-        member { post :resend }
-      end
-
       namespace :finance do
         resources :contracts, only: [] do
           member do
