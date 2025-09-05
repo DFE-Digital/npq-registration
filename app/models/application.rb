@@ -51,6 +51,15 @@ class Application < ApplicationRecord
     childminder: "childminder",
   }, suffix: true
 
+  enum :employment_type, {
+    hospital_school: "hospital_school",
+    lead_mentor_for_accredited_itt_provider: "lead_mentor_for_accredited_itt_provider",
+    local_authority_supply_teacher: "local_authority_supply_teacher",
+    local_authority_virtual_school: "local_authority_virtual_school",
+    young_offender_institution: "young_offender_institution",
+    other: "other",
+  }, suffix: true
+
   enum :headteacher_status, {
     no: "no",
     yes_when_course_starts: "yes_when_course_starts",
