@@ -245,6 +245,7 @@ Rails.application.routes.draw do
       resources :cohorts do
         resources :schedules, except: :index
         resources :statements, only: %i[new create show]
+        member { get :download_contracts, path: "download-contracts" }
       end
 
       resources :delivery_partners, path: "delivery-partners", except: %i[show destroy] do

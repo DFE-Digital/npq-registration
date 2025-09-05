@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.feature "Creating statements", type: :feature do
   include Helpers::AdminLogin
+  include Helpers::FileHelper
   include Helpers::StatementsHelper
 
   let(:cohort) { create(:cohort) }
@@ -72,10 +73,7 @@ RSpec.feature "Creating statements", type: :feature do
       click_on "Download empty statements template"
 
       csv_file = "#{Capybara.save_path}/statements.csv"
-      1.upto(50) do
-        sleep 0.1
-        break if File.exist?(csv_file)
-      end
+      wait_for_file_to_be_created(csv_file)
       csv = CSV.read(csv_file)
       expect(csv.count).to eq(1)
 
@@ -83,12 +81,14 @@ RSpec.feature "Creating statements", type: :feature do
       click_on "Download empty contracts template"
 
       csv_file = "#{Capybara.save_path}/contracts.csv"
-      1.upto(50) do
-        sleep 0.1
-        break if File.exist?(csv_file)
-      end
+      wait_for_file_to_be_created(csv_file)
       csv = CSV.read(csv_file)
       expect(csv.count).to eq(1)
+
+      visit npq_separation_admin_cohort_path(cohort)
+      click_on "Download contracts CSV"
+      csv_file = "#{Capybara.save_path}/contracts.csv"
+      wait_for_file_to_be_created(csv_file)
     end
   end
 end

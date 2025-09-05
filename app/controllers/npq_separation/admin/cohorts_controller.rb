@@ -48,6 +48,10 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
     end
   end
 
+  def download_contracts
+    send_data Exporters::Contracts.new(cohort:).call, filename: "#{cohort.start_year}_cohort_contracts.csv", type: :csv
+  end
+
 private
 
   def cohort_params
