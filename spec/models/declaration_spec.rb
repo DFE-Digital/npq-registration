@@ -61,8 +61,15 @@ RSpec.describe Declaration, type: :model do
         }
       end
 
-      it { is_expected.not_to validate_presence_of(:delivery_partner_id) }
+      it { is_expected.to validate_presence_of(:delivery_partner_id) }
       it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
+
+      context "when no delivery partner provided" do
+        let(:declaration) { build(:declaration, delivery_partner: nil) }
+
+        it { is_expected.not_to validate_absence_of(:delivery_partner_id) }
+        it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
+      end
 
       it "allows delivery_partner who is on the available partners list" do
         expect(declaration).to allow_value(delivery_partner.id).for(:delivery_partner_id)
@@ -83,19 +90,10 @@ RSpec.describe Declaration, type: :model do
           .not_to allow_value(old_cohort_partner.id).for(:secondary_delivery_partner_id)
       end
 
-      context "with feature_flag enabled" do
-        before do
-          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
-        end
-
-        let(:declaration) { build(:declaration, cohort:) }
+      describe "skipping validation for certain cases" do
+        let(:declaration) { build(:declaration, cohort:, delivery_partner: nil) }
         let(:cohort) { create(:cohort, start_year: cohort_start_year) }
         let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
-
-        it { is_expected.to validate_presence_of(:delivery_partner_id) }
-        it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
-        it { is_expected.not_to validate_absence_of(:delivery_partner_id) }
-        it { is_expected.to validate_absence_of(:secondary_delivery_partner_id) }
 
         context "with earlier cohort" do
           let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM - 1 }
@@ -159,20 +157,18 @@ RSpec.describe Declaration, type: :model do
         end
       end
 
-      context "with existing declarations after enabling feature flag" do
+      context "with existing declarations" do
+        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
+        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
+
         subject(:declaration) { create(:declaration, cohort:) }
 
         before do
           declaration
 
-          allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true)
-
           declaration.mark_eligible!
           declaration.reload
         end
-
-        let(:cohort) { create(:cohort, start_year: cohort_start_year) }
-        let(:cohort_start_year) { described_class::DELIVER_PARTNER_REQUIRED_FROM }
 
         it { is_expected.to be_eligible_state }
       end
@@ -217,6 +213,7 @@ RSpec.describe Declaration, type: :model do
 
       context "when delivery_partner is blank but secondary_delivery_partner is not" do
         before do
+          declaration.delivery_partner = nil
           declaration.secondary_delivery_partner = delivery_partner
           declaration.valid?
         end
@@ -899,7 +896,7 @@ RSpec.describe Declaration, type: :model do
     context "without cohort" do
       before { allow(lead_provider).to receive(:delivery_partners_for_cohort) }
 
-      let(:declaration) { build(:declaration, lead_provider:, cohort: nil) }
+      let(:declaration) { build(:declaration, delivery_partner: nil, lead_provider:, cohort: nil) }
 
       it { is_expected.to be_empty }
 

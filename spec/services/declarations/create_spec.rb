@@ -40,6 +40,8 @@ RSpec.describe Declarations::Create, type: :model do
     it { is_expected.to validate_presence_of(:participant_id).with_message("The property '#/participant_id' must be present") }
     it { is_expected.to validate_presence_of(:declaration_type).with_message("Enter a '#/declaration_type'.") }
     it { is_expected.to validate_presence_of(:declaration_date).with_message("Enter a '#/declaration_date'.") }
+    it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
+    it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
 
     it_behaves_like "a model that validates participant_id change" do
       subject { service }
@@ -318,30 +320,17 @@ RSpec.describe Declarations::Create, type: :model do
       it { is_expected.to have_error(:secondary_delivery_partner_id, :inclusion, "The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
     end
 
-    context "with the declarations_require_delivery_partner feature flag enabled" do
-      before { allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true) }
+    context "when the delivery partner does not exist" do
+      let(:delivery_partner_id) { SecureRandom.uuid }
+      let(:secondary_delivery_partner_id) { nil }
 
-      it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
-      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
+      it { is_expected.to have_error(:delivery_partner_id, :not_found, "The property '#/delivery_partner_id' does not exist") }
+    end
 
-      context "when the delivery partner does not exist" do
-        let(:delivery_partner_id) { SecureRandom.uuid }
-        let(:secondary_delivery_partner_id) { nil }
+    context "when the secondary delivery partner does not exist" do
+      let(:secondary_delivery_partner_id) { SecureRandom.uuid }
 
-        it "only has one validation error" do
-          subject.valid?
-          expect(subject.errors[:delivery_partner_id]).to eq(["The property '#/delivery_partner_id' does not exist"])
-        end
-      end
-
-      context "when the secondary delivery partner does not exist" do
-        let(:secondary_delivery_partner_id) { SecureRandom.uuid }
-
-        it "only has one validation error" do
-          subject.valid?
-          expect(subject.errors[:secondary_delivery_partner_id]).to eq(["The property '#/secondary_delivery_partner_id' does not exist"])
-        end
-      end
+      it { is_expected.to have_error(:secondary_delivery_partner_id, :not_found, "The property '#/secondary_delivery_partner_id' does not exist") }
     end
 
     context "when delivery_partner is blank but secondary_delivery_partner is not" do
@@ -354,19 +343,6 @@ RSpec.describe Declarations::Create, type: :model do
       let(:secondary_delivery_partner_id) { delivery_partner_id }
 
       it { is_expected.to have_error(:secondary_delivery_partner_id, :duplicate_delivery_partner, "The property '#/secondary_delivery_partner_id' cannot have the same value as the property '#/delivery_partner_id'") }
-    end
-
-    context "when the delivery partner does not exist" do
-      let(:delivery_partner_id) { SecureRandom.uuid }
-      let(:secondary_delivery_partner_id) { nil }
-
-      it { is_expected.to have_error(:delivery_partner_id, :not_found, "The property '#/delivery_partner_id' does not exist") }
-    end
-
-    context "when the secondary delivery partner does not exist" do
-      let(:secondary_delivery_partner_id) { SecureRandom.uuid }
-
-      it { is_expected.to have_error(:secondary_delivery_partner_id, :not_found, "The property '#/secondary_delivery_partner_id' does not exist") }
     end
   end
 
