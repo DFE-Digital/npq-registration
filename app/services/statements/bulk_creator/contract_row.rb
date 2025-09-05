@@ -7,25 +7,25 @@ module Statements
       CONTRACT_TEMPLATE_ATTRIBUTES = %w[
         recruitment_target
         per_participant
+        service_fee_installments
         special_course
         monthly_service_fee
-        service_fee_installments
       ].freeze
 
       attribute :lead_provider_name, :string
       attribute :course_identifier, :string
       attribute :recruitment_target, :strict_integer
       attribute :per_participant, :strict_decimal, default: nil
+      attribute :service_fee_installments, :strict_integer, default: nil
       attribute :special_course, :boolean, default: false
       attribute :monthly_service_fee, :strict_decimal, default: nil
-      attribute :service_fee_installments, :strict_integer, default: nil
 
       validates :lead_provider_name, inclusion: { in: -> { LeadProvider.pluck(:name) } }
       validates :course_identifier, inclusion: { in: -> { Course.pluck(:identifier) } }
       validates :recruitment_target, numericality: { greater_than: 0 }
       validates :per_participant, numericality: { greater_than: 0 }
-      validates :monthly_service_fee, numericality: { greater_than_or_equal_to: 0 }
       validates :service_fee_installments, numericality: { greater_than_or_equal_to: 0 }
+      validates :monthly_service_fee, numericality: { greater_than_or_equal_to: 0 }
 
       def self.example_csv
         <<~CSV.strip
