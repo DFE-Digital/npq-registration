@@ -15,6 +15,10 @@
       <strong>Status:</strong>
       <%= @statement.state.humanize %>
     </p>
+    <p class="govuk-body govuk-!-margin-bottom-2">
+      <strong>Payment run:</strong>
+      <%= boolean_red_green_tag(@statement.output_fee) %>
+    </p>
     <%= govuk_details(summary_text: "Statement ID", id: "statement-id") do
           @statement.ecf_id
         end %>
