@@ -1,0 +1,33 @@
+name: External links
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *" # 4am every day
+  # remove below after PR approval: it's needed to show up as a
+  # workflow_dispatch action before merging, but in practice external service
+  # status should not fail/block our PRs
+  pull_request:
+    branches: [ main ]
+
+env:
+  RAILS_ENV: staging
+  SECRET_KEY_BASE: ${{ secrets.RAILS_SECRET_KEY_BASE_STAGING }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+jobs:
+  verify:
+    name: Verify external links
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ inputs.ruby-version }}
+          bundler-cache: true
+
+      - name: Run rake task
+        run: bundle exec rake external_links:verify
