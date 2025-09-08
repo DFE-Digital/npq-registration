@@ -57,8 +57,8 @@
     </p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li><%= govuk_link_to("find a lost TRN", "https://find-a-lost-trn.education.gov.uk/start", new_tab: true) %></li>
-      <li><%= govuk_link_to("get a TRN", "https://authorise-access-to-a-teaching-record.education.gov.uk/request-trn?AccessToken=SqjgaHbrdofsSL5z", new_tab: true) %></li>
+      <li><%= external_link_to("find a lost TRN", :find_a_lost_trn, new_tab: true) %></li>
+      <li><%= external_link_to("get a TRN", :get_a_trn, new_tab: true) %></li>
     </ul>
 
     <p class="govuk-body">
