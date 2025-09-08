@@ -9,7 +9,7 @@ RSpec.describe OneOff::UpdateContracts do
     let(:csv_path) { csv_file.path }
     let(:csv_content) do
       <<~CSV
-        provider_name,course_identifier,per_participant
+        lead_provider_name,course_identifier,per_participant
         Provider 1,#{Course::NPQ_SENCO},1000
         Provider 2,#{Course::NPQ_HEADSHIP},2000
       CSV
@@ -49,7 +49,7 @@ RSpec.describe OneOff::UpdateContracts do
       describe "logs" do
         let(:csv_content) do
           <<~CSV
-            provider_name,course_identifier,per_participant
+            lead_provider_name,course_identifier,per_participant
             Provider 1,#{Course::NPQ_SENCO},1000
           CSV
         end
