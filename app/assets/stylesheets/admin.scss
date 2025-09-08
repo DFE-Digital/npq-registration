@@ -161,3 +161,7 @@
     @include govuk-font-size(24); // default font size is 19 here
   }
 }
+
+.nowrap {
+  white-space: nowrap;
+}

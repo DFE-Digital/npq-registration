@@ -96,6 +96,11 @@ module NpqSeparation
             href: npq_separation_admin_registration_closed_index_path,
             prefix: "/npq-separation/admin/registration-closed",
           ) => [],
+          Node.new(
+            name: "Actions log",
+            href: npq_separation_admin_actions_log_path,
+            prefix: "/npq-separation/admin/actions-log",
+          ) => [],
         }
       end
 

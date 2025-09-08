@@ -1,0 +1,22 @@
+<h1 class="govuk-heading-l">Admin actions log</h1>
+<p class="govuk-body">Select an admin user to see the changes they have made to applications.</p>
+
+<div class="admin-search-box">
+  <%= form_with url: search_npq_separation_admin_actions_log_path, method: :post do |f| %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <%= f.govuk_collection_select(
+       :admin_user_id,
+       Admin.all.order(:full_name),
+       :id,
+       :name_with_email,
+        options: { include_blank: "- select admin user -" },
+        label: { text: "Admin user", size: "s" },
+      ) %>
+    </div>
+  </div>
+
+  <%= f.govuk_submit "Continue" %>
+
+  <% end %>
+</div>

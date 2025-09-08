@@ -322,6 +322,13 @@ Rails.application.routes.draw do
           post "run", on: :member
         end
       end
+
+      resource :actions_log, path: "actions-log", controller: "actions_log", only: %i[show] do
+        member do
+          post :search
+        end
+        resources :admin_users, path: "admin-users", only: %i[show], controller: "actions_log", action: "show_admin_user"
+      end
     end
   end
 
