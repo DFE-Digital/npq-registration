@@ -64,7 +64,8 @@ private
 
   def ensure_super_admin
     unless current_admin.super_admin?
-      flash[:error] = "You must be a super admin to change cohorts"
+      action = action_name == "download_contracts" ? "download contracts" : "change cohorts"
+      flash[:error] = "You must be a super admin to #{action}"
       redirect_to action: :index
     end
   end
