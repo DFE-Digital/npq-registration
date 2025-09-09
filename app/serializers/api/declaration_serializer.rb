@@ -25,15 +25,11 @@ module API
       view :v2 do
       end
 
-      view :delivery_partner_fields do
+      view :v3 do
         field(:delivery_partner_id) { |declaration| declaration.delivery_partner&.ecf_id }
         field(:delivery_partner_name) { |declaration| declaration.delivery_partner&.name }
         field(:secondary_delivery_partner_id) { |declaration| declaration.secondary_delivery_partner&.ecf_id }
         field(:secondary_delivery_partner_name) { |declaration| declaration.secondary_delivery_partner&.name }
-      end
-
-      view :v3 do
-        include_view :delivery_partner_fields
 
         field(:statement_id) { |declaration| declaration.billable_statement&.ecf_id }
         field(:clawback_statement_id) { |declaration| declaration.refundable_statement&.ecf_id }
