@@ -22,7 +22,7 @@ module Questionnaires
     end
 
     def previous_step
-      :employment_type
+      :your_employment
     end
 
   private
