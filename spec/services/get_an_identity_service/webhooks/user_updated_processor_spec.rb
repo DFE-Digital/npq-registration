@@ -16,14 +16,17 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
   let(:old_date_of_birth) { 30.years.ago.to_date }
   let(:old_trn) { "1234567" }
   let(:old_trn_verified) { false }
+  let(:old_trn_lookup_status) { nil }
+  let(:old_name) { "John Doe" }
 
   let(:user) do
     create(:user,
            :with_get_an_identity_id,
            email: old_email,
            date_of_birth: old_date_of_birth,
-           full_name: "John Doe",
+           full_name: old_name,
            trn: old_trn,
+           trn_lookup_status: old_trn_lookup_status,
            trn_verified: old_trn_verified)
   end
 
@@ -81,6 +84,14 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
       )
     end
 
+    with_versioning do
+      it "saves the proper papertrail whodunnit attribute" do
+        subject
+
+        expect(user.reload.versions.last.whodunnit).to eq("UserUpdatedProcessor")
+      end
+    end
+
     context "when the new email is already in use" do
       before do
         create(:user, email: new_email)
@@ -129,6 +140,22 @@ RSpec.describe GetAnIdentityService::Webhooks::UserUpdatedProcessor do
             updated_from_tra_at: sent_at,
           ),
         )
+      end
+    end
+
+    context "when there are no new attributes in the webhook" do
+      let(:new_email) { old_email }
+      let(:new_name) { old_name }
+      let(:new_date_of_birth) { old_date_of_birth }
+      let(:new_trn) { old_trn }
+      let(:old_trn_lookup_status) { "None" }
+
+      before do
+        subject
+      end
+
+      it "does not save the user" do
+        expect(user.reload.updated_from_tra_at).to be_nil
       end
     end
 
