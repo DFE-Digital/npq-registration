@@ -271,6 +271,18 @@ RSpec.describe API::ApplicationSerializer, type: :serializer do
         it "serializes the `senco_start_date`" do
           expect(attributes["senco_start_date"]).to eq(application.senco_start_date.to_json)
         end
+
+        context "when application is non senco application" do
+          let(:application) { build(:application, cohort:, course:, private_childcare_provider:, itt_provider:, school:) }
+
+          it "serializes the `works_as_senco`" do
+            expect(attributes["works_as_senco"]).to be_nil
+          end
+
+          it "serializes the `senco_start_date`" do
+            expect(attributes["senco_start_date"]).to be_nil
+          end
+        end
       end
 
       context "when LP_SELF_SERVE feature flag is off" do
