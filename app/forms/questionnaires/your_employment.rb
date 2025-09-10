@@ -20,13 +20,14 @@ module Questionnaires
     end
 
     def options
-      [
-        build_option_struct(value: "local_authority_virtual_school", link_errors: true),
-        build_option_struct(value: "hospital_school"),
-        build_option_struct(value: "young_offender_institution"),
-        build_option_struct(value: "local_authority_supply_teacher"),
-        build_option_struct(value: "lead_mentor_for_accredited_itt_provider"),
-      ].freeze
+      Application.employment_types.keys
+                 .reject { |v| v == "other" } # Other is handled on the previous page
+                 .map do |value|
+        build_option_struct(
+          value:,
+          link_errors: value == "local_authority_virtual_school"
+        )
+      end
     end
 
     def next_step
