@@ -1,0 +1,22 @@
+<%= govuk_back_link href: new_npq_separation_admin_delivery_partner_path %>
+
+<h1 class="govuk-heading-l govuk-!-margin-top-6">We found similar delivery partners</h1>
+
+<p class="govuk-body">The following delivery partners have similar names to <strong><%= @delivery_partner.name %></strong>:</p>
+
+<%= govuk_list @similarly_named_delivery_partners.map(&:name), type: :bullet %>
+
+<%= form_for @continue_form, url: continue_npq_separation_admin_delivery_partners_path(@delivery_partner), as: :continue_form do |f| %>
+  <%= f.govuk_error_summary %>
+
+  <%= f.govuk_radio_buttons_fieldset :continue, legend: { text: "Are you sure you want to add '#{@delivery_partner.name}'?", tag: 'h1', size: 'm' } do %>
+    <%= f.govuk_radio_button :continue, "yes", label: { text: "Yes" }, link_errors: true %>
+    <%= f.govuk_radio_button :continue, "no", label: { text: "No" } %>
+  <% end %>
+  <%= hidden_field_tag "delivery_partner[name]",  @delivery_partner.name %>
+
+  <div class="govuk-button-group">
+    <%= f.govuk_submit %>
+    <%= govuk_link_to "Cancel", npq_separation_admin_delivery_partners_path %>
+  </div>
+<% end %>
