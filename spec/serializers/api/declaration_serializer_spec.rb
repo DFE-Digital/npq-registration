@@ -149,7 +149,7 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
 
       context "when LP_SELF_SERVE feature flag is off" do
         it "does not serialize the `application_id`" do
-          expect(attributes).not_to have_key("delivery_partner_id")
+          expect(attributes).not_to have_key("application_id")
         end
       end
 
