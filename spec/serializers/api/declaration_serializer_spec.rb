@@ -137,44 +137,20 @@ RSpec.describe API::DeclarationSerializer, type: :serializer do
     context "when serializing the `v3` view" do
       subject(:attributes) { JSON.parse(described_class.render(declaration, view: :v3))["attributes"] }
 
-      context "when declaration api feature flag is on" do
-        before do
-          Flipper.enable(Feature::INCLUDE_DELIVERY_PARTNERS_IN_DECLARATIONS_API)
-        end
-
-        it "serializes the `delivery_partner_id`" do
-          expect(attributes["delivery_partner_id"]).to eq(primary_partner.ecf_id)
-        end
-
-        it "serializes the `delivery_partner_name`" do
-          expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
-        end
-
-        it "serializes the `secondary_delivery_partner_id`" do
-          expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.ecf_id)
-        end
-
-        it "serializes the `secondary_delivery_partner_name`" do
-          expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
-        end
+      it "serializes the `delivery_partner_id`" do
+        expect(attributes["delivery_partner_id"]).to eq(primary_partner.ecf_id)
       end
 
-      context "when declaration api feature flag is off" do
-        it "serializes the `delivery_partner_id`" do
-          expect(attributes).not_to have_key("delivery_partner_id")
-        end
+      it "serializes the `delivery_partner_name`" do
+        expect(attributes["delivery_partner_name"]).to eq(primary_partner.name)
+      end
 
-        it "serializes the `delivery_partner_name`" do
-          expect(attributes).not_to have_key("delivery_partner_name")
-        end
+      it "serializes the `secondary_delivery_partner_id`" do
+        expect(attributes["secondary_delivery_partner_id"]).to eq(secondary_partner.ecf_id)
+      end
 
-        it "serializes the `secondary_delivery_partner_id`" do
-          expect(attributes).not_to have_key("secondary_delivery_partner_id")
-        end
-
-        it "serializes the `secondary_delivery_partner_name`" do
-          expect(attributes).not_to have_key("secondary_delivery_partner_name")
-        end
+      it "serializes the `secondary_delivery_partner_name`" do
+        expect(attributes["secondary_delivery_partner_name"]).to eq(secondary_partner.name)
       end
 
       it "serializes the `created_at`" do

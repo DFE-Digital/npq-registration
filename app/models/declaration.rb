@@ -232,7 +232,6 @@ private
   end
 
   def delivery_partner_required
-    return false unless Feature.declarations_require_delivery_partner?
     return false unless cohort
     return false unless application_inside_catchment?
     return false if persisted? && !delivery_partner_id_changed?

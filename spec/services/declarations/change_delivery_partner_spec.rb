@@ -60,6 +60,8 @@ RSpec.describe Declarations::ChangeDeliveryPartner, type: :model do
     before { instance.change_delivery_partner }
 
     it { is_expected.to validate_presence_of(:declaration) }
+    it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
+    it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
 
     context "when the delivery partner id is empty" do
       let(:delivery_partner_id) { nil }
@@ -92,18 +94,8 @@ RSpec.describe Declarations::ChangeDeliveryPartner, type: :model do
       it { is_expected.to have_error(:secondary_delivery_partner_id, :inclusion, "The entered '#/secondary_delivery_partner_id' is not from your list of confirmed Delivery Partners for the Cohort") }
     end
 
-    context "with the declarations_require_delivery_partner feature flag enabled" do
-      before { allow(Feature).to receive(:declarations_require_delivery_partner?).and_return(true) }
-
-      it { is_expected.to validate_presence_of(:delivery_partner_id).with_message("The property '#/delivery_partner_id' must be present") }
-      it { is_expected.not_to validate_presence_of(:secondary_delivery_partner_id) }
-    end
-
     context "when delivery_partner is blank but secondary_delivery_partner is not" do
       let(:delivery_partner_id) { nil }
-
-      let(:delivery_partner) { nil }
-      let(:secondary_delivery_partner) { nil }
 
       it { is_expected.to have_error(:secondary_delivery_partner_id, :present, "The property '#/secondary_delivery_partner_id' cannot be specified without the property '#/delivery_partner_id'") }
     end

@@ -4,10 +4,6 @@ require "swagger_helper"
 RSpec.describe "Participant Declarations endpoint", openapi_spec: "v3/swagger.yaml", type: :request do
   include_context "with authorization for api doc request"
 
-  before do
-    allow(Feature).to receive(:include_delivery_partners_in_declarations_api?).and_return(true)
-  end
-
   it_behaves_like "an API index endpoint documentation",
                   "/api/v3/participant-declarations",
                   "Participant declarations",
