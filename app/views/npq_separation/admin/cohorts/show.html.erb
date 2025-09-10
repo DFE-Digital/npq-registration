@@ -23,6 +23,7 @@
   <%= govuk_button_link_to('Edit cohort details', edit_npq_separation_admin_cohort_path(@cohort)) %>
   <%= govuk_button_link_to('Delete cohort', npq_separation_admin_cohort_path(@cohort), method: :delete, warning: true) %>
   <%= govuk_button_link_to('Create statements', new_npq_separation_admin_cohort_statement_path(@cohort), secondary: true) %>
+  <%= govuk_button_link_to('Download contracts CSV', download_contracts_npq_separation_admin_cohort_path(@cohort), secondary: true) %>
 <% end %>
 
 <hr class="govuk-section-break govuk-section-break--l">

@@ -88,11 +88,11 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
   context "when logged in as normal admin" do
     before { sign_in_as_admin }
 
-    shared_examples "inaccessible to normal admins" do
+    shared_examples "inaccessible to normal admins" do |error_message: "You must be a super admin to change cohorts"|
       it { is_expected.to redirect_to npq_separation_admin_cohorts_path }
 
       it "flashes the correct error" do
-        expect(flash[:error]).to match(/You must be a super admin to change cohorts/i)
+        expect(flash[:error]).to match(/#{error_message}/i)
       end
     end
 
@@ -137,6 +137,12 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
 
       it_behaves_like "inaccessible to normal admins"
     end
+
+    describe "#download_contracts" do
+      before { get download_contracts_npq_separation_admin_cohort_path(cohort) }
+
+      it_behaves_like "inaccessible to normal admins", error_message: "You must be a super admin to download contracts"
+    end
   end
 
   context "when not logged in" do
@@ -178,6 +184,12 @@ RSpec.describe NpqSeparation::Admin::CohortsController, :ecf_api_disabled, type:
 
     describe "#destroy" do
       before { delete npq_separation_admin_cohort_path(cohort) }
+
+      it { is_expected.to redirect_to sign_in_path }
+    end
+
+    describe "#download_contracts" do
+      before { get download_contracts_npq_separation_admin_cohort_path(cohort) }
 
       it { is_expected.to redirect_to sign_in_path }
     end

@@ -5,7 +5,7 @@ module OneOff
 
       ActiveRecord::Base.transaction do
         csv_file.each do |row|
-          lead_provider = LeadProvider.find_by!(name: row["provider_name"])
+          lead_provider = LeadProvider.find_by!(name: row["lead_provider_name"])
           cohort = Cohort.find_by!(start_year: cohort_year)
           course = Course.find_by!(identifier: row["course_identifier"])
 
