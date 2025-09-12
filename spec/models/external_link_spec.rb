@@ -99,6 +99,22 @@ RSpec.describe ExternalLink, type: :model do
         expect { subject }.to raise_error(ExternalLink::VerificationError, "Too many redirects")
       end
     end
+
+    context "when the URL is redirected with a cookie" do
+      let(:instance) { described_class.new("https://example.org/cookie") }
+
+      before do
+        redirect_url = "https://example.org/redirected/200"
+        cookie_value = "cookie=value"
+        stub_request(:get, instance.url).to_return(status: 302, headers: { "Location" => redirect_url, "Set-Cookie" => cookie_value })
+        stub_request(:get, redirect_url).with(headers: { "Cookie" => cookie_value }).to_return(status: 200)
+      end
+
+      it "sends the cookie to the redirected URL" do
+        subject
+        expect(logger).to have_received(:info).with("External link #{instance.url} verified successfully")
+      end
+    end
   end
 
   describe "#url" do

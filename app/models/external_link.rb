@@ -44,14 +44,17 @@ class ExternalLink
 
 private
 
-  def request(url, limit = 5)
+  def request(url, limit = 5, headers: {})
     fail "Too many redirects" if limit.zero?
 
     uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
+    response = Net::HTTP.get_response(uri, headers)
 
     if response.is_a? Net::HTTPRedirection
-      request(response["location"], limit - 1)
+      # authorise-access-to-a-teaching-record redirects forever without cookies
+      headers.merge!(cookie: response["set-cookie"]) if response.key?("set-cookie")
+      location = URI.join(uri, response["location"])
+      request(location, limit - 1, headers:)
     else
       response
     end
