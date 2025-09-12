@@ -1,6 +1,88 @@
 require "rails_helper"
 
 RSpec.describe DeliveryPartner, type: :model do
+  describe "search scopes" do
+    describe ".name_similar_to" do
+      subject { described_class.name_similar_to(name) }
+
+      shared_examples "matching a delivery partner using" do |name:, existing_delivery_partner_name:|
+        let(:matching_delivery_partner) { create :delivery_partner, name: existing_delivery_partner_name }
+        let(:name) { name }
+
+        before { matching_delivery_partner }
+
+        it "matches '#{name}' to the delivery partner with name '#{existing_delivery_partner_name}'" do
+          expect(subject).to include matching_delivery_partner
+        end
+
+        it "doesn't have duplicates" do
+          expect(subject.uniq.count).to eq subject.count
+        end
+      end
+
+      context "when a delivery partner name matches exactly" do
+        let(:name) { "The Example TSH" }
+
+        before { create :delivery_partner, name: }
+
+        it "doesn't return anything" do
+          expect(subject).to be_empty
+        end
+      end
+
+      context "when a delivery partner name has typos" do
+        it_behaves_like "matching a delivery partner using", name: "The Julain TSH", existing_delivery_partner_name: "The Julian TSH" # one typo
+        it_behaves_like "matching a delivery partner using", name: "The Julain THS", existing_delivery_partner_name: "The Julian TSH" # two typos
+      end
+
+      context "when a delivery partner name is similar" do
+        it_behaves_like "matching a delivery partner using", name: "Alban Teaching School Hub", existing_delivery_partner_name: "Alban TSH"
+        it_behaves_like "matching a delivery partner using", name: "The Alban Teaching School Hub", existing_delivery_partner_name: "Alban TSH"
+
+        it_behaves_like "matching a delivery partner using", name: "Julian Teaching School Hub", existing_delivery_partner_name: "The Julian TSH"
+        it_behaves_like "matching a delivery partner using", name: "The Julian Teaching School Hub", existing_delivery_partner_name: "The Julian TSH"
+
+        it_behaves_like "matching a delivery partner using", name: "Julian TSH", existing_delivery_partner_name: "The Julian TSH"
+        it_behaves_like "matching a delivery partner using", name: "East London TSH", existing_delivery_partner_name: "East London Teaching School Hub"
+        it_behaves_like "matching a delivery partner using", name: "Julian TSH", existing_delivery_partner_name: "The Julian Teaching School Hub"
+
+        it_behaves_like "matching a delivery partner using", name: "Alliance of Leading Learning", existing_delivery_partner_name: "ALL (Alliance of Leading Learning)"
+        it_behaves_like "matching a delivery partner using", name: "Sacred Heart Alliance", existing_delivery_partner_name: "The Bishop Fraser Trust/Sacred Heart Alliance"
+        it_behaves_like "matching a delivery partner using", name: "The Cardinal Vaughan Memorial School", existing_delivery_partner_name: "Kent Teaching School Hub/The Cardinal Vaughan Memorial School"
+      end
+
+      context "when there are many Teaching School Hubs" do
+        let(:name) { "Some Teaching School Hub" }
+
+        before do
+          create_list(:delivery_partner, 20) do |delivery_partner|
+            delivery_partner.name = "The #{Faker::Company.unique.name} Teaching School Hub"
+            delivery_partner.save!
+          end
+        end
+
+        it "doesn't return all the Teaching School Hubs" do
+          expect(subject.count).to be < 20
+        end
+      end
+
+      context "when there are many Delivery Partners beginning with 'The'" do
+        let(:name) { "The Example School" }
+
+        before do
+          create_list(:delivery_partner, 20) do |delivery_partner|
+            delivery_partner.name = "The #{Faker::Company.unique.name} School"
+            delivery_partner.save!
+          end
+        end
+
+        it "doesn't return all the Delivery Patners beginning with 'The'" do
+          expect(subject.count).to be < 20
+        end
+      end
+    end
+  end
+
   describe "attributes" do
     subject { described_class.create(name: "new partner") }
 
