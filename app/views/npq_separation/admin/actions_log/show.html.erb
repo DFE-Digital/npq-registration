@@ -1,22 +1,32 @@
-<h1 class="govuk-heading-l">Admin actions log</h1>
-<p class="govuk-body">Select an admin user to see the changes they have made to applications.</p>
+<%= govuk_back_link href: npq_separation_admin_actions_log_index_path %>
 
-<div class="admin-search-box">
-  <%= form_with url: search_npq_separation_admin_actions_log_path, method: :post do |f| %>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <%= f.govuk_collection_select(
-       :admin_user_id,
-       Admin.all.order(:full_name),
-       :id,
-       :name_with_email,
-        options: { include_blank: "- select admin user -" },
-        label: { text: "Admin user", size: "s" },
-      ) %>
-    </div>
-  </div>
+<h1 class="govuk-heading-l">Changes to applications by <%= @admin.full_name %></h1>
 
-  <%= f.govuk_submit "Continue" %>
+<% if @versions.none? %>
+  <div class="govuk-body">No applications have been updated by this admin user.</div>
+<% else %>
+  <%=
+    govuk_table do |table|
+      table.with_head do |header|
+        header.with_row do |row|
+          row.with_cell(text: "Application ID")
+          row.with_cell(text: "Updated")
+          row.with_cell(text: "Changes")
+          row.with_cell(text: "Actions")
+        end
+      end
 
-  <% end %>
-</div>
+      table.with_body do |body|
+        @versions.each do |version|
+          body.with_row do |row|
+            row.with_cell(text: version.item.ecf_id, html_attributes: { class: "nowrap" })
+            row.with_cell(text: version.created_at.to_fs(:govuk_short), html_attributes: { class: "nowrap" })
+            row.with_cell(text: version.object_changes.keys.excluding("updated_at").join(", "))
+            row.with_cell(text: govuk_link_to("History", npq_separation_admin_applications_history_path(version.item.id)))
+          end
+        end
+      end
+    end
+  %>
+<% end %>
+<%= govuk_pagination(pagy: @pagy) %>

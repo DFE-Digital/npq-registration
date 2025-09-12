@@ -98,7 +98,7 @@ module NpqSeparation
           ) => [],
           Node.new(
             name: "Actions log",
-            href: npq_separation_admin_actions_log_path,
+            href: npq_separation_admin_actions_log_index_path,
             prefix: "/npq-separation/admin/actions-log",
           ) => [],
         }

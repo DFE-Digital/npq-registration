@@ -1,14 +1,13 @@
 class NpqSeparation::Admin::ActionsLogController < NpqSeparation::AdminController
   def search
-    admin_user_id = params[:admin_user_id]
-    if admin_user_id.blank?
-      redirect_to npq_separation_admin_actions_log_path
+    if params[:admin_id].blank?
+      redirect_to npq_separation_admin_actions_log_index_path
     else
-      redirect_to npq_separation_admin_actions_log_admin_user_path(params[:admin_user_id])
+      redirect_to npq_separation_admin_actions_log_path(params[:admin_id])
     end
   end
 
-  def show_admin_user
+  def show
     @admin = Admin.find(params[:id])
     versions = PaperTrail::Version
       .includes(:item)
