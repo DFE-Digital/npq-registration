@@ -8,6 +8,8 @@ RSpec.describe ExternalLink, type: :model do
 
   before do
     described_class.logger = logger
+    described_class.reset_cache
+
     allow(YAML).to receive(:load_file).with(ExternalLink.config_path).and_return({
       "good" => good_url,
       "bad" => bad_url,
@@ -20,6 +22,7 @@ RSpec.describe ExternalLink, type: :model do
 
   after do
     described_class.logger = nil
+    described_class.reset_cache
   end
 
   describe ".all" do

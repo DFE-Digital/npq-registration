@@ -2,9 +2,14 @@ require "rails_helper"
 
 RSpec.describe ExternalLinkHelper, type: :helper do
   before do
+    ExternalLink.reset_cache
     allow(YAML).to receive(:load_file).with(ExternalLink.config_path).and_return({
       "good" => "https://example.org",
     })
+  end
+
+  after do
+    ExternalLink.reset_cache
   end
 
   describe "#external_link_to without a block" do

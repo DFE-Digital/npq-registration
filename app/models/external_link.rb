@@ -12,6 +12,8 @@ class ExternalLink
 
     def verify_all = all.each(&:verify)
 
+    def reset_cache = @mapping = nil
+
     def logger
       @logger ||= Logger.new($stdout)
     end
