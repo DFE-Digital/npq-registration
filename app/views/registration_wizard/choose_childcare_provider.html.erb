@@ -11,7 +11,7 @@
 
   <ul class="govuk-list govuk-list--bullet">
     <li>check the spelling and try entering part of the name</li>
-    <li>make sure the <%= govuk_link_to "name matches the postcode", "https://get-information-schools.service.gov.uk/Search?SelectedTab=Establishments", new_tab: true %> you entered</li>
+    <li>make sure the <%= external_link_to "name matches the postcode", :gias_establishment_search, new_tab: true %> you entered</li>
     <li>make sure your web browser settings have JavaScript enabled</li>
   </ul>
 
