@@ -45,13 +45,13 @@ class TestSubNavigationStructure < NpqSeparation::NavigationStructure
 end
 
 RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
-  let(:current_path) { "/some-path" }
-  let(:current_section) { "First" }
+  let(:current_path) { "/a" }
   let(:structure) { TestSubNavigationStructure.new }
   let(:heading) { {} }
+  let(:default_to_first_section) { false }
 
   subject do
-    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_section), heading:)
+    NpqSeparation::SubNavigationComponent.new(current_path, structure: structure.sub_structure(current_path, default_to_first_section:), heading:)
   end
 
   it "renders a visually hidden level 2 heading" do
@@ -61,10 +61,20 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   end
 
   context "when an unrecognised section is provided" do
-    let(:current_section) { "Missing" }
+    let(:current_path) { "/missing" }
 
-    it "renders a visually hidden level 2 heading" do
+    it "raises an error" do
       expect { render_inline(subject) }.to raise_error(NpqSeparation::NavigationStructure::SectionNotFoundError)
+    end
+
+    context "and default_to_first_section is true" do
+      let(:default_to_first_section) { true }
+
+      it "renders the first section" do
+        render_inline(subject)
+
+        expect(rendered_content).to have_css("li.x-govuk-sub-navigation__section-item", text: "This is the first page")
+      end
     end
   end
 
@@ -96,7 +106,6 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   describe "highlighting the current section" do
     context "when the prefix matches the start of the current path" do
       let(:current_path) { "/b/second" }
-      let(:current_section) { "Second" }
 
       it "marks only the section as current" do
         render_inline(subject)
@@ -112,7 +121,6 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
   describe "highlighting the current link in the right subsection" do
     context "when the prefix matches the start of the current path" do
       let(:current_path) { "/b/second/two" }
-      let(:current_section) { "Second" }
 
       it "marks only the section as current" do
         render_inline(subject)
@@ -132,7 +140,6 @@ RSpec.describe NpqSeparation::SubNavigationComponent, type: :component do
 
   describe "when navigation node prefix is nil" do
     let(:current_path) { "/c" }
-    let(:current_section) { "Third" }
 
     it "does not highlight the section as current" do
       render_inline(subject)

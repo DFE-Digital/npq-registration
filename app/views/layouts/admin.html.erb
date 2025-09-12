@@ -14,13 +14,18 @@
 
     <%= render partial: "shared/cookies/banner" %>
 
-    <%= render partial: "layouts/shared/header" %>
+    <%= govuk_header %>
+
+    <%=
+      govuk_service_navigation(
+        current_path: request.path,
+        navigation_items: admin_service_navigation_items,
+        service_name: "Manage NPQs",
+        service_url: npq_separation_admin_path,
+      )
+    %>
 
     <div class="govuk-width-container">
-      <% primary_navigation = NpqSeparation::PrimaryNavigationComponent.new(request.path, structure: admin_navigation_structure) %>
-
-      <%= render(primary_navigation) %>
-
       <main class="govuk-main-wrapper" id="main-content">
         <%= render partial: "layouts/shared/messages" %>
 
@@ -29,7 +34,7 @@
             <%=
               render NpqSeparation::SubNavigationComponent.new(
                 request.path,
-                structure: admin_navigation_structure.sub_structure(primary_navigation.current_section.name),
+                structure: admin_navigation_structure.sub_structure(request.path, default_to_first_section: true),
               )
             %>
 
