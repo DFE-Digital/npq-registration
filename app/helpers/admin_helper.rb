@@ -24,7 +24,7 @@ module AdminHelper
       {
         href: sign_out_user_path,
         text: "Sign out",
-        html_attributes: { style: "margin-left: auto;" },
+        classes: "ml-auto",
       },
     ]
   end
