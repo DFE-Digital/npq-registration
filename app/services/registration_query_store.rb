@@ -67,27 +67,27 @@ class RegistrationQueryStore
   end
 
   def lead_mentor_for_accredited_itt_provider?
-    employment_type == "lead_mentor_for_accredited_itt_provider"
+    employment_type == Application.employment_types[:lead_mentor_for_accredited_itt_provider]
   end
 
   def employment_type_other?
-    employment_type == "other"
+    employment_type == Application.employment_types[:other]
   end
 
   def employment_type_local_authority_virtual_school?
-    employment_type == "local_authority_virtual_school"
+    employment_type == Application.employment_types[:local_authority_virtual_school]
   end
 
   def local_authority_supply_teacher?
-    employment_type == "local_authority_supply_teacher"
+    employment_type == Application.employment_types[:local_authority_supply_teacher]
   end
 
   def employment_type_hospital_school?
-    employment_type == "hospital_school"
+    employment_type == Application.employment_types[:hospital_school]
   end
 
   def young_offender_institution?
-    employment_type == "young_offender_institution"
+    employment_type == Application.employment_types[:young_offender_institution]
   end
 
   def teacher_catchment_england?
