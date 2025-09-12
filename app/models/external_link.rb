@@ -46,7 +46,7 @@ class ExternalLink
 
 private
 
-  def request(url, limit = 5, headers: {})
+  def request(url, limit = 5, headers: default_headers)
     fail "Too many redirects" if limit.zero?
 
     uri = URI.parse(url)
@@ -60,6 +60,12 @@ private
     else
       response
     end
+  end
+
+  def default_headers
+    {
+      "user-agent" => "Mozilla/5.0 Chrome/139.0.0.0", # wrong/bad but GIAS 403s without spoofing user agent
+    }
   end
 
   def fail(message)
