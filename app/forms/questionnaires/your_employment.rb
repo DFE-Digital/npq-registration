@@ -25,16 +25,17 @@ module Questionnaires
                  .map do |value|
         build_option_struct(
           value:,
-          link_errors: value == "local_authority_virtual_school"
+          link_errors: value == "local_authority_virtual_school",
         )
       end
     end
 
     def next_step
       case employment_type
-      when "lead_mentor_for_accredited_itt_provider"
+      when Application.employment_types[:lead_mentor_for_accredited_itt_provider]
         :itt_provider
-      when "hospital_school", "young_offender_institution"
+      when Application.employment_types[:hospital_school],
+        Application.employment_types[:young_offender_institution]
         :your_employer
       else
         :your_role
