@@ -181,11 +181,11 @@ private
       return NOT_LEAD_MENTOR_COURSE
     end
 
-    eligible_employment_types = %w[
-      local_authority_virtual_school
-      hospital_school
-      young_offender_institution
-      local_authority_supply_teacher
+    eligible_employment_types = [
+      Application.employment_types[:local_authority_virtual_school],
+      Application.employment_types[:hospital_school],
+      Application.employment_types[:young_offender_institution],
+      Application.employment_types[:local_authority_supply_teacher],
     ]
 
     eligible_course_identifiers = %w[
