@@ -160,7 +160,6 @@ course = Course.find_by!(identifier: Course::IDENTIFIERS.first.to_sym)
   FactoryBot.create(:application, :manual_review, **application_attrs.merge(course:))
 end
 
-
 Application.order(id: :desc).each.with_index do |a, i|
   a.update!(created_at: i.days.ago)
 end
