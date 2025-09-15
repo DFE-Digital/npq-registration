@@ -123,18 +123,6 @@ en:
     blank: "The '#/%{parameterized_attribute}' is missing from your request. Please include a 'passed' or 'failed' value and try again."
     inclusion: "The attribute '#/%{parameterized_attribute}' can only include 'passed' or 'failed' values. If you need to void an outcome, you will need to void the associated 'completed' declaration."
 
-  participant_outcomes:
-    na: "N/A"
-    declaration_outcomes: "Declaration Outcomes"
-    passed: "Passed"
-    failed: "Failed"
-    passed_and_recorded: "Passed and recorded"
-    failed_and_recorded: "Failed and recorded"
-    passed_but_not_recorded: "Passed but not recorded"
-    failed_but_not_recorded: "Failed but not recorded"
-    pending: "Pending"
-    resend: "Resend"
-
   time:
     formats:
       admin: "%R on %d/%m/%Y"
@@ -257,10 +245,6 @@ en:
           attributes:
             completion_date:
               *completion_date
-            ecf_id:
-              *ecf_id
-        participant_outcome_api_request:
-          attributes:
             ecf_id:
               *ecf_id
         schedule:
@@ -660,14 +644,6 @@ en:
               blank: Enter the new amount
               greater_than_or_equal_to: Amount must be a positive number
               not_a_number: Amount must be a number, without commas, or the £ symbol
-        qualified_teachers_api_sender:
-          already_successfully_sent_to_api: "This participant outcome has already been successfully submitted to Qualified Teachers API (TRA)"
-          already_unsuccessfully_sent_to_api: "This participant outcome has already been unsuccessfully submitted to Qualified Teachers API (TRA)"
-          attributes:
-            participant_outcome_id:
-              blank: "The property '#/missing_participant_outcome_id' must be present"
-            participant_outcome:
-              blank: "There's no participant outcome for the given ID"
         statements/payment_authorisation_form:
           attributes:
             checks_done:
