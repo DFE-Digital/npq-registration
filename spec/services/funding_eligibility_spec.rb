@@ -417,6 +417,15 @@ RSpec.describe FundingEligibility do
         }
       end
     end
+
+    context "when institution is mandatory but missing" do
+      let(:work_setting) { Questionnaires::WorkSetting::A_SCHOOL }
+      let(:course) { Course.first }
+
+      it "raises an error" do
+        expect { subject }.to raise_error(FundingEligibility::MissingMandatoryInstitution)
+      end
+    end
   end
 
   describe "#get_description_for_funding_status" do

@@ -169,9 +169,9 @@ class RegistrationWizard
 
     if inside_catchment?
       if works_in_school?
-        array << Answer.new("Workplace", institution_from_store.name_with_address, :find_school)
+        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :find_school)
       elsif works_in_childcare? && kind_of_nursery_public?
-        array << Answer.new("Workplace", institution_from_store.name_with_address, :find_childcare_provider)
+        array << Answer.new("Workplace", institution_from_store.try(:name_with_address), :find_childcare_provider)
       end
     end
 

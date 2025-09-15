@@ -1,4 +1,6 @@
 class FundingEligibility
+  class MissingMandatoryInstitution < StandardError; end
+
   include CourseHelper
 
   FUNDED_ELIGIBILITY_RESULT = :funded
@@ -137,7 +139,7 @@ private
 
     if childminder?
       if course.eyl?
-        return FUNDED_ELIGIBILITY_RESULT if institution.on_childminders_list?
+        return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.on_childminders_list?
 
         return NOT_ENTITLED_CHILDMINDER
       end
@@ -146,7 +148,7 @@ private
     end
 
     if course.eyl?
-      return FUNDED_ELIGIBILITY_RESULT if institution.eyl_disadvantaged?
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.eyl_disadvantaged?
 
       return NOT_ENTITLED_EY_INSTITUTION
     end
@@ -155,12 +157,12 @@ private
   end
 
   def school_policy
-    return FUNDED_ELIGIBILITY_RESULT if institution.rise?
+    return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.rise?
 
-    return INELIGIBLE_ESTABLISHMENT_TYPE unless institution.eligible_establishment?
+    return INELIGIBLE_ESTABLISHMENT_TYPE unless mandatory_institution.eligible_establishment?
 
     if course.only_pp50?
-      return FUNDED_ELIGIBILITY_RESULT if institution.pp50?(work_setting)
+      return FUNDED_ELIGIBILITY_RESULT if mandatory_institution.pp50?(work_setting)
 
       return INELIGIBLE_ESTABLISHMENT_NOT_A_PP50
     end
@@ -235,5 +237,11 @@ private
 
       Application.where(id: application_ids)
     end
+  end
+
+  def mandatory_institution
+    raise MissingMandatoryInstitution if institution.nil?
+
+    institution
   end
 end
