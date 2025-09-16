@@ -9,5 +9,5 @@
 
   <p class="govuk-body">This is because you said that you cannot show an understanding of mastery approaches to teaching maths.</p>
 
-  <p class="govuk-body">Join the <a class="govuk-link" href="https://www.gov.uk/guidance/join-the-maths-teaching-for-mastery-programme">primary maths Teaching for Mastery programme</a> or go back if you want to <a class="govuk-link" href="<%= registration_wizard_show_url('choose_your_npq'.dasherize) %>">register for a different NPQ</a>.</p>
+  <p class="govuk-body">Join the <%= external_link_to "primary maths Teaching for Mastery programme", :join_the_maths_teaching_for_mastery_programme %> or go back if you want to <%= govuk_link_to "register for a different NPQ", registration_wizard_show_path('choose-your-npq') %>.</p>
 <% end %>
