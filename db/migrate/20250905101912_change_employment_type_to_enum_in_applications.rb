@@ -1,5 +1,5 @@
 class ChangeEmploymentTypeToEnumInApplications < ActiveRecord::Migration[7.2]
-  def do
+  def change
     create_enum :employment_types, %w[
       hospital_school
       lead_mentor_for_accredited_itt_provider

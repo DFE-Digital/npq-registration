@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_05_101912) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_08_162110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_05_101912) do
   create_enum "declaration_state_reasons", ["duplicate"]
   create_enum "declaration_states", ["submitted", "eligible", "payable", "paid", "voided", "ineligible", "awaiting_clawback", "clawed_back"]
   create_enum "declaration_types", ["started", "retained-1", "retained-2", "completed"]
+  create_enum "employment_types", ["hospital_school", "lead_mentor_for_accredited_itt_provider", "local_authority_supply_teacher", "local_authority_virtual_school", "young_offender_institution", "other"]
   create_enum "funding_choices", ["school", "trust", "self", "another", "employer"]
   create_enum "headteacher_statuses", ["no", "yes_when_course_starts", "yes_in_first_two_years", "yes_over_two_years", "yes_in_first_five_years", "yes_over_five_years"]
   create_enum "kind_of_nurseries", ["local_authority_maintained_nursery", "preschool_class_as_part_of_school", "private_nursery", "another_early_years_setting", "childminder"]
@@ -132,7 +133,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_05_101912) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
-    t.string "employment_type"
+    t.enum "employment_type", enum_type: "employment_types"
     t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
