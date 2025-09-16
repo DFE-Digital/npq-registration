@@ -48,6 +48,10 @@ class NpqSeparation::Admin::CohortsController < NpqSeparation::AdminController
     end
   end
 
+  def download_contracts
+    send_data Exporters::Contracts.new(cohort:).call, filename: "#{cohort.start_year}_cohort_contracts.csv", type: :csv
+  end
+
 private
 
   def cohort_params
@@ -60,7 +64,8 @@ private
 
   def ensure_super_admin
     unless current_admin.super_admin?
-      flash[:error] = "You must be a super admin to change cohorts"
+      action = action_name == "download_contracts" ? "download contracts" : "change cohorts"
+      flash[:error] = "You must be a super admin to #{action}"
       redirect_to action: :index
     end
   end
