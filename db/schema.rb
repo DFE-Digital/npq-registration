@@ -133,7 +133,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_162110) do
     t.jsonb "raw_application_data", default: {}
     t.text "work_setting"
     t.boolean "teacher_catchment_synced_to_ecf", default: false
-    t.enum "employment_type", enum_type: "employment_types"
     t.string "DEPRECATED_itt_provider"
     t.boolean "lead_mentor", default: false
     t.boolean "primary_establishment", default: false
@@ -158,6 +157,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_08_162110) do
     t.date "senco_start_date"
     t.string "on_submission_trn"
     t.enum "review_status", enum_type: "review_statuses"
+    t.enum "employment_type", enum_type: "employment_types"
     t.index ["cohort_id"], name: "index_applications_on_cohort_id"
     t.index ["course_id"], name: "index_applications_on_course_id"
     t.index ["ecf_id"], name: "index_applications_on_ecf_id", unique: true
