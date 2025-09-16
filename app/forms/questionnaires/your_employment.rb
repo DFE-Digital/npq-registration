@@ -21,7 +21,7 @@ module Questionnaires
 
     def options
       Application.employment_types.keys
-                 .reject { |v| v == "other" } # Other is handled on the previous page
+                 .without("other") # Other is handled on the previous page
                  .each_with_index.map do |value, index|
         build_option_struct(
           value:,
