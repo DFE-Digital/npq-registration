@@ -83,6 +83,12 @@ class Application < ApplicationRecord
     rejected: "rejected",
   }, suffix: true
 
+  enum :reason_for_rejection, {
+    registration_expired: "registration_expired",
+    rejected_by_provider: "rejected_by_provider",
+    application_accepted_by_other_provider: "application_accepted_by_other_provider",
+  }, suffix: true
+
   enum :training_status, {
     active: "active",
     deferred: "deferred",

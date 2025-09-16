@@ -629,6 +629,8 @@ en:
           attributes:
             application:
               <<: *application
+            reason_for_rejection:
+              <<: *application
         applications/change_funded_place:
           attributes:
             application:

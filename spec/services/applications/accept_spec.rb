@@ -142,7 +142,10 @@ RSpec.describe Applications::Accept, :with_default_schedules, type: :model do
         expect(application.reload.lead_provider_approval_status).to eql("accepted")
         expect(application.reload.accepted_at).to be_within(1.minute).of(Time.zone.now)
         expect(service.application).to be_active_training_status
-        expect(other_application.reload.lead_provider_approval_status).to eql("rejected")
+
+        other_application.reload
+        expect(other_application.lead_provider_approval_status).to eql("rejected")
+        expect(other_application.reason_for_rejection).to eql(Application.reason_for_rejections[:application_accepted_by_other_provider])
       end
     end
 
