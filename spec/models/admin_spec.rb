@@ -18,4 +18,12 @@ RSpec.describe Admin, type: :model do
       expect(Admin.new.super_admin?).to be false
     end
   end
+
+  describe "#name_with_email" do
+    subject { admin.name_with_email }
+
+    let(:admin) { build(:admin) }
+
+    it { is_expected.to eq("#{admin.full_name} (#{admin.email})") }
+  end
 end

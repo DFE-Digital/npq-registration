@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_08_162110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
   enable_extension "citext"
@@ -608,6 +608,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_19_161441) do
     t.json "object_changes"
     t.string "note"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_versions_on_whodunnit"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

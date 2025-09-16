@@ -319,6 +319,12 @@ Rails.application.routes.draw do
           post "run", on: :member
         end
       end
+
+      resources :actions_log, path: "actions-log", controller: "actions_log", only: %i[index show] do
+        collection do
+          post :search
+        end
+      end
     end
   end
 

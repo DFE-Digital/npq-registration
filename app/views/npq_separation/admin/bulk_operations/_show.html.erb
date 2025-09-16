@@ -34,13 +34,13 @@
 
         sl.with_row do |row|
           row.with_key(text: "Created by")
-          row.with_value(text: "#{@bulk_operation.admin.full_name} (#{@bulk_operation.admin.email})")
+          row.with_value(text: @bulk_operation.admin.name_with_email)
         end
 
         if @bulk_operation.ran_by_admin
           sl.with_row do |row|
             row.with_key(text: "Ran by")
-            row.with_value(text: "#{@bulk_operation.ran_by_admin.full_name} (#{@bulk_operation.ran_by_admin.email})")
+            row.with_value(text: @bulk_operation.ran_by_admin.name_with_email)
           end
         end
       end
