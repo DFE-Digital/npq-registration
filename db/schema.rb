@@ -608,6 +608,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_05_101912) do
     t.json "object_changes"
     t.string "note"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+    t.index ["whodunnit"], name: "index_versions_on_whodunnit"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
