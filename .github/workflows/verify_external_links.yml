@@ -4,11 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 4 * * *" # 4am every day
-  # remove below after PR approval: it's needed to show up as a
-  # workflow_dispatch action before merging, but in practice external service
-  # status should not fail/block our PRs
-  pull_request:
-    branches: [ main ]
 
 env:
   RAILS_ENV: staging
