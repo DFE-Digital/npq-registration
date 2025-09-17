@@ -148,6 +148,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_start_date" => "2024-12-12",
           "on_submission_trn" => "1234321",
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -268,6 +269,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -437,6 +439,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -512,6 +515,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
@@ -597,6 +601,7 @@ RSpec.describe HandleSubmissionForStore do
           "senco_start_date" => nil,
           "on_submission_trn" => nil,
           "review_status" => nil,
+          "reason_for_rejection" => nil,
         })
       end
     end
