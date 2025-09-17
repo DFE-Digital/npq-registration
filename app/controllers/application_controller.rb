@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   default_form_builder GOVUKDesignSystemFormBuilder::FormBuilder
 
-  before_action :clear_null_user_sessions
   before_action :set_cache_headers
   before_action :authenticate_user!
   before_action :set_sentry_user
@@ -61,14 +60,5 @@ private
 
   def set_cache_headers
     no_store
-  end
-
-  def clear_null_user_sessions
-    # TODO: can we get rid of this? what happens when we have current_user_id instead?
-    if session.key?(:registration_store) &&
-        session[:registration_store][:current_user].is_a?(NullUser)
-      reset_session
-      redirect_to root_path
-    end
   end
 end
