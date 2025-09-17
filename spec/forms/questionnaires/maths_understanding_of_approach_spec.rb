@@ -17,7 +17,7 @@ RSpec.describe Questionnaires::MathsUnderstandingOfApproach, type: :model do
       current_step: :maths_understanding_of_approach,
       store:,
       request: nil,
-      current_user: build(:user),
+      current_user: create(:user),
     )
   end
 

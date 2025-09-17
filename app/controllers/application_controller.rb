@@ -64,6 +64,7 @@ private
   end
 
   def clear_null_user_sessions
+    # TODO: can we get rid of this? what happens when we have current_user_id instead?
     if session.key?(:registration_store) &&
         session[:registration_store][:current_user].is_a?(NullUser)
       reset_session

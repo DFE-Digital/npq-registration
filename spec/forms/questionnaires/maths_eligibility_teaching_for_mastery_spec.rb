@@ -17,7 +17,7 @@ RSpec.describe Questionnaires::MathsEligibilityTeachingForMastery, type: :model 
       current_step: :maths_eligibility_teaching_for_mastery,
       store:,
       request: nil,
-      current_user: build(:user),
+      current_user: create(:user),
     )
   end
 
