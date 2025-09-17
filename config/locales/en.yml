@@ -308,6 +308,10 @@ en:
           attributes:
             add_another:
               inclusion: Select if you need to add another adjustment
+        admin/delivery_partners/continue_form:
+          attributes:
+            continue:
+              inclusion: Select ‘Yes’ or ‘No’ to continue
         applications/change_training_status:
           attributes:
             training_status:
