@@ -6,7 +6,7 @@ class AdminService::DeliveryPartnersSearch
   end
 
   def call
-    default_scope.where("name ILIKE ?", "%#{q}%")
+    default_scope.contains(q)
   end
 
 private
