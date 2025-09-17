@@ -263,7 +263,7 @@ private
   end
 
   def load_current_user_into_store
-    store["current_user"] = current_user
+    store["current_user_id"] = current_user&.id
   end
 
   def institution_from_store

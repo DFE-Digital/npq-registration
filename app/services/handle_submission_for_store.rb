@@ -35,7 +35,7 @@ class HandleSubmissionForStore
         lead_mentor: lead_mentor?,
         itt_provider: itt_provider.present? && IttProvider.find_by(legal_name: itt_provider),
         referred_by_return_to_teaching_adviser: store["referred_by_return_to_teaching_adviser"],
-        raw_application_data: raw_application_data.except("current_user"),
+        raw_application_data: raw_application_data.except("current_user", "current_user_id"),
         senco_in_role: store["senco_in_role"],
         senco_start_date: store["senco_start_date"],
         on_submission_trn: store["trn"],
@@ -210,7 +210,7 @@ private
   end
 
   def user
-    @user ||= store["current_user"]
+    @user ||= store["current_user"].presence || User.find(store["current_user_id"])
   end
 
   def uk_country

@@ -6,7 +6,7 @@ class RegistrationQueryStore
   end
 
   def current_user
-    store["current_user"]
+    store["current_user"] || User.find_by(id: store["current_user_id"])
   end
 
   def itt_provider
