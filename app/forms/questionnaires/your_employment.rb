@@ -20,20 +20,22 @@ module Questionnaires
     end
 
     def options
-      [
-        build_option_struct(value: "local_authority_virtual_school", link_errors: true),
-        build_option_struct(value: "hospital_school"),
-        build_option_struct(value: "young_offender_institution"),
-        build_option_struct(value: "local_authority_supply_teacher"),
-        build_option_struct(value: "lead_mentor_for_accredited_itt_provider"),
-      ].freeze
+      Application.employment_types.keys
+                 .without("other") # Other is handled on the previous page
+                 .each_with_index.map do |value, index|
+        build_option_struct(
+          value:,
+          link_errors: index.zero?,
+        )
+      end
     end
 
     def next_step
       case employment_type
-      when "lead_mentor_for_accredited_itt_provider"
+      when Application.employment_types[:lead_mentor_for_accredited_itt_provider]
         :itt_provider
-      when "hospital_school", "young_offender_institution"
+      when Application.employment_types[:hospital_school],
+        Application.employment_types[:young_offender_institution]
         :your_employer
       else
         :your_role

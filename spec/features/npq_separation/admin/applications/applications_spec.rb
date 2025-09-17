@@ -142,7 +142,7 @@ RSpec.feature "Listing and viewing applications", type: :feature do
       funded_place: true,
       lead_provider_approval_status: :accepted,
       funding_eligiblity_status_code: 123,
-      employment_type: :full_time,
+      employment_type: :hospital_school,
       employer_name: "Employer name",
       employment_role: :headteacher,
     )
