@@ -154,5 +154,10 @@ FactoryBot.define do
     trait :manual_review do
       review_status { "Needs review" }
     end
+
+    trait :senco do
+      senco_in_role { "yes" }
+      senco_start_date { Time.zone.today }
+    end
   end
 end
