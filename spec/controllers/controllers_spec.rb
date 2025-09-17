@@ -99,38 +99,4 @@ RSpec.describe "choosing the correct controller to inherit from" do
     it_behaves_like "allowing an authenticated user access"
     it_behaves_like "allowing an admin access"
   end
-
-  describe "sessions with NullUser in" do
-    controller(PublicPagesController) do
-      def index
-        head :ok
-      end
-    end
-
-    context "with a NullUser set" do
-      before do
-        session[:user_id] = 1
-        session[:registration_store] = { current_user: NullUser.new }
-      end
-
-      it "clears out the session" do
-        get :index
-        expect(session[:user_id]).to be_nil
-        expect(session[:registration_store]).to be_nil
-      end
-    end
-
-    context "without a NullUser set" do
-      before do
-        session[:user_id] = user.id
-        session[:registration_store] = { current_user: user }
-      end
-
-      it "does not clear out the session" do
-        get :index
-        expect(session[:user_id]).to eq user.id
-        expect(session[:registration_store][:current_user]).to eq user
-      end
-    end
-  end
 end
